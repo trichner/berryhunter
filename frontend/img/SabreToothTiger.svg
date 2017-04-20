@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <radialGradient id="gradient-2" gradientUnits="userSpaceOnUse" cx="228.753" cy="171.152" r="10.105" spreadMethod="repeat" gradientTransform="matrix(1, 0, 0, 1, 0.000473, 0.000015)">
+      <stop offset="0" style="stop-color: rgb(5, 22, 175);"/>
+      <stop offset="1"/>
+    </radialGradient>
+    <radialGradient id="gradient-11" gradientUnits="userSpaceOnUse" cx="123.157" cy="180.378" r="53.606" spreadMethod="pad">
+      <stop offset="0" style="stop-color: rgb(119, 6, 6);"/>
+      <stop offset="1" style="stop-color: rgb(150, 87, 5);"/>
+    </radialGradient>
+    <radialGradient id="gradient-13" gradientUnits="userSpaceOnUse" cx="176.114" cy="171.152" r="10.105" gradientTransform="matrix(1, 0, 0, 1, -79.447594, 25.499054)">
+      <stop offset="0" style="stop-color: rgb(5, 22, 175);"/>
+      <stop offset="1" style="stop-color: rgba(0, 0, 0, 1)"/>
+    </radialGradient>
+    <radialGradient id="gradient-14" gradientUnits="userSpaceOnUse" cx="225.499" cy="165.217" r="3.833" spreadMethod="pad" gradientTransform="matrix(1.000004, 0, 0, 1.000004, -0.001798, -0.001924)">
+      <stop offset="0" style="stop-color: rgb(255, 255, 255);"/>
+      <stop offset="1" style="stop-color: rgb(169, 169, 169);"/>
+    </radialGradient>
+    <radialGradient id="gradient-16" gradientUnits="userSpaceOnUse" cx="172.138" cy="165.806" r="3.833" gradientTransform="matrix(1, 0, 0, 1, -79.925034, 26.305771)">
+      <stop offset="0" style="stop-color: rgb(255, 255, 255);"/>
+      <stop offset="1" style="stop-color: rgb(169, 169, 169);"/>
+    </radialGradient>
+    <radialGradient id="gradient-0" gradientUnits="userSpaceOnUse" cx="228.753" cy="171.152" r="10.105" gradientTransform="matrix(1, 0, 0, 1, 0.000473, 0.000015)">
+      <stop offset="0" style="stop-color: #bada55"/>
+      <stop offset="1" style="stop-color: #758d29"/>
+    </radialGradient>
+    <radialGradient id="gradient-1" gradientUnits="userSpaceOnUse" cx="225.499" cy="165.217" r="3.833" gradientTransform="matrix(1.000004, 0, 0, 1.000004, -0.001798, -0.001924)">
+      <stop offset="0" style="stop-color: #bada55"/>
+      <stop offset="1" style="stop-color: #758d29"/>
+    </radialGradient>
+  </defs>
+  <path d="M 86.578 217.155 C 110.964 271.821 135.35 271.821 159.735 217.155 L 164.569 206.316 C 175.99 180.714 179.388 161.107 174.763 147.495 C 174.873 136.985 174.837 122.451 174.172 108.664 C 173.404 92.766 161.986 111.315 153.391 127.769 C 146.465 125.468 137.998 124.317 127.991 124.317 L 118.322 124.317 C 108.309 124.317 99.836 125.469 92.908 127.773 C 84.314 111.325 72.906 92.8 72.138 108.691 C 71.474 122.468 71.438 136.992 71.55 147.501 C 66.926 161.112 70.324 180.717 81.744 206.316 Z" style="fill-rule: evenodd; fill-opacity: 0.9; fill: url(#gradient-11); stroke-width: 3; stroke: rgb(37, 0, 0);"/>
+  <g transform="matrix(1, 0, 0, 1, 2.208381, -2.943915)">
+    <ellipse cx="228.753" cy="171.152" rx="10.105" ry="10.285" style="fill: url(#gradient-2); stroke: url(#gradient-0); stroke-width: 0;" transform="matrix(0.999998, 0, 0, 1, -79.105413, 25.499039)" bx:origin="0.5 0.375"/>
+    <ellipse cx="225.498" cy="165.215" rx="3.833" ry="3.833" style="fill: url(#gradient-14); stroke: url(#gradient-1); stroke-width: 0;" transform="matrix(1, 0, 0, 0.999996, -79.756912, 26.370882)"/>
+  </g>
+  <g transform="matrix(1, 0, 0, 1, -2.207491, -2.943915)">
+    <ellipse cx="96.666" cy="196.651" rx="10.105" ry="10.285" style="fill: url(#gradient-13);"/>
+    <ellipse cx="92.213" cy="192.112" rx="3.833" ry="3.833" style="fill: url(#gradient-16);"/>
+  </g>
+  <path d="M 141.836 248.337 C 141.836 248.337 143.141 230.038 144.298 227.268 C 145.536 224.304 137.454 230.413 137.637 233.619 C 138.216 243.761 141.836 248.337 141.836 248.337 Z" style="fill: rgb(255, 254, 213);" transform="matrix(-0.991061, 0.133411, -0.133411, -0.991061, 312.473099, 453.878443)"/>
+  <path d="M 106.089 226.479 C 106.089 226.479 107.394 244.778 108.551 247.548 C 109.789 250.512 101.707 244.403 101.89 241.197 C 102.469 231.055 106.089 226.479 106.089 226.479 Z" style="fill: rgb(255, 254, 213);" transform="matrix(0.991061, 0.133411, -0.133411, 0.991061, 32.613994, -11.923732)"/>
+</svg>
