@@ -18,7 +18,7 @@ function getUrlParameter(sParam, lowerCase) {
 
 var QuadrantRenderer = {
 	isActive: function () {
-		if (typeof this.active !=== 'undefined'){
+		if (typeof this.active !== 'undefined'){
 			return this.active;
 		}
 
