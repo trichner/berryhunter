@@ -4,6 +4,7 @@ import (
 	"engo.io/ecs"
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
+	"log"
 )
 
 type physicsEntity struct {
@@ -17,15 +18,17 @@ type PhysicsSystem struct {
 }
 
 func (p *PhysicsSystem) New(w *ecs.World){
-	p.entities = make([]physicsEntity,0)
+	// do nothing for now
 }
 
 func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity,e *chipmunk.Body) {
-	p.entities = append(p.entities, physicsEntity{b,e})
-	p.space.AddBody(e)
+	pe := physicsEntity{b,e}
+	p.entities = append(p.entities, pe)
+	p.space.AddBody(pe.Body)
 }
 
 func (p *PhysicsSystem) Update(dt float32)  {
+	log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
 	p.space.Step(vect.Float(dt))
 }
 
@@ -40,6 +43,6 @@ func (p *PhysicsSystem) Remove(b ecs.BasicEntity)  {
 	if delete >= 0 {
 		e := p.entities[delete]
 		p.entities = append(p.entities[:delete], p.entities[delete+1:]...)
-		p.space.RemoveBody(e)
+		p.space.RemoveBody(e.Body)
 	}
 }
