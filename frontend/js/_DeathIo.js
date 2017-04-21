@@ -138,6 +138,7 @@ function setup() {
 
 	groups.background = two.makeGroup();
 	groups.character = two.makeGroup();
+	groups.mapBorders = two.makeGroup();
 	groups.gameObjects = two.makeGroup();
 	groups.overlay = two.makeGroup();
 

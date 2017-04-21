@@ -11,7 +11,7 @@ class Camera {
 		this.lastY = character.getY();
 		this.translation = new Two.Vector(0, 0);
 
-		this.shownGameObjects = [];
+		// this.shownGameObjects = [];
 
 		two.bind('update', this.update.bind(this));
 	}
@@ -36,6 +36,7 @@ class Camera {
 		this.translation.addSelf(deltaV);
 
 		groups.gameObjects.translation.subSelf(deltaV);
+		groups.mapBorders.translation.subSelf(deltaV);
 		this.character.setX(this.lastX);
 		this.character.setY(this.lastY);
 

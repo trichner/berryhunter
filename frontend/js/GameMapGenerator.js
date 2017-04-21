@@ -8,6 +8,7 @@ var GameMapGenerator = {
 		Quadrants.forEach(function (quadrant, index) {
 			let offsetX = index * 8 * gridSpacing;
 			//TODO "Zeilenumrbrüche" wenn mehr Quadranten als Kartenbreite
+			// TODO Quadranten möglichst quadratisch auslegen, statt alle in die Breite
 			let offsetY = 0;
 
 			quadrant.forEach(function (field) {
