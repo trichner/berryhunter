@@ -25,8 +25,8 @@ function GameMap() {
 
 	this.objects = GameMapGenerator.generate(this.width, this.height);
 
-	console.info('Map is ' + this.width + ' x ' + this.height);
-	console.log(this.objects.length + ' objects generated');
+	// console.info('Map is ' + this.width + ' x ' + this.height);
+	// console.log(this.objects.length + ' objects generated');
 }
 
 function executeRandomFunction(weightedFunctions) {

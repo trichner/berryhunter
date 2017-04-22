@@ -34,13 +34,16 @@
 
 	<title>Death.io</title>
 </head>
-<body oncontextmenu="event.preventDefault();">
+<body oncontextmenu="event.preventDefault();" class="layout-row">
 <section id="drawingContainer"></section>
-<section id="inputContainer">
-	<div class="wrapper">
+<section id="inputContainer" class="layout-column flex">
+	<header class="layout-row">
+		<div id="jsonStatus" class="flex">Waiting for input...</div>
+		<button id="renderButton">Render again</button>
+	</header>
+	<div class="wrapper flex">
 		<textarea id="quadrantJson" placeholder="Quadrant Definition JSON"></textarea>
 	</div>
-	<div id="jsonStatus"><!-- Either a JSON error message or Render success--></div>
 </section>
 
 <!-- Libraries that need the DOM to be loaded -->

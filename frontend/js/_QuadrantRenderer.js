@@ -40,29 +40,51 @@ var QuadrantRenderer = {
 
 		GameMapGenerator.generate = GameMapGenerator.generateFromQuadrants;
 
-		var textarea = document.getElementById('quadrantJson');
-		textarea.addEventListener('input', this.onJsonInput);
+		document.getElementById('quadrantJson').addEventListener('input', this.tryRenderQuadrants);
+		document.getElementById('renderButton').addEventListener('click', this.tryRenderQuadrants);
 
 		return two;
 	},
 
-	onJsonInput: function () {
-		try {
-			Quadrants = eval(this.value);
-			QuadrantRenderer.calculateMapDimensions();
+	tryRenderQuadrants: function () {
+		let jsonStatus = document.getElementById('jsonStatus');
+		jsonStatus.classList.remove('error');
+		jsonStatus.classList.remove('success');
 
-			groups.gameObjects.remove();
-			groups.gameObjects = two.makeGroup();
-
-			gameMap.objects = GameMapGenerator.generateFromQuadrants(this.mapWidth, this.mapHeight);
-
-			two.update();
-		} catch (e) {
-			var err = e.constructor('Fehler im JSON: ' + e.message);
-			// +3 because 'err' has the line number of the 'eval' line plus 2.
-			err.lineNumber = e.lineNumber - err.lineNumber + 3;
-			throw err;
+		if (!this.value) {
+			jsonStatus.innerHTML = 'Waiting for input...';
 		}
+
+		try {
+			Quadrants = eval(document.getElementById('quadrantJson').value);
+			if (!Quadrants) {
+				throw "Doesn't return a definition."
+			}
+		} catch (e) {
+			jsonStatus.classList.add('error');
+			jsonStatus.innerHTML = "Error in JSON: " + e.message;
+			return;
+		}
+
+		QuadrantRenderer.calculateMapDimensions();
+
+		groups.gameObjects.remove();
+		groups.gameObjects = two.makeGroup();
+		groups.mapBorders.remove();
+		groups.mapBorders = two.makeGroup();
+
+		try {
+			gameMap = new GameMap();
+		} catch (e) {
+			jsonStatus.classList.add('error');
+			jsonStatus.innerHTML = "Error in Quadrant Definition: " + e.message;
+			return;
+		}
+
+		miniMap = new MiniMap(gameMap);
+		two.update();
+		jsonStatus.innerHTML = 'Rendered';
+		jsonStatus.classList.add('success');
 	},
 
 	calculateMapDimensions: function () {
