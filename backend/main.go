@@ -2,11 +2,12 @@ package main
 
 import (
 	"engo.io/ecs"
-	"fmt"
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"log"
 	"time"
+	"fmt"
+	"net/http"
 )
 
 type Entity struct {
@@ -15,6 +16,25 @@ type Entity struct {
 }
 
 func main() {
+
+	server := NewServer("/echo")
+
+	go server.Listen()
+
+	go func() {
+
+		for {
+			select {
+			case msg := <-server.rxCh:
+				log.Printf("Received 1 message from %d", msg.client.id)
+				server.Tx(msg.client.id, msg.body)
+			case err := <-server.errCh:
+				fmt.Errorf("Err: %s", err)
+			}
+		}
+	}()
+
+	log.Fatal(http.ListenAndServe(":2000", nil))
 
 	world := ecs.World{}
 
@@ -57,7 +77,7 @@ func setupPhysicsSystem() *PhysicsSystem {
 	return p
 }
 
-func createBall() *Entity{
+func createBall() *Entity {
 
 	// Create a ball
 	ballEntity := &Entity{BasicEntity: ecs.NewBasic()}
