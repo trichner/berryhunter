@@ -25,7 +25,8 @@ class MiniMap {
 
 		this.register(player);
 
-		two.bind('update', this.update.bind(this));
+		this.updateCallback = this.update.bind(this);
+		two.bind('update', this.updateCallback);
 	}
 
 	/**
@@ -59,5 +60,10 @@ class MiniMap {
 			gameObject.minimapIcon.translation.x = (playerCam.getX() + gameObject.getX()) / gameMap.width * this.size;
 			gameObject.minimapIcon.translation.y = (playerCam.getY() + gameObject.getY()) / gameMap.width * this.size;
 		}, this);
+	}
+
+	remove() {
+		two.unbind('update', this.updateCallback);
+		this.group.remove();
 	}
 }

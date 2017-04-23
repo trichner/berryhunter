@@ -2,6 +2,9 @@ body {
   padding: 0;
   margin: 0;
 }
+body.loading > * {
+  display: none;
+}
 canvas,
 svg {
   display: block;

@@ -127,6 +127,7 @@ function setup() {
 	if (QuadrantRenderer.isActive()){
 		two = QuadrantRenderer.setup();
 	} else {
+		QuadrantRenderer.disable();
 		two = new Two({
 			fullscreen: true,
 			type: Two.Types.svg
@@ -149,7 +150,7 @@ function setup() {
 	miniMap = new MiniMap(gameMap);
 	playerCam = new Camera(player);
 
-	if (typeof Fps === 'object') {
+	if (typeof Fps === 'object' && Constants.SHOW_FPS) {
 		Fps.setup();
 	}
 
@@ -169,11 +170,17 @@ function setup() {
 	/*
 	 * Set up animation loop.
 	 */
-	two.play();
+	if (QuadrantRenderer.isActive()) {
+		two.update();
+	}else {
+		two.play();
+	}
 
 	// two.unbind('update');
 
 	// two.update();
+
+	document.body.classList.remove('loading');
 }
 
 

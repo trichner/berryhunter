@@ -21,7 +21,7 @@ var GameMapGenerator = {
 						gameObjectClass = executeRandomFunction([{
 							weight: 5,
 							func: () => {
-								return Tree;
+								return RoundTree;
 							}
 						}, {
 							weight: 1,
@@ -31,7 +31,24 @@ var GameMapGenerator = {
 						}]);
 						break;
 					case Animal:
-						gameObjectClass = Rabbit;
+						gameObjectClass = executeRandomFunction([{
+							weight: 3,
+							func: () => {
+								return Rabbit;
+							}
+						}, {
+							weight: 1,
+							func: () => {
+								return SabreToothTiger;
+							}
+						}
+							// }, {
+							// 	weight: 1,
+							// 	func: () => {
+							// 		return new Mammoth(rx, ry);
+							// 	}
+							// }
+						]);
 						break;
 				}
 				objects.push(new gameObjectClass(rx, ry));

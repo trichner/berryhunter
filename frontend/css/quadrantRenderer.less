@@ -1,3 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:400,700');
+
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+	margin: 0.67em;
+}
+
 #drawingContainer {
 	//float: left;
 	margin-right: 30px;
@@ -22,18 +32,48 @@
 	width: 100%;
 	//height: 100vh;
 	height: 100%;
+	resize: none;
+
+	font-family: 'Roboto Mono', monospace;
 }
 
 #jsonStatus {
 	padding: 1em;
+
 	color: white;
 	background-color: #03A9F4;
+
+	&.error {
+		background-color: #F44336;
+	}
+
+	&.success {
+		background-color: #4CAF50;
+
+		+ #renderButton {
+			display: inline-block;
+		}
+	}
 }
 
-#jsonStatus.error {
-	background-color: #F44336;
+#renderButton {
+	display: none;
 }
 
-#jsonStatus.success {
-	background-color: #4CAF50;
+#reference {
+	padding: 1em;
+	max-width: 14em;
+
+	> :first-child {
+		margin-top: 0;
+	}
+
+	> ul {
+		word-wrap: break-word;
+		word-break: break-all;
+	}
+
+	code {
+		font-family: 'Roboto Mono', monospace;
+	}
 }

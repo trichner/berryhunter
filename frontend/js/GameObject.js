@@ -49,21 +49,27 @@ class Tree extends GameObject {
 		super(x, y)
 	}
 
+	createMinimapIcon(x, y, sizeFactor) {
+		let shape = new Two.Ellipse(x, y, this.diameter * sizeFactor);
+		shape.stroke = 'green';
+		shape.linewidth = 1;
+		shape.noFill();
+
+		return shape;
+	}
+}
+
+class RoundTree extends Tree {
+	constructor(x, y) {
+		super(x, y)
+	}
+
 	createShape(x, y) {
 		this.diameter = randomInt(50, 150);
 		let shape = new Two.Ellipse(x, y, this.diameter);
 		shape.fill = 'green';
 		shape.stroke = 'darkgreen';
 		shape.linewidth = 2;
-
-		return shape;
-	}
-
-	createMinimapIcon(x, y, sizeFactor) {
-		let shape = new Two.Ellipse(x, y, this.diameter * sizeFactor);
-		shape.stroke = 'green';
-		shape.linewidth = 1;
-		shape.noFill();
 
 		return shape;
 	}

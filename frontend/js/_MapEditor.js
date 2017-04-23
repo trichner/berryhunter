@@ -1,28 +1,12 @@
 "use strict";
 
-function getUrlParameter(sParam, lowerCase) {
-	var sPageUrl = decodeURIComponent(window.location.search.substring(1)),
-		sUrlVariables = sPageUrl.split('&'),
-		sParameterName,
-		i;
-
-	for (i = 0; i < sUrlVariables.length; i++) {
-		sParameterName = sUrlVariables[i].split('=');
-
-		if (sParameterName[0] === sParam) {
-			return sParameterName[1] === undefined ? true :
-				lowerCase ? sParameterName[1].toLowerCase() : sParameterName[1];
-		}
-	}
-}
-
 var QuadrantRenderer = {
 	isActive: function () {
 		if (typeof this.active !== 'undefined') {
 			return this.active;
 		}
 
-		let quadrantParameter = getUrlParameter("quadrant");
+		let quadrantParameter = getUrlParameter("map-editor");
 		this.active = !!quadrantParameter;
 		return this.active;
 	},
@@ -43,7 +27,13 @@ var QuadrantRenderer = {
 		document.getElementById('quadrantJson').addEventListener('input', this.tryRenderQuadrants);
 		document.getElementById('renderButton').addEventListener('click', this.tryRenderQuadrants);
 
+		Constants.SHOW_FPS = false;
+
 		return two;
+	},
+
+	disable: function () {
+		clearNode(document.body);
 	},
 
 	tryRenderQuadrants: function () {
@@ -68,10 +58,14 @@ var QuadrantRenderer = {
 
 		QuadrantRenderer.calculateMapDimensions();
 
-		groups.gameObjects.remove();
-		groups.gameObjects = two.makeGroup();
 		groups.mapBorders.remove();
 		groups.mapBorders = two.makeGroup();
+		groups.gameObjects.remove();
+		groups.gameObjects = two.makeGroup();
+
+		// Re-add overlay to ensure z-index
+		groups.overlay.remove();
+		groups.overlay = two.makeGroup();
 
 		try {
 			gameMap = new GameMap();
@@ -81,7 +75,12 @@ var QuadrantRenderer = {
 			return;
 		}
 
+		groups.gameObjects.translation.subSelf(playerCam.translation);
+		groups.mapBorders.translation.subSelf(playerCam.translation);
+
+		miniMap.remove();
 		miniMap = new MiniMap(gameMap);
+
 		two.update();
 		jsonStatus.innerHTML = 'Rendered';
 		jsonStatus.classList.add('success');

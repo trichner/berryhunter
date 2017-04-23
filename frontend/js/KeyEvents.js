@@ -7,7 +7,10 @@ var KeyEvents = {
 		domElement.addEventListener('keyup', this._onkeyup.bind(this));
 		domElement.addEventListener('keypress', this._onkeypress.bind(this));
 		domElement.addEventListener('blur', this._onblur.bind(this));
-		domElement.focus();
+
+		if (!QuadrantRenderer.isActive()) {
+			domElement.focus();
+		}
 	},
 
 	_setProperty: function (prop, value) {
