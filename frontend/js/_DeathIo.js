@@ -102,29 +102,10 @@ function createBackground() {
 	groups.background.add(background);
 	background.fill = 'rgb(0, 96, 48)';
 	background.noStroke();
-
-	// const gridSpacing = 100;
-	// let offsetX = (width % gridSpacing) / 2;
-	// for (var x = offsetX; x < width; x += gridSpacing) {
-	// 	groups.overlay.add(createGridLine(x, 0, x, height));
-	// }
-	//
-	// let offsetY = (height % gridSpacing) / 2;
-	// for (var y = offsetY; y < height; y += gridSpacing) {
-	// 	groups.overlay.add(createGridLine(0, y, width, y));
-	// }
-}
-
-function createGridLine(x1, y1, x2, y2){
-	let shape = new Two.Line(x1, y1, x2, y2);
-	shape.stroke = 'yellow';
-	shape.noFill();
-
-	return shape;
 }
 
 function setup() {
-	if (QuadrantRenderer.isActive()){
+	if (QuadrantRenderer.isActive()) {
 		two = QuadrantRenderer.setup();
 	} else {
 		QuadrantRenderer.disable();
@@ -166,14 +147,14 @@ function setup() {
 	});
 
 
-
 	/*
 	 * Set up animation loop.
 	 */
+	two.play();
+
+
 	if (QuadrantRenderer.isActive()) {
-		two.update();
-	}else {
-		two.play();
+		QuadrantRenderer.afterSetup();
 	}
 
 	// two.unbind('update');

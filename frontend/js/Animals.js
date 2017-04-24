@@ -76,12 +76,22 @@ class Rabbit extends Animal {
 }
 
 class SabreToothTiger extends Animal {
+
 	constructor(x, y) {
 		super(x, y);
+
+		let callback = function () {
+			console.log("Append custom SVG");
+			this.shape._renderer.elem.appendChild(SabreToothTiger.svg.cloneNode(true));
+			two.unbind('render', callback);
+		}.bind(this);
+		two.bind('render', callback);
 	}
 
 	createShape(x, y){
-		return two.interpret(SabreToothTiger.svg);
+		let group = new Two.Group();
+		group.translation.set(x, y);
+		return group;
 	}
 
 	visibleOnMinimap() {

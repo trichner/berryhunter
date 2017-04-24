@@ -32,6 +32,14 @@ var QuadrantRenderer = {
 		return two;
 	},
 
+	afterSetup: function () {
+		two.pause();
+
+		this.grid = new QuadrantGrid();
+
+		two.update();
+	},
+
 	disable: function () {
 		clearNode(document.body);
 	},
@@ -81,6 +89,8 @@ var QuadrantRenderer = {
 		miniMap.remove();
 		miniMap = new MiniMap(gameMap);
 
+		this.grid = new QuadrantGrid();
+
 		two.update();
 		jsonStatus.innerHTML = 'Rendered';
 		jsonStatus.classList.add('success');
@@ -101,3 +111,30 @@ var QuadrantRenderer = {
 		}
 	}
 };
+
+class QuadrantGrid {
+	constructor() {
+		this.group = new Two.Group();
+		groups.mapBorders.add(this.group);
+
+		const gridSpacing = Constants.GRID_SPACING;
+		let offsetX = 0;
+		for (var x = gridSpacing; x < Constants.QUADRANT_SIZE; x += gridSpacing) {
+			this.group.add(QuadrantGrid.createGridLine(x, 0, x, height));
+		}
+
+		// let offsetY = (height % gridSpacing) / 2;
+		let offsetY = 0;
+		for (var y = gridSpacing; y < Constants.QUADRANT_SIZE; y += gridSpacing) {
+			this.group.add(QuadrantGrid.createGridLine(0, y, width, y));
+		}
+	}
+
+	static createGridLine(x1, y1, x2, y2) {
+		let shape = new Two.Line(x1, y1, x2, y2);
+		shape.stroke = 'yellow';
+		shape.noFill();
+
+		return shape;
+	}
+}

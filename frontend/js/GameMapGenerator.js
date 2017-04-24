@@ -94,7 +94,7 @@ var GameMapGenerator = {
 						return executeRandomFunction([{
 							weight: 5,
 							func: () => {
-								return new Tree(rx, ry);
+								return new RoundTree(rx, ry);
 							}
 						}, {
 							weight: 1,
