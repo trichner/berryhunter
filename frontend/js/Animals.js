@@ -82,7 +82,7 @@ class SabreToothTiger extends Animal {
 
 		let callback = function () {
 			console.log("Append custom SVG");
-			this.shape._renderer.elem.appendChild(SabreToothTiger.svg.cloneNode(true));
+			this.injectionGroup._renderer.elem.appendChild(SabreToothTiger.svg.cloneNode(true));
 			two.unbind('render', callback);
 		}.bind(this);
 		two.bind('render', callback);
@@ -91,6 +91,9 @@ class SabreToothTiger extends Animal {
 	createShape(x, y){
 		let group = new Two.Group();
 		group.translation.set(x, y);
+		this.injectionGroup = new Two.Group();
+		group.add(this.injectionGroup);
+		this.injectionGroup.translation.set(-50, -50);
 		return group;
 	}
 

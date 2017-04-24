@@ -37,8 +37,11 @@ var QuadrantRenderer = {
 
 		this.grid = new QuadrantGrid();
 
-		two.update();
+		// two.update();
+
+		this.tryRenderQuadrants();
 	},
+
 
 	disable: function () {
 		clearNode(document.body);
