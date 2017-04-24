@@ -91,7 +91,7 @@ function htmlToElement(html) {
 }
 
 function preload() {
-	Two.Utils.xhr('img/SabreToothTiger.svg', function (responseText) {
+	Two.Utils.xhr('img/sabreToothTiger.svg', function (responseText) {
 		SabreToothTiger.svg = htmlToElement(responseText);
 		setup();
 	});
