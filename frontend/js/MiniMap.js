@@ -21,7 +21,9 @@ class MiniMap {
 
 		const sizeFactorRelatedToMapSize = 1;
 		this.iconSizeFactor = width / gameMap.width * 0.15 * sizeFactorRelatedToMapSize;
-		gameMap.objects.forEach(this.add, this);
+
+		// gameMap.objects.forEach(this.add, this);
+
 
 		this.register(player);
 

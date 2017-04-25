@@ -208,4 +208,3 @@ class BerryBush extends GameObject {
 		return shape;
 	}
 }
-

@@ -5,7 +5,10 @@ var Constants = {
 	GRID_SPACING: 100,
 	FIELDS_IN_QUADRANT: 8,
 	SHOW_FPS: true,
-	PIXEL_PER_METRE: 30
+	PIXEL_PER_METRE: 30,
+	BACKEND: {
+		URL: "ws://192.168.178.50:2000/echo"
+	}
 };
 
 Constants.QUADRANT_SIZE= Constants.GRID_SPACING * Constants.FIELDS_IN_QUADRANT;

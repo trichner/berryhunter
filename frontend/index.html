@@ -10,32 +10,35 @@
 	<script type="text/javascript" src="vendor/two/two.js"></script>
 
 	<!-- other libraries -->
+	<script src="vendor/pointerEvents/pointerevents.js"></script>
 	<!--<script type="text/javascript" src="vendor/easystar-0.3.0.js"></script>-->
-	<script type="text/javascript" src="vendor/easystar-0.3.0.min.js"></script>
-	<script type="text/javascript" src="vendor/ID.js"></script>
-	<script type="text/javascript" src="vendor/WAAClock-0-5-0.js"></script>
-	<script type="text/javascript" src="vendor/xcolor.js"></script>
+	<!--<script type="text/javascript" src="vendor/easystar-0.3.0.min.js"></script>-->
+	<!--<script type="text/javascript" src="vendor/ID.js"></script>-->
+	<!--<script type="text/javascript" src="vendor/WAAClock-0-5-0.js"></script>-->
+	<!--<script type="text/javascript" src="vendor/xcolor.js"></script>-->
 
 	<!-- own libraries -->
 	<script type="text/javascript" src="vendor/XieLongUtils.js"></script>
 	<script type="text/javascript" src="js/Utils.js"></script>
 
 	<!-- sketch files -->
+	<script type="text/javascript" src="js/Backend.js"></script>
+	<script type="text/javascript" src="js/Controls.js"></script>
 	<script type="text/javascript" src="js/Fps.js"></script>
 	<script type="text/javascript" src="js/KeyEvents.js"></script>
 	<script type="text/javascript" src="js/Constants.js"></script>
 	<script type="text/javascript" src="js/GameObject.js"></script>
+	<script type="text/javascript" src="js/Animals.js"></script>
 	<script type="text/javascript" src="js/GameMapGenerator.js"></script>
-	<script type="text/javascript" src="js/GameMap.js"></script>
+	<script type="text/javascript" src="js/GameMap2.js"></script>
 	<script type="text/javascript" src="js/MiniMap.js"></script>
 	<script type="text/javascript" src="js/Camera.js"></script>
-	<script type="text/javascript" src="js/Animals.js"></script>
 	<script type="text/javascript" src="js/Quadrants.js"></script>
 	<script type="text/javascript" src="js/mapEditor/QuadrantGrid.js"></script>
 
 	<title>Death.io</title>
 </head>
-<body oncontextmenu="event.preventDefault();" class="layout-column loading">
+<body oncontextmenu="event.preventDefault();" class="layout-column loading" touch-action="none">
 <h1>Death.io :: Map Editor</h1>
 <main class="layout-row flex">
 	<section id="drawingContainer"></section>

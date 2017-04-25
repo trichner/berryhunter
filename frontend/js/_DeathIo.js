@@ -31,13 +31,17 @@ var miniMap;
 var playerCam;
 
 class Character extends GameObject {
-	constructor(x, y) {
+	constructor(id, x, y) {
 		super(x, y);
+		this.id = id;
+
 		this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
 
 		this.show();
 
-		two.bind('update', this.update.bind(this));
+		this.controls = new Controls(this);
+
+		two.bind('update', this.controls.update.bind(this.controls));
 	}
 
 	createShape(x, y) {
@@ -65,20 +69,29 @@ class Character extends GameObject {
 		groups.character.remove(this.shape);
 	}
 
-	update() {
-		if (anyKeyIsPressed(UP_KEYS)) {
-			this.shape.translation.y -= this.movementSpeed;
+	move(direction){
+		switch (direction) {
+			case Command.TOP:
+				this.shape.translation.y -= this.movementSpeed;
+				break;
+			case Command.BOTTOM:
+				this.shape.translation.y += this.movementSpeed;
+				break;
+			case Command.LEFT:
+				this.shape.translation.x -= this.movementSpeed;
+				break;
+			case Command.RIGHT:
+				this.shape.translation.x += this.movementSpeed;
+				break;
 		}
-		if (anyKeyIsPressed(DOWN_KEYS)) {
-			this.shape.translation.y += this.movementSpeed;
-		}
-		if (anyKeyIsPressed(LEFT_KEYS)) {
-			this.shape.translation.x -= this.movementSpeed;
-		}
-		if (anyKeyIsPressed(RIGHT_KEYS)) {
-			this.shape.translation.x += this.movementSpeed;
-		}
-		// TODO bei diagonaler Bewegung darf der Movementspeed nicht überschritten werden
+	}
+
+	action(){
+		console.info("Action by Player " + this.id);
+	}
+
+	altAction(){
+		console.info("Alt Action by Player " + this.id);
 	}
 }
 
@@ -105,6 +118,9 @@ function createBackground() {
 }
 
 function setup() {
+	// Setup backend first, as this will take some time to connect.
+	Backend.setup();
+
 	if (QuadrantRenderer.isActive()) {
 		two = QuadrantRenderer.setup();
 	} else {
@@ -126,7 +142,7 @@ function setup() {
 
 	createBackground();
 
-	player = new Character(width / 2, height / 2);
+	player = new Character(1, width / 2, height / 2);
 	gameMap = new GameMap();
 	miniMap = new MiniMap(gameMap);
 	playerCam = new Camera(player);
@@ -137,6 +153,13 @@ function setup() {
 
 	var domElement = two.renderer.domElement;
 	KeyEvents.init(domElement);
+
+	domElement.addEventListener('pointerup', function (event) {
+		console.log("pointerup", event);
+	});
+	domElement.addEventListener('pointerdown', function (event) {
+		console.log("pointerdown", event);
+	});
 
 
 	domElement.addEventListener('blur', function () {
@@ -162,35 +185,4 @@ function setup() {
 	// two.update();
 
 	document.body.classList.remove('loading');
-}
-
-
-var UP_KEYS = [
-	'w'.charCodeAt(0),
-	'W'.charCodeAt(0),
-	38 // Up Arrow
-];
-
-var DOWN_KEYS = [
-	's'.charCodeAt(0),
-	'S'.charCodeAt(0),
-	40 // Down Arrow
-];
-
-var LEFT_KEYS = [
-	'a'.charCodeAt(0),
-	'A'.charCodeAt(0),
-	37 // Left Arrow
-];
-
-var RIGHT_KEYS = [
-	'd'.charCodeAt(0),
-	'D'.charCodeAt(0),
-	39 // Right Arrow
-];
-
-function anyKeyIsPressed(keyList) {
-	return keyList.some(function (keyCode) {
-		return KeyEvents.keyIsDown(keyCode);
-	});
 }
