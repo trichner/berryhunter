@@ -40,6 +40,10 @@ class Camera {
 		this.character.setX(this.lastX);
 		this.character.setY(this.lastY);
 
+		if (typeof this.onUpdate === 'function'){
+			this.onUpdate(deltaV);
+		}
+
 		// if (deltaX != 0 ||deltaY != 0) {
 		// 	let gameObjectsToShow = gameMap.getObjects(
 		// 		this.translation.x,
