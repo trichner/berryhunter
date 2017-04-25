@@ -21,6 +21,10 @@ func (p *PhysicsSystem) New(w *ecs.World){
 	// do nothing for now
 }
 
+func (p *PhysicsSystem) Priority() int{
+	return 50
+}
+
 func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity,e *chipmunk.Body) {
 	pe := physicsEntity{b,e}
 	p.entities = append(p.entities, pe)
@@ -46,3 +50,4 @@ func (p *PhysicsSystem) Remove(b ecs.BasicEntity)  {
 		p.space.RemoveBody(e.Body)
 	}
 }
+

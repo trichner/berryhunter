@@ -9,32 +9,30 @@ import (
 	"fmt"
 )
 
-
 type Message struct {
 	body string
 }
 
 // Chat server.
 type Server struct {
-	pattern   string
-	clients   map[int]*Client
-	addCh     chan *Client
-	delCh     chan *Client
-	txCh	  chan *Message
-	rxCh	  chan *ClientMessage
-	doneCh    chan bool
-	errCh     chan error
+	pattern string
+	clients map[uint]*Client
+	addCh   chan *Client
+	delCh   chan *Client
+	txCh    chan *Message
+	rxCh    chan *ClientMessage
+	doneCh  chan bool
+	errCh   chan error
 }
 
 type ClientMessage struct {
 	client *Client
-	body *Message
+	body   *Message
 }
-
 
 // Create new chat server.
 func NewServer(pattern string) *Server {
-	clients := make(map[int]*Client)
+	clients := make(map[uint]*Client)
 	addCh := make(chan *Client)
 	delCh := make(chan *Client)
 	txCh := make(chan *Message)
@@ -74,9 +72,9 @@ func (s *Server) Err(err error) {
 	s.errCh <- err
 }
 
-func (s *Server) Tx(clientId int, msg *Message){
+func (s *Server) Tx(clientId uint, msg *Message) {
 	c, ok := s.clients[clientId]
-	if(!ok){
+	if (!ok) {
 		errMsg := fmt.Sprintf("Client %d not found", clientId)
 		s.errCh <- errors.New(errMsg)
 		return
@@ -84,7 +82,7 @@ func (s *Server) Tx(clientId int, msg *Message){
 	c.Tx(msg)
 }
 
-func (s *Server) Rx(msg *ClientMessage){
+func (s *Server) Rx(msg *ClientMessage) {
 	s.rxCh <- msg
 }
 

@@ -11,11 +11,11 @@ import (
 
 const channelBufSize = 100
 
-var maxId int = 0
+var maxId uint = 0
 
 // Chat client.
 type Client struct {
-	id     int
+	id     uint
 	ws     *websocket.Conn
 	server *Server
 	ch     chan *Message
