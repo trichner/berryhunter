@@ -7,7 +7,8 @@ import (
 
 const (
 	typeNone            = "NONE"
-	typeRoundTree       = "SabreToothTiger"
+	typeRabbit          = "Rabbit"
+	typeRoundTree       = "RoundTree"
 	typePlayer          = "Character"
 	typeSabreToothTiger = "SabreToothTiger"
 )
@@ -24,7 +25,7 @@ type Entity interface {
 //---- entity
 type entity struct {
 	ecs.BasicEntity
-	chipmunk.Body
+	body chipmunk.Body
 }
 
 func (e *entity) Type() string {
@@ -32,11 +33,15 @@ func (e *entity) Type() string {
 }
 
 func (e *entity) X() float32 {
-	return float32(e.Position().X)
+	return float32(e.body.Position().X)
 }
 
 func (e *entity) Y() float32 {
-	return float32(e.Position().Y)
+	return float32(e.body.Position().Y)
+}
+
+func (e *entity) Body() chipmunk.Body {
+	return e.body
 }
 
 //---- SabreToothTiger
@@ -48,15 +53,16 @@ func (p *SabreToothTiger) Type() string {
 	return typeSabreToothTiger
 }
 
-//---- Player
-type Player struct {
+//---- player
+type player struct {
 	entity
 	Health uint
 	Hunger uint
+	client *Client
 }
 
-func (p *Player) Type() string {
-	return typePlayer
+func (p *player) Type() string {
+	return typeRabbit
 }
 
 //---- DTO
@@ -72,7 +78,7 @@ type MessageDTO struct {
 	Data interface{} `json:"body"`
 }
 
-func mapToDTO(e *entity) *MessageDTO {
+func mapToDTO(e Entity) *MessageDTO {
 	return &MessageDTO{
 		"OBJECT",
 		EntityDTO{

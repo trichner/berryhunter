@@ -4,11 +4,10 @@ import (
 	"engo.io/ecs"
 	"log"
 	"encoding/json"
-	"math/rand"
 )
 
 type NetSystem struct {
-	entities []*entity
+	entities []Entity
 	server   *Server
 }
 
@@ -20,19 +19,13 @@ func (n *NetSystem) New(w *ecs.World) {
 	log.Println("NetSystem nominal")
 }
 
-func (n *NetSystem) AddBody(e *entity) {
+func (n *NetSystem) AddEntity(e Entity) {
 	n.entities = append(n.entities, e)
 }
 
 func (n *NetSystem) Update(dt float32) {
-	log.Printf("Broadcasting %d entities", len(n.entities))
+	log.Printf("Broadcasting %d players", len(n.entities))
 	for _, entity := range n.entities {
-
-		//fx := rand.Float32() * 100.0
-		//fy := rand.Float32() * 100.0
-		//entity.SetForce(fx, fy)
-
-		entity.AddForce(rand.Float32()*20.0-10.0, rand.Float32()*20.0-10.0)
 
 		dto := mapToDTO(entity)
 		msgJson, _ := json.Marshal(dto)
@@ -40,16 +33,16 @@ func (n *NetSystem) Update(dt float32) {
 	}
 }
 
-func (p *NetSystem) Remove(b ecs.BasicEntity) {
+func (n *NetSystem) Remove(b ecs.BasicEntity) {
 	var delete int = -1
-	for index, entity := range p.entities {
+	for index, entity := range n.entities {
 		if entity.ID() == b.ID() {
 			delete = index
 			break
 		}
 	}
 	if delete >= 0 {
-		//e := p.entities[delete]
-		p.entities = append(p.entities[:delete], p.entities[delete+1:]...)
+		//e := p.players[delete]
+		n.entities = append(n.entities[:delete], n.entities[delete+1:]...)
 	}
 }

@@ -11,11 +11,11 @@ import (
 
 const channelBufSize = 100
 
-var maxId uint = 0
+var maxId uint64 = 0
 
 // Chat client.
 type Client struct {
-	id     uint
+	id     uint64
 	ws     *websocket.Conn
 	server *Server
 	ch     chan *Message
@@ -101,7 +101,7 @@ func (c *Client) listenRead() {
 			//var msg Message
 			var msg string
 			err := websocket.Message.Receive(c.ws, &msg)
-			log.Printf("Error: %s", err)
+			log.Printf("Error Receiving: %s", err)
 			if err == io.EOF {
 				c.doneCh <- true
 			} else if err != nil {

@@ -15,14 +15,15 @@ type Message struct {
 
 // Chat server.
 type Server struct {
-	pattern string
-	clients map[uint]*Client
-	addCh   chan *Client
-	delCh   chan *Client
-	txCh    chan *Message
-	rxCh    chan *ClientMessage
-	doneCh  chan bool
-	errCh   chan error
+	pattern              string
+	clients              map[uint64]*Client
+	addCh                chan *Client
+	delCh                chan *Client
+	txCh                 chan *Message
+	rxCh                 chan *ClientMessage
+	doneCh               chan bool
+	errCh                chan error
+	clientConnectHandler ClientConnectHandler
 }
 
 type ClientMessage struct {
@@ -31,8 +32,8 @@ type ClientMessage struct {
 }
 
 // Create new chat server.
-func NewServer(pattern string) *Server {
-	clients := make(map[uint]*Client)
+func NewServer(pattern string, handler ClientConnectHandler) *Server {
+	clients := make(map[uint64]*Client)
 	addCh := make(chan *Client)
 	delCh := make(chan *Client)
 	txCh := make(chan *Message)
@@ -49,6 +50,7 @@ func NewServer(pattern string) *Server {
 		rxCh,
 		doneCh,
 		errCh,
+		handler,
 	}
 }
 
@@ -72,7 +74,7 @@ func (s *Server) Err(err error) {
 	s.errCh <- err
 }
 
-func (s *Server) Tx(clientId uint, msg *Message) {
+func (s *Server) Tx(clientId uint64, msg *Message) {
 	c, ok := s.clients[clientId]
 	if (!ok) {
 		errMsg := fmt.Sprintf("Client %d not found", clientId)
@@ -92,6 +94,8 @@ func (s *Server) sendAll(msg *Message) {
 	}
 }
 
+type ClientConnectHandler func(client *Client)
+
 // Listen and serve.
 // It serves client connection and broadcast request.
 func (s *Server) Listen() {
@@ -107,6 +111,8 @@ func (s *Server) Listen() {
 				s.errCh <- err
 			}
 		}()
+
+		// add player
 
 		client := NewClient(ws, s)
 		s.Add(client)
@@ -124,6 +130,7 @@ func (s *Server) Listen() {
 			log.Println("Added new client")
 			s.clients[c.id] = c
 			log.Println("Now", len(s.clients), "clients connected.")
+			s.clientConnectHandler(c)
 
 			// del a client
 		case c := <-s.delCh:
