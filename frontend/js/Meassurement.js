@@ -77,4 +77,12 @@ class Measurement {
 		}
 	}
 
+	getPixel() {
+		return this.pixel;
+	}
+
+	getMetres() {
+		return this.metres;
+	}
+
 }
