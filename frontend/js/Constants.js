@@ -7,7 +7,7 @@ var Constants = {
 	SHOW_FPS: true,
 	PIXEL_PER_METRE: 60,
 	BACKEND: {
-		URL: "ws://192.168.178.50:2000/echo"
+		URL: "ws://192.168.178.46:2000/echo"
 	},
 	INPUT_TICKRATE: 33 // Milliseconds between ticks
 

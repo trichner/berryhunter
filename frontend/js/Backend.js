@@ -29,6 +29,10 @@ const Backend = {
 			// }, 2500);
 		};
 
+		this.webSocket.onerror = function () {
+			console.log("WebSocket: Exploded");
+		};
+
 		this.webSocket.onmessage = this.receive.bind(this);
 
 		this.lastMessageReceivedTime = window.performance.now();
@@ -50,8 +54,13 @@ const Backend = {
 		let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
 		this.lastMessageReceivedTime = messageReceivedTime;
 
-
-		let messageObj = JSON.parse(event.data);
+		let messageObj;
+		try {
+			messageObj = JSON.parse(event.data);
+		} catch (e) {
+			console.error("Error while parsing message: " + event.data);
+			return;
+		}
 
 		switch (messageObj.type) {
 			case MessageType.OBJECT:
