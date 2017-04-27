@@ -4,14 +4,6 @@
 
 
 
-const Command = {
-	TOP: 'TOP',
-	BOTTOM: 'BOTTOM',
-	LEFT: 'LEFT',
-	RIGHT: 'RIGHT',
-	ACTION: 'ACTION',
-	ALT_ACTION: 'ALT_ACTION'
-};
 
 const UP_KEYS = [
 	'w'.charCodeAt(0),
@@ -56,56 +48,75 @@ function anyKeyIsPressed(keyList) {
 }
 
 class Controls {
-	constructor(character){
+	constructor(character) {
 		this.chararacter = character;
 		this.playerId = character.id;
+
+		this.clock = new Tock({
+			interval: Constants.INPUT_TICKRATE,
+			callback: function () {
+				let movement = {
+					x: 0,
+					y: 0
+				};
+
+				if (anyKeyIsPressed(UP_KEYS)) {
+					movement.y -= 1;
+				}
+				if (anyKeyIsPressed(DOWN_KEYS)) {
+					movement.y += 1;
+				}
+				if (anyKeyIsPressed(LEFT_KEYS)) {
+					movement.x -= 1;
+				}
+				if (anyKeyIsPressed(RIGHT_KEYS)) {
+					movement.x += 1;
+				}
+
+				let action = null;
+				if (anyKeyIsPressed(ACTION_KEYS)) {
+					// TODO: check action delay
+					this.chararacter.action();
+					action = {
+						// TODO aktives Item eintragen
+						item: "fist",
+						alt: false
+					};
+				}
+				if (anyKeyIsPressed(ALT_ACTION_KEYS)) {
+					// TODO: check action delay
+					this.chararacter.altAction();
+					action = {
+						// TODO aktives Item eintragen
+						item: "fist",
+						alt: true
+					};
+				}
+
+				if (
+					movement.x === 0 &&
+					movement.y === 0 &&
+					action === null) {
+					return;
+				}
+
+				this.chararacter.move(movement);
+
+				let input = {
+					"movement": movement,
+					"rotation": Math.PI * 1.5,
+					"action": action
+				};
+
+				Backend.sendInputTick(input);
+			}.bind(this)
+		});
+
+		this.clock.start();
 	}
 
 	update() {
-		if (anyKeyIsPressed(UP_KEYS)) {
-			this.chararacter.move(Command.TOP);
-			Backend.send({
-				playerId: this.playerId,
-				command: Command.TOP
-			});
-		}
-		if (anyKeyIsPressed(DOWN_KEYS)) {
-			this.chararacter.move(Command.BOTTOM);
-			Backend.send({
-				playerId: this.playerId,
-				command: Command.BOTTOM
-			});
-		}
-		if (anyKeyIsPressed(LEFT_KEYS)) {
-			this.chararacter.move(Command.LEFT);
-			Backend.send({
-				playerId: this.playerId,
-				command: Command.LEFT
-			});
-		}
-		if (anyKeyIsPressed(RIGHT_KEYS)) {
-			this.chararacter.move(Command.RIGHT);
-			Backend.send({
-				playerId: this.playerId,
-				command: Command.RIGHT
-			});
-		}
-		if (anyKeyIsPressed(ACTION_KEYS)) {
-			// TODO: check action delay
-			this.chararacter.action();
-			Backend.send({
-				playerId: this.playerId,
-				command: Command.ACTION
-			});
-		}
-		if (anyKeyIsPressed(ALT_ACTION_KEYS)) {
-			// TODO: check action delay
-			this.chararacter.altAction();
-			Backend.send({
-				playerId: this.playerId,
-				command: Command.ACTION
-			});
-		}
+
 		// TODO bei diagonaler Bewegung darf der Movementspeed nicht überschritten werden
 	}
 }

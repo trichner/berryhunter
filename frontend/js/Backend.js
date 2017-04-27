@@ -3,7 +3,8 @@
  */
 
 const MessageType = {
-	OBJECT: 'OBJECT'
+	OBJECT: 'OBJECT',
+	SNAPSHOT: 'SNAPSHOT'
 };
 
 const Backend = {
@@ -52,14 +53,32 @@ const Backend = {
 
 		let messageObj = JSON.parse(event.data);
 
-		switch(messageObj.type){
+		switch (messageObj.type) {
 			case MessageType.OBJECT:
 				gameMap.add(messageObj.body);
 				break;
+			case MessageType.SNAPSHOT:
+				this.receiveSnapshot(messageObj.body);
 		}
 
 		// if (messageObj.object !== 'ball') {
-			console.log(timeSinceLastMessage.toFixed(1) + "ms", messageObj);
+		console.log(timeSinceLastMessage.toFixed(1) + "ms", messageObj);
 		// }
+	},
+
+	receiveSnapshot: function (snapshot) {
+		this.lastServerTick = snapshot.tick;
+		console.log("Snapshot #" + this.lastServerTick);
+
+		// TODO render stuff
+
+	},
+
+	sendInputTick: function (inputObj) {
+		inputObj.tick = this.lastServerTick + 1;
+		this.send(inputObj);
+
+		console.log("input:", inputObj);
 	}
+
 };

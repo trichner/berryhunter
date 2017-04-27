@@ -69,21 +69,14 @@ class Character extends GameObject {
 		groups.character.remove(this.shape);
 	}
 
-	move(direction){
-		switch (direction) {
-			case Command.TOP:
-				this.shape.translation.y -= this.movementSpeed;
-				break;
-			case Command.BOTTOM:
-				this.shape.translation.y += this.movementSpeed;
-				break;
-			case Command.LEFT:
-				this.shape.translation.x -= this.movementSpeed;
-				break;
-			case Command.RIGHT:
-				this.shape.translation.x += this.movementSpeed;
-				break;
+	move(movement){
+		let moveVec = new Two.Vector().copy(movement);
+		if (moveVec.lengthSquared() === 0){
+			// No movement happened, cancel
+			return;
 		}
+
+		this.shape.translation.addSelf(moveVec.setLength(this.movementSpeed));
 	}
 
 	action(){
