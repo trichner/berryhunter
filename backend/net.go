@@ -8,7 +8,13 @@ import (
 
 type NetSystem struct {
 	entities []Entity
-	server   *Server
+	players  []*player
+	game     *Game
+}
+
+func NewNetSystem(g *Game) *NetSystem {
+	//TODO configure path/ports here
+	return &NetSystem{game: g}
 }
 
 func (n *NetSystem) Priority() int {
@@ -23,13 +29,42 @@ func (n *NetSystem) AddEntity(e Entity) {
 	n.entities = append(n.entities, e)
 }
 
+func (n *NetSystem) AddPlayer(p *player) {
+	n.AddEntity(p)
+	n.players = append(n.players, p)
+}
+
 func (n *NetSystem) Update(dt float32) {
 	log.Printf("Broadcasting %d players", len(n.entities))
+
+	var entites []*EntityDTO
 	for _, entity := range n.entities {
 
-		dto := mapToDTO(entity)
-		msgJson, _ := json.Marshal(dto)
-		n.server.Broadcast(&Message{string(msgJson)})
+		dto := mapToEntityDTO(entity)
+		entites = append(entites, dto)
+
+		//DEPRECATED
+		msg := &MessageDTO{"OBJECT", dto}
+		msgJson, _ := json.Marshal(msg)
+		n.game.server.Broadcast(&Message{string(msgJson)})
+	}
+
+	// assemble game state prototype
+	gameState := GameState{}
+	gameState.Tick = n.game.tick
+	gameState.Entities = entites
+	//TODO assemble to a 'GameState' object and send every player his state
+	for _, player := range n.players {
+		_ = player
+		//TODO
+		// - query BB for entities in view
+
+		// copy gameStatePrototype
+		clientGameState := gameState
+		clientGameState.ClientID = player.client.id
+		msg := &MessageDTO{"GAME_STATE", clientGameState}
+		msgJson, _ := json.Marshal(msg)
+		player.client.Tx(&Message{string(msgJson)})
 	}
 }
 

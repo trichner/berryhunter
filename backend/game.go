@@ -11,8 +11,6 @@ type Game struct {
 	ecs.World
 	server *Server
 	tick   uint64
-
-	inputSystem *InputSystem
 }
 
 func (g *Game) Init() {
@@ -33,12 +31,11 @@ func (g *Game) Init() {
 	p := newPhysicsSystem()
 	g.AddSystem(p)
 
-	n := newNetSystem(g.server)
+	n := NewNetSystem(g)
 	g.AddSystem(n)
 
 	i := NewInputSystem(g)
 	g.AddSystem(i)
-	g.inputSystem = i
 }
 
 func (g *Game) Run() {
@@ -87,7 +84,7 @@ func (g *Game) addPlayer(p *player) {
 		case *PhysicsSystem:
 			sys.AddBody(&p.BasicEntity, &p.body)
 		case *NetSystem:
-			sys.AddEntity(p)
+			sys.AddPlayer(p)
 			// Create a case for each System you want to use
 		case *InputSystem:
 			sys.AddPlayer(p)

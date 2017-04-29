@@ -54,11 +54,6 @@ func newPhysicsSystem() *PhysicsSystem {
 	return p
 }
 
-func newNetSystem(s *Server) *NetSystem {
-	//TODO configure path/ports here
-	return &NetSystem{server: s}
-}
-
 func newCircleEntity(x, y, r, m float32) entity {
 
 	// Create a ball

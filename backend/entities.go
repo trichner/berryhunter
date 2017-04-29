@@ -66,26 +66,24 @@ func (p *player) Type() string {
 }
 
 //---- DTO
-type EntityDTO struct {
-	Id   uint64  `json:"id"`
-	X    float32 `json:"x"`
-	Y    float32 `json:"y"`
-	Type string `json:"object"`
-}
-
 type MessageDTO struct {
 	Type string `json:"type"`
 	Data interface{} `json:"body"`
 }
 
-func mapToDTO(e Entity) *MessageDTO {
+func mapToEntityDTO(e Entity) *EntityDTO {
+
+	return &EntityDTO{
+		e.ID(),
+		e.X(),
+		e.Y(),
+		e.Type(),
+	}
+}
+
+func mapToMessageDTO(e Entity) *MessageDTO {
 	return &MessageDTO{
 		"OBJECT",
-		EntityDTO{
-			e.ID(),
-			e.X(),
-			e.Y(),
-			e.Type(),
-		},
+		mapToEntityDTO(e),
 	}
 }

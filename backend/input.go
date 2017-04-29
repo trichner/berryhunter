@@ -7,22 +7,13 @@ import (
 	"encoding/json"
 )
 
-/*
-   {
-   	"tick":1337,
-   	"movement":"TOP_RIGHT",
-   	"action":{
-  		"item":"FIST"
-   	}
-   }
- */
-
 const inputBuffererCount = 2
 
+//---- models for input
 type inputDTO struct {
 	Tick     *uint64 `json:"tick"`
 	Movement *movement `json:"movement"`
-	Rotation float32 `json:"rotation"`   // [0, 2*PI)
+	Rotation float32 `json:"rotation"` // [0, 2*PI)
 	Action   *action `json:"action"`
 }
 
@@ -39,6 +30,7 @@ type InputSystem struct {
 	players []*player
 	game    *Game
 
+	// currently two, one to read and one to fill
 	ibufs [inputBuffererCount]InputBufferer
 }
 
@@ -52,29 +44,38 @@ func (i *InputSystem) Priority() int {
 
 func (i *InputSystem) New(w *ecs.World) {
 
+	// initialize buffers
 	for idx := range i.ibufs {
-		i.ibufs[idx] = InputBufferer{make(map[uint64]inputDTO)}
+		i.ibufs[idx] = NewInputBufferer()
 	}
 
 	log.Println("InputSystem nominal")
-	go func() {
-		for {
-			select {
-			case msg := <-i.game.server.rxCh:
-				log.Printf("Received 1 message from %d", msg.client.id)
-				log.Printf("RX: %s", msg.body.body)
+	go i.readAndBufferInput()
+}
 
-				var input inputDTO
-				err := json.Unmarshal([]byte(msg.body.body), &input)
-				if err != nil {
-					log.Printf("Marshalling Error: %s", err)
-				} else {
-					log.Printf("RX Obj: %+v", input)
-					i.ibufs[(i.game.tick+1)%inputBuffererCount].inputs[msg.client.id] = input
-				}
+// Reads input from the servers inputqueue and puts it into the buffer
+func (i *InputSystem) readAndBufferInput() {
+
+	for {
+		select {
+		case msg := <-i.game.server.rxCh:
+			log.Printf("Received 1 message from %d", msg.client.id)
+			log.Printf("RX: %s", msg.body.body)
+
+			var input inputDTO
+			err := json.Unmarshal([]byte(msg.body.body), &input)
+			if err != nil {
+				log.Printf("Marshalling Error: %s", err)
+			} else {
+				log.Printf("RX Obj: %+v", input)
+				i.storeInput(msg.client.id, input)
 			}
 		}
-	}()
+	}
+}
+
+func (i *InputSystem) storeInput(clientId uint64, input inputDTO) {
+	i.ibufs[(i.game.tick+1)%inputBuffererCount].inputs[clientId] = input
 }
 
 func (i *InputSystem) AddPlayer(p *player) {
@@ -85,21 +86,32 @@ func (i *InputSystem) Update(dt float32) {
 
 	// freeze input
 	ibuf := i.ibufs[i.game.tick%inputBuffererCount]
+
+	// apply inputs to player
 	for _, p := range i.players {
-
-		inputs, ok := ibuf.inputs[p.client.id]
-		if (!ok) || inputs.Movement == nil {
-			p.body.SetVelocity(0, 0)
-			continue
-		}
-
-		v := vect.Vect{X: vect.Float(inputs.Movement.X), Y: vect.Float(inputs.Movement.Y)}
-		v.Normalize()
-		v.Mult(100.0)
-		p.body.SetVelocity(float32(v.X), float32(v.Y))
+		inputs, _ := ibuf.inputs[p.client.id]
+		i.UpdatePlayer(p, &inputs)
 	}
+
 	// clear out buffer
-	i.ibufs[i.game.tick%inputBuffererCount] = InputBufferer{make(map[uint64]inputDTO)}
+	i.ibufs[i.game.tick%inputBuffererCount] = NewInputBufferer()
+}
+
+// applies the inputs to a player
+func (i *InputSystem) UpdatePlayer(p *player, inputs *inputDTO) {
+
+	// do we even have inputs?
+	if inputs == nil || inputs.Movement == nil {
+		p.body.SetVelocity(0, 0)
+		return
+	}
+
+	x := signumf32(inputs.Movement.X)
+	y := signumf32(inputs.Movement.Y)
+	v := vect.Vect{X: vect.Float(x), Y: vect.Float(y)}
+	v.Normalize()
+	v.Mult(100.0)
+	p.body.SetVelocity(float32(v.X), float32(v.Y))
 }
 
 func (i *InputSystem) Remove(b ecs.BasicEntity) {
