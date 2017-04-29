@@ -20,19 +20,19 @@ import (
 const inputBuffererCount = 2
 
 type inputDTO struct {
-	tick     uint64 `json:"tick"`
-	movement movement `json:"movement"` // BOTTOM BOTTOM_LEFT BOTTOM_RIGHT
-	rotation float32 `json:"rotation"`  // [0, 2*PI)
-	action   action `json:"action"`
+	Tick     *uint64 `json:"tick"`
+	Movement *movement `json:"movement"`
+	Rotation float32 `json:"rotation"`   // [0, 2*PI)
+	Action   *action `json:"action"`
 }
 
 type movement struct {
-	x float32 `json:"x"`
-	y float32 `json:"y"`
+	X float32 `json:"x"`
+	Y float32 `json:"y"`
 }
 
 type action struct {
-	item string `json:"item"`
+	Item string `json:"item"`
 }
 
 type InputSystem struct {
@@ -62,12 +62,14 @@ func (i *InputSystem) New(w *ecs.World) {
 			select {
 			case msg := <-i.game.server.rxCh:
 				log.Printf("Received 1 message from %d", msg.client.id)
+				log.Printf("RX: %s", msg.body.body)
 
 				var input inputDTO
 				err := json.Unmarshal([]byte(msg.body.body), &input)
 				if err != nil {
 					log.Printf("Marshalling Error: %s", err)
 				} else {
+					log.Printf("RX Obj: %+v", input)
 					i.ibufs[(i.game.tick+1)%inputBuffererCount].inputs[msg.client.id] = input
 				}
 			}
@@ -86,17 +88,18 @@ func (i *InputSystem) Update(dt float32) {
 	for _, p := range i.players {
 
 		inputs, ok := ibuf.inputs[p.client.id]
-		if (!ok) {
+		if (!ok) || inputs.Movement == nil {
 			p.body.SetVelocity(0, 0)
 			continue
 		}
 
-		v := vect.Vect{X: vect.Float(inputs.movement.x), Y: vect.Float(inputs.movement.y)}
+		v := vect.Vect{X: vect.Float(inputs.Movement.X), Y: vect.Float(inputs.Movement.Y)}
 		v.Normalize()
-		v.Mult(10.0)
+		v.Mult(100.0)
 		p.body.SetVelocity(float32(v.X), float32(v.Y))
 	}
-
+	// clear out buffer
+	i.ibufs[i.game.tick%inputBuffererCount] = InputBufferer{make(map[uint64]inputDTO)}
 }
 
 func (i *InputSystem) Remove(b ecs.BasicEntity) {
