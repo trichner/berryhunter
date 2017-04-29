@@ -50,10 +50,10 @@ func (n *NetSystem) Update(dt float32) {
 	}
 
 	// assemble game state prototype
-	gameState := GameState{}
+	gameState := GameStateDTO{}
 	gameState.Tick = n.game.tick
 	gameState.Entities = entites
-	//TODO assemble to a 'GameState' object and send every player his state
+	//TODO assemble to a 'GameStateDTO' object and send every player his state
 	for _, player := range n.players {
 		_ = player
 		//TODO

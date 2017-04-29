@@ -1,0 +1,28 @@
+{
+  "type": "GAME_STATE",
+  "body": {
+    "tick": 1112,
+    "client_id": 1,
+    "player_id": 0,
+    "entities": [
+      {
+        "id": 1,
+        "x": 100,
+        "y": 100,
+        "object": "RoundTree"
+      },
+      {
+        "id": 2,
+        "x": 90,
+        "y": 100,
+        "object": "RoundTree"
+      },
+      {
+        "id": 3,
+        "x": -77.27292,
+        "y": -45.40531,
+        "object": "Rabbit"
+      }
+    ]
+  }
+}

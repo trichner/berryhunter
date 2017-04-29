@@ -14,7 +14,7 @@ type PlayerDTO struct {
 	Type string `json:"object"`
 }
 
-type GameState struct {
+type GameStateDTO struct {
 	Tick     uint64 `json:"tick"`
 	ClientID uint64 `json:"client_id"`
 	PlayerID uint64 `json:"player_id"`
