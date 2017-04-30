@@ -17,4 +17,4 @@ go get
 go build
 
 # Start backend
-screen -dmS backend backend
+screen -dmS backend ./backend
