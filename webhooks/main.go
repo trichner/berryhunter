@@ -26,9 +26,10 @@ func handleEvent(conf *Config, event *hookserve.Event) {
 	if contains(conf.Branches, event.Branch) {
 		log.Println("Branch matches! Doing magic.")
 		cmd := conf.Command
-		err := exec.Command(cmd).Run()
+		out, err := exec.Command(cmd).CombinedOutput()
 		if err != nil {
 			log.Printf("Command '%s' failed: %v", conf.Command, err)
+			log.Println(string(out))
 		} else {
 			log.Printf("Successfully executed '%s'", cmd)
 		}
