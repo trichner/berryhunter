@@ -13,6 +13,7 @@ git pull
 # Rebuild backend binary
 pushd ./backend/
 
+go get
 go build
 
 # Start backend
