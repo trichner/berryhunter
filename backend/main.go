@@ -38,10 +38,11 @@ func main() {
 func readConf() *conf.Config {
 
 	configFile := "./conf.json"
-	_, err := conf.ReadConfig(configFile)
+	config, err := conf.ReadConfig(configFile)
 	if err != nil {
 		log.Panicf("Cannot read config '%s':%v", configFile, err)
 	}
+	return config
 }
 
 func newPhysicsSystem() *PhysicsSystem {
