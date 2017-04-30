@@ -7,7 +7,7 @@ var Constants = {
 	SHOW_FPS: true,
 	PIXEL_PER_METRE: 60,
 	BACKEND: {
-		URL: "ws://localhost:2000/echo"
+		URL: "wss://k42.ch/death-io/game"
 	},
 	INPUT_TICKRATE: 33 // Milliseconds between ticks
 
