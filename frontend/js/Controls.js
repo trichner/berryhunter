@@ -41,6 +41,11 @@ const ALT_ACTION_KEYS = [
 	16 // Shift
 ];
 
+const PAUSE_KEYS = [
+	'p'.charCodeAt(0),
+	'P'.charCodeAt(0)
+];
+
 function anyKeyIsPressed(keyList) {
 	return keyList.some(function (keyCode) {
 		return KeyEvents.keyIsDown(keyCode);
@@ -97,6 +102,7 @@ class Controls {
 					movement.x === 0 &&
 					movement.y === 0 &&
 					action === null) {
+					this.chararacter.stopMovement();
 					return;
 				}
 
@@ -116,7 +122,13 @@ class Controls {
 	}
 
 	update() {
-
+		if (anyKeyIsPressed(PAUSE_KEYS)){
+			if (two.playing){
+				two.pause();
+			} else {
+				two.play();
+			}
+		}
 		// TODO bei diagonaler Bewegung darf der Movementspeed nicht überschritten werden
 	}
 }

@@ -71,6 +71,8 @@ class RoundTree extends Tree {
 		shape.stroke = 'darkgreen';
 		shape.linewidth = 2;
 
+		physics.registerStatic(x, y, this.diameter);
+
 		return shape;
 	}
 }
@@ -101,6 +103,8 @@ class MarioTree extends Tree {
 		ellipse.fill = 'green';
 		ellipse.noStroke();
 
+		physics.registerStatic(x, y, this.diameter * 2);
+
 		return shape;
 	}
 }
@@ -117,6 +121,8 @@ class Stone extends GameObject {
 		shape.stroke = 'dimgray';
 		shape.linewidth = 2;
 		shape.rotation = random(0, Math.PI * 2);
+
+		physics.registerStatic(x, y, this.diameter);
 
 		return shape;
 	}
@@ -148,6 +154,8 @@ class Gold extends GameObject {
 		shape.stroke = 'goldenrod';
 		shape.linewidth = 2;
 		shape.rotation = random(0, Math.PI * 2);
+
+		physics.registerStatic(x, y, this.diameter);
 
 		return shape;
 	}

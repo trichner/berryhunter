@@ -11,6 +11,12 @@ var groups = {};
 
 var width;
 var height;
+
+/**
+ * @type Physics
+ */
+var physics;
+
 /**
  * @type Character
  */
@@ -42,6 +48,8 @@ class Character extends GameObject {
 		this.controls = new Controls(this);
 
 		two.bind('update', this.controls.update.bind(this.controls));
+
+		this.isMoving = false;
 	}
 
 	createShape(x, y) {
@@ -49,6 +57,9 @@ class Character extends GameObject {
 		shape.fill = 'rgb(128, 98, 64)';
 		shape.stroke = 'rgb(255, 196, 128)';
 		shape.linewidth = 2;
+
+		this.body = physics.registerDynamic(x, y, 30);
+		this.body.twoShape = shape;
 
 		return shape;
 	}
@@ -69,21 +80,42 @@ class Character extends GameObject {
 		groups.character.remove(this.shape);
 	}
 
-	move(movement){
-		let moveVec = new Two.Vector().copy(movement);
-		if (moveVec.lengthSquared() === 0){
-			// No movement happened, cancel
-			return;
+	stopMovement() {
+		if (this.isMoving){
+			// this.body.setLinearVelocity(new planck.Vec2());
+			this.isMoving = false;
 		}
-
-		this.shape.translation.addSelf(moveVec.setLength(this.movementSpeed));
 	}
 
-	action(){
+	move(movement) {
+		let moveVec = new Two.Vector().copy(movement);
+		// if (moveVec.lengthSquared() === 0) {
+		// 	// No movement happened, cancel
+		// 	return;
+		// }
+
+		moveVec.setLength(this.movementSpeed);
+
+
+		// this.body.setLinearVelocity(
+		// 	// this.body.getLinearVelocity().add(Measurement.vec2meters(moveVec))
+		// 	Measurement.vec2meters(moveVec)
+		// );
+
+		this.body.setPosition(
+			this.body.getPosition().add(Measurement.vec2meters(moveVec))
+		);
+
+		this.isMoving = true;
+
+		// this.shape.translation.addSelf(moveVec.setLength(this.movementSpeed));
+	}
+
+	action() {
 		console.info("Action by Player " + this.id);
 	}
 
-	altAction(){
+	altAction() {
 		console.info("Alt Action by Player " + this.id);
 	}
 }
@@ -127,6 +159,8 @@ function setup() {
 	width = two.width;
 	height = two.height;
 
+	physics = new Physics(width, height);
+
 	groups.background = two.makeGroup();
 	groups.character = two.makeGroup();
 	groups.mapBorders = two.makeGroup();
@@ -147,20 +181,20 @@ function setup() {
 	var domElement = two.renderer.domElement;
 	KeyEvents.init(domElement);
 
-	domElement.addEventListener('pointerup', function (event) {
-		console.log("pointerup", event);
-	});
-	domElement.addEventListener('pointerdown', function (event) {
-		console.log("pointerdown", event);
-	});
+	// domElement.addEventListener('pointerup', function (event) {
+	// 	console.log("pointerup", event);
+	// });
+	// domElement.addEventListener('pointerdown', function (event) {
+	// 	console.log("pointerdown", event);
+	// });
 
 
-	domElement.addEventListener('blur', function () {
-		two.pause();
-	});
-	domElement.addEventListener('focus', function () {
-		two.play();
-	});
+	// domElement.addEventListener('blur', function () {
+	// 	two.pause();
+	// });
+	// domElement.addEventListener('focus', function () {
+	// 	two.play();
+	// });
 
 
 	/*

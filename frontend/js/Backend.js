@@ -87,7 +87,7 @@ const Backend = {
 		inputObj.tick = this.lastServerTick + 1;
 		this.send(inputObj);
 
-		console.log("input:", inputObj);
+		// console.log("input:", inputObj);
 	}
 
 };

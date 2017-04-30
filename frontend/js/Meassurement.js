@@ -85,4 +85,24 @@ class Measurement {
 		return this.metres;
 	}
 
+	static pixel2meters(pixel){
+		return pixel / Constants.PIXEL_PER_METRE;
+	}
+
+	static meters2pixel(meters){
+		return meters * Constants.PIXEL_PER_METRE;
+	}
+
+	static vec2meters(vec){
+		vec.x /= Constants.PIXEL_PER_METRE;
+		vec.y /= Constants.PIXEL_PER_METRE;
+		return vec;
+	}
+
+	static vec2pixel(vec){
+		vec.x *= Constants.PIXEL_PER_METRE;
+		vec.y *= Constants.PIXEL_PER_METRE;
+		return vec;
+	}
+
 }

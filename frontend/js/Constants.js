@@ -1,7 +1,7 @@
 "use strict";
 
 var Constants = {
-	BASE_MOVEMENT_SPEED: 10,
+	BASE_MOVEMENT_SPEED: 1,
 	GRID_SPACING: 100,
 	FIELDS_IN_QUADRANT: 8,
 	SHOW_FPS: true,
