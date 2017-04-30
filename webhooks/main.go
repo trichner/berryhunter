@@ -2,7 +2,6 @@ package main
 
 import "github.com/phayes/hookserve/hookserve"
 import (
-	"time"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -57,13 +56,8 @@ func main() {
 	}
 	log.Println(" ---- ")
 
-	for {
-		select {
-		case event := <-server.Events:
-			handleEvent(conf, &event)
-		default:
-			time.Sleep(100)
-		}
+	for event := range server.Events {
+		handleEvent(conf, &event)
 	}
 }
 
