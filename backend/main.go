@@ -2,6 +2,7 @@ package main
 
 import (
 	"engo.io/ecs"
+	"github.com/trichner/death-io/backend/conf"
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"log"
@@ -10,9 +11,10 @@ import (
 
 func main() {
 
-	g := &Game{World: ecs.World{}}
+	config := readConf()
 
-	g.Init()
+	g := &Game{}
+	g.Init(config)
 
 	//---- add a ball
 	circleEntity := newCircleEntity(100, 100, 10, 1)
@@ -30,6 +32,15 @@ func main() {
 	for {
 		g.Update()
 		<-ticker.C
+	}
+}
+
+func readConf() *conf.Config {
+
+	configFile := "./conf.json"
+	_, err := conf.ReadConfig(configFile)
+	if err != nil {
+		log.Panicf("Cannot read config '%s':%v", configFile, err)
 	}
 }
 

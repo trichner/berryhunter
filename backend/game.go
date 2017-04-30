@@ -5,17 +5,21 @@ import (
 	"fmt"
 	"net/http"
 	"sync/atomic"
+	"github.com/trichner/death-io/backend/conf"
 )
 
 type Game struct {
 	ecs.World
 	server *Server
 	tick   uint64
+	conf   *conf.Config
 }
 
-func (g *Game) Init() {
+func (g *Game) Init(conf *conf.Config) {
 
-	g.server = NewServer("/echo", func(c *Client) {
+	g.conf = conf
+
+	g.server = NewServer(conf.Path, func(c *Client) {
 
 		player := &player{
 			client: c,
@@ -50,7 +54,9 @@ func (g *Game) Run() {
 			}
 		}
 	}()
-	go http.ListenAndServe(":2000", nil)
+
+	addr := fmt.Sprintf(":%d", g.conf.Port)
+	go http.ListenAndServe(addr, nil)
 }
 
 func (g *Game) addEntity(e *entity) {
@@ -97,5 +103,6 @@ func (g *Game) Update() {
 	// fixed 33ms steps
 	g.World.Update(33.0 / 1000.0)
 
+	// needs to be atomic to prevent race conditions
 	atomic.AddUint64(&g.tick, 1)
 }
