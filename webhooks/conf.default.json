@@ -4,5 +4,6 @@
     "master"
   ],
   "path": "hook",
-  "secret": "verysecret"
+  "secret": "verysecret",
+  "command": "date"
 }

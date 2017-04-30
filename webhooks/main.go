@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"os/exec"
 )
 
 const configFilename = "./conf.json"
@@ -15,16 +16,23 @@ type Config struct {
 	Secret   string `json:"secret"`
 	Path     string `json:"path"`
 	Branches []string `json:"branches"`
+	Command  string `json:"command"`
 }
 
 func handleEvent(conf *Config, event *hookserve.Event) {
 
-	log.Printf("Processing %6s on branch %s from %s/%s", event.Commit, event.Branch, event.Owner, event.Repo)
+	log.Printf("Processing %.7s on branch %s from %s/%s", event.Commit, event.Branch, event.Owner, event.Repo)
 
 	if contains(conf.Branches, event.Branch) {
 		log.Println("Branch matches! Doing magic.")
+		cmd := conf.Command
+		err := exec.Command(cmd).Run()
+		if err != nil {
+			log.Printf("Command '%s' failed: %v", conf.Command, err)
+		} else {
+			log.Printf("Successfully executed '%s'", cmd)
+		}
 	}
-
 }
 
 func main() {
