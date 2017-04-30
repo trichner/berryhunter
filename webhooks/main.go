@@ -41,7 +41,7 @@ func main() {
 	server.Secret = conf.Secret
 
 	server.GoListenAndServe()
-	log.Printf("Server listening on :%d/%s", server.Port, server.Path)
+	log.Printf("Server listening on :%d%s", server.Port, server.Path)
 	log.Printf("Filtering for %d branches:", len(conf.Branches))
 	for _, b := range conf.Branches {
 		log.Printf("> " + b)
