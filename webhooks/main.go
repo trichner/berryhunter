@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os/exec"
+	"time"
 )
 
 const configFilename = "./conf.json"
@@ -56,8 +57,13 @@ func main() {
 	}
 	log.Println(" ---- ")
 
-	for event := range server.Events {
-		handleEvent(conf, &event)
+	for {
+		select {
+		case event := <-server.Events:
+			handleEvent(conf, &event)
+		default:
+			time.Sleep(time.Millisecond * 100)
+		}
 	}
 }
 
