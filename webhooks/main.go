@@ -1,12 +1,12 @@
 package main
 
-import "github.com/phayes/hookserve/hookserve"
 import (
-	"encoding/json"
+	"time"
 	"io/ioutil"
+	"encoding/json"
 	"log"
 	"os/exec"
-	"time"
+	"github.com/trichner/hookserve/hookserve"
 )
 
 const configFilename = "./conf.json"
