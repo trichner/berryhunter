@@ -1,13 +1,38 @@
 "use strict";
 
 class GameObject {
-	constructor(x, y) {
+	constructor(x, y, size, rotation) {
+		this.size = size || Constants.GRID_SPACING / 2;
+		this.rotation = rotation || 0;
+
 		var args = Array.prototype.splice.call(arguments, 2);
 		this.shape = this.createShape.apply(this, [x, y].concat(args));
+
+		if (this.constructor.svg) {
+			let callback = function () {
+				console.log("Append custom SVG");
+				this.injectionGroup._renderer.elem.appendChild(this.constructor.svg.cloneNode(true));
+				two.unbind('render', callback);
+			}.bind(this);
+			two.bind('render', callback);
+		}
+
 		this.show();
 	}
 
 	createShape(x, y) {
+		if (this.constructor.svg) {
+			let group = new Two.Group();
+			group.translation.set(x, y);
+			// group.translation.set(x-this.size, y-this.size);
+			this.injectionGroup = new Two.Group();
+			group.add(this.injectionGroup);
+			this.injectionGroup.scale = (this.size / (Constants.GRID_SPACING / 2));
+			// this.injectionGroup.rotation = this.rotation;
+			this.injectionGroup.translation.set(-this.size, -this.size);
+			return group;
+		}
+
 		console.error('createShape not implemented for ' + this.constructor.name);
 	}
 
@@ -111,21 +136,24 @@ class MarioTree extends Tree {
 
 class Stone extends GameObject {
 	constructor(x, y) {
-		super(x, y)
+		super(x, y,
+			randomInt(30, 90),
+			random(0, Math.PI * 2)
+		);
 	}
 
-	createShape(x, y) {
-		this.diameter = randomInt(30, 90);
-		let shape = new Two.Polygon(x, y, this.diameter, 6);
-		shape.fill = 'darkgray';
-		shape.stroke = 'dimgray';
-		shape.linewidth = 2;
-		shape.rotation = random(0, Math.PI * 2);
-
-		// physics.registerStatic(x, y, this.diameter);
-
-		return shape;
-	}
+	// createShape(x, y) {
+	// 	this.diameter = randomInt(30, 90);
+	// 	let shape = new Two.Polygon(x, y, this.diameter, 6);
+	// 	shape.fill = 'darkgray';
+	// 	shape.stroke = 'dimgray';
+	// 	shape.linewidth = 2;
+	// 	shape.rotation = random(0, Math.PI * 2);
+	//
+	// 	// physics.registerStatic(x, y, this.diameter);
+	//
+	// 	return shape;
+	// }
 
 	// TODO size modificator
 	createMinimapIcon(x, y, sizeFactor) {
@@ -136,6 +164,8 @@ class Stone extends GameObject {
 		return shape;
 	}
 }
+
+registerGameObjectSVG(Stone, 'img/flintStone.svg');
 
 class Gold extends GameObject {
 	constructor(x, y) {

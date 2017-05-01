@@ -4,6 +4,10 @@ class Animal extends GameObject {
 	constructor(x, y) {
 		super(x, y)
 	}
+
+	visibleOnMinimap() {
+		return false;
+	}
 }
 
 class Rabbit extends Animal {
@@ -69,36 +73,12 @@ class Rabbit extends Animal {
 
 		return group;
 	}
-
-	visibleOnMinimap() {
-		return false;
-	}
 }
 
 class SabreToothTiger extends Animal {
 
 	constructor(x, y) {
 		super(x, y);
-
-		let callback = function () {
-			console.log("Append custom SVG");
-			this.injectionGroup._renderer.elem.appendChild(SabreToothTiger.svg.cloneNode(true));
-			two.unbind('render', callback);
-		}.bind(this);
-		two.bind('render', callback);
-	}
-
-	createShape(x, y){
-		let group = new Two.Group();
-		group.translation.set(x, y);
-		this.injectionGroup = new Two.Group();
-		group.add(this.injectionGroup);
-		this.injectionGroup.translation.set(-50, -50);
-		return group;
-	}
-
-	visibleOnMinimap() {
-		return false;
 	}
 }
 
