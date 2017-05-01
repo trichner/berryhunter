@@ -75,11 +75,17 @@ func newCircleEntity(x, y, r, m float32) entity {
 	ball.SetElasticity(0.95)
 
 	// Create a body for the ball
-	body := chipmunk.NewBody(vect.Float(m), ball.Moment(m))
+	body := newBody(m, ball)
 	body.SetPosition(vect.Vect{vect.Float(x), vect.Float(y)})
-	//`body.SetAngle(vect.Float(rand.Float32() * 2 * math.Pi))
-	body.AddShape(ball)
+	//body.SetAngle(vect.Float(rand.Float32() * 2 * math.Pi))
 
 	ballEntity.body = *body
 	return ballEntity
 }
+
+func newBody(mass float32, shape *chipmunk.Shape) *chipmunk.Body {
+	body := chipmunk.NewBody(vect.Float(mass), shape.Moment(mass))
+	body.AddShape(shape)
+	return body
+}
+

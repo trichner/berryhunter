@@ -1,4 +1,4 @@
 {
   "port": 2000,
-  "path": "/echo"
+  "path": "/game"
 }
