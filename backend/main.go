@@ -27,7 +27,7 @@ func main() {
 
 	//---- run game loop
 	log.Printf("Starting loop")
-	tickrate := time.Millisecond * 33
+	tickrate := time.Millisecond * 50
 	ticker := time.NewTicker(tickrate)
 	for {
 		g.Update()

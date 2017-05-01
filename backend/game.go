@@ -40,16 +40,8 @@ func (g *Game) Init(conf *conf.Config) {
 
 func (g *Game) Run() {
 
+	// unnecessary
 	go g.server.Listen()
-	go func() {
-
-		for {
-			select {
-			case err := <-g.server.errCh:
-				fmt.Errorf("Err: %s", err)
-			}
-		}
-	}()
 
 	addr := fmt.Sprintf(":%d", g.conf.Port)
 	go http.ListenAndServe(addr, nil)
@@ -93,7 +85,7 @@ func (g *Game) addPlayer(p *player) {
 func (g *Game) Update() {
 
 	// fixed 33ms steps
-	g.World.Update(33.0 / 1000.0)
+	g.World.Update(50.0 / 1000.0)
 
 	// needs to be atomic to prevent race conditions
 	atomic.AddUint64(&g.tick, 1)

@@ -2,11 +2,11 @@ package main
 
 
 import (
-"fmt"
-"io"
+	"io"
 "log"
 
 "golang.org/x/net/websocket"
+	"errors"
 )
 
 const channelBufSize = 100
@@ -17,99 +17,92 @@ var maxId uint64 = 0
 type Client struct {
 	id     uint64
 	ws     *websocket.Conn
-	server *Server
-	ch     chan *Message
+	txCh   chan *Message
+	rxCh   chan<- *ClientMessage
 	doneCh chan bool
+	rxCb   func() (c *Client, m *Message)
 }
 
-// Create new chat client.
-func NewClient(ws *websocket.Conn, server *Server) *Client {
+// Create new chat client. Not threadsafe.
+func NewClient(ws *websocket.Conn, rxCh chan<- *ClientMessage) *Client {
 
 	if ws == nil {
 		panic("ws cannot be nil")
 	}
 
-	if server == nil {
-		panic("server cannot be nil")
-	}
-
 	maxId++
-	ch := make(chan *Message, channelBufSize)
-	doneCh := make(chan bool)
+	//rxCh := make(chan *Message, channelBufSize)
+	txCh := make(chan *Message, channelBufSize)
+	doneCh := make(chan bool, channelBufSize)
 
-	return &Client{maxId, ws, server, ch, doneCh}
+	return &Client{id: maxId, ws: ws, rxCh: rxCh, txCh: txCh, doneCh: doneCh}
 }
 
-func (c *Client) Conn() *websocket.Conn {
-	return c.ws
-}
+func (c *Client) Tx(msg *Message) error {
 
-func (c *Client) Tx(msg *Message) {
-	select {
-	case c.ch <- msg:
-	default:
-		c.server.Del(c)
-		err := fmt.Errorf("client %d is disconnected.", c.id)
-		c.server.Err(err)
+	if c.isDone() {
+		return errors.New("Client already disconnected.")
 	}
+	c.txCh <- msg
+	return nil
 }
 
-func (c *Client) Done() {
+func (c *Client) isDone() bool {
+	select {
+	case <-c.doneCh:
+		return true
+	default:
+	}
+
+	return false
+}
+
+func (c *Client) Close(msg *Message) {
 	c.doneCh <- true
+	c.ws.Close()
 }
 
 // Listen Write and Read request via chanel
 func (c *Client) Listen() {
-	go c.listenWrite()
-	c.listenRead()
-}
 
-// Listen write request via chanel
-func (c *Client) listenWrite() {
-	log.Println("Listening write to client")
-	for {
-		select {
+	// tx goroutine
+	go func() {
+		for {
+			if c.isDone() {
+				// clean up sender
+				close(c.txCh)
+				return
+			}
 
-		// send message to the client
-		case msg := <-c.ch:
-			log.Println("Send:", msg)
-			websocket.Message.Send(c.ws, msg.body)
-
-			// receive done request
-		case <-c.doneCh:
-			c.server.Del(c)
-			c.doneCh <- true // for listenRead method
-			return
+			select {
+			// send message to the client
+			case msg := <-c.txCh:
+				log.Println("Send:", msg)
+				websocket.Message.Send(c.ws, msg.body)
+			default:
+			}
 		}
-	}
-}
+	}()
 
-// Listen read request via chanel
-func (c *Client) listenRead() {
-	log.Println("Listening read from client")
-	for {
-		select {
-
-		// receive done request
-		case <-c.doneCh:
-			c.server.Del(c)
-			c.doneCh <- true // for listenWrite method
-			return
-
-			// read data from websocket connection
-		default:
+	// rx goroutine
+	go func() {
+		for {
+			if c.isDone() {
+				// clean up receiver
+				return
+			}
 			//var msg Message
 			var msg string
 			err := websocket.Message.Receive(c.ws, &msg)
-			log.Printf("Error Receiving: %s", err)
 			if err == io.EOF {
-				c.doneCh <- true
+				close(c.doneCh)
 			} else if err != nil {
-				c.server.Err(err)
+				log.Println(err)
 			} else {
-				cmsg := &ClientMessage{c,&Message{msg}}
-				c.server.Rx(cmsg)
+				c.rxCh <- &ClientMessage{client: c, body: &Message{msg}}
 			}
 		}
-	}
+	}()
 }
+
+
