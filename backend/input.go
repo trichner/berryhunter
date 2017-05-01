@@ -111,8 +111,8 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs *inputDTO) {
 	v := vect.Vect{X: vect.Float(x), Y: vect.Float(y)}
 	v.Normalize()
 	v.Mult(100.0)
-	//p.body.SetVelocity(float32(v.X), float32(v.Y))
-	p.body.SetForce(float32(v.X), float32(v.Y))
+	p.body.SetVelocity(float32(v.X), float32(v.Y))
+	//p.body.SetForce(float32(v.X), float32(v.Y))
 }
 
 func (i *InputSystem) Remove(b ecs.BasicEntity) {

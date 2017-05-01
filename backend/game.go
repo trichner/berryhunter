@@ -6,11 +6,13 @@ import (
 	"net/http"
 	"sync/atomic"
 	"github.com/trichner/death-io/backend/conf"
+	"github.com/vova616/chipmunk"
 )
 
 type Game struct {
 	ecs.World
 	server *Server
+	space *chipmunk.Space
 	tick   uint64
 	conf   *conf.Config
 }
