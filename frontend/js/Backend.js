@@ -84,7 +84,7 @@ const Backend = {
 
 	receiveSnapshot: function (snapshot) {
 		this.lastServerTick = snapshot.tick;
-		console.log("Snapshot #" + this.lastServerTick);
+		// console.log("Snapshot #" + this.lastServerTick);
 
 		snapshot.entities.forEach(function (entity) {
 			gameMap.addOrUpdate(entity);

@@ -2,9 +2,6 @@
  * Created by raoulzander on 25.04.17.
  */
 
-
-
-
 const UP_KEYS = [
 	'w'.charCodeAt(0),
 	'W'.charCodeAt(0),
