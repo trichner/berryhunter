@@ -58,8 +58,8 @@ class Character extends GameObject {
 		shape.stroke = 'rgb(255, 196, 128)';
 		shape.linewidth = 2;
 
-		this.body = physics.registerDynamic(x, y, 30);
-		this.body.twoShape = shape;
+		// this.body = physics.registerDynamic(x, y, 30);
+		// this.body.twoShape = shape;
 
 		return shape;
 	}
@@ -81,10 +81,10 @@ class Character extends GameObject {
 	}
 
 	stopMovement() {
-		if (this.isMoving){
-			// this.body.setLinearVelocity(new planck.Vec2());
-			this.isMoving = false;
-		}
+		// if (this.isMoving){
+		// 	// this.body.setLinearVelocity(new planck.Vec2());
+		// 	this.isMoving = false;
+		// }
 	}
 
 	move(movement) {
@@ -97,18 +97,18 @@ class Character extends GameObject {
 		moveVec.setLength(this.movementSpeed);
 
 
-		// this.body.setLinearVelocity(
-		// 	// this.body.getLinearVelocity().add(Measurement.vec2meters(moveVec))
-		// 	Measurement.vec2meters(moveVec)
+		// // this.body.setLinearVelocity(
+		// // 	// this.body.getLinearVelocity().add(Measurement.vec2meters(moveVec))
+		// // 	Measurement.vec2meters(moveVec)
+		// // );
+		//
+		// this.body.setPosition(
+		// 	this.body.getPosition().add(Measurement.vec2meters(moveVec))
 		// );
+		//
+		// this.isMoving = true;
 
-		this.body.setPosition(
-			this.body.getPosition().add(Measurement.vec2meters(moveVec))
-		);
-
-		this.isMoving = true;
-
-		// this.shape.translation.addSelf(moveVec.setLength(this.movementSpeed));
+		this.shape.translation.addSelf(moveVec.setLength(this.movementSpeed));
 	}
 
 	action() {
@@ -159,7 +159,7 @@ function setup() {
 	width = two.width;
 	height = two.height;
 
-	physics = new Physics(width, height);
+	// physics = new Physics(width, height);
 
 	groups.background = two.makeGroup();
 	groups.character = two.makeGroup();
@@ -189,12 +189,12 @@ function setup() {
 	// });
 
 
-	// domElement.addEventListener('blur', function () {
-	// 	two.pause();
-	// });
-	// domElement.addEventListener('focus', function () {
-	// 	two.play();
-	// });
+	domElement.addEventListener('blur', function () {
+		two.pause();
+	});
+	domElement.addEventListener('focus', function () {
+		two.play();
+	});
 
 
 	/*

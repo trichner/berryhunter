@@ -29,24 +29,6 @@ function GameMap() {
 	// console.log(this.objects.length + ' objects generated');
 }
 
-function executeRandomFunction(weightedFunctions) {
-	let weightTotal = 0;
-
-	weightedFunctions.forEach(function (weightedFunction) {
-		weightTotal += weightedFunction.weight;
-	});
-
-	// http://stackoverflow.com/a/9330493
-	var index = randomInt(weightTotal) + 1;
-	var sum = 0;
-	var i = 0;
-	while (sum < index) {
-		var weightedFunction = weightedFunctions[i++];
-		sum += weightedFunction.weight;
-	}
-	return weightedFunctions[i - 1].func();
-}
-
 /**
  * Returns an array of game objects that are currently within the given area.
  * @param startX
@@ -85,48 +67,3 @@ GameMap.prototype.getObjects = function (startX, startY, endX, endY) {
 	console.log(containedObjects.length + ' objects in view.');
 	return containedObjects;
 };
-
-class Border extends GameObject {
-	constructor(x, y, side, length) {
-		super(x, y, side, length);
-	}
-
-	createShape(x, y, side, length) {
-		var x2, y2;
-		switch (side) {
-			case 'NORTH':
-				x2 = x + length;
-				y2 = y;
-				break;
-			case 'EAST':
-				x2 = x;
-				y2 = y + length;
-				break;
-			case 'SOUTH':
-				x2 = x + length;
-				y2 = y;
-				break;
-			case 'WEST':
-				x2 = x;
-				y2 = y + length;
-				break;
-		}
-
-		let shape = new Two.Line(x, y, x2, y2);
-		shape.noFill();
-		shape.stroke = 'yellow';
-		return shape;
-	}
-
-	visibleOnMinimap() {
-		return false;
-	}
-
-	show() {
-		groups.mapBorders.add(this.shape);
-	}
-
-	hide() {
-		groups.mapBorders.remove(this.shape);
-	}
-}

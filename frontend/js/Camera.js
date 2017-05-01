@@ -31,7 +31,7 @@ class Camera {
 			return;
 		}
 
-		console.log("Camera Delta: [" + deltaX.toFixed(1) + " / " + deltaY.toFixed(1));
+		// console.log("Camera Delta: [" + deltaX.toFixed(1) + " / " + deltaY.toFixed(1) + "]");
 
 		let deltaV = new Two.Vector(deltaX, deltaY);
 
@@ -41,8 +41,8 @@ class Camera {
 		groups.mapBorders.translation.subSelf(deltaV);
 		// groups.character.translation.subSelf(deltaV);
 
-		// this.character.setX(this.lastX);
-		// this.character.setY(this.lastY);
+		this.character.setX(this.lastX);
+		this.character.setY(this.lastY);
 
 		if (typeof this.onUpdate === 'function'){
 			this.onUpdate(deltaV);

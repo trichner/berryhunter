@@ -26,14 +26,22 @@ var Relative = {
 	}
 };
 
+function executeRandomFunction(weightedFunctions) {
+	let weightTotal = 0;
 
+	weightedFunctions.forEach(function (weightedFunction) {
+		weightTotal += weightedFunction.weight;
+	});
 
-/**
- * @deprecated
- * @param c
- */
-function color(c) {
-	return c;
+	// http://stackoverflow.com/a/9330493
+	var index = randomInt(weightTotal) + 1;
+	var sum = 0;
+	var i = 0;
+	while (sum < index) {
+		var weightedFunction = weightedFunctions[i++];
+		sum += weightedFunction.weight;
+	}
+	return weightedFunctions[i - 1].func();
 }
 
 function createVector(x, y) {

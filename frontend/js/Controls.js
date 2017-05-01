@@ -53,6 +53,10 @@ function anyKeyIsPressed(keyList) {
 }
 
 class Controls {
+	/**
+	 *
+	 * @param {Character} character
+	 */
 	constructor(character) {
 		this.chararacter = character;
 		this.playerId = character.id;

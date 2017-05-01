@@ -4,7 +4,7 @@
 
 const MessageType = {
 	OBJECT: 'OBJECT',
-	SNAPSHOT: 'SNAPSHOT'
+	SNAPSHOT: 'GAME_STATE'
 };
 
 const Backend = {
@@ -54,6 +54,11 @@ const Backend = {
 		let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
 		this.lastMessageReceivedTime = messageReceivedTime;
 
+		if (!event.data){
+			console.warn("Received empty message.");
+			return;
+		}
+
 		let messageObj;
 		try {
 			messageObj = JSON.parse(event.data);
@@ -64,26 +69,33 @@ const Backend = {
 
 		switch (messageObj.type) {
 			case MessageType.OBJECT:
-				gameMap.add(messageObj.body);
+				this.receiveObject(messageObj.body);
 				break;
 			case MessageType.SNAPSHOT:
 				this.receiveSnapshot(messageObj.body);
 		}
 
-		// if (messageObj.object !== 'ball') {
-		console.log(timeSinceLastMessage.toFixed(1) + "ms", messageObj);
-		// }
+		// console.log(timeSinceLastMessage.toFixed(1) + "ms", messageObj);
+	},
+
+	receiveObject: function (gameObject) {
+		gameMap.addOrUpdate(gameObject);
 	},
 
 	receiveSnapshot: function (snapshot) {
 		this.lastServerTick = snapshot.tick;
 		console.log("Snapshot #" + this.lastServerTick);
 
-		// TODO render stuff
-
+		snapshot.entities.forEach(function (entity) {
+			gameMap.addOrUpdate(entity);
+		})
 	},
 
 	sendInputTick: function (inputObj) {
+		if (typeof this.lastServerTick === 'undefined'){
+			// If the backend hasn't send a snapshot yet, don't send any input.
+			return;
+		}
 		inputObj.tick = this.lastServerTick + 1;
 		this.send(inputObj);
 
