@@ -17,8 +17,8 @@ func main() {
 	g.Init(config)
 
 	//---- add a ball
-	circleEntity := newCircleEntity(100, 100, 10, 1)
-	g.addEntity(&circleEntity)
+	rabbit := NewRabbit()
+	g.addEntity(rabbit)
 
 	tiger := NewSabretoothTiger()
 	g.addEntity(tiger)

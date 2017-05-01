@@ -45,6 +45,12 @@ func (e *entity) Body() chipmunk.Body {
 	return e.body
 }
 
+func NewRabbit() *entity {
+	e := newCircleEntity(40, 0, 1, 1)
+	e.entityType = typeRabbit
+	return &e
+}
+
 func NewSabretoothTiger() *entity {
 	e := newCircleEntity(0, 0, 1, 1)
 	e.entityType = typeSabreToothTiger
