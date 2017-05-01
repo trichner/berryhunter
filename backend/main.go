@@ -74,6 +74,10 @@ func newCircleEntity(x, y, r, m float32) entity {
 	ball := chipmunk.NewCircle(vect.Vector_Zero, r)
 	ball.SetElasticity(0.95)
 
+	// everything collides with everything :/
+	ball.Layer = 0x01
+	ball.Group = chipmunk.Group(ballEntity.ID())
+
 	// Create a body for the ball
 	body := newBody(m, ball)
 	body.SetPosition(vect.Vect{vect.Float(x), vect.Float(y)})
