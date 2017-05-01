@@ -12,7 +12,7 @@ const gameObjectClasses = {
 	SabreToothTiger
 };
 
-function GameMap() {
+function GameMapWithBackend() {
 	if (MapEditor.isActive()) {
 		let dimmensions = MapEditor.getMapDimensions();
 		this.width = dimmensions.width;
@@ -37,7 +37,7 @@ function GameMap() {
 	// console.log(this.objects.length + ' objects generated');
 }
 
-GameMap.prototype.addOrUpdate = function (entity) {
+GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 	let gameObject = this.objects[entity.id];
 	if (gameObject) {
 		gameObject.setX(entity.x);

@@ -85,7 +85,7 @@ function setup() {
 
 	// TODO if offline createPlayer
 	// player = new Character(1, width / 2, height / 2);
-	gameMap = new GameMap();
+	gameMap = new GameMapWithBackend();
 	miniMap = new MiniMap(gameMap);
 	// playerCam = new Camera(player);
 
