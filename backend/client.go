@@ -65,7 +65,7 @@ func (c *Client) Close(msg *Message) {
 // Listen Write and Read request via chanel
 func (c *Client) Listen() {
 
-	// tx goroutine
+	// TX goroutine
 	go func() {
 		for {
 			if c.isDone() {
@@ -84,25 +84,23 @@ func (c *Client) Listen() {
 		}
 	}()
 
-	// rx goroutine
-	go func() {
-		for {
-			if c.isDone() {
-				// clean up receiver
-				return
-			}
-			//var msg Message
-			var msg string
-			err := websocket.Message.Receive(c.ws, &msg)
-			if err == io.EOF {
-				close(c.doneCh)
-			} else if err != nil {
-				log.Println(err)
-			} else {
-				c.rxCh <- &ClientMessage{client: c, body: &Message{msg}}
-			}
+	// RX
+	for {
+		if c.isDone() {
+			// clean up receiver
+			return
 		}
-	}()
+		//var msg Message
+		var msg string
+		err := websocket.Message.Receive(c.ws, &msg)
+		if err == io.EOF {
+			close(c.doneCh)
+		} else if err != nil {
+			log.Println(err)
+		} else {
+			c.rxCh <- &ClientMessage{client: c, body: &Message{msg}}
+		}
+	}
 }
 
 
