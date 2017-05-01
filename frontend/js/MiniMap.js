@@ -25,7 +25,7 @@ class MiniMap {
 		// gameMap.objects.forEach(this.add, this);
 
 
-		this.register(player);
+		// this.register(player);
 
 		this.updateCallback = this.update.bind(this);
 		two.bind('update', this.updateCallback);

@@ -2,6 +2,7 @@
 
 
 const gameObjectClasses = {
+	Character,
 	RoundTree,
 	MarioTree,
 	Stone,

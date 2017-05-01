@@ -50,6 +50,9 @@ const Backend = {
 	},
 
 	receive: function (event) {
+		if (!two.playing && gameStarted){
+			return;
+		}
 		let messageReceivedTime = window.performance.now();
 		let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
 		this.lastMessageReceivedTime = messageReceivedTime;
@@ -87,7 +90,11 @@ const Backend = {
 		// console.log("Snapshot #" + this.lastServerTick);
 
 		snapshot.entities.forEach(function (entity) {
-			gameMap.addOrUpdate(entity);
+			if (entity.id === snapshot.player_id){
+				createPlayer(entity.id, entity.x, entity.y);
+			} else {
+				gameMap.addOrUpdate(entity);
+			}
 		})
 	},
 
