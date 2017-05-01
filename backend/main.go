@@ -75,7 +75,7 @@ func newCircleEntity(x, y, r, m float32) entity {
 	ball.SetElasticity(0.95)
 
 	// everything collides with everything :/
-	ball.Layer = 0x01
+	ball.Layer = -1 // all layers 0xFFFF
 	ball.Group = chipmunk.Group(ballEntity.ID())
 
 	// Create a body for the ball
