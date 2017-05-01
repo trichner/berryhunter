@@ -37,17 +37,17 @@ func (n *NetSystem) AddPlayer(p *player) {
 func (n *NetSystem) Update(dt float32) {
 	log.Printf("Broadcasting %d players", len(n.entities))
 
-	//var entites []*EntityDTO
-	//for _, entity := range n.entities {
-	//
-	//	dto := mapToEntityDTO(entity)
-	//	entites = append(entites, dto)
-	//
-	//	//DEPRECATED
-	//	msg := &MessageDTO{"OBJECT", dto}
-	//	msgJson, _ := json.Marshal(msg)
-	//	n.game.server.Broadcast(&Message{string(msgJson)})
-	//}
+	var entites []*EntityDTO
+	for _, entity := range n.entities {
+
+		dto := mapToEntityDTO(entity)
+		entites = append(entites, dto)
+
+		//DEPRECATED
+		//msg := &MessageDTO{"OBJECT", dto}
+		//msgJson, _ := json.Marshal(msg)
+		//n.game.server.Broadcast(&Message{string(msgJson)})
+	}
 
 	// assemble game state prototype
 	gameState := GameStateDTO{}
