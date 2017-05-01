@@ -41,17 +41,11 @@ var playerCam;
 
 preload();
 
-function htmlToElement(html) {
-	var template = document.createElement('template');
-	template.innerHTML = html;
-	return template.content.firstChild;
-}
-
 function preload() {
-	Two.Utils.xhr('img/sabreToothTiger2.svg', function (responseText) {
-		SabreToothTiger.svg = htmlToElement(responseText);
-		setup();
-	});
+	executePreload()
+		.then(() => {
+			setup();
+		});
 }
 
 function createBackground() {
@@ -62,13 +56,14 @@ function createBackground() {
 }
 
 function setup() {
-	// Setup backend first, as this will take some time to connect.
-	Backend.setup();
 
-	if (QuadrantRenderer.isActive()) {
-		two = QuadrantRenderer.setup();
+	if (MapEditor.isActive()) {
+		two = MapEditor.setup();
 	} else {
-		QuadrantRenderer.disable();
+		// Setup backend first, as this will take some time to connect.
+		Backend.setup();
+
+		MapEditor.disable();
 		two = new Two({
 			fullscreen: true,
 			type: Two.Types.svg
@@ -125,8 +120,8 @@ function setup() {
 	// two.play();
 
 
-	if (QuadrantRenderer.isActive()) {
-		QuadrantRenderer.afterSetup();
+	if (MapEditor.isActive()) {
+		MapEditor.afterSetup();
 	}
 
 	// two.unbind('update');

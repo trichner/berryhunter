@@ -13,7 +13,10 @@ class Camera {
 
 		// this.shownGameObjects = [];
 
-		// two.bind('update', this.update.bind(this));
+		// TODO deactivated Camera for movement tests
+		if (MapEditor.isActive()) {
+			two.bind('update', this.update.bind(this));
+		}
 	}
 
 	getX() {

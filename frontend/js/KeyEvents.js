@@ -8,7 +8,7 @@ var KeyEvents = {
 		domElement.addEventListener('keypress', this._onkeypress.bind(this));
 		domElement.addEventListener('blur', this._onblur.bind(this));
 
-		if (!QuadrantRenderer.isActive()) {
+		if (!MapEditor.isActive()) {
 			domElement.focus();
 		}
 	},

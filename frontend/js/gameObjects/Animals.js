@@ -101,3 +101,5 @@ class SabreToothTiger extends Animal {
 		return false;
 	}
 }
+
+registerGameObjectSVG(SabreToothTiger, 'img/sabreToothTiger.svg');

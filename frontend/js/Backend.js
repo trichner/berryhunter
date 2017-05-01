@@ -86,12 +86,20 @@ const Backend = {
 	},
 
 	receiveSnapshot: function (snapshot) {
+		if (snapshot.tick <= this.lastServerTick){
+			console.log("Snapshot #" + this.lastServerTick + " out of order. Next #" + snapshot.tick);
+		}
+
 		this.lastServerTick = snapshot.tick;
 		// console.log("Snapshot #" + this.lastServerTick);
 
 		snapshot.entities.forEach(function (entity) {
 			if (entity.id === snapshot.player_id){
 				if (gameStarted){
+					// if (player.getX() > entity.x){
+					// 	console.log(player.getX(), entity.x);
+					// 	return;
+					// }
 					player.setX(entity.x);
 					player.setY(entity.y);
 				} else {

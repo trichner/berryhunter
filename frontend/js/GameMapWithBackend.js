@@ -13,8 +13,8 @@ const gameObjectClasses = {
 };
 
 function GameMap() {
-	if (QuadrantRenderer.isActive()) {
-		let dimmensions = QuadrantRenderer.getMapDimensions();
+	if (MapEditor.isActive()) {
+		let dimmensions = MapEditor.getMapDimensions();
 		this.width = dimmensions.width;
 		this.height = dimmensions.height;
 	} else {

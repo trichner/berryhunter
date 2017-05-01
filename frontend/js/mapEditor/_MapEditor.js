@@ -1,6 +1,6 @@
 "use strict";
 
-var QuadrantRenderer = {
+const MapEditor = {
 	isActive: function () {
 		if (typeof this.active !== 'undefined') {
 			return this.active;
@@ -34,6 +34,8 @@ var QuadrantRenderer = {
 
 	afterSetup: function () {
 		two.pause();
+
+		createPlayer(0, width/2, height/2);
 
 		this.grid = new QuadrantGrid();
 
@@ -71,7 +73,7 @@ var QuadrantRenderer = {
 			return;
 		}
 
-		QuadrantRenderer.calculateMapDimensions();
+		MapEditor.calculateMapDimensions();
 
 		groups.mapBorders.remove();
 		groups.mapBorders = two.makeGroup();
@@ -96,7 +98,7 @@ var QuadrantRenderer = {
 		miniMap.remove();
 		miniMap = new MiniMap(gameMap);
 
-		QuadrantRenderer.grid = new QuadrantGrid(QuadrantRenderer.mapWidth, QuadrantRenderer.mapHeight);
+		MapEditor.grid = new QuadrantGrid(MapEditor.mapWidth, MapEditor.mapHeight);
 
 		two.update();
 		jsonStatus.innerHTML = 'Rendered';

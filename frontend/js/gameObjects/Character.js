@@ -50,6 +50,10 @@ class Character extends GameObject {
 	}
 
 	move(movement) {
+		// TODO Offline mode
+		if (!MapEditor.isActive()){
+			return;
+		}
 		let moveVec = new Two.Vector().copy(movement);
 		// if (moveVec.lengthSquared() === 0) {
 		// 	// No movement happened, cancel
