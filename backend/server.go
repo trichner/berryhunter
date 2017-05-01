@@ -5,8 +5,6 @@ import (
 	"net/http"
 
 	"golang.org/x/net/websocket"
-	"errors"
-	"fmt"
 )
 
 type Message struct {
@@ -16,13 +14,8 @@ type Message struct {
 // Chat server.
 type Server struct {
 	pattern              string
-	clients              map[uint64]*Client
-	addCh                chan *Client
-	delCh                chan *Client
-	txCh                 chan *Message
 	rxCh                 chan *ClientMessage
 	doneCh               chan bool
-	errCh                chan error
 	clientConnectHandler ClientConnectHandler
 }
 
@@ -33,64 +26,14 @@ type ClientMessage struct {
 
 // Create new chat server.
 func NewServer(pattern string, handler ClientConnectHandler) *Server {
-	clients := make(map[uint64]*Client)
-	addCh := make(chan *Client)
-	delCh := make(chan *Client)
-	txCh := make(chan *Message)
 	rxCh := make(chan *ClientMessage)
 	doneCh := make(chan bool)
-	errCh := make(chan error)
 
 	return &Server{
-		pattern,
-		clients,
-		addCh,
-		delCh,
-		txCh,
-		rxCh,
-		doneCh,
-		errCh,
-		handler,
-	}
-}
-
-func (s *Server) Add(c *Client) {
-	s.addCh <- c
-}
-
-func (s *Server) Del(c *Client) {
-	s.delCh <- c
-}
-
-func (s *Server) Broadcast(msg *Message) {
-	s.txCh <- msg
-}
-
-func (s *Server) Done() {
-	s.doneCh <- true
-}
-
-func (s *Server) Err(err error) {
-	s.errCh <- err
-}
-
-func (s *Server) Tx(clientId uint64, msg *Message) {
-	c, ok := s.clients[clientId]
-	if (!ok) {
-		errMsg := fmt.Sprintf("Client %d not found", clientId)
-		s.errCh <- errors.New(errMsg)
-		return
-	}
-	c.Tx(msg)
-}
-
-func (s *Server) Rx(msg *ClientMessage) {
-	s.rxCh <- msg
-}
-
-func (s *Server) sendAll(msg *Message) {
-	for _, c := range s.clients {
-		c.Tx(msg)
+		pattern:              pattern,
+		rxCh:                 rxCh,
+		doneCh:               doneCh,
+		clientConnectHandler: handler,
 	}
 }
 
@@ -105,48 +48,11 @@ func (s *Server) Listen() {
 	// websocket handler
 	onConnected := func(ws *websocket.Conn) {
 		log.Println("New connection.")
-		defer func() {
-			err := ws.Close()
-			if err != nil {
-				s.errCh <- err
-			}
-		}()
-
 		// add player
-
-		client := NewClient(ws, s)
-		s.Add(client)
+		client := NewClient(ws, s.rxCh)
+		s.clientConnectHandler(client)
 		client.Listen()
 	}
 
 	http.Handle(s.pattern, websocket.Handler(onConnected))
-	log.Println("Created handler")
-
-	for {
-		select {
-
-		// Add new a client
-		case c := <-s.addCh:
-			log.Println("Added new client")
-			s.clients[c.id] = c
-			log.Println("Now", len(s.clients), "clients connected.")
-			s.clientConnectHandler(c)
-
-			// del a client
-		case c := <-s.delCh:
-			log.Println("Delete client")
-			delete(s.clients, c.id)
-
-			// broadcast message for all clients
-		case msg := <-s.txCh:
-			log.Println("Send all:", msg)
-			s.sendAll(msg)
-
-		case err := <-s.errCh:
-			log.Println("Error:", err.Error())
-
-		case <-s.doneCh:
-			return
-		}
-	}
 }

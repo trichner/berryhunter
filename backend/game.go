@@ -41,15 +41,6 @@ func (g *Game) Init(conf *conf.Config) {
 func (g *Game) Run() {
 
 	go g.server.Listen()
-	go func() {
-
-		for {
-			select {
-			case err := <-g.server.errCh:
-				fmt.Errorf("Err: %s", err)
-			}
-		}
-	}()
 
 	addr := fmt.Sprintf(":%d", g.conf.Port)
 	go http.ListenAndServe(addr, nil)
