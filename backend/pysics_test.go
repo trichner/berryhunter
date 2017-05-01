@@ -95,36 +95,12 @@ func ExampleCollision() {
 	body.SetVelocity(1, 0)
 	space.AddBody(body)
 
-	body.CallbackHandler = &Collidable{body}
+	//body.CallbackHandler = &Collidable{}
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 400; i++ {
 		space.Step(1.0 / 30.0)
 	}
+	fmt.Printf("Box: %+v\n", shape.BB)
 	// Output: Body 1
 }
 
-type Collidable struct {
-	entity *chipmunk.Body
-}
-
-func (c *Collidable) CollisionEnter(arbiter *chipmunk.Arbiter) bool {
-
-	fmt.Printf("Collision @ %f/%f\n", c.entity.Position().X, c.entity.Position().Y)
-	fmt.Printf("BoxA: %+v\n", arbiter.ShapeA.BB)
-	fmt.Printf("BoxB: %+v\n", arbiter.ShapeB.BB)
-
-	return true
-}
-
-func (c *Collidable) CollisionPreSolve(arbiter *chipmunk.Arbiter) bool {
-
-	return true
-}
-
-func (c *Collidable) CollisionPostSolve(arbiter *chipmunk.Arbiter) {
-
-}
-
-func (c *Collidable) CollisionExit(arbiter *chipmunk.Arbiter) {
-
-}

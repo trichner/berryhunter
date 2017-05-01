@@ -61,7 +61,6 @@ func (n *NetSystem) Update(dt float32) {
 
 		// copy gameStatePrototype
 		clientGameState := gameState
-		clientGameState.ClientID = player.client.id
 		clientGameState.PlayerID = player.ID()
 		msg := &MessageDTO{"GAME_STATE", clientGameState}
 		msgJson, _ := json.Marshal(msg)

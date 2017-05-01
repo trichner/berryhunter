@@ -16,7 +16,6 @@ type PlayerDTO struct {
 
 type GameStateDTO struct {
 	Tick     uint64 `json:"tick"`
-	ClientID uint64 `json:"client_id"`
 	PlayerID uint64 `json:"player_id"`
 	Entities []*EntityDTO `json:"entities"`
 }
