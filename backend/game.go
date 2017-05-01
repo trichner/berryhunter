@@ -23,15 +23,7 @@ func (g *Game) Init(conf *conf.Config) {
 
 	g.server = NewServer(conf.Path, func(c *Client) {
 
-		entity := newCircleEntity(20.0, 20.0, 5.0, 1)
-
-		player := &player{
-			client: c,
-			Health: 100,
-			Hunger: 0,
-			entity: entity,
-		}
-
+		player := NewPlayer(c)
 		g.addPlayer(player)
 	})
 
@@ -77,10 +69,6 @@ func (g *Game) addEntity(e *entity) {
 			sys.AddEntity(e)
 		}
 	}
-}
-
-func (g *Game) addTiger(s *SabreToothTiger) {
-	g.addEntity(&s.entity)
 }
 
 func (g *Game) addPlayer(p *player) {

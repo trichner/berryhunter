@@ -20,8 +20,8 @@ func main() {
 	circleEntity := newCircleEntity(100, 100, 10, 1)
 	g.addEntity(&circleEntity)
 
-	tiger := &SabreToothTiger{newCircleEntity(90, 100, 10, 1)}
-	g.addTiger(tiger)
+	tiger := NewSabretoothTiger()
+	g.addEntity(tiger)
 
 	g.Run()
 
@@ -72,7 +72,7 @@ func newCircleEntity(x, y, r, m float32) entity {
 	ballEntity := entity{BasicEntity: ecs.NewBasic()}
 
 	ball := chipmunk.NewCircle(vect.Vector_Zero, r)
-	ball.SetElasticity(0.95)
+	ball.SetElasticity(0.5)
 
 	// everything collides with everything :/
 	ball.Layer = -1 // all layers 0xFFFF

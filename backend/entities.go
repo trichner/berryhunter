@@ -25,11 +25,12 @@ type Entity interface {
 //---- entity
 type entity struct {
 	ecs.BasicEntity
-	body chipmunk.Body
+	body       chipmunk.Body
+	entityType string
 }
 
 func (e *entity) Type() string {
-	return typeRoundTree
+	return e.entityType
 }
 
 func (e *entity) X() float32 {
@@ -44,13 +45,10 @@ func (e *entity) Body() chipmunk.Body {
 	return e.body
 }
 
-//---- SabreToothTiger
-type SabreToothTiger struct {
-	entity
-}
-
-func (p *SabreToothTiger) Type() string {
-	return typeSabreToothTiger
+func NewSabretoothTiger() *entity {
+	e := newCircleEntity(0, 0, 1, 1)
+	e.entityType = typeSabreToothTiger
+	return &e
 }
 
 //---- player
@@ -61,8 +59,10 @@ type player struct {
 	client *Client
 }
 
-func (p *player) Type() string {
-	return typePlayer
+func NewPlayer(c *Client) *player {
+	e := newCircleEntity(0, 0, 1, 1)
+	e.entityType = typePlayer
+	return &player{entity: e}
 }
 
 //---- DTO
