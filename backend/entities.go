@@ -62,7 +62,7 @@ type player struct {
 func NewPlayer(c *Client) *player {
 	e := newCircleEntity(0, 0, 1, 1)
 	e.entityType = typePlayer
-	return &player{entity: e}
+	return &player{entity: e, client: c}
 }
 
 //---- DTO
