@@ -13,7 +13,7 @@ class Camera {
 
 		// this.shownGameObjects = [];
 
-		two.bind('update', this.update.bind(this));
+		// two.bind('update', this.update.bind(this));
 	}
 
 	getX() {
