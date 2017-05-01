@@ -91,7 +91,12 @@ const Backend = {
 
 		snapshot.entities.forEach(function (entity) {
 			if (entity.id === snapshot.player_id){
-				createPlayer(entity.id, entity.x, entity.y);
+				if (gameStarted){
+					player.setX(entity.x);
+					player.setY(entity.y);
+				} else {
+					createPlayer(entity.id, entity.x, entity.y);
+				}
 			} else {
 				gameMap.addOrUpdate(entity);
 			}
