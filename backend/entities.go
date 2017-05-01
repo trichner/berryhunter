@@ -62,7 +62,7 @@ type player struct {
 }
 
 func (p *player) Type() string {
-	return typeRabbit
+	return typePlayer
 }
 
 //---- DTO
