@@ -3,7 +3,7 @@
   "body": {
     "tick": 1112,
     "client_id": 1,
-    "player_id": 0,
+    "player_id": 4,
     "entities": [
       {
         "id": 1,
@@ -22,6 +22,12 @@
         "x": -77.27292,
         "y": -45.40531,
         "object": "Rabbit"
+      },
+      {
+        "id": 4,
+        "x": 71.33299,
+        "y": -45.40531,
+        "object": "Player"
       }
     ]
   }
