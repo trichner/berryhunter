@@ -202,41 +202,42 @@ class Gold extends GameObject {
 
 class BerryBush extends GameObject {
 	constructor(x, y) {
-		super(x, y)
+		super(x, y,	randomInt(20, 45));
+
 	}
 
-	createShape(x, y) {
-		let shape = new Two.Group();
-		shape.translation.set(x, y);
-		shape.rotation = random(0, Math.PI * 2);
+	// createShape(x, y) {
+	// 	let shape = new Two.Group();
+	// 	shape.translation.set(x, y);
+	// 	shape.rotation = random(0, Math.PI * 2);
 
-		this.diameter = randomInt(30, 50);
-		let bush = new Two.Star(0, 0, this.diameter, this.diameter * 0.7, 5 + randomInt(1, 3) * 2);
-		shape.add(bush);
-		bush.fill = 'seagreen';
-		bush.stroke = 'darkslategray';
-		bush.linewidth = 2;
+	// 	this.diameter = randomInt(30, 50);
+	// 	let bush = new Two.Star(0, 0, this.diameter, this.diameter * 0.7, 5 + randomInt(1, 3) * 2);
+	// 	shape.add(bush);
+	// 	bush.fill = 'seagreen';
+	// 	bush.stroke = 'darkslategray';
+	// 	bush.linewidth = 2;
 
 
-		let numberOfBerries = 3;
-		if (this.diameter >= 37) {
-			numberOfBerries++;
-		}
-		if (this.diameter >= 45) {
-			numberOfBerries++;
-		}
-		for (let i = 0; i < numberOfBerries; i++) {
-			let circle = new Two.Ellipse(
-				(Math.cos(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
-				(Math.sin(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
-				5);
-			shape.add(circle);
-			circle.fill = 'purple';
-			circle.noStroke();
-		}
+	// 	let numberOfBerries = 3;
+	// 	if (this.diameter >= 37) {
+	// 		numberOfBerries++;
+	// 	}
+	// 	if (this.diameter >= 45) {
+	// 		numberOfBerries++;
+	// 	}
+	// 	for (let i = 0; i < numberOfBerries; i++) {
+	// 		let circle = new Two.Ellipse(
+	// 			(Math.cos(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
+	// 			(Math.sin(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
+	// 			5);
+	// 		shape.add(circle);
+	// 		circle.fill = 'purple';
+	// 		circle.noStroke();
+	// 	}
 
-		return shape;
-	}
+	// 	return shape;
+	// }
 
 	createMinimapIcon(x, y, sizeFactor) {
 		let shape = new Two.Ellipse(x, y, this.diameter * 3 * sizeFactor);
@@ -246,3 +247,5 @@ class BerryBush extends GameObject {
 		return shape;
 	}
 }
+
+registerGameObjectSVG(BerryBush, 'img/berryBushVariant2.svg');
