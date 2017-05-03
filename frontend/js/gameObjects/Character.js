@@ -11,7 +11,7 @@ class Character extends GameObject {
 
 		two.bind('update', this.controls.update.bind(this.controls));
 
-		this.isMoving = false;
+		// this.isMoving = false;
 	}
 
 	createShape(x, y) {

@@ -39,11 +39,9 @@ const MapEditor = {
 
 		this.grid = new QuadrantGrid();
 
-		playerCam.onUpdate = function (deltaV) {
-			this.grid.cameraUpdate(deltaV);
+		playerCam.onUpdate = function (translation) {
+			this.grid.cameraUpdate(translation);
 		}.bind(this);
-
-		// two.update();
 
 		this.tryRenderQuadrants();
 	},
@@ -91,9 +89,6 @@ const MapEditor = {
 			jsonStatus.innerHTML = "Error in Quadrant Definition: " + e.message;
 			return;
 		}
-
-		groups.gameObjects.translation.subSelf(playerCam.translation);
-		groups.mapBorders.translation.subSelf(playerCam.translation);
 
 		miniMap.remove();
 		miniMap = new MiniMap(gameMap);

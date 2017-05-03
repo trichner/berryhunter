@@ -3,20 +3,21 @@
 class Camera {
 	/**
 	 *
-	 * @param character the Character to follow
+	 * @param {Character} character the Character to follow
 	 */
 	constructor(character) {
 		this.character = character;
-		this.lastX = character.getX();
-		this.lastY = character.getY();
-		this.translation = new Two.Vector(0, 0);
+
+		/**
+		 * @type {Two.Vector}
+		 */
+		this.translation = new Two.Vector(
+			character.getX() - width / 2,
+			character.getY() - height / 2);
 
 		// this.shownGameObjects = [];
 
-		// TODO deactivated Camera for movement tests
-		if (MapEditor.isActive()) {
-			two.bind('update', this.update.bind(this));
-		}
+		two.bind('update', this.update.bind(this));
 	}
 
 	getX() {
@@ -28,39 +29,16 @@ class Camera {
 	}
 
 	update() {
-		let deltaX = this.character.getX() - this.lastX;
-		let deltaY = this.character.getY() - this.lastY;
-		if (deltaX == 0 && deltaY == 0){
-			return;
-		}
+		this.translation = new Two.Vector(
+			this.character.getX() - width / 2,
+			this.character.getY() - height / 2);
 
-		// console.log("Camera Delta: [" + deltaX.toFixed(1) + " / " + deltaY.toFixed(1) + "]");
-
-		let deltaV = new Two.Vector(deltaX, deltaY);
-
-		this.translation.addSelf(deltaV);
-
-		groups.gameObjects.translation.subSelf(deltaV);
-		groups.mapBorders.translation.subSelf(deltaV);
-		// groups.character.translation.subSelf(deltaV);
-
-		this.character.setX(this.lastX);
-		this.character.setY(this.lastY);
+		groups.gameObjects.translation.copy(this.translation.negate());
+		groups.mapBorders.translation.copy(this.translation);
+		groups.character.translation.copy(this.translation);
 
 		if (typeof this.onUpdate === 'function'){
-			this.onUpdate(deltaV);
+			this.onUpdate(this.translation);
 		}
-
-		// if (deltaX != 0 ||deltaY != 0) {
-		// 	let gameObjectsToShow = gameMap.getObjects(
-		// 		this.translation.x,
-		// 		this.translation.y,
-		// 		this.translation.x + width,
-		// 		this.translation.y + height);
-		//
-		// 	gameObjectsToShow.forEach(function (object) {
-		// 		object.show();
-		// 	});
-		// }
 	}
 }

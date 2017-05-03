@@ -9,18 +9,6 @@ class QuadrantGrid {
 		this.yIndices = new Two.Group();
 		groups.overlay.add(this.xIndices, this.yIndices);
 
-		this.xIndices.translation.subSelf(playerCam.translation);
-		this.xIndices.translation.y = 0;
-		if (groups.mapBorders.translation.y > 0){
-			this.xIndices.translation.y = groups.mapBorders.translation.y;
-		}
-
-		this.yIndices.translation.subSelf(playerCam.translation);
-		this.yIndices.translation.x = 0;
-		if (groups.mapBorders.translation.x > 0){
-			this.yIndices.translation.x = groups.mapBorders.translation.x;
-		}
-
 		let index = 1;
 		const gridSpacing = Constants.GRID_SPACING;
 		for (var x = gridSpacing; x <= width; x += gridSpacing) {
@@ -47,13 +35,13 @@ class QuadrantGrid {
 		}
 	}
 
-	cameraUpdate(deltaV) {
-		this.xIndices.translation.subSelf(new Two.Vector(deltaV.x, 0));
+	cameraUpdate(translation) {
+		this.xIndices.translation.set(translation.x, 0);
 		if (groups.mapBorders.translation.y > 0){
 			this.xIndices.translation.y = groups.mapBorders.translation.y;
 		}
 
-		this.yIndices.translation.subSelf(new Two.Vector(0, deltaV.y));
+		this.yIndices.translation.set(0, translation.y);
 		if (groups.mapBorders.translation.x > 0){
 			this.yIndices.translation.x = groups.mapBorders.translation.x;
 		}
