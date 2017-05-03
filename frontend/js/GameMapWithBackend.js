@@ -40,8 +40,7 @@ function GameMapWithBackend() {
 GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 	let gameObject = this.objects[entity.id];
 	if (gameObject) {
-		gameObject.setX(entity.x);
-		gameObject.setY(entity.y);
+		gameObject.setPosition(entity.x, entity.y);
 	} else {
 		gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
 		this.objects[entity.id] = gameObject;

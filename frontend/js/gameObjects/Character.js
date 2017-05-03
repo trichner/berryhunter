@@ -123,7 +123,14 @@ class Character extends GameObject {
 		//
 		// this.isMoving = true;
 
+		let lastX = this.getX();
+		let lastY = this.getY();
+
 		this.shape.translation.addSelf(moveVec.setLength(this.movementSpeed));
+
+		if (this.isMoveable) {
+			this.shape.rotation = TwoDimensional.angleBetween(lastX, lastY, this.getX(), this.getY());
+		}
 	}
 
 	action() {

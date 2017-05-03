@@ -133,3 +133,4 @@ class Controls {
 		// TODO bei diagonaler Bewegung darf der Movementspeed nicht überschritten werden
 	}
 }
+

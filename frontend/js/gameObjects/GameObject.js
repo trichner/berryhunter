@@ -53,8 +53,15 @@ class GameObject {
 		console.error('createMinimapIcon not implemented for ' + this.constructor.name);
 	}
 
+	setPosition(x, y) {
+		if (this.isMoveable) {
+			this.shape.rotation = TwoDimensional.angleBetween(this.getX(), this.getY(), x, y);
+		}
+		this.shape.translation.set(x, y);
+	}
+
 	setX(x) {
-		this.shape.translation.x = x;
+		this.setPosition(x, this.getY());
 	}
 
 	getX() {
@@ -62,7 +69,7 @@ class GameObject {
 	}
 
 	setY(y) {
-		this.shape.translation.y = y;
+		this.setPosition(this.getX(), y);
 	}
 
 	getY() {

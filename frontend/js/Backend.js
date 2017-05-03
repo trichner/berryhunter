@@ -100,8 +100,7 @@ const Backend = {
 					// 	console.log(player.getX(), entity.x);
 					// 	return;
 					// }
-					player.setX(entity.x);
-					player.setY(entity.y);
+					player.setPosition(entity.x, entity.y);
 				} else {
 					createPlayer(entity.id, entity.x, entity.y);
 				}
