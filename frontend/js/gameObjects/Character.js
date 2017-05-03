@@ -3,6 +3,7 @@ class Character extends GameObject {
 		super(x, y);
 		this.id = id;
 
+		this.isMoveable = true;
 		this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
 
 		this.show();
@@ -15,15 +16,63 @@ class Character extends GameObject {
 	}
 
 	createShape(x, y) {
-		let shape = new Two.Ellipse(x, y, 30);
+		let group = new Two.Group();
+		group.translation.set(x, y);
+		group.rotation = Math.PI / 2;
+
+		let shape = new Two.Ellipse(0, 0, 30);
+		group.add(shape);
 		shape.fill = 'rgb(128, 98, 64)';
 		shape.stroke = 'rgb(255, 196, 128)';
 		shape.linewidth = 2;
 
+		var smiley = executeRandomFunction([
+			{
+				weight: 4,
+				func: function () {
+					return ': )';
+				}
+			},
+			{
+				weight: 1,
+				func: function () {
+					return ': (';
+				}
+			},
+			{
+				weight: 2,
+				func: function () {
+					return ': o';
+				}
+			},
+			{
+				weight: 2,
+				func: function () {
+					return ': b';
+				}
+			},
+			{
+				weight: 1,
+				func: function () {
+					return ': (';
+				}
+			},
+			{
+				weight: 1,
+				func: function () {
+					return ': /';
+				}
+			}]);
+
+		group.add(new Two.Text(smiley, 0, 0, {
+			size: 60 * 0.6,
+			fill: 'rgb(255, 196, 128)'
+		}));
+
 		// this.body = physics.registerDynamic(x, y, 30);
 		// this.body.twoShape = shape;
 
-		return shape;
+		return group;
 	}
 
 	createMinimapIcon(x, y, size) {
@@ -51,7 +100,7 @@ class Character extends GameObject {
 
 	move(movement) {
 		// TODO Offline mode
-		if (!MapEditor.isActive()){
+		if (!MapEditor.isActive()) {
 			return;
 		}
 		let moveVec = new Two.Vector().copy(movement);

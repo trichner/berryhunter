@@ -1,8 +1,9 @@
 "use strict";
 
 class Animal extends GameObject {
-	constructor(x, y) {
-		super(x, y)
+	constructor(x, y, size, rotation) {
+		super(x, y, size, rotation);
+		this.isMoveable = true;
 	}
 
 	visibleOnMinimap() {
@@ -78,7 +79,7 @@ class Rabbit extends Animal {
 class SabreToothTiger extends Animal {
 
 	constructor(x, y) {
-		super(x, y);
+		super(x, y, randomInt(40, 80));
 	}
 }
 
