@@ -5,34 +5,43 @@ class GameObject {
 		this.size = size || Constants.GRID_SPACING / 2;
 		this.rotation = rotation || 0;
 
-		var args = Array.prototype.splice.call(arguments, 2);
-		this.shape = this.createShape.apply(this, [x, y].concat(args));
+		this.isMoveable = false;
 
 		if (this.constructor.svg) {
+			this.shape = this.createInjectionGroup(x, y, this.size, this.rotation);
+
 			let callback = function () {
 				console.log("Append custom SVG");
 				this.injectionGroup._renderer.elem.appendChild(this.constructor.svg.cloneNode(true));
 				two.unbind('render', callback);
 			}.bind(this);
 			two.bind('render', callback);
+		} else {
+			var args = Array.prototype.splice.call(arguments, 2);
+			this.shape = this.createShape.apply(this, [x, y].concat(args));
 		}
 
 		this.show();
 	}
 
-	createShape(x, y) {
-		if (this.constructor.svg) {
-			let group = new Two.Group();
-			group.translation.set(x, y);
-			// group.translation.set(x-this.size, y-this.size);
-			this.injectionGroup = new Two.Group();
-			group.add(this.injectionGroup);
-			this.injectionGroup.scale = (this.size / (Constants.GRID_SPACING / 2));
-			// this.injectionGroup.rotation = this.rotation;
-			this.injectionGroup.translation.set(-this.size, -this.size);
-			return group;
-		}
+	createInjectionGroup(x, y, size, rotation) {
+		let group = new Two.Group();
+		group.translation.set(x, y);
+		// group.translation.set(x-size, y-size);
+		this.injectionGroup = new Two.Group();
+		group.add(this.injectionGroup);
+		this.injectionGroup.scale = (size / (Constants.GRID_SPACING / 2));
+		// this.injectionGroup.rotation = rotation;
+		this.injectionGroup.translation.set(-size, -size);
+		return group;
+	}
 
+	/**
+	 * Fallback method if there is no SVG bound to this gameObject class.
+	 * @param x
+	 * @param y
+	 */
+	createShape(x, y) {
 		console.error('createShape not implemented for ' + this.constructor.name);
 	}
 
@@ -142,18 +151,18 @@ class Stone extends GameObject {
 		);
 	}
 
-	// createShape(x, y) {
-	// 	this.diameter = randomInt(30, 90);
-	// 	let shape = new Two.Polygon(x, y, this.diameter, 6);
-	// 	shape.fill = 'darkgray';
-	// 	shape.stroke = 'dimgray';
-	// 	shape.linewidth = 2;
-	// 	shape.rotation = random(0, Math.PI * 2);
-	//
-	// 	// physics.registerStatic(x, y, this.diameter);
-	//
-	// 	return shape;
-	// }
+	createShape(x, y) {
+		this.diameter = randomInt(30, 90);
+		let shape = new Two.Polygon(x, y, this.diameter, 6);
+		shape.fill = 'darkgray';
+		shape.stroke = 'dimgray';
+		shape.linewidth = 2;
+		shape.rotation = random(0, Math.PI * 2);
+
+		// physics.registerStatic(x, y, this.diameter);
+
+		return shape;
+	}
 
 	// TODO size modificator
 	createMinimapIcon(x, y, sizeFactor) {
@@ -202,42 +211,42 @@ class Gold extends GameObject {
 
 class BerryBush extends GameObject {
 	constructor(x, y) {
-		super(x, y,	randomInt(20, 45));
+		super(x, y, randomInt(20, 45));
 
 	}
 
-	// createShape(x, y) {
-	// 	let shape = new Two.Group();
-	// 	shape.translation.set(x, y);
-	// 	shape.rotation = random(0, Math.PI * 2);
+	createShape(x, y) {
+		let shape = new Two.Group();
+		shape.translation.set(x, y);
+		shape.rotation = random(0, Math.PI * 2);
 
-	// 	this.diameter = randomInt(30, 50);
-	// 	let bush = new Two.Star(0, 0, this.diameter, this.diameter * 0.7, 5 + randomInt(1, 3) * 2);
-	// 	shape.add(bush);
-	// 	bush.fill = 'seagreen';
-	// 	bush.stroke = 'darkslategray';
-	// 	bush.linewidth = 2;
+		this.diameter = randomInt(30, 50);
+		let bush = new Two.Star(0, 0, this.diameter, this.diameter * 0.7, 5 + randomInt(1, 3) * 2);
+		shape.add(bush);
+		bush.fill = 'seagreen';
+		bush.stroke = 'darkslategray';
+		bush.linewidth = 2;
 
 
-	// 	let numberOfBerries = 3;
-	// 	if (this.diameter >= 37) {
-	// 		numberOfBerries++;
-	// 	}
-	// 	if (this.diameter >= 45) {
-	// 		numberOfBerries++;
-	// 	}
-	// 	for (let i = 0; i < numberOfBerries; i++) {
-	// 		let circle = new Two.Ellipse(
-	// 			(Math.cos(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
-	// 			(Math.sin(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
-	// 			5);
-	// 		shape.add(circle);
-	// 		circle.fill = 'purple';
-	// 		circle.noStroke();
-	// 	}
+		let numberOfBerries = 3;
+		if (this.diameter >= 37) {
+			numberOfBerries++;
+		}
+		if (this.diameter >= 45) {
+			numberOfBerries++;
+		}
+		for (let i = 0; i < numberOfBerries; i++) {
+			let circle = new Two.Ellipse(
+				(Math.cos(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
+				(Math.sin(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
+				5);
+			shape.add(circle);
+			circle.fill = 'purple';
+			circle.noStroke();
+		}
 
-	// 	return shape;
-	// }
+		return shape;
+	}
 
 	createMinimapIcon(x, y, sizeFactor) {
 		let shape = new Two.Ellipse(x, y, this.diameter * 3 * sizeFactor);
