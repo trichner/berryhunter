@@ -8,12 +8,17 @@ class Camera {
 	constructor(character) {
 		this.character = character;
 
+		this.offset = new Two.Vector(centerX, centerY);
+		this.vehicle = new Vehicle(
+			character.getX(),
+			character.getY());
+
+		this.vehicle.setMaxSpeed(character.movementSpeed * 2);
+
 		/**
 		 * @type {Two.Vector}
 		 */
-		this.translation = new Two.Vector(
-			character.getX() - width / 2,
-			character.getY() - height / 2);
+		this.translation = this.vehicle.position;
 
 		// this.shownGameObjects = [];
 
@@ -29,16 +34,22 @@ class Camera {
 	}
 
 	update() {
-		this.translation = new Two.Vector(
-			this.character.getX() - width / 2,
-			this.character.getY() - height / 2);
+		this.vehicle.arrive(this.character.getPosition());
+		this.vehicle.update();
 
-		groups.gameObjects.translation.copy(this.translation.negate());
-		groups.mapBorders.translation.copy(this.translation);
-		groups.character.translation.copy(this.translation);
+		// this.translation = new Two.Vector(
+		// 	this.character.getX() - width / 2,
+		// 	this.character.getY() - height / 2);
+
+		let translation = this.translation.clone();
+		translation.negate();
+		translation.addSelf(this.offset);
+		groups.gameObjects.translation.copy(translation);
+		groups.mapBorders.translation.copy(translation);
+		groups.character.translation.copy(translation);
 
 		if (typeof this.onUpdate === 'function'){
-			this.onUpdate(this.translation);
+			this.onUpdate(translation);
 		}
 	}
 }

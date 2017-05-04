@@ -60,6 +60,10 @@ class GameObject {
 		this.shape.translation.set(x, y);
 	}
 
+	getPosition() {
+		return this.shape.translation;
+	}
+
 	setX(x) {
 		this.setPosition(x, this.getY());
 	}
