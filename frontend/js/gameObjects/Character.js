@@ -10,8 +10,6 @@ class Character extends GameObject {
 
 		this.controls = new Controls(this);
 
-		two.bind('update', this.controls.update.bind(this.controls));
-
 		// this.isMoving = false;
 	}
 

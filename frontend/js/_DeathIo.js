@@ -12,8 +12,9 @@ var two;
  */
 var groups = {};
 
-var width;
-var height;
+var width, height;
+
+var centerX, centerY;
 
 /**
  * @type Physics
@@ -73,6 +74,9 @@ function setup() {
 	width = two.width;
 	height = two.height;
 
+	centerX = width / 2;
+	centerY = height / 2;
+
 	// physics = new Physics(width, height);
 
 	groups.background = two.makeGroup();
@@ -95,13 +99,7 @@ function setup() {
 
 	var domElement = two.renderer.domElement;
 	KeyEvents.init(domElement);
-
-	// domElement.addEventListener('pointerup', function (event) {
-	// 	console.log("pointerup", event);
-	// });
-	// domElement.addEventListener('pointerdown', function (event) {
-	// 	console.log("pointerdown", event);
-	// });
+	PointerEvents.setup(domElement);
 
 
 	domElement.addEventListener('blur', function () {

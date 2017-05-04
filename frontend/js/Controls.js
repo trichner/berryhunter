@@ -60,63 +60,7 @@ class Controls {
 
 		this.clock = new Tock({
 			interval: Constants.INPUT_TICKRATE,
-			callback: function () {
-				let movement = {
-					x: 0,
-					y: 0
-				};
-
-				if (anyKeyIsPressed(UP_KEYS)) {
-					movement.y -= 1;
-				}
-				if (anyKeyIsPressed(DOWN_KEYS)) {
-					movement.y += 1;
-				}
-				if (anyKeyIsPressed(LEFT_KEYS)) {
-					movement.x -= 1;
-				}
-				if (anyKeyIsPressed(RIGHT_KEYS)) {
-					movement.x += 1;
-				}
-
-				let action = null;
-				if (anyKeyIsPressed(ACTION_KEYS)) {
-					// TODO: check action delay
-					this.chararacter.action();
-					action = {
-						// TODO aktives Item eintragen
-						item: "fist",
-						alt: false
-					};
-				}
-				if (anyKeyIsPressed(ALT_ACTION_KEYS)) {
-					// TODO: check action delay
-					this.chararacter.altAction();
-					action = {
-						// TODO aktives Item eintragen
-						item: "fist",
-						alt: true
-					};
-				}
-
-				if (
-					movement.x === 0 &&
-					movement.y === 0 &&
-					action === null) {
-					this.chararacter.stopMovement();
-					return;
-				}
-
-				this.chararacter.move(movement);
-
-				let input = {
-					"movement": movement,
-					"rotation": Math.PI * 1.5,
-					"action": action
-				};
-
-				Backend.sendInputTick(input);
-			}.bind(this)
+			callback: this.update.bind(this)
 		});
 
 		this.clock.start();
@@ -129,8 +73,83 @@ class Controls {
 			} else {
 				two.play();
 			}
+			return;
 		}
-		// TODO bei diagonaler Bewegung darf der Movementspeed nicht überschritten werden
+
+		let movement = {
+			x: 0,
+			y: 0
+		};
+
+		if (anyKeyIsPressed(UP_KEYS)) {
+			movement.y -= 1;
+		}
+		if (anyKeyIsPressed(DOWN_KEYS)) {
+			movement.y += 1;
+		}
+		if (anyKeyIsPressed(LEFT_KEYS)) {
+			movement.x -= 1;
+		}
+		if (anyKeyIsPressed(RIGHT_KEYS)) {
+			movement.x += 1;
+		}
+
+		let action = null;
+		if (anyKeyIsPressed(ACTION_KEYS)) {
+			// TODO: check action delay
+			this.chararacter.action();
+			action = {
+				// TODO aktives Item eintragen
+				item: "fist",
+				alt: false
+			};
+		}
+		if (anyKeyIsPressed(ALT_ACTION_KEYS)) {
+			// TODO: check action delay
+			this.chararacter.altAction();
+			action = {
+				// TODO aktives Item eintragen
+				item: "fist",
+				alt: true
+			};
+		}
+
+		if (
+			movement.x === 0 &&
+			movement.y === 0 &&
+			action === null) {
+			this.chararacter.stopMovement();
+			this.adjustCharacterRotation();
+			return;
+		}
+
+		this.chararacter.move(movement);
+
+		let input = {
+			"movement": movement,
+			"rotation": this.adjustCharacterRotation(),
+			"action": action
+		};
+
+		Backend.sendInputTick(input);
+	}
+
+	adjustCharacterRotation() {
+		if (PointerEvents.moved) {
+			let rotation = TwoDimensional.angleBetween(
+				centerX,
+				centerY,
+				PointerEvents.x,
+				PointerEvents.y
+			);
+			this.chararacter.shape.rotation = rotation;
+
+			PointerEvents.moved = false;
+
+			return rotation;
+		}
+
+		return this.chararacter.shape.rotation;
 	}
 }
 
