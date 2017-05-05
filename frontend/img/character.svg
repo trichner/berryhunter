@@ -1,0 +1,16 @@
+<svg width="100" height="100" version="1.1" viewBox="0 0 26.458333 26.458334" xmlns="http://www.w3.org/2000/svg"
+     xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <radialGradient id="radialGradient6371-6" cx="21" cy="282" r="2.77"
+                        gradientTransform="matrix(1.61 .0361 -.0224 1 -11.9 -268)" gradientUnits="userSpaceOnUse">
+            <stop offset="0"/>
+            <stop stop-color="#f2a586" offset="1"/>
+        </radialGradient>
+    </defs>
+    <circle cx="19.4" cy="14.4" r="2.77" fill="url(#radialGradient6371-6)" stroke="#000" stroke-width=".212"/>
+    <g transform="translate(0 -271)">
+        <path d="m17.6 271s0.356 5.86-2.12 6.15c0.161-1.33-6.17-4.78-6.17-4.78s1.62 1.86 2.05 5.21c-3.31-1.01-4.67-4.42-4.67-4.42s-1.62 5.13-0.486 6.63c-0.769-0.559-4.31-0.79-4.31-0.79s3.84 6.19 5.8 6.38c-2.95 1.32-3.32 7.86-3.32 7.86s1.81-2.43 6.87-2.47c0.0448 4.59-3.25 6.54-3.25 6.54s11.7-2.92 10.8-5.76c1.51 0.313 1.23 1.65 1.23 1.65s0.984-3.57-0.295-4.41c3.35-0.345 4.9 3.44 4.9 3.44s-1.64-5.38-4.33-6.13c1.03-1.25 2.48-1.01 2.48-1.01s-0.752-3.49-1.81-2.84c1.51 0.347 0.862-6.77 0.862-6.77s-0.39 3.26-1.69 3.56c2.19-2.1-2.51-8.05-2.51-8.05z"
+              fill="#502119" stroke="#211b1b" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit=".4"
+              stroke-width=".185"/>
+    </g>
+</svg>

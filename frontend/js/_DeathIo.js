@@ -101,7 +101,13 @@ function setup() {
 	KeyEvents.init(domElement);
 	PointerEvents.setup(domElement);
 
-
+	// Disable context menu on right click to use the right click ingame
+	document.body.addEventListener('contextmenu', function (event) {
+		// console.log("Context menu target: ", event.target);
+		if (event.target === domElement || domElement.contains(event.target)) {
+			event.preventDefault();
+		}
+	});
 	domElement.addEventListener('blur', function () {
 		two.pause();
 	});
@@ -136,6 +142,9 @@ function createPlayer(id, x, y) {
 	gameStarted = true;
 
 	player = new Character(id, x, y);
+
+	two.bind('update', player.update.bind(player));
+
 	playerCam = new Camera(player);
 	miniMap.register(player);
 	two.play();

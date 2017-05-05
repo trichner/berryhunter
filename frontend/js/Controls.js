@@ -43,6 +43,14 @@ const PAUSE_KEYS = [
 	'P'.charCodeAt(0)
 ];
 
+/**
+ * List of key codes that are browser shortcuts that have to be prevented in normal game flow.
+ * @type {Array}
+ */
+const FUNCTION_KEYS = [
+	' '.charCodeAt(0) // Space. Browser: Scrolls the window. Game: Action Key
+];
+
 function anyKeyIsPressed(keyList) {
 	return keyList.some(function (keyCode) {
 		return KeyEvents.keyIsDown(keyCode);
@@ -58,17 +66,30 @@ class Controls {
 		this.chararacter = character;
 		this.playerId = character.id;
 
+		this.hitAnimationTick = false;
+
 		this.clock = new Tock({
 			interval: Constants.INPUT_TICKRATE,
 			callback: this.update.bind(this)
 		});
 
 		this.clock.start();
+
+		// Not part of KeyEvents as its way more complicated to implement desired behavior there.
+		window.addEventListener('keydown', this.handleFunctionKeys.bind(this));
+	}
+
+	handleFunctionKeys(event) {
+		// TODO check if in chat mode
+		let isFunctionKey = FUNCTION_KEYS.indexOf(event.keyCode) !== -1;
+		if (isFunctionKey) {
+			event.preventDefault();
+		}
 	}
 
 	update() {
-		if (anyKeyIsPressed(PAUSE_KEYS)){
-			if (two.playing){
+		if (anyKeyIsPressed(PAUSE_KEYS)) {
+			if (two.playing) {
 				two.pause();
 			} else {
 				two.play();
@@ -95,23 +116,31 @@ class Controls {
 		}
 
 		let action = null;
-		if (anyKeyIsPressed(ACTION_KEYS)) {
-			// TODO: check action delay
-			this.chararacter.action();
-			action = {
-				// TODO aktives Item eintragen
-				item: "fist",
-				alt: false
-			};
-		}
-		if (anyKeyIsPressed(ALT_ACTION_KEYS)) {
-			// TODO: check action delay
-			this.chararacter.altAction();
-			action = {
-				// TODO aktives Item eintragen
-				item: "fist",
-				alt: true
-			};
+		if (this.hitAnimationTick) {
+			// Make sure tick 0 gets passed to the character to finish animation
+			this.hitAnimationTick--;
+			this.chararacter.progressHitAnimation(this.hitAnimationTick);
+		} else {
+			if (anyKeyIsPressed(ACTION_KEYS)) {
+				this.hitAnimationTick = 30;
+				this.chararacter.action();
+				this.chararacter.progressHitAnimation(this.hitAnimationTick);
+				action = {
+					// TODO aktives Item eintragen
+					item: "fist",
+					alt: false
+				};
+			}
+			if (anyKeyIsPressed(ALT_ACTION_KEYS)) {
+				this.hitAnimationTick = 30;
+				this.chararacter.altAction();
+				this.chararacter.progressHitAnimation(this.hitAnimationTick);
+				action = {
+					// TODO aktives Item eintragen
+					item: "fist",
+					alt: true
+				};
+			}
 		}
 
 		if (
@@ -137,11 +166,17 @@ class Controls {
 	adjustCharacterRotation() {
 		if (PointerEvents.moved) {
 			let rotation = TwoDimensional.angleBetween(
-				centerX,
-				centerY,
 				PointerEvents.x,
-				PointerEvents.y
+				PointerEvents.y,
+				centerX,
+				centerY
 			);
+			// let rotation = TwoDimensional.angleBetween(
+			// 	centerX,
+			// 	centerY,
+			// 	PointerEvents.x,
+			// 	PointerEvents.y
+			// );
 			this.chararacter.shape.rotation = rotation;
 
 			PointerEvents.moved = false;
@@ -152,4 +187,3 @@ class Controls {
 		return this.chararacter.shape.rotation;
 	}
 }
-

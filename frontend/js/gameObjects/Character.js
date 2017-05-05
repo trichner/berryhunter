@@ -1,6 +1,6 @@
 class Character extends GameObject {
 	constructor(id, x, y) {
-		super(x, y);
+		super(x, y, 30, Math.PI / 2);
 		this.id = id;
 
 		this.isMoveable = true;
@@ -10,7 +10,41 @@ class Character extends GameObject {
 
 		this.controls = new Controls(this);
 
+		this.currentAction = false;
+
 		// this.isMoving = false;
+	}
+
+
+	createInjectionGroup(x, y, size, rotation) {
+		let group = super.createInjectionGroup(x, y, size, rotation);
+
+		// TODO Hände unter die Frisur rendern
+		let handAngle = 1.7;
+
+		this.leftHand = new Two.Ellipse(
+			Math.cos(Math.PI * handAngle) * size * 0.8,
+			Math.sin(Math.PI * handAngle) * size * 0.8,
+			size * 0.2
+		);
+		group.add(this.leftHand);
+		this.leftHand.fill = '#f2a586';
+		this.leftHand.stroke = '#000';
+		this.leftHand.linewidth = 0.212 * 0.6; // relative to size
+		this.leftHand.originalTranslation = this.leftHand.translation.clone();
+
+		this.rightHand = new Two.Ellipse(
+			Math.cos(Math.PI * (2 - handAngle)) * size * 0.8,
+			Math.sin(Math.PI * (2 - handAngle)) * size * 0.8,
+			size * 0.2
+		);
+		group.add(this.rightHand);
+		this.rightHand.fill = '#f2a586';
+		this.rightHand.stroke = '#000';
+		this.rightHand.linewidth = 0.212 * 0.6; // relative to size
+		this.rightHand.originalTranslation = this.rightHand.translation.clone();
+
+		return group;
 	}
 
 	createShape(x, y) {
@@ -132,10 +166,47 @@ class Character extends GameObject {
 	}
 
 	action() {
-		console.info("Action by Player " + this.id);
+		this.currentAction = 'MAIN';
+		// console.info("Action by Player " + this.id);
 	}
 
 	altAction() {
-		console.info("Alt Action by Player " + this.id);
+		this.currentAction = 'ALT';
+		// console.info("Alt Action by Player " + this.id);
+	}
+
+	progressHitAnimation(animationFrame) {
+		this.actionAnimationFrame = animationFrame;
+	}
+
+	update() {
+		if (this.currentAction) {
+			let hand;
+			switch (this.currentAction) {
+				case 'MAIN':
+					hand = this.rightHand;
+					break;
+				case 'ALT':
+					hand = this.leftHand;
+					break;
+			}
+
+			const maxOffset = this.size * 0.4;
+			let offset;
+			if (this.actionAnimationFrame > 21) {
+				offset = sq((31 - this.actionAnimationFrame)) / (9 * 9) * maxOffset;
+			} else if (this.actionAnimationFrame > 18) {
+				offset = maxOffset;
+			} else {
+				offset = this.actionAnimationFrame / 18 * maxOffset;
+			}
+			hand.translation.x = hand.originalTranslation.x + offset;
+
+			if (this.actionAnimationFrame <= 1) {
+				this.currentAction = false;
+			}
+		}
 	}
 }
+
+registerGameObjectSVG(Character, 'img/character.svg');
