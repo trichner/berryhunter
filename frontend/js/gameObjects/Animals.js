@@ -83,4 +83,4 @@ class SaberToothCat extends Animal {
 	}
 }
 
-registerGameObjectSVG(SaberToothCat, 'img/sabreToothCat.svg');
+registerGameObjectSVG(SaberToothCat, 'img/saberToothCat.svg');
