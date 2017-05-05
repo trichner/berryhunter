@@ -97,13 +97,13 @@ function setup() {
 		Fps.setup();
 	}
 
-	var domElement = two.renderer.domElement;
-	KeyEvents.init(domElement);
+	let domElement = two.renderer.domElement;
+	SvgLoader.setup(domElement);
+	KeyEvents.setup(domElement);
 	PointerEvents.setup(domElement);
 
 	// Disable context menu on right click to use the right click ingame
 	document.body.addEventListener('contextmenu', function (event) {
-		// console.log("Context menu target: ", event.target);
 		if (event.target === domElement || domElement.contains(event.target)) {
 			event.preventDefault();
 		}

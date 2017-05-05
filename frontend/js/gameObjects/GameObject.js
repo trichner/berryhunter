@@ -11,7 +11,6 @@ class GameObject {
 			this.shape = this.createInjectionGroup(x, y, this.size, this.rotation);
 
 			let callback = function () {
-				console.log("Append custom SVG");
 				this.injectionGroup._renderer.elem.appendChild(this.constructor.svg.cloneNode(true));
 				two.unbind('render', callback);
 			}.bind(this);

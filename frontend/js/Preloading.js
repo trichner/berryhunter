@@ -17,7 +17,7 @@ function registerGameObjectSVG(gameObjectClass, svgPath) {
 		url: svgPath
 	})
 		.then((svgText) => {
-			gameObjectClass.svg = htmlToElement(svgText);
+			gameObjectClass.svg = SvgLoader.load(svgText);
 			return gameObjectClass.svg;
 		}));
 }

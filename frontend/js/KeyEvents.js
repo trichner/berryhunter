@@ -1,8 +1,8 @@
 "use strict";
 
-var KeyEvents = {
+const KeyEvents = {
 
-	init: function (domElement) {
+	setup: function (domElement) {
 		domElement.addEventListener('keydown', this._onkeydown.bind(this));
 		domElement.addEventListener('keyup', this._onkeyup.bind(this));
 		domElement.addEventListener('keypress', this._onkeypress.bind(this));
