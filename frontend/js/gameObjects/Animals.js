@@ -84,3 +84,12 @@ class SaberToothCat extends Animal {
 }
 
 registerGameObjectSVG(SaberToothCat, 'img/saberToothCat.svg');
+
+class Mammoth extends Animal {
+
+	constructor(x, y) {
+		super(x, y, randomInt(60, 90));
+	}
+}
+
+registerGameObjectSVG(Mammoth, 'img/mammoth.svg');
