@@ -90,8 +90,8 @@ class GameObject {
 }
 
 class Tree extends GameObject {
-	constructor(x, y) {
-		super(x, y)
+	constructor(x, y, size, rotation) {
+		super(x, y, size, rotation);
 	}
 
 	createMinimapIcon(x, y, sizeFactor) {
@@ -124,11 +124,11 @@ class RoundTree extends Tree {
 
 class MarioTree extends Tree {
 	constructor(x, y) {
-		super(x, y)
+		super(x, y, randomInt(50, 150));
 	}
 
 	createShape(x, y) {
-		this.diameter = randomInt(25, 75);
+		this.diameter = this.size/2;
 		let shape = new Two.Group();
 		shape.translation.set(x, y);
 		for (let i = 0; i < 5; i++) {
@@ -154,6 +154,8 @@ class MarioTree extends Tree {
 	}
 }
 
+registerGameObjectSVG(MarioTree, 'img/deciduousTree.svg');
+
 class Stone extends GameObject {
 	constructor(x, y) {
 		super(x, y,
@@ -163,7 +165,7 @@ class Stone extends GameObject {
 	}
 
 	createShape(x, y) {
-		this.diameter = randomInt(30, 90);
+		this.diameter = this.size;
 		let shape = new Two.Polygon(x, y, this.diameter, 6);
 		shape.fill = 'darkgray';
 		shape.stroke = 'dimgray';
@@ -189,11 +191,11 @@ registerGameObjectSVG(Stone, 'img/flintStone.svg');
 
 class Gold extends GameObject {
 	constructor(x, y) {
-		super(x, y)
+		super(x, y, randomInt(30, 70));
 	}
 
 	createShape(x, y) {
-		this.diameter = randomInt(30, 90);
+		this.diameter = this.size;
 		this.sides = 5;
 		if (this.diameter > 60) {
 			this.sides += 2;
@@ -219,6 +221,8 @@ class Gold extends GameObject {
 		return shape;
 	}
 }
+
+registerGameObjectSVG(Gold, 'img/bronceStone.svg');
 
 class BerryBush extends GameObject {
 	constructor(x, y) {
@@ -268,4 +272,4 @@ class BerryBush extends GameObject {
 	}
 }
 
-registerGameObjectSVG(BerryBush, 'img/berryBushVariant2.svg');
+registerGameObjectSVG(BerryBush, 'img/berryBush.svg');

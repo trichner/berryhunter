@@ -79,7 +79,7 @@ class Rabbit extends Animal {
 class SaberToothCat extends Animal {
 
 	constructor(x, y) {
-		super(x, y, randomInt(40, 80));
+		super(x, y, randomInt(30, 50));
 	}
 }
 
