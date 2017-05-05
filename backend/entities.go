@@ -10,7 +10,7 @@ const (
 	typeRabbit          = "Rabbit"
 	typeRoundTree       = "RoundTree"
 	typePlayer          = "Character"
-	typeSabreToothTiger = "SabreToothTiger"
+	typeSaberToothCat = "SaberToothCat"
 )
 
 //---- basic interface with getters
@@ -51,9 +51,9 @@ func NewRabbit() *entity {
 	return &e
 }
 
-func NewSabretoothTiger() *entity {
+func NewSaberToothCat() *entity {
 	e := newCircleEntity(0, 0, 1, 1)
-	e.entityType = typeSabreToothTiger
+	e.entityType = typeSaberToothCat
 	return &e
 }
 

@@ -76,11 +76,11 @@ class Rabbit extends Animal {
 	}
 }
 
-class SabreToothTiger extends Animal {
+class SaberToothCat extends Animal {
 
 	constructor(x, y) {
 		super(x, y, randomInt(40, 80));
 	}
 }
 
-registerGameObjectSVG(SabreToothTiger, 'img/sabreToothTiger.svg');
+registerGameObjectSVG(SaberToothCat, 'img/sabreToothCat.svg');

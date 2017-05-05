@@ -39,7 +39,7 @@ var GameMapGenerator = {
 						}, {
 							weight: 1,
 							func: () => {
-								return SabreToothTiger;
+								return SaberToothCat;
 							}
 						}
 							// }, {
@@ -129,7 +129,7 @@ var GameMapGenerator = {
 						}, {
 							weight: 1,
 							func: () => {
-								return new SabreToothTiger(rx, ry);
+								return new SaberToothCat(rx, ry);
 							}
 						}
 							// }, {

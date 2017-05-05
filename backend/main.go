@@ -20,7 +20,7 @@ func main() {
 	rabbit := NewRabbit()
 	g.addEntity(rabbit)
 
-	tiger := NewSabretoothTiger()
+	tiger := NewSaberToothCat()
 	g.addEntity(tiger)
 
 	g.Run()

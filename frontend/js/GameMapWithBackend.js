@@ -9,7 +9,7 @@ const gameObjectClasses = {
 	Gold,
 	BerryBush,
 	Rabbit,
-	SabreToothTiger
+	SaberToothCat
 };
 
 function GameMapWithBackend() {
