@@ -38,7 +38,7 @@ function GameMap() {
  * @return Array
  */
 GameMap.prototype.getObjects = function (startX, startY, endX, endY) {
-	var containedObjects = this.objects.filter(function (object) {
+	const containedObjects = this.objects.filter(function (object) {
 		// let verticalContain = false;
 		// let horizontalContain = true;
 		//

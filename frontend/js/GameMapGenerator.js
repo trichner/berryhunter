@@ -1,6 +1,6 @@
 "use strict";
 
-var GameMapGenerator = {
+let GameMapGenerator = {
 	generateFromQuadrants: function (width, height) {
 		let objects = [];
 

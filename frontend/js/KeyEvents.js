@@ -168,14 +168,14 @@ const KeyEvents = {
 		this._setProperty('keyIsPressed', true);
 		this._setProperty('keyCode', e.which);
 		this.downKeys[e.which] = true;
-		var key = String.fromCharCode(e.which);
+		let key = String.fromCharCode(e.which);
 		if (!key) {
 			key = e.which;
 		}
 		this._setProperty('key', key);
-		var keyPressed = this.keyPressed || window.keyPressed;
+		let keyPressed = this.keyPressed || window.keyPressed;
 		if (typeof keyPressed === 'function' && !e.charCode) {
-			var executeDefault = keyPressed(e);
+			const executeDefault = keyPressed(e);
 			if (executeDefault === false) {
 				e.preventDefault();
 			}
@@ -209,20 +209,20 @@ const KeyEvents = {
 	 * </div>
 	 */
 	_onkeyup: function (e) {
-		var keyReleased = this.keyReleased || window.keyReleased;
+		let keyReleased = this.keyReleased || window.keyReleased;
 		this._setProperty('isKeyPressed', false);
 		this._setProperty('keyIsPressed', false);
 		this._setProperty('_lastKeyCodeTyped', null);
 		this.downKeys[e.which] = false;
 		//delete this._downKeys[e.which];
-		var key = String.fromCharCode(e.which);
+		let key = String.fromCharCode(e.which);
 		if (!key) {
 			key = e.which;
 		}
 		this._setProperty('key', key);
 		this._setProperty('keyCode', e.which);
 		if (typeof keyReleased === 'function') {
-			var executeDefault = keyReleased(e);
+			const executeDefault = keyReleased(e);
 			if (executeDefault === false) {
 				e.preventDefault();
 			}
@@ -270,9 +270,9 @@ const KeyEvents = {
 		this._setProperty('keyCode', e.which);
 		this._setProperty('_lastKeyCodeTyped', e.which); // track last keyCode
 		this._setProperty('key', String.fromCharCode(e.which));
-		var keyTyped = this.keyTyped || window.keyTyped;
+		let keyTyped = this.keyTyped || window.keyTyped;
 		if (typeof keyTyped === 'function') {
-			var executeDefault = keyTyped(e);
+			const executeDefault = keyTyped(e);
 			if (executeDefault === false) {
 				e.preventDefault();
 			}
@@ -284,7 +284,7 @@ const KeyEvents = {
 	 * not focused on the element we must assume all keys currently down have
 	 * been released.
 	 */
-	_onblur: function (e) {
+	_onblur: function () {
 		this.downKeys = {};
 	},
 

@@ -12,21 +12,6 @@ const Backend = {
 		this.webSocket = new WebSocket(Constants.BACKEND.URL);
 		this.webSocket.onopen = function () {
 			console.log("WebSocket: Open");
-
-			// setTimeout(function () {
-			// 	Backend.webSocket.send("Hallo Thomas");
-			// }, 500);
-			//
-			// setTimeout(function () {
-			// 	Backend.webSocket.send("Na was geht?");
-			// }, 1500);
-			//
-			// setTimeout(function () {
-			// 	Backend.send({
-			// 		id: 23434,
-			// 		movement: 'top'
-			// 	});
-			// }, 2500);
 		};
 
 		this.webSocket.onerror = function () {
@@ -35,13 +20,12 @@ const Backend = {
 
 		this.webSocket.onmessage = this.receive.bind(this);
 
-		this.lastMessageReceivedTime = window.performance.now();
+		this.lastMessageReceivedTime = performance.now();
 
 	},
 
 	send: function (messageObj) {
 		if (this.webSocket.readyState !== WebSocket.OPEN) {
-			// TODO
 			// Websocket is not open (yet), ignore sending
 			return;
 		}
@@ -53,7 +37,7 @@ const Backend = {
 		if (!two.playing && gameStarted){
 			return;
 		}
-		let messageReceivedTime = window.performance.now();
+		let messageReceivedTime = performance.now();
 		let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
 		this.lastMessageReceivedTime = messageReceivedTime;
 
@@ -96,10 +80,6 @@ const Backend = {
 		snapshot.entities.forEach(function (entity) {
 			if (entity.id === snapshot.player_id){
 				if (gameStarted){
-					// if (player.getX() > entity.x){
-					// 	console.log(player.getX(), entity.x);
-					// 	return;
-					// }
 					player.setPosition(entity.x, entity.y);
 				} else {
 					createPlayer(entity.id, entity.x, entity.y);
@@ -117,8 +97,5 @@ const Backend = {
 		}
 		inputObj.tick = this.lastServerTick + 1;
 		this.send(inputObj);
-
-		// console.log("input:", inputObj);
 	}
-
 };

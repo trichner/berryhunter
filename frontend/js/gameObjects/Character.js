@@ -11,8 +11,6 @@ class Character extends GameObject {
 		this.controls = new Controls(this);
 
 		this.currentAction = false;
-
-		// this.isMoving = false;
 	}
 
 
@@ -58,7 +56,7 @@ class Character extends GameObject {
 		shape.stroke = 'rgb(255, 196, 128)';
 		shape.linewidth = 2;
 
-		var smiley = executeRandomFunction([
+		const smiley = executeRandomFunction([
 			{
 				weight: 4,
 				func: function () {
@@ -101,9 +99,6 @@ class Character extends GameObject {
 			fill: 'rgb(255, 196, 128)'
 		}));
 
-		// this.body = physics.registerDynamic(x, y, 30);
-		// this.body.twoShape = shape;
-
 		return group;
 	}
 
@@ -123,37 +118,15 @@ class Character extends GameObject {
 		groups.character.remove(this.shape);
 	}
 
-	stopMovement() {
-		// if (this.isMoving){
-		// 	// this.body.setLinearVelocity(new planck.Vec2());
-		// 	this.isMoving = false;
-		// }
-	}
-
 	move(movement) {
 		// TODO Offline mode
 		if (!MapEditor.isActive()) {
 			return;
 		}
 		let moveVec = new Two.Vector().copy(movement);
-		// if (moveVec.lengthSquared() === 0) {
-		// 	// No movement happened, cancel
-		// 	return;
-		// }
 
 		moveVec.setLength(this.movementSpeed);
 
-
-		// // this.body.setLinearVelocity(
-		// // 	// this.body.getLinearVelocity().add(Measurement.vec2meters(moveVec))
-		// // 	Measurement.vec2meters(moveVec)
-		// // );
-		//
-		// this.body.setPosition(
-		// 	this.body.getPosition().add(Measurement.vec2meters(moveVec))
-		// );
-		//
-		// this.isMoving = true;
 
 		let lastX = this.getX();
 		let lastY = this.getY();
@@ -167,12 +140,10 @@ class Character extends GameObject {
 
 	action() {
 		this.currentAction = 'MAIN';
-		// console.info("Action by Player " + this.id);
 	}
 
 	altAction() {
 		this.currentAction = 'ALT';
-		// console.info("Alt Action by Player " + this.id);
 	}
 
 	progressHitAnimation(animationFrame) {

@@ -1,4 +1,4 @@
-var Quadrants =
+let Quadrants =
 	[
 		// Berries behind a row of trees
 		[

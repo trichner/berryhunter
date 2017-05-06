@@ -1,6 +1,6 @@
 "use strict";
 
-var PointerEvents = {
+let PointerEvents = {
 	x: 0,
 	y: 0,
 

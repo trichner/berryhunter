@@ -37,10 +37,6 @@ class Camera {
 		this.vehicle.arrive(this.character.getPosition());
 		this.vehicle.update();
 
-		// this.translation = new Two.Vector(
-		// 	this.character.getX() - width / 2,
-		// 	this.character.getY() - height / 2);
-
 		let translation = this.translation.clone();
 		translation.negate();
 		translation.addSelf(this.offset);

@@ -4,7 +4,7 @@ class Border extends GameObject {
 	}
 
 	createShape(x, y, side, length) {
-		var x2, y2;
+		let x2, y2;
 		switch (side) {
 			case 'NORTH':
 				x2 = x + length;

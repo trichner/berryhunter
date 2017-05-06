@@ -11,7 +11,7 @@ class QuadrantGrid {
 
 		let index = 1;
 		const gridSpacing = Constants.GRID_SPACING;
-		for (var x = gridSpacing; x <= width; x += gridSpacing) {
+		for (let x = gridSpacing; x <= width; x += gridSpacing) {
 			if (x < width) {
 				this.gridLines.add(QuadrantGrid.createGridLine(false, x, 0, x, height));
 			}
@@ -23,7 +23,7 @@ class QuadrantGrid {
 		}
 
 		index = 1;
-		for (var y = gridSpacing; y <= height; y += gridSpacing) {
+		for (let y = gridSpacing; y <= height; y += gridSpacing) {
 			if (y < height) {
 				this.gridLines.add(QuadrantGrid.createGridLine(true, 0, y, width, y));
 			}

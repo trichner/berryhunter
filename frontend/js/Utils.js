@@ -1,6 +1,6 @@
 "use strict";
 
-var Relative = {
+let Relative = {
 	width: function (value) {
 		return value * width / 100;
 	},
@@ -34,11 +34,11 @@ function executeRandomFunction(weightedFunctions) {
 	});
 
 	// http://stackoverflow.com/a/9330493
-	var index = randomInt(weightTotal) + 1;
-	var sum = 0;
-	var i = 0;
+	const index = randomInt(weightTotal) + 1;
+	let sum = 0;
+	let i = 0;
 	while (sum < index) {
-		var weightedFunction = weightedFunctions[i++];
+		const weightedFunction = weightedFunctions[i++];
 		sum += weightedFunction.weight;
 	}
 	return weightedFunctions[i - 1].func();
@@ -49,9 +49,9 @@ function createVector(x, y) {
 }
 
 function loadStrings(path, callback, errorCallback) {
-	var ret = [];
-	var req = new XMLHttpRequest();
-	var decrementPreload = _getDecrementPreload.apply(this, arguments);
+	const ret = [];
+	const req = new XMLHttpRequest();
+	const decrementPreload = _getDecrementPreload.apply(this, arguments);
 
 	req.addEventListener('error', function (resp) {
 		if (errorCallback) {
@@ -65,8 +65,8 @@ function loadStrings(path, callback, errorCallback) {
 	req.onreadystatechange = function () {
 		if (req.readyState === 4) {
 			if (req.status === 200) {
-				var arr = req.responseText.match(/[^\r\n]+/g);
-				for (var k in arr) {
+				const arr = req.responseText.match(/[^\r\n]+/g);
+				for (let k in arr) {
 					ret[k] = arr[k];
 				}
 				if (typeof callback !== 'undefined') {
@@ -90,7 +90,7 @@ function loadStrings(path, callback, errorCallback) {
 }
 
 function _getDecrementPreload() {
-	var decrementPreload = arguments[arguments.length - 1];
+	let decrementPreload = arguments[arguments.length - 1];
 
 	// when in preload decrementPreload will always be the last arg as it is set
 	// with args.push() before invocation in _wrapPreload
@@ -124,14 +124,14 @@ function hasClass(svgElement, className) {
 }
 
 function htmlToElement(html) {
-	var template = document.createElement('template');
+	const template = document.createElement('template');
 	template.innerHTML = html;
 	return template.content.firstChild;
 }
 
 function makeRequest (opts) {
 	return new Promise(function (resolve, reject) {
-		var xhr = new XMLHttpRequest();
+		const xhr = new XMLHttpRequest();
 		xhr.open(opts.method, opts.url);
 		xhr.onload = function () {
 			if (this.status >= 200 && this.status < 300) {
@@ -154,7 +154,7 @@ function makeRequest (opts) {
 				xhr.setRequestHeader(key, opts.headers[key]);
 			});
 		}
-		var params = opts.params;
+		let params = opts.params;
 		// We'll need to stringify if we've been given an object
 		// If we have a string, this is skipped.
 		if (params && typeof params === 'object') {

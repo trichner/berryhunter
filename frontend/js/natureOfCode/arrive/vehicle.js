@@ -5,7 +5,7 @@
 // The "Vehicle" class
 
 Two.Vector.prototype.limit = function (max) {
-	var mSq = this.lengthSquared();
+	const mSq = this.lengthSquared();
 	if (mSq > max * max) {
 		this.divideScalar(Math.sqrt(mSq)); //normalize it
 		this.multiplyScalar(max);
@@ -50,18 +50,18 @@ function Vehicle(x, y) {
 	// A method that calculates a steering force towards a target
 	// STEER = DESIRED MINUS VELOCITY
 	this.arrive = function (target) {
-		var desired = new Two.Vector().sub(target, this.position);  // A vector pointing from the location to the target
-		var d = desired.length();
+		const desired = new Two.Vector().sub(target, this.position);  // A vector pointing from the location to the target
+		const d = desired.length();
 		// Scale with arbitrary damping within 100 pixels
 		if (d < this.distanceBeforeStopping) {
-			var m = map(d, 0, this.distanceBeforeStopping, 0, this.maxspeed);
+			const m = map(d, 0, this.distanceBeforeStopping, 0, this.maxspeed);
 			desired.setLength(m);
 		} else {
 			desired.setLength(this.maxspeed);
 		}
 
 		// Steering = Desired minus Velocity
-		var steer = new Two.Vector().sub(desired, this.velocity);
+		const steer = new Two.Vector().sub(desired, this.velocity);
 		steer.limit(this.maxforce);  // Limit to maximum steering force
 		this.applyForce(steer);
 	};

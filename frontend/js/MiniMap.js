@@ -12,7 +12,7 @@ class MiniMap {
 		groups.overlay.add(this.group);
 		this.group.translation.set(0, height - this.size);
 
-		var background = new Two.Rectangle(this.size / 2, this.size / 2, this.size, this.size);
+		const background = new Two.Rectangle(this.size / 2, this.size / 2, this.size, this.size);
 		this.group.add(background);
 		background.fill = 'Cornsilk';
 		background.stroke = background.fill;
@@ -41,9 +41,9 @@ class MiniMap {
 		}
 
 		// Position each icon relative to its position on the real map.
-		let x = gameObject.getX() / gameMap.width * this.size;
-		let y = gameObject.getY() / gameMap.height * this.size;
-		var minimapIcon = gameObject.createMinimapIcon(x, y, this.iconSizeFactor);
+		let x = gameObject.getX() / this.gameMap.width * this.size;
+		let y = gameObject.getY() / this.gameMap.height * this.size;
+		const minimapIcon = gameObject.createMinimapIcon(x, y, this.iconSizeFactor);
 		this.group.add(minimapIcon);
 		return minimapIcon;
 	}
@@ -59,8 +59,8 @@ class MiniMap {
 
 	update() {
 		this.registeredGameObjects.forEach(function (gameObject) {
-			gameObject.minimapIcon.translation.x = (playerCam.getX() + gameObject.getX()) / gameMap.width * this.size;
-			gameObject.minimapIcon.translation.y = (playerCam.getY() + gameObject.getY()) / gameMap.width * this.size;
+			gameObject.minimapIcon.translation.x = (playerCam.getX() + gameObject.getX()) / this.gameMap.width * this.size;
+			gameObject.minimapIcon.translation.y = (playerCam.getY() + gameObject.getY()) / this.gameMap.width * this.size;
 		}, this);
 	}
 

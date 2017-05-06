@@ -1,5 +1,5 @@
 "use strict";
-var promises = [];
+const promises = [];
 
 function executePreload() {
 	return Promise.all(promises);

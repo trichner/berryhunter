@@ -62,13 +62,16 @@ const MapEditor = {
 
 		try {
 			Quadrants = eval(document.getElementById('quadrantJson').value);
-			if (!Quadrants) {
-				throw "Doesn't return a definition."
-			}
+
 		} catch (e) {
 			jsonStatus.classList.add('error');
 			jsonStatus.innerHTML = "Error in JSON: " + e.message;
 			return;
+		}
+
+		if (!Quadrants) {
+			jsonStatus.classList.add('error');
+			jsonStatus.innerHTML = "The JSON doesn't return a definition.";
 		}
 
 		MapEditor.calculateMapDimensions();

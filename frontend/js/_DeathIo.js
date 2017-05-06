@@ -1,44 +1,39 @@
 "use strict";
 
-var gameStarted = false;
+let gameStarted = false;
 
 /**
  * @type Two
  */
-var two;
+let two;
 
 /**
  * Ordered by z-index
  */
-var groups = {};
+const groups = {};
 
-var width, height;
+let width, height;
 
-var centerX, centerY;
-
-/**
- * @type Physics
- */
-var physics;
+let centerX, centerY;
 
 /**
  * @type Character
  */
-var player;
+let player;
 /**
  * @type GameMap
  */
-var gameMap;
+let gameMap;
 
 /**
  * @type MiniMap
  */
-var miniMap;
+let miniMap;
 
 /**
  * @type Camera
  */
-var playerCam;
+let playerCam;
 
 preload();
 
@@ -50,7 +45,7 @@ function preload() {
 }
 
 function createBackground() {
-	var background = new Two.Rectangle(width / 2, height / 2, width, height);
+	const background = new Two.Rectangle(width / 2, height / 2, width, height);
 	groups.background.add(background);
 	background.fill = 'rgb(0, 96, 48)';
 	background.noStroke();
@@ -77,8 +72,6 @@ function setup() {
 	centerX = width / 2;
 	centerY = height / 2;
 
-	// physics = new Physics(width, height);
-
 	groups.background = two.makeGroup();
 	groups.character = two.makeGroup();
 	groups.mapBorders = two.makeGroup();
@@ -89,9 +82,9 @@ function setup() {
 
 	// TODO if offline createPlayer
 	// player = new Character(1, width / 2, height / 2);
+	// playerCam = new Camera(player);
 	gameMap = new GameMapWithBackend();
 	miniMap = new MiniMap(gameMap);
-	// playerCam = new Camera(player);
 
 	if (typeof Fps === 'object' && Constants.SHOW_FPS) {
 		Fps.setup();
@@ -118,19 +111,9 @@ function setup() {
 	});
 
 
-	/*
-	 * Set up animation loop.
-	 */
-	// two.play();
-
-
 	if (MapEditor.isActive()) {
 		MapEditor.afterSetup();
 	}
-
-	// two.unbind('update');
-
-	// two.update();
 
 	document.body.classList.remove('loading');
 }
