@@ -147,7 +147,6 @@ class Controls {
 			movement.x === 0 &&
 			movement.y === 0 &&
 			action === null) {
-			this.chararacter.stopMovement();
 			this.adjustCharacterRotation();
 			return;
 		}
