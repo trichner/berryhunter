@@ -6,6 +6,8 @@ import (
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"math/rand"
+	"fmt"
+	"encoding/json"
 )
 
 const (
@@ -166,10 +168,18 @@ func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
 	}
 	s := b.Shapes[0]
 	pos := b.Position()
-	return &AabbDTO{
+	aabb := &AabbDTO{
 		LowerX: &(&floatwrapper{float32(s.AABB().Lower.X+pos.X) * dist2px}).f,
 		LowerY: &(&floatwrapper{float32(s.AABB().Lower.Y+pos.Y) * dist2px}).f,
 		UpperX: &(&floatwrapper{float32(s.AABB().Upper.X+pos.X) * dist2px}).f,
 		UpperY: &(&floatwrapper{float32(s.AABB().Upper.Y+pos.Y) * dist2px}).f,
 	}
+
+	bytes, err := json.Marshal(aabb)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s\n", bytes)
+
+	return aabb
 }

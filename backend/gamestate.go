@@ -3,7 +3,7 @@ package main
 type AabbDTO struct {
 	LowerX *float32 `json:"LowerX,omitempty"`
 	LowerY *float32 `json:"LowerY,omitempty"`
-	UpperX *float32 `json:"UpperY,omitempty"`
+	UpperX *float32 `json:"UpperX,omitempty"`
 	UpperY *float32 `json:"UpperY,omitempty"`
 }
 
