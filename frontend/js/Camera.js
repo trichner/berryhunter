@@ -59,7 +59,9 @@ class Camera {
 		this.vehicle.arrive(this.character.getPosition());
 		this.vehicle.update();
 
-		Camera.keepWithinMapBoundaries(this.vehicle);
+		if (!Constants.DEBUGGING.CAMERA_IGNORES_MAP_BOUNDARIES) {
+			Camera.keepWithinMapBoundaries(this.vehicle);
+		}
 
 		let translation = this.translation.clone();
 		translation.negate();

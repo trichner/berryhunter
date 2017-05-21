@@ -41,7 +41,8 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 	let gameObject = this.objects[entity.id];
 	if (gameObject) {
 		gameObject.setPosition(entity.x, entity.y);
-		if (entity.aabb && //
+		if (Constants.DEBUGGING.SHOW_AABBS && //
+			entity.aabb && //
 			!_.isUndefined(entity.aabb.LowerX) && //
 			!_.isUndefined(entity.aabb.LowerY) && //
 			!_.isUndefined(entity.aabb.UpperX) && //

@@ -11,7 +11,12 @@ const Constants = {
 	},
 	INPUT_TICKRATE: 33, // Milliseconds between ticks
 
-	INVENTORY_SLOTS: 8
+	INVENTORY_SLOTS: 8,
+
+	DEBUGGING: {
+		SHOW_AABBS: true,
+		CAMERA_IGNORES_MAP_BOUNDARIES: true
+	}
 };
 
 Constants.QUADRANT_SIZE = Constants.GRID_SPACING * Constants.FIELDS_IN_QUADRANT;
