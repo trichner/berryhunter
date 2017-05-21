@@ -122,7 +122,7 @@ class Controls {
 			this.chararacter.progressHitAnimation(this.hitAnimationTick);
 		} else {
 			if (anyKeyIsPressed(ACTION_KEYS)) {
-				this.hitAnimationTick = 30;
+				this.hitAnimationTick = Character.hitAnimationFrameDuration;
 				this.chararacter.action();
 				this.chararacter.progressHitAnimation(this.hitAnimationTick);
 				action = {
@@ -132,7 +132,7 @@ class Controls {
 				};
 			}
 			if (anyKeyIsPressed(ALT_ACTION_KEYS)) {
-				this.hitAnimationTick = 30;
+				this.hitAnimationTick = Character.hitAnimationFrameDuration;
 				this.chararacter.altAction();
 				this.chararacter.progressHitAnimation(this.hitAnimationTick);
 				action = {

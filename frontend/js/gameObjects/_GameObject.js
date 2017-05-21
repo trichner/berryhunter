@@ -5,7 +5,7 @@ class GameObject {
 		this.size = size || Constants.GRID_SPACING / 2;
 		this.rotation = rotation || 0;
 
-		this.isMoveable = false;
+		this.rotateOnPositioning = false;
 
 		if (this.constructor.svg) {
 			this.shape = this.createInjectionGroup(x, y, this.size, this.rotation);
@@ -53,7 +53,7 @@ class GameObject {
 	}
 
 	setPosition(x, y) {
-		if (this.isMoveable) {
+		if (this.rotateOnPositioning) {
 			this.shape.rotation = TwoDimensional.angleBetween(this.getX(), this.getY(), x, y);
 		}
 		this.shape.translation.set(x, y);

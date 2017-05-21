@@ -3,7 +3,6 @@ class Character extends GameObject {
 		super(x, y, 30, Math.PI / 2);
 		this.id = id;
 
-		this.isMoveable = true;
 		this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
 
 		this.show();
@@ -133,7 +132,7 @@ class Character extends GameObject {
 
 		this.shape.translation.addSelf(moveVec.setLength(this.movementSpeed));
 
-		if (this.isMoveable) {
+		if (this.rotateOnPositioning) {
 			this.shape.rotation = TwoDimensional.angleBetween(lastX, lastY, this.getX(), this.getY());
 		}
 	}
@@ -164,12 +163,13 @@ class Character extends GameObject {
 
 			const maxOffset = this.size * 0.4;
 			let offset;
-			if (this.actionAnimationFrame > 21) {
-				offset = sq((31 - this.actionAnimationFrame)) / (9 * 9) * maxOffset;
-			} else if (this.actionAnimationFrame > 18) {
+			if (this.actionAnimationFrame > 0.7 * Character.hitAnimationFrameDuration) {
+				offset = sq(( Character.hitAnimationFrameDuration + 1 - this.actionAnimationFrame)) /
+					sq(0.3 * Character.hitAnimationFrameDuration) * maxOffset;
+			} else if (this.actionAnimationFrame > 0.6 * Character.hitAnimationFrameDuration) {
 				offset = maxOffset;
 			} else {
-				offset = this.actionAnimationFrame / 18 * maxOffset;
+				offset = this.actionAnimationFrame / (0.6 * Character.hitAnimationFrameDuration) * maxOffset;
 			}
 			hand.translation.x = hand.originalTranslation.x + offset;
 
@@ -179,5 +179,7 @@ class Character extends GameObject {
 		}
 	}
 }
+
+Character.hitAnimationFrameDuration = 15;
 
 registerGameObjectSVG(Character, 'img/character.svg');
