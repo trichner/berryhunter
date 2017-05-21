@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"fmt"
 	"encoding/json"
+	"math"
 )
 
 const (
@@ -127,10 +128,10 @@ func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
 	s := b.Shapes[0]
 	pos := b.Position()
 	aabb := &AabbDTO{
-		LowerX: &(&floatwrapper{float32(s.AABB().Lower.X+pos.X) * dist2px}).f,
-		LowerY: &(&floatwrapper{float32(s.AABB().Lower.Y+pos.Y) * dist2px}).f,
-		UpperX: &(&floatwrapper{float32(s.AABB().Upper.X+pos.X) * dist2px}).f,
-		UpperY: &(&floatwrapper{float32(s.AABB().Upper.Y+pos.Y) * dist2px}).f,
+		LowerX: sanititzeFloat(float32(s.AABB().Lower.X+pos.X) * dist2px),
+		LowerY: sanititzeFloat(float32(s.AABB().Lower.Y+pos.Y) * dist2px),
+		UpperX: sanititzeFloat(float32(s.AABB().Upper.X+pos.X) * dist2px),
+		UpperY: sanititzeFloat(float32(s.AABB().Upper.Y+pos.Y) * dist2px),
 	}
 
 	bytes, err := json.Marshal(aabb)
@@ -140,4 +141,12 @@ func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
 	fmt.Printf("%s\n", bytes)
 
 	return aabb
+}
+
+func sanititzeFloat(f float32) *float32 {
+	z := float32(0)
+	if math.IsNaN(float64(f)) {
+		return &z
+	}
+	return &f
 }
