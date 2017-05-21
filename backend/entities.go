@@ -22,42 +22,6 @@ const (
 	typeBerryBush     = "BerryBush"
 )
 
-var trees = []staticEntityBody{
-	staticEntityBody{
-		typeRoundTree,
-		300,
-		1,
-	},
-	staticEntityBody{
-		typeMarioTree,
-		700,
-		2,
-	},
-}
-
-var resources = []staticEntityBody{
-	staticEntityBody{
-		typeBerryBush,
-		100,
-		1,
-	},
-	staticEntityBody{
-		typeStone,
-		100,
-		1,
-	},
-	staticEntityBody{
-		typeGold,
-		100,
-		1,
-	},
-}
-
-type staticEntityBody struct {
-	entityType string
-	weight     int
-	radius     float32
-}
 
 //---- basic interface with getters
 type Entity interface {
@@ -113,12 +77,6 @@ func NewStaticEntityWithBody(body *staticEntityBody) *entity {
 	return &e
 }
 
-func NewRabbit() *entity {
-	e := newCircleEntity(40, 0, 1, 1)
-	e.entityType = typeRabbit
-	return &e
-}
-
 func NewSaberToothCat() *entity {
 	e := newCircleEntity(0, 0, 1, 1)
 	e.entityType = typeSaberToothCat
@@ -145,7 +103,7 @@ type MessageDTO struct {
 	Data interface{} `json:"body"`
 }
 
-const dist2px = 100.0
+const dist2px = 120.0
 func mapToEntityDTO(e Entity) *EntityDTO {
 
 	bdy := e.Body()
