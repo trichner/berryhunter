@@ -99,14 +99,14 @@ func (i *InputSystem) Update(dt float32) {
 	i.ibufs[i.game.tick%inputBuffererCount] = NewInputBufferer()
 }
 
-const walkingSpeed = 3.0
+const walkImpulse = 2.0
 
 // applies the inputs to a player
 func (i *InputSystem) UpdatePlayer(p *player, inputs, last *inputDTO) {
 
 	if last != nil && last.Movement != nil {
 		l := input2vec(last)
-		l.Mult(walkingSpeed)
+		l.Mult(walkImpulse)
 		p.body.AddForce(float32(-l.X), float32(-l.Y))
 		return
 	}
@@ -118,9 +118,9 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *inputDTO) {
 	}
 
 	v := input2vec(inputs)
-	v.Mult(walkingSpeed)
+	v.Mult(walkImpulse)
 	//p.body.SetVelocity(float32(v.X), float32(v.Y))
-	p.body.AddForce(float32(-v.X), float32(-v.Y))
+	p.body.AddForce(float32(v.X), float32(v.Y))
 	//p.body.SetForce(float32(v.X), float32(v.Y))
 }
 
