@@ -72,4 +72,36 @@ class GameObject {
 	hide() {
 		groups.gameObjects.remove(this.shape);
 	}
+
+	updateAABB(startX, startY, endX, endY){
+		if (_.isUndefined(this.aabb)){
+
+			let width = (endX - startX) / 2;
+			let height = (endY - startY) / 2;
+			// this.aabb = new Two.Rectangle(50, 50, 100, 100);
+			this.aabb = new Two.Rectangle(startX + width, startY + height, width, height);
+			groups.gameObjects.add(this.aabb);
+
+			this.aabb.noFill();
+			this.aabb.stroke = 'red';
+			this.aabb.linewidth = 2;
+		}
+
+		// let width = (endX - startX) / 2;
+		// let height = (endY - startY) / 2;
+		// this.aabb.translation.set(startX, startY);
+		// this._matrix
+		//
+		//
+		// this.scale()
+		// this.aabb.noFill();
+		// this.aabb.stroke = 'red';
+		// this.aabb.linewidth = 2;
+	}
+
+	removeAABB(){
+		if (!_.isUndefined(this.aabb)) {
+			this.aabb.noStroke();
+		}
+	}
 }
