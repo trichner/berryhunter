@@ -1,10 +1,12 @@
 package main
 
+import "github.com/vova616/chipmunk/vect"
+
 type AabbDTO struct {
-	LowerX float32 `json:"LowerX"`
-	LowerY float32 `json:"LowerY"`
-	UpperX float32 `json:"UpperY"`
-	UpperY float32 `json:"UpperY"`
+	LowerX *vect.Float `json:"LowerX"`
+	LowerY *vect.Float `json:"LowerY"`
+	UpperX *vect.Float `json:"UpperY"`
+	UpperY *vect.Float `json:"UpperY"`
 }
 
 type EntityDTO struct {
