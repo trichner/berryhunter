@@ -18,7 +18,8 @@ const Items = {
 		type: ItemType.EQUIPMENT
 	},
 	BronzeTool: {
-		iconFile: 'bronzeTool',
+		// TODO
+		iconFile: '',
 		type: ItemType.EQUIPMENT
 	},
 	IronTool: {
@@ -195,3 +196,11 @@ const Items = {
 		type: ItemType.RESOURCE
 	}
 };
+
+(function preloadItemIcons() {
+	Object.values(Items).forEach(function (item) {
+		if (item.iconFile) {
+			registerGameObjectSVG(item, 'img/icons/' + item.iconFile + '.svg');
+		}
+	});
+})();
