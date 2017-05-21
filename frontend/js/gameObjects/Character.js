@@ -10,12 +10,11 @@ class Character extends GameObject {
 		this.controls = new Controls(this);
 
 		this.currentAction = false;
+
+		this.createHands(this.size);
 	}
 
-
-	createInjectionGroup(x, y, size, rotation) {
-		let group = super.createInjectionGroup(x, y, size, rotation);
-
+	createHands(size){
 		// TODO Hände unter die Frisur rendern
 		let handAngle = 1.7;
 
@@ -24,7 +23,7 @@ class Character extends GameObject {
 			Math.sin(Math.PI * handAngle) * size * 0.8,
 			size * 0.2
 		);
-		group.add(this.leftHand);
+		this.shape.add(this.leftHand);
 		this.leftHand.fill = '#f2a586';
 		this.leftHand.stroke = '#000';
 		this.leftHand.linewidth = 0.212 * 0.6; // relative to size
@@ -35,13 +34,11 @@ class Character extends GameObject {
 			Math.sin(Math.PI * (2 - handAngle)) * size * 0.8,
 			size * 0.2
 		);
-		group.add(this.rightHand);
+		this.shape.add(this.rightHand);
 		this.rightHand.fill = '#f2a586';
 		this.rightHand.stroke = '#000';
 		this.rightHand.linewidth = 0.212 * 0.6; // relative to size
 		this.rightHand.originalTranslation = this.rightHand.translation.clone();
-
-		return group;
 	}
 
 	createShape(x, y) {
