@@ -6,8 +6,6 @@ import (
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"math/rand"
-	"fmt"
-	"encoding/json"
 	"math"
 )
 
