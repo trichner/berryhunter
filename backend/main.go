@@ -43,7 +43,7 @@ func readConf() *conf.Config {
 
 const staticBodyGroup = 0x01
 
-var walls []*chipmunk.Body = make([]*chipmunk.Body, 10)
+var walls []*chipmunk.Body = make([]*chipmunk.Body, 0)
 func newPhysicsSystem(x, y int) *PhysicsSystem {
 
 	overlap := vect.Float(3)
