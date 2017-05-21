@@ -96,12 +96,12 @@ func (e *entity) Body() chipmunk.Body {
 func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
 	choices := []wrand.Choice{}
 	for _, b := range bodies {
-		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: &b})
+		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: b})
 	}
 
 	wc := wrand.NewWeightedChoice(choices)
-	selected := wc.Choose(rnd).(*staticEntityBody)
-	return NewStaticEntityWithBody(selected)
+	selected := wc.Choose(rnd).(staticEntityBody)
+	return NewStaticEntityWithBody(&selected)
 }
 
 func NewStaticEntityWithBody(body *staticEntityBody) *entity {
