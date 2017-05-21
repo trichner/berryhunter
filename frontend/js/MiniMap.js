@@ -59,8 +59,8 @@ class MiniMap {
 
 	update() {
 		this.registeredGameObjects.forEach(function (gameObject) {
-			gameObject.minimapIcon.translation.x = (playerCam.getX() + gameObject.getX()) / this.gameMap.width * this.size;
-			gameObject.minimapIcon.translation.y = (playerCam.getY() + gameObject.getY()) / this.gameMap.width * this.size;
+			gameObject.minimapIcon.translation.x = (player.camera.getX() + gameObject.getX()) / this.gameMap.width * this.size;
+			gameObject.minimapIcon.translation.y = (player.camera.getY() + gameObject.getY()) / this.gameMap.width * this.size;
 		}, this);
 	}
 

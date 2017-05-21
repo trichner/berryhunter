@@ -9,8 +9,9 @@ const Constants = {
 	BACKEND: {
 		URL: "wss://k42.ch/death-io/game"
 	},
-	INPUT_TICKRATE: 33 // Milliseconds between ticks
+	INPUT_TICKRATE: 33, // Milliseconds between ticks
 
+	INVENTORY_SLOTS: 8
 };
 
 Constants.QUADRANT_SIZE = Constants.GRID_SPACING * Constants.FIELDS_IN_QUADRANT;

@@ -39,7 +39,7 @@ const MapEditor = {
 
 		this.grid = new QuadrantGrid();
 
-		playerCam.onUpdate = function (translation) {
+		player.camera.onUpdate = function (translation) {
 			this.grid.cameraUpdate(translation);
 		}.bind(this);
 
@@ -82,8 +82,7 @@ const MapEditor = {
 		groups.gameObjects = two.makeGroup();
 
 		// Re-add overlay to ensure z-index
-		groups.overlay.remove();
-		groups.overlay = two.makeGroup();
+		two.add(groups.overlay.remove());
 
 		try {
 			gameMap = new GameMap();

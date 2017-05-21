@@ -17,7 +17,7 @@ let width, height;
 let centerX, centerY;
 
 /**
- * @type Character
+ * @type Player
  */
 let player;
 /**
@@ -29,11 +29,6 @@ let gameMap;
  * @type MiniMap
  */
 let miniMap;
-
-/**
- * @type Camera
- */
-let playerCam;
 
 preload();
 
@@ -122,13 +117,6 @@ function setup() {
  * Creating a player starts implicitly the game
  */
 function createPlayer(id, x, y) {
-	gameStarted = true;
-
-	player = new Character(id, x, y);
-
-	two.bind('update', player.update.bind(player));
-
-	playerCam = new Camera(player);
-	miniMap.register(player);
+	player = new Player(id, x, y);
 	two.play();
 }

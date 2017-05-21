@@ -80,7 +80,7 @@ const Backend = {
 		snapshot.entities.forEach(function (entity) {
 			if (entity.id === snapshot.player_id){
 				if (gameStarted){
-					player.setPosition(entity.x, entity.y);
+					player.character.setPosition(entity.x, entity.y);
 				} else {
 					createPlayer(entity.id, entity.x, entity.y);
 				}
