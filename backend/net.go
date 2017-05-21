@@ -35,7 +35,7 @@ func (n *NetSystem) AddPlayer(p *player) {
 }
 
 func (n *NetSystem) Update(dt float32) {
-	log.Printf("Broadcasting %d players", len(n.entities))
+	//log.Printf("Broadcasting %d players", len(n.entities))
 
 	var entites []*EntityDTO
 	for _, entity := range n.entities {

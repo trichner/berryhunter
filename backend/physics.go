@@ -32,7 +32,7 @@ func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity,e *chipmunk.Body) {
 }
 
 func (p *PhysicsSystem) Update(dt float32)  {
-	log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
+	//log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
 	p.space.Step(vect.Float(dt))
 }
 

@@ -8,6 +8,7 @@ import (
 	"log"
 	"time"
 	"math/rand"
+	"fmt"
 )
 
 func main() {
@@ -35,6 +36,7 @@ func main() {
 	for {
 		g.Update()
 		<-ticker.C
+		fmt.Printf("%10d @ %s\n", g.tick, time.Now().Format("15:04:05.0000"))
 	}
 }
 
