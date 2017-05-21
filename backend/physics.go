@@ -4,7 +4,6 @@ import (
 	"engo.io/ecs"
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
-	"log"
 )
 
 type physicsEntity struct {
