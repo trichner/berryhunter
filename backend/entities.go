@@ -23,12 +23,12 @@ const (
 var trees = []staticEntityBody{
 	staticEntityBody{
 		typeRoundTree,
-		500,
+		300,
 		1,
 	},
 	staticEntityBody{
 		typeMarioTree,
-		100,
+		700,
 		2,
 	},
 }
