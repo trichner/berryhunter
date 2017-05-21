@@ -41,20 +41,7 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 	let gameObject = this.objects[entity.id];
 	if (gameObject) {
 		gameObject.setPosition(entity.x, entity.y);
-		if (Constants.DEBUGGING.SHOW_AABBS && //
-			entity.aabb && //
-			!_.isUndefined(entity.aabb.LowerX) && //
-			!_.isUndefined(entity.aabb.LowerY) && //
-			!_.isUndefined(entity.aabb.UpperX) && //
-			!_.isUndefined(entity.aabb.UpperY)) {
-			gameObject.updateAABB(
-				entity.aabb.LowerX,
-				entity.aabb.LowerY,
-				entity.aabb.UpperX,
-				entity.aabb.UpperY);
-		} else {
-			gameObject.removeAABB();
-		}
+		gameObject.updateAABB(entity.aabb);
 	} else {
 		gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
 		this.objects[entity.id] = gameObject;

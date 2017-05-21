@@ -73,8 +73,22 @@ class GameObject {
 		groups.gameObjects.remove(this.shape);
 	}
 
-	updateAABB(startX, startY, endX, endY){
-		if (_.isUndefined(this.aabb)){
+	updateAABB(aabb) {
+		if (!(Constants.DEBUGGING.SHOW_AABBS && //
+			aabb && //
+			!_.isUndefined(aabb.LowerX) && //
+			!_.isUndefined(aabb.LowerY) && //
+			!_.isUndefined(aabb.UpperX) && //
+			!_.isUndefined(aabb.UpperY))) {
+			return;
+		}
+
+		let startX = aabb.LowerX;
+		let startY = aabb.LowerY;
+		let endX = aabb.UpperX;
+		let endY = aabb.UpperY;
+
+		if (_.isUndefined(this.aabb)) {
 
 			let width = (endX - startX) / 2;
 			let height = (endY - startY) / 2;
@@ -85,6 +99,8 @@ class GameObject {
 			this.aabb.noFill();
 			this.aabb.stroke = 'red';
 			this.aabb.linewidth = 2;
+		} else {
+			this.aabb.translation.set((startX + endX) / 2, (startY + endY) / 2);
 		}
 
 		// let width = (endX - startX) / 2;
@@ -99,7 +115,7 @@ class GameObject {
 		// this.aabb.linewidth = 2;
 	}
 
-	removeAABB(){
+	removeAABB() {
 		if (!_.isUndefined(this.aabb)) {
 			this.aabb.noStroke();
 		}

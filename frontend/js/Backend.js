@@ -84,6 +84,7 @@ const Backend = {
 				} else {
 					createPlayer(entity.id, entity.x, entity.y);
 				}
+				player.character.updateAABB(entity.aabb);
 			} else {
 				gameMap.addOrUpdate(entity);
 			}

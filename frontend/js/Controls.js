@@ -147,6 +147,9 @@ class Controls {
 			}
 		}
 
+		// FIXME backend crashes when we send actions
+		action = null;
+
 		if (
 			movement.x === 0 &&
 			movement.y === 0 &&
