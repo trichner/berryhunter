@@ -156,6 +156,10 @@ func mapToEntityDTO(e Entity) *EntityDTO {
 	}
 }
 
+type floatwrapper struct {
+	f float32
+}
+
 func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
 	if b == nil || len(b.Shapes) == 0 {
 		return nil
@@ -163,9 +167,9 @@ func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
 	s := b.Shapes[0]
 	pos := b.Position()
 	return &AabbDTO{
-		LowerX: &((s.AABB().Lower.X + pos.X) * dist2px),
-		LowerY: &((s.AABB().Lower.Y + pos.Y) * dist2px),
-		UpperX: &((s.AABB().Upper.X + pos.X) * dist2px),
-		UpperY: &((s.AABB().Upper.Y + pos.Y) * dist2px),
+		LowerX: &(&floatwrapper{float32(s.AABB().Lower.X+pos.X) * dist2px}).f,
+		LowerY: &(&floatwrapper{float32(s.AABB().Lower.Y+pos.Y) * dist2px}).f,
+		UpperX: &(&floatwrapper{float32(s.AABB().Upper.X+pos.X) * dist2px}).f,
+		UpperY: &(&floatwrapper{float32(s.AABB().Upper.Y+pos.Y) * dist2px}).f,
 	}
 }
