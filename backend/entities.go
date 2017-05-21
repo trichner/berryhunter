@@ -20,7 +20,7 @@ const (
 	typeBerryBush     = "BerryBush"
 )
 
-var foliage = []staticEntityBody{
+var trees = []staticEntityBody{
 	staticEntityBody{
 		typeRoundTree,
 		500,
