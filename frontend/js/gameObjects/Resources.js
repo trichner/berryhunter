@@ -15,11 +15,11 @@ class Tree extends GameObject {
 
 class RoundTree extends Tree {
 	constructor(x, y) {
-		super(x, y)
+		super(x, y, randomInt(50, 150));
 	}
 
 	createShape(x, y) {
-		this.diameter = randomInt(50, 150);
+		this.diameter = this.size;
 		let shape = new Two.Ellipse(x, y, this.diameter);
 		shape.fill = 'green';
 		shape.stroke = 'darkgreen';
@@ -28,6 +28,8 @@ class RoundTree extends Tree {
 		return shape;
 	}
 }
+
+registerGameObjectSVG(RoundTree, 'img/roundTree.svg');
 
 class MarioTree extends Tree {
 	constructor(x, y) {
@@ -89,7 +91,7 @@ class Stone extends GameObject {
 	}
 }
 
-registerGameObjectSVG(Stone, 'img/flintStone.svg');
+registerGameObjectSVG(Stone, 'img/stone.svg');
 
 class Gold extends GameObject {
 	constructor(x, y) {
@@ -121,7 +123,7 @@ class Gold extends GameObject {
 	}
 }
 
-registerGameObjectSVG(Gold, 'img/bronceStone.svg');
+registerGameObjectSVG(Gold, 'img/bronze.svg');
 
 class BerryBush extends GameObject {
 	constructor(x, y) {
