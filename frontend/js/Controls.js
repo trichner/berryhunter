@@ -32,11 +32,15 @@ const ACTION_KEYS = [
 	' '.charCodeAt(0) // Space
 ];
 
+const ACTION_BUTTON = PointerType.LEFT;
+
 const ALT_ACTION_KEYS = [
 	'q'.charCodeAt(0),
 	'Q'.charCodeAt(0),
 	16 // Shift
 ];
+
+const ALT_ACTION_BUTTON = PointerType.RIGHT;
 
 const PAUSE_KEYS = [
 	'p'.charCodeAt(0),
@@ -121,7 +125,11 @@ class Controls {
 			this.hitAnimationTick--;
 			this.chararacter.progressHitAnimation(this.hitAnimationTick);
 		} else {
-			if (anyKeyIsPressed(ACTION_KEYS)) {
+			if (PointerEvents.pointerDown){
+				console.log(PointerEvents.pointerDown);
+			}
+
+			if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
 				this.hitAnimationTick = Character.hitAnimationFrameDuration;
 				this.chararacter.action();
 				this.chararacter.progressHitAnimation(this.hitAnimationTick);
@@ -131,7 +139,7 @@ class Controls {
 					alt: false
 				};
 			}
-			if (anyKeyIsPressed(ALT_ACTION_KEYS)) {
+			if (anyKeyIsPressed(ALT_ACTION_KEYS) || PointerEvents.pointerDown === ALT_ACTION_BUTTON) {
 				this.hitAnimationTick = Character.hitAnimationFrameDuration;
 				this.chararacter.altAction();
 				this.chararacter.progressHitAnimation(this.hitAnimationTick);

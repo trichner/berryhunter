@@ -1,16 +1,36 @@
 "use strict";
 
+const PointerType = {
+	LEFT: 'LEFT',
+	RIGHT: 'RIGHT'
+};
+
 let PointerEvents = {
 	x: 0,
 	y: 0,
+	/*
+	 * @type PointerType
+	 */
+	pointerDown: false,
 
 	setup: function (domElement) {
-		// domElement.addEventListener('pointerup', function (event) {
-		// 	console.log("pointerup", event);
-		// });
-		// domElement.addEventListener('pointerdown', function (event) {
-		// 	console.log("pointerdown", event);
-		// });
+		domElement.addEventListener('pointerup', function () {
+			console.log('Pointer Up:', this.pointerDown);
+			this.pointerDown = false;
+		}.bind(this));
+
+		domElement.addEventListener('pointerdown', function (event) {
+			switch (event.button) {
+				case 0:
+					this.pointerDown = PointerType.LEFT;
+					break;
+				case 2:
+					this.pointerDown = PointerType.RIGHT;
+					break;
+			}
+			console.log('Pointer Down:', this.pointerDown);
+		}.bind(this));
+
 		domElement.addEventListener('mousemove', function (event) {
 			this.x = event.clientX;
 			this.y = event.clientY;
