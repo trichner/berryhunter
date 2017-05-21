@@ -125,10 +125,6 @@ class Controls {
 			this.hitAnimationTick--;
 			this.chararacter.progressHitAnimation(this.hitAnimationTick);
 		} else {
-			if (PointerEvents.pointerDown){
-				console.log(PointerEvents.pointerDown);
-			}
-
 			if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
 				this.hitAnimationTick = Character.hitAnimationFrameDuration;
 				this.chararacter.action();

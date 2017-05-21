@@ -15,7 +15,6 @@ let PointerEvents = {
 
 	setup: function (domElement) {
 		domElement.addEventListener('pointerup', function () {
-			console.log('Pointer Up:', this.pointerDown);
 			this.pointerDown = false;
 		}.bind(this));
 
@@ -28,7 +27,6 @@ let PointerEvents = {
 					this.pointerDown = PointerType.RIGHT;
 					break;
 			}
-			console.log('Pointer Down:', this.pointerDown);
 		}.bind(this));
 
 		domElement.addEventListener('mousemove', function (event) {
