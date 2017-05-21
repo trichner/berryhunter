@@ -151,8 +151,8 @@ func mapToEntityDTO(e Entity) *EntityDTO {
 
 	return &EntityDTO{
 		e.ID(),
-		e.X() * 100,
-		e.Y() * 100,
+		e.X() * 100.0,
+		e.Y() * 100.0,
 		e.Type(),
 	}
 }
