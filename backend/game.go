@@ -29,7 +29,7 @@ func (g *Game) Init(conf *conf.Config) {
 	})
 
 	//---- setup systems
-	p := newPhysicsSystem()
+	p := newPhysicsSystem(100, 100)
 	g.AddSystem(p)
 
 	n := NewNetSystem(g)

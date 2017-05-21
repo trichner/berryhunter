@@ -2,7 +2,6 @@ package main
 
 import (
 	"math/rand"
-	"fmt"
 )
 
 const gridSize = 100
@@ -18,8 +17,6 @@ func populate(g *Game, rnd *rand.Rand) {
 	entities = append(entities, trees...)
 	entities = append(entities, resources...)
 
-	fmt.Printf("Entities: %v\n", entities)
-
 	for x := int64(0); x < steps; x++ {
 		for y := int64(0); y < steps; y++ {
 			crnd := chunkRand(x, y, rnd)
@@ -30,9 +27,7 @@ func populate(g *Game, rnd *rand.Rand) {
 				chunkSize*float32(x)+dx,
 				chunkSize*float32(y)+dy)
 
-			fmt.Printf("Entity: %v\n", e)
 			g.addEntity(e)
-
 		}
 	}
 

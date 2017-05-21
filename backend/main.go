@@ -48,8 +48,11 @@ func readConf() *conf.Config {
 	return config
 }
 
-func newPhysicsSystem() *PhysicsSystem {
+func newPhysicsSystem(x, y int) *PhysicsSystem {
 
+	overlap := vect.Float(3)
+	xf := vect.Float(x)
+	yf := vect.Float(y)
 	p := &PhysicsSystem{}
 
 	p.space = chipmunk.NewSpace()
@@ -58,14 +61,37 @@ func newPhysicsSystem() *PhysicsSystem {
 	// Add a static body - lines etc.
 	staticBody := chipmunk.NewBodyStatic()
 
-	size := vect.Float(9000)
-	floor := chipmunk.NewBox(vect.Vector_Zero, size, size)
+	floor := chipmunk.NewBox(vect.Vect{-overlap, -overlap}, xf+2*overlap, yf+2*overlap)
 	floor.SetElasticity(0)
 	floor.SetFriction(0.3)
 	staticBody.AddShape(floor)
-
-	//TODO add box
 	p.space.AddBody(staticBody)
+
+	//---- adding walls around map
+
+	var bdy *chipmunk.Body
+	var wall *chipmunk.Shape
+
+	// bottom
+	wall = chipmunk.NewBox(toVect(0-overlap, yf), 2*overlap+xf, overlap)
+	bdy = shape2staticBody(wall)
+	p.space.AddBody(bdy)
+
+	// top
+	wall = chipmunk.NewBox(toVect(0-overlap, 0-overlap), 2*overlap+xf, overlap)
+	bdy = shape2staticBody(wall)
+	p.space.AddBody(bdy)
+
+	// left
+	wall = chipmunk.NewBox(toVect(0-overlap, 0-overlap), overlap, 2*overlap+yf)
+	bdy = shape2staticBody(wall)
+	p.space.AddBody(bdy)
+
+	// right
+	wall = chipmunk.NewBox(toVect(xf, 0-overlap), overlap, 2*overlap+yf)
+	bdy = shape2staticBody(wall)
+	p.space.AddBody(bdy)
+
 	return p
 }
 

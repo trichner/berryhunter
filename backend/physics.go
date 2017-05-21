@@ -20,6 +20,16 @@ func (p *PhysicsSystem) New(w *ecs.World) {
 	// do nothing for now
 }
 
+func shape2staticBody(s *chipmunk.Shape) *chipmunk.Body {
+	bdy := chipmunk.NewBodyStatic()
+	bdy.AddShape(s)
+	return bdy
+}
+
+func toVect(x, y vect.Float) vect.Vect {
+	return vect.Vect{vect.Float(x), vect.Float(y)}
+}
+
 func (p *PhysicsSystem) Priority() int {
 	return 50
 }
