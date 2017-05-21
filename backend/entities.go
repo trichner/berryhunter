@@ -143,13 +143,14 @@ type MessageDTO struct {
 	Data interface{} `json:"body"`
 }
 
+const dist2px = 100.0
 func mapToEntityDTO(e Entity) *EntityDTO {
 
 	bdy := e.Body()
 	return &EntityDTO{
 		Id:   e.ID(),
-		X:    e.X() * 100.0,
-		Y:    e.Y() * 100.0,
+		X:    e.X() * dist2px,
+		Y:    e.Y() * dist2px,
 		Type: e.Type(),
 		Aabb: mapToAabbDTO(&bdy),
 	}
@@ -161,16 +162,9 @@ func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
 	}
 	s := b.Shapes[0]
 	return &AabbDTO{
-		LowerX: float32(s.AABB().Lower.X),
-		LowerY: float32(s.AABB().Lower.Y),
-		UpperX: float32(s.AABB().Upper.X),
-		UpperY: float32(s.AABB().Upper.Y),
-	}
-}
-
-func mapToMessageDTO(e Entity) *MessageDTO {
-	return &MessageDTO{
-		"OBJECT",
-		mapToEntityDTO(e),
+		LowerX: float32(s.AABB().Lower.X) * dist2px,
+		LowerY: float32(s.AABB().Lower.Y) * dist2px,
+		UpperX: float32(s.AABB().Upper.X) * dist2px,
+		UpperY: float32(s.AABB().Upper.Y) * dist2px,
 	}
 }
