@@ -73,26 +73,36 @@ func newPhysicsSystem(x, y int) *PhysicsSystem {
 	var wall *chipmunk.Shape
 
 	// bottom
-	wall = chipmunk.NewBox(toVect(0-overlap, yf), 2*overlap+xf, overlap)
+	wall = chipmunk.NewBox(toVect(xf/2.0, yf+overlap/2.0), 2.0*overlap+xf, overlap)
 	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
 
 	// top
-	wall = chipmunk.NewBox(toVect(0-overlap, 0-overlap), 2*overlap+xf, overlap)
+	wall = chipmunk.NewBox(toVect(xf/2.0, 0-overlap/2.0), 2.0*overlap+xf, overlap)
 	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
 
 	// left
-	wall = chipmunk.NewBox(toVect(0-overlap, 0-overlap), overlap, 2*overlap+yf)
+	wall = chipmunk.NewBox(toVect(0-overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
 	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
 
 	// right
-	wall = chipmunk.NewBox(toVect(xf, 0-overlap), overlap, 2*overlap+yf)
+	wall = chipmunk.NewBox(toVect(xf+overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
 	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
 
+	DumpBodies(p.space)
+
 	return p
+}
+
+func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
+	s.SetElasticity(1)
+	bdy := chipmunk.NewBodyStatic()
+	bdy.AddShape(s)
+	bdy.CallbackHandler = &Collidable{}
+	return bdy
 }
 
 func newStaticCircleEntity(x, y, r float32) entity {

@@ -4,7 +4,30 @@ import (
 	"engo.io/ecs"
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
+	"fmt"
 )
+
+func DumpBodies(s *chipmunk.Space) {
+	fmt.Printf("x, y, w, h\n")
+	for _, b := range s.Bodies {
+		dumpBody(b)
+	}
+
+	bb := chipmunk.NewAABB(-110, -110, 110, 110)
+	s.QueryStatic(nil, bb, func(a, b chipmunk.Indexable) {
+		dumpBody(b.Shape().Body)
+	})
+}
+
+func dumpBody(b *chipmunk.Body) {
+	//	pos := b.Position()
+	for _, s := range b.Shapes {
+		bb := s.AABB()
+		v := bb.Upper
+		v.Sub(bb.Lower)
+		fmt.Printf("%f,%f,%f,%f\n", bb.Lower.X, bb.Lower.Y, v.X, v.Y)
+	}
+}
 
 type physicsEntity struct {
 	*ecs.BasicEntity
@@ -18,13 +41,6 @@ type PhysicsSystem struct {
 
 func (p *PhysicsSystem) New(w *ecs.World) {
 	// do nothing for now
-}
-
-func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
-	s.SetElasticity(1)
-	bdy := chipmunk.NewBodyStatic()
-	bdy.AddShape(s)
-	return bdy
 }
 
 func toVect(x, y vect.Float) vect.Vect {
