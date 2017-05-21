@@ -46,11 +46,7 @@ func (n *NetSystem) Update(dt float32) {
 
 	//TODO DEBUG
 	for _, w := range walls {
-		dto := mapToEntityDTO(&entity{
-			BasicEntity: ecs.NewBasic(),
-			body:*w,
-			entityType: typeRoundTree,
-		})
+		dto := mapToEntityDTO(w)
 		entites = append(entites, dto)
 	}
 

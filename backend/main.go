@@ -43,7 +43,7 @@ func readConf() *conf.Config {
 
 const staticBodyGroup = 0x01
 
-var walls []*chipmunk.Body = make([]*chipmunk.Body, 0)
+var walls []Entity = make([]Entity, 0)
 func newPhysicsSystem(x, y int) *PhysicsSystem {
 
 	overlap := vect.Float(3)
@@ -101,8 +101,11 @@ func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
 	bdy.AddShape(s)
 	bdy.CallbackHandler = &Collidable{}
 
-	walls = append(walls, bdy)
-
+	walls = append(walls, &entity{
+		BasicEntity: ecs.NewBasic(),
+		body:        *bdy,
+		entityType:  typeRoundTree,
+	})
 	return bdy
 }
 
