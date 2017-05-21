@@ -161,10 +161,11 @@ func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
 		return nil
 	}
 	s := b.Shapes[0]
+	pos := b.Position()
 	return &AabbDTO{
-		LowerX: float32(s.AABB().Lower.X) * dist2px,
-		LowerY: float32(s.AABB().Lower.Y) * dist2px,
-		UpperX: float32(s.AABB().Upper.X) * dist2px,
-		UpperY: float32(s.AABB().Upper.Y) * dist2px,
+		LowerX: float32(s.AABB().Lower.X+pos.X) * dist2px,
+		LowerY: float32(s.AABB().Lower.Y+pos.Y) * dist2px,
+		UpperX: float32(s.AABB().Upper.X+pos.X) * dist2px,
+		UpperY: float32(s.AABB().Upper.Y+pos.Y) * dist2px,
 	}
 }
