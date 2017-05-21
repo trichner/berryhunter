@@ -113,7 +113,7 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *inputDTO) {
 
 	// do we even have inputs?
 	if inputs == nil || inputs.Movement == nil {
-		//p.body.SetVelocity(0, 0)
+		p.body.SetVelocity(0, 0)
 		return
 	}
 
