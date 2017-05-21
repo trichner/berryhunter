@@ -17,13 +17,6 @@ func main() {
 	g := &Game{}
 	g.Init(config)
 
-	//---- add a ball
-	rabbit := NewRabbit()
-	g.addEntity(rabbit)
-
-	tiger := NewSaberToothCat()
-	g.addEntity(tiger)
-
 	populate(g, rand.New(rand.NewSource(0xDEADBEEF)))
 
 	g.Run()
