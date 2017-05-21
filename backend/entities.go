@@ -99,10 +99,11 @@ func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
 		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: b})
 	}
 
-	wc := wrand.NewWeightedChoice(choices)
+wc := wrand.NewWeightedChoice(choices)
 	selected := wc.Choose(rnd).(staticEntityBody)
 	return NewStaticEntityWithBody(&selected)
 }
+
 
 func NewStaticEntityWithBody(body *staticEntityBody) *entity {
 	e := newStaticCircleEntity(0, 0, body.radius)

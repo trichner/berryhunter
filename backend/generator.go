@@ -23,7 +23,7 @@ func populate(g *Game, rnd *rand.Rand) {
 	for x := int64(0); x < steps; x++ {
 		for y := int64(0); y < steps; y++ {
 			crnd := chunkRand(x, y, rnd)
-			e := NewRandomEntityFrom(trees, crnd)
+			e := NewRandomEntityFrom(entities, crnd)
 			dx := crnd.Float32()*chunkHalfSize + chunkQuarterSize
 			dy := crnd.Float32()*chunkHalfSize + chunkQuarterSize
 			e.SetPosition(
