@@ -133,13 +133,6 @@ func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
 		UpperX: sanititzeFloat(float32(s.AABB().Upper.X+pos.X) * dist2px),
 		UpperY: sanititzeFloat(float32(s.AABB().Upper.Y+pos.Y) * dist2px),
 	}
-
-	bytes, err := json.Marshal(aabb)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%s\n", bytes)
-
 	return aabb
 }
 
