@@ -20,61 +20,41 @@ const (
 	typeBerryBush     = "BerryBush"
 )
 
-var foliage = []entityBody{
-	entityBody{
+var foliage = []staticEntityBody{
+	staticEntityBody{
 		typeRoundTree,
 		500,
 		1,
-		1,
 	},
-	entityBody{
+	staticEntityBody{
 		typeMarioTree,
 		100,
 		2,
-		1,
 	},
 }
 
-var resources = []entityBody{
-	entityBody{
+var resources = []staticEntityBody{
+	staticEntityBody{
 		typeBerryBush,
 		100,
 		1,
-		1,
 	},
-	entityBody{
+	staticEntityBody{
 		typeStone,
 		100,
 		1,
-		1,
 	},
-	entityBody{
+	staticEntityBody{
 		typeGold,
 		100,
 		1,
-		1,
 	},
 }
 
-var mobs = []entityBody{
-	entityBody{
-		typeSaberToothCat,
-		100,
-		1,
-		1,
-	},
-	entityBody{
-		typeRabbit,
-		100,
-		1,
-		1,
-	},
-}
-
-type entityBody struct {
-	entityType   string
-	weight       int
-	radius, mass float32
+type staticEntityBody struct {
+	entityType string
+	weight     int
+	radius     float32
 }
 
 //---- basic interface with getters
@@ -113,19 +93,19 @@ func (e *entity) Body() chipmunk.Body {
 	return e.body
 }
 
-func NewRandomEntityFrom(bodies []entityBody, rnd *rand.Rand) *entity {
+func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
 	choices := []wrand.Choice{}
 	for _, b := range bodies {
 		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: &b})
 	}
 
 	wc := wrand.NewWeightedChoice(choices)
-	selected := wc.Choose(rnd).(*entityBody)
-	return NewEntityWithBody(selected)
+	selected := wc.Choose(rnd).(*staticEntityBody)
+	return NewStaticEntityWithBody(selected)
 }
 
-func NewEntityWithBody(body *entityBody) *entity {
-	e := newCircleEntity(0, 0, body.radius, body.mass)
+func NewStaticEntityWithBody(body *staticEntityBody) *entity {
+	e := newStaticCircleEntity(0, 0, body.radius)
 	e.entityType = body.entityType
 	return &e
 }

@@ -10,9 +10,8 @@ func populate(g *Game, rnd *rand.Rand) {
 	var steps int64 = gridSize / chunkSize
 	var chunkHalfSize float32 = chunkSize / 2.0
 
-	entities := []entityBody{}
+	entities := []staticEntityBody{}
 	entities = append(entities, foliage...)
-	entities = append(entities, mobs...)
 	entities = append(entities, resources...)
 
 	for x := int64(0); x < steps; x++ {
@@ -21,7 +20,7 @@ func populate(g *Game, rnd *rand.Rand) {
 			e := NewRandomEntityFrom(foliage, crnd)
 			e.SetPosition(
 				chunkSize*float32(x)+chunkHalfSize,
-				chunkSize*float32(y)+chunkSize)
+				chunkSize*float32(y)+chunkHalfSize)
 
 			g.addEntity(e)
 

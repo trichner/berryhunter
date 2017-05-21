@@ -8,7 +8,6 @@ import (
 	"log"
 	"time"
 	"math/rand"
-	"fmt"
 )
 
 func main() {
@@ -36,7 +35,6 @@ func main() {
 	for {
 		g.Update()
 		<-ticker.C
-		fmt.Printf("%10d @ %s\n", g.tick, time.Now().Format("15:04:05.0000"))
 	}
 }
 
@@ -71,6 +69,27 @@ func newPhysicsSystem() *PhysicsSystem {
 	return p
 }
 
+func newStaticCircleEntity(x, y, r float32) entity {
+
+	// Create a ball
+	ballEntity := entity{BasicEntity: ecs.NewBasic()}
+
+	ball := chipmunk.NewCircle(vect.Vector_Zero, r)
+	ball.SetElasticity(0.5)
+
+	// everything collides with everything :/
+	ball.Layer = -1 // all layers 0xFFFF
+	ball.Group = chipmunk.Group(ballEntity.ID())
+
+	// Create a body for the ball
+	body := chipmunk.NewBodyStatic()
+	body.AddShape(ball)
+	body.SetPosition(vect.Vect{vect.Float(x), vect.Float(y)})
+
+	ballEntity.body = *body
+	return ballEntity
+}
+
 func newCircleEntity(x, y, r, m float32) entity {
 
 	// Create a ball
@@ -97,4 +116,3 @@ func newBody(mass float32, shape *chipmunk.Shape) *chipmunk.Body {
 	body.AddShape(shape)
 	return body
 }
-

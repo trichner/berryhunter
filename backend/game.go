@@ -7,12 +7,13 @@ import (
 	"sync/atomic"
 	"github.com/trichner/death-io/backend/conf"
 	"github.com/vova616/chipmunk"
+	"time"
 )
 
 type Game struct {
 	ecs.World
 	server *Server
-	space *chipmunk.Space
+	space  *chipmunk.Space
 	tick   uint64
 	conf   *conf.Config
 }
@@ -81,10 +82,18 @@ func (g *Game) addPlayer(p *player) {
 	}
 }
 
+const step = float32(33.0 / 1000.0)
+
 func (g *Game) Update() {
 
 	// fixed 33ms steps
-	g.World.Update(33.0 / 1000.0)
+	beforeMillis := time.Now().UnixNano() / 1000000
+
+	g.World.Update(step)
+
+	nowMillis := time.Now().UnixNano() / 1000000
+	dtMillis := nowMillis - beforeMillis
+	fmt.Printf("%10d @ %5d\n", g.tick, dtMillis)
 
 	// needs to be atomic to prevent race conditions
 	atomic.AddUint64(&g.tick, 1)
