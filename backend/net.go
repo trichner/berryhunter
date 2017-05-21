@@ -42,11 +42,6 @@ func (n *NetSystem) Update(dt float32) {
 
 		dto := mapToEntityDTO(entity)
 		entites = append(entites, dto)
-
-		//DEPRECATED
-		//msg := &MessageDTO{"OBJECT", dto}
-		//msgJson, _ := json.Marshal(msg)
-		//n.game.server.Broadcast(&Message{string(msgJson)})
 	}
 
 	// assemble game state prototype

@@ -41,6 +41,12 @@ func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e *chipmunk.Body) {
 	p.space.AddBody(pe.Body)
 }
 
+func (p *PhysicsSystem) AddPlayer(pl *player) {
+	pe := physicsEntity{&pl.BasicEntity, &pl.body}
+	p.entities = append(p.entities, pe)
+	p.space.AddBody(pe.Body)
+}
+
 func (p *PhysicsSystem) Update(dt float32) {
 	//log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
 	p.space.Step(vect.Float(dt))

@@ -100,28 +100,26 @@ func (i *InputSystem) Update(dt float32) {
 }
 
 const walkImpulse = 2.0
-const maxForce = 5.0
 
 // applies the inputs to a player
 func (i *InputSystem) UpdatePlayer(p *player, inputs, last *inputDTO) {
 
-	if last != nil && last.Movement != nil {
-		l := input2vec(last)
-		l.Mult(walkImpulse)
-		p.body.AddForce(float32(-l.X), float32(-l.Y))
-		return
-	}
+	//if last != nil && last.Movement != nil {
+	//	l := input2vec(last)
+	//	l.Mult(walkImpulse)
+	//	p.body.AddForce(float32(-l.X), float32(-l.Y))
+	//	return
+	//}
 
 	// do we even have inputs?
 	if inputs == nil || inputs.Movement == nil {
+		//p.body.SetVelocity(0, 0)
 		return
 	}
 
 	v := input2vec(inputs)
 	v.Mult(walkImpulse)
-	//p.body.SetVelocity(float32(v.X), float32(v.Y))
-	p.body.AddForce(float32(v.X), float32(v.Y))
-	//p.body.SetForce(float32(v.X), float32(v.Y))
+	p.body.SetVelocity(float32(v.X), float32(v.Y))
 }
 
 func input2vec(i *inputDTO) vect.Vect {
