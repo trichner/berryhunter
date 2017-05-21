@@ -100,6 +100,7 @@ func (i *InputSystem) Update(dt float32) {
 }
 
 const walkImpulse = 2.0
+const maxForce = 5.0
 
 // applies the inputs to a player
 func (i *InputSystem) UpdatePlayer(p *player, inputs, last *inputDTO) {
@@ -113,7 +114,6 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *inputDTO) {
 
 	// do we even have inputs?
 	if inputs == nil || inputs.Movement == nil {
-		p.body.SetVelocity(0, 0)
 		return
 	}
 
