@@ -33,9 +33,33 @@ class Camera {
 		return this.translation.y;
 	}
 
+	static keepWithinMapBoundaries(vehicle) {
+		if (vehicle.position.x < centerX) {
+			vehicle.position.x = centerX;
+			vehicle.velocity.x = 0;
+			vehicle.acceleration.x = 0;
+		} else if (vehicle.position.x > gameMap.width - centerX) {
+			vehicle.position.x = gameMap.width - centerX;
+			vehicle.velocity.x = 0;
+			vehicle.acceleration.x = 0;
+		}
+
+		if (vehicle.position.y < centerY) {
+			vehicle.position.y = centerY;
+			vehicle.velocity.y = 0;
+			vehicle.acceleration.y = 0;
+		} else if (vehicle.position.y > gameMap.height - centerY) {
+			vehicle.position.y = gameMap.height - centerY;
+			vehicle.velocity.y = 0;
+			vehicle.acceleration.y = 0;
+		}
+	}
+
 	update() {
 		this.vehicle.arrive(this.character.getPosition());
 		this.vehicle.update();
+
+		Camera.keepWithinMapBoundaries(this.vehicle);
 
 		let translation = this.translation.clone();
 		translation.negate();
@@ -44,7 +68,7 @@ class Camera {
 		groups.mapBorders.translation.copy(translation);
 		groups.character.translation.copy(translation);
 
-		if (typeof this.onUpdate === 'function'){
+		if (typeof this.onUpdate === 'function') {
 			this.onUpdate(translation);
 		}
 	}
