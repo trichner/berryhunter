@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-const inputBuffererCount = 2
+const inputBuffererCount = 3
 
 //---- models for input
 type inputDTO struct {
@@ -86,11 +86,13 @@ func (i *InputSystem) Update(dt float32) {
 
 	// freeze input
 	ibuf := i.ibufs[i.game.tick%inputBuffererCount]
+	lastBuf := i.ibufs[(i.game.tick+inputBuffererCount-1 )%inputBuffererCount]
 
 	// apply inputs to player
 	for _, p := range i.players {
 		inputs, _ := ibuf.inputs[p.client.id]
-		i.UpdatePlayer(p, &inputs)
+		last, _ := lastBuf.inputs[p.client.id]
+		i.UpdatePlayer(p, &inputs, &last)
 	}
 
 	// clear out buffer
@@ -100,7 +102,14 @@ func (i *InputSystem) Update(dt float32) {
 const walkingSpeed = 3.0
 
 // applies the inputs to a player
-func (i *InputSystem) UpdatePlayer(p *player, inputs *inputDTO) {
+func (i *InputSystem) UpdatePlayer(p *player, inputs, last *inputDTO) {
+
+	if last != nil && last.Movement != nil {
+		l := input2vec(last)
+		l.Mult(walkingSpeed)
+		p.body.AddForce(float32(-l.X), float32(-l.Y))
+		return
+	}
 
 	// do we even have inputs?
 	if inputs == nil || inputs.Movement == nil {
@@ -108,13 +117,19 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs *inputDTO) {
 		return
 	}
 
-	x := signumf32(inputs.Movement.X)
-	y := signumf32(inputs.Movement.Y)
+	v := input2vec(inputs)
+	v.Mult(walkingSpeed)
+	//p.body.SetVelocity(float32(v.X), float32(v.Y))
+	p.body.AddForce(float32(-v.X), float32(-v.Y))
+	//p.body.SetForce(float32(v.X), float32(v.Y))
+}
+
+func input2vec(i *inputDTO) vect.Vect {
+	x := signumf32(i.Movement.X)
+	y := signumf32(i.Movement.Y)
 	v := vect.Vect{X: vect.Float(x), Y: vect.Float(y)}
 	v.Normalize()
-	v.Mult(walkingSpeed)
-	p.body.SetVelocity(float32(v.X), float32(v.Y))
-	//p.body.SetForce(float32(v.X), float32(v.Y))
+	return v
 }
 
 func (i *InputSystem) Remove(b ecs.BasicEntity) {

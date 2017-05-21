@@ -20,7 +20,8 @@ func (p *PhysicsSystem) New(w *ecs.World) {
 	// do nothing for now
 }
 
-func shape2staticBody(s *chipmunk.Shape) *chipmunk.Body {
+func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
+	s.SetElasticity(1)
 	bdy := chipmunk.NewBodyStatic()
 	bdy.AddShape(s)
 	return bdy

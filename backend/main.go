@@ -74,22 +74,22 @@ func newPhysicsSystem(x, y int) *PhysicsSystem {
 
 	// bottom
 	wall = chipmunk.NewBox(toVect(0-overlap, yf), 2*overlap+xf, overlap)
-	bdy = shape2staticBody(wall)
+	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
 
 	// top
 	wall = chipmunk.NewBox(toVect(0-overlap, 0-overlap), 2*overlap+xf, overlap)
-	bdy = shape2staticBody(wall)
+	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
 
 	// left
 	wall = chipmunk.NewBox(toVect(0-overlap, 0-overlap), overlap, 2*overlap+yf)
-	bdy = shape2staticBody(wall)
+	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
 
 	// right
 	wall = chipmunk.NewBox(toVect(xf, 0-overlap), overlap, 2*overlap+yf)
-	bdy = shape2staticBody(wall)
+	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
 
 	return p
