@@ -130,7 +130,7 @@ func newStaticCircleEntity(x, y, r float32) entity {
 	return ballEntity
 }
 
-func newCircleEntity(x, y, r, m float32) entity {
+func newCircleEntity(r, m float32) entity {
 
 	// Create a ball
 	ballEntity := entity{BasicEntity: ecs.NewBasic()}
@@ -144,8 +144,6 @@ func newCircleEntity(x, y, r, m float32) entity {
 
 	// Create a body for the ball
 	body := newBody(m, ball)
-	body.SetPosition(vect.Vect{vect.Float(x), vect.Float(y)})
-
 	ballEntity.body = *body
 	return ballEntity
 }

@@ -11,7 +11,6 @@ import (
 
 const (
 	typeNone          = "NONE"
-	typeRabbit        = "Rabbit"
 	typeRoundTree     = "RoundTree"
 	typeMarioTree     = "MarioTree"
 	typePlayer        = "Character"
@@ -76,12 +75,6 @@ func NewStaticEntityWithBody(body *staticEntityBody) *entity {
 	return &e
 }
 
-func NewSaberToothCat() *entity {
-	e := newCircleEntity(0, 0, 1, 1)
-	e.entityType = typeSaberToothCat
-	return &e
-}
-
 //---- player
 type player struct {
 	entity
@@ -91,7 +84,7 @@ type player struct {
 }
 
 func NewPlayer(c *Client) *player {
-	e := newCircleEntity(5, 5, 1, 1)
+	e := newCircleEntity(1, 1)
 	e.entityType = typePlayer
 	return &player{entity: e, client: c}
 }
