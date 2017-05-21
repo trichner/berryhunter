@@ -146,10 +146,16 @@ type MessageDTO struct {
 func mapToEntityDTO(e Entity) *EntityDTO {
 
 	return &EntityDTO{
-		e.ID(),
-		e.X() * 100.0,
-		e.Y() * 100.0,
-		e.Type(),
+		Id:   e.ID(),
+		X:    e.X() * 100.0,
+		Y:    e.Y() * 100.0,
+		Type: e.Type(),
+		Aabb: &AabbDTO{
+			LowerX: float32(e.Body().Shapes[0].AABB().Lower.X),
+			LowerY: float32(e.Body().Shapes[0].AABB().Lower.Y),
+			UpperX: float32(e.Body().Shapes[0].AABB().Upper.X),
+			UpperY: float32(e.Body().Shapes[0].AABB().Upper.Y),
+		},
 	}
 }
 

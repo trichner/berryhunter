@@ -1,10 +1,18 @@
 package main
 
+type AabbDTO struct {
+	LowerX float32
+	LowerY float32
+	UpperX float32
+	UpperY float32
+}
+
 type EntityDTO struct {
 	Id   uint64  `json:"id"`
 	X    float32 `json:"x"`
 	Y    float32 `json:"y"`
 	Type string  `json:"object"`
+	Aabb *AabbDTO `json:"aabb"`
 }
 
 type PlayerDTO struct {
