@@ -15,6 +15,9 @@ const (
 	typeMarioTree     = "MarioTree"
 	typePlayer        = "Character"
 	typeSaberToothCat = "SaberToothCat"
+	typeStone         = "Stone"
+	typeGold          = "Gold"
+	typeBerryBush     = "BerryBush"
 )
 
 var foliage = []entityBody{
@@ -32,9 +35,21 @@ var foliage = []entityBody{
 	},
 }
 
-var ores = []entityBody{
+var resources = []entityBody{
 	entityBody{
-		typeRoundTree,
+		typeBerryBush,
+		100,
+		1,
+		1,
+	},
+	entityBody{
+		typeStone,
+		100,
+		1,
+		1,
+	},
+	entityBody{
+		typeGold,
 		100,
 		1,
 		1,

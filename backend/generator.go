@@ -3,12 +3,17 @@ package main
 import "math/rand"
 
 const gridSize = 100
-const chunkSize = 10
+const chunkSize = 5
 
 func populate(g *Game, rnd *rand.Rand) {
 
 	var steps int64 = gridSize / chunkSize
 	var chunkHalfSize float32 = chunkSize / 2.0
+
+	entities := []entityBody{}
+	entities = append(entities, foliage...)
+	entities = append(entities, mobs...)
+	entities = append(entities, resources...)
 
 	for x := int64(0); x < steps; x++ {
 		for y := int64(0); y < steps; y++ {
