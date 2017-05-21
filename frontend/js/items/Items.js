@@ -10,147 +10,188 @@ const ItemType = {
 
 const Items = {
 	WoodClub: {
-		iconFile: '',
+		iconFile: 'woodClub',
 		type: ItemType.EQUIPMENT
 	},
 	StoneTool: {
-		iconFile: '',
+		iconFile: 'stoneTool',
 		type: ItemType.EQUIPMENT
 	},
-	BronceTool: {
-		iconFile: '',
+	BronzeTool: {
+		iconFile: 'bronzeTool',
 		type: ItemType.EQUIPMENT
 	},
 	IronTool: {
+		// TODO
 		iconFile: '',
 		type: ItemType.EQUIPMENT
 	},
 	StoneClub: {
-		iconFile: '',
+		iconFile: 'stoneClub',
 		type: ItemType.EQUIPMENT
 	},
-	BronceSword: {
+	BronzeSword: {
+		// TODO
 		iconFile: '',
 		type: ItemType.EQUIPMENT
 	},
 	IronSword: {
+		// TODO
 		iconFile: '',
 		type: ItemType.EQUIPMENT
 	},
 	StoneSpear: {
-		iconFile: '',
+		iconFile: 'stoneSpear',
 		type: ItemType.EQUIPMENT
 	},
-	BronceSpear: {
+	BronzeSpear: {
+		// TODO
 		iconFile: '',
 		type: ItemType.EQUIPMENT
 	},
 	IronSpear: {
-		iconFile: '',
+		iconFile: 'ironSpear',
 		type: ItemType.EQUIPMENT
 	},
 	StoneHammer: {
+		// TODO
 		iconFile: '',
 		type: ItemType.EQUIPMENT
 	},
-	BronceHammer: {
+	BronzeHammer: {
+		// TODO
 		iconFile: '',
 		type: ItemType.EQUIPMENT
 	},
 	IronHammer: {
+		// TODO
 		iconFile: '',
 		type: ItemType.EQUIPMENT
 	},
 	Campfire: {
-		iconFile: '',
+		iconFile: 'campfire',
 		type: ItemType.PLACEABLE
 	},
 	BigCampfire: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	Workbench: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	Chest: {
-		iconFile: '',
+		iconFile: '../items/workbench',
 		type: ItemType.PLACEABLE
 	},
 	BigChest: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	Furnace: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	WoodWall: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	WoodSpikyWall: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	StoneWall: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	StoneSpikyWall: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
-	BronceWall: {
+	BronzeWall: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
-	BronceSpikyWall: {
+	BronzeSpikyWall: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	WoodDoor: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	StoneDoor: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	BronceDoor: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	IronDoor: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	IronWall: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	IronSpikyWall: {
+		// TODO
 		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	CookedMeat: {
-		iconFile: '',
+		iconFile: 'cookedMeat',
 		type: ItemType.CONSUMABLE
 	},
 	RawMeat: {
-		iconFile: '',
+		iconFile: 'rawMeat',
 		type: ItemType.CONSUMABLE
 	},
 	Berry: {
-		iconFile: '',
+		iconFile: 'berry',
 		type: ItemType.CONSUMABLE
 	},
 	Seeds: {
-		iconFile: '',
+		iconFile: 'seed',
 		type: ItemType.CONSUMABLE
 	},
 	BerryBowl: {
-		iconFile: '',
+		iconFile: 'berryBowl',
 		type: ItemType.CONSUMABLE
+	},
+	Wood: {
+		iconFile: 'wood',
+		type: ItemType.RESOURCE
+	},
+	Stone: {
+		iconFile: 'stone',
+		type: ItemType.RESOURCE
+	},
+	Bronze: {
+		// TODO
+		iconFile: '',
+		type: ItemType.RESOURCE
+	},
+	Iron: {
+		// TODO
+		iconFile: '',
+		type: ItemType.RESOURCE
 	}
 };
