@@ -1,10 +1,10 @@
 package main
 
 type AabbDTO struct {
-	LowerX *float32 `json:"LowerX"`
-	LowerY *float32 `json:"LowerY"`
-	UpperX *float32 `json:"UpperY"`
-	UpperY *float32 `json:"UpperY"`
+	LowerX *float32 `json:"LowerX,omitempty"`
+	LowerY *float32 `json:"LowerY,omitempty"`
+	UpperX *float32 `json:"UpperY,omitempty"`
+	UpperY *float32 `json:"UpperY,omitempty"`
 }
 
 type EntityDTO struct {
