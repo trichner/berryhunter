@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/vova616/chipmunk"
 	"fmt"
+	"github.com/vova616/chipmunk"
 )
 
 type Collidable struct {

@@ -2,10 +2,10 @@ package main
 
 import (
 	"engo.io/ecs"
-	"github.com/vova616/chipmunk"
-	"math/rand"
 	"github.com/trichner/death-io/backend/wrand"
+	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
+	"math/rand"
 )
 
 const (
@@ -138,7 +138,7 @@ func NewPlayer(c *Client) *player {
 
 //---- DTO
 type MessageDTO struct {
-	Type string `json:"type"`
+	Type string      `json:"type"`
 	Data interface{} `json:"body"`
 }
 

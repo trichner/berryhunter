@@ -1,9 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"engo.io/ecs"
 	"log"
-	"encoding/json"
 )
 
 type NetSystem struct {

@@ -6,8 +6,8 @@ import (
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"log"
-	"time"
 	"math/rand"
+	"time"
 )
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 	tiger := NewSaberToothCat()
 	g.addEntity(tiger)
 
-	populate(g, rand.New(rand.NewSource(1337)))
+	populate(g, rand.New(rand.NewSource(0xDEADBEEF)))
 
 	g.Run()
 

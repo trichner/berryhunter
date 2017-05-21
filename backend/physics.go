@@ -13,29 +13,29 @@ type physicsEntity struct {
 
 type PhysicsSystem struct {
 	entities []physicsEntity
-	space *chipmunk.Space
+	space    *chipmunk.Space
 }
 
-func (p *PhysicsSystem) New(w *ecs.World){
+func (p *PhysicsSystem) New(w *ecs.World) {
 	// do nothing for now
 }
 
-func (p *PhysicsSystem) Priority() int{
+func (p *PhysicsSystem) Priority() int {
 	return 50
 }
 
-func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity,e *chipmunk.Body) {
-	pe := physicsEntity{b,e}
+func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e *chipmunk.Body) {
+	pe := physicsEntity{b, e}
 	p.entities = append(p.entities, pe)
 	p.space.AddBody(pe.Body)
 }
 
-func (p *PhysicsSystem) Update(dt float32)  {
+func (p *PhysicsSystem) Update(dt float32) {
 	//log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
 	p.space.Step(vect.Float(dt))
 }
 
-func (p *PhysicsSystem) Remove(b ecs.BasicEntity)  {
+func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
 	var delete int = -1
 	for index, entity := range p.entities {
 		if entity.ID() == b.ID() {
@@ -49,4 +49,3 @@ func (p *PhysicsSystem) Remove(b ecs.BasicEntity)  {
 		p.space.RemoveBody(e.Body)
 	}
 }
-

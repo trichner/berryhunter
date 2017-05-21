@@ -3,10 +3,10 @@ package main
 import (
 	"engo.io/ecs"
 	"fmt"
-	"net/http"
-	"sync/atomic"
 	"github.com/trichner/death-io/backend/conf"
 	"github.com/vova616/chipmunk"
+	"net/http"
+	"sync/atomic"
 	"time"
 )
 

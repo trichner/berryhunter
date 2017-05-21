@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
-	"fmt"
 )
 
 func ExampleBBQueryDynamic() {
@@ -103,4 +103,3 @@ func ExampleCollision() {
 	fmt.Printf("Box: %+v\n", shape.BB)
 	// Output: Body 1
 }
-

@@ -1,20 +1,20 @@
 package main
 
 import (
-	"engo.io/ecs"
-	"log"
-	"github.com/vova616/chipmunk/vect"
 	"encoding/json"
+	"engo.io/ecs"
+	"github.com/vova616/chipmunk/vect"
+	"log"
 )
 
 const inputBuffererCount = 2
 
 //---- models for input
 type inputDTO struct {
-	Tick     *uint64 `json:"tick"`
+	Tick     *uint64   `json:"tick"`
 	Movement *movement `json:"movement"`
-	Rotation float32 `json:"rotation"` // [0, 2*PI)
-	Action   *action `json:"action"`
+	Rotation float32   `json:"rotation"` // [0, 2*PI)
+	Action   *action   `json:"action"`
 }
 
 type movement struct {

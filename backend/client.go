@@ -1,10 +1,9 @@
 package main
 
-
 import (
-	"io"
-	"golang.org/x/net/websocket"
 	"errors"
+	"golang.org/x/net/websocket"
+	"io"
 	"sync"
 	"sync/atomic"
 )
@@ -15,10 +14,10 @@ var maxId uint64 = 0
 
 // Chat client.
 type Client struct {
-	id     uint64
-	ws     *websocket.Conn
-	txCh   chan *Message
-	rxCh   chan<- *ClientMessage
+	id   uint64
+	ws   *websocket.Conn
+	txCh chan *Message
+	rxCh chan<- *ClientMessage
 
 	done int32
 	wg   sync.WaitGroup
@@ -99,5 +98,3 @@ func (c *Client) Listen() {
 
 	c.wg.Wait()
 }
-
-
