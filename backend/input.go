@@ -22,9 +22,6 @@ type movement struct {
 	Y float32 `json:"y"`
 }
 
-//2017/05/21 22:16:46 Received 1 message from 1
-//2017/05/21 22:16:46 RX: {"movement":{"x":0,"y":0},"rotation":0.03224688243525392,"action":{"item":"fist","alt":false},"tick":224}
-//2017/05/21 22:16:46 RX Obj: {Tick:0xc42030e5a8 Movement:0xc42030e548 Rotation:0.032246884 Action:0xc42030e570}
 type action struct {
 	Item string `json:"item"`
 	Alt  bool `json:"alt"`

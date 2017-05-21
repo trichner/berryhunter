@@ -44,6 +44,16 @@ func (n *NetSystem) Update(dt float32) {
 		entites = append(entites, dto)
 	}
 
+	//TODO DEBUG
+	for _, w := range walls {
+		dto := mapToEntityDTO(&entity{
+			BasicEntity: ecs.NewBasic(),
+			body:*w,
+			entityType: typeRoundTree,
+		})
+		entites = append(entites, dto)
+	}
+
 	// assemble game state prototype
 	gameState := GameStateDTO{}
 	gameState.Tick = n.game.tick

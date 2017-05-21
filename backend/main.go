@@ -42,7 +42,8 @@ func readConf() *conf.Config {
 }
 
 const staticBodyGroup = 0x01
-var walls []chipmunk.Body = make([]chipmunk.Body,10)
+
+var walls []*chipmunk.Body = make([]*chipmunk.Body, 10)
 func newPhysicsSystem(x, y int) *PhysicsSystem {
 
 	overlap := vect.Float(3)
@@ -72,7 +73,6 @@ func newPhysicsSystem(x, y int) *PhysicsSystem {
 	wall = chipmunk.NewBox(toVect(xf/2.0, yf+overlap/2.0), 2.0*overlap+xf, overlap)
 	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
-	//walls = append(walls, bdy)
 
 	// top
 	wall = chipmunk.NewBox(toVect(xf/2.0, 0-overlap/2.0), 2.0*overlap+xf, overlap)
@@ -100,6 +100,9 @@ func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
 	bdy := chipmunk.NewBodyStatic()
 	bdy.AddShape(s)
 	bdy.CallbackHandler = &Collidable{}
+
+	walls = append(walls, bdy)
+
 	return bdy
 }
 
