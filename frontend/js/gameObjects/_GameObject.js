@@ -8,13 +8,7 @@ class GameObject {
 		this.rotateOnPositioning = false;
 
 		if (this.constructor.svg) {
-			this.shape = this.createInjectionGroup(x, y, this.size, this.rotation);
-
-			let callback = function () {
-				this.injectionGroup._renderer.elem.appendChild(this.constructor.svg.cloneNode(true));
-				two.unbind('render', callback);
-			}.bind(this);
-			two.bind('render', callback);
+			this.shape = new InjectedSVG(this.constructor.svg, x, y, this.size, this.rotation);
 		} else {
 			const args = Array.prototype.splice.call(arguments, 2);
 			this.shape = this.createShape.apply(this, [x, y].concat(args));

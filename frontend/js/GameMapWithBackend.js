@@ -18,8 +18,8 @@ function GameMapWithBackend() {
 		this.width = dimmensions.width;
 		this.height = dimmensions.height;
 	} else {
-		this.width = width;
-		this.height = height;
+		this.width = 100 * 100;
+		this.height = 100 * 100;
 	}
 
 	/*
