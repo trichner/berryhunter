@@ -3,6 +3,8 @@
 
 const gameObjectClasses = {
 	Character,
+	Border,
+
 	RoundTree,
 	MarioTree,
 	Stone,
@@ -25,11 +27,11 @@ function GameMapWithBackend() {
 	/*
 	 * Create map borders
 	 */
-	groups.mapBorders.add(
-		new Border(0, 0, 'NORTH', this.width),
-		new Border(this.width, 0, 'EAST', this.height),
-		new Border(0, this.height, 'SOUTH', this.width),
-		new Border(0, 0, 'WEST', this.height));
+	// groups.mapBorders.add(
+	// 	new Border(0, 0, 'NORTH', this.width),
+	// 	new Border(this.width, 0, 'EAST', this.height),
+	// 	new Border(0, this.height, 'SOUTH', this.width),
+	// 	new Border(0, 0, 'WEST', this.height));
 
 	this.objects = {};
 
@@ -43,7 +45,46 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 		gameObject.setPosition(entity.x, entity.y);
 		gameObject.updateAABB(entity.aabb);
 	} else {
-		gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
+		if (entity.object === 'Border') {
+			let startX = entity.aabb.LowerX;
+			let startY = entity.aabb.LowerY;
+			let endX = entity.aabb.UpperX;
+			let endY = entity.aabb.UpperY;
+			let x1, y1, x2, y2;
+
+			if (startX <= 0) {
+				if (endY <= 0) {
+					// Top Border
+					x1 = 0;
+					y1 = 0;
+					x2 = endX + startX;
+					y2 = y1;
+				} else {
+					// Left Border
+					x1 = 0;
+					y1 = 0;
+					x2 = x1;
+					y2 = endY + startY;
+				}
+			} else {
+				if (startY <= 0) {
+					// Right Border
+					x1 = startX;
+					y1 = 0;
+					x2 = x1;
+					y2 = endY + startY;
+				} else {
+					// Bottom Border
+					x1 = 0;
+					y1 = startY;
+					x2 = endX + startX;
+					y2 = startY;
+				}
+			}
+		} else {
+			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
+		}
+		miniMap.add(gameObject);
 		this.objects[entity.id] = gameObject;
 	}
 };

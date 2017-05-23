@@ -5,23 +5,28 @@ class Border extends GameObject {
 
 	createShape(x, y, side, length) {
 		let x2, y2;
-		switch (side) {
-			case 'NORTH':
-				x2 = x + length;
-				y2 = y;
-				break;
-			case 'EAST':
-				x2 = x;
-				y2 = y + length;
-				break;
-			case 'SOUTH':
-				x2 = x + length;
-				y2 = y;
-				break;
-			case 'WEST':
-				x2 = x;
-				y2 = y + length;
-				break;
+		if (typeof side === 'string') {
+			switch (side) {
+				case 'NORTH':
+					x2 = x + length;
+					y2 = y;
+					break;
+				case 'EAST':
+					x2 = x;
+					y2 = y + length;
+					break;
+				case 'SOUTH':
+					x2 = x + length;
+					y2 = y;
+					break;
+				case 'WEST':
+					x2 = x;
+					y2 = y + length;
+					break;
+			}
+		} else {
+			x2 = side;
+			y2 = length;
 		}
 
 		let shape = new Two.Line(x, y, x2, y2);
