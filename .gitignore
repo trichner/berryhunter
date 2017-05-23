@@ -2,3 +2,5 @@
 *.iml
 frontend/death-io.sublime-project
 frontend/death-io.sublime-workspace
+.DS_Store
+*.log
