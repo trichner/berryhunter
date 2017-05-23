@@ -108,7 +108,12 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 			// 		y2 = startY;
 			// 	}
 			// }
-			gameObject = new Border(startX, startY, endX, endY);
+			// gameObject = new Border(
+			// 	x1 + (endX - startX) / 2,
+			// 	y1 + (endY - startY) / 2,
+			// 	x2 + (endX - startX) / 2,
+			// 	y2 + (endY - startY) / 2);
+			gameObject = new Border(x1, y1, x2, y2);
 			gameObject.updateAABB(entity.aabb);
 		} else {
 			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
