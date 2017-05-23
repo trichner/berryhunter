@@ -11,6 +11,7 @@ import (
 
 const (
 	typeNone          = "NONE"
+	typeBorder          = "Border"
 	typeRoundTree     = "RoundTree"
 	typeMarioTree     = "MarioTree"
 	typePlayer        = "Character"

@@ -104,7 +104,7 @@ func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
 	walls = append(walls, &entity{
 		BasicEntity: ecs.NewBasic(),
 		body:        *bdy,
-		entityType:  typeRoundTree,
+		entityType:  typeBorder,
 	})
 	return bdy
 }
