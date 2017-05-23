@@ -3,7 +3,6 @@
 
 const gameObjectClasses = {
 	Character,
-	Border,
 
 	RoundTree,
 	MarioTree,
@@ -52,35 +51,65 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 			let endY = entity.aabb.UpperY;
 			let x1, y1, x2, y2;
 
-			if (startX <= 0) {
-				if (endY <= 0) {
-					// Top Border
-					x1 = 0;
-					y1 = 0;
-					x2 = endX + startX;
-					y2 = y1;
-				} else {
-					// Left Border
-					x1 = 0;
-					y1 = 0;
-					x2 = x1;
-					y2 = endY + startY;
-				}
+			if (startX > 0) {
+				// Right Border
+				x1 = startX;
+				y1 = 0;
+				x2 = x1;
+				y2 = endY + startY;
+			} else if (startY > 0) {
+				// Bottom Border
+				x1 = 0;
+				y1 = startY;
+				x2 = endX + startX;
+				y2 = startY;
+			} else if (endX <= 0) {
+				// Left Border
+				x1 = 0;
+				y1 = 0;
+				x2 = x1;
+				y2 = endY + startY;
+			} else if (endY <= 0) {
+				// Top Border
+				x1 = 0;
+				y1 = 0;
+				x2 = endX + startX;
+				y2 = y1;
 			} else {
-				if (startY <= 0) {
-					// Right Border
-					x1 = startX;
-					y1 = 0;
-					x2 = x1;
-					y2 = endY + startY;
-				} else {
-					// Bottom Border
-					x1 = 0;
-					y1 = startY;
-					x2 = endX + startX;
-					y2 = startY;
-				}
+				throw "Unknown Border orientation " + JSON.stringify(entity.aabb);
 			}
+
+			// if (startX <= 0) {
+			// 	if (endY <= 0) {
+			// 		// Top Border
+			// 		x1 = 0;
+			// 		y1 = 0;
+			// 		x2 = endX + startX;
+			// 		y2 = y1;
+			// 	} else {
+			// 		// Left Border
+			// 		x1 = 0;
+			// 		y1 = 0;
+			// 		x2 = x1;
+			// 		y2 = endY + startY;
+			// 	}
+			// } else {
+			// 	if (startY <= 0) {
+			// 		// Right Border
+			// 		x1 = startX;
+			// 		y1 = 0;
+			// 		x2 = x1;
+			// 		y2 = endY + startY;
+			// 	} else {
+			// 		// Bottom Border
+			// 		x1 = 0;
+			// 		y1 = startY;
+			// 		x2 = endX + startX;
+			// 		y2 = startY;
+			// 	}
+			// }
+			gameObject = new Border(startX, startY, endX, endY);
+			gameObject.updateAABB(entity.aabb);
 		} else {
 			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
 		}
