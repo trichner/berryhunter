@@ -41,8 +41,11 @@ function GameMapWithBackend() {
 GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 	let gameObject = this.objects[entity.id];
 	if (gameObject) {
-		gameObject.setPosition(entity.x, entity.y);
-		gameObject.updateAABB(entity.aabb);
+		// FIXME Der Server sollte mir nur Entities liefern, die sich auch geändert haben
+		if (gameObject.isMoveable) {
+			gameObject.setPosition(entity.x, entity.y);
+			gameObject.updateAABB(entity.aabb);
+		}
 	} else {
 		if (entity.object === 'Border') {
 			let startX = entity.aabb.LowerX;

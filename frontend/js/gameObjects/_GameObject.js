@@ -5,6 +5,7 @@ class GameObject {
 		this.size = size || Constants.GRID_SPACING / 2;
 		this.rotation = rotation || 0;
 
+		this.isMoveable = false;
 		this.rotateOnPositioning = false;
 
 		if (this.constructor.svg) {
@@ -93,12 +94,19 @@ class GameObject {
 			let width = (endX - startX) / 2;
 			let height = (endY - startY) / 2;
 			// this.aabb = new Two.Rectangle(50, 50, 100, 100);
-			this.aabb = new Two.Rectangle(startX + width, startY + height, width, height);
+			let x = startX + width;
+			let y = startY + height;
+			this.aabb = new Two.Rectangle(x, y, width, height);
 			groups.gameObjects.add(this.aabb);
 
 			this.aabb.noFill();
 			this.aabb.stroke = 'red';
 			this.aabb.linewidth = 2;
+
+			this.aabbConnector = new Two.Line(this.getX(), this.getY(), x, y);
+			groups.gameObjects.add(this.aabbConnector);
+			this.aabbConnector.stroke = 'red';
+			this.aabbConnector.linewidth = 2;
 		} else {
 			this.aabb.translation.set((startX + endX) / 2, (startY + endY) / 2);
 		}

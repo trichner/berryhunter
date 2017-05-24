@@ -4,6 +4,7 @@ class Character extends GameObject {
 		this.id = id;
 
 		this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
+		this.isMoveable = true;
 
 		this.show();
 

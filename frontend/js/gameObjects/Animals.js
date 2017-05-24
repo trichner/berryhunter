@@ -4,6 +4,7 @@ class Animal extends GameObject {
 	constructor(x, y, size, rotation) {
 		super(x, y, size, rotation);
 		this.rotateOnPositioning = true;
+		this.isMoveable = true;
 	}
 
 	visibleOnMinimap() {
