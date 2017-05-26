@@ -81,10 +81,6 @@ function setup() {
 	gameMap = new GameMapWithBackend();
 	miniMap = new MiniMap(gameMap);
 
-	if (typeof Fps === 'object' && Constants.SHOW_FPS) {
-		Fps.setup();
-	}
-
 	let domElement = two.renderer.domElement;
 	SvgLoader.setup(domElement);
 	KeyEvents.setup(domElement);

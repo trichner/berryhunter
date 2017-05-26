@@ -20,7 +20,10 @@ const Backend = {
 
 		this.webSocket.onmessage = this.receive.bind(this);
 
-		this.lastMessageReceivedTime = performance.now();
+		if (Develop.isActive()) {
+			this.lastMessageReceivedTime = performance.now();
+			this.lastMessageSentTime = this.lastMessageReceivedTime;
+		}
 
 	},
 
@@ -37,9 +40,6 @@ const Backend = {
 		if (!two.playing && gameStarted){
 			return;
 		}
-		let messageReceivedTime = performance.now();
-		let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
-		this.lastMessageReceivedTime = messageReceivedTime;
 
 		if (!event.data){
 			console.warn("Received empty message.");
@@ -59,10 +59,15 @@ const Backend = {
 				this.receiveObject(messageObj.body);
 				break;
 			case MessageType.SNAPSHOT:
-				this.receiveSnapshot(messageObj.body);
+				let snapshot = messageObj.body;
+				if (Develop.isActive()) {
+					let messageReceivedTime = performance.now();
+					let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
+					this.lastMessageReceivedTime = messageReceivedTime;
+					Develop.logServerTick(snapshot.tick, timeSinceLastMessage);
+				}
+				this.receiveSnapshot(snapshot);
 		}
-
-		// console.log(timeSinceLastMessage.toFixed(1) + "ms", messageObj);
 	},
 
 	receiveObject: function (gameObject) {
@@ -70,13 +75,6 @@ const Backend = {
 	},
 
 	receiveSnapshot: function (snapshot) {
-		if (snapshot.tick <= this.lastServerTick){
-			console.log("Snapshot #" + this.lastServerTick + " out of order. Next #" + snapshot.tick);
-		}
-
-		this.lastServerTick = snapshot.tick;
-		// console.log("Snapshot #" + this.lastServerTick);
-
 		snapshot.entities.forEach(function (entity) {
 			if (entity.id === snapshot.player_id){
 				if (gameStarted){
@@ -97,6 +95,13 @@ const Backend = {
 			return;
 		}
 		inputObj.tick = this.lastServerTick + 1;
+
+		if (Develop.isActive()) {
+			let messageReceivedTime = performance.now();
+			let timeSinceLastMessage = messageReceivedTime - this.lastMessageSentTime;
+			this.lastMessageSentTime = messageReceivedTime;
+			Develop.logServerTick(inputObj.tick, timeSinceLastMessage);
+		}
 		this.send(inputObj);
 	}
 };

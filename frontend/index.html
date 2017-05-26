@@ -4,7 +4,6 @@
 	<meta charset="UTF-8">
 
 	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/quadrantRenderer.css">
 
 	<!-- Graphics -->
 	<script type="text/javascript" src="vendor/two/two.js"></script>
@@ -34,7 +33,6 @@
 	<script type="text/javascript" src="js/KeyEvents.js"></script>
 	<script type="text/javascript" src="js/PointerEvents.js"></script>
 	<script type="text/javascript" src="js/Controls.js"></script>
-	<script type="text/javascript" src="js/Fps.js"></script>
 	<script type="text/javascript" src="js/Constants.js"></script>
 	<script type="text/javascript" src="js/InjectedSVG.js"></script>
 	<script type="text/javascript" src="js/gameObjects/_GameObject.js"></script>
@@ -52,6 +50,11 @@
 	<script type="text/javascript" src="js/Camera.js"></script>
 	<script type="text/javascript" src="js/Quadrants.js"></script>
 	<script type="text/javascript" src="js/mapEditor/QuadrantGrid.js"></script>
+
+	<!-- Develop resources -->
+	<script type="text/javascript" src="js/develop/Fps.js"></script>
+	<script type="text/javascript" src="js/develop/AABBs.js"></script>
+	<script type="text/javascript" src="js/develop/Develop.js"></script>
 
 	<title>Death.io</title>
 </head>
@@ -105,7 +108,11 @@
 		</div>
 	</section>
 	<section id="reference">
-		<p>Quadranten werden in vereinfachtem <a href="https://de.wikipedia.org/wiki/JavaScript_Object_Notation">JSON</a> definiert. Für jede Resource wird ein <code>x</code> und <code>y</code> Wert festgelegt, der das Feld im Quadranten für die Resource bestimmt. Dann wird im Feld <code>object</code> festgehalten, welche Resource in dem Feld auftauchen soll.</p>
+		<p>Quadranten werden in vereinfachtem <a
+				href="https://de.wikipedia.org/wiki/JavaScript_Object_Notation">JSON</a> definiert. Für jede Resource
+			wird ein <code>x</code> und <code>y</code> Wert festgelegt, der das Feld im Quadranten für die Resource
+			bestimmt. Dann wird im Feld <code>object</code> festgehalten, welche Resource in dem Feld auftauchen soll.
+		</p>
 		<h3>Available Objects</h3>
 		<ul>
 			<li>Tree
@@ -125,8 +132,11 @@
 			</li>
 		</ul>
 		<p>
-			Es ist möglich entweder "Tree" anzugeben, um einfach einen zufälligen Baum zu platzieren. Oder konkret "RoundTree", um exakt diesen Baumtypen zu platzieren. Das gilt für alle Kategorien, also auch zB "Animals".<br />
-			Die Zahlen in Klammern hinter den Subtypen geben an, wie die Gewichtung in der Zufallstabelle ist. Je niedriger (im Verhältnis der anderen Gewichte), desto unwahrscheinlicher ein Auftauchen.
+			Es ist möglich entweder "Tree" anzugeben, um einfach einen zufälligen Baum zu platzieren. Oder konkret
+			"RoundTree", um exakt diesen Baumtypen zu platzieren. Das gilt für alle Kategorien, also auch zB
+			"Animals".<br/>
+			Die Zahlen in Klammern hinter den Subtypen geben an, wie die Gewichtung in der Zufallstabelle ist. Je
+			niedriger (im Verhältnis der anderen Gewichte), desto unwahrscheinlicher ein Auftauchen.
 		</p>
 	</section>
 </main>
