@@ -8,8 +8,6 @@ class Character extends GameObject {
 
 		this.show();
 
-		this.controls = new Controls(this);
-
 		this.currentAction = false;
 
 		this.createHands(this.size);
