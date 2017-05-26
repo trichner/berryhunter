@@ -49,19 +49,15 @@ svg:focus {
   -webkit-flex: 1;
   flex: 1;
 }
-
 body {
   font-family: 'Roboto', sans-serif;
 }
-
 h1 {
   margin: 0.67em;
 }
-
 #drawingContainer {
   margin-right: 30px;
 }
-
 #quadrantJson {
   box-sizing: border-box;
   display: block;
@@ -70,52 +66,64 @@ h1 {
   resize: none;
   font-family: 'Roboto Mono', monospace;
 }
-
 #jsonStatus {
   padding: 1em;
   color: white;
   background-color: #03A9F4;
 }
-
 #jsonStatus.error {
   background-color: #F44336;
 }
-
 #jsonStatus.success {
   background-color: #4CAF50;
 }
-
 #jsonStatus.success + #renderButton {
   display: inline-block;
 }
-
 #renderButton {
   display: none;
 }
-
 #reference {
   padding: 1em;
   max-width: 14em;
 }
-
 #reference > :first-child {
   margin-top: 0;
 }
-
 #reference > ul {
   word-wrap: break-word;
   word-break: break-all;
 }
-
 #reference code {
   font-family: 'Roboto Mono', monospace;
 }
-
 #developPanel {
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
+    top: 0;
+    right: 0;
   background-color: rgba(255, 255, 255, 0.8);
-  width: 15%;
-  min-width: 21em;
+    padding: 1em;
+    min-width: 16em;
+}
+
+#developPanel > :first-child {
+    margin-top: 0;
+}
+
+#developPanel > h2 {
+    font-size: 1.2em;
+}
+
+#developPanel > table td,
+#developPanel > table th {
+    padding: 0.15em 0.25em;
+}
+
+#developPanel > table > tbody th {
+    text-align: right;
+    padding-right: 0.5em;
+}
+
+#developPanel > table > tbody td {
+    min-width: 6.35em;
 }

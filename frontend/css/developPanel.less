@@ -1,10 +1,35 @@
 #developPanel {
 	position: fixed;
-	top: 50%;
-	transform: translateY(-50%);
+	top: 0;
+	right: 0;
 	background-color: rgba(255, 255, 255, 0.8);
-	width: 15%;
-	min-width: 21em;
+	padding: 1em;
+	min-width: 16em;
+
+	> :first-child {
+		margin-top: 0;
+	}
+
+	> h2 {
+		font-size: 1.2em;
+	}
+
+	> table {
+		td, th {
+			padding: 0.15em 0.25em;
+		}
+
+		> tbody {
+			th {
+				text-align: right;
+				padding-right: 0.5em;
+			}
+
+			td {
+				min-width: 6.35em;
+			}
+		}
+	}
 }
 
 // FPS were 'color: lightyellow'

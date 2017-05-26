@@ -10,13 +10,8 @@ const Develop = {
 	},
 
 	setup: function () {
-		this.isActive = true;
+		this.active = true;
 		AABBs.setup();
-
-		if (typeof Fps === 'object' && Constants.DEBUGGING.SHOW_FPS) {
-			Fps.setup();
-		}
-
 		this.setupDevelopPanel();
 		this.logs = {
 			fps: [],
@@ -26,19 +21,19 @@ const Develop = {
 	},
 
 	setupDevelopPanel: function () {
-		makeRequest({
-			method: 'GET',
-			url: 'developPanel.html'
-		}).then(function (html) {
-			// TODO append to body
-			document.body.appendChild(htmlToElement(html));
+		registerPreload(
+			makeRequest({
+				method: 'GET',
+				url: 'developPanel.html'
+			}).then(function (html) {
+				document.body.appendChild(htmlToElement(html));
 
-			this.developPanelAvailable = true;
-		}.bind(this))
+				this.developPanelAvailable = true;
+			}.bind(this)));
 	},
 
 	logValue: function (name, value) {
-		$('#develop_' + name).text(value);
+		document.getElementById('develop_' + name).textContent = value;
 	},
 
 	logSampledValue: function (name, logArray, value) {

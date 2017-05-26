@@ -75,6 +75,8 @@ const Backend = {
 	},
 
 	receiveSnapshot: function (snapshot) {
+		this.lastServerTick = snapshot.tick;
+
 		snapshot.entities.forEach(function (entity) {
 			if (entity.id === snapshot.player_id){
 				if (gameStarted){
