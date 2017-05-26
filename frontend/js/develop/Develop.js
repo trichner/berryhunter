@@ -42,7 +42,6 @@ const Develop = {
 	},
 
 	logSampledValue: function (name, logArray, value) {
-		// Darstellung mit .fixed(1)
 		logArray.push(value);
 		while (logArray.length > Constants.DEBUGGING.MEASUREMENT_SAMPLE_RATE) {
 			logArray.shift();

@@ -100,7 +100,7 @@ const Backend = {
 			let messageReceivedTime = performance.now();
 			let timeSinceLastMessage = messageReceivedTime - this.lastMessageSentTime;
 			this.lastMessageSentTime = messageReceivedTime;
-			Develop.logServerTick(inputObj.tick, timeSinceLastMessage);
+			Develop.logClientTick(inputObj.tick, timeSinceLastMessage);
 		}
 		this.send(inputObj);
 	}
