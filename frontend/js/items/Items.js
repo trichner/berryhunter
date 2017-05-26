@@ -10,30 +10,30 @@ const ItemType = {
 
 const Items = {
 	WoodClub: {
-		iconFile: 'woodClub',
+		iconFile: 'clubWoodIcon',
 		type: ItemType.EQUIPMENT
 	},
 	StoneTool: {
-		iconFile: 'stoneTool',
+		iconFile: 'toolStoneIcon',
 		type: ItemType.EQUIPMENT
 	},
 	BronzeTool: {
 		// TODO
-		iconFile: '',
+		iconFile: 'toolBronzeIcon',
 		type: ItemType.EQUIPMENT
 	},
 	IronTool: {
 		// TODO
-		iconFile: '',
+		iconFile: 'toolIronIcon',
 		type: ItemType.EQUIPMENT
 	},
 	StoneClub: {
-		iconFile: 'stoneClub',
+		iconFile: 'clubStoneIcon',
 		type: ItemType.EQUIPMENT
 	},
 	BronzeSword: {
 		// TODO
-		iconFile: '',
+		iconFile: 'swordBronzeIcon',
 		type: ItemType.EQUIPMENT
 	},
 	IronSword: {
@@ -42,16 +42,16 @@ const Items = {
 		type: ItemType.EQUIPMENT
 	},
 	StoneSpear: {
-		iconFile: 'stoneSpear',
+		iconFile: 'spearStoneIcon',
 		type: ItemType.EQUIPMENT
 	},
 	BronzeSpear: {
 		// TODO
-		iconFile: '',
+		iconFile: 'spearBronzeIcon',
 		type: ItemType.EQUIPMENT
 	},
 	IronSpear: {
-		iconFile: 'ironSpear',
+		iconFile: 'spearIronIcon',
 		type: ItemType.EQUIPMENT
 	},
 	StoneHammer: {
@@ -70,7 +70,7 @@ const Items = {
 		type: ItemType.EQUIPMENT
 	},
 	Campfire: {
-		iconFile: 'campfire',
+		iconFile: 'campFireIcon',
 		type: ItemType.PLACEABLE
 	},
 	BigCampfire: {
@@ -80,11 +80,11 @@ const Items = {
 	},
 	Workbench: {
 		// TODO
-		iconFile: '',
+		iconFile: 'workbenchIcon',
 		type: ItemType.PLACEABLE
 	},
 	Chest: {
-		iconFile: '../items/workbench',
+		iconFile: '',
 		type: ItemType.PLACEABLE
 	},
 	BigChest: {
@@ -158,41 +158,41 @@ const Items = {
 		type: ItemType.PLACEABLE
 	},
 	CookedMeat: {
-		iconFile: 'cookedMeat',
+		iconFile: 'meatCookedIcon',
 		type: ItemType.CONSUMABLE
 	},
 	RawMeat: {
-		iconFile: 'rawMeat',
+		iconFile: 'meatRawIcon',
 		type: ItemType.CONSUMABLE
 	},
 	Berry: {
-		iconFile: 'berry',
+		iconFile: 'berryIcon',
 		type: ItemType.CONSUMABLE
 	},
 	Seeds: {
-		iconFile: 'seed',
+		iconFile: 'seedIcon',
 		type: ItemType.CONSUMABLE
 	},
 	BerryBowl: {
-		iconFile: 'berryBowl',
+		iconFile: 'berryBowlIcon',
 		type: ItemType.CONSUMABLE
 	},
 	Wood: {
-		iconFile: 'wood',
+		iconFile: 'woodIcon',
 		type: ItemType.RESOURCE
 	},
 	Stone: {
-		iconFile: 'stone',
+		iconFile: 'stoneIcon',
 		type: ItemType.RESOURCE
 	},
 	Bronze: {
 		// TODO
-		iconFile: '',
+		iconFile: 'bronzeIcon',
 		type: ItemType.RESOURCE
 	},
 	Iron: {
 		// TODO
-		iconFile: '',
+		iconFile: 'ironIcon',
 		type: ItemType.RESOURCE
 	}
 };
@@ -200,7 +200,7 @@ const Items = {
 (function preloadItemIcons() {
 	Object.values(Items).forEach(function (item) {
 		if (item.iconFile) {
-			registerGameObjectSVG(item, 'img/icons/' + item.iconFile + '.svg');
+			registerGameObjectSVG(item, 'img/items/' + item.iconFile + '.svg');
 		}
 	});
 })();
