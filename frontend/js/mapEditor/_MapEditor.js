@@ -35,7 +35,7 @@ const MapEditor = {
 	afterSetup: function () {
 		two.pause();
 
-		createPlayer(0, width/2, height/2);
+		createPlayer(0, width / 2, height / 2);
 
 		this.grid = new QuadrantGrid();
 
@@ -44,11 +44,6 @@ const MapEditor = {
 		}.bind(this);
 
 		this.tryRenderQuadrants();
-	},
-
-
-	disable: function () {
-		clearNode(document.body);
 	},
 
 	tryRenderQuadrants: function () {
@@ -118,3 +113,12 @@ const MapEditor = {
 	}
 };
 
+if (MapEditor.isActive()) {
+	registerPreload(
+		makeRequest({
+			method: 'GET',
+			url: 'mapEditor.part.html'
+		}).then(function (html) {
+			document.body.appendChild(htmlToElement(html));
+		}));
+}

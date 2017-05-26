@@ -44,7 +44,9 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 		// FIXME Der Server sollte mir nur Entities liefern, die sich auch geändert haben
 		if (gameObject.isMoveable) {
 			gameObject.setPosition(entity.x, entity.y);
-			gameObject.updateAABB(entity.aabb);
+			if (Develop.isActive()) {
+				gameObject.updateAABB(entity.aabb);
+			}
 		}
 	} else {
 		if (entity.object === 'Border') {
@@ -117,7 +119,9 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 			// 	x2 + (endX - startX) / 2,
 			// 	y2 + (endY - startY) / 2);
 			gameObject = new Border(x1, y1, x2, y2);
-			gameObject.updateAABB(entity.aabb);
+			if (Develop.isActive()) {
+				gameObject.updateAABB(entity.aabb);
+			}
 		} else {
 			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
 		}

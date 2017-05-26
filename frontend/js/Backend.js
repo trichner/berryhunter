@@ -10,19 +10,26 @@ const MessageType = {
 const Backend = {
 	setup: function () {
 		this.webSocket = new WebSocket(Constants.BACKEND.URL);
+		if (Develop.isActive()) {
+			Develop.logWebsocketStatus('Connecting', 'neutral');
+		}
 		this.webSocket.onopen = function () {
+			if (Develop.isActive()) {
+				Develop.logWebsocketStatus('Open', 'good');
+			}
 			console.log("WebSocket: Open");
 		};
 
 		this.webSocket.onerror = function () {
-			console.log("WebSocket: Exploded");
+			if (Develop.isActive()) {
+				Develop.logWebsocketStatus('Crashed', 'bad');
+			}
 		};
 
 		this.webSocket.onmessage = this.receive.bind(this);
 
 		if (Develop.isActive()) {
 			this.lastMessageReceivedTime = performance.now();
-			this.lastMessageSentTime = this.lastMessageReceivedTime;
 		}
 
 	},
@@ -37,11 +44,14 @@ const Backend = {
 	},
 
 	receive: function (event) {
-		if (!two.playing && gameStarted){
+		if (!two.playing && gameStarted) {
 			return;
 		}
 
-		if (!event.data){
+		if (!event.data) {
+			if (Develop.isActive()) {
+				Develop.logWebsocketStatus('Receiving empty messages', 'bad');
+			}
 			console.warn("Received empty message.");
 			return;
 		}
@@ -52,6 +62,10 @@ const Backend = {
 		} catch (e) {
 			console.error("Error while parsing message: " + event.data);
 			return;
+		}
+
+		if (Develop.isActive()) {
+			Develop.logWebsocketStatus('Open', 'good');
 		}
 
 		switch (messageObj.type) {
@@ -78,13 +92,15 @@ const Backend = {
 		this.lastServerTick = snapshot.tick;
 
 		snapshot.entities.forEach(function (entity) {
-			if (entity.id === snapshot.player_id){
-				if (gameStarted){
+			if (entity.id === snapshot.player_id) {
+				if (gameStarted) {
 					player.character.setPosition(entity.x, entity.y);
 				} else {
 					createPlayer(entity.id, entity.x, entity.y);
 				}
-				player.character.updateAABB(entity.aabb);
+				if (Develop.isActive()) {
+					player.character.updateAABB(entity.aabb);
+				}
 			} else {
 				gameMap.addOrUpdate(entity);
 			}
@@ -92,17 +108,14 @@ const Backend = {
 	},
 
 	sendInputTick: function (inputObj) {
-		if (typeof this.lastServerTick === 'undefined'){
+		if (typeof this.lastServerTick === 'undefined') {
 			// If the backend hasn't send a snapshot yet, don't send any input.
 			return;
 		}
 		inputObj.tick = this.lastServerTick + 1;
 
 		if (Develop.isActive()) {
-			let messageReceivedTime = performance.now();
-			let timeSinceLastMessage = messageReceivedTime - this.lastMessageSentTime;
-			this.lastMessageSentTime = messageReceivedTime;
-			Develop.logClientTick(inputObj.tick, timeSinceLastMessage);
+			Develop.logClientTick(inputObj.tick);
 		}
 		this.send(inputObj);
 	}

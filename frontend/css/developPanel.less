@@ -5,6 +5,7 @@
 	background-color: rgba(255, 255, 255, 0.8);
 	padding: 1em;
 	min-width: 16em;
+	z-index: 1000;
 
 	> :first-child {
 		margin-top: 0;
@@ -25,10 +26,27 @@
 				padding-right: 0.5em;
 			}
 
+			> tr.separatorRow > th {
+				text-align: center;
+				padding-right: 0.25em;
+			}
+
 			td {
 				min-width: 6.35em;
 			}
 		}
+	}
+
+	.good {
+		color: #4CAF50;
+	}
+
+	.neutral {
+		color: #03A9F4;
+	}
+
+	.bad {
+		color: #F44336;
 	}
 }
 

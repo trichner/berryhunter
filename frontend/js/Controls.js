@@ -92,6 +92,18 @@ class Controls {
 	}
 
 	update() {
+		if (Develop.isActive()){
+			if (typeof this.updateTime === 'undefined'){
+				this.updateTime = this.clock.lap();
+				Develop.logClientTickRate(this.updateTime);
+			} else {
+				let currentTime = this.clock.lap();
+				let timeSinceUpdate = currentTime - this.updateTime;
+				this.updateTime = currentTime;
+				Develop.logClientTickRate(timeSinceUpdate);
+			}
+		}
+
 		if (anyKeyIsPressed(PAUSE_KEYS)) {
 			if (two.playing) {
 				two.pause();

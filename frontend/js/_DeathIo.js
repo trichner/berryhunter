@@ -53,8 +53,6 @@ function setup() {
 	} else {
 		// Setup backend first, as this will take some time to connect.
 		Backend.setup();
-
-		MapEditor.disable();
 		two = new Two({
 			fullscreen: true,
 			type: Two.Types.svg

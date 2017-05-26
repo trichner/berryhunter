@@ -24,7 +24,7 @@ const Develop = {
 		registerPreload(
 			makeRequest({
 				method: 'GET',
-				url: 'developPanel.html'
+				url: 'developPanel.part.html'
 			}).then(function (html) {
 				document.body.appendChild(htmlToElement(html));
 
@@ -36,29 +36,34 @@ const Develop = {
 		document.getElementById('develop_' + name).textContent = value;
 	},
 
-	logSampledValue: function (name, logArray, value) {
+	logSampledValue: function (name, logArray, value, unit) {
+		if (typeof unit === 'undefined') {
+			unit = '';
+		} else {
+			unit = ' ' + unit;
+		}
 		logArray.push(value);
 		while (logArray.length > Constants.DEBUGGING.MEASUREMENT_SAMPLE_RATE) {
-			logArray.shift();
+			let average = 0;
+			logArray.forEach(function (value) {
+				average += value;
+			});
+			average /= logArray.length;
+
+			let abweichung = 0;
+			logArray.forEach(function (value) {
+				abweichung += Math.abs(value - average);
+			});
+			abweichung /= logArray.length;
+
+			let output = average.toFixed(1);
+			output += '±';
+			output += abweichung.toFixed(0);
+			output += unit;
+			this.logValue(name, output);
+
+			logArray.length = 0;
 		}
-
-		let average = 0;
-		logArray.forEach(function (value) {
-			average += value;
-		});
-		average /= logArray.length;
-
-		let abweichung = 0;
-		logArray.forEach(function (value) {
-			abweichung += Math.abs(value - average);
-		});
-		abweichung /= logArray.length;
-
-		let output = average.toFixed(1);
-		output += '+';
-		output += abweichung.toFixed(0);
-		output += ' ms';
-		this.logValue(name, output);
 	},
 
 	logFPS: function (fps) {
@@ -67,13 +72,26 @@ const Develop = {
 
 	logServerTick: function (tick, timeSinceLast) {
 		this.logValue('serverTick', tick);
-		this.logSampledValue('serverTickRate', this.logs.serverTickRate, timeSinceLast);
+		this.logSampledValue('serverTickRate', this.logs.serverTickRate, timeSinceLast, 'ms');
 	},
 
-	logClientTick: function (tick, timeSinceLast) {
+	logClientTick: function (tick) {
 		this.logValue('clientTick', tick);
-		this.logSampledValue('clientTickRate', this.logs.clientTickRate, timeSinceLast);
 	},
+
+	logClientTickRate: function (timeSinceLast) {
+		this.logSampledValue('clientTickRate', this.logs.clientTickRate, timeSinceLast, 'ms');
+	},
+
+	logWebsocketStatus: function (text, status) {
+		let webSocketCell = document.getElementById('develop_webSocket');
+		webSocketCell.textContent = text;
+		webSocketCell.classList.remove('neutral');
+		webSocketCell.classList.remove('good');
+		webSocketCell.classList.remove('bad');
+
+		webSocketCell.classList.add(status);
+	}
 };
 
 if (getUrlParameter('develop')) {
