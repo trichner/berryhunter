@@ -14,12 +14,15 @@ class Character extends GameObject {
 	}
 
 	createHands(size){
+		this.shape.rotation = Math.PI / -2;
+
 		// TODO Hände unter die Frisur rendern
-		let handAngle = 1.7;
+		const handAngle = Math.PI / 2;
+		const handAngleDistance = 0.4;
 
 		this.leftHand = new Two.Ellipse(
-			Math.cos(Math.PI * handAngle) * size * 0.8,
-			Math.sin(Math.PI * handAngle) * size * 0.8,
+			Math.cos(handAngle - Math.PI * handAngleDistance) * size * 0.8,
+			Math.sin(handAngle - Math.PI * handAngleDistance) * size * 0.8,
 			size * 0.2
 		);
 		this.shape.add(this.leftHand);
@@ -29,8 +32,8 @@ class Character extends GameObject {
 		this.leftHand.originalTranslation = this.leftHand.translation.clone();
 
 		this.rightHand = new Two.Ellipse(
-			Math.cos(Math.PI * (2 - handAngle)) * size * 0.8,
-			Math.sin(Math.PI * (2 - handAngle)) * size * 0.8,
+			Math.cos(handAngle + Math.PI * handAngleDistance) * size * 0.8,
+			Math.sin(handAngle + Math.PI * handAngleDistance) * size * 0.8,
 			size * 0.2
 		);
 		this.shape.add(this.rightHand);
@@ -167,7 +170,7 @@ class Character extends GameObject {
 			} else {
 				offset = this.actionAnimationFrame / (0.6 * Character.hitAnimationFrameDuration) * maxOffset;
 			}
-			hand.translation.x = hand.originalTranslation.x + offset;
+			hand.translation.y = hand.originalTranslation.y + offset;
 
 			if (this.actionAnimationFrame <= 1) {
 				this.currentAction = false;

@@ -18,18 +18,6 @@ class GameObject {
 		this.show();
 	}
 
-	createInjectionGroup(x, y, size, rotation) {
-		let group = new Two.Group();
-		group.translation.set(x, y);
-		// group.translation.set(x-size, y-size);
-		this.injectionGroup = new Two.Group();
-		group.add(this.injectionGroup);
-		this.injectionGroup.scale = (size / (Constants.GRID_SPACING / 2));
-		// this.injectionGroup.rotation = rotation;
-		this.injectionGroup.translation.set(-size, -size);
-		return group;
-	}
-
 	/**
 	 * Fallback method if there is no SVG bound to this gameObject class.
 	 * @param x
