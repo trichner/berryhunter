@@ -1,15 +1,16 @@
-<h1>Death.io :: Map Editor</h1>
-<main class="layout-row flex">
-    <section id="drawingContainer"></section>
-    <section id="inputContainer" class="layout-column flex">
-        <header class="layout-row">
-            <div id="jsonStatus" class="flex">Waiting for input...</div>
-            <button id="renderButton">Render again</button>
-        </header>
-        <div class="wrapper flex">
+<div class="layout-column">
+	<h1>Death.io :: Map Editor</h1>
+	<main class="layout-row flex">
+		<section id="drawingContainer"></section>
+		<section id="inputContainer" class="layout-column flex">
+			<header class="layout-row">
+				<div id="jsonStatus" class="flex">Waiting for input...</div>
+				<button id="renderButton">Render again</button>
+			</header>
+			<div class="wrapper flex">
 			<textarea id="quadrantJson"
-                      placeholder="Quadrant Definition JSON"
-                      autofocus="autofocus">
+			          placeholder="Quadrant Definition JSON"
+			          autofocus="autofocus">
 [
   [
     {
@@ -44,38 +45,41 @@
     }
   ]
 ]</textarea>
-        </div>
-    </section>
-    <section id="reference">
-        <p>Quadranten werden in vereinfachtem <a
-                href="https://de.wikipedia.org/wiki/JavaScript_Object_Notation">JSON</a> definiert. Für jede Resource
-            wird ein <code>x</code> und <code>y</code> Wert festgelegt, der das Feld im Quadranten für die Resource
-            bestimmt. Dann wird im Feld <code>object</code> festgehalten, welche Resource in dem Feld auftauchen soll.
-        </p>
-        <h3>Available Objects</h3>
-        <ul>
-            <li>Tree
-                <ul>
-                    <li>RoundTree (5)</li>
-                    <li>MarioTree (1)</li>
-                </ul>
-            </li>
-            <li>Stone</li>
-            <li>Gold</li>
-            <li>BerryBush</li>
-            <li>Animal
-                <ul>
-                    <li>Rabbit (3)</li>
-                    <li>SaberToothCat (1)</li>
-                </ul>
-            </li>
-        </ul>
-        <p>
-            Es ist möglich entweder "Tree" anzugeben, um einfach einen zufälligen Baum zu platzieren. Oder konkret
-            "RoundTree", um exakt diesen Baumtypen zu platzieren. Das gilt für alle Kategorien, also auch zB
-            "Animals".<br/>
-            Die Zahlen in Klammern hinter den Subtypen geben an, wie die Gewichtung in der Zufallstabelle ist. Je
-            niedriger (im Verhältnis der anderen Gewichte), desto unwahrscheinlicher ein Auftauchen.
-        </p>
-    </section>
-</main>
+			</div>
+		</section>
+		<section id="reference">
+			<p>Quadranten werden in vereinfachtem <a
+					href="https://de.wikipedia.org/wiki/JavaScript_Object_Notation">JSON</a> definiert. Für jede
+				Resource
+				wird ein <code>x</code> und <code>y</code> Wert festgelegt, der das Feld im Quadranten für die Resource
+				bestimmt. Dann wird im Feld <code>object</code> festgehalten, welche Resource in dem Feld auftauchen
+				soll.
+			</p>
+			<h3>Available Objects</h3>
+			<ul>
+				<li>Tree
+					<ul>
+						<li>RoundTree (5)</li>
+						<li>MarioTree (1)</li>
+					</ul>
+				</li>
+				<li>Stone</li>
+				<li>Gold</li>
+				<li>BerryBush</li>
+				<li>Animal
+					<ul>
+						<li>Rabbit (3)</li>
+						<li>SaberToothCat (1)</li>
+					</ul>
+				</li>
+			</ul>
+			<p>
+				Es ist möglich entweder "Tree" anzugeben, um einfach einen zufälligen Baum zu platzieren. Oder konkret
+				"RoundTree", um exakt diesen Baumtypen zu platzieren. Das gilt für alle Kategorien, also auch zB
+				"Animals".<br/>
+				Die Zahlen in Klammern hinter den Subtypen geben an, wie die Gewichtung in der Zufallstabelle ist. Je
+				niedriger (im Verhältnis der anderen Gewichte), desto unwahrscheinlicher ein Auftauchen.
+			</p>
+		</section>
+	</main>
+</div>
