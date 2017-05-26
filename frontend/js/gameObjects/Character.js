@@ -17,7 +17,7 @@ class Character extends GameObject {
 		this.shape.rotation = Math.PI / -2;
 
 		// TODO Hände unter die Frisur rendern
-		const handAngle = Math.PI / 2;
+		const handAngle = 0;
 		const handAngleDistance = 0.4;
 
 		this.leftHand = new Two.Ellipse(
@@ -170,7 +170,7 @@ class Character extends GameObject {
 			} else {
 				offset = this.actionAnimationFrame / (0.6 * Character.hitAnimationFrameDuration) * maxOffset;
 			}
-			hand.translation.y = hand.originalTranslation.y + offset;
+			hand.translation.x = hand.originalTranslation.x + offset;
 
 			if (this.actionAnimationFrame <= 1) {
 				this.currentAction = false;

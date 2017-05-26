@@ -165,3 +165,11 @@ function makeRequest (opts) {
 		xhr.send(params);
 	});
 }
+
+function isDefined(variable) {
+	return !isUndefined(variable);
+}
+
+function isUndefined(variable) {
+	return typeof variable === 'undefined';
+}

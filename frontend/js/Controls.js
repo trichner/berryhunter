@@ -92,8 +92,8 @@ class Controls {
 	}
 
 	update() {
-		if (Develop.isActive()){
-			if (typeof this.updateTime === 'undefined'){
+		if (Develop.isActive()) {
+			if (typeof this.updateTime === 'undefined') {
 				this.updateTime = this.clock.lap();
 				Develop.logClientTickRate(this.updateTime);
 			} else {
@@ -162,11 +162,12 @@ class Controls {
 		// FIXME backend crashes when we send actions
 		action = null;
 
+		let rotation = this.adjustCharacterRotation();
+
 		if (
 			movement.x === 0 &&
 			movement.y === 0 &&
 			action === null) {
-			this.adjustCharacterRotation();
 			return;
 		}
 
@@ -174,7 +175,7 @@ class Controls {
 
 		let input = {
 			"movement": movement,
-			"rotation": this.adjustCharacterRotation(),
+			"rotation": rotation,
 			"action": action
 		};
 
@@ -182,19 +183,17 @@ class Controls {
 	}
 
 	adjustCharacterRotation() {
-		if (PointerEvents.moved) {
+		if (PointerEvents.moved && isDefined(player)) {
+			let characterX = player.camera.getScreenX(this.chararacter.getX());
+			let characterY = player.camera.getScreenY(this.chararacter.getY());
+
 			let rotation = TwoDimensional.angleBetween(
 				PointerEvents.x,
 				PointerEvents.y,
-				centerX,
-				centerY
+				characterX,
+				characterY
 			);
-			// let rotation = TwoDimensional.angleBetween(
-			// 	centerX,
-			// 	centerY,
-			// 	PointerEvents.x,
-			// 	PointerEvents.y
-			// );
+
 			this.chararacter.shape.rotation = rotation;
 
 			PointerEvents.moved = false;

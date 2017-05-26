@@ -25,6 +25,14 @@ class Camera {
 		two.bind('update', this.update.bind(this));
 	}
 
+	getScreenX(mapX){
+		return mapX - this.getX() + this.offset.x;
+	}
+
+	getScreenY(mapY){
+		return mapY - this.getY() + this.offset.y;
+	}
+
 	getX() {
 		return this.translation.x;
 	}
