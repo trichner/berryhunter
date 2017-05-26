@@ -37,3 +37,15 @@
 #developPanel .bad {
   color: #F44336;
 }
+#developPanel .toggleButton {
+  color: white;
+}
+#developPanel .toggleButton > .label::after {
+  content: ':';
+}
+#developPanel .toggleButton.on {
+  background-color: #4CAF50;
+}
+#developPanel .toggleButton.off {
+  background-color: #F44336;
+}

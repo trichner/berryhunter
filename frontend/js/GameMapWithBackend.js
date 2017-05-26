@@ -119,13 +119,13 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 			// 	x2 + (endX - startX) / 2,
 			// 	y2 + (endY - startY) / 2);
 			gameObject = new Border(x1, y1, x2, y2);
-			if (Develop.isActive()) {
-				gameObject.updateAABB(entity.aabb);
-			}
 		} else {
 			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
 		}
 		miniMap.add(gameObject);
 		this.objects[entity.id] = gameObject;
+		if (Develop.isActive()) {
+			gameObject.updateAABB(entity.aabb);
+		}
 	}
 };

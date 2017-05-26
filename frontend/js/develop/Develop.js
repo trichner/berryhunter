@@ -3,7 +3,16 @@
 const Develop = {
 
 	active: false,
-	developPanelAvailable: false,
+	settings: {
+		showAABBs: true,
+		cameraBoundaries: false,
+		elementColor: 'red',
+		/**
+		 * Aus wievielen Werten wird maximal der Durchschnitt und die
+		 * mittlere absolute Abweichung gebildet
+		 */
+		measurementSampleRate: 20
+	},
 
 	isActive: function () {
 		return this.active;
@@ -28,8 +37,59 @@ const Develop = {
 			}).then(function (html) {
 				document.body.appendChild(htmlToElement(html));
 
-				this.developPanelAvailable = true;
+				this.setupToggleButtons();
 			}.bind(this)));
+	},
+
+	setupToggleButtons: function () {
+		let buttons = document.querySelectorAll('#developPanel .toggleButton');
+
+		/**
+		 *
+		 * @param {Node} button
+		 * @param {boolean} state
+		 */
+		function setButtonState(button, state) {
+
+			if (state) {
+				button.querySelector('span.state').textContent = 'On';
+				button.classList.add('on');
+				button.classList.remove('off');
+			} else {
+				button.querySelector('span.state').textContent = 'Off';
+				button.classList.add('off');
+				button.classList.remove('on');
+			}
+		}
+
+		for (let i = 0; i < buttons.length; i++) {
+			let button = buttons[i];
+			setButtonState(button, Develop.settings[button.getAttribute('data-setting')]);
+			button.addEventListener('click', function () {
+				let setting = button.getAttribute('data-setting');
+				let newValue = !Develop.settings[setting];
+				Develop.settings[setting] = newValue;
+				setButtonState(button, newValue);
+				Develop.onSettingToggle(setting, newValue);
+			});
+		}
+	},
+
+	onSettingToggle(setting, newValue){
+		switch (setting) {
+			case 'showAABBs':
+				Object.values(gameMap.objects)
+					.forEach(function (gameObject) {
+						if (newValue) {
+							gameObject.showAABB();
+							player.character.showAABB();
+						} else {
+							gameObject.hideAABB();
+							player.character.hideAABB();
+						}
+					});
+				two.update();
+		}
 	},
 
 	logValue: function (name, value) {
@@ -43,7 +103,7 @@ const Develop = {
 			unit = ' ' + unit;
 		}
 		logArray.push(value);
-		while (logArray.length > Constants.DEBUGGING.MEASUREMENT_SAMPLE_RATE) {
+		while (logArray.length > Develop.settings.measurementSampleRate) {
 			let average = 0;
 			logArray.forEach(function (value) {
 				average += value;

@@ -48,6 +48,23 @@
 	.bad {
 		color: #F44336;
 	}
+
+	.toggleButton {
+		color: white;
+
+		> .label {
+			&::after {
+				content: ':';
+			}
+		}
+
+		&.on {
+			background-color: #4CAF50;
+		}
+		&.off {
+			background-color: #F44336;
+		}
+	}
 }
 
 // FPS were 'color: lightyellow'

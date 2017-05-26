@@ -7,7 +7,7 @@ const AABBs = {
 		 * @param {{LowerX: number, LowerY: number, UpperX: number, UpperY: number}} aabb
 		 */
 		GameObject.prototype.updateAABB = function (aabb) {
-			if (!(Constants.DEBUGGING.SHOW_AABBS && //
+			if (!(Develop.settings.showAABBs && //
 				aabb && //
 				!_.isUndefined(aabb.LowerX) && //
 				!_.isUndefined(aabb.LowerY) && //
@@ -25,14 +25,13 @@ const AABBs = {
 
 				let width = (endX - startX) / 2;
 				let height = (endY - startY) / 2;
-				// this.aabb = new Two.Rectangle(50, 50, 100, 100);
 				let x = startX + width;
 				let y = startY + height;
 				this.aabb = new Two.Rectangle(x, y, width, height);
 				groups.gameObjects.add(this.aabb);
 
 				this.aabb.noFill();
-				this.aabb.stroke = 'red';
+				this.aabb.stroke = Develop.settings.elementColor;
 				this.aabb.linewidth = 2;
 
 				this.aabbConnector = new Two.Line(this.getX(), this.getY(), x, y);
@@ -42,23 +41,19 @@ const AABBs = {
 			} else {
 				this.aabb.translation.set((startX + endX) / 2, (startY + endY) / 2);
 			}
-
-			// let width = (endX - startX) / 2;
-			// let height = (endY - startY) / 2;
-			// this.aabb.translation.set(startX, startY);
-			// this._matrix
-			//
-			//
-			// this.scale()
-			// this.aabb.noFill();
-			// this.aabb.stroke = 'red';
-			// this.aabb.linewidth = 2;
 		};
 
-		GameObject.prototype.removeAABB = function () {
+		GameObject.prototype.hideAABB = function () {
 			if (!_.isUndefined(this.aabb)) {
 				this.aabb.noStroke();
 			}
-		}
+		};
+
+		GameObject.prototype.showAABB = function () {
+			if (!_.isUndefined(this.aabb)) {
+				this.aabb.stroke = Develop.settings.elementColor;
+				this.aabb.linewidth = 2;
+			}
+		};
 	}
 };

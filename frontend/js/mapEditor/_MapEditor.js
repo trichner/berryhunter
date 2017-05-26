@@ -27,8 +27,6 @@ const MapEditor = {
 		document.getElementById('quadrantJson').addEventListener('input', this.tryRenderQuadrants);
 		document.getElementById('renderButton').addEventListener('click', this.tryRenderQuadrants);
 
-		Constants.SHOW_FPS = false;
-
 		return two;
 	},
 

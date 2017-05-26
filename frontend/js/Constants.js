@@ -13,16 +13,7 @@ const Constants = {
 	INVENTORY_SLOTS: 8,
 
 	DEBUGGING: {
-		ELEMENT_COLOR: 'red',
-		SHOW_FPS: true,
-		SHOW_AABBS: true,
-		CAMERA_IGNORES_MAP_BOUNDARIES: true,
 
-		/**
-		 * Aus wievielen Werten wird maximal der Durchschnitt und die
-		 * mittlere absolute Abweichung gebildet
-		 */
-		MEASUREMENT_SAMPLE_RATE: 20
 	}
 };
 

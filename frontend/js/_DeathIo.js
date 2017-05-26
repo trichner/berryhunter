@@ -80,8 +80,7 @@ function setup() {
 	miniMap = new MiniMap(gameMap);
 
 	if (Develop.isActive() &&
-		typeof Fps === 'object' &&
-		Constants.DEBUGGING.SHOW_FPS) {
+		typeof Fps === 'object') {
 		Fps.setup();
 	}
 

@@ -67,7 +67,7 @@ class Camera {
 		this.vehicle.arrive(this.character.getPosition());
 		this.vehicle.update();
 
-		if (!Constants.DEBUGGING.CAMERA_IGNORES_MAP_BOUNDARIES) {
+		if (Develop.isActive() && Develop.settings.cameraBoundaries) {
 			Camera.keepWithinMapBoundaries(this.vehicle);
 		}
 
