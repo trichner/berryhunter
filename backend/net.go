@@ -39,25 +39,10 @@ const viewPortWidth = 20.0
 const viewPortHeight = 12.0
 
 func (n *NetSystem) Update(dt float32) {
-	//log.Printf("Broadcasting %d players", len(n.entities))
-
-	//for _, entity := range n.entities {
-	//
-	//	dto := mapToEntityDTO(entity)
-	//	entites = append(entites, dto)
-	//}
-
-	//TODO DEBUG
-	//for _, w := range walls {
-	//	dto := mapToEntityDTO(w)
-	//	entites = append(entites, dto)
-	//}
 
 	// assemble game state prototype
 	gameState := GameStateDTO{}
 	gameState.Tick = n.game.tick
-	//gameState.Entities = entites
-	//TODO assemble to a 'GameStateDTO' object and send every player his state
 	for _, player := range n.players {
 		_ = player
 		//TODO

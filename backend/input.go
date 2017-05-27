@@ -126,16 +126,16 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	//	p.body.AddForce(float32(-l.X), float32(-l.Y))
 	//	return
 	//}
+	p.rotation = inputs.Rotation
 
 	// do we even have inputs?
 	if inputs == nil || inputs.Movement == nil {
 		p.body.SetVelocity(0, 0)
-		return
+	} else {
+		v := input2vec(inputs)
+		v.Mult(walkImpulse)
+		p.body.SetVelocity(float32(v.X), float32(v.Y))
 	}
-
-	v := input2vec(inputs)
-	v.Mult(walkImpulse)
-	p.body.SetVelocity(float32(v.X), float32(v.Y))
 }
 
 func input2vec(i *InputDTO) vect.Vect {

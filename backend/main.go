@@ -99,6 +99,7 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
 	s.SetElasticity(0)
 	s.Group = staticBodyGroup
+	s.Layer = staticCollisionLayer | actionCollisionLayer
 	bdy := chipmunk.NewBodyStatic()
 	bdy.AddShape(s)
 

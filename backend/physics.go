@@ -7,6 +7,12 @@ import (
 	"fmt"
 )
 
+const (
+	allCollisionLayer    = -1
+	staticCollisionLayer = 0x1 << 0
+	actionCollisionLayer = 0x1 << 1
+)
+
 func DumpBodies(s *chipmunk.Space) {
 	fmt.Printf("x, y, w, h\n")
 	for _, b := range s.Bodies {

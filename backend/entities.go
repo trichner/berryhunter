@@ -27,6 +27,7 @@ type Entity interface {
 	ID() uint64
 	X() float32
 	Y() float32
+	Rot() float32
 	Type() string
 	Body() *chipmunk.Body
 }
@@ -58,6 +59,10 @@ func (e *entity) Body() *chipmunk.Body {
 	return e.body
 }
 
+func (e *entity) Rot() float32 {
+	return 0
+}
+
 func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
 	choices := []wrand.Choice{}
 	for _, b := range bodies {
@@ -79,14 +84,23 @@ func NewStaticEntityWithBody(body *staticEntityBody) *entity {
 //---- player
 type player struct {
 	*entity
-	Health uint
-	Hunger uint
-	client *net.Client
+	Health   uint
+	Hunger   uint
+	client   *net.Client
+	rotation float32
 }
 
+func (p *player) Rot() float32 {
+	return p.rotation
+}
+
+const playerCollisionGroup = -1
 func NewPlayer(c *net.Client) *player {
 	e := newCircleEntity(0.5, 1)
 	e.entityType = typePlayer
+	for _, s := range e.body.Shapes {
+		s.Group = playerCollisionGroup
+	}
 	return &player{entity: e, client: c}
 }
 
@@ -105,6 +119,7 @@ func mapToEntityDTO(e Entity) *EntityDTO {
 		Id:   e.ID(),
 		X:    e.X() * dist2px,
 		Y:    e.Y() * dist2px,
+		Rot:  e.Rot(),
 		Type: e.Type(),
 		Aabb: mapToAabbDTO(bdy),
 	}
