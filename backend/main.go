@@ -44,15 +44,16 @@ func readConf() *conf.Config {
 const staticBodyGroup = 0x01
 
 var walls []Entity = make([]Entity, 0)
-func newPhysicsSystem(x, y int) *PhysicsSystem {
+
+func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 
 	overlap := vect.Float(3)
 	xf := vect.Float(x)
 	yf := vect.Float(y)
 	p := &PhysicsSystem{}
-
-	p.space = chipmunk.NewSpace()
-	p.space.Gravity = vect.Vect{X: 0, Y: 0}
+	p.game = g
+	g.space = chipmunk.NewSpace()
+	g.space.Gravity = vect.Vect{X: 0, Y: 0}
 
 	// Add a static body - lines etc.
 	staticBody := chipmunk.NewBodyStatic()
@@ -72,25 +73,25 @@ func newPhysicsSystem(x, y int) *PhysicsSystem {
 	// bottom
 	wall = chipmunk.NewBox(toVect(xf/2.0, yf+overlap/2.0), 2.0*overlap+xf, overlap)
 	bdy = shape2wall(wall)
-	p.space.AddBody(bdy)
+	g.space.AddBody(bdy)
 
 	// top
 	wall = chipmunk.NewBox(toVect(xf/2.0, 0-overlap/2.0), 2.0*overlap+xf, overlap)
 	bdy = shape2wall(wall)
-	p.space.AddBody(bdy)
+	g.space.AddBody(bdy)
 
 	// left
 	wall = chipmunk.NewBox(toVect(0-overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
 	bdy = shape2wall(wall)
-	p.space.AddBody(bdy)
+	g.space.AddBody(bdy)
 
 	// right
 	wall = chipmunk.NewBox(toVect(xf+overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
 	bdy = shape2wall(wall)
-	p.space.AddBody(bdy)
+	g.space.AddBody(bdy)
 
 	_ = bdy
-	DumpBodies(p.space)
+	DumpBodies(g.space)
 
 	return p
 }
@@ -109,10 +110,10 @@ func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
 	return bdy
 }
 
-func newStaticCircleEntity(x, y, r float32) entity {
+func newStaticCircleEntity(x, y, r float32) *entity {
 
 	// Create a ball
-	ballEntity := entity{BasicEntity: ecs.NewBasic()}
+	ballEntity := &entity{BasicEntity: ecs.NewBasic()}
 
 	ball := chipmunk.NewCircle(vect.Vector_Zero, r)
 	ball.SetElasticity(0.5)
@@ -132,10 +133,10 @@ func newStaticCircleEntity(x, y, r float32) entity {
 	return ballEntity
 }
 
-func newCircleEntity(r, m float32) entity {
+func newCircleEntity(r, m float32) *entity {
 
 	// Create a ball
-	ballEntity := entity{BasicEntity: ecs.NewBasic()}
+	ballEntity := &entity{BasicEntity: ecs.NewBasic()}
 
 	ball := chipmunk.NewCircle(vect.Vector_Zero, r)
 	ball.SetElasticity(0.5)

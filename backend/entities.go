@@ -72,13 +72,13 @@ func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
 func NewStaticEntityWithBody(body *staticEntityBody) *entity {
 	e := newStaticCircleEntity(0, 0, body.radius)
 	e.entityType = body.entityType
-	e.body.UserData = &e
-	return &e
+	e.body.UserData = e
+	return e
 }
 
 //---- player
 type player struct {
-	entity
+	*entity
 	Health uint
 	Hunger uint
 	client *net.Client

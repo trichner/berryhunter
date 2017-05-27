@@ -36,7 +36,7 @@ type physicsEntity struct {
 
 type PhysicsSystem struct {
 	entities []physicsEntity
-	space    *chipmunk.Space
+	game     *Game
 }
 
 func (p *PhysicsSystem) New(w *ecs.World) {
@@ -54,18 +54,18 @@ func (p *PhysicsSystem) Priority() int {
 func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e *chipmunk.Body) {
 	pe := physicsEntity{b, e}
 	p.entities = append(p.entities, pe)
-	p.space.AddBody(pe.Body)
+	p.game.space.AddBody(pe.Body)
 }
 
 func (p *PhysicsSystem) AddPlayer(pl *player) {
 	pe := physicsEntity{&pl.BasicEntity, pl.body}
 	p.entities = append(p.entities, pe)
-	p.space.AddBody(pe.Body)
+	p.game.space.AddBody(pe.Body)
 }
 
 func (p *PhysicsSystem) Update(dt float32) {
 	//log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
-	p.space.Step(vect.Float(dt))
+	p.game.space.Step(vect.Float(dt))
 }
 
 func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
@@ -79,6 +79,6 @@ func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
 	if delete >= 0 {
 		e := p.entities[delete]
 		p.entities = append(p.entities[:delete], p.entities[delete+1:]...)
-		p.space.RemoveBody(e.Body)
+		p.game.space.RemoveBody(e.Body)
 	}
 }

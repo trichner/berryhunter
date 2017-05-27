@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"engo.io/ecs"
 	"log"
+	"github.com/vova616/chipmunk"
 )
 
 type NetSystem struct {
@@ -34,34 +35,55 @@ func (n *NetSystem) AddPlayer(p *player) {
 	n.players = append(n.players, p)
 }
 
+const viewPortWidth = 20.0
+const viewPortHeight = 12.0
+
 func (n *NetSystem) Update(dt float32) {
 	//log.Printf("Broadcasting %d players", len(n.entities))
 
-	var entites []*EntityDTO
-	for _, entity := range n.entities {
-
-		dto := mapToEntityDTO(entity)
-		entites = append(entites, dto)
-	}
+	//for _, entity := range n.entities {
+	//
+	//	dto := mapToEntityDTO(entity)
+	//	entites = append(entites, dto)
+	//}
 
 	//TODO DEBUG
-	for _, w := range walls {
-		dto := mapToEntityDTO(w)
-		entites = append(entites, dto)
-	}
+	//for _, w := range walls {
+	//	dto := mapToEntityDTO(w)
+	//	entites = append(entites, dto)
+	//}
 
 	// assemble game state prototype
 	gameState := GameStateDTO{}
 	gameState.Tick = n.game.tick
-	gameState.Entities = entites
+	//gameState.Entities = entites
 	//TODO assemble to a 'GameStateDTO' object and send every player his state
 	for _, player := range n.players {
 		_ = player
 		//TODO
+
+		var entites []*EntityDTO
+		pos := player.body.Position()
+		bb := chipmunk.NewAABB(pos.X-viewPortWidth/2, pos.Y-viewPortHeight/2, pos.X+viewPortWidth/2, pos.Y+viewPortHeight/2)
+		n.game.space.Query(nil, bb, func(a, b chipmunk.Indexable) {
+			u := b.Shape().Body.UserData
+			if u != nil {
+				e := mapToEntityDTO(u.(Entity))
+				entites = append(entites, e)
+			}
+		})
+		n.game.space.QueryStatic(nil, bb, func(a, b chipmunk.Indexable) {
+			u := b.Shape().Body.UserData
+			if u != nil {
+				e := mapToEntityDTO(u.(Entity))
+				entites = append(entites, e)
+			}
+		})
 		// - query BB for entities in view
 
 		// copy gameStatePrototype
 		clientGameState := gameState
+		clientGameState.Entities = entites
 		clientGameState.PlayerID = player.ID()
 		msg := &MessageDTO{"GAME_STATE", clientGameState}
 		msgJson, _ := json.Marshal(msg)
