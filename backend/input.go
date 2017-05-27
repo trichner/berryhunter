@@ -6,6 +6,7 @@ import (
 	"log"
 	"github.com/trichner/death-io/backend/net"
 	"encoding/json"
+	"sync"
 )
 
 const inputBuffererCount = 3
@@ -38,6 +39,7 @@ type InputSystem struct {
 	game    *Game
 	// currently two, one to read and one to fill
 	ibufs [inputBuffererCount]InputBufferer
+	mux   sync.Mutex
 
 	receive chan *clientMessage
 }
@@ -58,7 +60,7 @@ func (i *InputSystem) New(w *ecs.World) {
 	}
 	i.receive = make(chan *clientMessage, 256)
 
-	log.Println("InputSystem nominal")
+	// receive pump, otherwise we have concurrent map writes
 	go func() {
 		for {
 			select {
@@ -75,10 +77,13 @@ func (i *InputSystem) New(w *ecs.World) {
 			}
 		}
 	}()
+	log.Println("InputSystem nominal")
 }
 
 func (i *InputSystem) storeInput(playerId uint64, input InputDTO) {
+	i.mux.Lock()
 	i.ibufs[(i.game.tick+1)%inputBuffererCount].inputs[playerId] = input
+	i.mux.Unlock()
 }
 
 func (i *InputSystem) AddPlayer(p *player) {
@@ -91,9 +96,11 @@ func (i *InputSystem) AddPlayer(p *player) {
 
 func (i *InputSystem) Update(dt float32) {
 
-	// freeze input
+	// freeze input, concurrent reads are fine
+	i.mux.Lock()
 	ibuf := i.ibufs[i.game.tick%inputBuffererCount]
 	lastBuf := i.ibufs[(i.game.tick+inputBuffererCount-1 )%inputBuffererCount]
+	i.mux.Unlock()
 
 	// apply inputs to player
 	for _, p := range i.players {
@@ -103,7 +110,9 @@ func (i *InputSystem) Update(dt float32) {
 	}
 
 	// clear out buffer
+	i.mux.Lock()
 	i.ibufs[i.game.tick%inputBuffererCount] = NewInputBufferer()
+	i.mux.Unlock()
 }
 
 const walkImpulse = 2.0
