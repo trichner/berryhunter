@@ -28,11 +28,18 @@ type action struct {
 	Alt  bool   `json:"alt"`
 }
 
+type clientMessage struct {
+	playerId uint64
+	body     []byte
+}
+
 type InputSystem struct {
 	players []*player
 	game    *Game
 	// currently two, one to read and one to fill
 	ibufs [inputBuffererCount]InputBufferer
+
+	receive chan *clientMessage
 }
 
 func NewInputSystem(g *Game) *InputSystem {
@@ -49,8 +56,25 @@ func (i *InputSystem) New(w *ecs.World) {
 	for idx := range i.ibufs {
 		i.ibufs[idx] = NewInputBufferer()
 	}
+	i.receive = make(chan *clientMessage, 256)
 
 	log.Println("InputSystem nominal")
+	go func() {
+		for {
+			select {
+			case msg := <-i.receive:
+
+				var input InputDTO
+				_ = input
+				err := json.Unmarshal(msg.body, &input)
+				if err != nil {
+					log.Printf("Marshalling Error: %s", err)
+				} else {
+					i.storeInput(msg.playerId, input)
+				}
+			}
+		}
+	}()
 }
 
 func (i *InputSystem) storeInput(playerId uint64, input InputDTO) {
@@ -61,14 +85,7 @@ func (i *InputSystem) AddPlayer(p *player) {
 	i.players = append(i.players, p)
 	p.client.OnMessage(func(c *net.Client, msg []byte) {
 
-		var input InputDTO
-		_ = input
-		err := json.Unmarshal(msg, &input)
-		if err != nil {
-			log.Printf("Marshalling Error: %s", err)
-		} else {
-			i.storeInput(p.ID(), input)
-		}
+		i.receive <- &clientMessage{p.ID(), msg}
 	})
 }
 
