@@ -65,14 +65,13 @@ func (i *InputSystem) New(w *ecs.World) {
 		for {
 			select {
 			case msg := <-i.receive:
-
 				var input InputDTO
 				_ = input
 				err := json.Unmarshal(msg.body, &input)
 				if err != nil {
 					log.Printf("Marshalling Error: %s", err)
 				} else {
-					i.storeInput(msg.playerId, input)
+					i.storeInput(msg.playerId, &input)
 				}
 			}
 		}
@@ -80,16 +79,15 @@ func (i *InputSystem) New(w *ecs.World) {
 	log.Println("InputSystem nominal")
 }
 
-func (i *InputSystem) storeInput(playerId uint64, input InputDTO) {
+func (i *InputSystem) storeInput(playerId uint64, input *InputDTO) {
 	i.mux.Lock()
-	i.ibufs[(i.game.tick+1)%inputBuffererCount].inputs[playerId] = input
+	i.ibufs[(i.game.tick+1)%inputBuffererCount][playerId] = input
 	i.mux.Unlock()
 }
 
 func (i *InputSystem) AddPlayer(p *player) {
 	i.players = append(i.players, p)
 	p.client.OnMessage(func(c *net.Client, msg []byte) {
-
 		i.receive <- &clientMessage{p.ID(), msg}
 	})
 }
@@ -104,9 +102,9 @@ func (i *InputSystem) Update(dt float32) {
 
 	// apply inputs to player
 	for _, p := range i.players {
-		inputs, _ := ibuf.inputs[p.ID()]
-		last, _ := lastBuf.inputs[p.ID()]
-		i.UpdatePlayer(p, &inputs, &last)
+		inputs, _ := ibuf[p.ID()]
+		last, _ := lastBuf[p.ID()]
+		i.UpdatePlayer(p, inputs, last)
 	}
 
 	// clear out buffer
@@ -126,10 +124,15 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	//	p.body.AddForce(float32(-l.X), float32(-l.Y))
 	//	return
 	//}
+	if inputs == nil {
+		p.body.SetVelocity(0, 0)
+		return
+	}
+
 	p.rotation = inputs.Rotation
 
 	// do we even have inputs?
-	if inputs == nil || inputs.Movement == nil {
+	if inputs.Movement == nil {
 		p.body.SetVelocity(0, 0)
 	} else {
 		v := input2vec(inputs)
@@ -165,9 +168,7 @@ func (i *InputSystem) Remove(b ecs.BasicEntity) {
 }
 
 func NewInputBufferer() InputBufferer {
-	return InputBufferer{inputs: make(map[uint64]InputDTO)}
+	return InputBufferer(make(map[uint64]*InputDTO))
 }
 
-type InputBufferer struct {
-	inputs map[uint64]InputDTO
-}
+type InputBufferer map[uint64]*InputDTO

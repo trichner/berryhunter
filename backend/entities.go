@@ -101,7 +101,9 @@ func NewPlayer(c *net.Client) *player {
 	for _, s := range e.body.Shapes {
 		s.Group = playerCollisionGroup
 	}
-	return &player{entity: e, client: c}
+	p := &player{entity: e, client: c}
+	p.body.UserData = p
+	return p
 }
 
 //---- DTO
