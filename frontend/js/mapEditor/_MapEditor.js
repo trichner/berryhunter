@@ -6,7 +6,7 @@ const MapEditor = {
 			return this.active;
 		}
 
-		let quadrantParameter = getUrlParameter("map-editor");
+		let quadrantParameter = getUrlParameter(Constants.MODE_PARAMETERS.MAP_EDITOR);
 		this.active = !!quadrantParameter;
 		return this.active;
 	},

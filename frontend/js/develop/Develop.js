@@ -154,6 +154,6 @@ const Develop = {
 	}
 };
 
-if (getUrlParameter('develop')) {
+if (getUrlParameter(Constants.MODE_PARAMETERS.DEVELOPMENT)) {
 	Develop.setup();
 }
