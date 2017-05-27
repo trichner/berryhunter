@@ -44,6 +44,7 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 		// FIXME Der Server sollte mir nur Entities liefern, die sich auch geändert haben
 		if (gameObject.isMoveable) {
 			gameObject.setPosition(entity.x, entity.y);
+			gameObject.setRotation(entity.rotation);
 			if (Develop.isActive()) {
 				gameObject.updateAABB(entity.aabb);
 			}

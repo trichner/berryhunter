@@ -67,8 +67,13 @@ class Controls {
 	 * @param {Character} character
 	 */
 	constructor(character) {
-		this.chararacter = character;
+		this.character = character;
 		this.playerId = character.id;
+
+		if (Constants.ALWAYS_VIEW_CURSOR) {
+			this.lastX = character.getX();
+			this.lastY = character.getY();
+		}
 
 		this.hitAnimationTick = false;
 
@@ -135,12 +140,12 @@ class Controls {
 		if (this.hitAnimationTick) {
 			// Make sure tick 0 gets passed to the character to finish animation
 			this.hitAnimationTick--;
-			this.chararacter.progressHitAnimation(this.hitAnimationTick);
+			this.character.progressHitAnimation(this.hitAnimationTick);
 		} else {
 			if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
 				this.hitAnimationTick = Character.hitAnimationFrameDuration;
-				this.chararacter.action();
-				this.chararacter.progressHitAnimation(this.hitAnimationTick);
+				this.character.action();
+				this.character.progressHitAnimation(this.hitAnimationTick);
 				action = {
 					// TODO aktives Item eintragen
 					item: "fist",
@@ -149,8 +154,8 @@ class Controls {
 			}
 			if (anyKeyIsPressed(ALT_ACTION_KEYS) || PointerEvents.pointerDown === ALT_ACTION_BUTTON) {
 				this.hitAnimationTick = Character.hitAnimationFrameDuration;
-				this.chararacter.altAction();
-				this.chararacter.progressHitAnimation(this.hitAnimationTick);
+				this.character.altAction();
+				this.character.progressHitAnimation(this.hitAnimationTick);
 				action = {
 					// TODO aktives Item eintragen
 					item: "fist",
@@ -159,19 +164,33 @@ class Controls {
 			}
 		}
 
-		let rotation = this.adjustCharacterRotation();
-
 		let input = {};
 		let hasInput = false;
+
+		if (PointerEvents.moved) {
+			if (Constants.ALWAYS_VIEW_CURSOR) {
+				if (this.lastX !== this.character.getX() ||
+					this.lastY !== this.character.getY()) {
+
+					input.rotation = this.adjustCharacterRotation();
+					hasInput = true;
+					this.lastX = this.character.getX();
+					this.lastY = this.character.getY();
+				}
+			} else {
+				input.rotation = this.adjustCharacterRotation();
+				hasInput = true;
+			}
+		}
+
 		if (movement.x !== 0 || movement.y !== 0) {
 			input.movement = movement;
-			this.chararacter.move(movement);
+			this.character.move(movement);
 			hasInput = true;
 		}
 
 		if (action !== null) {
 			input.action = action;
-			input.rotation = rotation;
 			hasInput = true;
 		}
 
@@ -181,9 +200,9 @@ class Controls {
 	}
 
 	adjustCharacterRotation() {
-		if (PointerEvents.moved && isDefined(player)) {
-			let characterX = player.camera.getScreenX(this.chararacter.getX());
-			let characterY = player.camera.getScreenY(this.chararacter.getY());
+		if (isDefined(player)) {
+			let characterX = player.camera.getScreenX(this.character.getX());
+			let characterY = player.camera.getScreenY(this.character.getY());
 
 			let rotation = TwoDimensional.angleBetween(
 				PointerEvents.x,
@@ -192,13 +211,13 @@ class Controls {
 				characterY
 			);
 
-			this.chararacter.shape.rotation = rotation;
+			this.character.setRotation(rotation);
 
 			PointerEvents.moved = false;
 
 			return rotation;
 		}
 
-		return this.chararacter.shape.rotation;
+		return this.character.shape.rotation;
 	}
 }

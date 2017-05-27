@@ -54,6 +54,10 @@ class GameObject {
 		return this.shape.translation.y;
 	}
 
+	setRotation(rotation) {
+		this.shape.rotation = rotation;
+	}
+
 	show() {
 		groups.gameObjects.add(this.shape);
 	}
