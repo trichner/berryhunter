@@ -164,22 +164,23 @@ class Controls {
 
 		let rotation = this.adjustCharacterRotation();
 
-		if (
-			movement.x === 0 &&
-			movement.y === 0 &&
-			action === null) {
-			return;
+		let input = {};
+		let hasInput = false;
+		if (movement.x !== 0 || movement.y !== 0) {
+			input.movement = movement;
+			this.chararacter.move(movement);
+			hasInput = true;
 		}
 
-		this.chararacter.move(movement);
+		if (action !== null) {
+			input.action = action;
+			input.rotation = rotation
+			hasInput = true;
+		}
 
-		let input = {
-			"movement": movement,
-			"rotation": rotation,
-			"action": action
-		};
-
-		Backend.sendInputTick(input);
+		if (hasInput) {
+			Backend.sendInputTick(input);
+		}
 	}
 
 	adjustCharacterRotation() {
