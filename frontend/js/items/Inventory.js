@@ -2,8 +2,25 @@
  * Created by XieLong on 21.05.2017.
  */
 class InventorySlot {
-	constructor(size) {
+	/**
+	 *
+	 * @param {Inventory} inventory
+	 * @param {int} index
+	 * @param {int} size
+	 */
+	constructor(inventory, index, size) {
+		this.inventory = inventory;
+		this.index = index;
 		this.size = size;
+
+		/**
+		 *
+		 * @type {{
+					iconFile: String,
+					type: ItemType,
+					svg: Node
+				}}
+		 */
 		this.item = null;
 		this.count = 0;
 		this.active = false;
@@ -36,10 +53,47 @@ class InventorySlot {
 		this.group.add(this.countText);
 	}
 
+	onDomReady() {
+		this.domElement = this.group._renderer.elem;
+		this.domElement.addEventListener('pointerup', function (event) {
+			event.stopPropagation();
+		});
+		this.domElement.addEventListener('pointerdown', function (event) {
+			event.stopPropagation();
+		});
+		this.domElement.addEventListener('click', function (event) {
+			switch (event.button) {
+				case 0:
+					// Left Click
+					if (this.isFilled() && this.item.type === ItemType.EQUIPMENT) {
+						if (this.isActive()) {
+							this.deactivate();
+						} else {
+							this.inventory.activateSlot(this.index);
+						}
+					}
+					break;
+				case 2:
+					// Right Click
+					break;
+			}
+			event.stopPropagation();
+		}.bind(this));
+	}
+
 	static margin(size) {
 		return InventorySlot.relativeMargin * size;
 	}
 
+	/**
+	 *
+	 * @param {{
+					iconFile: String,
+					type: ItemType,
+					svg: Node
+				}} item
+	 * @param {Number} count
+	 */
 	setItem(item, count) {
 		this.count = count || 1;
 		this.item = item;
@@ -58,17 +112,44 @@ class InventorySlot {
 			this.countText.value = this.count;
 		}
 
+		if (item.type === ItemType.EQUIPMENT) {
+			this.domElement.classList.add('clickable');
+		}
+
 	}
 
 	dropItem() {
 		this.item = null;
 		this.itemIcon.remove();
 		delete this.itemIcon;
-		this.background.fill = InventorySlot.backgroundColors.empty;
+		this.domElement.classList.remove('clickable');
+
+		if (this.isActive()) {
+			this.inventory.deactivateSlot();
+		}
+		this.deactivate();
 	}
 
 	activate() {
 		this.background.fill = InventorySlot.backgroundColors.active;
+		this.active = true;
+	}
+
+	deactivate() {
+		if (this.isFilled()) {
+			this.background.fill = InventorySlot.backgroundColors.filled;
+		} else {
+			this.background.fill = InventorySlot.backgroundColors.empty;
+		}
+		this.active = false;
+	}
+
+	isActive() {
+		return this.active;
+	}
+
+	isFilled() {
+		return this.item !== null;
 	}
 }
 
@@ -85,7 +166,10 @@ InventorySlot.backgroundColors = {
 };
 
 class Inventory {
-	constructor() {
+	constructor(character) {
+		this.character = character;
+		this.equipedItem = null;
+
 		this.height = Relative.height(7);
 
 		this.group = new Two.Group();
@@ -106,15 +190,43 @@ class Inventory {
 		);
 
 		for (let i = 0; i < this.slots.length; i++) {
-			this.slots[i] = new InventorySlot(this.height);
+			this.slots[i] = new InventorySlot(this, i, this.height);
 			let slotGroup = this.slots[i].group;
 			slotGroup.translation.x += i * (margin + this.height);
 			this.group.add(slotGroup)
 		}
 
-		// TODO DEV
-		this.slots[0].setItem(Items.Wood, 54);
-		this.slots[1].setItem(Items.BronzeSpear, 3);
-		this.slots[1].activate();
+		let callback = function () {
+			this.slots.forEach(function (slot) {
+				slot.onDomReady();
+			});
+
+			two.unbind('render', callback);
+
+			// TODO DEV
+			this.slots[0].setItem(Items.Wood, 54);
+			this.slots[1].setItem(Items.BronzeSpear);
+			this.slots[1].activate();
+		}.bind(this);
+		two.bind('render', callback);
 	}
+
+	activateSlot(slotIndex) {
+		for (let i = 0; i < this.slots.length; i++) {
+			let slot = this.slots[i];
+			if (i === slotIndex) {
+				slot.activate();
+				this.equipedItem = slot.item;
+				// this.character.equipItem(this.equipedItem);
+			} else {
+				slot.deactivate();
+			}
+		}
+	}
+
+	deactivateSlot() {
+		this.equipedItem = null;
+		// this.character.unequipItem();
+	}
+
 }

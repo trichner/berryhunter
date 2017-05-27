@@ -14,6 +14,22 @@ svg:focus {
   outline: none !important;
   box-shadow: none !important;
 }
+svg text {
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+svg text::selection {
+  background: none;
+}
+svg .clickable {
+  cursor: pointer;
+}
+svg .clickable text {
+  cursor: pointer;
+}
 .layout,
 .layout-column,
 .layout-row {

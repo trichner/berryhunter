@@ -14,7 +14,6 @@ class InjectedSVG extends Two.Group {
 		// injectionGroup.rotation = rotation;
 		injectionGroup.translation.set(-size, -size);
 
-
 		let callback = function () {
 			injectionGroup._renderer.elem.appendChild(svg.cloneNode(true));
 			two.unbind('render', callback);
