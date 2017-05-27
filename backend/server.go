@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"golang.org/x/net/websocket"
+	"github.com/trichner/death-io/backend/net"
 )
 
 type Message struct {
@@ -20,7 +21,8 @@ type Server struct {
 }
 
 type ClientMessage struct {
-	client *Client
+	player *player
+	client *net.Client
 	body   *Message
 }
 

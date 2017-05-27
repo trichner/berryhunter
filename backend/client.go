@@ -91,7 +91,7 @@ func (c *Client) Listen() {
 				c.Close()
 			} else {
 				// push received message into RX queue
-				c.rxCh <- &ClientMessage{client: c, body: &Message{msg}}
+				//c.rxCh <- &ClientMessage{client: c, body: &Message{msg}}
 			}
 		}
 	}()

@@ -44,7 +44,17 @@ type Client struct {
 	quit chan struct{}
 
 	// Handler notified on events
-	handlers WsHandler
+	onConnectedHandler    func(*Client)
+	onDisconnectedHandler func(*Client)
+	onMessageHandler      func(*Client, []byte)
+}
+
+func (c *Client) OnMessage(h func(*Client, []byte)) {
+	c.onMessageHandler = h
+}
+
+func (c *Client) OnDisconnect(h func(*Client)) {
+	c.onDisconnectedHandler = h
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -79,9 +89,11 @@ func (c *Client) readPump() {
 func (c *Client) Run() {
 	go c.writePump()
 	go c.readPump()
-	c.handlers.OnConnected(c)
+	c.onConnectedHandler(c)
 	defer func() {
-		c.handlers.OnDisconnected(c)
+		if c.onDisconnectedHandler != nil {
+			c.onDisconnectedHandler(c)
+		}
 	}()
 	for {
 		select {
@@ -90,7 +102,9 @@ func (c *Client) Run() {
 				// receive channel was closed
 				return
 			}
-			c.handlers.OnMessage(c, msg)
+			if c.onMessageHandler != nil {
+				c.onMessageHandler(c, msg)
+			}
 		}
 	}
 }

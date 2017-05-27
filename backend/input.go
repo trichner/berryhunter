@@ -5,6 +5,7 @@ import (
 	"engo.io/ecs"
 	"github.com/vova616/chipmunk/vect"
 	"log"
+	"github.com/trichner/death-io/backend/net"
 )
 
 const inputBuffererCount = 3
@@ -30,6 +31,7 @@ type action struct {
 type InputSystem struct {
 	players []*player
 	game    *Game
+	receive chan *ClientMessage
 
 	// currently two, one to read and one to fill
 	ibufs [inputBuffererCount]InputBufferer
@@ -49,30 +51,9 @@ func (i *InputSystem) New(w *ecs.World) {
 	for idx := range i.ibufs {
 		i.ibufs[idx] = NewInputBufferer()
 	}
+	i.receive = make(chan *ClientMessage, 256)
 
 	log.Println("InputSystem nominal")
-	go i.readAndBufferInput()
-}
-
-// Reads input from the servers inputqueue and puts it into the buffer
-func (i *InputSystem) readAndBufferInput() {
-
-	for {
-		select {
-		case msg := <-i.game.server.rxCh:
-			log.Printf("Received 1 message from %d", msg.client.id)
-			log.Printf("RX: %s", msg.body.body)
-
-			var input inputDTO
-			err := json.Unmarshal([]byte(msg.body.body), &input)
-			if err != nil {
-				log.Printf("Marshalling Error: %s", err)
-			} else {
-				log.Printf("RX Obj: %+v", input)
-				i.storeInput(msg.client.id, input)
-			}
-		}
-	}
 }
 
 func (i *InputSystem) storeInput(clientId uint64, input inputDTO) {
@@ -81,6 +62,17 @@ func (i *InputSystem) storeInput(clientId uint64, input inputDTO) {
 
 func (i *InputSystem) AddPlayer(p *player) {
 	i.players = append(i.players, p)
+	p.client.OnMessage(func(c *net.Client, msg []byte) {
+
+		var input inputDTO
+		err := json.Unmarshal(msg, &input)
+		if err != nil {
+			log.Printf("Marshalling Error: %s", err)
+		} else {
+			log.Printf("RX Obj: %+v", input)
+			i.storeInput(p.ID(), input)
+		}
+	})
 }
 
 func (i *InputSystem) Update(dt float32) {
@@ -91,8 +83,8 @@ func (i *InputSystem) Update(dt float32) {
 
 	// apply inputs to player
 	for _, p := range i.players {
-		inputs, _ := ibuf.inputs[p.client.id]
-		last, _ := lastBuf.inputs[p.client.id]
+		inputs, _ := ibuf.inputs[p.ID()]
+		last, _ := lastBuf.inputs[p.ID()]
 		i.UpdatePlayer(p, &inputs, &last)
 	}
 

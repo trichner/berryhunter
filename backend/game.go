@@ -8,25 +8,36 @@ import (
 	"net/http"
 	"sync/atomic"
 	"time"
+	"github.com/trichner/death-io/backend/net"
+	"flag"
+	"log"
+	"os"
 )
 
 type Game struct {
 	ecs.World
-	server *Server
-	space  *chipmunk.Space
-	tick   uint64
-	conf   *conf.Config
+	space *chipmunk.Space
+	tick  uint64
+	conf  *conf.Config
+}
+
+type wsHandler struct{}
+
+func (h *wsHandler) OnConnected(c *net.Client) {
+
+}
+
+func (h *wsHandler) OnDisconnected(c *net.Client) {
+
+}
+
+func (h *wsHandler) OnMessage(c *net.Client, msg []byte) {
+
 }
 
 func (g *Game) Init(conf *conf.Config) {
 
 	g.conf = conf
-
-	g.server = NewServer(conf.Path, func(c *Client) {
-
-		player := NewPlayer(c)
-		g.addPlayer(player)
-	})
 
 	//---- setup systems
 	p := newPhysicsSystem(100, 100)
@@ -41,9 +52,29 @@ func (g *Game) Init(conf *conf.Config) {
 
 func (g *Game) Run() {
 
-	go g.server.Listen()
+	//TODO move into main
+	var dev, help bool
+	flag.BoolVar(&dev, "dev", false, "Serve frontend directly")
+	flag.BoolVar(&help, "help", false, "Show usage help")
+	flag.Parse()
+	if help {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	handleFunc := net.NewHandleFunc(func(c *net.Client) {
+		player := NewPlayer(c)
+		g.addPlayer(player)
+	})
 
 	addr := fmt.Sprintf(":%d", g.conf.Port)
+	http.HandleFunc(g.conf.Path, handleFunc)
+
+	if dev {
+		log.Print("Using development server.")
+		http.Handle("/", http.FileServer(http.Dir("./../frontend")))
+	}
+
 	go http.ListenAndServe(addr, nil)
 }
 

@@ -65,7 +65,7 @@ func (n *NetSystem) Update(dt float32) {
 		clientGameState.PlayerID = player.ID()
 		msg := &MessageDTO{"GAME_STATE", clientGameState}
 		msgJson, _ := json.Marshal(msg)
-		err := player.client.Tx(&Message{string(msgJson)})
+		err := player.client.SendMessage(msgJson)
 		if err != nil {
 			n.game.RemoveEntity(player.BasicEntity)
 		}

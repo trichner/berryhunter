@@ -7,11 +7,12 @@ import (
 	"github.com/vova616/chipmunk/vect"
 	"math/rand"
 	"math"
+	"github.com/trichner/death-io/backend/net"
 )
 
 const (
 	typeNone          = "NONE"
-	typeBorder          = "Border"
+	typeBorder        = "Border"
 	typeRoundTree     = "RoundTree"
 	typeMarioTree     = "MarioTree"
 	typePlayer        = "Character"
@@ -20,7 +21,6 @@ const (
 	typeGold          = "Gold"
 	typeBerryBush     = "BerryBush"
 )
-
 
 //---- basic interface with getters
 type Entity interface {
@@ -64,11 +64,10 @@ func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
 		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: b})
 	}
 
-wc := wrand.NewWeightedChoice(choices)
+	wc := wrand.NewWeightedChoice(choices)
 	selected := wc.Choose(rnd).(staticEntityBody)
 	return NewStaticEntityWithBody(&selected)
 }
-
 
 func NewStaticEntityWithBody(body *staticEntityBody) *entity {
 	e := newStaticCircleEntity(0, 0, body.radius)
@@ -81,10 +80,10 @@ type player struct {
 	entity
 	Health uint
 	Hunger uint
-	client *Client
+	client *net.Client
 }
 
-func NewPlayer(c *Client) *player {
+func NewPlayer(c *net.Client) *player {
 	e := newCircleEntity(1, 1)
 	e.entityType = typePlayer
 	return &player{entity: e, client: c}
@@ -97,6 +96,7 @@ type MessageDTO struct {
 }
 
 const dist2px = 120.0
+
 func mapToEntityDTO(e Entity) *EntityDTO {
 
 	bdy := e.Body()
