@@ -1,3 +1,5 @@
+"use strict";
+
 class Character extends GameObject {
 	constructor(id, x, y) {
 		super(x, y, 30, Math.PI / 2);
@@ -10,37 +12,45 @@ class Character extends GameObject {
 
 		this.currentAction = false;
 
-		this.createHands(this.size);
+		this.equipmentSlots = {
+			leftHand: null,
+			rightHand: null
+		};
+
+		this.createHands();
 	}
 
-	createHands(size){
+	createHands() {
 		this.shape.rotation = Math.PI / -2;
 
 		// TODO Hände unter die Frisur rendern
-		const handAngle = 0;
 		const handAngleDistance = 0.4;
 
-		this.leftHand = new Two.Ellipse(
-			Math.cos(handAngle - Math.PI * handAngleDistance) * size * 0.8,
-			Math.sin(handAngle - Math.PI * handAngleDistance) * size * 0.8,
-			size * 0.2
-		);
+		this.leftHand = this.createHand(-handAngleDistance);
 		this.shape.add(this.leftHand);
-		this.leftHand.fill = '#f2a586';
-		this.leftHand.stroke = '#000';
-		this.leftHand.linewidth = 0.212 * 0.6; // relative to size
-		this.leftHand.originalTranslation = this.leftHand.translation.clone();
 
-		this.rightHand = new Two.Ellipse(
-			Math.cos(handAngle + Math.PI * handAngleDistance) * size * 0.8,
-			Math.sin(handAngle + Math.PI * handAngleDistance) * size * 0.8,
-			size * 0.2
-		);
+		this.rightHand = this.createHand(handAngleDistance);
 		this.shape.add(this.rightHand);
-		this.rightHand.fill = '#f2a586';
-		this.rightHand.stroke = '#000';
-		this.rightHand.linewidth = 0.212 * 0.6; // relative to size
-		this.rightHand.originalTranslation = this.rightHand.translation.clone();
+	}
+
+	createHand(handAngleDistance) {
+		let group = new Two.Group();
+
+		const handAngle = 0;
+		group.translation.set(
+			Math.cos(handAngle + Math.PI * handAngleDistance) * this.size * 0.8,
+			Math.sin(handAngle + Math.PI * handAngleDistance) * this.size * 0.8,
+		);
+
+		let handShape = new Two.Ellipse(0, 0, this.size * 0.2);
+		group.add(handShape);
+		handShape.fill = '#f2a586';
+		handShape.stroke = '#000';
+		handShape.linewidth = 0.212 * 0.6; // relative to size
+
+		group.originalTranslation = group.translation.clone();
+
+		return group;
 	}
 
 	createShape(x, y) {
@@ -176,6 +186,14 @@ class Character extends GameObject {
 				this.currentAction = false;
 			}
 		}
+	}
+
+	equipItem(item) {
+
+	}
+
+	unequipItem() {
+
 	}
 }
 

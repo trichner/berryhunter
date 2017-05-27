@@ -217,7 +217,7 @@ class Inventory {
 			if (i === slotIndex) {
 				slot.activate();
 				this.equipedItem = slot.item;
-				// this.character.equipItem(this.equipedItem);
+				this.character.equipItem(this.equipedItem);
 			} else {
 				slot.deactivate();
 			}
@@ -226,7 +226,7 @@ class Inventory {
 
 	deactivateSlot() {
 		this.equipedItem = null;
-		// this.character.unequipItem();
+		this.character.unequipItem();
 	}
 
 }

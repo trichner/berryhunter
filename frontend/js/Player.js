@@ -17,6 +17,6 @@ class Player {
 		this.camera = new Camera(this.character);
 		miniMap.register(this.character);
 
-		this.inventory = new Inventory();
+		this.inventory = new Inventory(this.character);
 	}
 }
