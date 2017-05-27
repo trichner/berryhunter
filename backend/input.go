@@ -31,8 +31,6 @@ type action struct {
 type InputSystem struct {
 	players []*player
 	game    *Game
-	receive chan *ClientMessage
-
 	// currently two, one to read and one to fill
 	ibufs [inputBuffererCount]InputBufferer
 }
@@ -51,7 +49,6 @@ func (i *InputSystem) New(w *ecs.World) {
 	for idx := range i.ibufs {
 		i.ibufs[idx] = NewInputBufferer()
 	}
-	i.receive = make(chan *ClientMessage, 256)
 
 	log.Println("InputSystem nominal")
 }
