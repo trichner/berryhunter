@@ -189,7 +189,7 @@ class Character extends GameObject {
 	}
 
 	equipItem(item) {
-
+		// this.equipmentSlots.leftHand.add(new InjectedSVG(item))
 	}
 
 	unequipItem() {
