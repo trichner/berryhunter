@@ -174,7 +174,7 @@ class Controls {
 
 		if (action !== null) {
 			input.action = action;
-			input.rotation = rotation
+			input.rotation = rotation;
 			hasInput = true;
 		}
 
