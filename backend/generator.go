@@ -41,33 +41,33 @@ func chunkRand(x, y int64, rnd *rand.Rand) *rand.Rand {
 }
 
 var trees = []staticEntityBody{
-	staticEntityBody{
+	{
 		typeRoundTree,
-		300,
+		100,
 		1,
 	},
-	staticEntityBody{
+	{
 		typeMarioTree,
-		700,
-		2,
+		100,
+		1,
 	},
 }
 
 var resources = []staticEntityBody{
-	staticEntityBody{
+	{
 		typeBerryBush,
 		100,
-		1,
+		0.5,
 	},
-	staticEntityBody{
+	{
 		typeStone,
 		100,
-		1,
+		0.5,
 	},
-	staticEntityBody{
+	{
 		typeGold,
 		100,
-		1,
+		0.5,
 	},
 }
 

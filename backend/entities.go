@@ -28,13 +28,13 @@ type Entity interface {
 	X() float32
 	Y() float32
 	Type() string
-	Body() chipmunk.Body
+	Body() *chipmunk.Body
 }
 
 //---- entity
 type entity struct {
 	ecs.BasicEntity
-	body       chipmunk.Body
+	body       *chipmunk.Body
 	entityType string
 }
 
@@ -54,7 +54,7 @@ func (e *entity) Y() float32 {
 	return float32(e.body.Position().Y)
 }
 
-func (e *entity) Body() chipmunk.Body {
+func (e *entity) Body() *chipmunk.Body {
 	return e.body
 }
 
@@ -72,6 +72,7 @@ func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
 func NewStaticEntityWithBody(body *staticEntityBody) *entity {
 	e := newStaticCircleEntity(0, 0, body.radius)
 	e.entityType = body.entityType
+	e.body.UserData = &e
 	return &e
 }
 
@@ -84,7 +85,7 @@ type player struct {
 }
 
 func NewPlayer(c *net.Client) *player {
-	e := newCircleEntity(1, 1)
+	e := newCircleEntity(0.5, 1)
 	e.entityType = typePlayer
 	return &player{entity: e, client: c}
 }
@@ -105,7 +106,7 @@ func mapToEntityDTO(e Entity) *EntityDTO {
 		X:    e.X() * dist2px,
 		Y:    e.Y() * dist2px,
 		Type: e.Type(),
-		Aabb: mapToAabbDTO(&bdy),
+		Aabb: mapToAabbDTO(bdy),
 	}
 }
 
@@ -118,12 +119,11 @@ func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
 		return nil
 	}
 	s := b.Shapes[0]
-	pos := b.Position()
 	aabb := &AabbDTO{
-		LowerX: sanititzeFloat(float32(s.AABB().Lower.X+pos.X) * dist2px),
-		LowerY: sanititzeFloat(float32(s.AABB().Lower.Y+pos.Y) * dist2px),
-		UpperX: sanititzeFloat(float32(s.AABB().Upper.X+pos.X) * dist2px),
-		UpperY: sanititzeFloat(float32(s.AABB().Upper.Y+pos.Y) * dist2px),
+		LowerX: sanititzeFloat(float32(s.AABB().Lower.X) * dist2px),
+		LowerY: sanititzeFloat(float32(s.AABB().Lower.Y) * dist2px),
+		UpperX: sanititzeFloat(float32(s.AABB().Upper.X) * dist2px),
+		UpperY: sanititzeFloat(float32(s.AABB().Upper.Y) * dist2px),
 	}
 	return aabb
 }

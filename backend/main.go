@@ -62,7 +62,7 @@ func newPhysicsSystem(x, y int) *PhysicsSystem {
 	floor.SetElasticity(0)
 	floor.SetFriction(0.3)
 	staticBody.AddShape(floor)
-	p.space.AddBody(staticBody)
+	//p.space.AddBody(staticBody)
 
 	//---- adding walls around map
 
@@ -89,21 +89,21 @@ func newPhysicsSystem(x, y int) *PhysicsSystem {
 	bdy = shape2wall(wall)
 	p.space.AddBody(bdy)
 
+	_ = bdy
 	DumpBodies(p.space)
 
 	return p
 }
 
 func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
-	s.SetElasticity(1)
+	s.SetElasticity(0)
 	s.Group = staticBodyGroup
 	bdy := chipmunk.NewBodyStatic()
 	bdy.AddShape(s)
-	bdy.CallbackHandler = &Collidable{}
 
 	walls = append(walls, &entity{
 		BasicEntity: ecs.NewBasic(),
-		body:        *bdy,
+		body:        bdy,
 		entityType:  typeBorder,
 	})
 	return bdy
@@ -118,15 +118,17 @@ func newStaticCircleEntity(x, y, r float32) entity {
 	ball.SetElasticity(0.5)
 
 	// everything collides with everything :/
-	ball.Layer = -1 // all layers 0xFFFF
-	ball.Group = chipmunk.Group(ballEntity.ID())
+	//ball.Layer = -1 // all layers 0xFFFF
+	//ball.Group = chipmunk.Group(ballEntity.ID())
 
 	// Create a body for the ball
 	body := chipmunk.NewBodyStatic()
 	body.AddShape(ball)
 	body.SetPosition(vect.Vect{vect.Float(x), vect.Float(y)})
 
-	ballEntity.body = *body
+	ballEntity.body = body
+	ballEntity.body.UserData = ballEntity
+	ballEntity.body.CallbackHandler = &Collidable{}
 	return ballEntity
 }
 
@@ -139,12 +141,14 @@ func newCircleEntity(r, m float32) entity {
 	ball.SetElasticity(0.5)
 
 	// everything collides with everything :/
-	ball.Layer = -1 // all layers 0xFFFF
-	ball.Group = chipmunk.Group(ballEntity.ID())
+	//ball.Layer = -1 // all layers 0xFFFF
+	//ball.Group = chipmunk.Group(ballEntity.ID())
 
 	// Create a body for the ball
 	body := newBody(m, ball)
-	ballEntity.body = *body
+	ballEntity.body = body
+	ballEntity.body.UserData = ballEntity
+	ballEntity.body.CallbackHandler = &Collidable{}
 	return ballEntity
 }
 

@@ -110,7 +110,6 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	v := input2vec(inputs)
 	v.Mult(walkImpulse)
 	p.body.SetVelocity(float32(v.X), float32(v.Y))
-	log.Printf("Vect: %+v", v)
 }
 
 func input2vec(i *InputDTO) vect.Vect {

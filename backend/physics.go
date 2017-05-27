@@ -58,7 +58,7 @@ func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e *chipmunk.Body) {
 }
 
 func (p *PhysicsSystem) AddPlayer(pl *player) {
-	pe := physicsEntity{&pl.BasicEntity, &pl.body}
+	pe := physicsEntity{&pl.BasicEntity, pl.body}
 	p.entities = append(p.entities, pe)
 	p.space.AddBody(pe.Body)
 }
