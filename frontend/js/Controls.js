@@ -160,7 +160,7 @@ class Controls {
 		}
 
 		// FIXME backend crashes when we send actions
-		action = null;
+		//action = null;
 
 		let rotation = this.adjustCharacterRotation();
 

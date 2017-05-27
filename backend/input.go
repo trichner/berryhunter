@@ -1,17 +1,17 @@
 package main
 
 import (
-	"encoding/json"
 	"engo.io/ecs"
 	"github.com/vova616/chipmunk/vect"
 	"log"
 	"github.com/trichner/death-io/backend/net"
+	"encoding/json"
 )
 
 const inputBuffererCount = 3
 
 //---- models for input
-type inputDTO struct {
+type InputDTO struct {
 	Tick     *uint64   `json:"tick"`
 	Movement *movement `json:"movement"`
 	Rotation float32   `json:"rotation"` // [0, 2*PI)
@@ -25,7 +25,7 @@ type movement struct {
 
 type action struct {
 	Item string `json:"item"`
-	Alt  bool `json:"alt"`
+	Alt  bool   `json:"alt"`
 }
 
 type InputSystem struct {
@@ -53,20 +53,20 @@ func (i *InputSystem) New(w *ecs.World) {
 	log.Println("InputSystem nominal")
 }
 
-func (i *InputSystem) storeInput(clientId uint64, input inputDTO) {
-	i.ibufs[(i.game.tick+1)%inputBuffererCount].inputs[clientId] = input
+func (i *InputSystem) storeInput(playerId uint64, input InputDTO) {
+	i.ibufs[(i.game.tick+1)%inputBuffererCount].inputs[playerId] = input
 }
 
 func (i *InputSystem) AddPlayer(p *player) {
 	i.players = append(i.players, p)
 	p.client.OnMessage(func(c *net.Client, msg []byte) {
 
-		var input inputDTO
+		var input InputDTO
+		_ = input
 		err := json.Unmarshal(msg, &input)
 		if err != nil {
 			log.Printf("Marshalling Error: %s", err)
 		} else {
-			log.Printf("RX Obj: %+v", input)
 			i.storeInput(p.ID(), input)
 		}
 	})
@@ -92,7 +92,7 @@ func (i *InputSystem) Update(dt float32) {
 const walkImpulse = 2.0
 
 // applies the inputs to a player
-func (i *InputSystem) UpdatePlayer(p *player, inputs, last *inputDTO) {
+func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 
 	//if last != nil && last.Movement != nil {
 	//	l := input2vec(last)
@@ -110,11 +110,16 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *inputDTO) {
 	v := input2vec(inputs)
 	v.Mult(walkImpulse)
 	p.body.SetVelocity(float32(v.X), float32(v.Y))
+	log.Printf("Vect: %+v", v)
 }
 
-func input2vec(i *inputDTO) vect.Vect {
+func input2vec(i *InputDTO) vect.Vect {
 	x := signumf32(i.Movement.X)
 	y := signumf32(i.Movement.Y)
+	// prevent division by zero
+	if x == 0 && y == 0 {
+		return vect.Vector_Zero
+	}
 	v := vect.Vect{X: vect.Float(x), Y: vect.Float(y)}
 	v.Normalize()
 	return v
@@ -135,9 +140,9 @@ func (i *InputSystem) Remove(b ecs.BasicEntity) {
 }
 
 func NewInputBufferer() InputBufferer {
-	return InputBufferer{inputs: make(map[uint64]inputDTO)}
+	return InputBufferer{inputs: make(map[uint64]InputDTO)}
 }
 
 type InputBufferer struct {
-	inputs map[uint64]inputDTO
+	inputs map[uint64]InputDTO
 }
