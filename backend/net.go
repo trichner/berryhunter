@@ -5,7 +5,6 @@ import (
 	"engo.io/ecs"
 	"log"
 	"github.com/vova616/chipmunk"
-	"fmt"
 )
 
 type NetSystem struct {
@@ -56,9 +55,6 @@ func (n *NetSystem) Update(dt float32) {
 			if u != nil {
 				e := mapToEntityDTO(u.(Entity))
 				entites = append(entites, e)
-				if e.Type == typePlayer {
-					fmt.Printf("Rotation: %+v\n", e.Rot)
-				}
 			}
 		})
 		n.game.space.QueryStatic(nil, bb, func(a, b chipmunk.Indexable) {
