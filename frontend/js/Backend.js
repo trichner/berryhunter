@@ -10,7 +10,7 @@ const MessageType = {
 const Backend = {
 	setup: function () {
 		if (getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
-			this.webSocket = new WebSocket('ws://' + window.location.host + ':' + window.location.port + '/game');
+			this.webSocket = new WebSocket('ws://' + window.location.host + '/game');
 		} else {
 			this.webSocket = new WebSocket(Constants.BACKEND.REMOTE_URL);
 		}
