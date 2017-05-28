@@ -123,7 +123,9 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 		} else {
 			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
 		}
-		miniMap.add(gameObject);
+		if (entity.object !== 'Character') {
+			miniMap.add(gameObject);
+		}
 		this.objects[entity.id] = gameObject;
 		if (Develop.isActive()) {
 			gameObject.updateAABB(entity.aabb);
