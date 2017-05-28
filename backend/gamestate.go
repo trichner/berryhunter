@@ -8,12 +8,13 @@ type AabbDTO struct {
 }
 
 type EntityDTO struct {
-	Id   uint64  `json:"id"`
-	X    float32 `json:"x"`
-	Y    float32 `json:"y"`
-	Rot  float32 `json:"rotation"`
-	Type string  `json:"object"`
-	Aabb *AabbDTO `json:"aabb"`
+	Id     uint64  `json:"id"`
+	X      float32 `json:"x"`
+	Y      float32 `json:"y"`
+	Rot    float32 `json:"rotation"`
+	Radius float32 `json:"radius"`
+	Type   string  `json:"object"`
+	Aabb   *AabbDTO `json:"aabb"`
 }
 
 type PlayerDTO struct {

@@ -117,7 +117,6 @@ func newStaticCircleEntity(x, y, r float32) *entity {
 	ballEntity := &entity{BasicEntity: ecs.NewBasic()}
 
 	ball := chipmunk.NewCircle(vect.Vector_Zero, r)
-	ball.SetElasticity(0.5)
 
 	// everything collides with everything :/
 	//ball.Layer = -1 // all layers 0xFFFF
@@ -131,6 +130,7 @@ func newStaticCircleEntity(x, y, r float32) *entity {
 	ballEntity.body = body
 	ballEntity.body.UserData = ballEntity
 	ballEntity.body.CallbackHandler = &Collidable{}
+	ballEntity.radius = r
 	return ballEntity
 }
 
@@ -151,6 +151,7 @@ func newCircleEntity(r, m float32) *entity {
 	ballEntity.body = body
 	ballEntity.body.UserData = ballEntity
 	ballEntity.body.CallbackHandler = &Collidable{}
+	ballEntity.radius = r
 	return ballEntity
 }
 

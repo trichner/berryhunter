@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	noneCollisionLayer   = 0
 	allCollisionLayer    = -1
 	staticCollisionLayer = 0x1 << 0
 	actionCollisionLayer = 0x1 << 1

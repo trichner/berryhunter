@@ -28,6 +28,7 @@ type Entity interface {
 	X() float32
 	Y() float32
 	Rot() float32
+	Radius() float32
 	Type() string
 	Body() *chipmunk.Body
 }
@@ -37,6 +38,7 @@ type entity struct {
 	ecs.BasicEntity
 	body       *chipmunk.Body
 	entityType string
+	radius     float32
 }
 
 func (e *entity) Type() string {
@@ -61,6 +63,10 @@ func (e *entity) Body() *chipmunk.Body {
 
 func (e *entity) Rot() float32 {
 	return 0
+}
+
+func (e *entity) Radius() float32 {
+	return e.radius
 }
 
 func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
@@ -118,12 +124,13 @@ func mapToEntityDTO(e Entity) *EntityDTO {
 
 	bdy := e.Body()
 	return &EntityDTO{
-		Id:   e.ID(),
-		X:    e.X() * dist2px,
-		Y:    e.Y() * dist2px,
-		Rot:  e.Rot(),
-		Type: e.Type(),
-		Aabb: mapToAabbDTO(bdy),
+		Id:     e.ID(),
+		X:      e.X() * dist2px,
+		Y:      e.Y() * dist2px,
+		Rot:    e.Rot(),
+		Radius: e.Radius() * dist2px,
+		Type:   e.Type(),
+		Aabb:   mapToAabbDTO(bdy),
 	}
 }
 

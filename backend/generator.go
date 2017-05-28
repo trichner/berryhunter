@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand"
+	"github.com/vova616/chipmunk"
 )
 
 const gridSize = 100
@@ -45,11 +46,13 @@ var trees = []staticEntityBody{
 		typeRoundTree,
 		100,
 		1,
+		staticCollisionLayer,
 	},
 	{
 		typeMarioTree,
 		100,
 		1,
+		staticCollisionLayer,
 	},
 }
 
@@ -58,21 +61,25 @@ var resources = []staticEntityBody{
 		typeBerryBush,
 		100,
 		0.5,
+		noneCollisionLayer,
 	},
 	{
 		typeStone,
 		100,
 		0.5,
+		staticCollisionLayer,
 	},
 	{
 		typeGold,
 		100,
 		0.5,
+		staticCollisionLayer,
 	},
 }
 
 type staticEntityBody struct {
-	entityType string
-	weight     int
-	radius     float32
+	entityType     string
+	weight         int
+	radius         float32
+	collisionLayer chipmunk.Layer
 }
