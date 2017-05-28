@@ -4,7 +4,7 @@ class Tree extends GameObject {
 	}
 
 	createMinimapIcon(x, y, sizeFactor) {
-		let shape = new Two.Ellipse(x, y, this.diameter * sizeFactor);
+		let shape = new Two.Ellipse(x, y, this.size * sizeFactor);
 		shape.stroke = 'green';
 		shape.linewidth = 1;
 		shape.noFill();
@@ -19,8 +19,7 @@ class RoundTree extends Tree {
 	}
 
 	createShape(x, y) {
-		this.diameter = this.size;
-		let shape = new Two.Ellipse(x, y, this.diameter);
+		let shape = new Two.Ellipse(x, y, this.size);
 		shape.fill = 'green';
 		shape.stroke = 'darkgreen';
 		shape.linewidth = 2;
@@ -37,14 +36,14 @@ class MarioTree extends Tree {
 	}
 
 	createShape(x, y) {
-		this.diameter = this.size/2;
+		this.size = this.size / 2;
 		let shape = new Two.Group();
 		shape.translation.set(x, y);
 		for (let i = 0; i < 5; i++) {
 			let circle = new Two.Ellipse(
-				(Math.cos(Math.PI * 2 / 5 * i) * this.diameter ),
-				(Math.sin(Math.PI * 2 / 5 * i) * this.diameter ),
-				this.diameter);
+				(Math.cos(Math.PI * 2 / 5 * i) * this.size ),
+				(Math.sin(Math.PI * 2 / 5 * i) * this.size ),
+				this.size);
 			shape.add(circle)
 		}
 		shape.fill = 'green';
@@ -52,7 +51,7 @@ class MarioTree extends Tree {
 		shape.linewidth = 2;
 		shape.rotation = random(0, Math.PI * 2);
 
-		let ellipse = new Two.Ellipse(0, 0, this.diameter * 1.6);
+		let ellipse = new Two.Ellipse(0, 0, this.size * 1.6);
 		shape.add(ellipse);
 		ellipse.fill = 'green';
 		ellipse.noStroke();
@@ -72,8 +71,7 @@ class Stone extends GameObject {
 	}
 
 	createShape(x, y) {
-		this.diameter = this.size;
-		let shape = new Two.Polygon(x, y, this.diameter, 6);
+		let shape = new Two.Polygon(x, y, this.size, 6);
 		shape.fill = 'darkgray';
 		shape.stroke = 'dimgray';
 		shape.linewidth = 2;
@@ -83,7 +81,7 @@ class Stone extends GameObject {
 	}
 
 	createMinimapIcon(x, y, sizeFactor) {
-		let shape = new Two.Polygon(x, y, this.diameter * 2 * sizeFactor, 6);
+		let shape = new Two.Polygon(x, y, this.size * 2 * sizeFactor, 6);
 		shape.fill = 'dimgray';
 		shape.noStroke();
 
@@ -99,13 +97,12 @@ class Gold extends GameObject {
 	}
 
 	createShape(x, y) {
-		this.diameter = this.size;
 		this.sides = 5;
-		if (this.diameter > 60) {
+		if (this.size > 60) {
 			this.sides += 2;
 		}
 
-		let shape = new Two.Polygon(x, y, this.diameter, this.sides);
+		let shape = new Two.Polygon(x, y, this.size, this.sides);
 		shape.fill = 'gold';
 		shape.stroke = 'goldenrod';
 		shape.linewidth = 2;
@@ -115,7 +112,7 @@ class Gold extends GameObject {
 	}
 
 	createMinimapIcon(x, y, sizeFactor) {
-		let shape = new Two.Polygon(x, y, this.diameter * 2 * sizeFactor, this.sides);
+		let shape = new Two.Polygon(x, y, this.size * 2 * sizeFactor, this.sides);
 		shape.fill = 'gold';
 		shape.noStroke();
 
@@ -136,8 +133,7 @@ class BerryBush extends GameObject {
 		shape.translation.set(x, y);
 		shape.rotation = random(0, Math.PI * 2);
 
-		this.diameter = randomInt(30, 50);
-		let bush = new Two.Star(0, 0, this.diameter, this.diameter * 0.7, 5 + randomInt(1, 3) * 2);
+		let bush = new Two.Star(0, 0, this.size, this.size * 0.7, 5 + randomInt(1, 3) * 2);
 		shape.add(bush);
 		bush.fill = 'seagreen';
 		bush.stroke = 'darkslategray';
@@ -145,16 +141,16 @@ class BerryBush extends GameObject {
 
 
 		let numberOfBerries = 3;
-		if (this.diameter >= 37) {
+		if (this.size >= 37) {
 			numberOfBerries++;
 		}
-		if (this.diameter >= 45) {
+		if (this.size >= 45) {
 			numberOfBerries++;
 		}
 		for (let i = 0; i < numberOfBerries; i++) {
 			let circle = new Two.Ellipse(
-				(Math.cos(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
-				(Math.sin(Math.PI * 2 / numberOfBerries * i) * this.diameter * 0.3),
+				(Math.cos(Math.PI * 2 / numberOfBerries * i) * this.size * 0.3),
+				(Math.sin(Math.PI * 2 / numberOfBerries * i) * this.size * 0.3),
 				5);
 			shape.add(circle);
 			circle.fill = 'purple';
@@ -165,7 +161,7 @@ class BerryBush extends GameObject {
 	}
 
 	createMinimapIcon(x, y, sizeFactor) {
-		let shape = new Two.Ellipse(x, y, this.diameter * 3 * sizeFactor);
+		let shape = new Two.Ellipse(x, y, this.size * 3 * sizeFactor);
 		shape.fill = 'purple';
 		shape.noStroke();
 
