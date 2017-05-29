@@ -1,5 +1,7 @@
 "use strict";
 
+var movementInterpolatedObjects = new Set();
+
 class GameObject {
 	constructor(x, y, size, rotation) {
 		this.size = size || Constants.GRID_SPACING / 2;
@@ -37,21 +39,42 @@ class GameObject {
 
 	setPosition(x, y) {
 		if (this.rotateOnPositioning) {
-			this.shape.rotation = TwoDimensional.angleBetween(this.getX(), this.getY(), x, y);
+			this.setRotation(TwoDimensional.angleBetween(this.getX(), this.getY(), x, y));
 		}
-		this.shape.translation.set(x, y);
+
+		if (Constants.MOVEMENT_INTERPOLATION) {
+			this.desiredPosition = new Two.Vector(x, y); //.subSelf(this.shape.translation);
+			this.desireTimestamp = performance.now();
+			movementInterpolatedObjects.add(this);
+		} else {
+			this.shape.translation.set(x, y);
+		}
+	}
+
+	movePosition(deltaX, deltaY) {
+		if (arguments.length === 1) {
+			// Seems to be a vector
+			deltaY = deltaX.y;
+			deltaX = deltaX.x;
+		}
+
+		this.setPosition(
+			this.getX() + deltaX,
+			this.getY() + deltaY
+		);
 	}
 
 	getPosition() {
-		return this.shape.translation;
+		// Defensive copy
+		return this.shape.translation.clone();
 	}
 
 	getX() {
-		return this.shape.translation.x;
+		return this.getPosition().x;
 	}
 
 	getY() {
-		return this.shape.translation.y;
+		return this.getPosition().y;
 	}
 
 	setRotation(rotation) {
@@ -65,4 +88,27 @@ class GameObject {
 	hide() {
 		groups.gameObjects.remove(this.shape);
 	}
+}
+
+function moveInterpolatedObjects() {
+	let now = performance.now();
+
+	movementInterpolatedObjects.forEach(
+		/**
+		 *
+		 * @param {GameObject} gameObject
+		 */
+		function (gameObject) {
+			let elapsedTimePortion = (now - gameObject.desireTimestamp) / Constants.SERVER_TICKRATE;
+			if (elapsedTimePortion >= 1) {
+				// console.log('Last Interpolation length',
+				// gameObject.shape.translation.distanceTo(gameObject.desiredPosition));
+				gameObject.shape.translation.copy(gameObject.desiredPosition);
+				movementInterpolatedObjects.delete(gameObject);
+			} else {
+				let prevPos = gameObject.shape.translation.clone();
+				gameObject.shape.translation.lerp(gameObject.desiredPosition, elapsedTimePortion);
+				// console.log('Interpolation length', prevPos.distanceTo(gameObject.shape.translation));
+			}
+		});
 }

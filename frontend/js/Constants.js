@@ -14,13 +14,14 @@ const Constants = {
 	BACKEND: {
 		REMOTE_URL: 'wss://k42.ch/death-io/game',
 	},
-	INPUT_TICKRATE: 33, // Milliseconds between ticks
+	// Milliseconds between ticks
+	INPUT_TICKRATE: 33,
+
+	// Used for interpolation
+	SERVER_TICKRATE: 33,
+	MOVEMENT_INTERPOLATION: true,
 
 	INVENTORY_SLOTS: 8,
-
-	DEBUGGING: {
-
-	}
 };
 
 Constants.QUADRANT_SIZE = Constants.GRID_SPACING * Constants.FIELDS_IN_QUADRANT;

@@ -104,6 +104,9 @@ function setup() {
 		}
 	});
 
+	if (Constants.MOVEMENT_INTERPOLATION) {
+		two.bind('update', moveInterpolatedObjects);
+	}
 
 	if (MapEditor.isActive()) {
 		MapEditor.afterSetup();
