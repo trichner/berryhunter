@@ -68,6 +68,7 @@ class InventorySlot {
 					if (this.isFilled() && this.item.type === ItemType.EQUIPMENT) {
 						if (this.isActive()) {
 							this.deactivate();
+							this.inventory.deactivateSlot();
 						} else {
 							this.inventory.activateSlot(this.index);
 						}
@@ -206,7 +207,7 @@ class Inventory {
 			// TODO DEV
 			this.slots[0].setItem(Items.Wood, 54);
 			this.slots[1].setItem(Items.BronzeSpear);
-			this.slots[1].activate();
+			this.activateSlot(1);
 		}.bind(this);
 		two.bind('render', callback);
 	}

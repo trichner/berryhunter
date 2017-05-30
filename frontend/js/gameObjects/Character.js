@@ -195,7 +195,14 @@ class Character extends GameObject {
 		if (this.equipmentSlots.hand.children.length > 0) {
 			this.unequipItem();
 		}
-		this.equipmentSlots.hand.add(new InjectedSVG(item.graphic.svg, 0, 0, 60));
+		// Offsets are applied to the slot itself to respect the slot rotation
+		if (isDefined(item.graphic.offsetX)){
+			this.equipmentSlots.hand.translation.x = item.graphic.offsetX * 2;
+		}
+		if (isDefined(item.graphic.offsetY)){
+			this.equipmentSlots.hand.translation.y = item.graphic.offsetY * 2;
+		}
+		this.equipmentSlots.hand.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size));
 	}
 
 	unequipItem() {

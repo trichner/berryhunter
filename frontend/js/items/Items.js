@@ -52,7 +52,11 @@ const Items = {
 	},
 	BronzeSpear: {
 		icon: {file: 'spearBronzeIcon'},
-		graphic: {file: 'spearBronze'},
+		graphic: {
+			file: 'spearBronze',
+			size: 60,
+			offsetX: 20
+		},
 		type: ItemType.EQUIPMENT
 	},
 	IronSpear: {
