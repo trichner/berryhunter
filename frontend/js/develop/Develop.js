@@ -38,6 +38,8 @@ const Develop = {
 				document.body.appendChild(htmlToElement(html));
 
 				this.setupToggleButtons();
+
+				this.setupItemAdding();
 			}.bind(this)));
 	},
 
@@ -73,6 +75,33 @@ const Develop = {
 				Develop.onSettingToggle(setting, newValue);
 			});
 		}
+	},
+
+	setupItemAdding: function () {
+		let select = document.getElementById('develop_itemSelect');
+		for (let item in Items) {
+			if (!Items.hasOwnProperty(item)) {
+				continue;
+			}
+			if (!Items[item].icon.file) {
+				continue;
+			}
+			if (Items[item].graphic && !Items[item].graphic.file) {
+				continue;
+			}
+
+			select.appendChild(htmlToElement('<option value="' + item + '">' + item + '</option>'));
+		}
+
+		document
+			.getElementById('develop_itemAdd')
+			.addEventListener('click', function () {
+				player.inventory.addItem(
+					Items[document.getElementById('develop_itemSelect').value],
+					parseInt(document.getElementById('develop_itemCount').value)
+				);
+				two.update();
+			});
 	},
 
 	onSettingToggle(setting, newValue){

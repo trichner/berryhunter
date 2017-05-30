@@ -96,7 +96,7 @@ class InventorySlot {
 	 * @param {Number} count
 	 */
 	setItem(item, count) {
-		this.count = count || 1;
+		count = count || 1;
 		this.item = item;
 		this.itemIcon =
 			new InjectedSVG(
@@ -106,17 +106,26 @@ class InventorySlot {
 		this.group.add(this.itemIcon);
 		this.background.fill = InventorySlot.backgroundColors.filled;
 
+
+		this.setCount(count);
+
+		if (item.type === ItemType.EQUIPMENT) {
+			this.domElement.classList.add('clickable');
+		}
+	}
+
+	setCount(count) {
+		this.count = count;
 		if (this.count === 1) {
 			this.countText.visible = false;
 		} else {
 			this.countText.visible = true;
 			this.countText.value = this.count;
 		}
+	}
 
-		if (item.type === ItemType.EQUIPMENT) {
-			this.domElement.classList.add('clickable');
-		}
-
+	addCount(count) {
+		this.setCount(this.count + count);
 	}
 
 	dropItem() {
@@ -230,4 +239,17 @@ class Inventory {
 		this.character.unequipItem();
 	}
 
+	addItem(item, count) {
+		this.slots.some(function (slot) {
+			if (slot.isFilled()) {
+				if (slot.item === item) {
+					slot.addCount(count);
+					return true;
+				}
+			} else {
+				slot.setItem(item, count);
+				return true;
+			}
+		});
+	}
 }

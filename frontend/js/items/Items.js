@@ -41,7 +41,7 @@ const Items = {
 	},
 	IronSword: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.EQUIPMENT
 	},
@@ -55,7 +55,7 @@ const Items = {
 		graphic: {
 			file: 'spearBronze',
 			size: 60,
-			offsetX: 20
+			offsetX: 10
 		},
 		type: ItemType.EQUIPMENT
 	},
@@ -66,19 +66,19 @@ const Items = {
 	},
 	StoneHammer: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.EQUIPMENT
 	},
 	BronzeHammer: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.EQUIPMENT
 	},
 	IronHammer: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.EQUIPMENT
 	},
@@ -90,7 +90,7 @@ const Items = {
 	},
 	BigCampfire: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
@@ -102,91 +102,91 @@ const Items = {
 	},
 	Chest: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	BigChest: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	Furnace: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	WoodWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	WoodSpikyWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	StoneWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	StoneSpikyWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	BronzeWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	BronzeSpikyWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	WoodDoor: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	StoneDoor: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	BronceDoor: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	IronDoor: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	IronWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	IronSpikyWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},

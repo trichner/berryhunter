@@ -202,7 +202,7 @@ class Character extends GameObject {
 		if (isDefined(item.graphic.offsetY)){
 			this.equipmentSlots.hand.translation.y = item.graphic.offsetY * 2;
 		}
-		this.equipmentSlots.hand.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size));
+		this.equipmentSlots.hand.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING ));
 	}
 
 	unequipItem() {
