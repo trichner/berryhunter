@@ -99,7 +99,7 @@ class InventorySlot {
 		this.item = item;
 		this.itemIcon =
 			new InjectedSVG(
-				item.svg,
+				item.icon.svg,
 				0, 0,
 				this.size * (0.5 - InventorySlot.relativePadding));
 		this.group.add(this.itemIcon);

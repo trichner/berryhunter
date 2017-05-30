@@ -13,8 +13,7 @@ class Character extends GameObject {
 		this.currentAction = false;
 
 		this.equipmentSlots = {
-			leftHand: null,
-			rightHand: null
+			hand: null
 		};
 
 		this.createHands();
@@ -26,11 +25,15 @@ class Character extends GameObject {
 		// TODO Hände unter die Frisur rendern
 		const handAngleDistance = 0.4;
 
-		this.leftHand = this.createHand(-handAngleDistance);
+		this.leftHand = this.createHand(-handAngleDistance).group;
 		this.shape.add(this.leftHand);
 
-		this.rightHand = this.createHand(handAngleDistance);
+
+		let rightHand = this.createHand(handAngleDistance);
+		this.rightHand = rightHand.group;
 		this.shape.add(this.rightHand);
+
+		this.equipmentSlots.hand = rightHand.slot;
 	}
 
 	createHand(handAngleDistance) {
@@ -42,6 +45,11 @@ class Character extends GameObject {
 			Math.sin(handAngle + Math.PI * handAngleDistance) * this.size * 0.8,
 		);
 
+		let slotGroup = new Two.Group();
+		group.add(slotGroup);
+		slotGroup.translation.set(-this.size * 0.2, 0);
+		slotGroup.rotation = Math.PI / 2;
+
 		let handShape = new Two.Ellipse(0, 0, this.size * 0.2);
 		group.add(handShape);
 		handShape.fill = '#f2a586';
@@ -50,7 +58,10 @@ class Character extends GameObject {
 
 		group.originalTranslation = group.translation.clone();
 
-		return group;
+		return {
+			group: group,
+			slot: slotGroup
+		};
 	}
 
 	createShape(x, y) {
@@ -181,11 +192,14 @@ class Character extends GameObject {
 	}
 
 	equipItem(item) {
-		// this.equipmentSlots.leftHand.add(new InjectedSVG(item))
+		if (this.equipmentSlots.hand.children.length > 0) {
+			this.unequipItem();
+		}
+		this.equipmentSlots.hand.add(new InjectedSVG(item.graphic.svg, 0, 0, 60));
 	}
 
 	unequipItem() {
-
+		this.equipmentSlots.hand.children[0].remove();
 	}
 }
 

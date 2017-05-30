@@ -5,6 +5,11 @@
 class InjectedSVG extends Two.Group {
 	constructor(svg, x, y, size, rotation){
 		super();
+
+		if (isUndefined(svg) || typeof svg.cloneNode !== 'function') {
+			throw svg + ' is not a valid SVG node';
+		}
+
 		this.translation.set(x, y);
 		// group.translation.set(x-size, y-size);
 		let injectionGroup = new Two.Group();
