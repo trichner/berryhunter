@@ -25,11 +25,11 @@ class Camera {
 		two.bind('update', this.update.bind(this));
 	}
 
-	getScreenX(mapX){
+	getScreenX(mapX) {
 		return mapX - this.getX() + this.offset.x;
 	}
 
-	getScreenY(mapY){
+	getScreenY(mapY) {
 		return mapY - this.getY() + this.offset.y;
 	}
 
@@ -67,7 +67,8 @@ class Camera {
 		this.vehicle.arrive(this.character.getPosition());
 		this.vehicle.update();
 
-		if (Develop.isActive() && Develop.settings.cameraBoundaries) {
+		if (!Develop.isActive() ||
+			(Develop.isActive() && Develop.settings.cameraBoundaries)) {
 			Camera.keepWithinMapBoundaries(this.vehicle);
 		}
 
