@@ -18,7 +18,7 @@ const (
 	typePlayer        = "Character"
 	typeSaberToothCat = "SaberToothCat"
 	typeStone         = "Stone"
-	typeGold          = "Gold"
+	typeBronze = "Bronze"
 	typeBerryBush     = "BerryBush"
 )
 

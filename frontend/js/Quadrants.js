@@ -59,7 +59,7 @@ let Quadrants =
 			}
 
 		],
-		// Gold hidden in some Trees
+		// Bronze hidden in some Trees
 		[
 			{
 				x: 2,
@@ -99,7 +99,7 @@ let Quadrants =
 			{
 				x: 3,
 				y: 6,
-				object: Gold
+				object: Bronze
 			},
 			{
 				x: 3,

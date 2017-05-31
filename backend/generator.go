@@ -70,7 +70,7 @@ var resources = []staticEntityBody{
 		staticCollisionLayer,
 	},
 	{
-		typeGold,
+		typeBronze,
 		100,
 		0.5,
 		staticCollisionLayer,

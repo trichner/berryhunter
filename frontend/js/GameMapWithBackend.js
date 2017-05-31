@@ -7,7 +7,7 @@ const gameObjectClasses = {
 	RoundTree,
 	MarioTree,
 	Stone,
-	Gold,
+	Bronze,
 	BerryBush,
 	Rabbit,
 	SaberToothCat
@@ -85,44 +85,9 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 			} else {
 				throw "Unknown Border orientation " + JSON.stringify(entity.aabb);
 			}
-
-			// if (startX <= 0) {
-			// 	if (endY <= 0) {
-			// 		// Top Border
-			// 		x1 = 0;
-			// 		y1 = 0;
-			// 		x2 = endX + startX;
-			// 		y2 = y1;
-			// 	} else {
-			// 		// Left Border
-			// 		x1 = 0;
-			// 		y1 = 0;
-			// 		x2 = x1;
-			// 		y2 = endY + startY;
-			// 	}
-			// } else {
-			// 	if (startY <= 0) {
-			// 		// Right Border
-			// 		x1 = startX;
-			// 		y1 = 0;
-			// 		x2 = x1;
-			// 		y2 = endY + startY;
-			// 	} else {
-			// 		// Bottom Border
-			// 		x1 = 0;
-			// 		y1 = startY;
-			// 		x2 = endX + startX;
-			// 		y2 = startY;
-			// 	}
-			// }
-			// gameObject = new Border(
-			// 	x1 + (endX - startX) / 2,
-			// 	y1 + (endY - startY) / 2,
-			// 	x2 + (endX - startX) / 2,
-			// 	y2 + (endY - startY) / 2);
 			gameObject = new Border(x1, y1, x2, y2);
 		} else {
-			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y);
+			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y, entity.radius);
 		}
 		if (entity.object !== 'Character') {
 			miniMap.add(gameObject);
