@@ -1,7 +1,3 @@
-/**
- * Created by XieLong on 21.05.2017.
- */
-
 class InjectedSVG extends Two.Group {
 	constructor(svg, x, y, size, rotation){
 		super();

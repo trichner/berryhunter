@@ -1,6 +1,3 @@
-/**
- * Created by XieLong on 21.05.2017.
- */
 const ItemType = {
 	RESOURCE: 'RESOURCE',
 	CONSUMABLE: 'CONSUMABLE',
@@ -9,6 +6,9 @@ const ItemType = {
 };
 
 const Items = {
+	/***********************************
+	 * TOOLS
+	 ***********************************/
 	WoodClub: {
 		icon: {file: 'clubWoodIcon'},
 		graphic: {file: 'clubWood'},
@@ -29,6 +29,10 @@ const Items = {
 		graphic: {file: 'toolIron'},
 		type: ItemType.EQUIPMENT
 	},
+
+	/***********************************
+	 * WEAPONS
+	 ***********************************/
 	StoneClub: {
 		icon: {file: 'clubStoneIcon'},
 		graphic: {file: 'clubStone'},
@@ -45,6 +49,10 @@ const Items = {
 		graphic: {file: ''},
 		type: ItemType.EQUIPMENT
 	},
+
+	/***********************************
+	 * Spears
+	 ***********************************/
 	StoneSpear: {
 		icon: {file: 'spearStoneIcon'},
 		graphic: {file: 'spearStone'},
@@ -64,6 +72,10 @@ const Items = {
 		graphic: {file: 'spearIron'},
 		type: ItemType.EQUIPMENT
 	},
+
+	/***********************************
+	 * HAMMERS
+	 ***********************************/
 	StoneHammer: {
 		// TODO
 		icon: {file: ''},
@@ -82,6 +94,10 @@ const Items = {
 		graphic: {file: ''},
 		type: ItemType.EQUIPMENT
 	},
+
+	/***********************************
+	 * PLACEABLES
+	 ***********************************/
 	Campfire: {
 		icon: {file: 'campFireIcon'},
 		// TODO
@@ -118,6 +134,10 @@ const Items = {
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
+
+	/***********************************
+	 * WALLS
+	 ***********************************/
 	WoodWall: {
 		// TODO
 		icon: {file: ''},
@@ -154,6 +174,22 @@ const Items = {
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
+	IronWall: {
+		// TODO
+		icon: {file: ''},
+		graphic: {file: ''},
+		type: ItemType.PLACEABLE
+	},
+	IronSpikyWall: {
+		// TODO
+		icon: {file: ''},
+		graphic: {file: ''},
+		type: ItemType.PLACEABLE
+	},
+
+	/***********************************
+	 * DOORS
+	 ***********************************/
 	WoodDoor: {
 		// TODO
 		icon: {file: ''},
@@ -178,18 +214,10 @@ const Items = {
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
-	IronWall: {
-		// TODO
-		icon: {file: ''},
-		graphic: {file: ''},
-		type: ItemType.PLACEABLE
-	},
-	IronSpikyWall: {
-		// TODO
-		icon: {file: ''},
-		graphic: {file: ''},
-		type: ItemType.PLACEABLE
-	},
+
+	/***********************************
+	 * FOOD & HEALING
+	 ***********************************/
 	CookedMeat: {
 		icon: {file: 'meatCookedIcon'},
 		type: ItemType.CONSUMABLE
@@ -210,6 +238,10 @@ const Items = {
 		icon: {file: 'berryBowlIcon'},
 		type: ItemType.CONSUMABLE
 	},
+
+	/***********************************
+	 * RESOURCES
+	 ***********************************/
 	Wood: {
 		icon: {file: 'woodIcon'},
 		type: ItemType.RESOURCE
@@ -229,12 +261,16 @@ const Items = {
 };
 
 (function preloadItemIcons() {
-	Object.values(Items).forEach(function (item) {
+	for (let itemName in Items){
+		let item = Items[itemName];
+
+		item.name = itemName;
+
 		if (item.icon && item.icon.file) {
 			registerGameObjectSVG(item.icon, 'img/items/' + item.icon.file + '.svg');
 		}
 		if (item.graphic && item.graphic.file) {
 			registerGameObjectSVG(item.graphic, 'img/items/' + item.graphic.file + '.svg');
 		}
-	});
+	}
 })();

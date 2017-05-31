@@ -1,6 +1,3 @@
-/**
- * Created by XieLong on 21.05.2017.
- */
 class InventorySlot {
 	/**
 	 *
