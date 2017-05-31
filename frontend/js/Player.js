@@ -14,5 +14,7 @@ class Player {
 		miniMap.register(this.character);
 
 		this.inventory = new Inventory(this.character);
+
+		this.craftableItems = [];
 	}
 }

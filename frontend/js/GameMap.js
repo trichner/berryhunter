@@ -67,3 +67,12 @@ GameMap.prototype.getObjects = function (startX, startY, endX, endY) {
 	console.log(containedObjects.length + ' objects in view.');
 	return containedObjects;
 };
+
+GameMap.prototype.getObjectsInView = function () {
+	return this.getObjects(
+		player.character.getX() - width / 2,
+		player.character.getY() - height / 2,
+		player.character.getX() + width / 2,
+		player.character.getY() + height / 2
+	)
+};

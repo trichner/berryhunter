@@ -22,6 +22,7 @@ const Constants = {
 	MOVEMENT_INTERPOLATION: true,
 
 	INVENTORY_SLOTS: 8,
+	CRAFTING_RANGE: 60
 };
 
 Constants.QUADRANT_SIZE = Constants.GRID_SPACING * Constants.FIELDS_IN_QUADRANT;

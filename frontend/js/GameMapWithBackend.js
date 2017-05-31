@@ -33,6 +33,7 @@ function GameMapWithBackend() {
 	// 	new Border(0, 0, 'WEST', this.height));
 
 	this.objects = {};
+	this.objectsInView = [];
 
 	// console.info('Map is ' + this.width + ' x ' + this.height);
 	// console.log(this.objects.length + ' objects generated');
@@ -131,4 +132,14 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 			gameObject.updateAABB(entity.aabb);
 		}
 	}
+
+	this.objectsInView.push(gameObject);
+};
+
+GameMap.prototype.newSnapshot = function () {
+	this.objectsInView.length = 0;
+};
+
+GameMap.prototype.getObjectsInView = function () {
+	return this.objectsInView;
 };
