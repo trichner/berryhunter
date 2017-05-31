@@ -136,10 +136,10 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 	this.objectsInView.push(gameObject);
 };
 
-GameMap.prototype.newSnapshot = function () {
+GameMapWithBackend.prototype.newSnapshot = function () {
 	this.objectsInView.length = 0;
 };
 
-GameMap.prototype.getObjectsInView = function () {
+GameMapWithBackend.prototype.getObjectsInView = function () {
 	return this.objectsInView;
 };

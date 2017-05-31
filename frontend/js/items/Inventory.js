@@ -28,6 +28,9 @@ class InventorySlot {
 		this.background.noStroke();
 		this.background.fill = InventorySlot.backgroundColors.empty;
 
+		this.iconGroup = new Two.Group();
+		this.group.add(this.iconGroup);
+
 		// let countGroup = new Two.Group();
 		// this.group.add(countGroup);
 		// countGroup.translation.set(
@@ -100,7 +103,7 @@ class InventorySlot {
 				item.icon.svg,
 				0, 0,
 				this.size * (0.5 - InventorySlot.relativePadding));
-		this.group.add(this.itemIcon);
+		this.iconGroup.add(this.itemIcon);
 		this.background.fill = InventorySlot.backgroundColors.filled;
 
 
