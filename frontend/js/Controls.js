@@ -167,20 +167,19 @@ class Controls {
 		let input = {};
 		let hasInput = false;
 
-		if (PointerEvents.moved) {
-			if (Constants.ALWAYS_VIEW_CURSOR) {
-				if (this.lastX !== this.character.getX() ||
-					this.lastY !== this.character.getY()) {
+		if (Constants.ALWAYS_VIEW_CURSOR) {
+			if (PointerEvents.moved ||
+				this.lastX !== this.character.getX() ||
+				this.lastY !== this.character.getY()) {
 
-					input.rotation = this.adjustCharacterRotation();
-					hasInput = true;
-					this.lastX = this.character.getX();
-					this.lastY = this.character.getY();
-				}
-			} else {
 				input.rotation = this.adjustCharacterRotation();
 				hasInput = true;
+				this.lastX = this.character.getX();
+				this.lastY = this.character.getY();
 			}
+		} else if (PointerEvents.moved) {
+			input.rotation = this.adjustCharacterRotation();
+			hasInput = true;
 		}
 
 		if (movement.x !== 0 || movement.y !== 0) {

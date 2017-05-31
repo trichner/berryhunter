@@ -9,7 +9,7 @@ const Constants = {
 	BASE_MOVEMENT_SPEED: 10,
 
 	// FIXME true macht nicht, was gewünscht
-	ALWAYS_VIEW_CURSOR: false,
+	ALWAYS_VIEW_CURSOR: true,
 	GRID_SPACING: 100,
 	FIELDS_IN_QUADRANT: 8,
 	PIXEL_PER_METRE: 60,
