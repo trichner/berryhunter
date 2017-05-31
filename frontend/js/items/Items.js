@@ -11,37 +11,41 @@ const Items = {
 	 ***********************************/
 	WoodClub: {
 		icon: {file: 'clubWoodIcon'},
-		graphic: {file: 'clubWood',
+		graphic: {
+			file: 'clubWood',
 			size: 40,
 			offsetX: 15
-			},
+		},
 		type: ItemType.EQUIPMENT
 	},
 	StoneTool: {
 		icon: {file: 'toolStoneIcon'},
-		graphic: {file: 'toolStone',
+		graphic: {
+			file: 'toolStone',
 			size: 30,
 			offsetX: 10,
 			offsetY: -2.5
-			},
+		},
 		type: ItemType.EQUIPMENT
 	},
 	BronzeTool: {
 		icon: {file: 'toolBronzeIcon'},
-		graphic: {file: 'toolBronze',
+		graphic: {
+			file: 'toolBronze',
 			size: 30,
 			offsetX: 10,
 			offsetY: -2.5
-			},
+		},
 		type: ItemType.EQUIPMENT
 	},
 	IronTool: {
 		icon: {file: 'toolIronIcon'},
-		graphic: {file: 'toolIron',
+		graphic: {
+			file: 'toolIron',
 			size: 30,
 			offsetX: 10,
 			offsetY: -2.5
-			},
+		},
 		type: ItemType.EQUIPMENT
 	},
 
@@ -50,10 +54,11 @@ const Items = {
 	 ***********************************/
 	StoneClub: {
 		icon: {file: 'clubStoneIcon'},
-		graphic: {file: 'clubStone',
+		graphic: {
+			file: 'clubStone',
 			size: 40,
 			offsetX: 15
-			},
+		},
 		type: ItemType.EQUIPMENT
 	},
 	BronzeSword: {
@@ -77,10 +82,11 @@ const Items = {
 	 ***********************************/
 	StoneSpear: {
 		icon: {file: 'spearStoneIcon'},
-		graphic: {file: 'spearStone',
+		graphic: {
+			file: 'spearStone',
 			size: 60,
 			offsetX: 20
-			},
+		},
 		type: ItemType.EQUIPMENT
 	},
 	BronzeSpear: {
@@ -94,10 +100,11 @@ const Items = {
 	},
 	IronSpear: {
 		icon: {file: 'spearIronIcon'},
-		graphic: {file: 'spearIron',
+		graphic: {
+			file: 'spearIron',
 			size: 60,
 			offsetX: 20
-			},
+		},
 		type: ItemType.EQUIPMENT
 	},
 
@@ -289,7 +296,7 @@ const Items = {
 };
 
 (function preloadItemIcons() {
-	for (let itemName in Items){
+	for (let itemName in Items) {
 		let item = Items[itemName];
 
 		item.name = itemName;
