@@ -141,7 +141,7 @@ const Items = {
 	},
 	BigCampfire: {
 		// TODO
-		icon: {file: ''},
+		icon: {file: 'bigCampFireIcon'},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
