@@ -35,31 +35,26 @@ class Inventory {
 			});
 
 			two.unbind('render', callback);
-
-			// TODO DEV
-			this.slots[0].setItem(Items.Wood, 54);
-			this.slots[1].setItem(Items.BronzeSpear);
-			this.activateSlot(1);
 		}.bind(this);
 		two.bind('render', callback);
 	}
 
-	activateSlot(slotIndex) {
+	activateSlot(slotIndex, equipementSlot) {
 		for (let i = 0; i < this.slots.length; i++) {
 			let slot = this.slots[i];
 			if (i === slotIndex) {
 				slot.activate();
 				this.equipedItem = slot.item;
-				this.character.equipItem(this.equipedItem);
+				this.character.equipItem(this.equipedItem, equipementSlot);
 			} else {
 				slot.deactivate();
 			}
 		}
 	}
 
-	deactivateSlot() {
+	deactivateSlot(equipementSlot) {
 		this.equipedItem = null;
-		this.character.unequipItem();
+		this.character.unequipItem(equipementSlot);
 	}
 
 	addItem(item, count) {

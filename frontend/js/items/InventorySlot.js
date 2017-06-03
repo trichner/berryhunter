@@ -73,14 +73,17 @@ class InventorySlot {
 						case ItemType.EQUIPMENT:
 							if (this.isActive()) {
 								this.deactivate();
-								this.inventory.deactivateSlot();
+								this.inventory.deactivateSlot(this.item.equipmentSlot);
 							} else {
-								this.inventory.activateSlot(this.index);
+								this.inventory.activateSlot(this.index, this.item.equipmentSlot);
 							}
 							break;
 						case ItemType.PLACEABLE:
 							if (this.isActive()) {
-
+								this.deactivate();
+								this.inventory.deactivateSlot(EquipmentSlot.PLACEABLE);
+							} else {
+								this.inventory.activateSlot(this.index, EquipmentSlot.PLACEABLE);
 							}
 					}
 					break;

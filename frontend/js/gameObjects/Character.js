@@ -12,16 +12,31 @@ class Character extends GameObject {
 
 		this.currentAction = false;
 
-		this.equipmentSlots = {
-			hand: null
-		};
+		// Rotate the character according the 0-angle in drawing space
+		this.shape.rotation = Math.PI / -2;
+
+		/**
+		 * Needs the same properties as EquipmentSlot
+		 */
+		this.equipmentSlots = {};
+
+		let placeableSlot = new Two.Group();
+		this.shape.add(placeableSlot);
+		this.equipmentSlots[EquipmentSlot.PLACEABLE] = placeableSlot;
+		placeableSlot.translation.set(
+			Constants.CRAFTING_RANGE,
+			0
+		);
+		placeableSlot.opacity = 0.6;
 
 		this.createHands();
+
+		Object.values(this.equipmentSlots).forEach(function (equipmentSlot) {
+			equipmentSlot.originalTranslation = equipmentSlot.translation.clone();
+		})
 	}
 
 	createHands() {
-		this.shape.rotation = Math.PI / -2;
-
 		// TODO Hände unter die Frisur rendern
 		const handAngleDistance = 0.4;
 
@@ -33,7 +48,7 @@ class Character extends GameObject {
 		this.rightHand = rightHand.group;
 		this.shape.add(this.rightHand);
 
-		this.equipmentSlots.hand = rightHand.slot;
+		this.equipmentSlots[EquipmentSlot.HAND] = rightHand.slot;
 	}
 
 	createHand(handAngleDistance) {
@@ -191,26 +206,27 @@ class Character extends GameObject {
 		}
 	}
 
-	equipItem(item) {
-		if (this.equipmentSlots.hand.children.length > 0) {
+	equipItem(item, equipementSlot) {
+		let slot = this.equipmentSlots[equipementSlot];
+		if (slot.children.length > 0) {
 			this.unequipItem();
 		}
 		// Offsets are applied to the slot itself to respect the slot rotation
 		if (isDefined(item.graphic.offsetX)) {
-			this.equipmentSlots.hand.translation.x = item.graphic.offsetX * 2;
+			slot.translation.x = slot.originalTranslation.x + item.graphic.offsetX * 2;
 		} else {
-			this.equipmentSlots.hand.translation.x = 0;
+			slot.translation.x = slot.originalTranslation.x;
 		}
 		if (isDefined(item.graphic.offsetY)) {
-			this.equipmentSlots.hand.translation.y = item.graphic.offsetY * 2;
+			slot.translation.y = slot.originalTranslation.y + item.graphic.offsetY * 2;
 		} else {
-			this.equipmentSlots.hand.translation.y = 0;
+			slot.translation.y = slot.originalTranslation.y;
 		}
-		this.equipmentSlots.hand.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
+		slot.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
 	}
 
-	unequipItem() {
-		this.equipmentSlots.hand.children[0].remove();
+	unequipItem(equipementSlot) {
+		this.equipmentSlots[equipementSlot].children[0].remove();
 	}
 }
 

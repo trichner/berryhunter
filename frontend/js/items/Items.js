@@ -5,6 +5,24 @@ const ItemType = {
 	PLACEABLE: 'PLACEABLE'
 };
 
+/**
+ * Register of available items in the game.
+ *
+ * {{ItemName: {
+ *      icon: {
+ *          file: path relative to /frontend/img/items - '.svg' gets appended
+ *          svg: injected, svg node loaded from file
+ *      },
+ *      graphic: {
+ *          file: path relative to /frontend/img/items - '.svg' gets appended
+ *          svg: injected, svg node loaded from file
+ *          size: optional number, defaults to 100
+ *          offsetX: optional number, defaults to 0
+ *          offsetY: optional number, default to 0
+ *      },
+ *      type: ItemType,
+ *      equipmentSlot: EquipmentSlot},
+ */
 const Items = {
 	/***********************************
 	 * TOOLS
@@ -16,7 +34,8 @@ const Items = {
 			size: 40,
 			offsetX: 15
 		},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	StoneTool: {
 		icon: {file: 'toolStoneIcon'},
@@ -26,7 +45,8 @@ const Items = {
 			offsetX: 10,
 			offsetY: -2.5
 		},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	BronzeTool: {
 		icon: {file: 'toolBronzeIcon'},
@@ -36,7 +56,8 @@ const Items = {
 			offsetX: 10,
 			offsetY: -2.5
 		},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	IronTool: {
 		icon: {file: 'toolIronIcon'},
@@ -46,7 +67,8 @@ const Items = {
 			offsetX: 10,
 			offsetY: -2.5
 		},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 
 	/***********************************
@@ -59,7 +81,8 @@ const Items = {
 			size: 40,
 			offsetX: 15
 		},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	BronzeSword: {
 		icon: {file: 'swordBronzeIcon'},
@@ -68,13 +91,15 @@ const Items = {
 			size: 40,
 			offsetX: 15
 		},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	IronSword: {
 		// TODO
 		icon: {file: ''},
 		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 
 	/***********************************
@@ -87,7 +112,8 @@ const Items = {
 			size: 60,
 			offsetX: 20
 		},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	BronzeSpear: {
 		icon: {file: 'spearBronzeIcon'},
@@ -96,7 +122,8 @@ const Items = {
 			size: 60,
 			offsetX: 20
 		},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	IronSpear: {
 		icon: {file: 'spearIronIcon'},
@@ -105,7 +132,8 @@ const Items = {
 			size: 60,
 			offsetX: 20
 		},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 
 	/***********************************
@@ -115,19 +143,22 @@ const Items = {
 		// TODO
 		icon: {file: ''},
 		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	BronzeHammer: {
 		// TODO
 		icon: {file: ''},
 		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	IronHammer: {
 		// TODO
 		icon: {file: ''},
 		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 
 	/***********************************
@@ -136,7 +167,10 @@ const Items = {
 	Campfire: {
 		icon: {file: 'campFireIcon'},
 		// TODO
-		graphic: {file: ''},
+		graphic: {
+			file: 'campFireIcon',
+			size: 50
+		},
 		type: ItemType.PLACEABLE
 	},
 	BigCampfire: {
