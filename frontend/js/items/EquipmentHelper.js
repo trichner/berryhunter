@@ -8,3 +8,14 @@ const EquipmentSlot = {
 	 */
 	PLACEABLE: 'PLACEABLE'
 };
+
+const EquipmentHelper = {
+	getItemEquipmentSlot: function (item) {
+		switch (item.type) {
+			case ItemType.EQUIPMENT:
+				return item.equipmentSlot;
+			case ItemType.PLACEABLE:
+				return EquipmentSlot.PLACEABLE;
+		}
+	}
+};

@@ -69,22 +69,12 @@ class InventorySlot {
 			switch (event.button) {
 				// Left Click
 				case 0:
-					switch (this.item.type) {
-						case ItemType.EQUIPMENT:
-							if (this.isActive()) {
-								this.deactivate();
-								this.inventory.deactivateSlot(this.item.equipmentSlot);
-							} else {
-								this.inventory.activateSlot(this.index, this.item.equipmentSlot);
-							}
-							break;
-						case ItemType.PLACEABLE:
-							if (this.isActive()) {
-								this.deactivate();
-								this.inventory.deactivateSlot(EquipmentSlot.PLACEABLE);
-							} else {
-								this.inventory.activateSlot(this.index, EquipmentSlot.PLACEABLE);
-							}
+					let equipementSlot = EquipmentHelper.getItemEquipmentSlot(this.item);
+					if (this.isActive()) {
+						this.deactivate();
+						this.inventory.deactivateSlot(equipementSlot);
+					} else {
+						this.inventory.activateSlot(this.index, equipementSlot);
 					}
 					break;
 				case 2:
@@ -142,14 +132,14 @@ class InventorySlot {
 	}
 
 	dropItem() {
-		this.item = null;
 		this.itemIcon.remove();
 		delete this.itemIcon;
 		this.domElement.classList.remove('clickable');
 
 		if (this.isActive()) {
-			this.inventory.deactivateSlot();
+			this.inventory.deactivateSlot(EquipmentHelper.getItemEquipmentSlot(this.item));
 		}
+		this.item = null;
 		this.deactivate();
 	}
 

@@ -44,8 +44,7 @@ class Inventory {
 			let slot = this.slots[i];
 			if (i === slotIndex) {
 				slot.activate();
-				this.equipedItem = slot.item;
-				this.character.equipItem(this.equipedItem, equipementSlot);
+				this.character.equipItem(slot.item, equipementSlot);
 			} else {
 				slot.deactivate();
 			}
@@ -53,7 +52,6 @@ class Inventory {
 	}
 
 	deactivateSlot(equipementSlot) {
-		this.equipedItem = null;
 		this.character.unequipItem(equipementSlot);
 	}
 
@@ -69,5 +67,26 @@ class Inventory {
 				return true;
 			}
 		});
+	}
+
+	removeItem(item, count) {
+		let itemWasRemoved = this.slots.some(function (slot) {
+			if (slot.isFilled()) {
+				if (slot.item === item) {
+					if (slot.count === count) {
+						slot.dropItem();
+					} else {
+						slot.addCount(-count);
+						if (slot.isActive()) {
+							this.ac
+						}
+					}
+					return true;
+				}
+			}
+		}, this);
+		if (!itemWasRemoved) {
+			console.warn('Tried to remove ' + count + ' item(s) ' + item.name + ' that were not in inventory.');
+		}
 	}
 }

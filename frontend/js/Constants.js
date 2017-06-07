@@ -8,7 +8,6 @@ const Constants = {
 	},
 	BASE_MOVEMENT_SPEED: 10,
 
-	// FIXME true macht nicht, was gewünscht
 	ALWAYS_VIEW_CURSOR: true,
 	GRID_SPACING: 100,
 	FIELDS_IN_QUADRANT: 8,
@@ -24,7 +23,8 @@ const Constants = {
 	MOVEMENT_INTERPOLATION: true,
 
 	INVENTORY_SLOTS: 8,
-	CRAFTING_RANGE: 60
+	CRAFTING_RANGE: 60,
+	PLACEMENT_RANGE: 60
 };
 
 Constants.QUADRANT_SIZE = Constants.GRID_SPACING * Constants.FIELDS_IN_QUADRANT;

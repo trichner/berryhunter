@@ -1,6 +1,7 @@
 /**
  * Created by raoulzander on 25.04.17.
  */
+'use strict';
 
 const UP_KEYS = [
 	'w'.charCodeAt(0),
@@ -143,18 +144,35 @@ class Controls {
 			this.character.progressHitAnimation(this.hitAnimationTick);
 		} else {
 			if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
-				this.hitAnimationTick = Character.hitAnimationFrameDuration;
-				this.character.action();
+				this.hitAnimationTick = this.character.action();
 				this.character.progressHitAnimation(this.hitAnimationTick);
-				action = {
-					// TODO aktives Item eintragen
-					item: "fist",
-					alt: false
-				};
+				switch (this.character.currentAction) {
+					case 'MAIN':
+						action = {
+							// TODO aktives Item eintragen
+							item: "fist",
+							alt: false
+						};
+						break;
+					case 'PLACING':
+						let placedItem = this.character.getEquippedItem(EquipmentSlot.PLACEABLE);
+						// this.character.unequipItem(EquipmentSlot.PLACEABLE);
+
+						if (MapEditor.isActive()) {
+							new Placeable(
+								placedItem,
+								this.character.getX() + Math.cos(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
+								this.character.getY() + Math.sin(this.character.getRotation()) * Constants.PLACEMENT_RANGE
+							);
+							player.inventory.removeItem(placedItem, 1);
+						} else {
+							// TODO communicate placing to backend
+						}
+						break;
+				}
 			}
 			if (anyKeyIsPressed(ALT_ACTION_KEYS) || PointerEvents.pointerDown === ALT_ACTION_BUTTON) {
-				this.hitAnimationTick = Character.hitAnimationFrameDuration;
-				this.character.altAction();
+				this.hitAnimationTick = this.character.altAction();
 				this.character.progressHitAnimation(this.hitAnimationTick);
 				action = {
 					// TODO aktives Item eintragen

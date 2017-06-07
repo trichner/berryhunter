@@ -87,6 +87,10 @@ class GameObject {
 		this.shape.rotation = rotation;
 	}
 
+	getRotation() {
+		return this.shape.rotation;
+	}
+
 	show() {
 		groups.gameObjects.add(this.shape);
 	}

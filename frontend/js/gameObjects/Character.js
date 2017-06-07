@@ -18,20 +18,25 @@ class Character extends GameObject {
 		/**
 		 * Needs the same properties as EquipmentSlot
 		 */
-		this.equipmentSlots = {};
+		this.equipmentSlotGroups = {};
+		this.equippedItems = {};
+		for (let equipmentSlot in EquipmentSlot) {
+			//noinspection JSUnfilteredForInLoop
+			this.equippedItems[equipmentSlot] = null;
+		}
 
 		let placeableSlot = new Two.Group();
 		this.shape.add(placeableSlot);
-		this.equipmentSlots[EquipmentSlot.PLACEABLE] = placeableSlot;
+		this.equipmentSlotGroups[EquipmentSlot.PLACEABLE] = placeableSlot;
 		placeableSlot.translation.set(
-			Constants.CRAFTING_RANGE,
+			Constants.PLACEMENT_RANGE,
 			0
 		);
 		placeableSlot.opacity = 0.6;
 
 		this.createHands();
 
-		Object.values(this.equipmentSlots).forEach(function (equipmentSlot) {
+		Object.values(this.equipmentSlotGroups).forEach(function (equipmentSlot) {
 			equipmentSlot.originalTranslation = equipmentSlot.translation.clone();
 		})
 	}
@@ -48,7 +53,7 @@ class Character extends GameObject {
 		this.rightHand = rightHand.group;
 		this.shape.add(this.rightHand);
 
-		this.equipmentSlots[EquipmentSlot.HAND] = rightHand.slot;
+		this.equipmentSlotGroups[EquipmentSlot.HAND] = rightHand.slot;
 	}
 
 	createHand(handAngleDistance) {
@@ -165,11 +170,23 @@ class Character extends GameObject {
 	}
 
 	action() {
+		if (this.isSlotEquipped(this.equipmentSlotGroups.PLACEABLE)) {
+			this.currentAction = 'PLACING';
+			return Character.hitAnimationFrameDuration;
+		}
+
 		this.currentAction = 'MAIN';
+		return Character.hitAnimationFrameDuration;
 	}
 
 	altAction() {
+		if (this.isSlotEquipped(this.equipmentSlotGroups.PLACEABLE)) {
+			this.currentAction = false;
+			return 0;
+		}
+
 		this.currentAction = 'ALT';
+		return Character.hitAnimationFrameDuration;
 	}
 
 	progressHitAnimation(animationFrame) {
@@ -181,6 +198,7 @@ class Character extends GameObject {
 			let hand;
 			switch (this.currentAction) {
 				case 'MAIN':
+				case 'PLACING':
 					hand = this.rightHand;
 					break;
 				case 'ALT':
@@ -206,27 +224,45 @@ class Character extends GameObject {
 		}
 	}
 
+	isSlotEquipped(equipementSlot) {
+		if (typeof equipementSlot === 'string') {
+			equipementSlot = this.equipmentSlotGroups[equipementSlot];
+		}
+		return equipementSlot.children.length > 0;
+	}
+
 	equipItem(item, equipementSlot) {
-		let slot = this.equipmentSlots[equipementSlot];
-		if (slot.children.length > 0) {
+		let slotGroup = this.equipmentSlotGroups[equipementSlot];
+		if (this.isSlotEquipped(slotGroup)) {
 			this.unequipItem();
 		}
 		// Offsets are applied to the slot itself to respect the slot rotation
 		if (isDefined(item.graphic.offsetX)) {
-			slot.translation.x = slot.originalTranslation.x + item.graphic.offsetX * 2;
+			slotGroup.translation.x = slotGroup.originalTranslation.x + item.graphic.offsetX * 2;
 		} else {
-			slot.translation.x = slot.originalTranslation.x;
+			slotGroup.translation.x = slotGroup.originalTranslation.x;
 		}
 		if (isDefined(item.graphic.offsetY)) {
-			slot.translation.y = slot.originalTranslation.y + item.graphic.offsetY * 2;
+			slotGroup.translation.y = slotGroup.originalTranslation.y + item.graphic.offsetY * 2;
 		} else {
-			slot.translation.y = slot.originalTranslation.y;
+			slotGroup.translation.y = slotGroup.originalTranslation.y;
 		}
-		slot.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
+		slotGroup.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
+
+		this.equippedItems[equipementSlot] = item;
 	}
 
 	unequipItem(equipementSlot) {
-		this.equipmentSlots[equipementSlot].children[0].remove();
+		let slotGroup = this.equipmentSlotGroups[equipementSlot];
+		if (!this.isSlotEquipped(equipementSlot)) {
+			return;
+		}
+		slotGroup.children[0].remove();
+		this.equippedItems[equipementSlot] = null;
+	}
+
+	getEquippedItem(equipementSlot) {
+		return this.equippedItems[equipementSlot];
 	}
 }
 
