@@ -175,6 +175,14 @@ function every() {
 	}
 }
 
+(function preloadRecipes() {
+	for (let itemName in Recipes) {
+		let recipe = Recipes[itemName];
+		recipe.item = Items[itemName];
+		recipe.name = itemName;
+	}
+})();
+
 const RecipesHelper = {
 	/**
 	 *

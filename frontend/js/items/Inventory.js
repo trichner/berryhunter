@@ -57,17 +57,22 @@ class Inventory {
 	}
 
 	addItem(item, count) {
-		this.slots.some(function (slot) {
+		let isItemPresent = this.slots.some(function (slot) {
 			if (slot.isFilled()) {
 				if (slot.item === item) {
 					slot.addCount(count);
 					return true;
 				}
-			} else {
-				slot.setItem(item, count);
-				return true;
 			}
 		});
+		if (!isItemPresent) {
+			this.slots.some(function (slot) {
+				if (!slot.isFilled()) {
+					slot.setItem(item, count);
+					return true;
+				}
+			})
+		}
 		this.onChange();
 	}
 

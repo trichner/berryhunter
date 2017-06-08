@@ -43,10 +43,18 @@ class ClickableIcon extends Two.Group {
 				this.onClick(event);
 			}
 		}.bind(this));
+
+		if (this.clickable) {
+			this.domElement.classList.add('clickable');
+		}
 	}
 
 	setClickable(toggle) {
 		this.clickable = toggle;
+		if (isUndefined(this.domElement)){
+			// domElement is not yet loaded, so skip class modification (it will be done onDomReady)
+			return;
+		}
 		if (toggle) {
 			this.domElement.classList.add('clickable');
 		} else {

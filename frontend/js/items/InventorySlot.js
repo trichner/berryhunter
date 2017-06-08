@@ -85,7 +85,7 @@ class InventorySlot {
 
 	setCount(count) {
 		this.count = count;
-		if (this.count === 1) {
+		if (this.count <= 1) {
 			this.countText.visible = false;
 		} else {
 			this.countText.visible = true;
@@ -94,6 +94,7 @@ class InventorySlot {
 	}
 
 	addCount(count) {
+		count = count || 1;
 		this.setCount(this.count + count);
 	}
 
@@ -105,6 +106,7 @@ class InventorySlot {
 			this.inventory.deactivateSlot(EquipmentHelper.getItemEquipmentSlot(this.item));
 		}
 		this.item = null;
+		this.setCount(0);
 		this.deactivate();
 	}
 
