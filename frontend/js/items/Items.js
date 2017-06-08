@@ -166,23 +166,26 @@ const Items = {
 	 ***********************************/
 	Campfire: {
 		icon: {file: 'campFireIcon'},
-		// TODO
 		graphic: {
-			file: 'campFireIcon',
+			file: 'campFire',
 			size: 50
 		},
 		type: ItemType.PLACEABLE
 	},
 	BigCampfire: {
-		// TODO
 		icon: {file: 'bigCampFireIcon'},
-		graphic: {file: ''},
+		graphic: {
+			file: 'bigCampFire',
+			size: 65
+		},
 		type: ItemType.PLACEABLE
 	},
 	Workbench: {
 		icon: {file: 'workbenchIcon'},
-		// TODO
-		graphic: {file: ''},
+		graphic: {
+			file: 'workbench',
+			size: 40
+		},
 		type: ItemType.PLACEABLE
 	},
 	Chest: {
