@@ -23,46 +23,21 @@ class InventorySlot {
 		this.count = 0;
 		this.active = false;
 
-		this.group = new Two.Group();
-		this.background = new Two.RoundedRectangle(0, 0, size, size, size * 0.1);
-		this.group.add(this.background);
-		this.background.noStroke();
-		this.background.fill = InventorySlot.backgroundColors.empty;
-
-		this.iconGroup = new Two.Group();
-		this.group.add(this.iconGroup);
-
-		// let countGroup = new Two.Group();
-		// this.group.add(countGroup);
-		// countGroup.translation.set(
-		// 	this.size
-		// )
-
+		this.clickableIcon = new ClickableIcon(size);
 
 		let fontSize = this.size * 0.25;
 		this.countText =
 			new Two.Text(0,
-				this.size * (0.5 - InventorySlot.relativePadding) - fontSize / 2,
-				this.size * (0.5 - InventorySlot.relativePadding) - fontSize / 2,
+				this.size * (0.5 - ClickableIcon.relativePadding) - fontSize / 2,
+				this.size * (0.5 - ClickableIcon.relativePadding) - fontSize / 2,
 				{
 					visible: false,
-					fill: InventorySlot.countColors.font,
-					// stroke : InventorySlot.countColors.outline,
-					// linewidth: 0.5,
+					fill: ClickableIcon.countColors.font,
 					size: fontSize
 				});
-		this.group.add(this.countText);
-	}
+		this.clickableIcon.add(this.countText);
 
-	onDomReady() {
-		this.domElement = this.group._renderer.elem;
-		this.domElement.addEventListener('pointerup', function (event) {
-			event.stopPropagation();
-		});
-		this.domElement.addEventListener('pointerdown', function (event) {
-			event.stopPropagation();
-		});
-		this.domElement.addEventListener('click', function (event) {
+		this.clickableIcon.onClick = function (event) {
 			if (!this.isFilled()) {
 				return;
 			}
@@ -81,12 +56,7 @@ class InventorySlot {
 					// Right Click
 					break;
 			}
-			event.stopPropagation();
-		}.bind(this));
-	}
-
-	static margin(size) {
-		return InventorySlot.relativeMargin * size;
+		}.bind(this);
 	}
 
 	/**
@@ -101,19 +71,15 @@ class InventorySlot {
 	setItem(item, count) {
 		count = count || 1;
 		this.item = item;
-		this.itemIcon =
-			new InjectedSVG(
-				item.icon.svg,
-				0, 0,
-				this.size * (0.5 - InventorySlot.relativePadding));
-		this.iconGroup.add(this.itemIcon);
-		this.background.fill = InventorySlot.backgroundColors.filled;
-
+		this.clickableIcon.setIconGraphic(item.icon.svg);
 
 		this.setCount(count);
 
-		if (item.type === ItemType.EQUIPMENT) {
-			this.domElement.classList.add('clickable');
+		switch (item.type) {
+			case ItemType.EQUIPMENT:
+			case ItemType.PLACEABLE:
+				this.clickableIcon.setClickable(true);
+				break;
 		}
 	}
 
@@ -132,9 +98,8 @@ class InventorySlot {
 	}
 
 	dropItem() {
-		this.itemIcon.remove();
-		delete this.itemIcon;
-		this.domElement.classList.remove('clickable');
+		this.clickableIcon.removeIconGraphic();
+		this.clickableIcon.setClickable(false);
 
 		if (this.isActive()) {
 			this.inventory.deactivateSlot(EquipmentHelper.getItemEquipmentSlot(this.item));
@@ -144,16 +109,12 @@ class InventorySlot {
 	}
 
 	activate() {
-		this.background.fill = InventorySlot.backgroundColors.active;
+		this.clickableIcon.activate();
 		this.active = true;
 	}
 
 	deactivate() {
-		if (this.isFilled()) {
-			this.background.fill = InventorySlot.backgroundColors.filled;
-		} else {
-			this.background.fill = InventorySlot.backgroundColors.empty;
-		}
+		this.clickableIcon.deactivate();
 		this.active = false;
 	}
 
@@ -166,14 +127,4 @@ class InventorySlot {
 	}
 }
 
-InventorySlot.relativeMargin = 0.1;
-InventorySlot.relativePadding = 0.1;
-InventorySlot.countColors = {
-	font: 'white',
-	// outline: 'white'
-};
-InventorySlot.backgroundColors = {
-	empty: 'rgba(0, 0, 0, 0.6)',
-	filled: 'rgba(64, 64, 64, 0.6)',
-	active: 'rgba(255, 255, 255, 0.6)'
-};
+

@@ -156,14 +156,14 @@ class Controls {
 						break;
 					case 'PLACING':
 						let placedItem = this.character.getEquippedItem(EquipmentSlot.PLACEABLE);
-						// this.character.unequipItem(EquipmentSlot.PLACEABLE);
 
 						if (MapEditor.isActive()) {
-							new Placeable(
+							let placeableGameobject = new Placeable(
 								placedItem,
 								this.character.getX() + Math.cos(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
 								this.character.getY() + Math.sin(this.character.getRotation()) * Constants.PLACEMENT_RANGE
 							);
+							gameMap.objects.push(placeableGameobject);
 							player.inventory.removeItem(placedItem, 1);
 						} else {
 							// TODO communicate placing to backend

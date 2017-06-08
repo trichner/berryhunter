@@ -1,7 +1,7 @@
 class Inventory {
 	constructor(character) {
 		this.character = character;
-		this.equipedItem = null;
+		this.craftableRecipes = [];
 
 		this.height = Relative.height(7);
 
@@ -15,7 +15,9 @@ class Inventory {
 		this.slots = new Array(Constants.INVENTORY_SLOTS);
 
 		let inventoryWidth = this.slots.length * this.height;
-		let margin = InventorySlot.margin(this.height);
+
+
+		let margin = ClickableIcon.relativeMargin * this.height;
 		inventoryWidth += (this.slots.length - 1) * margin;
 		this.group.translation.set(
 			centerX - inventoryWidth / 2,
@@ -24,19 +26,10 @@ class Inventory {
 
 		for (let i = 0; i < this.slots.length; i++) {
 			this.slots[i] = new InventorySlot(this, i, this.height);
-			let slotGroup = this.slots[i].group;
+			let slotGroup = this.slots[i].clickableIcon;
 			slotGroup.translation.x += i * (margin + this.height);
 			this.group.add(slotGroup)
 		}
-
-		let callback = function () {
-			this.slots.forEach(function (slot) {
-				slot.onDomReady();
-			});
-
-			two.unbind('render', callback);
-		}.bind(this);
-		two.bind('render', callback);
 	}
 
 	activateSlot(slotIndex, equipementSlot) {
@@ -67,6 +60,7 @@ class Inventory {
 				return true;
 			}
 		});
+		this.onChange();
 	}
 
 	removeItem(item, count) {
@@ -77,9 +71,6 @@ class Inventory {
 						slot.dropItem();
 					} else {
 						slot.addCount(-count);
-						if (slot.isActive()) {
-							this.ac
-						}
 					}
 					return true;
 				}
@@ -87,6 +78,20 @@ class Inventory {
 		}, this);
 		if (!itemWasRemoved) {
 			console.warn('Tried to remove ' + count + ' item(s) ' + item.name + ' that were not in inventory.');
+		} else {
+			this.onChange();
 		}
+	}
+
+	/**
+	 * Gets called everytime the items or item count in this inventory get changed.
+	 */
+	onChange() {
+		this.craftableRecipes = RecipesHelper.getCraftableRecipes(this);
+		Crafting.displayAvailableCrafts(this.craftableRecipes);
+	}
+
+	getCraftableRecipes() {
+		return this.craftableRecipes;
 	}
 }
