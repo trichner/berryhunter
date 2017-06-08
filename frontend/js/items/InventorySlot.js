@@ -44,12 +44,12 @@ class InventorySlot {
 			switch (event.button) {
 				// Left Click
 				case 0:
-					let equipementSlot = EquipmentHelper.getItemEquipmentSlot(this.item);
+					let equipmentSlot = EquipmentHelper.getItemEquipmentSlot(this.item);
 					if (this.isActive()) {
 						this.deactivate();
-						this.inventory.deactivateSlot(equipementSlot);
+						this.inventory.deactivateSlot(equipmentSlot);
 					} else {
-						this.inventory.activateSlot(this.index, equipementSlot);
+						this.inventory.activateSlot(this.index, equipmentSlot);
 					}
 					break;
 				case 2:

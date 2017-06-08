@@ -170,7 +170,7 @@ class Character extends GameObject {
 	}
 
 	action() {
-		if (this.isSlotEquipped(this.equipmentSlotGroups.PLACEABLE)) {
+		if (this.isSlotEquipped(EquipmentSlot.PLACEABLE)) {
 			this.currentAction = 'PLACING';
 			return Character.hitAnimationFrameDuration;
 		}
@@ -180,7 +180,7 @@ class Character extends GameObject {
 	}
 
 	altAction() {
-		if (this.isSlotEquipped(this.equipmentSlotGroups.PLACEABLE)) {
+		if (this.isSlotEquipped(EquipmentSlot.PLACEABLE)) {
 			this.currentAction = false;
 			return 0;
 		}
@@ -224,18 +224,15 @@ class Character extends GameObject {
 		}
 	}
 
-	isSlotEquipped(equipementSlot) {
-		if (typeof equipementSlot === 'string') {
-			equipementSlot = this.equipmentSlotGroups[equipementSlot];
-		}
-		return equipementSlot.children.length > 0;
+	isSlotEquipped(equipmentSlot) {
+		return this.equippedItems[equipmentSlot] !== null;
 	}
 
-	equipItem(item, equipementSlot) {
-		let slotGroup = this.equipmentSlotGroups[equipementSlot];
-		if (this.isSlotEquipped(slotGroup)) {
-			this.unequipItem();
-		}
+	equipItem(item, equipmentSlot) {
+		let slotGroup = this.equipmentSlotGroups[equipmentSlot];
+		// if (this.isSlotEquipped(equipmentSlot)) {
+		// 	this.unequipItem(equipmentSlot);
+		// }
 		// Offsets are applied to the slot itself to respect the slot rotation
 		if (isDefined(item.graphic.offsetX)) {
 			slotGroup.translation.x = slotGroup.originalTranslation.x + item.graphic.offsetX * 2;
@@ -249,20 +246,20 @@ class Character extends GameObject {
 		}
 		slotGroup.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
 
-		this.equippedItems[equipementSlot] = item;
+		this.equippedItems[equipmentSlot] = item;
 	}
 
-	unequipItem(equipementSlot) {
-		let slotGroup = this.equipmentSlotGroups[equipementSlot];
-		if (!this.isSlotEquipped(equipementSlot)) {
+	unequipItem(equipmentSlot) {
+		let slotGroup = this.equipmentSlotGroups[equipmentSlot];
+		if (!this.isSlotEquipped(equipmentSlot)) {
 			return;
 		}
 		slotGroup.children[0].remove();
-		this.equippedItems[equipementSlot] = null;
+		this.equippedItems[equipmentSlot] = null;
 	}
 
-	getEquippedItem(equipementSlot) {
-		return this.equippedItems[equipementSlot];
+	getEquippedItem(equipmentSlot) {
+		return this.equippedItems[equipmentSlot];
 	}
 }
 

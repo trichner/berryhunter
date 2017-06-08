@@ -32,20 +32,31 @@ class Inventory {
 		}
 	}
 
-	activateSlot(slotIndex, equipementSlot) {
+	activateSlot(slotIndex, equipmentSlot) {
+		// 1st: Deactivate all other slots that match the same equipment slot
 		for (let i = 0; i < this.slots.length; i++) {
 			let slot = this.slots[i];
-			if (i === slotIndex) {
-				slot.activate();
-				this.character.equipItem(slot.item, equipementSlot);
-			} else {
-				slot.deactivate();
+			if (i !== slotIndex) {
+				if (slot.isFilled()) {
+					let itemEquipmentSlot = EquipmentHelper.getItemEquipmentSlot(slot.item);
+					if (itemEquipmentSlot === equipmentSlot) {
+						slot.deactivate();
+						this.deactivateSlot(itemEquipmentSlot);
+					}
+				} else {
+					// There are no empty slots in between, so all items have now been checked.
+					break;
+				}
 			}
 		}
+
+		let slot = this.slots[slotIndex];
+		slot.activate();
+		this.character.equipItem(slot.item, equipmentSlot);
 	}
 
-	deactivateSlot(equipementSlot) {
-		this.character.unequipItem(equipementSlot);
+	deactivateSlot(equipmentSlot) {
+		this.character.unequipItem(equipmentSlot);
 	}
 
 	addItem(item, count) {

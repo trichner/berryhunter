@@ -17,12 +17,7 @@ class ClickableIcon extends Two.Group {
 			this.setIconGraphic(svg);
 		}
 
-		let callback = function () {
-			this.onDomReady();
-
-			two.unbind('render', callback);
-		}.bind(this);
-		two.bind('render', callback);
+		two.once('render', this.onDomReady, this);
 	}
 
 	onDomReady() {
