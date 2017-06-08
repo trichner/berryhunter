@@ -43,9 +43,6 @@ class Inventory {
 						slot.deactivate();
 						this.deactivateSlot(itemEquipmentSlot);
 					}
-				} else {
-					// There are no empty slots in between, so all items have now been checked.
-					break;
 				}
 			}
 		}
