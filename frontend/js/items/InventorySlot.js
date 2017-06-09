@@ -11,14 +11,6 @@ class InventorySlot {
 		this.index = index;
 		this.size = size;
 
-		/**
-		 *
-		 * @type {{
-					iconFile: String,
-					type: ItemType,
-					svg: Node
-				}}
-		 */
 		this.item = null;
 		this.count = 0;
 		this.active = false;
@@ -59,15 +51,6 @@ class InventorySlot {
 		}.bind(this);
 	}
 
-	/**
-	 *
-	 * @param {{
-					iconFile: String,
-					type: ItemType,
-					svg: Node
-				}} item
-	 * @param {Number} count
-	 */
 	setItem(item, count) {
 		count = count || 1;
 		this.item = item;

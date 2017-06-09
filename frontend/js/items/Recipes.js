@@ -195,12 +195,22 @@ const Recipes = {
  * Combinators
  */
 
+/**
+ * Any of the provided placeables have to be nearby.
+ *
+ * @returns {{operator: string, parameters: Array}}
+ */
 function any() {
 	return {
 		operator: 'or',
 		parameters: Array.from(arguments)
 	}
 }
+/**
+ * All of the provided placeables have to be nearby.
+ *
+ * @returns {{operator: string, parameters: Array}}
+ */
 function every() {
 	return {
 		operator: 'and',
@@ -210,9 +220,14 @@ function every() {
 
 (function preloadRecipes() {
 	for (let itemName in Recipes) {
-		let recipe = Recipes[itemName];
-		recipe.item = Items[itemName];
-		recipe.name = itemName;
+		// TODO Remove Recipes that don't have an icon (yet)
+		if (!Items[itemName].icon.file) {
+			delete Recipes[itemName];
+		} else {
+			let recipe = Recipes[itemName];
+			recipe.item = Items[itemName];
+			recipe.name = itemName;
+		}
 	}
 })();
 
@@ -269,7 +284,7 @@ const RecipesHelper = {
 		 * Get placeables in view as a first rough check
 		 */
 		let getObjectsInRange;
-		if (isFunction(gameMap.getObjectsInRange)){
+		if (isFunction(gameMap.getObjectsInRange)) {
 			getObjectsInRange = gameMap.getObjectsInRange.bind(gameMap, player.character.getPosition(), Constants.CRAFTING_RANGE);
 		} else {
 			getObjectsInRange = gameMap.getObjectsInView
