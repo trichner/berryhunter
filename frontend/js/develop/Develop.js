@@ -79,6 +79,13 @@ const Develop = {
 
 	setupItemAdding: function () {
 		let select = document.getElementById('develop_itemSelect');
+
+		let optionGroups = {};
+		for (let itemType in ItemType){
+			optionGroups[itemType] = htmlToElement('<optgroup label="' + itemType + '"></optgroup>');
+			select.appendChild(optionGroups[itemType]);
+		}
+
 		for (let item in Items) {
 			if (!Items.hasOwnProperty(item)) {
 				continue;
@@ -90,7 +97,7 @@ const Develop = {
 				continue;
 			}
 
-			select.appendChild(htmlToElement('<option value="' + item + '">' + item + '</option>'));
+			optionGroups[Items[item].type].appendChild(htmlToElement('<option value="' + item + '">' + item + '</option>'));
 		}
 
 		document
