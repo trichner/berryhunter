@@ -244,9 +244,28 @@ const RecipesHelper = {
 	},
 
 	checkNearbys(recipes){
+		let recipesWithNear = [];
+		let recipesWithoutNear = [];
+		recipes.forEach(function (recipe) {
+			if (isDefined(recipe.nearby)) {
+				recipesWithNear.push(recipe);
+			} else {
+				recipesWithoutNear.push(recipe);
+			}
+		});
+
+		if (recipesWithNear.length === 0) {
+			return recipesWithoutNear;
+		}
+
 		let placeablesInView = gameMap.getObjectsInView().filter(function (gameObject) {
 			return gameObject.constructor === Placeable;
 		});
+
+		if (placeablesInView.length === 0) {
+			return recipesWithoutNear;
+		}
+
 		let placeablesNearby = {};
 
 		function isNearby(placeableItem) {
@@ -265,7 +284,7 @@ const RecipesHelper = {
 			}
 		}
 
-		return recipes.filter(function (recipe) {
+		recipesWithNear = recipesWithNear.filter(function (recipe) {
 			if (isDefined(recipe.nearby.operator)) {
 				// Its a combinator
 				switch (recipe.nearby.operator) {
@@ -285,5 +304,7 @@ const RecipesHelper = {
 				return isNearby(recipe.nearby);
 			}
 		});
+
+		return recipesWithNear.concat(recipesWithoutNear);
 	}
 };

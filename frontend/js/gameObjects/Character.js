@@ -230,9 +230,6 @@ class Character extends GameObject {
 
 	equipItem(item, equipmentSlot) {
 		let slotGroup = this.equipmentSlotGroups[equipmentSlot];
-		// if (this.isSlotEquipped(equipmentSlot)) {
-		// 	this.unequipItem(equipmentSlot);
-		// }
 		// Offsets are applied to the slot itself to respect the slot rotation
 		if (isDefined(item.graphic.offsetX)) {
 			slotGroup.translation.x = slotGroup.originalTranslation.x + item.graphic.offsetX * 2;

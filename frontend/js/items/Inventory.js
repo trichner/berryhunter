@@ -2,6 +2,7 @@ class Inventory {
 	constructor(character) {
 		this.character = character;
 		this.craftableRecipes = [];
+		this.availableCrafts = [];
 
 		this.height = Relative.height(7);
 
@@ -30,6 +31,17 @@ class Inventory {
 			slotGroup.translation.x += i * (margin + this.height);
 			this.group.add(slotGroup)
 		}
+
+		// Register movement listener to check for nearby craft requirements
+		let super_setPosition = character.setPosition;
+		let inventory = this;
+		character.setPosition = function (x, y) {
+			super_setPosition.call(this, x, y);
+			if (inventory.craftableRecipes.length > 0) {
+				inventory.availableCrafts = RecipesHelper.checkNearbys(inventory.craftableRecipes);
+				Crafting.displayAvailableCrafts(inventory.availableCrafts);
+			}
+		}.bind(character);
 	}
 
 	activateSlot(slotIndex, equipmentSlot) {
@@ -101,10 +113,7 @@ class Inventory {
 	 */
 	onChange() {
 		this.craftableRecipes = RecipesHelper.getCraftableRecipes(this);
-		Crafting.displayAvailableCrafts(this.craftableRecipes);
-	}
-
-	getCraftableRecipes() {
-		return this.craftableRecipes;
+		this.availableCrafts = RecipesHelper.checkNearbys(this.craftableRecipes);
+		Crafting.displayAvailableCrafts(this.availableCrafts);
 	}
 }
