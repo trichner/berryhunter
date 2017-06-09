@@ -198,13 +198,13 @@ const Recipes = {
 function any() {
 	return {
 		operator: 'or',
-		parameters: arguments
+		parameters: Array.from(arguments)
 	}
 }
 function every() {
 	return {
 		operator: 'and',
-		parameters: arguments
+		parameters: Array.from(arguments)
 	}
 }
 
@@ -220,7 +220,7 @@ const RecipesHelper = {
 	/**
 	 *
 	 * @param {Inventory} inventory
-	 * @return List of recipes where enough materials are available
+	 * @return Array.<*> of recipes where enough materials are available
 	 */
 	getCraftableRecipes: function (inventory) {
 		let availableItems = {};
@@ -246,6 +246,10 @@ const RecipesHelper = {
 	checkNearbys(recipes){
 		let recipesWithNear = [];
 		let recipesWithoutNear = [];
+
+		/*
+		 * Step 1: Sort recipes by having a 'nearby' requirement or not
+		 */
 		recipes.forEach(function (recipe) {
 			if (isDefined(recipe.nearby)) {
 				recipesWithNear.push(recipe);
@@ -254,18 +258,39 @@ const RecipesHelper = {
 			}
 		});
 
+		/*
+		 * No recipes with nearby requirements - nothing to do here
+		 */
 		if (recipesWithNear.length === 0) {
 			return recipesWithoutNear;
 		}
 
-		let placeablesInView = gameMap.getObjectsInView().filter(function (gameObject) {
+		/*
+		 * Get placeables in view as a first rough check
+		 */
+		let getObjectsInRange;
+		if (isFunction(gameMap.getObjectsInRange)){
+			getObjectsInRange = gameMap.getObjectsInRange.bind(gameMap, player.character.getPosition(), Constants.CRAFTING_RANGE);
+		} else {
+			getObjectsInRange = gameMap.getObjectsInView
+		}
+
+		let placeablesInView = getObjectsInRange().filter(function (gameObject) {
 			return gameObject.constructor === Placeable;
 		});
 
+		/*
+		 * No placeables in sight, nothing to check
+		 */
 		if (placeablesInView.length === 0) {
 			return recipesWithoutNear;
 		}
 
+		/**
+		 * Cache of specific placeables (like Campfire or Workbench) that are within crafting range - or not
+		 *
+		 * @type {{Placeable: boolean}}
+		 */
 		let placeablesNearby = {};
 
 		function isNearby(placeableItem) {
@@ -275,7 +300,7 @@ const RecipesHelper = {
 				let nearby = placeablesInView.some(function (placeable) {
 					if (placeable.is(placeableItem)) {
 						let distance = placeable.getPosition().distanceToSquared(player.character.getPosition());
-						return distance <= Math.pow(Constants.CRAFTING_RANGE / 2, 2);
+						return distance <= Math.pow(Constants.CRAFTING_RANGE, 2);
 					}
 					return false;
 				});
