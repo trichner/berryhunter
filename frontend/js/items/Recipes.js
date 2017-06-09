@@ -121,12 +121,45 @@ const Recipes = {
 		},
 		craftingTime: 10
 	},
+	BigCampfire: {
+		materials: {
+			Wood: 40,
+			Stone: 10,
+			Campfire: 1
+		},
+		craftingTime: 10
+	},
 	Workbench: {
 		materials: {
 			Wood: 40,
 			Stone: 20
 		},
 		craftingTime: 15
+	},
+	Chest: {
+		materials: {
+			Wood: 60,
+			Stone: 20,
+			Bronze: 10
+		},
+		craftingTime: 20
+	},
+	BigChest: {
+		materials: {
+			Wood: 100,
+			Stone: 30,
+			Bronze: 20,
+			Chest: 1
+		},
+		craftingTime: 20
+	},
+	Furnace: {
+		materials: {
+			Wood: 150,
+			Stone: 100,
+			Bronze: 50
+		},
+		craftingTime: 20
 	},
 
 	/***********************************

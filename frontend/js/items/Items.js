@@ -206,6 +206,14 @@ const Items = {
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
+	Seeds: {
+		icon: {file: 'seedIcon'},
+		graphic: {
+			file: '../berryBush',
+			size: 25
+		},
+		type: ItemType.PLACEABLE
+	},
 
 	/***********************************
 	 * WALLS
@@ -301,10 +309,6 @@ const Items = {
 	Berry: {
 		icon: {file: 'berryIcon'},
 		type: ItemType.CONSUMABLE
-	},
-	Seeds: {
-		icon: {file: 'seedIcon'},
-		type: ItemType.PLACEABLE
 	},
 	BerryBowl: {
 		icon: {file: 'berryBowlIcon'},
