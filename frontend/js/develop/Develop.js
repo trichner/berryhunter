@@ -23,8 +23,6 @@ const Develop = {
 		this.active = true;
 		AABBs.setup();
 		gameObjectClasses.DebugCircle = DebugCircle;
-		// Replace with NOOP - DebugCircle doesn't need another AABB
-		// DebugCircle.prototype.updateAABB = function () {};
 
 		this.setupDevelopPanel();
 		this.logs = {
