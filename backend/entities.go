@@ -11,14 +11,14 @@ import (
 )
 
 const (
-	typeNone          = "NONE"
+	typeDebugCircle   = "DebugCircle"
 	typeBorder        = "Border"
 	typeRoundTree     = "RoundTree"
 	typeMarioTree     = "MarioTree"
 	typePlayer        = "Character"
 	typeSaberToothCat = "SaberToothCat"
 	typeStone         = "Stone"
-	typeBronze = "Bronze"
+	typeBronze        = "Bronze"
 	typeBerryBush     = "BerryBush"
 )
 
@@ -30,7 +30,38 @@ type Entity interface {
 	Rot() float32
 	Radius() float32
 	Type() string
-	Body() *chipmunk.Body
+	AABB() chipmunk.AABB
+}
+
+//
+type debugCircleShapeEntity struct {
+	ecs.BasicEntity
+	circle     *chipmunk.Shape
+	entityType string
+}
+
+func (e *debugCircleShapeEntity) Type() string {
+	return e.entityType
+}
+
+func (e *debugCircleShapeEntity) X() float32 {
+	return float32(e.circle.GetAsCircle().Position.X)
+}
+
+func (e *debugCircleShapeEntity) Y() float32 {
+	return float32(e.circle.GetAsCircle().Position.Y)
+}
+
+func (e *debugCircleShapeEntity) AABB() chipmunk.AABB {
+	return e.circle.AABB()
+}
+
+func (e *debugCircleShapeEntity) Rot() float32 {
+	return 0
+}
+
+func (e *debugCircleShapeEntity) Radius() float32 {
+	return float32(e.circle.GetAsCircle().Radius)
 }
 
 //---- entity
@@ -57,8 +88,8 @@ func (e *entity) Y() float32 {
 	return float32(e.body.Position().Y)
 }
 
-func (e *entity) Body() *chipmunk.Body {
-	return e.body
+func (e *entity) AABB() chipmunk.AABB {
+	return e.body.Shapes[0].AABB()
 }
 
 func (e *entity) Rot() float32 {
@@ -103,6 +134,18 @@ func (p *player) Rot() float32 {
 const playerCollisionGroup = -1
 func NewPlayer(c *net.Client) *player {
 	e := newCircleEntity(0.5, 1)
+
+	sensor := chipmunk.NewCircle(vect.Vect{1, 0}, 0.25)
+	sensor.IsSensor = true
+	sensor.Layer = actionCollisionLayer
+	sensor.UserData = "SENSOR"
+
+	e.body.AddShape(sensor)
+	e.body.CallbackHandler = &Collidable{}
+	e.body.UserData = e
+
+	e.body.UpdateShapes()
+
 	e.entityType = typePlayer
 	for _, s := range e.body.Shapes {
 		s.Group = playerCollisionGroup
@@ -122,7 +165,6 @@ const dist2px = 120.0
 
 func mapToEntityDTO(e Entity) *EntityDTO {
 
-	bdy := e.Body()
 	return &EntityDTO{
 		Id:     e.ID(),
 		X:      e.X() * dist2px,
@@ -130,7 +172,15 @@ func mapToEntityDTO(e Entity) *EntityDTO {
 		Rot:    e.Rot(),
 		Radius: e.Radius() * dist2px,
 		Type:   e.Type(),
-		Aabb:   mapToAabbDTO(bdy),
+		Aabb:   mapToAabbDTO(e.AABB()),
+	}
+}
+
+func newDebugEntity(shape *chipmunk.Shape) Entity {
+	return &debugCircleShapeEntity{
+		BasicEntity: ecs.NewBasic(),
+		circle:      shape,
+		entityType:  typeDebugCircle,
 	}
 }
 
@@ -138,16 +188,12 @@ type floatwrapper struct {
 	f float32
 }
 
-func mapToAabbDTO(b *chipmunk.Body) *AabbDTO {
-	if b == nil || len(b.Shapes) == 0 {
-		return nil
-	}
-	s := b.Shapes[0]
+func mapToAabbDTO(bb chipmunk.AABB) *AabbDTO {
 	aabb := &AabbDTO{
-		LowerX: sanititzeFloat(float32(s.AABB().Lower.X) * dist2px),
-		LowerY: sanititzeFloat(float32(s.AABB().Lower.Y) * dist2px),
-		UpperX: sanititzeFloat(float32(s.AABB().Upper.X) * dist2px),
-		UpperY: sanititzeFloat(float32(s.AABB().Upper.Y) * dist2px),
+		LowerX: sanititzeFloat(float32(bb.Lower.X) * dist2px),
+		LowerY: sanititzeFloat(float32(bb.Lower.Y) * dist2px),
+		UpperX: sanititzeFloat(float32(bb.Upper.X) * dist2px),
+		UpperY: sanititzeFloat(float32(bb.Upper.Y) * dist2px),
 	}
 	return aabb
 }
