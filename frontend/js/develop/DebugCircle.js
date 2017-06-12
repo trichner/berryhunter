@@ -4,15 +4,15 @@ class DebugCircle extends GameObject {
 	constructor(x, y, radius) {
 		super(x, y, radius);
 
-		this.timeToLife = 1000;
+		this.timeToLife = 300;
 
-		// two.bind('update', (frameCount, timeDelta) => {
-		// 	this.timeToLife-= timeDelta;
-		// 	if (this.timeToLife < 0) {
-		// 		this.hide();
-		// 		delete gameMap.objects[gameMap.id];
-		// 	}
-		// }, this);
+		two.bind('update', (frameCount, timeDelta) => {
+			this.timeToLife-= timeDelta;
+			if (this.timeToLife < 0) {
+				this.hide();
+				delete gameMap.objects[gameMap.id];
+			}
+		}, this);
 	}
 
 	visibleOnMinimap() {
