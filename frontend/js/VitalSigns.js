@@ -8,7 +8,11 @@ class VitalSigns {
 
 		this.group = new Two.Group();
 		this.group.translation.set(
-
-		)
+			height - Relative.width(7.5),
+			width - Relative.width(15)
+		);
+		let background = new Two.RoundedRectangle(0, 0, Relative.width(7.5), Relative.width(15), 5);
+		this.group.add(background);
+		background.fill = ClickableIcon.backgroundColors.empty;
 	}
 }
