@@ -15,6 +15,8 @@ class Player {
 
 		this.inventory = new Inventory(this.character);
 
+		this.vitalSigns = new VitalSigns();
+
 		this.craftableItems = [];
 	}
 }

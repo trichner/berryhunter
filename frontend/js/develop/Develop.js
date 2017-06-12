@@ -7,6 +7,7 @@ const Develop = {
 		showAABBs: true,
 		cameraBoundaries: false,
 		elementColor: 'red',
+		linewidth: 2,
 		/**
 		 * Aus wievielen Werten wird maximal der Durchschnitt und die
 		 * mittlere absolute Abweichung gebildet
@@ -21,6 +22,8 @@ const Develop = {
 	setup: function () {
 		this.active = true;
 		AABBs.setup();
+		gameObjectClasses.DebugCircle = DebugCircle;
+
 		this.setupDevelopPanel();
 		this.logs = {
 			fps: [],
