@@ -93,6 +93,7 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 			miniMap.add(gameObject);
 		}
 		this.objects[entity.id] = gameObject;
+		gameObject.id = entity.id;
 		if (Develop.isActive()) {
 			gameObject.updateAABB(entity.aabb);
 		}

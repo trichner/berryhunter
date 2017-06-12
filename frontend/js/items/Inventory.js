@@ -15,11 +15,9 @@ class Inventory {
 		 */
 		this.slots = new Array(Constants.INVENTORY_SLOTS);
 
-		let inventoryWidth = this.slots.length * this.height;
-
-
 		let margin = ClickableIcon.relativeMargin * this.height;
-		inventoryWidth += (this.slots.length - 1) * margin;
+		let inventoryWidth = (this.slots.length - 1) * (this.height + margin);
+
 		this.group.translation.set(
 			centerX - inventoryWidth / 2,
 			height - this.height / 2 - margin

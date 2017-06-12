@@ -10,7 +10,7 @@ class DebugCircle extends GameObject {
 			this.timeToLife-= timeDelta;
 			if (this.timeToLife < 0) {
 				this.hide();
-				removeElement(gameMap.objects, this);
+				delete gameMap.objects[gameMap.id];
 			}
 		}, this);
 	}

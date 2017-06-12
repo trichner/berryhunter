@@ -7,11 +7,12 @@ class VitalSigns {
 		this.satiety = 1000;
 
 		this.group = new Two.Group();
+		groups.overlay.add(this.group);
 		this.group.translation.set(
-			height - Relative.width(7.5),
-			width - Relative.width(15)
+			width - Relative.width(15) / 2,
+			height - Relative.height(12) / 2
 		);
-		let background = new Two.RoundedRectangle(0, 0, Relative.width(7.5), Relative.width(15), 5);
+		let background = new Two.RoundedRectangle(0, 0, Relative.width(15), Relative.height(12), 5);
 		this.group.add(background);
 		background.fill = ClickableIcon.backgroundColors.empty;
 	}
