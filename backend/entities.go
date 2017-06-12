@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"math"
 	"github.com/trichner/death-io/backend/net"
+	"github.com/vova616/chipmunk/transform"
 )
 
 const (
@@ -27,7 +28,7 @@ type Entity interface {
 	ID() uint64
 	X() float32
 	Y() float32
-	Rot() float32
+	Angle() float32
 	Radius() float32
 	Type() string
 	AABB() chipmunk.AABB
@@ -44,19 +45,25 @@ func (e *debugCircleShapeEntity) Type() string {
 	return e.entityType
 }
 
+func (e *debugCircleShapeEntity) Position() vect.Vect {
+
+	t := transform.NewTransform(e.circle.Body.Position(), e.circle.Body.Angle())
+	return t.TransformVect(e.circle.GetAsCircle().Position)
+}
+
 func (e *debugCircleShapeEntity) X() float32 {
-	return float32(e.circle.GetAsCircle().Position.X)
+	return float32(e.Position().X)
 }
 
 func (e *debugCircleShapeEntity) Y() float32 {
-	return float32(e.circle.GetAsCircle().Position.Y)
+	return float32(e.Position().Y)
 }
 
 func (e *debugCircleShapeEntity) AABB() chipmunk.AABB {
 	return e.circle.AABB()
 }
 
-func (e *debugCircleShapeEntity) Rot() float32 {
+func (e *debugCircleShapeEntity) Angle() float32 {
 	return 0
 }
 
@@ -92,8 +99,8 @@ func (e *entity) AABB() chipmunk.AABB {
 	return e.body.Shapes[0].AABB()
 }
 
-func (e *entity) Rot() float32 {
-	return 0
+func (e *entity) Angle() float32 {
+	return float32(e.body.Angle())
 }
 
 func (e *entity) Radius() float32 {
@@ -121,24 +128,20 @@ func NewStaticEntityWithBody(body *staticEntityBody) *entity {
 //---- player
 type player struct {
 	*entity
-	Health   uint
-	Hunger   uint
-	client   *net.Client
-	rotation float32
-}
-
-func (p *player) Rot() float32 {
-	return p.rotation
+	hitSensor *chipmunk.Shape
+	Health    uint
+	Hunger    uint
+	client    *net.Client
 }
 
 const playerCollisionGroup = -1
 func NewPlayer(c *net.Client) *player {
 	e := newCircleEntity(0.5, 1)
 
-	sensor := chipmunk.NewCircle(vect.Vect{1, 0}, 0.25)
+	sensor := chipmunk.NewCircle(vect.Vect{0.75, 0}, 0.25)
 	sensor.IsSensor = true
-	sensor.Layer = actionCollisionLayer
-	sensor.UserData = "SENSOR"
+	sensor.Layer = ressourceCollisionLayer
+	sensor.UserData = "ITEM"
 
 	e.body.AddShape(sensor)
 	e.body.CallbackHandler = &Collidable{}
@@ -150,7 +153,7 @@ func NewPlayer(c *net.Client) *player {
 	for _, s := range e.body.Shapes {
 		s.Group = playerCollisionGroup
 	}
-	p := &player{entity: e, client: c}
+	p := &player{entity: e, client: c, hitSensor: sensor}
 	p.body.UserData = p
 	return p
 }
@@ -169,7 +172,7 @@ func mapToEntityDTO(e Entity) *EntityDTO {
 		Id:     e.ID(),
 		X:      e.X() * dist2px,
 		Y:      e.Y() * dist2px,
-		Rot:    e.Rot(),
+		Rot:    e.Angle(),
 		Radius: e.Radius() * dist2px,
 		Type:   e.Type(),
 		Aabb:   mapToAabbDTO(e.AABB()),

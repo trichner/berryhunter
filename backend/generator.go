@@ -46,13 +46,13 @@ var trees = []staticEntityBody{
 		typeRoundTree,
 		100,
 		1,
-		staticCollisionLayer,
+		staticCollisionLayer | ressourceCollisionLayer,
 	},
 	{
 		typeMarioTree,
 		100,
 		1,
-		staticCollisionLayer,
+		staticCollisionLayer | ressourceCollisionLayer,
 	},
 }
 
@@ -61,19 +61,19 @@ var resources = []staticEntityBody{
 		typeBerryBush,
 		100,
 		0.5,
-		noneCollisionLayer,
+		noneCollisionLayer | ressourceCollisionLayer,
 	},
 	{
 		typeStone,
 		100,
 		0.5,
-		staticCollisionLayer,
+		staticCollisionLayer | ressourceCollisionLayer,
 	},
 	{
 		typeBronze,
 		100,
 		0.5,
-		staticCollisionLayer,
+		staticCollisionLayer | ressourceCollisionLayer,
 	},
 }
 

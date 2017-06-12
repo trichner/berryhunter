@@ -51,7 +51,8 @@ func (n *NetSystem) Update(dt float32) {
 		// DEBUG, add sensors
 		for _, s := range player.body.Shapes {
 			if s.IsSensor {
-				entites = append(entites, mapToEntityDTO(newDebugEntity(s)))
+				e := newDebugEntity(s)
+				entites = append(entites, mapToEntityDTO(e))
 			}
 		}
 
