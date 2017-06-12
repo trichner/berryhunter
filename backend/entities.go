@@ -138,7 +138,7 @@ const playerCollisionGroup = -1
 func NewPlayer(c *net.Client) *player {
 	e := newCircleEntity(0.5, 1)
 
-	sensor := chipmunk.NewCircle(vect.Vect{0.75, 0}, 0.25)
+	sensor := chipmunk.NewCircle(vect.Vect{0.5, 0}, 0.5)
 	sensor.IsSensor = true
 	sensor.Layer = ressourceCollisionLayer
 	sensor.UserData = "ITEM"

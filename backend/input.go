@@ -129,7 +129,6 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 		return
 	}
 
-	//p.body.SetMoment(0)
 	p.body.SetAngle(vect.Float(inputs.Rotation))
 
 	// do we even have inputs?
