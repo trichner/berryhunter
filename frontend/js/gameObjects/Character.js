@@ -12,25 +12,48 @@ class Character extends GameObject {
 
 		this.currentAction = false;
 
-		this.equipmentSlots = {
-			leftHand: null,
-			rightHand: null
-		};
+		// Rotate the character according the 0-angle in drawing space
+		this.shape.rotation = Math.PI / -2;
+
+		/**
+		 * Needs the same properties as EquipmentSlot
+		 */
+		this.equipmentSlotGroups = {};
+		this.equippedItems = {};
+		for (let equipmentSlot in EquipmentSlot) {
+			//noinspection JSUnfilteredForInLoop
+			this.equippedItems[equipmentSlot] = null;
+		}
+
+		let placeableSlot = new Two.Group();
+		this.shape.add(placeableSlot);
+		this.equipmentSlotGroups[EquipmentSlot.PLACEABLE] = placeableSlot;
+		placeableSlot.translation.set(
+			Constants.PLACEMENT_RANGE,
+			0
+		);
+		placeableSlot.opacity = 0.6;
 
 		this.createHands();
+
+		Object.values(this.equipmentSlotGroups).forEach(function (equipmentSlot) {
+			equipmentSlot.originalTranslation = equipmentSlot.translation.clone();
+		})
 	}
 
 	createHands() {
-		this.shape.rotation = Math.PI / -2;
-
 		// TODO Hände unter die Frisur rendern
 		const handAngleDistance = 0.4;
 
-		this.leftHand = this.createHand(-handAngleDistance);
+		this.leftHand = this.createHand(-handAngleDistance).group;
 		this.shape.add(this.leftHand);
 
-		this.rightHand = this.createHand(handAngleDistance);
+
+		let rightHand = this.createHand(handAngleDistance);
+		this.rightHand = rightHand.group;
 		this.shape.add(this.rightHand);
+
+		this.equipmentSlotGroups[EquipmentSlot.HAND] = rightHand.slot;
 	}
 
 	createHand(handAngleDistance) {
@@ -42,6 +65,11 @@ class Character extends GameObject {
 			Math.sin(handAngle + Math.PI * handAngleDistance) * this.size * 0.8,
 		);
 
+		let slotGroup = new Two.Group();
+		group.add(slotGroup);
+		slotGroup.translation.set(-this.size * 0.2, 0);
+		slotGroup.rotation = Math.PI / 2;
+
 		let handShape = new Two.Ellipse(0, 0, this.size * 0.2);
 		group.add(handShape);
 		handShape.fill = '#f2a586';
@@ -50,7 +78,10 @@ class Character extends GameObject {
 
 		group.originalTranslation = group.translation.clone();
 
-		return group;
+		return {
+			group: group,
+			slot: slotGroup
+		};
 	}
 
 	createShape(x, y) {
@@ -139,11 +170,23 @@ class Character extends GameObject {
 	}
 
 	action() {
+		if (this.isSlotEquipped(EquipmentSlot.PLACEABLE)) {
+			this.currentAction = 'PLACING';
+			return Character.hitAnimationFrameDuration;
+		}
+
 		this.currentAction = 'MAIN';
+		return Character.hitAnimationFrameDuration;
 	}
 
 	altAction() {
+		if (this.isSlotEquipped(EquipmentSlot.PLACEABLE)) {
+			this.currentAction = false;
+			return 0;
+		}
+
 		this.currentAction = 'ALT';
+		return Character.hitAnimationFrameDuration;
 	}
 
 	progressHitAnimation(animationFrame) {
@@ -155,6 +198,7 @@ class Character extends GameObject {
 			let hand;
 			switch (this.currentAction) {
 				case 'MAIN':
+				case 'PLACING':
 					hand = this.rightHand;
 					break;
 				case 'ALT':
@@ -180,12 +224,39 @@ class Character extends GameObject {
 		}
 	}
 
-	equipItem(item) {
-		// this.equipmentSlots.leftHand.add(new InjectedSVG(item))
+	isSlotEquipped(equipmentSlot) {
+		return this.equippedItems[equipmentSlot] !== null;
 	}
 
-	unequipItem() {
+	equipItem(item, equipmentSlot) {
+		let slotGroup = this.equipmentSlotGroups[equipmentSlot];
+		// Offsets are applied to the slot itself to respect the slot rotation
+		if (isDefined(item.graphic.offsetX)) {
+			slotGroup.translation.x = slotGroup.originalTranslation.x + item.graphic.offsetX * 2;
+		} else {
+			slotGroup.translation.x = slotGroup.originalTranslation.x;
+		}
+		if (isDefined(item.graphic.offsetY)) {
+			slotGroup.translation.y = slotGroup.originalTranslation.y + item.graphic.offsetY * 2;
+		} else {
+			slotGroup.translation.y = slotGroup.originalTranslation.y;
+		}
+		slotGroup.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
 
+		this.equippedItems[equipmentSlot] = item;
+	}
+
+	unequipItem(equipmentSlot) {
+		let slotGroup = this.equipmentSlotGroups[equipmentSlot];
+		if (!this.isSlotEquipped(equipmentSlot)) {
+			return;
+		}
+		slotGroup.children[0].remove();
+		this.equippedItems[equipmentSlot] = null;
+	}
+
+	getEquippedItem(equipmentSlot) {
+		return this.equippedItems[equipmentSlot];
 	}
 }
 

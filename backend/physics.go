@@ -8,10 +8,12 @@ import (
 )
 
 const (
-	noneCollisionLayer   = 0
-	allCollisionLayer    = -1
-	staticCollisionLayer = 0x1 << 0
-	actionCollisionLayer = 0x1 << 1
+	noneCollisionLayer      = 0
+	allCollisionLayer       = -1
+	staticCollisionLayer    = 0x1 << 0
+	actionCollisionLayer    = 0x1 << 1
+	weaponCollisionLayer    = 0x1 << 2
+	ressourceCollisionLayer = 0x1 << 3
 )
 
 func DumpBodies(s *chipmunk.Space) {

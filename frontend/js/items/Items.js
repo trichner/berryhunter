@@ -1,246 +1,352 @@
-/**
- * Created by XieLong on 21.05.2017.
- */
 const ItemType = {
 	RESOURCE: 'RESOURCE',
-	CONSUMABLE: 'CONSUMABLE',
+	PLACEABLE: 'PLACEABLE',
 	EQUIPMENT: 'EQUIPMENT',
-	PLACEABLE: 'PLACEABLE'
+	CONSUMABLE: 'CONSUMABLE'
 };
 
+/**
+ * Register of available items in the game.
+ *
+ * {{ItemName: {
+ *      icon: {
+ *          file: path relative to /frontend/img/items - '.svg' gets appended
+ *          svg: injected, svg node loaded from file
+ *      },
+ *      graphic: {
+ *          file: path relative to /frontend/img/items - '.svg' gets appended
+ *          svg: injected, svg node loaded from file
+ *          size: optional number, defaults to 100
+ *          offsetX: optional number, defaults to 0
+ *          offsetY: optional number, default to 0
+ *      },
+ *      type: ItemType,
+ *      equipmentSlot: EquipmentSlot},
+ */
 const Items = {
+	/***********************************
+	 * TOOLS
+	 ***********************************/
 	WoodClub: {
 		icon: {file: 'clubWoodIcon'},
-		graphic: {file: 'clubWood'},
-		type: ItemType.EQUIPMENT
+		graphic: {
+			file: 'clubWood',
+			size: 40,
+			offsetX: 15
+		},
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	StoneTool: {
 		icon: {file: 'toolStoneIcon'},
-		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		graphic: {
+			file: 'toolStone',
+			size: 30,
+			offsetX: 10,
+			offsetY: -2.5
+		},
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	BronzeTool: {
-		// TODO
 		icon: {file: 'toolBronzeIcon'},
-		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		graphic: {
+			file: 'toolBronze',
+			size: 30,
+			offsetX: 10,
+			offsetY: -2.5
+		},
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	IronTool: {
-		// TODO
 		icon: {file: 'toolIronIcon'},
-		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		graphic: {
+			file: 'toolIron',
+			size: 30,
+			offsetX: 10,
+			offsetY: -2.5
+		},
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
+
+	/***********************************
+	 * WEAPONS
+	 ***********************************/
 	StoneClub: {
 		icon: {file: 'clubStoneIcon'},
-		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		graphic: {
+			file: 'clubStone',
+			size: 40,
+			offsetX: 15
+		},
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	BronzeSword: {
-		// TODO
 		icon: {file: 'swordBronzeIcon'},
-		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		graphic: {
+			file: 'swordBronze',
+			size: 40,
+			offsetX: 15
+		},
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	IronSword: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
+
+	/***********************************
+	 * Spears
+	 ***********************************/
 	StoneSpear: {
 		icon: {file: 'spearStoneIcon'},
-		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		graphic: {
+			file: 'spearStone',
+			size: 60,
+			offsetX: 20
+		},
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	BronzeSpear: {
-		// TODO
 		icon: {file: 'spearBronzeIcon'},
-		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		graphic: {
+			file: 'spearBronze',
+			size: 60,
+			offsetX: 20
+		},
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	IronSpear: {
 		icon: {file: 'spearIronIcon'},
-		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		graphic: {
+			file: 'spearIron',
+			size: 60,
+			offsetX: 20
+		},
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
+
+	/***********************************
+	 * HAMMERS
+	 ***********************************/
 	StoneHammer: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	BronzeHammer: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
 	IronHammer: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
-		type: ItemType.EQUIPMENT
+		type: ItemType.EQUIPMENT,
+		equipmentSlot: EquipmentSlot.HAND
 	},
+
+	/***********************************
+	 * PLACEABLES
+	 ***********************************/
 	Campfire: {
 		icon: {file: 'campFireIcon'},
-		graphic: {file: ''},
+		graphic: {
+			file: 'campFire',
+			size: 50
+		},
 		type: ItemType.PLACEABLE
 	},
 	BigCampfire: {
-		// TODO
-		iconFile: '',
-		graphic: {file: ''},
+		icon: {file: 'bigCampFireIcon'},
+		graphic: {
+			file: 'bigCampFire',
+			size: 65
+		},
 		type: ItemType.PLACEABLE
 	},
 	Workbench: {
-		// TODO
 		icon: {file: 'workbenchIcon'},
-		graphic: {file: ''},
+		graphic: {
+			file: 'workbench',
+			size: 40
+		},
 		type: ItemType.PLACEABLE
 	},
 	Chest: {
-		iconFile: '',
+		// TODO
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	BigChest: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	Furnace: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
+	Seeds: {
+		icon: {file: 'seedIcon'},
+		graphic: {
+			file: '../berryBush',
+			size: 25
+		},
+		type: ItemType.PLACEABLE
+	},
+
+	/***********************************
+	 * WALLS
+	 ***********************************/
 	WoodWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	WoodSpikyWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	StoneWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	StoneSpikyWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	BronzeWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	BronzeSpikyWall: {
 		// TODO
-		iconFile: '',
-		graphic: {file: ''},
-		type: ItemType.PLACEABLE
-	},
-	WoodDoor: {
-		// TODO
-		iconFile: '',
-		graphic: {file: ''},
-		type: ItemType.PLACEABLE
-	},
-	StoneDoor: {
-		// TODO
-		iconFile: '',
-		graphic: {file: ''},
-		type: ItemType.PLACEABLE
-	},
-	BronceDoor: {
-		// TODO
-		iconFile: '',
-		graphic: {file: ''},
-		type: ItemType.PLACEABLE
-	},
-	IronDoor: {
-		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	IronWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
 	IronSpikyWall: {
 		// TODO
-		iconFile: '',
+		icon: {file: ''},
 		graphic: {file: ''},
 		type: ItemType.PLACEABLE
 	},
+
+	/***********************************
+	 * DOORS
+	 ***********************************/
+	WoodDoor: {
+		// TODO
+		icon: {file: ''},
+		graphic: {file: ''},
+		type: ItemType.PLACEABLE
+	},
+	StoneDoor: {
+		// TODO
+		icon: {file: ''},
+		graphic: {file: ''},
+		type: ItemType.PLACEABLE
+	},
+	BronceDoor: {
+		// TODO
+		icon: {file: ''},
+		graphic: {file: ''},
+		type: ItemType.PLACEABLE
+	},
+	IronDoor: {
+		// TODO
+		icon: {file: ''},
+		graphic: {file: ''},
+		type: ItemType.PLACEABLE
+	},
+
+	/***********************************
+	 * FOOD & HEALING
+	 ***********************************/
 	CookedMeat: {
 		icon: {file: 'meatCookedIcon'},
-		graphic: {file: ''},
 		type: ItemType.CONSUMABLE
 	},
 	RawMeat: {
 		icon: {file: 'meatRawIcon'},
-		graphic: {file: ''},
 		type: ItemType.CONSUMABLE
 	},
 	Berry: {
 		icon: {file: 'berryIcon'},
-		graphic: {file: ''},
-		type: ItemType.CONSUMABLE
-	},
-	Seeds: {
-		icon: {file: 'seedIcon'},
-		graphic: {file: ''},
 		type: ItemType.CONSUMABLE
 	},
 	BerryBowl: {
 		icon: {file: 'berryBowlIcon'},
-		graphic: {file: ''},
 		type: ItemType.CONSUMABLE
 	},
+
+	/***********************************
+	 * RESOURCES
+	 ***********************************/
 	Wood: {
 		icon: {file: 'woodIcon'},
-		graphic: {file: ''},
 		type: ItemType.RESOURCE
 	},
 	Stone: {
 		icon: {file: 'stoneIcon'},
-		graphic: {file: ''},
 		type: ItemType.RESOURCE
 	},
 	Bronze: {
-		// TODO
 		icon: {file: 'bronzeIcon'},
-		graphic: {file: ''},
 		type: ItemType.RESOURCE
 	},
 	Iron: {
-		// TODO
 		icon: {file: 'ironIcon'},
-		graphic: {file: ''},
 		type: ItemType.RESOURCE
 	}
 };
 
 (function preloadItemIcons() {
-	Object.values(Items).forEach(function (item) {
+	for (let itemName in Items) {
+		let item = Items[itemName];
+
+		item.name = itemName;
+
 		if (item.icon && item.icon.file) {
-			registerGameObjectSVG(item, 'img/items/' + item.icon.file + '.svg');
+			registerGameObjectSVG(item.icon, 'img/items/' + item.icon.file + '.svg');
 		}
-	});
+		if (item.graphic && item.graphic.file) {
+			registerGameObjectSVG(item.graphic, 'img/items/' + item.graphic.file + '.svg');
+		}
+	}
 })();

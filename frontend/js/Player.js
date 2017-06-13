@@ -1,7 +1,3 @@
-/**
- * Created by XieLong on 21.05.2017.
- */
-
 class Player {
 	constructor(id, x, y) {
 		gameStarted = true;
@@ -18,5 +14,9 @@ class Player {
 		miniMap.register(this.character);
 
 		this.inventory = new Inventory(this.character);
+
+		this.vitalSigns = new VitalSigns();
+
+		this.craftableItems = [];
 	}
 }

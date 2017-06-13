@@ -1,6 +1,7 @@
 /**
  * Created by raoulzander on 25.04.17.
  */
+'use strict';
 
 const UP_KEYS = [
 	'w'.charCodeAt(0),
@@ -143,18 +144,35 @@ class Controls {
 			this.character.progressHitAnimation(this.hitAnimationTick);
 		} else {
 			if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
-				this.hitAnimationTick = Character.hitAnimationFrameDuration;
-				this.character.action();
+				this.hitAnimationTick = this.character.action();
 				this.character.progressHitAnimation(this.hitAnimationTick);
-				action = {
-					// TODO aktives Item eintragen
-					item: "fist",
-					alt: false
-				};
+				switch (this.character.currentAction) {
+					case 'MAIN':
+						action = {
+							// TODO aktives Item eintragen
+							item: "fist",
+							alt: false
+						};
+						break;
+					case 'PLACING':
+						let placedItem = this.character.getEquippedItem(EquipmentSlot.PLACEABLE);
+
+						if (MapEditor.isActive()) {
+							let placeableGameobject = new Placeable(
+								placedItem,
+								this.character.getX() + Math.cos(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
+								this.character.getY() + Math.sin(this.character.getRotation()) * Constants.PLACEMENT_RANGE
+							);
+							gameMap.objects.push(placeableGameobject);
+							player.inventory.removeItem(placedItem, 1);
+						} else {
+							// TODO communicate placing to backend
+						}
+						break;
+				}
 			}
 			if (anyKeyIsPressed(ALT_ACTION_KEYS) || PointerEvents.pointerDown === ALT_ACTION_BUTTON) {
-				this.hitAnimationTick = Character.hitAnimationFrameDuration;
-				this.character.altAction();
+				this.hitAnimationTick = this.character.altAction();
 				this.character.progressHitAnimation(this.hitAnimationTick);
 				action = {
 					// TODO aktives Item eintragen
@@ -167,20 +185,19 @@ class Controls {
 		let input = {};
 		let hasInput = false;
 
-		if (PointerEvents.moved) {
-			if (Constants.ALWAYS_VIEW_CURSOR) {
-				if (this.lastX !== this.character.getX() ||
-					this.lastY !== this.character.getY()) {
+		if (Constants.ALWAYS_VIEW_CURSOR) {
+			if (PointerEvents.moved ||
+				this.lastX !== this.character.getX() ||
+				this.lastY !== this.character.getY()) {
 
-					input.rotation = this.adjustCharacterRotation();
-					hasInput = true;
-					this.lastX = this.character.getX();
-					this.lastY = this.character.getY();
-				}
-			} else {
 				input.rotation = this.adjustCharacterRotation();
 				hasInput = true;
+				this.lastX = this.character.getX();
+				this.lastY = this.character.getY();
 			}
+		} else if (PointerEvents.moved) {
+			input.rotation = this.adjustCharacterRotation();
+			hasInput = true;
 		}
 
 		if (movement.x !== 0 || movement.y !== 0) {

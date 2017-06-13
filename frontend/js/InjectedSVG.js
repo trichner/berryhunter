@@ -1,10 +1,11 @@
-/**
- * Created by XieLong on 21.05.2017.
- */
-
 class InjectedSVG extends Two.Group {
-	constructor(svg, x, y, size, rotation){
+	constructor(svg, x, y, size, rotation) {
 		super();
+
+		if (isUndefined(svg) || typeof svg.cloneNode !== 'function') {
+			throw svg + ' is not a valid SVG node';
+		}
+
 		this.translation.set(x, y);
 		// group.translation.set(x-size, y-size);
 		let injectionGroup = new Two.Group();
@@ -14,10 +15,8 @@ class InjectedSVG extends Two.Group {
 		// injectionGroup.rotation = rotation;
 		injectionGroup.translation.set(-size, -size);
 
-		let callback = function () {
+		two.once('render', function () {
 			injectionGroup._renderer.elem.appendChild(svg.cloneNode(true));
-			two.unbind('render', callback);
-		}.bind(this);
-		two.bind('render', callback);
+		});
 	}
 }

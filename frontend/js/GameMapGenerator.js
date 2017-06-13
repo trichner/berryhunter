@@ -116,7 +116,7 @@ let GameMapGenerator = {
 				}, {
 					weight: 1,
 					func: () => {
-						return new Gold(rx, ry);
+						return new Bronze(rx, ry);
 					}
 				}, {
 					weight: 10,

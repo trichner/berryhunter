@@ -32,12 +32,12 @@ const AABBs = {
 
 				this.aabb.noFill();
 				this.aabb.stroke = Develop.settings.elementColor;
-				this.aabb.linewidth = 2;
+				this.aabb.linewidth = Develop.settings.linewidth;
 
 				this.aabbConnector = new Two.Line(this.getX(), this.getY(), x, y);
 				groups.gameObjects.add(this.aabbConnector);
-				this.aabbConnector.stroke = 'red';
-				this.aabbConnector.linewidth = 2;
+				this.aabbConnector.stroke = Develop.settings.elementColor;
+				this.aabbConnector.linewidth = Develop.settings.linewidth;
 			} else {
 				this.aabb.translation.set((startX + endX) / 2, (startY + endY) / 2);
 			}
@@ -52,7 +52,7 @@ const AABBs = {
 		GameObject.prototype.showAABB = function () {
 			if (!_.isUndefined(this.aabb)) {
 				this.aabb.stroke = Develop.settings.elementColor;
-				this.aabb.linewidth = 2;
+				this.aabb.linewidth = Develop.settings.linewidth;
 			}
 		};
 	}

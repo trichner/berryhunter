@@ -38,6 +38,12 @@ class GameObject {
 	}
 
 	setPosition(x, y) {
+		if (isDefined(this.desiredPosition) &&
+			this.desiredPosition.x > (x - 0.2) && this.desiredPosition.x < (x + 0.2) &&
+			this.desiredPosition.y > (y - 0.2) && this.desiredPosition.y < (y + 0.2)) {
+			return;
+		}
+
 		if (this.rotateOnPositioning) {
 			this.setRotation(TwoDimensional.angleBetween(this.getX(), this.getY(), x, y));
 		}
@@ -81,6 +87,10 @@ class GameObject {
 		this.shape.rotation = rotation;
 	}
 
+	getRotation() {
+		return this.shape.rotation;
+	}
+
 	show() {
 		groups.gameObjects.add(this.shape);
 	}
@@ -106,7 +116,7 @@ function moveInterpolatedObjects() {
 				gameObject.shape.translation.copy(gameObject.desiredPosition);
 				movementInterpolatedObjects.delete(gameObject);
 			} else {
-				let prevPos = gameObject.shape.translation.clone();
+				// let prevPos = gameObject.shape.translation.clone();
 				gameObject.shape.translation.lerp(gameObject.desiredPosition, elapsedTimePortion);
 				// console.log('Interpolation length', prevPos.distanceTo(gameObject.shape.translation));
 			}

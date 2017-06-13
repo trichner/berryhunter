@@ -44,10 +44,18 @@ func (n *NetSystem) Update(dt float32) {
 	gameState := GameStateDTO{}
 	gameState.Tick = n.game.tick
 	for _, player := range n.players {
-		_ = player
 		//TODO
 
 		var entites []*EntityDTO
+
+		// DEBUG, add sensors
+		for _, s := range player.body.Shapes {
+			if s.IsSensor {
+				e := newDebugEntity(s)
+				entites = append(entites, mapToEntityDTO(e))
+			}
+		}
+
 		pos := player.body.Position()
 		bb := chipmunk.NewAABB(pos.X-viewPortWidth/2, pos.Y-viewPortHeight/2, pos.X+viewPortWidth/2, pos.Y+viewPortHeight/2)
 		n.game.space.Query(nil, bb, func(a, b chipmunk.Indexable) {

@@ -1,0 +1,37 @@
+include "common.fbs";
+
+namespace DeathioApi;
+
+enum EntityType : ushort {
+  DebugCircle = 0,
+  Border,
+  RoundTree,
+  MarioTree,
+  Character,
+  Stone,
+  Bronze,
+  Iron,
+  BerryBush
+}
+
+struct AABB {
+  lower:Vec2f;
+  upper:Vec2f;
+}
+
+table Entity {
+  id:ulong;
+  pos:Vec2f;
+  radius:ushort;
+  rotation:float;
+  type:EntityType;
+  aabb:AABB;
+}
+
+table GameState {
+  tick:ulong;
+  player_id:ulong;
+  entities:[Entity];
+}
+
+root_type GameState;

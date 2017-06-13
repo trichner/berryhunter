@@ -7,6 +7,7 @@ const Develop = {
 		showAABBs: true,
 		cameraBoundaries: false,
 		elementColor: 'red',
+		linewidth: 2,
 		/**
 		 * Aus wievielen Werten wird maximal der Durchschnitt und die
 		 * mittlere absolute Abweichung gebildet
@@ -21,6 +22,8 @@ const Develop = {
 	setup: function () {
 		this.active = true;
 		AABBs.setup();
+		gameObjectClasses.DebugCircle = DebugCircle;
+
 		this.setupDevelopPanel();
 		this.logs = {
 			fps: [],
@@ -38,6 +41,8 @@ const Develop = {
 				document.body.appendChild(htmlToElement(html));
 
 				this.setupToggleButtons();
+
+				this.setupItemAdding();
 			}.bind(this)));
 	},
 
@@ -73,6 +78,40 @@ const Develop = {
 				Develop.onSettingToggle(setting, newValue);
 			});
 		}
+	},
+
+	setupItemAdding: function () {
+		let select = document.getElementById('develop_itemSelect');
+
+		let optionGroups = {};
+		for (let itemType in ItemType){
+			optionGroups[itemType] = htmlToElement('<optgroup label="' + itemType + '"></optgroup>');
+			select.appendChild(optionGroups[itemType]);
+		}
+
+		for (let item in Items) {
+			if (!Items.hasOwnProperty(item)) {
+				continue;
+			}
+			if (!Items[item].icon.file) {
+				continue;
+			}
+			if (Items[item].graphic && !Items[item].graphic.file) {
+				continue;
+			}
+
+			optionGroups[Items[item].type].appendChild(htmlToElement('<option value="' + item + '">' + item + '</option>'));
+		}
+
+		document
+			.getElementById('develop_itemAdd')
+			.addEventListener('click', function () {
+				player.inventory.addItem(
+					Items[document.getElementById('develop_itemSelect').value],
+					parseInt(document.getElementById('develop_itemCount').value)
+				);
+				two.update();
+			});
 	},
 
 	onSettingToggle(setting, newValue){

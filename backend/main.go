@@ -8,6 +8,7 @@ import (
 	"log"
 	"math/rand"
 	"time"
+	"math"
 )
 
 func main() {
@@ -156,7 +157,7 @@ func newCircleEntity(r, m float32) *entity {
 }
 
 func newBody(mass float32, shape *chipmunk.Shape) *chipmunk.Body {
-	body := chipmunk.NewBody(vect.Float(mass), shape.Moment(mass))
+	body := chipmunk.NewBody(vect.Float(mass), shape.Moment(float32(math.Inf(1))))
 	body.AddShape(shape)
 	return body
 }

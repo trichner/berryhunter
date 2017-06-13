@@ -38,32 +38,34 @@ function GameMap() {
  * @return Array
  */
 GameMap.prototype.getObjects = function (startX, startY, endX, endY) {
-	const containedObjects = this.objects.filter(function (object) {
-		// let verticalContain = false;
-		// let horizontalContain = true;
-		//
-		let boundingRect = object.shape.getBoundingClientRect(true);
-		//
-		// if (boundingRect.top < endY) {
-		// 	verticalContain = true;
-		// } else if (object.bottom > startY) {
-		// 	verticalContain = true;
-		// }
-		// if (object.left < endX) {
-		// 	horizontalContain = true;
-		// } else if (object.right > startX) {
-		// 	horizontalContain = true;
-		// }
-		//
-		// return verticalContain || horizontalContain;
-
+	const containedObjects = this.objects.filter(function (gameObject) {
+		let x = gameObject.getX();
+		let y = gameObject.getY();
 
 		return !(
-		boundingRect.left > endX ||
-		boundingRect.right < startX ||
-		boundingRect.top > endY ||
-		boundingRect.bottom < startY);
+		x > endX ||
+		x < startX ||
+		y > endY ||
+		y < startY);
 	});
-	console.log(containedObjects.length + ' objects in view.');
+	console.log(containedObjects.length + ' objects within ' +
+		'[(' + startX.toFixed(0) + '/' + startY.toFixed(0) + ')' +
+		'/(' + endX.toFixed(0) + '/' + endY.toFixed(0) + ')] .');
 	return containedObjects;
+};
+
+GameMap.prototype.getObjectsInView = function () {
+	return this.getObjectsInRange(
+		player.character.getPosition(),
+		Math.min(width / 2, height / 2)
+	)
+};
+
+GameMap.prototype.getObjectsInRange = function (position, range) {
+	return this.getObjects(
+		position.x - range,
+		position.y - range,
+		position.x + range,
+		position.y + range
+	)
 };

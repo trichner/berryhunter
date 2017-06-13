@@ -14,8 +14,8 @@ class Tree extends GameObject {
 }
 
 class RoundTree extends Tree {
-	constructor(x, y) {
-		super(x, y, randomInt(50, 150));
+	constructor(x, y, size) {
+		super(x, y, size || randomInt(50, 150));
 	}
 
 	createShape(x, y) {
@@ -31,8 +31,8 @@ class RoundTree extends Tree {
 registerGameObjectSVG(RoundTree, 'img/roundTree.svg');
 
 class MarioTree extends Tree {
-	constructor(x, y) {
-		super(x, y, randomInt(50, 150));
+	constructor(x, y, size) {
+		super(x, y, size || randomInt(50, 150));
 	}
 
 	createShape(x, y) {
@@ -63,9 +63,9 @@ class MarioTree extends Tree {
 registerGameObjectSVG(MarioTree, 'img/deciduousTree.svg');
 
 class Stone extends GameObject {
-	constructor(x, y) {
+	constructor(x, y, size) {
 		super(x, y,
-			randomInt(30, 90),
+			size || randomInt(30, 90),
 			random(0, Math.PI * 2)
 		);
 	}
@@ -91,9 +91,9 @@ class Stone extends GameObject {
 
 registerGameObjectSVG(Stone, 'img/stone.svg');
 
-class Gold extends GameObject {
-	constructor(x, y) {
-		super(x, y, randomInt(30, 70));
+class Bronze extends GameObject {
+	constructor(x, y, size) {
+		super(x, y, size || randomInt(30, 70));
 	}
 
 	createShape(x, y) {
@@ -120,11 +120,11 @@ class Gold extends GameObject {
 	}
 }
 
-registerGameObjectSVG(Gold, 'img/bronze.svg');
+registerGameObjectSVG(Bronze, 'img/bronze.svg');
 
 class BerryBush extends GameObject {
-	constructor(x, y) {
-		super(x, y, randomInt(20, 45));
+	constructor(x, y, size) {
+		super(x, y, size || randomInt(20, 45));
 
 	}
 

@@ -81,21 +81,80 @@ func ExampleCollision() {
 
 	// static body to collide with
 	staticBody = chipmunk.NewBodyStatic()
+	staticBody.UserData = "STATIC"
+	shape = chipmunk.NewCircle(vect.Vector_Zero, 1)
+	shape.UserData = "TREE"
+	staticBody.AddShape(shape)
+	space.AddBody(staticBody)
+
+
+	// P-I ->    T
+
+	// Body on the move
+	shape = chipmunk.NewCircle(vect.Vector_Zero, 1)
+	shape.UserData = "PLAYER"
+
+	sensor := chipmunk.NewCircle(vect.Vect{1, 0}, 0.5)
+	sensor.IsSensor = true
+	sensor.UserData = "ITEM"
+	sensor.Layer = 1
+
+	body := newBody(1, shape)
+	body.UserData = "MOVE"
+	body.AddShape(shape)
+	body.AddShape(sensor)
+	body.UpdateShapes()
+	body.SetPosition(vect.Vect{-10, 0})
+	body.SetVelocity(1, 0)
+	space.AddBody(body)
+
+	body.CallbackHandler = &Collidable{}
+
+	fmt.Printf("Shape:\t %+v\n", shape.BB)
+	fmt.Printf("Sensor:\t %+v\n", sensor.BB)
+
+	for i := 0; i < 400; i++ {
+		space.Step(1.0 / 30.0)
+	}
+	fmt.Printf("Shape:\t %+v\n", shape.BB)
+	fmt.Printf("Sensor:\t %+v\n", sensor.BB)
+	// Output: Body 1
+}
+
+func ExampleSegmentQuery() {
+
+	// setup space
+	space := chipmunk.NewSpace()
+
+	var shape *chipmunk.Shape
+	var staticBody *chipmunk.Body
+
+	// static body to collide with
+	staticBody = chipmunk.NewBodyStatic()
 	staticBody.UserData = "Body 1"
 	shape = chipmunk.NewCircle(vect.Vector_Zero, 1)
 	staticBody.AddShape(shape)
 	space.AddBody(staticBody)
 
 	// Body on the move
-	staticBody.UserData = "Collider"
+
+	// sensor circle
+	sensor := chipmunk.NewCircle(vect.Vect{1, 0}, 0.5)
+	sensor.IsSensor = true
+	sensor.Layer = -1
+	sensor.UserData = "Sensor"
+
 	shape = chipmunk.NewCircle(vect.Vector_Zero, 1)
+
 	body := newBody(1, shape)
+	body.AddShape(sensor)
 	body.AddShape(shape)
 	body.SetPosition(vect.Vect{-5, 0})
 	body.SetVelocity(1, 0)
+	body.UserData = "Collider"
 	space.AddBody(body)
 
-	//body.CallbackHandler = &Collidable{}
+	body.CallbackHandler = &Collidable{}
 
 	for i := 0; i < 400; i++ {
 		space.Step(1.0 / 30.0)
