@@ -51,7 +51,8 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 			}
 		}
 	} else {
-		if (entity.object === 'Border') {
+		switch (entity.object){
+			case 'Border':
 			let startX = entity.aabb.LowerX;
 			let startY = entity.aabb.LowerY;
 			let endX = entity.aabb.UpperX;
@@ -86,7 +87,13 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 				throw "Unknown Border orientation " + JSON.stringify(entity.aabb);
 			}
 			gameObject = new Border(x1, y1, x2, y2);
-		} else {
+			break;
+			case 'DebugCircle':
+				if (!Develop.isActive()){
+					return;
+				}
+				// Fallthrough
+			default:
 			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y, entity.radius);
 		}
 		if (entity.object !== 'Character') {
