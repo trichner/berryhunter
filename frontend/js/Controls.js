@@ -212,7 +212,7 @@ class Controls {
 		}
 
 		if (hasInput) {
-			// Backend.sendInputTick(input);
+			Backend.sendInputTick(input);
 		}
 	}
 
