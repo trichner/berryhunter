@@ -183,7 +183,7 @@ const Backend = {
 		DeathioApi.Input.startInput(builder);
 
 		if (action !== null) {
-			DeathioApi.Input.addAction(action);
+			DeathioApi.Input.addAction(builder, action);
 		}
 
 		if (isDefined(inputObj.movement)) {
