@@ -7,6 +7,7 @@ import (
 	"github.com/vova616/chipmunk/vect"
 )
 
+//---- helper methods to convert points to pixels
 const points2px = 120.0
 
 func f32ToPx(f float32) float32 {
@@ -21,35 +22,19 @@ func f32ToU16Px(f float32) uint16 {
 	return uint16(f * points2px)
 }
 
+// AABB is an alias to not expose transitive dependencies
 type AABB chipmunk.AABB
 
+// FlatbufMarshal implements FlatbufMarshaller for AABBs
 func (aabb AABB) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	return deathio.CreateAABB(builder, floatToPx(aabb.Lower.X), floatToPx(aabb.Lower.Y), floatToPx(aabb.Upper.X), floatToPx(aabb.Upper.Y))
 }
 
-type entities []Entity
-
-func (es entities) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
-	entities := []Entity(es)
-	n := len(entities)
-
-	offsets := make([]flatbuffers.UOffsetT, n)
-	for _, e := range entities {
-		offsets = append(offsets, fbMarshalEntity(builder, e))
-	}
-
-	deathio.GameStateStartEntitiesVector(builder, n)
-	for _, o := range offsets {
-		builder.PrependUOffsetT(o)
-	}
-	return builder.EndVector(n)
-}
-
+// FlatbufMarshal implements FlatbufMarshaller for GameState
 func (gs *GameState) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	entities := entities(gs.Entities).FlatbufMarshal(builder)
+	entities := EntitiesFlatbufMarshal(gs.Entities, builder)
 
 	deathio.GameStateStart(builder)
 	deathio.GameStateAddTick(builder, gs.Tick)
@@ -59,7 +44,26 @@ func (gs *GameState) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UO
 	return deathio.GameStateEnd(builder)
 }
 
-func fbMarshalEntity(builder *flatbuffers.Builder, e Entity) flatbuffers.UOffsetT {
+// EntitiesFlatbufMarshal marshals a list of Entity interfaces
+func EntitiesFlatbufMarshal(entities []Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	n := len(entities)
+
+	offsets := make([]flatbuffers.UOffsetT, n)
+	for _, e := range entities {
+		offsets = append(offsets, EntityFlatbufMarshal(e, builder))
+	}
+
+	deathio.GameStateStartEntitiesVector(builder, n)
+	for _, o := range offsets {
+		builder.PrependUOffsetT(o)
+	}
+	return builder.EndVector(n)
+}
+
+// EntityFlatbufMarshal marshals an Entity interface to its corresponding
+// flatbuffer schema
+func EntityFlatbufMarshal(e Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	deathio.EntityStart(builder)
 	deathio.EntityAddId(builder, e.ID())
@@ -77,6 +81,7 @@ func fbMarshalEntity(builder *flatbuffers.Builder, e Entity) flatbuffers.UOffset
 	return deathio.EntityEnd(builder)
 }
 
+// intermediate struct to serialize
 type GameState struct {
 	Tick     uint64
 	PlayerID uint64
