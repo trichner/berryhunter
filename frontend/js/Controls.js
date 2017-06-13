@@ -182,6 +182,7 @@ class Controls {
 			}
 		}
 
+		// let input = DeathioApi.startInput();
 		let input = {};
 		let hasInput = false;
 

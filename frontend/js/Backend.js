@@ -15,6 +15,8 @@ const Backend = {
 			this.webSocket = new WebSocket(Constants.BACKEND.REMOTE_URL);
 		}
 
+		this.webSocket.binaryType = 'arraybuffer';
+
 		if (Develop.isActive()) {
 			Develop.logWebsocketStatus('Connecting', 'neutral');
 		}
@@ -45,7 +47,8 @@ const Backend = {
 			return;
 		}
 
-		this.webSocket.send(JSON.stringify(messageObj));
+		// TODO FlatBuffers
+		// this.webSocket.send(JSON.stringify(messageObj));
 	},
 
 	receive: function (event) {
@@ -61,11 +64,25 @@ const Backend = {
 			return;
 		}
 
-		let messageObj;
+		let data, buffer, gameState;
 		try {
-			messageObj = JSON.parse(event.data);
+			data = new Uint8Array(event.data);
 		} catch (e) {
-			console.error("Error while parsing message: " + event.data);
+			console.error("Error converting event.data to Uint8Array.", event.data, e);
+			return;
+		}
+
+		try {
+			buffer = new flatbuffers.ByteBuffer(data);
+		} catch (e) {
+			console.error("Error creating ByteBuffer from Uint8Array.", data, e);
+			return;
+		}
+
+		try {
+			gameState = DeathioApi.getRootAsGameState(buffer);
+		} catch (e) {
+			console.error("Error reading GameState from ByteBuffer.", buffer, e);
 			return;
 		}
 
@@ -73,24 +90,13 @@ const Backend = {
 			Develop.logWebsocketStatus('Open', 'good');
 		}
 
-		switch (messageObj.type) {
-			case MessageType.OBJECT:
-				this.receiveObject(messageObj.body);
-				break;
-			case MessageType.SNAPSHOT:
-				let snapshot = messageObj.body;
-				if (Develop.isActive()) {
-					let messageReceivedTime = performance.now();
-					let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
-					this.lastMessageReceivedTime = messageReceivedTime;
-					Develop.logServerTick(snapshot.tick, timeSinceLastMessage);
-				}
-				this.receiveSnapshot(snapshot);
+		if (Develop.isActive()) {
+			let messageReceivedTime = performance.now();
+			let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
+			this.lastMessageReceivedTime = messageReceivedTime;
+			Develop.logServerTick(gameState.tick, timeSinceLastMessage);
 		}
-	},
-
-	receiveObject: function (gameObject) {
-		gameMap.addOrUpdate(gameObject);
+		this.receiveSnapshot(gameState);
 	},
 
 	receiveSnapshot: function (snapshot) {
