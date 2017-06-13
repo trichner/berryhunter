@@ -4,13 +4,28 @@ import (
 	deathio "github.com/trichner/death-io/backend/DeathioApi"
 	"github.com/vova616/chipmunk"
 	"github.com/google/flatbuffers/go"
+	"github.com/vova616/chipmunk/vect"
 )
+
+const points2px = 120.0
+
+func f32ToPx(f float32) float32 {
+	return f * points2px
+}
+
+func floatToPx(f vect.Float) float32 {
+	return float32(f) * points2px
+}
+
+func f32ToU16Px(f float32) uint16 {
+	return uint16(f * points2px)
+}
 
 type AABB chipmunk.AABB
 
 func (aabb AABB) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	return deathio.CreateAABB(builder, float32(aabb.Lower.X), float32(aabb.Lower.Y), float32(aabb.Upper.X), float32(aabb.Upper.Y))
+	return deathio.CreateAABB(builder, floatToPx(aabb.Lower.X), floatToPx(aabb.Lower.Y), floatToPx(aabb.Upper.X), floatToPx(aabb.Upper.Y))
 }
 
 type entities []Entity
@@ -49,13 +64,13 @@ func fbMarshalEntity(builder *flatbuffers.Builder, e Entity) flatbuffers.UOffset
 	deathio.EntityStart(builder)
 	deathio.EntityAddId(builder, e.ID())
 
-	pos := deathio.CreateVec2f(builder, e.X(), e.Y())
+	pos := deathio.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
 	deathio.EntityAddPos(builder, pos)
 
 	aabb := e.AABB().FlatbufMarshal(builder)
 	deathio.EntityAddAabb(builder, aabb)
 
-	deathio.EntityAddRadius(builder, uint16(e.Radius()))
+	deathio.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
 	deathio.EntityAddRotation(builder, e.Angle())
 	deathio.EntityAddType(builder, uint16(e.Type()))
 
