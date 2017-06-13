@@ -1,6 +1,7 @@
 /**
  * Created by raoulzander on 25.04.17.
  */
+"use strict";
 
 const MessageType = {
 	OBJECT: 'OBJECT',
@@ -80,7 +81,7 @@ const Backend = {
 		}
 
 		try {
-			gameState = DeathioApi.getRootAsGameState(buffer);
+			gameState = DeathioApi.GameState.getRootAsGameState(buffer);
 		} catch (e) {
 			console.error("Error reading GameState from ByteBuffer.", buffer, e);
 			return;
@@ -94,18 +95,23 @@ const Backend = {
 			let messageReceivedTime = performance.now();
 			let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
 			this.lastMessageReceivedTime = messageReceivedTime;
-			Develop.logServerTick(gameState.tick, timeSinceLastMessage);
+			Develop.logServerTick(gameState.tick().toFloat64(), timeSinceLastMessage);
 		}
 		this.receiveSnapshot(gameState);
 	},
 
+	/**
+	 *
+	 * @param {DeathioApi.GameState} snapshot
+	 */
 	receiveSnapshot: function (snapshot) {
-		this.lastServerTick = snapshot.tick;
+		this.lastServerTick = snapshot.tick().toFloat64();
 
 		gameMap.newSnapshot();
 
-		snapshot.entities.forEach(function (entity) {
-			if (entity.id === snapshot.player_id) {
+		for (let i = 0; i < snapshot.entitiesLength(); ++i) {
+			let entity = this.unmarshalEntity(snapshot.entities(i));
+			if (entity.id === snapshot.playerId().toFloat64()) {
 				if (gameStarted) {
 					player.character.setPosition(entity.x, entity.y);
 				} else {
@@ -117,7 +123,36 @@ const Backend = {
 			} else {
 				gameMap.addOrUpdate(entity);
 			}
-		})
+		}
+	},
+
+	/**
+	 *
+	 * @param {DeathioApi.Entity} entity
+	 */
+	unmarshalEntity(entity){
+		return {
+			id: entity.id().toFloat64(),
+			x: entity.pos().x(),
+			y: entity.pos().y(),
+			radius: entity.radius(),
+			rotation: entity.rotation(),
+			object: entity.type(),
+			aabb: this.unmarshalAABB(entity.aabb())
+		}
+	},
+
+	/**
+	 *
+	 * @param {DeathioApi.AABB} aabb
+	 */
+	unmarshalAABB(aabb){
+		return {
+			LowerX: aabb.lower().x(),
+			LowerY: aabb.lower().y(),
+			UpperX: aabb.upper().x(),
+			UpperY: aabb.upper().y(),
+		}
 	},
 
 	sendInputTick: function (inputObj) {
@@ -125,11 +160,19 @@ const Backend = {
 			// If the backend hasn't send a snapshot yet, don't send any input.
 			return;
 		}
+
+
 		inputObj.tick = this.lastServerTick + 1;
 
 		if (Develop.isActive()) {
 			Develop.logClientTick(inputObj.tick);
 		}
-		this.send(inputObj);
+
+
+		this.send(this.marshalInput(inputObj));
+	},
+
+	marshalInput: function (inputObj) {
+		return inputObj;
 	}
 };

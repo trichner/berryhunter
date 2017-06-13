@@ -176,13 +176,12 @@ class Controls {
 				this.character.progressHitAnimation(this.hitAnimationTick);
 				action = {
 					// TODO aktives Item eintragen
-					item: "fist",
+					item: "Fist",
 					alt: true
 				};
 			}
 		}
 
-		// let input = DeathioApi.startInput();
 		let input = {};
 		let hasInput = false;
 
@@ -213,7 +212,7 @@ class Controls {
 		}
 
 		if (hasInput) {
-			Backend.sendInputTick(input);
+			// Backend.sendInputTick(input);
 		}
 	}
 

@@ -1,17 +1,19 @@
 "use strict";
 
-
-const gameObjectClasses = {
-	Character,
-
+/**
+ * Has to be in sync with DeathioApi.EntityType
+ */
+const gameObjectClasses = [
+	DebugCircle,
+	Border,
 	RoundTree,
 	MarioTree,
+	Character,
 	Stone,
 	Bronze,
-	BerryBush,
-	Rabbit,
-	SaberToothCat
-};
+	null,
+	BerryBush
+];
 
 function GameMapWithBackend() {
 	if (MapEditor.isActive()) {
@@ -51,50 +53,50 @@ GameMapWithBackend.prototype.addOrUpdate = function (entity) {
 			}
 		}
 	} else {
-		switch (entity.object){
-			case 'Border':
-			let startX = entity.aabb.LowerX;
-			let startY = entity.aabb.LowerY;
-			let endX = entity.aabb.UpperX;
-			let endY = entity.aabb.UpperY;
-			let x1, y1, x2, y2;
+		switch (entity.object) {
+			case DeathioApi.EntityType.Border:
+				let startX = entity.aabb.LowerX;
+				let startY = entity.aabb.LowerY;
+				let endX = entity.aabb.UpperX;
+				let endY = entity.aabb.UpperY;
+				let x1, y1, x2, y2;
 
-			if (startX > 0) {
-				// Right Border
-				x1 = startX;
-				y1 = 0;
-				x2 = x1;
-				y2 = endY + startY;
-			} else if (startY > 0) {
-				// Bottom Border
-				x1 = 0;
-				y1 = startY;
-				x2 = endX + startX;
-				y2 = startY;
-			} else if (endX <= 0) {
-				// Left Border
-				x1 = 0;
-				y1 = 0;
-				x2 = x1;
-				y2 = endY + startY;
-			} else if (endY <= 0) {
-				// Top Border
-				x1 = 0;
-				y1 = 0;
-				x2 = endX + startX;
-				y2 = y1;
-			} else {
-				throw "Unknown Border orientation " + JSON.stringify(entity.aabb);
-			}
-			gameObject = new Border(x1, y1, x2, y2);
-			break;
-			case 'DebugCircle':
-				if (!Develop.isActive()){
+				if (startX > 0) {
+					// Right Border
+					x1 = startX;
+					y1 = 0;
+					x2 = x1;
+					y2 = endY + startY;
+				} else if (startY > 0) {
+					// Bottom Border
+					x1 = 0;
+					y1 = startY;
+					x2 = endX + startX;
+					y2 = startY;
+				} else if (endX <= 0) {
+					// Left Border
+					x1 = 0;
+					y1 = 0;
+					x2 = x1;
+					y2 = endY + startY;
+				} else if (endY <= 0) {
+					// Top Border
+					x1 = 0;
+					y1 = 0;
+					x2 = endX + startX;
+					y2 = y1;
+				} else {
+					throw "Unknown Border orientation " + JSON.stringify(entity.aabb);
+				}
+				gameObject = new Border(x1, y1, x2, y2);
+				break;
+			case DeathioApi.EntityType.DebugCircle:
+				if (!Develop.isActive()) {
 					return;
 				}
-				// Fallthrough
+			// Fallthrough
 			default:
-			gameObject = new gameObjectClasses[entity.object](entity.x, entity.y, entity.radius);
+				gameObject = new gameObjectClasses[entity.object](entity.x, entity.y, entity.radius);
 		}
 		if (entity.object !== 'Character') {
 			miniMap.add(gameObject);

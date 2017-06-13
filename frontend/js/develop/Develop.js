@@ -22,7 +22,6 @@ const Develop = {
 	setup: function () {
 		this.active = true;
 		AABBs.setup();
-		gameObjectClasses.DebugCircle = DebugCircle;
 
 		this.setupDevelopPanel();
 		this.logs = {
