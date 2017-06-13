@@ -5,8 +5,8 @@ import (
 	"github.com/vova616/chipmunk/vect"
 	"log"
 	"github.com/trichner/death-io/backend/net"
-	"encoding/json"
 	"sync"
+	"github.com/trichner/death-io/backend/DeathioApi"
 )
 
 
@@ -14,10 +14,10 @@ const inputBuffererCount = 3
 
 //---- models for input
 type InputDTO struct {
-	Tick     *uint64   `json:"tick"`
-	Movement *movement `json:"movement"`
-	Rotation float32   `json:"rotation"` // [0, 2*PI)
-	Action   *action   `json:"action"`
+	Tick     uint64
+	Movement *movement
+	Rotation float32
+	Action   *action
 }
 
 type movement struct {
@@ -26,8 +26,7 @@ type movement struct {
 }
 
 type action struct {
-	Item string `json:"item"`
-	Alt  bool   `json:"alt"`
+	Item byte
 }
 
 type clientMessage struct {
@@ -43,6 +42,25 @@ type InputSystem struct {
 	mux   sync.Mutex
 
 	receive chan *clientMessage
+}
+
+func (i *InputDTO) FlatbufferUnmarshal(bytes []byte) {
+
+	input := DeathioApi.GetRootAsInput(bytes, 0)
+
+	i.Tick = input.Tick()
+	v := input.Movement(nil)
+	i.Movement = &movement{
+		X: v.X(),
+		Y: v.Y(),
+	}
+
+	a := input.Action(nil)
+	if a != nil {
+		i.Action = &action{
+			Item: a.Item(),
+		}
+	}
 }
 
 func NewInputSystem(g *Game) *InputSystem {
@@ -67,13 +85,8 @@ func (i *InputSystem) New(w *ecs.World) {
 			select {
 			case msg := <-i.receive:
 				var input InputDTO
-				_ = input
-				err := json.Unmarshal(msg.body, &input)
-				if err != nil {
-					log.Printf("Marshalling Error: %s", err)
-				} else {
+				input.FlatbufferUnmarshal(msg.body)
 					i.storeInput(msg.playerId, &input)
-				}
 			}
 		}
 	}()
