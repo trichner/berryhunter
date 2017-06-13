@@ -1,1 +1,0 @@
-../../api/schema/js/server_generated.js
