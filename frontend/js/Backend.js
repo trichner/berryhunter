@@ -161,7 +161,6 @@ const Backend = {
 			return;
 		}
 
-
 		inputObj.tick = this.lastServerTick + 1;
 
 		if (Develop.isActive()) {
@@ -173,6 +172,33 @@ const Backend = {
 	},
 
 	marshalInput: function (inputObj) {
-		return inputObj;
+		let builder = new flatbuffers.Builder(10);
+		let action = null;
+		if (isDefined(inputObj.action)) {
+			DeathioApi.Action.startAction(builder);
+			DeathioApi.Action.addItem(builder, DeathioApi.Item[inputObj.action.item]);
+			action = DeathioApi.Action.endAction(builder);
+		}
+
+		DeathioApi.Input.startInput(builder);
+
+		if (action !== null) {
+			DeathioApi.Input.addAction(action);
+		}
+
+		if (isDefined(inputObj.movement)) {
+			DeathioApi.Input.addMovement(builder,
+				DeathioApi.Vec2f.createVec2f(builder, inputObj.movement.x, inputObj.movement.y));
+		}
+
+		if (isDefined(inputObj.rotation)) {
+			DeathioApi.Input.addRotation(builder, inputObj.rotation);
+		}
+
+		DeathioApi.Input.addTick(builder, flatbuffers.Long.create(inputObj.tick));
+
+		builder.finish(DeathioApi.Input.endInput(builder));
+
+		return builder.asUint8Array();
 	}
 };
