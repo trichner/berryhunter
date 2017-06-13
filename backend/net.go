@@ -1,10 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"engo.io/ecs"
 	"log"
 	"github.com/vova616/chipmunk"
+	"github.com/google/flatbuffers/go"
 )
 
 type NetSystem struct {
@@ -41,18 +41,18 @@ const viewPortHeight = 12.0
 func (n *NetSystem) Update(dt float32) {
 
 	// assemble game state prototype
-	gameState := GameStateDTO{}
+	gameState := GameState{}
 	gameState.Tick = n.game.tick
 	for _, player := range n.players {
 		//TODO
 
-		var entites []*EntityDTO
+		var entites []Entity
 
 		// DEBUG, add sensors
 		for _, s := range player.body.Shapes {
 			if s.IsSensor {
 				e := newDebugEntity(s)
-				entites = append(entites, mapToEntityDTO(e))
+				entites = append(entites, e)
 			}
 		}
 
@@ -61,15 +61,13 @@ func (n *NetSystem) Update(dt float32) {
 		n.game.space.Query(nil, bb, func(a, b chipmunk.Indexable) {
 			u := b.Shape().Body.UserData
 			if u != nil {
-				e := mapToEntityDTO(u.(Entity))
-				entites = append(entites, e)
+				entites = append(entites, u.(Entity))
 			}
 		})
 		n.game.space.QueryStatic(nil, bb, func(a, b chipmunk.Indexable) {
 			u := b.Shape().Body.UserData
 			if u != nil {
-				e := mapToEntityDTO(u.(Entity))
-				entites = append(entites, e)
+				entites = append(entites, u.(Entity))
 			}
 		})
 		// - query BB for entities in view
@@ -78,9 +76,13 @@ func (n *NetSystem) Update(dt float32) {
 		clientGameState := gameState
 		clientGameState.Entities = entites
 		clientGameState.PlayerID = player.ID()
-		msg := &MessageDTO{"GAME_STATE", clientGameState}
-		msgJson, _ := json.Marshal(msg)
-		err := player.client.SendMessage(msgJson)
+		//msg := &MessageDTO{"GAME_STATE", clientGameState}
+		//msgJson, _ := json.Marshal(msg)
+
+		builder := flatbuffers.NewBuilder(64)
+		gs := gameState.FlatbufMarshal(builder)
+		builder.Finish(gs)
+		err := player.client.SendMessage(builder.FinishedBytes())
 		if err != nil {
 			n.game.RemoveEntity(player.BasicEntity)
 		}

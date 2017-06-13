@@ -6,22 +6,12 @@ import (
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"math/rand"
-	"math"
 	"github.com/trichner/death-io/backend/net"
 	"github.com/vova616/chipmunk/transform"
+	"github.com/trichner/death-io/backend/DeathioApi"
 )
 
-const (
-	typeDebugCircle   = "DebugCircle"
-	typeBorder        = "Border"
-	typeRoundTree     = "RoundTree"
-	typeMarioTree     = "MarioTree"
-	typePlayer        = "Character"
-	typeSaberToothCat = "SaberToothCat"
-	typeStone         = "Stone"
-	typeBronze        = "Bronze"
-	typeBerryBush     = "BerryBush"
-)
+type EntityType uint16
 
 //---- basic interface with getters
 type Entity interface {
@@ -30,18 +20,18 @@ type Entity interface {
 	Y() float32
 	Angle() float32
 	Radius() float32
-	Type() string
-	AABB() chipmunk.AABB
+	Type() EntityType
+	AABB() AABB
 }
 
 //
 type debugCircleShapeEntity struct {
 	ecs.BasicEntity
 	circle     *chipmunk.Shape
-	entityType string
+	entityType EntityType
 }
 
-func (e *debugCircleShapeEntity) Type() string {
+func (e *debugCircleShapeEntity) Type() EntityType {
 	return e.entityType
 }
 
@@ -59,8 +49,8 @@ func (e *debugCircleShapeEntity) Y() float32 {
 	return float32(e.Position().Y)
 }
 
-func (e *debugCircleShapeEntity) AABB() chipmunk.AABB {
-	return e.circle.AABB()
+func (e *debugCircleShapeEntity) AABB() AABB {
+	return AABB(e.circle.AABB())
 }
 
 func (e *debugCircleShapeEntity) Angle() float32 {
@@ -75,11 +65,11 @@ func (e *debugCircleShapeEntity) Radius() float32 {
 type entity struct {
 	ecs.BasicEntity
 	body       *chipmunk.Body
-	entityType string
+	entityType EntityType
 	radius     float32
 }
 
-func (e *entity) Type() string {
+func (e *entity) Type() EntityType {
 	return e.entityType
 }
 
@@ -95,8 +85,8 @@ func (e *entity) Y() float32 {
 	return float32(e.body.Position().Y)
 }
 
-func (e *entity) AABB() chipmunk.AABB {
-	return e.body.Shapes[0].AABB()
+func (e *entity) AABB() AABB {
+	return AABB(e.body.Shapes[0].AABB())
 }
 
 func (e *entity) Angle() float32 {
@@ -149,7 +139,7 @@ func NewPlayer(c *net.Client) *player {
 
 	e.body.UpdateShapes()
 
-	e.entityType = typePlayer
+	e.entityType = DeathioApi.EntityTypeCharacter
 	for _, s := range e.body.Shapes {
 		s.Group = playerCollisionGroup
 	}
@@ -166,45 +156,14 @@ type MessageDTO struct {
 
 const dist2px = 120.0
 
-func mapToEntityDTO(e Entity) *EntityDTO {
-
-	return &EntityDTO{
-		Id:     e.ID(),
-		X:      e.X() * dist2px,
-		Y:      e.Y() * dist2px,
-		Rot:    e.Angle(),
-		Radius: e.Radius() * dist2px,
-		Type:   e.Type(),
-		Aabb:   mapToAabbDTO(e.AABB()),
-	}
-}
-
 func newDebugEntity(shape *chipmunk.Shape) Entity {
 	return &debugCircleShapeEntity{
 		BasicEntity: ecs.NewBasic(),
 		circle:      shape,
-		entityType:  typeDebugCircle,
+		entityType:  DeathioApi.EntityTypeDebugCircle,
 	}
 }
 
 type floatwrapper struct {
 	f float32
-}
-
-func mapToAabbDTO(bb chipmunk.AABB) *AabbDTO {
-	aabb := &AabbDTO{
-		LowerX: sanititzeFloat(float32(bb.Lower.X) * dist2px),
-		LowerY: sanititzeFloat(float32(bb.Lower.Y) * dist2px),
-		UpperX: sanititzeFloat(float32(bb.Upper.X) * dist2px),
-		UpperY: sanititzeFloat(float32(bb.Upper.Y) * dist2px),
-	}
-	return aabb
-}
-
-func sanititzeFloat(f float32) *float32 {
-	z := float32(0)
-	if math.IsNaN(float64(f)) {
-		return &z
-	}
-	return &f
 }

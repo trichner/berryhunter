@@ -3,6 +3,7 @@ package main
 import (
 	"math/rand"
 	"github.com/vova616/chipmunk"
+	"github.com/trichner/death-io/backend/DeathioApi"
 )
 
 const gridSize = 100
@@ -43,13 +44,13 @@ func chunkRand(x, y int64, rnd *rand.Rand) *rand.Rand {
 
 var trees = []staticEntityBody{
 	{
-		typeRoundTree,
+		DeathioApi.EntityTypeRoundTree,
 		100,
 		1,
 		staticCollisionLayer | ressourceCollisionLayer,
 	},
 	{
-		typeMarioTree,
+		DeathioApi.EntityTypeMarioTree,
 		100,
 		1,
 		staticCollisionLayer | ressourceCollisionLayer,
@@ -58,19 +59,19 @@ var trees = []staticEntityBody{
 
 var resources = []staticEntityBody{
 	{
-		typeBerryBush,
+		DeathioApi.EntityTypeBerryBush,
 		100,
 		0.5,
 		noneCollisionLayer | ressourceCollisionLayer,
 	},
 	{
-		typeStone,
+		DeathioApi.EntityTypeStone,
 		100,
 		0.5,
 		staticCollisionLayer | ressourceCollisionLayer,
 	},
 	{
-		typeBronze,
+		DeathioApi.EntityTypeBronze,
 		100,
 		0.5,
 		staticCollisionLayer | ressourceCollisionLayer,
@@ -78,7 +79,7 @@ var resources = []staticEntityBody{
 }
 
 type staticEntityBody struct {
-	entityType     string
+	entityType     EntityType
 	weight         int
 	radius         float32
 	collisionLayer chipmunk.Layer

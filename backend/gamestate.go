@@ -1,31 +1,67 @@
 package main
 
-type AabbDTO struct {
-	LowerX *float32 `json:"LowerX,omitempty"`
-	LowerY *float32 `json:"LowerY,omitempty"`
-	UpperX *float32 `json:"UpperX,omitempty"`
-	UpperY *float32 `json:"UpperY,omitempty"`
+import (
+	deathio "github.com/trichner/death-io/backend/DeathioApi"
+	"github.com/vova616/chipmunk"
+	"github.com/google/flatbuffers/go"
+)
+
+type AABB chipmunk.AABB
+
+func (aabb AABB) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	return deathio.CreateAABB(builder, float32(aabb.Lower.X), float32(aabb.Lower.Y), float32(aabb.Upper.X), float32(aabb.Upper.Y))
 }
 
-type EntityDTO struct {
-	Id     uint64  `json:"id"`
-	X      float32 `json:"x"`
-	Y      float32 `json:"y"`
-	Rot    float32 `json:"rotation"`
-	Radius float32 `json:"radius"`
-	Type   string  `json:"object"`
-	Aabb   *AabbDTO `json:"aabb"`
+type entities []Entity
+
+func (es entities) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	entities := []Entity(es)
+	n := len(entities)
+
+	offsets := make([]flatbuffers.UOffsetT, n)
+	for _, e := range entities {
+		offsets = append(offsets, fbMarshalEntity(builder, e))
+	}
+
+	deathio.GameStateStartEntitiesVector(builder, n)
+	for _, o := range offsets {
+		builder.PrependUOffsetT(o)
+	}
+	return builder.EndVector(n)
 }
 
-type PlayerDTO struct {
-	Id   uint64  `json:"id"`
-	X    float32 `json:"x"`
-	Y    float32 `json:"y"`
-	Type string  `json:"object"`
+func (gs *GameState) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	entities := entities(gs.Entities).FlatbufMarshal(builder)
+
+	deathio.GameStateStart(builder)
+	deathio.GameStateAddTick(builder, gs.Tick)
+	deathio.GameStateAddPlayerId(builder, gs.PlayerID)
+	deathio.GameStateAddEntities(builder, entities)
+
+	return deathio.GameStateEnd(builder)
 }
 
-type GameStateDTO struct {
-	Tick     uint64       `json:"tick"`
-	PlayerID uint64       `json:"player_id"`
-	Entities []*EntityDTO `json:"entities"`
+func fbMarshalEntity(builder *flatbuffers.Builder, e Entity) flatbuffers.UOffsetT {
+
+	pos := deathio.CreateVec2f(builder, e.X(), e.Y())
+	aabb := e.AABB().FlatbufMarshal(builder)
+
+	deathio.EntityStart(builder)
+	deathio.EntityAddId(builder, e.ID())
+	deathio.EntityAddPos(builder, pos)
+	deathio.EntityAddAabb(builder, aabb)
+	deathio.EntityAddRadius(builder, uint16(e.Radius()))
+	deathio.EntityAddRotation(builder, e.Angle())
+	deathio.EntityAddType(builder, uint16(e.Type()))
+
+	return deathio.EntityEnd(builder)
+}
+
+type GameState struct {
+	Tick     uint64
+	PlayerID uint64
+	Entities []Entity
 }

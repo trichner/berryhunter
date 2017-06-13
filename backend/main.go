@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"time"
 	"math"
+	"github.com/trichner/death-io/backend/DeathioApi"
 )
 
 func main() {
@@ -107,7 +108,7 @@ func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
 	walls = append(walls, &entity{
 		BasicEntity: ecs.NewBasic(),
 		body:        bdy,
-		entityType:  typeBorder,
+		entityType:  DeathioApi.EntityTypeBorder,
 	})
 	return bdy
 }
