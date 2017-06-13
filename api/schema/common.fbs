@@ -1,3 +1,4 @@
+namespace DeathioApi;
 
 struct Vec3f {
   x:float;
