@@ -80,7 +80,7 @@ func (n *NetSystem) Update(dt float32) {
 		//msgJson, _ := json.Marshal(msg)
 
 		builder := flatbuffers.NewBuilder(64)
-		gs := gameState.FlatbufMarshal(builder)
+		gs := clientGameState.FlatbufMarshal(builder)
 		builder.Finish(gs)
 		err := player.client.SendMessage(builder.FinishedBytes())
 		if err != nil {

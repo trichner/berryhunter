@@ -46,13 +46,15 @@ func (gs *GameState) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UO
 
 func fbMarshalEntity(builder *flatbuffers.Builder, e Entity) flatbuffers.UOffsetT {
 
-	pos := deathio.CreateVec2f(builder, e.X(), e.Y())
-	aabb := e.AABB().FlatbufMarshal(builder)
-
 	deathio.EntityStart(builder)
 	deathio.EntityAddId(builder, e.ID())
+
+	pos := deathio.CreateVec2f(builder, e.X(), e.Y())
 	deathio.EntityAddPos(builder, pos)
+
+	aabb := e.AABB().FlatbufMarshal(builder)
 	deathio.EntityAddAabb(builder, aabb)
+
 	deathio.EntityAddRadius(builder, uint16(e.Radius()))
 	deathio.EntityAddRotation(builder, e.Angle())
 	deathio.EntityAddType(builder, uint16(e.Type()))
