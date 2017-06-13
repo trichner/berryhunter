@@ -2,9 +2,9 @@
 
 class VitalSigns {
 	constructor() {
-		this.health = 1000;
-		this.satiety = 1000;
-		this.bodyHeat = 1000;
+		this.health = VitalSigns.maximumValues.HEALTH;
+		this.satiety = VitalSigns.maximumValues.SATIETY;
+		this.bodyHeat = VitalSigns.maximumValues.BODYHEAT;
 
 		this.group = new Two.Group();
 		groups.overlay.add(this.group);
@@ -20,8 +20,10 @@ class VitalSigns {
 
 		this.indicators = {};
 		this.group.add(this.createBar(0, 'HEALTH'));
-		this.group.add(this.createBar(2, 'SATIETY'));
-		this.group.add(this.createBar(1, 'BODY_HEAT'));
+		this.group.add(this.createBar(1, 'SATIETY'));
+		this.group.add(this.createBar(2, 'BODYHEAT'));
+
+		this.setHealth(randomInt(VitalSigns.maximumValues.HEALTH * 0.25, VitalSigns.maximumValues.HEALTH));
 	}
 
 	/**
@@ -42,9 +44,8 @@ class VitalSigns {
 		background.noStroke();
 		background.fill = VitalSigns.colors[colorIndex].PASSIVE;
 
-		let value = random(0, 1);
 
-		let indicator = new Two.Rectangle(this.width * (1 - value) / -2, y, this.width * value, barHeight);
+		let indicator = new Two.Rectangle(0, y, this.width, barHeight);
 		group.add(indicator);
 		this.indicators[colorIndex] = indicator;
 		indicator.noStroke();
@@ -52,7 +53,39 @@ class VitalSigns {
 
 		return group;
 	}
+
+	setHealth(health) {
+		this.setValue('health', health);
+	}
+
+	setSatiety(satiety) {
+		this.setValue('satiety', satiety);
+	}
+
+	setBodyHeat(bodyHeat) {
+		this.setValue('bodyHeat', bodyHeat);
+	}
+
+	setValue(valueIndex, value) {
+		this[valueIndex] = value;
+		valueIndex = valueIndex.toUpperCase();
+		this.indicators[valueIndex]._matrix.manual = true;
+		let indicator = this.indicators[valueIndex];
+		let floatValue = value / VitalSigns.maximumValues[valueIndex];
+		indicator.translation.x = this.width * (1 - floatValue) / -2;
+		indicator._matrix
+			.translate(
+				indicator.translation.x,
+				indicator.translation.y)
+			.scale(floatValue, 1);
+	}
 }
+
+VitalSigns.maximumValues = {
+	HEALTH: 1000,
+	SATIETY: 1000,
+	BODYHEAT: 1000
+};
 
 VitalSigns.colors = {
 	HEALTH: {
@@ -63,7 +96,7 @@ VitalSigns.colors = {
 		ACTIVE: 'limegreen',
 		PASSIVE: '#1E7A1E'
 	},
-	BODY_HEAT: {
+	BODYHEAT: {
 		ACTIVE: 'dodgerblue',
 		PASSIVE: '#125799'
 	}
