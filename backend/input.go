@@ -46,21 +46,26 @@ type InputSystem struct {
 
 func (i *InputDTO) FlatbufferUnmarshal(bytes []byte) {
 
-	input := DeathioApi.GetRootAsInput(bytes, 0)
+	fbInput := DeathioApi.GetRootAsInput(bytes, 0)
 
-	i.Tick = input.Tick()
-	v := input.Movement(nil)
-	i.Movement = &movement{
-		X: v.X(),
-		Y: v.Y(),
+	i.Tick = fbInput.Tick()
+	v := fbInput.Movement(nil)
+
+	if v != nil {
+		i.Movement = &movement{
+			X: v.X(),
+			Y: v.Y(),
+		}
 	}
 
-	a := input.Action(nil)
+	a := fbInput.Action(nil)
 	if a != nil {
 		i.Action = &action{
 			Item: a.Item(),
 		}
 	}
+
+	i.Rotation = fbInput.Rotation()
 }
 
 func NewInputSystem(g *Game) *InputSystem {
@@ -86,7 +91,7 @@ func (i *InputSystem) New(w *ecs.World) {
 			case msg := <-i.receive:
 				var input InputDTO
 				input.FlatbufferUnmarshal(msg.body)
-					i.storeInput(msg.playerId, &input)
+				i.storeInput(msg.playerId, &input)
 			}
 		}
 	}()
