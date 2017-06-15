@@ -14,10 +14,10 @@ const inputBuffererCount = 3
 
 //---- models for input
 type InputDTO struct {
-	Tick     uint64
-	Movement *movement
-	Rotation float32
-	Action   *action
+	tick     uint64
+	movement *movement
+	rotation float32
+	action   *action
 }
 
 type movement struct {
@@ -48,24 +48,26 @@ func (i *InputDTO) FlatbufferUnmarshal(bytes []byte) {
 
 	fbInput := DeathioApi.GetRootAsInput(bytes, 0)
 
-	i.Tick = fbInput.Tick()
-	v := fbInput.Movement(nil)
+	// umarshal simple scalars
+	i.tick = fbInput.Tick()
+	i.rotation = fbInput.Rotation()
 
-	if v != nil {
-		i.Movement = &movement{
-			X: v.X(),
-			Y: v.Y(),
+	// parse movement if existing
+	m := fbInput.Movement(nil)
+	if m != nil {
+		i.movement = &movement{
+			X: m.X(),
+			Y: m.Y(),
 		}
 	}
 
+	// parse action if existent
 	a := fbInput.Action(nil)
 	if a != nil {
-		i.Action = &action{
+		i.action = &action{
 			Item: a.Item(),
 		}
 	}
-
-	i.Rotation = fbInput.Rotation()
 }
 
 func NewInputSystem(g *Game) *InputSystem {
@@ -148,10 +150,10 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 		return
 	}
 
-	p.body.SetAngle(vect.Float(inputs.Rotation))
+	p.body.SetAngle(vect.Float(inputs.rotation))
 
 	// do we even have inputs?
-	if inputs.Movement == nil {
+	if inputs.movement == nil {
 		p.body.SetVelocity(0, 0)
 	} else {
 		v := input2vec(inputs)
@@ -161,8 +163,8 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 }
 
 func input2vec(i *InputDTO) vect.Vect {
-	x := signumf32(i.Movement.X)
-	y := signumf32(i.Movement.Y)
+	x := signumf32(i.movement.X)
+	y := signumf32(i.movement.Y)
 	// prevent division by zero
 	if x == 0 && y == 0 {
 		return vect.Vector_Zero
