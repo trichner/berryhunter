@@ -25,14 +25,14 @@ func f32ToU16Px(f float32) uint16 {
 // AABB is an alias to not expose transitive dependencies
 type AABB chipmunk.AABB
 
-// FlatbufMarshal implements FlatbufMarshaller for AABBs
-func (aabb AABB) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+// MarshalFlatbuf implements FlatbufCodec for AABBs
+func (aabb AABB) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	return deathio.CreateAABB(builder, floatToPx(aabb.Lower.X), floatToPx(aabb.Lower.Y), floatToPx(aabb.Upper.X), floatToPx(aabb.Upper.Y))
 }
 
-// FlatbufMarshal implements FlatbufMarshaller for GameState
-func (gs *GameState) FlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+// MarshalFlatbuf implements FlatbufCodec for GameState
+func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	entities := EntitiesFlatbufMarshal(gs.Entities, builder)
 
@@ -71,7 +71,7 @@ func EntityFlatbufMarshal(e Entity, builder *flatbuffers.Builder) flatbuffers.UO
 	pos := deathio.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
 	deathio.EntityAddPos(builder, pos)
 
-	aabb := e.AABB().FlatbufMarshal(builder)
+	aabb := e.AABB().MarshalFlatbuf(builder)
 	deathio.EntityAddAabb(builder, aabb)
 
 	deathio.EntityAddRadius(builder, f32ToU16Px(e.Radius()))

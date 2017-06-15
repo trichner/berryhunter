@@ -56,6 +56,7 @@ func (n *NetSystem) Update(dt float32) {
 			}
 		}
 
+		// find all entities in view
 		pos := player.body.Position()
 		bb := chipmunk.NewAABB(pos.X-viewPortWidth/2, pos.Y-viewPortHeight/2, pos.X+viewPortWidth/2, pos.Y+viewPortHeight/2)
 		n.game.space.Query(nil, bb, func(a, b chipmunk.Indexable) {
@@ -70,17 +71,15 @@ func (n *NetSystem) Update(dt float32) {
 				entites = append(entites, u.(Entity))
 			}
 		})
-		// - query BB for entities in view
 
 		// copy gameStatePrototype
 		clientGameState := gameState
 		clientGameState.Entities = entites
 		clientGameState.PlayerID = player.ID()
-		//msg := &MessageDTO{"GAME_STATE", clientGameState}
-		//msgJson, _ := json.Marshal(msg)
 
+		// marshal and send state
 		builder := flatbuffers.NewBuilder(64)
-		gs := clientGameState.FlatbufMarshal(builder)
+		gs := clientGameState.MarshalFlatbuf(builder)
 		builder.Finish(gs)
 		err := player.client.SendMessage(builder.FinishedBytes())
 		if err != nil {

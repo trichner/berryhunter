@@ -139,12 +139,6 @@ const walkImpulse = 2.0
 // applies the inputs to a player
 func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 
-	//if last != nil && last.Movement != nil {
-	//	l := input2vec(last)
-	//	l.Mult(walkImpulse)
-	//	p.body.AddForce(float32(-l.X), float32(-l.Y))
-	//	return
-	//}
 	if inputs == nil {
 		p.body.SetVelocity(0, 0)
 		return
