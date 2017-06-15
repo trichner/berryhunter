@@ -201,8 +201,8 @@ const Develop = {
 		}
 	},
 
-	logClientTick: function (tick) {
-		this.logValue('clientTick', tick);
+	logClientTick: function (inputObj) {
+		this.logValue('clientTick', inputObj.tick);
 	},
 
 	logClientTickRate: function (timeSinceLast) {

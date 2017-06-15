@@ -48,8 +48,23 @@ const Backend = {
 			return;
 		}
 
-		// TODO FlatBuffers
-		// this.webSocket.send(JSON.stringify(messageObj));
+		this.webSocket.send(messageObj);
+	},
+
+	sendInputTick: function (inputObj) {
+		if (isUndefined(this.lastServerTick)) {
+			// If the backend hasn't send a snapshot yet, don't send any input.
+			return;
+		}
+
+		inputObj.tick = this.lastServerTick + 1;
+
+		if (Develop.isActive()) {
+			Develop.logClientTick(inputObj);
+		}
+
+
+		this.send(this.marshalInput(inputObj));
 	},
 
 	receive: function (event) {
@@ -178,22 +193,6 @@ const Backend = {
 			UpperX: aabb.upper().x(),
 			UpperY: aabb.upper().y(),
 		}
-	},
-
-	sendInputTick: function (inputObj) {
-		if (typeof this.lastServerTick === 'undefined') {
-			// If the backend hasn't send a snapshot yet, don't send any input.
-			return;
-		}
-
-		inputObj.tick = this.lastServerTick + 1;
-
-		if (Develop.isActive()) {
-			Develop.logClientTick(inputObj.tick);
-		}
-
-
-		this.send(this.marshalInput(inputObj));
 	},
 
 	marshalInput: function (inputObj) {
