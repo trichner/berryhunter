@@ -203,6 +203,66 @@ const Develop = {
 
 	logClientTick: function (inputObj) {
 		this.logValue('clientTick', inputObj.tick);
+
+		let movementStr = '';
+		if (isDefined(inputObj.movement)) {
+			switch (inputObj.movement.x){
+				case 1:
+					switch (inputObj.movement.y){
+						case 1:
+							movementStr = '\u2198️'; // ↘
+							break;
+						case 0:
+							movementStr = '\u27A1'; // ➡
+							break;
+						case -1:
+							movementStr = '\u2197'; // ↗
+							break;
+					}
+					break;
+				case 0:
+					switch (inputObj.movement.y){
+						case 1:
+							movementStr = '\u2b07'; // ⬇
+							break;
+						case 0:
+							// movementStr = '\u26d4'; // ---
+							break;
+						case -1:
+							movementStr = '\u2b06'; // ⬆
+							break;
+					}
+					break;
+				case -1:
+					switch (inputObj.movement.y){
+						case 1:
+							movementStr = '\u2199'; // ↙
+							break;
+						case 0:
+							movementStr = '\u2b05'; // ⬅
+							break;
+						case -1:
+							movementStr = '\u2196'; // ↖
+							break;
+					}
+					break;
+			}		} else {
+			// movementStr = '\u26d4'; // ---
+		}
+
+		document.getElementById('develop_input_movement').textContent = movementStr;
+
+		if (isDefined(inputObj.rotation)){
+			document.getElementById('develop_input_rotation').textContent = (inputObj.rotation * (180/Math.PI)).toFixed(0);
+		} else {
+			document.getElementById('develop_input_rotation').textContent = '';
+		}
+
+		if (isDefined(inputObj.action)){
+			document.getElementById('develop_input_action').textContent = inputObj.action.item;
+		} else {
+			document.getElementById('develop_input_action').textContent = '';
+		}
 	},
 
 	logClientTickRate: function (timeSinceLast) {

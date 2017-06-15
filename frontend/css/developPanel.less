@@ -33,6 +33,12 @@
 
 			td {
 				min-width: 6.35em;
+
+				> h3 {
+					font-size: inherit;
+					text-align: center;
+					margin-bottom: 0;
+				}
 			}
 		}
 	}
@@ -70,6 +76,35 @@
 .actionButton {
 	color: white;
 	background-color: #03A9F4;
+}
+
+dl.flatList {
+	float: left;
+	width: 100%;
+	clear: both;
+	margin: 0;
+
+	> dt, dd {
+		float: left;
+	}
+
+	> dt {
+		clear: left;
+
+		&::after {
+			content: ': ';
+		}
+	}
+
+	> dd {
+		margin: 0;
+		margin-left: 0.5em;
+	}
+}
+
+#develop_input_movement {
+	font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji",
+		Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif;
 }
 
 // FPS were 'color: lightyellow'

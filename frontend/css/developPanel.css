@@ -28,6 +28,11 @@
 #developPanel > table > tbody td {
   min-width: 6.35em;
 }
+#developPanel > table > tbody td > h3 {
+  font-size: inherit;
+  text-align: center;
+  margin-bottom: 0;
+}
 #developPanel .good {
   color: #4CAF50;
 }
@@ -52,6 +57,29 @@
 .actionButton {
   color: white;
   background-color: #03A9F4;
+}
+dl.flatList {
+  float: left;
+  width: 100%;
+  clear: both;
+  margin: 0;
+}
+dl.flatList > dt,
+dl.flatList dd {
+  float: left;
+}
+dl.flatList > dt {
+  clear: left;
+}
+dl.flatList > dt::after {
+  content: ': ';
+}
+dl.flatList > dd {
+  margin: 0;
+  margin-left: 0.5em;
+}
+#develop_input_movement {
+  font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus, Code2000, Code2001, Code2002, Musica, serif;
 }
 #serverTickPopup {
   position: fixed;
