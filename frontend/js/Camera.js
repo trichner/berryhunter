@@ -42,22 +42,22 @@ class Camera {
 	}
 
 	static keepWithinMapBoundaries(vehicle) {
-		if (vehicle.position.x < centerX) {
-			vehicle.position.x = centerX;
+		if (vehicle.position.x < centerX - Camera.extraBoundary) {
+			vehicle.position.x = centerX - Camera.extraBoundary;
 			vehicle.velocity.x = 0;
 			vehicle.acceleration.x = 0;
-		} else if (vehicle.position.x > gameMap.width - centerX) {
-			vehicle.position.x = gameMap.width - centerX;
+		} else if (vehicle.position.x > gameMap.width - centerX + Camera.extraBoundary) {
+			vehicle.position.x = gameMap.width - centerX + Camera.extraBoundary;
 			vehicle.velocity.x = 0;
 			vehicle.acceleration.x = 0;
 		}
 
-		if (vehicle.position.y < centerY) {
-			vehicle.position.y = centerY;
+		if (vehicle.position.y < centerY - Camera.extraBoundary) {
+			vehicle.position.y = centerY - Camera.extraBoundary;
 			vehicle.velocity.y = 0;
 			vehicle.acceleration.y = 0;
-		} else if (vehicle.position.y > gameMap.height - centerY) {
-			vehicle.position.y = gameMap.height - centerY;
+		} else if (vehicle.position.y > gameMap.height - centerY + Camera.extraBoundary) {
+			vehicle.position.y = gameMap.height - centerY + Camera.extraBoundary;
 			vehicle.velocity.y = 0;
 			vehicle.acceleration.y = 0;
 		}
@@ -84,3 +84,5 @@ class Camera {
 		}
 	}
 }
+
+Camera.extraBoundary = 100;
