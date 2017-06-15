@@ -1,50 +1,68 @@
-<div id="developPanel">
-	<h2>Development</h2>
-	<table>
-		<thead>
+<section>
+	<div id="developPanel">
+		<h2>Development</h2>
+		<table>
+			<thead>
 
-		</thead>
-		<tbody>
-		<tr>
-			<th>FPS</th>
-			<td id="develop_fps" colspan="2"></td>
-		</tr>
-		<tr>
-			<th>Websocket</th>
-			<td id="develop_webSocket" colspan="2"></td>
-		</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<th>FPS</th>
+				<td id="develop_fps" colspan="2"></td>
+			</tr>
+			<tr>
+				<th>Websocket</th>
+				<td id="develop_webSocket" colspan="2"></td>
+			</tr>
 
-		<tr class="separatorRow">
-			<th><!-- Placeholder --></th>
-			<th>Server</th>
-			<th>Client</th>
-		</tr>
+			<tr class="separatorRow">
+				<th><!-- Placeholder --></th>
+				<th>Server</th>
+				<th>Client</th>
+			</tr>
 
-		<tr>
-			<th>Tick</th>
-			<td id="develop_serverTick"></td>
-			<td id="develop_clientTick"></td>
-		</tr>
-		<tr>
-			<th>Tick Rate</th>
-			<td id="develop_serverTickRate"></td>
-			<td id="develop_clientTickRate"></td>
-		</tr>
-		</tbody>
-	</table>
-	<div>
-		<button class="toggleButton" data-setting="cameraBoundaries">
-			<span class="label">Cam Boundaries</span>
-			<span class="state"></span>
-		</button>
-		<button class="toggleButton" data-setting="showAABBs">
-			<span class="label">AABBs</span>
-			<span class="state"></span>
+			<tr>
+				<th>Tick</th>
+				<td id="develop_serverTick"></td>
+				<td id="develop_clientTick"></td>
+			</tr>
+			<tr>
+				<th>Tick Rate</th>
+				<td id="develop_serverTickRate"></td>
+				<td id="develop_clientTickRate"></td>
+			</tr>
+			<tr>
+				<th><!-- Actions --></th>
+				<td>
+					<button id="develop_showServerTick" class="actionButton">
+						Show next GameState
+					</button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<div>
+			<button class="toggleButton" data-setting="cameraBoundaries">
+				<span class="label">Cam Boundaries</span>
+				<span class="state"></span>
+			</button>
+			<button class="toggleButton" data-setting="showAABBs">
+				<span class="label">AABBs</span>
+				<span class="state"></span>
+			</button>
+		</div>
+		<div>
+			<select id="develop_itemSelect"></select>
+			<input id="develop_itemCount" type="number" step="1" value="1"/>
+			<button id="develop_itemAdd">Add</button>
+		</div>
+	</div>
+
+	<div id="serverTickPopup" class="hidden">
+		<h2>Current Server Tick</h2>
+		<pre><code id="serverTickOutput"></code></pre>
+		<button id="develop_closeServerTickPopup" class="actionButton">
+			Close
 		</button>
 	</div>
-	<div>
-		<select id="develop_itemSelect"></select>
-		<input id="develop_itemCount" type="number" step="1" value="1" />
-		<button id="develop_itemAdd">Add</button>
-	</div>
-</div>
+</section>

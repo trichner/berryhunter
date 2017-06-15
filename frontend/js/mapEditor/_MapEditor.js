@@ -18,6 +18,10 @@ const MapEditor = {
 			type: Two.Types.svg
 		}).appendTo(document.getElementById('drawingContainer'));
 
+		if (Develop.isActive()) {
+			Develop.logWebsocketStatus('Disabled', 'neutral');
+		}
+
 		// Empty quadrants
 		Quadrants = [[]];
 		this.calculateMapDimensions();

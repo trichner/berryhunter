@@ -42,6 +42,8 @@ const Develop = {
 				this.setupToggleButtons();
 
 				this.setupItemAdding();
+
+				this.setupTickSampler();
 			}.bind(this)));
 	},
 
@@ -130,6 +132,28 @@ const Develop = {
 		}
 	},
 
+	setupTickSampler(){
+		this.showNextGameState = false;
+		let showServerTick = document.getElementById('develop_showServerTick');
+
+		if (MapEditor.isActive()) {
+			showServerTick.style.display = 'none';
+			return;
+		}
+
+		showServerTick.addEventListener('click', function () {
+			let serverTickPopup = document.getElementById('serverTickPopup');
+			serverTickPopup.classList.remove('hidden');
+			Develop.showNextGameState = true;
+		});
+
+		let closeServerTick = document.getElementById('develop_closeServerTickPopup');
+		closeServerTick.addEventListener('click', function () {
+			let serverTickPopup = document.getElementById('serverTickPopup');
+			serverTickPopup.classList.add('hidden');
+		});
+	},
+
 	logValue: function (name, value) {
 		document.getElementById('develop_' + name).textContent = value;
 	},
@@ -168,9 +192,13 @@ const Develop = {
 		this.logSampledValue('fps', this.logs.fps, fps);
 	},
 
-	logServerTick: function (tick, timeSinceLast) {
-		this.logValue('serverTick', tick);
+	logServerTick: function (gameState, timeSinceLast) {
+		this.logValue('serverTick', gameState.tick);
 		this.logSampledValue('serverTickRate', this.logs.serverTickRate, timeSinceLast, 'ms');
+		if (this.showNextGameState) {
+			document.getElementById('serverTickOutput').textContent = JSON.stringify(gameState, 2);
+			this.showNextGameState = false;
+		}
 	},
 
 	logClientTick: function (tick) {

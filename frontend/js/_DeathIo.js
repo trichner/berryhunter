@@ -21,7 +21,7 @@ let centerX, centerY;
  */
 let player;
 /**
- * @type GameMap
+ * @type GameMap|GameMapWithBackend
  */
 let gameMap;
 

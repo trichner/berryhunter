@@ -152,15 +152,48 @@ h1 {
 #developPanel .bad {
   color: #F44336;
 }
-#developPanel .toggleButton {
+
+.toggleButton {
   color: white;
 }
-#developPanel .toggleButton > .label::after {
+
+.toggleButton > .label::after {
   content: ':';
 }
-#developPanel .toggleButton.on {
+
+.toggleButton.on {
   background-color: #4CAF50;
 }
-#developPanel .toggleButton.off {
+
+.toggleButton.off {
   background-color: #F44336;
+}
+
+.actionButton {
+    color: white;
+    background-color: #03A9F4;
+}
+
+#serverTickPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 95vh;
+    max-width: 40em;
+    overflow-y: auto;
+    padding: 0.7em;
+    background-color: white;
+}
+
+#serverTickPopup.hidden {
+    display: none;
+}
+
+#serverTickPopup > pre {
+    white-space: pre-wrap;
+}
+
+#develop_closeServerTickPopup {
+    float: right;
 }

@@ -87,6 +87,13 @@ const Backend = {
 			return;
 		}
 
+		try {
+			gameState = this.unmarshalGameState(gameState);
+		} catch (e) {
+			console.error("Error unmarshalling GameState from FlatBuffer object.", gameState, e);
+			return;
+		}
+
 		if (Develop.isActive()) {
 			Develop.logWebsocketStatus('Open', 'good');
 		}
@@ -95,23 +102,23 @@ const Backend = {
 			let messageReceivedTime = performance.now();
 			let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
 			this.lastMessageReceivedTime = messageReceivedTime;
-			Develop.logServerTick(gameState.tick().toFloat64(), timeSinceLastMessage);
+			Develop.logServerTick(gameState, timeSinceLastMessage);
 		}
 		this.receiveSnapshot(gameState);
 	},
 
 	/**
 	 *
-	 * @param {DeathioApi.GameState} snapshot
+	 * @param {{tick: number, playerId: number, entities: Array}} snapshot
 	 */
 	receiveSnapshot: function (snapshot) {
-		this.lastServerTick = snapshot.tick().toFloat64();
+		this.lastServerTick = snapshot.tick;
 
 		gameMap.newSnapshot();
 
-		for (let i = 0; i < snapshot.entitiesLength(); ++i) {
-			let entity = this.unmarshalEntity(snapshot.entities(i));
-			if (entity.id === snapshot.playerId().toFloat64()) {
+		// TODO revert to old snapshot
+		snapshot.entities.forEach(function (entity) {
+			if (entity.id === snapshot.playerId) {
 				if (gameStarted) {
 					player.character.setPosition(entity.x, entity.y);
 				} else {
@@ -123,7 +130,25 @@ const Backend = {
 			} else {
 				gameMap.addOrUpdate(entity);
 			}
+		});
+	},
+
+	/**
+	 * @param {DeathioApi.GameState} gameState
+	 * @return {{tick: number, playerId: number, entities: Array}}
+	 */
+	unmarshalGameState(gameState){
+		let result = {
+			tick: gameState.tick().toFloat64(),
+			playerId: gameState.tick().toFloat64(),
+			entities: []
+		};
+
+		for (let i = 0; i < snapshot.entitiesLength(); ++i) {
+			result.entities.push(this.unmarshalEntity(snapshot.entities(i)));
 		}
+
+		return result;
 	},
 
 	/**
