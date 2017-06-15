@@ -113,7 +113,8 @@ func (g *Game) addPlayer(p *player) {
 	}
 }
 
-const step = float32(33.0 / 1000.0)
+const stepMillis = 33.0
+const step = float32(stepMillis / 1000.0)
 
 func (g *Game) Update() {
 
@@ -124,7 +125,10 @@ func (g *Game) Update() {
 
 	nowMillis := time.Now().UnixNano() / 1000000
 	dtMillis := nowMillis - beforeMillis
-	fmt.Printf("%10d @ %5d\n", g.tick, dtMillis)
+	if dtMillis > stepMillis {
+		load := dtMillis / stepMillis * 100
+		fmt.Printf("Overload! Systems at: %d%%\n", load)
+	}
 
 	// needs to be atomic to prevent race conditions
 	atomic.AddUint64(&g.tick, 1)

@@ -6,7 +6,6 @@ import (
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"math/rand"
-	"github.com/trichner/death-io/backend/net"
 	"github.com/vova616/chipmunk/transform"
 	"github.com/trichner/death-io/backend/DeathioApi"
 )
@@ -115,38 +114,7 @@ func NewStaticEntityWithBody(body *staticEntityBody) *entity {
 	return e
 }
 
-//---- player
-type player struct {
-	*entity
-	hitSensor *chipmunk.Shape
-	Health    uint
-	Hunger    uint
-	client    *net.Client
-}
 
-const playerCollisionGroup = -1
-func NewPlayer(c *net.Client) *player {
-	e := newCircleEntity(0.5, 1)
-
-	sensor := chipmunk.NewCircle(vect.Vect{0.25, 0}, 0.5)
-	sensor.IsSensor = true
-	sensor.Layer = ressourceCollisionLayer
-	sensor.UserData = "ITEM"
-
-	e.body.AddShape(sensor)
-	e.body.CallbackHandler = &Collidable{}
-	e.body.UserData = e
-
-	e.body.UpdateShapes()
-
-	e.entityType = DeathioApi.EntityTypeCharacter
-	for _, s := range e.body.Shapes {
-		s.Group = playerCollisionGroup
-	}
-	p := &player{entity: e, client: c, hitSensor: sensor}
-	p.body.UserData = p
-	return p
-}
 
 //---- DTO
 type MessageDTO struct {

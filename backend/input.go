@@ -7,6 +7,7 @@ import (
 	"github.com/trichner/death-io/backend/net"
 	"sync"
 	"github.com/trichner/death-io/backend/DeathioApi"
+	"fmt"
 )
 
 
@@ -154,7 +155,19 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 		v.Mult(walkImpulse)
 		p.body.SetVelocity(float32(v.X), float32(v.Y))
 	}
+
+	// process actions if available
+	if inputs.action != nil {
+		//a := inputs.action
+		for _, v := range p.collisions {
+			fmt.Printf("Action on: %+v\n", v)
+		}
+	} else {
+		//p.body.CallbackHandler = nil
+	}
 }
+
+
 
 func input2vec(i *InputDTO) vect.Vect {
 	x := signumf32(i.movement.X)

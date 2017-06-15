@@ -131,7 +131,7 @@ func newStaticCircleEntity(x, y, r float32) *entity {
 
 	ballEntity.body = body
 	ballEntity.body.UserData = ballEntity
-	ballEntity.body.CallbackHandler = &Collidable{}
+	//ballEntity.body.CallbackHandler = &Collidable{}
 	ballEntity.radius = r
 	return ballEntity
 }
@@ -152,7 +152,7 @@ func newCircleEntity(r, m float32) *entity {
 	body := newBody(m, ball)
 	ballEntity.body = body
 	ballEntity.body.UserData = ballEntity
-	ballEntity.body.CallbackHandler = &Collidable{}
+	//ballEntity.body.CallbackHandler = &Collidable{}
 	ballEntity.radius = r
 	return ballEntity
 }
