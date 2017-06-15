@@ -140,12 +140,12 @@ const Backend = {
 	unmarshalGameState(gameState){
 		let result = {
 			tick: gameState.tick().toFloat64(),
-			playerId: gameState.tick().toFloat64(),
+			playerId: gameState.playerId().toFloat64(),
 			entities: []
 		};
 
-		for (let i = 0; i < snapshot.entitiesLength(); ++i) {
-			result.entities.push(this.unmarshalEntity(snapshot.entities(i)));
+		for (let i = 0; i < gameState.entitiesLength(); ++i) {
+			result.entities.push(this.unmarshalEntity(gameState.entities(i)));
 		}
 
 		return result;

@@ -196,7 +196,7 @@ const Develop = {
 		this.logValue('serverTick', gameState.tick);
 		this.logSampledValue('serverTickRate', this.logs.serverTickRate, timeSinceLast, 'ms');
 		if (this.showNextGameState) {
-			document.getElementById('serverTickOutput').textContent = JSON.stringify(gameState, 2);
+			document.getElementById('serverTickOutput').textContent = JSON.stringify(gameState, null, 2);
 			this.showNextGameState = false;
 		}
 	},
