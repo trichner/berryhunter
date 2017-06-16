@@ -47,7 +47,7 @@ func BenchmarkSpace_Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		x := float32(rand.Intn(100))
 		y := float32(rand.Intn(100))
-		r := float32(1 + rand.Intn(11))
+		r := float32(1 + rand.Intn(3))
 		shape := NewCircle(Vec2f{x, y}, r)
 		s.AddShape(shape)
 	}

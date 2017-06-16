@@ -83,17 +83,23 @@ func (s *Space) bruteIntersectShapes(shapes shapes) {
 		for j := i + 1; j < n; j++ {
 			other := shapes[j]
 
-			cbb := current.BB()
-			obb := other.BB()
-			intersects := IntersectAabb(&cbb, &obb)
-			if !intersects {
+			cbb := current.BoundingBox()
+			obb := other.BoundingBox()
+			if !IntersectAabb(&cbb, &obb) {
 				continue
 			}
-			_ = intersects
 
 			// force circles for now
-			intersects = IntersectCircles(current.(Circle), other.(Circle))
-			// RESOLVE collision
+			currentCircle := current.(Circle)
+			otherCircle := other.(Circle)
+			if !IntersectCircles(currentCircle, otherCircle) {
+				continue
+			}
+
+			if !ArbiterShapes(current, other) {
+				continue
+			}
+
 			current.AddCollision(other)
 			other.AddCollision(current)
 		}
@@ -102,21 +108,30 @@ func (s *Space) bruteIntersectShapes(shapes shapes) {
 }
 
 // AddShape appends a new shape to the existing ones
-func (s *Space) AddShape(c Circle) {
+func (s *Space) AddShape(c ColliderShape) {
 	s.shapes[c] = struct{}{}
+}
+
+// RemoveShape removes a shape from the existing ones
+func (s *Space) RemoveShape(c ColliderShape) {
+	delete(s.shapes, c)
 }
 
 // AddStaticShape adds a static shape
 // Important: static shapes cannot be moved nor removed
-func (s *Space) AddStaticShape(c Circle) {
+func (s *Space) AddStaticShape(c ColliderShape) {
 	s.insert(s.gridStatic, c)
 }
 
 func (s *Space) insert(grid grid, c ColliderShape) {
 
-	bb := c.BB()
-	intersectedChunks := make(map[Vec2i]struct{})
+	bb := c.BoundingBox()
 
+	if bb.r-bb.l > gridWidth || bb.u-bb.b > gridWidth {
+		panic("Cannot handle objects bigger than a grid")
+	}
+
+	intersectedChunks := make(map[Vec2i]struct{})
 	intersectedChunks[Vec2i{floor32f(bb.l / gridWidth), floor32f(bb.b / gridWidth)}] = struct{}{}
 	intersectedChunks[Vec2i{floor32f(bb.l / gridWidth), floor32f(bb.u / gridWidth)}] = struct{}{}
 

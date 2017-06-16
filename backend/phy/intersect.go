@@ -32,3 +32,12 @@ func IntersectCircles(a Circle, b Circle) bool {
 	r := a.Radius() + b.Radius()
 	return d < r*r
 }
+
+func ArbiterShapes(a ColliderShape, b ColliderShape) bool {
+
+	if a.Group() > 0 && a.Group() == b.Group() {
+		return false
+	}
+
+	return (a.Layer() & b.Layer()) != 0
+}

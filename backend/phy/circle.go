@@ -6,23 +6,40 @@ import (
 
 type ColliderSet map[ColliderShape]struct{}
 
+type Shape struct {
+	bb    AABB
+	Layer int
+	Group int
+}
+
+func (c *Shape) BoundingBox() AABB {
+	return c.bb
+}
+
 type ColliderShape interface {
-	BB() AABB
+	BoundingBox() AABB
 	ResetCollisions()
 	AddCollision(s ColliderShape)
 	Collisions() ColliderSet
+	Layer() int
+	Group() int
 }
 
 type collisionShape struct {
+	Shape
 	collisions ColliderSet
+}
+
+func (c *collisionShape) Layer() int {
+	return c.Shape.Layer
+}
+
+func (c *collisionShape) Group() int {
+	return c.Shape.Group
 }
 
 func (c *collisionShape) AddCollision(s ColliderShape) {
 	c.collisions[s] = struct{}{}
-}
-
-func (c *collisionShape) BB() AABB {
-	return AABB{}
 }
 
 func (c *collisionShape) ResetCollisions() {
@@ -34,7 +51,6 @@ func (c *collisionShape) Collisions() ColliderSet {
 }
 
 type Circle interface {
-	ColliderShape
 	Center() Vec2f
 	Radius() float32
 }
@@ -46,7 +62,6 @@ type circle struct {
 
 	radius   float32
 	center   Vec2f
-	bb       AABB
 	isSensor bool
 
 	collisions circleSet
@@ -58,16 +73,14 @@ func NewCircle(origin Vec2f, radius float32) *circle {
 		center: origin,
 	}
 
+	c.Shape.Layer = -1
+
 	radiusVector := Vec2f{radius, radius}
 	lower := origin.Sub(radiusVector)
 	upper := origin.Add(radiusVector)
 
 	c.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
 	return c
-}
-
-func (c *circle) BB() AABB {
-	return c.bb
 }
 
 func (c *circle) Radius() float32 {
