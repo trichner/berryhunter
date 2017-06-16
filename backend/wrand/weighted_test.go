@@ -20,5 +20,5 @@ func TestWeightedChoice_Choose(t *testing.T) {
 		selected := wc.Choose(rnd)
 		choices[selected.(int)]++
 	}
-	fmt.Printf("Choices: %v", choices)
+	fmt.Printf("choices: %v", choices)
 }
