@@ -14,6 +14,8 @@ func sqrt32f(f float32) float32 {
 	return float32(math.Sqrt(float64(f)))
 }
 
+//==== Vec2f
+
 // Vec2f is a simple 2d float vector
 type Vec2f struct {
 	X, Y float32
@@ -62,3 +64,21 @@ func (m *Mat2f) Mult(f Vec2f) Vec2f {
 	y := m.c*f.X + m.d*f.Y
 	return Vec2f{x, y}
 }
+
+//==== Vec2i
+
+// Vec2i is a simple 2d integer vector
+type Vec2i struct {
+	X, Y int
+}
+
+// Add adds the vector with another and returns the resulting vector
+func (v Vec2i) Add(w Vec2i) Vec2i {
+	return Vec2i{v.X + w.X, v.Y + w.Y}
+}
+
+// Sub subtracts the vector with another and returns the resulting vector
+func (v Vec2i) Sub(w Vec2i) Vec2i {
+	return Vec2i{v.X - w.X, v.Y - w.Y}
+}
+

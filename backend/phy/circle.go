@@ -7,11 +7,11 @@ import (
 type circle struct {
 	radius float32
 	origin Vec2f
-	_aabb  AABB
+	bb     AABB
 }
 
-func NewCircle(origin Vec2f, radius float32) circle {
-	c := circle{
+func NewCircle(origin Vec2f, radius float32) *circle {
+	c := &circle{
 		radius: radius,
 		origin: origin,
 	}
@@ -19,12 +19,12 @@ func NewCircle(origin Vec2f, radius float32) circle {
 	lower := origin.Sub(Vec2f{-radius, -radius})
 	upper := origin.Add(Vec2f{-radius, -radius})
 
-	c._aabb = AABB{lower, upper}
+	c.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
 	return c
 }
 
 func (c *circle) aabb() AABB {
-	return c._aabb
+	return c.bb
 }
 
 func (c *circle) intersectionArea(o *circle) float32 {
