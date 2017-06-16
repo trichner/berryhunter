@@ -15,10 +15,10 @@ func IntersectAabb(a *AABB, b *AABB) bool {
 	if a.l > b.r {
 		return false // a is right of b
 	}
-	if a.u < b.l {
+	if a.u < b.b {
 		return false // a is above b
 	}
-	if a.l > b.u {
+	if a.b > b.u {
 		return false // a is below b
 	}
 

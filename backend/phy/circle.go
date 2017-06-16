@@ -4,10 +4,15 @@ import (
 	"math"
 )
 
+type circleSet map[*circle]struct{}
+
 type circle struct {
-	radius float32
-	origin Vec2f
-	bb     AABB
+	radius   float32
+	origin   Vec2f
+	bb       AABB
+	isSensor bool
+
+	collisions circleSet
 }
 
 func NewCircle(origin Vec2f, radius float32) *circle {
@@ -16,8 +21,9 @@ func NewCircle(origin Vec2f, radius float32) *circle {
 		origin: origin,
 	}
 
-	lower := origin.Sub(Vec2f{-radius, -radius})
-	upper := origin.Add(Vec2f{-radius, -radius})
+	radiusVector := Vec2f{radius, radius}
+	lower := origin.Sub(radiusVector)
+	upper := origin.Add(radiusVector)
 
 	c.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
 	return c
