@@ -4,11 +4,48 @@ import (
 	"math"
 )
 
-type circleSet map[*circle]struct{}
+type ColliderSet map[ColliderShape]struct{}
+
+type ColliderShape interface {
+	BB() AABB
+	ResetCollisions()
+	AddCollision(s ColliderShape)
+	Collisions() ColliderSet
+}
+
+type collisionShape struct {
+	collisions ColliderSet
+}
+
+func (c *collisionShape) AddCollision(s ColliderShape) {
+	c.collisions[s] = struct{}{}
+}
+
+func (c *collisionShape) BB() AABB {
+	return AABB{}
+}
+
+func (c *collisionShape) ResetCollisions() {
+	c.collisions = make(ColliderSet)
+}
+
+func (c *collisionShape) Collisions() ColliderSet {
+	return c.collisions
+}
+
+type Circle interface {
+	ColliderShape
+	Center() Vec2f
+	Radius() float32
+}
+
+type circleSet map[*Circle]struct{}
 
 type circle struct {
+	collisionShape
+
 	radius   float32
-	origin   Vec2f
+	center   Vec2f
 	bb       AABB
 	isSensor bool
 
@@ -18,7 +55,7 @@ type circle struct {
 func NewCircle(origin Vec2f, radius float32) *circle {
 	c := &circle{
 		radius: radius,
-		origin: origin,
+		center: origin,
 	}
 
 	radiusVector := Vec2f{radius, radius}
@@ -29,16 +66,24 @@ func NewCircle(origin Vec2f, radius float32) *circle {
 	return c
 }
 
-func (c *circle) aabb() AABB {
+func (c *circle) BB() AABB {
 	return c.bb
 }
 
-func (c *circle) intersectionArea(o *circle) float32 {
+func (c *circle) Radius() float32 {
+	return c.radius
+}
+
+func (c *circle) Center() Vec2f {
+	return c.center
+}
+
+func (c *circle) intersectionArea(o Circle) float32 {
 
 	// from https://stackoverflow.com/questions/4247889/area-of-intersection-between-two-circles
 	r1 := c.radius
-	r2 := o.radius
-	dSq := c.origin.Sub(o.origin).AbsSq()
+	r2 := o.Radius()
+	dSq := c.center.Sub(o.Center()).AbsSq()
 
 	rdSq := (r1 + r2) * (r1 + r2)
 

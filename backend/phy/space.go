@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-type shapes []*circle
-type shapeSet map[*circle]struct{}
+type shapes []ColliderShape
+type shapeSet map[ColliderShape]struct{}
 type grid map[int]sparseShapesList
 type sparseShapesList map[int]shapes
 
@@ -55,7 +55,7 @@ func (s *Space) Update() {
 
 	// reset all collisions and dynamic bodies
 	for shape := range s.shapes {
-		shape.collisions = make(circleSet)
+		shape.ResetCollisions()
 		s.insert(s.grid, shape)
 	}
 
@@ -83,37 +83,38 @@ func (s *Space) bruteIntersectShapes(shapes shapes) {
 		for j := i + 1; j < n; j++ {
 			other := shapes[j]
 
-			cbb := current.aabb()
-			obb := other.aabb()
+			cbb := current.BB()
+			obb := other.BB()
 			intersects := IntersectAabb(&cbb, &obb)
 			if !intersects {
 				continue
 			}
 			_ = intersects
 
-			intersects = IntersectCircles(current, other)
+			// force circles for now
+			intersects = IntersectCircles(current.(Circle), other.(Circle))
 			// RESOLVE collision
-			current.collisions[other] = struct{}{}
-			other.collisions[current] = struct{}{}
+			current.AddCollision(other)
+			other.AddCollision(current)
 		}
 	}
 
 }
 
 // AddShape appends a new shape to the existing ones
-func (s *Space) AddShape(c *circle) {
+func (s *Space) AddShape(c Circle) {
 	s.shapes[c] = struct{}{}
 }
 
 // AddStaticShape adds a static shape
 // Important: static shapes cannot be moved nor removed
-func (s *Space) AddStaticShape(c *circle) {
+func (s *Space) AddStaticShape(c Circle) {
 	s.insert(s.gridStatic, c)
 }
 
-func (s *Space) insert(grid grid, c *circle) {
+func (s *Space) insert(grid grid, c ColliderShape) {
 
-	bb := c.aabb()
+	bb := c.BB()
 	intersectedChunks := make(map[Vec2i]struct{})
 
 	intersectedChunks[Vec2i{floor32f(bb.l / gridWidth), floor32f(bb.b / gridWidth)}] = struct{}{}
@@ -128,7 +129,7 @@ func (s *Space) insert(grid grid, c *circle) {
 }
 
 // insertAt inserts a shape at the specified x/y chunk coordinates in a grid
-func (s *Space) insertAt(grid grid, x, y int, v *circle) {
+func (s *Space) insertAt(grid grid, x, y int, v ColliderShape) {
 
 	yMap := grid[x]
 	if yMap == nil {

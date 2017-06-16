@@ -26,9 +26,9 @@ func IntersectAabb(a *AABB, b *AABB) bool {
 }
 
 // IntersectCircles tests if two circles intersect
-func IntersectCircles(a *circle, b *circle) bool {
+func IntersectCircles(a Circle, b Circle) bool {
 
-	d := a.origin.Sub(b.origin).AbsSq()
-	r := a.radius + b.radius
+	d := a.Center().Sub(b.Center()).AbsSq()
+	r := a.Radius() + b.Radius()
 	return d < r*r
 }

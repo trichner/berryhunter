@@ -35,7 +35,7 @@ func TestSpace_AddShape(t *testing.T) {
 
 	fmt.Printf("Collisions:\n")
 	for c := range s.shapes {
-		for collsions := range c.collisions {
+		for collsions := range c.Collisions() {
 			fmt.Printf("%+v collides with %+v\n", c, collsions)
 		}
 	}
