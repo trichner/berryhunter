@@ -7,9 +7,13 @@ import (
 type ColliderSet map[ColliderShape]struct{}
 
 type Shape struct {
-	bb    AABB
-	Layer int
-	Group int
+	Layer    int
+	Group    int
+	IsSensor bool
+	UserData interface{}
+
+	pos Vec2f
+	bb  AABB
 }
 
 func (c *Shape) BoundingBox() AABB {
@@ -17,10 +21,15 @@ func (c *Shape) BoundingBox() AABB {
 }
 
 type ColliderShape interface {
+	SetPosition(p Vec2f)
+	Position() Vec2f
+
 	BoundingBox() AABB
+
 	ResetCollisions()
 	AddCollision(s ColliderShape)
 	Collisions() ColliderSet
+
 	Layer() int
 	Group() int
 }
@@ -28,6 +37,15 @@ type ColliderShape interface {
 type collisionShape struct {
 	Shape
 	collisions ColliderSet
+}
+
+func (*collisionShape) SetPosition(p Vec2f) {
+	panic("implement me")
+}
+
+func (*collisionShape) Position() Vec2f {
+	panic("implement me")
+	return VEC2F_ZERO
 }
 
 func (c *collisionShape) Layer() int {
@@ -50,53 +68,52 @@ func (c *collisionShape) Collisions() ColliderSet {
 	return c.collisions
 }
 
-type Circle interface {
-	Center() Vec2f
-	Radius() float32
-}
-
 type circleSet map[*Circle]struct{}
 
-type circle struct {
+type Circle struct {
 	collisionShape
 
-	radius   float32
-	center   Vec2f
-	isSensor bool
+	Radius float32
+	center Vec2f
 
 	collisions circleSet
 }
 
-func NewCircle(origin Vec2f, radius float32) *circle {
-	c := &circle{
-		radius: radius,
-		center: origin,
+func NewCircle(center Vec2f, radius float32) *Circle {
+	c := &Circle{
+		Radius: radius,
+		center: center,
 	}
 
 	c.Shape.Layer = -1
-
-	radiusVector := Vec2f{radius, radius}
-	lower := origin.Sub(radiusVector)
-	upper := origin.Add(radiusVector)
-
-	c.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
+	c.updateBB()
 	return c
 }
 
-func (c *circle) Radius() float32 {
-	return c.radius
+func (c *Circle) updateBB() {
+
+	radiusVector := Vec2f{c.Radius, c.Radius}
+	lower := c.center.Sub(radiusVector)
+	upper := c.center.Add(radiusVector)
+
+	c.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
 }
 
-func (c *circle) Center() Vec2f {
+func (c *Circle) SetPosition(p Vec2f) {
+	c.center = p
+	c.updateBB()
+}
+
+func (c *Circle) Position() Vec2f {
 	return c.center
 }
 
-func (c *circle) intersectionArea(o Circle) float32 {
+func (c *Circle) intersectionArea(o *Circle) float32 {
 
 	// from https://stackoverflow.com/questions/4247889/area-of-intersection-between-two-circles
-	r1 := c.radius
-	r2 := o.Radius()
-	dSq := c.center.Sub(o.Center()).AbsSq()
+	r1 := c.Radius
+	r2 := o.Radius
+	dSq := c.center.Sub(o.center).AbsSq()
 
 	rdSq := (r1 + r2) * (r1 + r2)
 
@@ -115,7 +132,7 @@ func (c *circle) intersectionArea(o Circle) float32 {
 		return r2 * r2 * math.Pi
 	}
 
-	// precompute some reused values
+	// pre-compute some reused values
 	d := float32(math.Sqrt(float64(dSq)))
 	r1Sq := r1 * r1
 	r2Sq := r2 * r2

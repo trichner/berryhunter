@@ -51,6 +51,14 @@ func (v Vec2f) Dot(w Vec2f) float32 {
 	return v.X*w.X + v.Y*w.Y
 }
 
+// Dot calculates the dot product between two vectors
+func (v Vec2f) Normalize() Vec2f {
+	a := v.Abs()
+	x := v.X / a
+	y := v.Y / a
+	return Vec2f{x, y}
+}
+
 // Mat2f is a simple 2x2 matrix
 // [ a b ]
 // [ c d ]

@@ -3,7 +3,6 @@ package main
 import (
 	"engo.io/ecs"
 	"log"
-	"github.com/vova616/chipmunk"
 	"github.com/google/flatbuffers/go"
 )
 
@@ -48,29 +47,23 @@ func (n *NetSystem) Update(dt float32) {
 
 		var entites []Entity
 
-		// DEBUG, add sensors
-		for _, s := range player.body.Shapes {
-			if s.IsSensor {
-				e := newDebugEntity(s)
-				entites = append(entites, e)
-			}
-		}
-
 		// find all entities in view
-		pos := player.body.Position()
-		bb := chipmunk.NewAABB(pos.X-viewPortWidth/2, pos.Y-viewPortHeight/2, pos.X+viewPortWidth/2, pos.Y+viewPortHeight/2)
-		n.game.space.Query(nil, bb, func(a, b chipmunk.Indexable) {
-			u := b.Shape().Body.UserData
-			if u != nil {
-				entites = append(entites, u.(Entity))
-			}
-		})
-		n.game.space.QueryStatic(nil, bb, func(a, b chipmunk.Indexable) {
-			u := b.Shape().Body.UserData
-			if u != nil {
-				entites = append(entites, u.(Entity))
-			}
-		})
+		//pos := player.body.center
+		//bb := chipmunk.NewAABB(pos.X-viewPortWidth/2, pos.Y-viewPortHeight/2, pos.X+viewPortWidth/2, pos.Y+viewPortHeight/2)
+
+		entites = n.entities
+		//n.game.space.Query(nil, bb, func(a, b chipmunk.Indexable) {
+		//	u := b.Shape().Body.UserData
+		//	if u != nil {
+		//		entites = append(entites, u.(Entity))
+		//	}
+		//})
+		//n.game.space.QueryStatic(nil, bb, func(a, b chipmunk.Indexable) {
+		//	u := b.Shape().Body.UserData
+		//	if u != nil {
+		//		entites = append(entites, u.(Entity))
+		//	}
+		//})
 
 		// copy gameStatePrototype
 		clientGameState := gameState

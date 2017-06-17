@@ -3,13 +3,10 @@ package main
 import (
 	"engo.io/ecs"
 	"github.com/trichner/death-io/backend/conf"
-	"github.com/vova616/chipmunk"
-	"github.com/vova616/chipmunk/vect"
 	"log"
 	"math/rand"
 	"time"
-	"math"
-	"github.com/trichner/death-io/backend/DeathioApi"
+	"github.com/trichner/death-io/backend/phy"
 )
 
 func main() {
@@ -49,116 +46,71 @@ var walls []Entity = make([]Entity, 0)
 
 func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 
-	overlap := vect.Float(3)
-	xf := vect.Float(x)
-	yf := vect.Float(y)
+	//overlap := vect.Float(3)
+	//xf := vect.Float(x)
+	//yf := vect.Float(y)
 	p := &PhysicsSystem{}
 	p.game = g
-	g.space = chipmunk.NewSpace()
-	g.space.Gravity = vect.Vect{X: 0, Y: 0}
-
-	// Add a static body - lines etc.
-	staticBody := chipmunk.NewBodyStatic()
-
-	floor := chipmunk.NewBox(vect.Vect{xf / 2.0, yf / 2.0}, xf+2*overlap, yf+2*overlap)
-	floor.Group = staticBodyGroup
-	floor.SetElasticity(0)
-	floor.SetFriction(0.3)
-	staticBody.AddShape(floor)
-	//p.space.AddBody(staticBody)
+	g.space = phy.NewSpace()
 
 	//---- adding walls around map
 
-	var bdy *chipmunk.Body
-	var wall *chipmunk.Shape
-
-	// bottom
-	wall = chipmunk.NewBox(toVect(xf/2.0, yf+overlap/2.0), 2.0*overlap+xf, overlap)
-	bdy = shape2wall(wall)
-	g.space.AddBody(bdy)
-
-	// top
-	wall = chipmunk.NewBox(toVect(xf/2.0, 0-overlap/2.0), 2.0*overlap+xf, overlap)
-	bdy = shape2wall(wall)
-	g.space.AddBody(bdy)
-
-	// left
-	wall = chipmunk.NewBox(toVect(0-overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
-	bdy = shape2wall(wall)
-	g.space.AddBody(bdy)
-
-	// right
-	wall = chipmunk.NewBox(toVect(xf+overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
-	bdy = shape2wall(wall)
-	g.space.AddBody(bdy)
-
-	_ = bdy
-	DumpBodies(g.space)
+	//var bdy *chipmunk.Body
+	//var wall *chipmunk.Shape
+	//
+	//// bottom
+	//wall = chipmunk.NewBox(toVect(xf/2.0, yf+overlap/2.0), 2.0*overlap+xf, overlap)
+	//bdy = shape2wall(wall)
+	//g.space.AddBody(bdy)
+	//
+	//// top
+	//wall = chipmunk.NewBox(toVect(xf/2.0, 0-overlap/2.0), 2.0*overlap+xf, overlap)
+	//bdy = shape2wall(wall)
+	//g.space.AddBody(bdy)
+	//
+	//// left
+	//wall = chipmunk.NewBox(toVect(0-overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
+	//bdy = shape2wall(wall)
+	//g.space.AddBody(bdy)
+	//
+	//// right
+	//wall = chipmunk.NewBox(toVect(xf+overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
+	//bdy = shape2wall(wall)
+	//g.space.AddBody(bdy)
 
 	return p
 }
 
-func shape2wall(s *chipmunk.Shape) *chipmunk.Body {
-	s.SetElasticity(0)
-	s.Group = staticBodyGroup
-	s.Layer = staticCollisionLayer | actionCollisionLayer
-	bdy := chipmunk.NewBodyStatic()
-	bdy.AddShape(s)
-
-	walls = append(walls, &entity{
-		BasicEntity: ecs.NewBasic(),
-		body:        bdy,
-		entityType:  DeathioApi.EntityTypeBorder,
-	})
-	return bdy
-}
+//func shape2wall(s *phy.Shape) *phy.Shape {
+//	s.Group = staticBodyGroup
+//	s.Layer = staticCollisionLayer | actionCollisionLayer
+//
+//	walls = append(walls, &entity{
+//		BasicEntity: ecs.NewBasic(),
+//		body:        s,
+//		entityType:  DeathioApi.EntityTypeBorder,
+//	})
+//	return s
+//}
 
 func newStaticCircleEntity(x, y, r float32) *entity {
 
 	// Create a ball
-	ballEntity := &entity{BasicEntity: ecs.NewBasic()}
+	aEntity := &entity{BasicEntity: ecs.NewBasic()}
 
-	ball := chipmunk.NewCircle(vect.Vector_Zero, r)
-
-	// everything collides with everything :/
-	//ball.Layer = -1 // all layers 0xFFFF
-	//ball.Group = chipmunk.Group(ballEntity.ID())
-
-	// Create a body for the ball
-	body := chipmunk.NewBodyStatic()
-	body.AddShape(ball)
-	body.SetPosition(vect.Vect{vect.Float(x), vect.Float(y)})
-
-	ballEntity.body = body
-	ballEntity.body.UserData = ballEntity
-	//ballEntity.body.CallbackHandler = &Collidable{}
-	ballEntity.radius = r
-	return ballEntity
+	ball := phy.NewCircle(phy.Vec2f{x, y}, r)
+	ball.UserData = aEntity
+	aEntity.body = ball
+	return aEntity
 }
 
-func newCircleEntity(r, m float32) *entity {
+func newCircleEntity(r float32) *entity {
 
-	// Create a ball
-	ballEntity := &entity{BasicEntity: ecs.NewBasic()}
+	aEntity := &entity{BasicEntity: ecs.NewBasic()}
+	circle := phy.NewCircle(phy.VEC2F_ZERO, r)
 
-	ball := chipmunk.NewCircle(vect.Vector_Zero, r)
-	ball.SetElasticity(0.5)
-
-	// everything collides with everything :/
-	//ball.Layer = -1 // all layers 0xFFFF
-	//ball.Group = chipmunk.Group(ballEntity.ID())
-
-	// Create a body for the ball
-	body := newBody(m, ball)
-	ballEntity.body = body
-	ballEntity.body.UserData = ballEntity
-	//ballEntity.body.CallbackHandler = &Collidable{}
-	ballEntity.radius = r
-	return ballEntity
+	circle.UserData = aEntity
+	aEntity.body = circle
+	return aEntity
 }
 
-func newBody(mass float32, shape *chipmunk.Shape) *chipmunk.Body {
-	body := chipmunk.NewBody(vect.Float(mass), shape.Moment(float32(math.Inf(1))))
-	body.AddShape(shape)
-	return body
-}

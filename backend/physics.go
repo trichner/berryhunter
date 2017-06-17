@@ -5,6 +5,7 @@ import (
 	"github.com/vova616/chipmunk"
 	"github.com/vova616/chipmunk/vect"
 	"fmt"
+	"github.com/trichner/death-io/backend/phy"
 )
 
 const (
@@ -40,7 +41,7 @@ func dumpBody(b *chipmunk.Body) {
 
 type physicsEntity struct {
 	*ecs.BasicEntity
-	*chipmunk.Body
+	phy.ColliderShape
 }
 
 type PhysicsSystem struct {
@@ -60,21 +61,21 @@ func (p *PhysicsSystem) Priority() int {
 	return 50
 }
 
-func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e *chipmunk.Body) {
+func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e phy.ColliderShape) {
 	pe := physicsEntity{b, e}
 	p.entities = append(p.entities, pe)
-	p.game.space.AddBody(pe.Body)
+	p.game.space.AddShape(pe.ColliderShape)
 }
 
 func (p *PhysicsSystem) AddPlayer(pl *player) {
 	pe := physicsEntity{&pl.BasicEntity, pl.body}
 	p.entities = append(p.entities, pe)
-	p.game.space.AddBody(pe.Body)
+	p.game.space.AddShape(pe.ColliderShape)
 }
 
 func (p *PhysicsSystem) Update(dt float32) {
 	//log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
-	p.game.space.Step(vect.Float(dt))
+	p.game.space.Update()
 }
 
 func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
@@ -88,6 +89,6 @@ func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
 	if delete >= 0 {
 		e := p.entities[delete]
 		p.entities = append(p.entities[:delete], p.entities[delete+1:]...)
-		p.game.space.RemoveBody(e.Body)
+		p.game.space.RemoveShape(e.ColliderShape)
 	}
 }

@@ -2,12 +2,12 @@ package main
 
 import (
 	"engo.io/ecs"
-	"github.com/vova616/chipmunk/vect"
 	"log"
 	"github.com/trichner/death-io/backend/net"
 	"sync"
 	"github.com/trichner/death-io/backend/DeathioApi"
 	"fmt"
+	"github.com/trichner/death-io/backend/phy"
 )
 
 
@@ -135,25 +135,23 @@ func (i *InputSystem) Update(dt float32) {
 	i.mux.Unlock()
 }
 
-const walkImpulse = 2.0
+const walkSpeed = 0.1
 
 // applies the inputs to a player
 func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 
 	if inputs == nil {
-		p.body.SetVelocity(0, 0)
 		return
 	}
 
-	p.body.SetAngle(vect.Float(inputs.rotation))
+	p.angle = inputs.rotation
 
 	// do we even have inputs?
-	if inputs.movement == nil {
-		p.body.SetVelocity(0, 0)
-	} else {
+	if inputs.movement != nil {
 		v := input2vec(inputs)
-		v.Mult(walkImpulse)
-		p.body.SetVelocity(float32(v.X), float32(v.Y))
+		v = v.Mult(walkSpeed)
+		next := p.body.Position().Add(v)
+		p.body.SetPosition(next)
 	}
 
 	// process actions if available
@@ -167,18 +165,15 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	}
 }
 
-
-
-func input2vec(i *InputDTO) vect.Vect {
+func input2vec(i *InputDTO) phy.Vec2f {
 	x := signumf32(i.movement.X)
 	y := signumf32(i.movement.Y)
 	// prevent division by zero
 	if x == 0 && y == 0 {
-		return vect.Vector_Zero
+		return phy.VEC2F_ZERO
 	}
-	v := vect.Vect{X: vect.Float(x), Y: vect.Float(y)}
-	v.Normalize()
-	return v
+	v := phy.Vec2f{x, y}
+	return v.Normalize()
 }
 
 func (i *InputSystem) Remove(b ecs.BasicEntity) {

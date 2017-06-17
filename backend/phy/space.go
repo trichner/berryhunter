@@ -89,9 +89,9 @@ func (s *Space) bruteIntersectShapes(shapes shapes) {
 				continue
 			}
 
-			// force circles for now
-			currentCircle := current.(Circle)
-			otherCircle := other.(Circle)
+			//force circles for now
+			currentCircle := current.(*Circle)
+			otherCircle := other.(*Circle)
 			if !IntersectCircles(currentCircle, otherCircle) {
 				continue
 			}
@@ -127,16 +127,16 @@ func (s *Space) insert(grid grid, c ColliderShape) {
 
 	bb := c.BoundingBox()
 
-	if bb.r-bb.l > gridWidth || bb.u-bb.b > gridWidth {
+	if bb.R-bb.L > gridWidth || bb.U-bb.B > gridWidth {
 		panic("Cannot handle objects bigger than a grid")
 	}
 
 	intersectedChunks := make(map[Vec2i]struct{})
-	intersectedChunks[Vec2i{floor32f(bb.l / gridWidth), floor32f(bb.b / gridWidth)}] = struct{}{}
-	intersectedChunks[Vec2i{floor32f(bb.l / gridWidth), floor32f(bb.u / gridWidth)}] = struct{}{}
+	intersectedChunks[Vec2i{floor32f(bb.L / gridWidth), floor32f(bb.B / gridWidth)}] = struct{}{}
+	intersectedChunks[Vec2i{floor32f(bb.L / gridWidth), floor32f(bb.U / gridWidth)}] = struct{}{}
 
-	intersectedChunks[Vec2i{floor32f(bb.r / gridWidth), floor32f(bb.b / gridWidth)}] = struct{}{}
-	intersectedChunks[Vec2i{floor32f(bb.r / gridWidth), floor32f(bb.u / gridWidth)}] = struct{}{}
+	intersectedChunks[Vec2i{floor32f(bb.R / gridWidth), floor32f(bb.B / gridWidth)}] = struct{}{}
+	intersectedChunks[Vec2i{floor32f(bb.R / gridWidth), floor32f(bb.U / gridWidth)}] = struct{}{}
 
 	for k := range intersectedChunks {
 		s.insertAt(grid, k.X, k.Y, c)

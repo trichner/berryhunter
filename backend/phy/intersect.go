@@ -3,22 +3,25 @@ package phy
 // AABB describes a axis-aligned bounding-box
 type AABB struct {
 	// left, bottom, upper and right
-	l, b, u, r float32
+	L, B, U, R float32
 }
 
 // IntersectAabb tests if two AABBs intersect
 func IntersectAabb(a *AABB, b *AABB) bool {
 
-	if a.r < b.l {
+	if a.R < b.L {
 		return false // a is left of b
 	}
-	if a.l > b.r {
+
+	if a.L > b.R {
 		return false // a is right of b
 	}
-	if a.u < b.b {
+
+	if a.U < b.B {
 		return false // a is above b
 	}
-	if a.b > b.u {
+
+	if a.B > b.U {
 		return false // a is below b
 	}
 
@@ -26,10 +29,10 @@ func IntersectAabb(a *AABB, b *AABB) bool {
 }
 
 // IntersectCircles tests if two circles intersect
-func IntersectCircles(a Circle, b Circle) bool {
+func IntersectCircles(a *Circle, b *Circle) bool {
 
-	d := a.Center().Sub(b.Center()).AbsSq()
-	r := a.Radius() + b.Radius()
+	d := a.center.Sub(b.center).AbsSq()
+	r := a.Radius + b.Radius
 	return d < r*r
 }
 

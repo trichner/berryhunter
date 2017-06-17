@@ -4,7 +4,6 @@ import (
 	"engo.io/ecs"
 	"fmt"
 	"github.com/trichner/death-io/backend/conf"
-	"github.com/vova616/chipmunk"
 	"net/http"
 	"sync/atomic"
 	"time"
@@ -12,11 +11,12 @@ import (
 	"flag"
 	"log"
 	"os"
+	"github.com/trichner/death-io/backend/phy"
 )
 
 type Game struct {
 	ecs.World
-	space *chipmunk.Space
+	space *phy.Space
 	tick  uint64
 	conf  *conf.Config
 }

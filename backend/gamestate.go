@@ -2,9 +2,8 @@ package main
 
 import (
 	deathio "github.com/trichner/death-io/backend/DeathioApi"
-	"github.com/vova616/chipmunk"
 	"github.com/google/flatbuffers/go"
-	"github.com/vova616/chipmunk/vect"
+	"github.com/trichner/death-io/backend/phy"
 )
 
 //---- helper methods to convert points to pixels
@@ -14,21 +13,17 @@ func f32ToPx(f float32) float32 {
 	return f * points2px
 }
 
-func floatToPx(f vect.Float) float32 {
-	return float32(f) * points2px
-}
-
 func f32ToU16Px(f float32) uint16 {
 	return uint16(f * points2px)
 }
 
 // AABB is an alias to not expose transitive dependencies
-type AABB chipmunk.AABB
+type AABB phy.AABB
 
 // MarshalFlatbuf implements FlatbufCodec for AABBs
 func (aabb AABB) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	return deathio.CreateAABB(builder, floatToPx(aabb.Lower.X), floatToPx(aabb.Lower.Y), floatToPx(aabb.Upper.X), floatToPx(aabb.Upper.Y))
+	return deathio.CreateAABB(builder, f32ToPx(aabb.L), f32ToPx(aabb.B), f32ToPx(aabb.R), f32ToPx(aabb.U))
 }
 
 // MarshalFlatbuf implements FlatbufCodec for GameState

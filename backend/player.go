@@ -1,8 +1,6 @@
 package main
 
 import (
-	"github.com/vova616/chipmunk"
-	"github.com/vova616/chipmunk/vect"
 	"github.com/trichner/death-io/backend/net"
 	"github.com/trichner/death-io/backend/DeathioApi"
 )
@@ -10,11 +8,11 @@ import (
 //---- player
 type player struct {
 	*entity
+	angle  float32
 	collisionTracker
-	hitSensor *chipmunk.Shape
-	Health    uint
-	Hunger    uint
-	client    *net.Client
+	Health uint
+	Hunger uint
+	client *net.Client
 }
 
 type inventory struct {
@@ -29,32 +27,14 @@ type itemStack struct {
 const playerCollisionGroup = -1
 
 func NewPlayer(c *net.Client) *player {
-	e := newCircleEntity(0.5, 1)
+	e := newCircleEntity(0.5)
 
-	sensor := chipmunk.NewCircle(vect.Vect{0.25, 0}, 0.5)
-	sensor.IsSensor = true
-	sensor.Layer = ressourceCollisionLayer
-	sensor.UserData = "SENSOR"
 
-	e.body.AddShape(sensor)
-	e.body.CallbackHandler = &Collidable{}
 	e.body.UserData = e
 
-	e.body.UpdateShapes()
-
 	e.entityType = DeathioApi.EntityTypeCharacter
-	for _, s := range e.body.Shapes {
-		s.Group = playerCollisionGroup
-	}
-	p := &player{entity: e, client: c, hitSensor: sensor}
+	p := &player{entity: e, client: c}
 	p.body.UserData = p
-
-	p.collisionTracker = newCollisionTracker()
-
-	p.body.CallbackHandler = &entityCollider{
-		shape: sensor,
-		handler: &p.collisionTracker,
-	}
 
 	return p
 }

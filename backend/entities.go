@@ -3,11 +3,9 @@ package main
 import (
 	"engo.io/ecs"
 	"github.com/trichner/death-io/backend/wrand"
-	"github.com/vova616/chipmunk"
-	"github.com/vova616/chipmunk/vect"
 	"math/rand"
-	"github.com/vova616/chipmunk/transform"
 	"github.com/trichner/death-io/backend/DeathioApi"
+	"github.com/trichner/death-io/backend/phy"
 )
 
 type EntityType uint16
@@ -26,7 +24,7 @@ type Entity interface {
 //
 type debugCircleShapeEntity struct {
 	ecs.BasicEntity
-	circle     *chipmunk.Shape
+	circle     *phy.Circle
 	entityType EntityType
 }
 
@@ -34,22 +32,16 @@ func (e *debugCircleShapeEntity) Type() EntityType {
 	return e.entityType
 }
 
-func (e *debugCircleShapeEntity) Position() vect.Vect {
-
-	t := transform.NewTransform(e.circle.Body.Position(), e.circle.Body.Angle())
-	return t.TransformVect(e.circle.GetAsCircle().Position)
-}
-
 func (e *debugCircleShapeEntity) X() float32 {
-	return float32(e.Position().X)
+	return e.circle.Position().X
 }
 
 func (e *debugCircleShapeEntity) Y() float32 {
-	return float32(e.Position().Y)
+	return e.circle.Position().Y
 }
 
 func (e *debugCircleShapeEntity) AABB() AABB {
-	return AABB(e.circle.AABB())
+	return AABB(e.circle.BoundingBox())
 }
 
 func (e *debugCircleShapeEntity) Angle() float32 {
@@ -57,15 +49,14 @@ func (e *debugCircleShapeEntity) Angle() float32 {
 }
 
 func (e *debugCircleShapeEntity) Radius() float32 {
-	return float32(e.circle.GetAsCircle().Radius)
+	return float32(e.circle.Radius)
 }
 
 //---- entity
 type entity struct {
 	ecs.BasicEntity
-	body       *chipmunk.Body
+	body       *phy.Circle
 	entityType EntityType
-	radius     float32
 }
 
 func (e *entity) Type() EntityType {
@@ -73,27 +64,27 @@ func (e *entity) Type() EntityType {
 }
 
 func (e *entity) SetPosition(x, y float32) {
-	e.body.SetPosition(vect.Vect{vect.Float(x), vect.Float(y)})
+	e.body.SetPosition(phy.Vec2f{x, y})
 }
 
 func (e *entity) X() float32 {
-	return float32(e.body.Position().X)
+	return e.body.Position().X
 }
 
 func (e *entity) Y() float32 {
-	return float32(e.body.Position().Y)
+	return e.body.Position().Y
 }
 
 func (e *entity) AABB() AABB {
-	return AABB(e.body.Shapes[0].AABB())
+	return AABB(e.body.BoundingBox())
 }
 
 func (e *entity) Angle() float32 {
-	return float32(e.body.Angle())
+	return 0
 }
 
 func (e *entity) Radius() float32 {
-	return e.radius
+	return e.body.Radius
 }
 
 func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
@@ -124,7 +115,7 @@ type MessageDTO struct {
 
 const dist2px = 120.0
 
-func newDebugEntity(shape *chipmunk.Shape) Entity {
+func newDebugEntity(shape *phy.Circle) Entity {
 	return &debugCircleShapeEntity{
 		BasicEntity: ecs.NewBasic(),
 		circle:      shape,
