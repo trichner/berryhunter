@@ -25,6 +25,7 @@ func NewSpace() *Space {
 	}
 }
 
+// Space represents a set of dynamic and static shapes that may collide
 type Space struct {
 	// list of all dynamic shapes
 	shapes shapeSet
@@ -114,13 +115,10 @@ func (s *Space) AddStaticShape(c ColliderShape) {
 	s.insert(s.gridStatic, c)
 }
 
+// insert inserts a new shape into the specified grid.
 func (s *Space) insert(grid grid, c ColliderShape) {
 
 	bb := c.BoundingBox()
-
-	if bb.Right-bb.Left > gridWidth || bb.Upper-bb.Bottom > gridWidth {
-		panic("Cannot handle objects bigger than a grid")
-	}
 
 	for x := floor32f(bb.Left / gridWidth); x <= floor32f(bb.Right/gridWidth); x++ {
 		for y := floor32f(bb.Bottom / gridWidth); y <= floor32f(bb.Upper/gridWidth); y++ {

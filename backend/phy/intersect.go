@@ -1,19 +1,5 @@
 package phy
 
-import (
-	"fmt"
-)
-
-// AABB describes a axis-aligned bounding-box
-type AABB struct {
-	// left, bottom, upper and right
-	Left, Bottom, Upper, Right float32
-}
-
-func (bb *AABB) String() string {
-	return fmt.Sprintf("l: %.2f, b: %.2f, u: %.2f, r: %.2f", bb.Left, bb.Bottom, bb.Upper, bb.Right)
-}
-
 // IntersectAabb tests if two AABBs intersect
 func IntersectAabb(a *AABB, b *AABB) bool {
 
@@ -44,6 +30,8 @@ func IntersectCircles(a *Circle, b *Circle) bool {
 	return d < r*r
 }
 
+// ArbiterShapes tests if two shapes can collide based on their
+// respective Group and Layer. Returns true if they can collide.
 func ArbiterShapes(a ColliderShape, b ColliderShape) bool {
 
 	if a.Group() > 0 && a.Group() == b.Group() {
