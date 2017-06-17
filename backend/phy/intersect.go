@@ -11,7 +11,7 @@ type AABB struct {
 }
 
 func (bb *AABB) String() string {
-	return fmt.Sprintf("l: %f, b: %f, u: %f, r: %f", bb.Left, bb.Bottom, bb.Upper, bb.Right)
+	return fmt.Sprintf("l: %.2f, b: %.2f, u: %.2f, r: %.2f", bb.Left, bb.Bottom, bb.Upper, bb.Right)
 }
 
 // IntersectAabb tests if two AABBs intersect

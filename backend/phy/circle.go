@@ -18,7 +18,7 @@ type Shape struct {
 }
 
 func (c *Shape) String() string {
-	return fmt.Sprintf("[ c: %f / %f, bb: (%s)]", c.pos.X, c.pos.Y, c.bb.String())
+	return fmt.Sprintf("[ c: %.2f / %.2f, bb: (%s)]", c.pos.X, c.pos.Y, c.bb.String())
 }
 
 func (c *Shape) BoundingBox() AABB {
