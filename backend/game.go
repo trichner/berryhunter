@@ -3,15 +3,15 @@ package main
 import (
 	"engo.io/ecs"
 	"fmt"
-	"github.com/trichner/death-io/backend/conf"
 	"net/http"
 	"sync/atomic"
 	"time"
-	"github.com/trichner/death-io/backend/net"
 	"flag"
 	"log"
 	"os"
-	"github.com/trichner/death-io/backend/phy"
+	"github.com/trichner/berryhunter/backend/conf"
+	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/net"
 )
 
 type Game struct {
@@ -87,7 +87,7 @@ func (g *Game) addEntity(e *entity) {
 
 		// Create a case for each System you want to use
 		case *PhysicsSystem:
-			sys.AddBody(&e.BasicEntity, e.body)
+			sys.AddStaticBody(&e.BasicEntity, e.body)
 		case *NetSystem:
 			sys.AddEntity(e)
 		}

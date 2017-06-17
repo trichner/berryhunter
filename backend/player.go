@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/trichner/death-io/backend/net"
-	"github.com/trichner/death-io/backend/DeathioApi"
+	"github.com/trichner/berryhunter/backend/net"
+	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 )
 
 //---- player

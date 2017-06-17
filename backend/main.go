@@ -2,11 +2,11 @@ package main
 
 import (
 	"engo.io/ecs"
-	"github.com/trichner/death-io/backend/conf"
 	"log"
 	"math/rand"
 	"time"
-	"github.com/trichner/death-io/backend/phy"
+	"github.com/trichner/berryhunter/backend/conf"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 func main() {
@@ -61,22 +61,22 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 	//// bottom
 	//wall = chipmunk.NewBox(toVect(xf/2.0, yf+overlap/2.0), 2.0*overlap+xf, overlap)
 	//bdy = shape2wall(wall)
-	//g.space.AddBody(bdy)
+	//g.space.AddStaticBody(bdy)
 	//
 	//// top
 	//wall = chipmunk.NewBox(toVect(xf/2.0, 0-overlap/2.0), 2.0*overlap+xf, overlap)
 	//bdy = shape2wall(wall)
-	//g.space.AddBody(bdy)
+	//g.space.AddStaticBody(bdy)
 	//
 	//// left
 	//wall = chipmunk.NewBox(toVect(0-overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
 	//bdy = shape2wall(wall)
-	//g.space.AddBody(bdy)
+	//g.space.AddStaticBody(bdy)
 	//
 	//// right
 	//wall = chipmunk.NewBox(toVect(xf+overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
 	//bdy = shape2wall(wall)
-	//g.space.AddBody(bdy)
+	//g.space.AddStaticBody(bdy)
 
 	return p
 }
@@ -93,12 +93,12 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 //	return s
 //}
 
-func newStaticCircleEntity(x, y, r float32) *entity {
+func newStaticCircleEntity(p phy.Vec2f, r float32) *entity {
 
 	// Create a ball
 	aEntity := &entity{BasicEntity: ecs.NewBasic()}
 
-	ball := phy.NewCircle(phy.Vec2f{x, y}, r)
+	ball := phy.NewCircle(p, r)
 	ball.UserData = aEntity
 	aEntity.body = ball
 	return aEntity

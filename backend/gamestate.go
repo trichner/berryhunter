@@ -1,9 +1,9 @@
 package main
 
 import (
-	deathio "github.com/trichner/death-io/backend/DeathioApi"
 	"github.com/google/flatbuffers/go"
-	"github.com/trichner/death-io/backend/phy"
+	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 )
 
 //---- helper methods to convert points to pixels
@@ -23,7 +23,7 @@ type AABB phy.AABB
 // MarshalFlatbuf implements FlatbufCodec for AABBs
 func (aabb AABB) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	return deathio.CreateAABB(builder, f32ToPx(aabb.Left), f32ToPx(aabb.Bottom), f32ToPx(aabb.Right), f32ToPx(aabb.Upper))
+	return DeathioApi.CreateAABB(builder, f32ToPx(aabb.Left), f32ToPx(aabb.Bottom), f32ToPx(aabb.Right), f32ToPx(aabb.Upper))
 }
 
 // MarshalFlatbuf implements FlatbufCodec for GameState
@@ -31,12 +31,12 @@ func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UO
 
 	entities := EntitiesFlatbufMarshal(gs.Entities, builder)
 
-	deathio.GameStateStart(builder)
-	deathio.GameStateAddTick(builder, gs.Tick)
-	deathio.GameStateAddPlayerId(builder, gs.PlayerID)
-	deathio.GameStateAddEntities(builder, entities)
+	DeathioApi.GameStateStart(builder)
+	DeathioApi.GameStateAddTick(builder, gs.Tick)
+	DeathioApi.GameStateAddPlayerId(builder, gs.PlayerID)
+	DeathioApi.GameStateAddEntities(builder, entities)
 
-	return deathio.GameStateEnd(builder)
+	return DeathioApi.GameStateEnd(builder)
 }
 
 // EntitiesFlatbufMarshal marshals a list of Entity interfaces
@@ -49,7 +49,7 @@ func EntitiesFlatbufMarshal(entities []Entity, builder *flatbuffers.Builder) fla
 		offsets = append(offsets, EntityFlatbufMarshal(e, builder))
 	}
 
-	deathio.GameStateStartEntitiesVector(builder, n)
+	DeathioApi.GameStateStartEntitiesVector(builder, n)
 	for _, o := range offsets {
 		builder.PrependUOffsetT(o)
 	}
@@ -60,20 +60,20 @@ func EntitiesFlatbufMarshal(entities []Entity, builder *flatbuffers.Builder) fla
 // flatbuffer schema
 func EntityFlatbufMarshal(e Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	deathio.EntityStart(builder)
-	deathio.EntityAddId(builder, e.ID())
+	DeathioApi.EntityStart(builder)
+	DeathioApi.EntityAddId(builder, e.ID())
 
-	pos := deathio.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
-	deathio.EntityAddPos(builder, pos)
+	pos := DeathioApi.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
+	DeathioApi.EntityAddPos(builder, pos)
 
 	aabb := e.AABB().MarshalFlatbuf(builder)
-	deathio.EntityAddAabb(builder, aabb)
+	DeathioApi.EntityAddAabb(builder, aabb)
 
-	deathio.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
-	deathio.EntityAddRotation(builder, e.Angle())
-	deathio.EntityAddType(builder, uint16(e.Type()))
+	DeathioApi.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
+	DeathioApi.EntityAddRotation(builder, e.Angle())
+	DeathioApi.EntityAddType(builder, uint16(e.Type()))
 
-	return deathio.EntityEnd(builder)
+	return DeathioApi.EntityEnd(builder)
 }
 
 // intermediate struct to serialize

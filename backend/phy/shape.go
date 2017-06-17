@@ -36,17 +36,59 @@ type ColliderShape interface {
 
 	BoundingBox() AABB
 
-	ResetCollisions()
-	AddCollision(s ColliderShape)
 	Collisions() ColliderSet
 
 	Layer() int
 	Group() int
+
+	updateBB()
+	resetCollisions()
+	resolveCollisions()
+	addCollision(s ColliderShape)
+}
+
+func newColliderShape(pos Vec2f) colliderShape {
+	return colliderShape{
+		Shape:      Shape{pos: pos},
+		collisions: make(ColliderSet),
+	}
 }
 
 type colliderShape struct {
 	Shape
 	collisions ColliderSet
+}
+
+const returningForce = 0.2
+
+func (c *colliderShape) resolveCollisions() {
+
+	if len(c.collisions) == 0 {
+		return
+	}
+
+	fmt.Printf("Resolving collision: %+v\n", c)
+
+	force := Vec2f{}
+
+	// calculate resulting force
+	for other := range c.collisions {
+		d := c.pos.Sub(other.Position())
+		if d.AbsSq() == 0 {
+			continue
+		}
+		d = d.Normalize()
+		force = force.Add(d)
+	}
+
+	if force.AbsSq() == 0 {
+		//TODO: What do?
+		return
+	}
+
+	// apply force
+	force = force.Normalize().Mult(returningForce)
+	c.SetPosition(c.pos.Add(force))
 }
 
 func (c *colliderShape) Layer() int {
@@ -57,14 +99,14 @@ func (c *colliderShape) Group() int {
 	return c.Shape.Group
 }
 
-func (c *colliderShape) AddCollision(s ColliderShape) {
+func (c *colliderShape) Collisions() ColliderSet {
+	return c.collisions
+}
+
+func (c *colliderShape) addCollision(s ColliderShape) {
 	c.collisions[s] = struct{}{}
 }
 
-func (c *colliderShape) ResetCollisions() {
+func (c *colliderShape) resetCollisions() {
 	c.collisions = make(ColliderSet)
-}
-
-func (c *colliderShape) Collisions() ColliderSet {
-	return c.collisions
 }

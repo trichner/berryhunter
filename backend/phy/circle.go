@@ -4,7 +4,6 @@ import (
 	"math"
 )
 
-
 type circleSet map[*Circle]struct{}
 
 type Circle struct {
@@ -15,18 +14,20 @@ type Circle struct {
 	collisions circleSet
 }
 
-func NewCircle(center Vec2f, radius float32) *Circle {
+func NewCircle(pos Vec2f, radius float32) *Circle {
 	c := &Circle{
-		Radius: radius,
-		colliderShape: colliderShape{Shape: Shape{pos: center },
-		},
+		Radius:        radius,
+		colliderShape: newColliderShape(pos),
 	}
 
+	// collide with everything
 	c.Shape.Layer = -1
+
 	c.updateBB()
 	return c
 }
 
+// updates the circles bounding box according to its radius and position.
 func (c *Circle) updateBB() {
 
 	radiusVector := Vec2f{c.Radius, c.Radius}
@@ -34,11 +35,6 @@ func (c *Circle) updateBB() {
 	upper := c.pos.Add(radiusVector)
 
 	c.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
-}
-
-func (c *Circle) SetPosition(p Vec2f) {
-	c.pos = p
-	c.updateBB()
 }
 
 func (c *Circle) intersectionArea(o *Circle) float32 {

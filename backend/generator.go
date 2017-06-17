@@ -3,7 +3,8 @@ package main
 import (
 	"math/rand"
 	"github.com/vova616/chipmunk"
-	"github.com/trichner/death-io/backend/DeathioApi"
+	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 const gridSize = 100
@@ -22,13 +23,12 @@ func populate(g *Game, rnd *rand.Rand) {
 	for x := int64(0); x < steps; x++ {
 		for y := int64(0); y < steps; y++ {
 			crnd := chunkRand(x, y, rnd)
-			e := NewRandomEntityFrom(entities, crnd)
 			dx := crnd.Float32()*chunkHalfSize + chunkQuarterSize
 			dy := crnd.Float32()*chunkHalfSize + chunkQuarterSize
-			e.SetPosition(
-				chunkSize*float32(x)+dx,
-				chunkSize*float32(y)+dy)
-
+			ex := chunkSize*float32(x) + dx
+			ey := chunkSize*float32(y) + dy
+			ev := phy.Vec2f{ex, ey}
+			e := NewRandomEntityFrom(ev, entities, crnd)
 			g.addEntity(e)
 		}
 	}

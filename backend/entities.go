@@ -2,10 +2,10 @@ package main
 
 import (
 	"engo.io/ecs"
-	"github.com/trichner/death-io/backend/wrand"
 	"math/rand"
-	"github.com/trichner/death-io/backend/DeathioApi"
-	"github.com/trichner/death-io/backend/phy"
+	"github.com/trichner/berryhunter/backend/wrand"
+	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 )
 
 type EntityType uint16
@@ -87,7 +87,7 @@ func (e *entity) Radius() float32 {
 	return e.body.Radius
 }
 
-func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
+func NewRandomEntityFrom(p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) *entity {
 	choices := []wrand.Choice{}
 	for _, b := range bodies {
 		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: b})
@@ -95,11 +95,11 @@ func NewRandomEntityFrom(bodies []staticEntityBody, rnd *rand.Rand) *entity {
 
 	wc := wrand.NewWeightedChoice(choices)
 	selected := wc.Choose(rnd).(staticEntityBody)
-	return NewStaticEntityWithBody(&selected)
+	return NewStaticEntityWithBody(p, &selected)
 }
 
-func NewStaticEntityWithBody(body *staticEntityBody) *entity {
-	e := newStaticCircleEntity(0, 0, body.radius)
+func NewStaticEntityWithBody(p phy.Vec2f, body *staticEntityBody) *entity {
+	e := newStaticCircleEntity(p, body.radius)
 	e.entityType = body.entityType
 	e.body.UserData = e
 	return e

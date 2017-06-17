@@ -3,11 +3,11 @@ package main
 import (
 	"engo.io/ecs"
 	"log"
-	"github.com/trichner/death-io/backend/net"
 	"sync"
-	"github.com/trichner/death-io/backend/DeathioApi"
 	"fmt"
-	"github.com/trichner/death-io/backend/phy"
+	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/net"
+	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 )
 
 

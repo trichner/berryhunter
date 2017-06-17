@@ -3,9 +3,8 @@ package main
 import (
 	"engo.io/ecs"
 	"github.com/vova616/chipmunk"
-	"github.com/vova616/chipmunk/vect"
 	"fmt"
-	"github.com/trichner/death-io/backend/phy"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 const (
@@ -53,12 +52,14 @@ func (p *PhysicsSystem) New(w *ecs.World) {
 	// do nothing for now
 }
 
-func toVect(x, y vect.Float) vect.Vect {
-	return vect.Vect{vect.Float(x), vect.Float(y)}
-}
-
 func (p *PhysicsSystem) Priority() int {
 	return 50
+}
+
+func (p *PhysicsSystem) AddStaticBody(b *ecs.BasicEntity, e phy.ColliderShape) {
+	pe := physicsEntity{b, e}
+	p.entities = append(p.entities, pe)
+	p.game.space.AddStaticShape(pe.ColliderShape)
 }
 
 func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e phy.ColliderShape) {

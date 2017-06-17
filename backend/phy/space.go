@@ -20,8 +20,8 @@ func floor32f(f float32) int {
 func NewSpace() *Space {
 
 	return &Space{
-		shapes: make(shapeSet),
-		grid:   make(grid),
+		shapes:     make(shapeSet),
+		gridStatic: make(grid),
 	}
 }
 
@@ -50,7 +50,8 @@ func (s *Space) Update() {
 
 	// reset all collisions and dynamic bodies
 	for shape := range s.shapes {
-		shape.ResetCollisions()
+		shape.resetCollisions()
+		shape.updateBB()
 		s.insert(s.grid, shape)
 	}
 
@@ -62,6 +63,11 @@ func (s *Space) Update() {
 			list = append(list, staticList...)
 		}
 		s.bruteIntersectShapes(list)
+	}
+
+	// reset all collisions and dynamic bodies
+	for shape := range s.shapes {
+		shape.resolveCollisions()
 	}
 }
 
@@ -92,8 +98,8 @@ func (s *Space) bruteIntersectShapes(shapes shapes) {
 				continue
 			}
 
-			current.AddCollision(other)
-			other.AddCollision(current)
+			current.addCollision(other)
+			other.addCollision(current)
 		}
 	}
 
@@ -112,6 +118,7 @@ func (s *Space) RemoveShape(c ColliderShape) {
 // AddStaticShape adds a static shape
 // Important: static shapes cannot be moved nor removed
 func (s *Space) AddStaticShape(c ColliderShape) {
+	c.updateBB()
 	s.insert(s.gridStatic, c)
 }
 
