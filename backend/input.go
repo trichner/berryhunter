@@ -22,8 +22,7 @@ type InputDTO struct {
 }
 
 type movement struct {
-	X float32 `json:"x"`
-	Y float32 `json:"y"`
+	X, Y float32
 }
 
 type action struct {

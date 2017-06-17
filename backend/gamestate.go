@@ -23,7 +23,7 @@ type AABB phy.AABB
 // MarshalFlatbuf implements FlatbufCodec for AABBs
 func (aabb AABB) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	return deathio.CreateAABB(builder, f32ToPx(aabb.L), f32ToPx(aabb.B), f32ToPx(aabb.R), f32ToPx(aabb.U))
+	return deathio.CreateAABB(builder, f32ToPx(aabb.Left), f32ToPx(aabb.Bottom), f32ToPx(aabb.Right), f32ToPx(aabb.Upper))
 }
 
 // MarshalFlatbuf implements FlatbufCodec for GameState

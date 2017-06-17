@@ -7,8 +7,7 @@ import (
 
 type shapes []ColliderShape
 type shapeSet map[ColliderShape]struct{}
-type grid map[int]sparseShapesList
-type sparseShapesList map[int]shapes
+type grid map[Vec2i]shapes
 
 const gridWidth = 10
 
@@ -40,12 +39,7 @@ type Space struct {
 // getAt returns the list of shapes in a chunk
 // Note: x and y are chunk coordinates, e.g. floor(X/gridWith)
 func (s *Space) getAt(grid grid, x, y int) shapes {
-	yMap := grid[x]
-	if yMap == nil {
-		return nil
-	}
-
-	return yMap[y]
+	return grid[Vec2i{x, y}]
 }
 
 // Update runs collision detection over all boxes
@@ -60,16 +54,13 @@ func (s *Space) Update() {
 	}
 
 	// iterate over all chunks and brute force collisions
-	for x, yMap := range s.grid {
-		for y, list := range yMap {
-			// add static objects if there are any relevant
-			yStaticMap := s.gridStatic[x]
-			if yStaticMap != nil {
-				staticList := yStaticMap[y]
-				list = append(list, staticList...)
-			}
-			s.bruteIntersectShapes(list)
+	for v, list := range s.grid {
+		// add static objects if there are any relevant
+		staticList := s.gridStatic[v]
+		if staticList != nil {
+			list = append(list, staticList...)
 		}
+		s.bruteIntersectShapes(list)
 	}
 }
 
@@ -127,38 +118,27 @@ func (s *Space) insert(grid grid, c ColliderShape) {
 
 	bb := c.BoundingBox()
 
-	if bb.R-bb.L > gridWidth || bb.U-bb.B > gridWidth {
+	if bb.Right-bb.Left > gridWidth || bb.Upper-bb.Bottom > gridWidth {
 		panic("Cannot handle objects bigger than a grid")
 	}
 
-	intersectedChunks := make(map[Vec2i]struct{})
-	intersectedChunks[Vec2i{floor32f(bb.L / gridWidth), floor32f(bb.B / gridWidth)}] = struct{}{}
-	intersectedChunks[Vec2i{floor32f(bb.L / gridWidth), floor32f(bb.U / gridWidth)}] = struct{}{}
-
-	intersectedChunks[Vec2i{floor32f(bb.R / gridWidth), floor32f(bb.B / gridWidth)}] = struct{}{}
-	intersectedChunks[Vec2i{floor32f(bb.R / gridWidth), floor32f(bb.U / gridWidth)}] = struct{}{}
-
-	for k := range intersectedChunks {
-		s.insertAt(grid, k.X, k.Y, c)
+	for x := floor32f(bb.Left / gridWidth); x <= floor32f(bb.Right/gridWidth); x++ {
+		for y := floor32f(bb.Bottom / gridWidth); y <= floor32f(bb.Upper/gridWidth); y++ {
+			s.insertAt(grid, x, y, c)
+		}
 	}
 }
 
 // insertAt inserts a shape at the specified x/y chunk coordinates in a grid
 func (s *Space) insertAt(grid grid, x, y int, v ColliderShape) {
 
-	yMap := grid[x]
-	if yMap == nil {
-		yMap = make(sparseShapesList)
+	p := Vec2i{x, y}
+	list := grid[p]
+	if list == nil {
+		list = make(shapes, 0, 4)
 	}
-
-	shapeList := yMap[y]
-	if shapeList == nil {
-		shapeList = make(shapes, 0, 4)
-	}
-	shapeList = append(shapeList, v)
-
-	yMap[y] = shapeList
-	grid[x] = yMap
+	list = append(list, v)
+	grid[p] = list
 }
 
 // String simple string representation of a space
@@ -166,12 +146,10 @@ func (s *Space) String() string {
 
 	var buffer bytes.Buffer
 
-	for x, yMap := range s.grid {
-		for y, sparseList := range yMap {
+	for v, list := range s.grid {
 
-			buffer.WriteString(fmt.Sprintf("%02d-%02d: %+v", x, y, sparseList))
-			buffer.WriteString("\t ")
-		}
+		buffer.WriteString(fmt.Sprintf("%02d-%02d: %+v", v.X, v.Y, list))
+		buffer.WriteString("\t ")
 		buffer.WriteString("\n")
 	}
 

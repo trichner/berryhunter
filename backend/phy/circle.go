@@ -2,6 +2,7 @@ package phy
 
 import (
 	"math"
+	"fmt"
 )
 
 type ColliderSet map[ColliderShape]struct{}
@@ -16,8 +17,20 @@ type Shape struct {
 	bb  AABB
 }
 
+func (c *Shape) String() string {
+	return fmt.Sprintf("[ c: %f / %f, bb: (%s)]", c.pos.X, c.pos.Y, c.bb.String())
+}
+
 func (c *Shape) BoundingBox() AABB {
 	return c.bb
+}
+
+func (c *Shape) Position() Vec2f {
+	return c.pos
+}
+
+func (c *Shape) SetPosition(v Vec2f) {
+	c.pos = v
 }
 
 type ColliderShape interface {
@@ -37,15 +50,6 @@ type ColliderShape interface {
 type collisionShape struct {
 	Shape
 	collisions ColliderSet
-}
-
-func (*collisionShape) SetPosition(p Vec2f) {
-	panic("implement me")
-}
-
-func (*collisionShape) Position() Vec2f {
-	panic("implement me")
-	return VEC2F_ZERO
 }
 
 func (c *collisionShape) Layer() int {
@@ -74,7 +78,6 @@ type Circle struct {
 	collisionShape
 
 	Radius float32
-	center Vec2f
 
 	collisions circleSet
 }
@@ -82,7 +85,8 @@ type Circle struct {
 func NewCircle(center Vec2f, radius float32) *Circle {
 	c := &Circle{
 		Radius: radius,
-		center: center,
+		collisionShape: collisionShape{Shape: Shape{pos: center },
+		},
 	}
 
 	c.Shape.Layer = -1
@@ -93,19 +97,15 @@ func NewCircle(center Vec2f, radius float32) *Circle {
 func (c *Circle) updateBB() {
 
 	radiusVector := Vec2f{c.Radius, c.Radius}
-	lower := c.center.Sub(radiusVector)
-	upper := c.center.Add(radiusVector)
+	lower := c.pos.Sub(radiusVector)
+	upper := c.pos.Add(radiusVector)
 
 	c.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
 }
 
 func (c *Circle) SetPosition(p Vec2f) {
-	c.center = p
+	c.pos = p
 	c.updateBB()
-}
-
-func (c *Circle) Position() Vec2f {
-	return c.center
 }
 
 func (c *Circle) intersectionArea(o *Circle) float32 {
@@ -113,7 +113,7 @@ func (c *Circle) intersectionArea(o *Circle) float32 {
 	// from https://stackoverflow.com/questions/4247889/area-of-intersection-between-two-circles
 	r1 := c.Radius
 	r2 := o.Radius
-	dSq := c.center.Sub(o.center).AbsSq()
+	dSq := c.pos.Sub(o.pos).AbsSq()
 
 	rdSq := (r1 + r2) * (r1 + r2)
 
