@@ -21,3 +21,9 @@ function registerGameObjectSVG(gameObjectClass, svgPath) {
 			return gameObjectClass.svg;
 		}));
 }
+
+let resolveDepencyLoading;
+
+registerPreload(new Promise(function (resolve) {
+	resolveDepencyLoading = resolve;
+}));
