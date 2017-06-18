@@ -25,7 +25,6 @@ const Backend = {
 			if (Develop.isActive()) {
 				Develop.logWebsocketStatus('Open', 'good');
 			}
-			console.log("WebSocket: Open");
 		};
 
 		this.webSocket.onerror = function () {
