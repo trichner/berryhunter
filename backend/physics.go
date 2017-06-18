@@ -40,7 +40,8 @@ func dumpBody(b *chipmunk.Body) {
 
 type physicsEntity struct {
 	*ecs.BasicEntity
-	phy.ColliderShape
+	static  phy.Collider
+	dynamic phy.DynamicCollider
 }
 
 type PhysicsSystem struct {
@@ -56,22 +57,22 @@ func (p *PhysicsSystem) Priority() int {
 	return 50
 }
 
-func (p *PhysicsSystem) AddStaticBody(b *ecs.BasicEntity, e phy.ColliderShape) {
-	pe := physicsEntity{b, e}
+func (p *PhysicsSystem) AddStaticBody(b *ecs.BasicEntity, e phy.Collider) {
+	pe := physicsEntity{b, e, nil}
 	p.entities = append(p.entities, pe)
-	p.game.space.AddStaticShape(pe.ColliderShape)
+	p.game.space.AddStaticShape(pe.static)
 }
 
-func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e phy.ColliderShape) {
-	pe := physicsEntity{b, e}
+func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e phy.DynamicCollider) {
+	pe := physicsEntity{b, nil, e}
 	p.entities = append(p.entities, pe)
-	p.game.space.AddShape(pe.ColliderShape)
+	p.game.space.AddShape(pe.dynamic)
 }
 
 func (p *PhysicsSystem) AddPlayer(pl *player) {
-	pe := physicsEntity{&pl.BasicEntity, pl.body}
+	pe := physicsEntity{&pl.BasicEntity, nil, pl.body}
 	p.entities = append(p.entities, pe)
-	p.game.space.AddShape(pe.ColliderShape)
+	p.game.space.AddShape(pe.dynamic)
 }
 
 func (p *PhysicsSystem) Update(dt float32) {
@@ -90,6 +91,10 @@ func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
 	if delete >= 0 {
 		e := p.entities[delete]
 		p.entities = append(p.entities[:delete], p.entities[delete+1:]...)
-		p.game.space.RemoveShape(e.ColliderShape)
+		if e.dynamic != nil {
+			p.game.space.RemoveShape(e.dynamic)
+		}else{
+			panic("Cannot remove static entities!")
+		}
 	}
 }

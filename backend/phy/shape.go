@@ -2,7 +2,7 @@ package phy
 
 import "fmt"
 
-type ColliderSet map[ColliderShape]struct{}
+type ColliderSet map[Collider]struct{}
 
 type Shape struct {
 	Layer    int
@@ -30,8 +30,21 @@ func (c *Shape) SetPosition(v Vec2f) {
 	c.pos = v
 }
 
-type ColliderShape interface {
-	SetPosition(p Vec2f)
+type DynamicShape struct {
+	Shape
+
+	velocity Vec2f
+}
+
+func (s *DynamicShape) Velocity() Vec2f {
+	return s.velocity
+}
+
+func (s *DynamicShape) SetVelocity(v Vec2f) {
+	s.velocity = v
+}
+
+type Collider interface {
 	Position() Vec2f
 
 	BoundingBox() AABB
@@ -44,7 +57,16 @@ type ColliderShape interface {
 	updateBB()
 	resetCollisions()
 	resolveCollisions()
-	addCollision(s ColliderShape)
+	addCollision(s Collider)
+}
+
+type DynamicCollider interface {
+	Collider
+
+	Velocity() Vec2f
+	SetVelocity(v Vec2f)
+	Translate(v Vec2f)
+	SetPosition(p Vec2f)
 }
 
 func newColliderShape(pos Vec2f) colliderShape {
@@ -54,9 +76,36 @@ func newColliderShape(pos Vec2f) colliderShape {
 	}
 }
 
+func newDynamicColliderShape(pos Vec2f) dynamicColliderShape {
+	return dynamicColliderShape{
+		colliderShape: colliderShape{
+			Shape:      Shape{pos: pos},
+			collisions: make(ColliderSet),
+		},
+	}
+}
+
 type colliderShape struct {
 	Shape
 	collisions ColliderSet
+}
+
+type dynamicColliderShape struct {
+	colliderShape
+
+	v Vec2f
+}
+
+func (d *dynamicColliderShape) Velocity() Vec2f {
+	return d.v
+}
+
+func (d *dynamicColliderShape) SetVelocity(v Vec2f) {
+	d.v = v
+}
+
+func (d *dynamicColliderShape) Translate(v Vec2f) {
+	d.SetPosition(d.Position().Add(v))
 }
 
 const returningForce = 0.2
@@ -103,7 +152,7 @@ func (c *colliderShape) Collisions() ColliderSet {
 	return c.collisions
 }
 
-func (c *colliderShape) addCollision(s ColliderShape) {
+func (c *colliderShape) addCollision(s Collider) {
 	c.collisions[s] = struct{}{}
 }
 

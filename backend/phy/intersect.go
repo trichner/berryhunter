@@ -30,9 +30,9 @@ func IntersectCircles(a *Circle, b *Circle) bool {
 	return d < r*r
 }
 
-// ArbiterShapes tests if two shapes can collide based on their
+// ArbiterShapes tests if two dynamicShapes can collide based on their
 // respective Group and Layer. Returns true if they can collide.
-func ArbiterShapes(a ColliderShape, b ColliderShape) bool {
+func ArbiterShapes(a Collider, b Collider) bool {
 
 	if a.Group() > 0 && a.Group() == b.Group() {
 		return false

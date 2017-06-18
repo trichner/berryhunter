@@ -7,7 +7,7 @@ import (
 type circleSet map[*Circle]struct{}
 
 type Circle struct {
-	colliderShape
+	dynamicColliderShape
 
 	Radius float32
 
@@ -17,7 +17,7 @@ type Circle struct {
 func NewCircle(pos Vec2f, radius float32) *Circle {
 	c := &Circle{
 		Radius:        radius,
-		colliderShape: newColliderShape(pos),
+		dynamicColliderShape: newDynamicColliderShape(pos),
 	}
 
 	// collide with everything
