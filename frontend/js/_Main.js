@@ -30,15 +30,6 @@ let gameMap;
  */
 let miniMap;
 
-preload();
-
-function preload() {
-	executePreload()
-		.then(() => {
-			setup();
-		});
-}
-
 function createBackground() {
 	const background = new Two.Rectangle(width / 2, height / 2, width, height);
 	groups.background.add(background);
@@ -121,4 +112,33 @@ function setup() {
 function createPlayer(id, x, y) {
 	player = new Player(id, x, y);
 	two.play();
+}
+
+requirejs.config({
+	paths: {
+		schema_common: [
+			'schema/common_generated',
+			'../../api/schema/js/common_generated'],
+		schema_server: [
+			'schema/server_generated',
+			'../../api/schema/js/server_generated'],
+		schema_client: [
+			'schema/client_generated',
+			'../../api/schema/js/client_generated']
+	}
+});
+
+_import(
+	'schema_common',
+	'schema_server',
+	'schema_client'
+);
+
+preload();
+
+function preload() {
+	executePreload()
+		.then(() => {
+			setup();
+		});
 }

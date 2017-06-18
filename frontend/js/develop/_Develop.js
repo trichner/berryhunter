@@ -35,7 +35,7 @@ const Develop = {
 		registerPreload(
 			makeRequest({
 				method: 'GET',
-				url: 'developPanel.part.html'
+				url: 'partials/developPanel.html'
 			}).then(function (html) {
 				document.body.appendChild(htmlToElement(html));
 

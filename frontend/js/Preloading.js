@@ -1,13 +1,20 @@
 "use strict";
 const promises = [];
+let numberOfPromises = 0;
+let loadedPromises = 0;
 
 function executePreload() {
 	return Promise.all(promises);
 }
 
 function registerPreload(preloadingPromise) {
+	preloadingPromise.then(function () {
+		loadedPromises++;
+		console.log('Loaded ' + loadedPromises + '/' + numberOfPromises);
+	});
 	// add promise to list of promises executed before setup()
 	promises.push(preloadingPromise);
+	numberOfPromises++;
 }
 
 function registerGameObjectSVG(gameObjectClass, svgPath) {
@@ -22,8 +29,19 @@ function registerGameObjectSVG(gameObjectClass, svgPath) {
 		}));
 }
 
-let resolveDepencyLoading;
+function preloadScript(script) {
+	registerPreload(new Promise(function (resolve, reject) {
+		require([script], function ($) {
+			resolve();
+		}, function (err) {
+			reject(err);
+		});
+	}));
 
-registerPreload(new Promise(function (resolve) {
-	resolveDepencyLoading = resolve;
-}));
+}
+
+function _import() {
+	for (let i = 0; i < arguments.length; ++i){
+		preloadScript(arguments[i]);
+	}
+}
