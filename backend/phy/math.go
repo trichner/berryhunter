@@ -14,6 +14,11 @@ func sqrt32f(f float32) float32 {
 	return float32(math.Sqrt(float64(f)))
 }
 
+// abs32f calculates the 2-norm of a float32
+func abs32f(f float32) float32 {
+	return float32(math.Abs(float64(f)))
+}
+
 //==== Vec2f
 
 // Vec2f is a simple 2d float vector
