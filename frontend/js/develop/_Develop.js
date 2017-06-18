@@ -32,19 +32,14 @@ const Develop = {
 	},
 
 	setupDevelopPanel: function () {
-		registerPreload(
-			makeRequest({
-				method: 'GET',
-				url: 'partials/developPanel.html'
-			}).then(function (html) {
-				document.body.appendChild(htmlToElement(html));
-
+		registerPartial('partials/developPanel.html')
+			.then(function () {
 				this.setupToggleButtons();
 
 				this.setupItemAdding();
 
 				this.setupTickSampler();
-			}.bind(this)));
+			}.bind(this));
 	},
 
 	setupToggleButtons: function () {
@@ -85,7 +80,7 @@ const Develop = {
 		let select = document.getElementById('develop_itemSelect');
 
 		let optionGroups = {};
-		for (let itemType in ItemType){
+		for (let itemType in ItemType) {
 			optionGroups[itemType] = htmlToElement('<optgroup label="' + itemType + '"></optgroup>');
 			select.appendChild(optionGroups[itemType]);
 		}
@@ -206,9 +201,9 @@ const Develop = {
 
 		let movementStr = '';
 		if (isDefined(inputObj.movement)) {
-			switch (inputObj.movement.x){
+			switch (inputObj.movement.x) {
 				case 1:
-					switch (inputObj.movement.y){
+					switch (inputObj.movement.y) {
 						case 1:
 							movementStr = '\u2198️'; // ↘
 							break;
@@ -221,7 +216,7 @@ const Develop = {
 					}
 					break;
 				case 0:
-					switch (inputObj.movement.y){
+					switch (inputObj.movement.y) {
 						case 1:
 							movementStr = '\u2b07'; // ⬇
 							break;
@@ -234,7 +229,7 @@ const Develop = {
 					}
 					break;
 				case -1:
-					switch (inputObj.movement.y){
+					switch (inputObj.movement.y) {
 						case 1:
 							movementStr = '\u2199'; // ↙
 							break;
@@ -246,19 +241,20 @@ const Develop = {
 							break;
 					}
 					break;
-			}		} else {
+			}
+		} else {
 			// movementStr = '\u26d4'; // ---
 		}
 
 		document.getElementById('develop_input_movement').textContent = movementStr;
 
-		if (isDefined(inputObj.rotation)){
-			document.getElementById('develop_input_rotation').textContent = (inputObj.rotation * (180/Math.PI)).toFixed(0);
+		if (isDefined(inputObj.rotation)) {
+			document.getElementById('develop_input_rotation').textContent = (inputObj.rotation * (180 / Math.PI)).toFixed(0);
 		} else {
 			document.getElementById('develop_input_rotation').textContent = '';
 		}
 
-		if (isDefined(inputObj.action)){
+		if (isDefined(inputObj.action)) {
 			document.getElementById('develop_input_action').textContent = inputObj.action.item;
 		} else {
 			document.getElementById('develop_input_action').textContent = '';

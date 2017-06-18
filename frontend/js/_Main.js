@@ -47,7 +47,10 @@ function setup() {
 		two = new Two({
 			fullscreen: true,
 			type: Two.Types.svg
-		}).appendTo(document.body);
+		});
+		document.body.insertBefore(
+			two.renderer.domElement,
+			document.body.firstChild);
 	}
 
 	width = two.width;
@@ -134,11 +137,9 @@ _import(
 	'schema_client'
 );
 
-preload();
-
-function preload() {
+(function preload() {
 	executePreload()
 		.then(() => {
 			setup();
 		});
-}
+})();

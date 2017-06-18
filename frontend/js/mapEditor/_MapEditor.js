@@ -116,11 +116,5 @@ const MapEditor = {
 };
 
 if (MapEditor.isActive()) {
-	registerPreload(
-		makeRequest({
-			method: 'GET',
-			url: 'partials/mapEditor.html'
-		}).then(function (html) {
-			document.body.appendChild(htmlToElement(html));
-		}));
+	registerPartial('partials/mapEditor.html');
 }

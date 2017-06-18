@@ -41,7 +41,35 @@ function preloadScript(script) {
 }
 
 function _import() {
-	for (let i = 0; i < arguments.length; ++i){
+	for (let i = 0; i < arguments.length; ++i) {
 		preloadScript(arguments[i]);
 	}
 }
+
+function registerPartial(htmlUrl) {
+	let preloadingPromise = makeRequest({
+		method: 'GET',
+		url: htmlUrl
+	}).then(function (html) {
+		switch (document.readyState) {
+			case "interactive":
+			case "complete":
+				document.body.appendChild(htmlToElement(html));
+				return Promise.resolve();
+			case "loading":
+				return new Promise(function (resolve) {
+					document.addEventListener("DOMContentLoaded", function () {
+						document.body.appendChild(htmlToElement(html));
+						resolve();
+					});
+				});
+		}
+	});
+	registerPreload(preloadingPromise);
+	return preloadingPromise;
+}
+
+registerPartial('partials/loadingScreen.html')
+	.then(function () {
+		console.log('loadingScreen loaded');
+	});
