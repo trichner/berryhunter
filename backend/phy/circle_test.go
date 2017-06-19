@@ -67,3 +67,47 @@ func TestCircleIntersectionArea(t *testing.T) {
 		assert.Equal(t, test.area, a)
 	}
 }
+
+type impaleQueryTest struct {
+	c *Circle
+	s Segment
+	e float32
+}
+
+var impaleQueryTests []impaleQueryTest = []impaleQueryTest{
+	{ // barely hitting
+		c: NewCircle(VEC2F_ZERO, 1),
+		s: Segment{Vec2f{X: -2}, Vec2f{X: 1}},
+		e: 1,
+	},
+	{ // fully impaling
+		c: NewCircle(VEC2F_ZERO, 1),
+		s: Segment{Vec2f{X: -2}, Vec2f{X: 2}},
+		e: 0.5,
+	},
+	{ // fall short
+		c: NewCircle(VEC2F_ZERO, 1),
+		s: Segment{Vec2f{X: -2, Y: 0.5}, Vec2f{X: 1}},
+		e: -1,
+	},
+	{ // impale off-center
+		c: NewCircle(VEC2F_ZERO, 1),
+		s: Segment{Vec2f{X: -2, Y: 0.5}, Vec2f{X: 2}},
+		e: 0.5669873,
+	},
+	{ // opposite direction
+		c: NewCircle(VEC2F_ZERO, 1),
+		s: Segment{Vec2f{X: -2, Y: 0}, Vec2f{X: -1}},
+		e: -1,
+	},
+}
+
+func TestCircle_ImpaleQuery(t *testing.T) {
+	for _, iqt := range impaleQueryTests {
+		d := iqt.c.ImpaleQuery(iqt.s)
+		fmt.Printf("D: %f\n", d)
+		assert.Equal(t, iqt.e, d, "Impale correctly")
+	}
+
+}
+

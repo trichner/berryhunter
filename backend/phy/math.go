@@ -19,6 +19,15 @@ func abs32f(f float32) float32 {
 	return float32(math.Abs(float64(f)))
 }
 
+// min32f calculates the 2-norm of a float32
+func min32f(a, b float32) float32 {
+	return float32(math.Min(float64(a), float64(b)))
+}
+
+func inf32f(sign int) float32 {
+	return float32(math.Inf(sign))
+}
+
 //==== Vec2f
 
 // Vec2f is a simple 2d float vector
@@ -54,6 +63,11 @@ func (v Vec2f) Mult(f float32) Vec2f {
 // Dot calculates the dot product between two vectors
 func (v Vec2f) Dot(w Vec2f) float32 {
 	return v.X*w.X + v.Y*w.Y
+}
+
+// Cross calculates the 2d cross product between two vectors
+func (v Vec2f) Cross(w Vec2f) float32 {
+	return v.X*w.Y - v.Y*w.X
 }
 
 // Dot calculates the dot product between two vectors
