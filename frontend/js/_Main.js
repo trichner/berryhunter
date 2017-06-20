@@ -127,19 +127,84 @@ requirejs.config({
 			'../../api/schema/js/server_generated'],
 		schema_client: [
 			'schema/client_generated',
-			'../../api/schema/js/client_generated']
+			'../../api/schema/js/client_generated'],
+		two: '../vendor/two/two'
 	}
 });
 
-_import(
-	'schema_common',
-	'schema_server',
-	'schema_client'
-);
 
-(function preload() {
-	executePreload()
-		.then(() => {
-			setup();
+require(['Utils', 'Preloading'], function () {
+	loadPartial('partials/loadingScreen.html')
+		.then(function () {
+			loadingBar = document.getElementById('loadingBar');
+			console.log('Loading Bar loaded');
+
+			setTimeout(function () {
+
+				_import(
+					// Graphics
+					'two',
+
+					// other libraries
+					'../vendor/tock',
+					'../vendor/flatbuffers-1.6.0',
+					'natureOfCode/arrive/vehicle',
+
+					// own libraries
+					'../vendor/XieLongUtils',
+
+					// API schema
+					'schema_common',
+					'schema_server',
+					'schema_client',
+
+					// Game Modules
+					'SvgLoader',
+					'Backend',
+					'KeyEvents',
+					'PointerEvents',
+					'Controls',
+					'Constants',
+					'InjectedSVG',
+					'gameObjects/_GameObject',
+					'gameObjects/Animals',
+					'gameObjects/Resources',
+					'gameObjects/Border',
+					'gameObjects/Character',
+					'gameObjects/Placeable',
+					'develop/DebugCircle',
+					'GameMapGenerator',
+					'GameMapWithBackend',
+					'items/EquipmentHelper',
+					'items/Items',
+					'items/Recipes',
+					'items/InventorySlot',
+					'items/ClickableIcon',
+					'items/Crafting',
+					'items/Inventory',
+					'VitalSigns',
+					'Player',
+					'GameMap',
+					'MiniMap',
+					'Camera',
+					'Quadrants',
+					'mapEditor/QuadrantGrid',
+
+					// Develop resources
+					'develop/Fps',
+					'develop/AABBs',
+					'develop/_Develop',
+
+					// Map Editor
+					'mapEditor/_MapEditor'
+				);
+
+				executePreload()
+					.then(() => {
+						setup();
+					});
+
+			}, 10);
+
 		});
-})();
+});

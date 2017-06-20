@@ -2,6 +2,7 @@
 const promises = [];
 let numberOfPromises = 0;
 let loadedPromises = 0;
+let loadingBar = false;
 
 function executePreload() {
 	return Promise.all(promises);
@@ -11,6 +12,13 @@ function registerPreload(preloadingPromise) {
 	preloadingPromise.then(function () {
 		loadedPromises++;
 		console.log('Loaded ' + loadedPromises + '/' + numberOfPromises);
+		if (loadingBar) {
+			loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
+			if (loadedPromises >= numberOfPromises ){
+				console.log('Finished loading.');
+				document.getElementById('loadingWrapper').classList.add('finished');
+			}
+		}
 	});
 	// add promise to list of promises executed before setup()
 	promises.push(preloadingPromise);
@@ -47,7 +55,13 @@ function _import() {
 }
 
 function registerPartial(htmlUrl) {
-	let preloadingPromise = makeRequest({
+	let preloadingPromise = loadPartial(htmlUrl);
+	registerPreload(preloadingPromise);
+	return preloadingPromise;
+}
+
+function loadPartial(htmlUrl) {
+	return makeRequest({
 		method: 'GET',
 		url: htmlUrl
 	}).then(function (html) {
@@ -55,9 +69,11 @@ function registerPartial(htmlUrl) {
 			case "interactive":
 			case "complete":
 				document.body.appendChild(htmlToElement(html));
+				console.log('Loaded ' + htmlUrl + ' directly.');
 				return Promise.resolve();
 			case "loading":
 				return new Promise(function (resolve) {
+					console.log('Wait for loaded DOM for ' + htmlUrl + '.');
 					document.addEventListener("DOMContentLoaded", function () {
 						document.body.appendChild(htmlToElement(html));
 						resolve();
@@ -65,11 +81,4 @@ function registerPartial(htmlUrl) {
 				});
 		}
 	});
-	registerPreload(preloadingPromise);
-	return preloadingPromise;
 }
-
-registerPartial('partials/loadingScreen.html')
-	.then(function () {
-		console.log('loadingScreen loaded');
-	});

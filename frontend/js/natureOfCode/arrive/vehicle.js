@@ -4,16 +4,18 @@
 
 // The "Vehicle" class
 
-Two.Vector.prototype.limit = function (max) {
-	const mSq = this.lengthSquared();
-	if (mSq > max * max) {
-		this.divideScalar(Math.sqrt(mSq)); //normalize it
-		this.multiplyScalar(max);
-	}
-	return this;
-};
-
 function Vehicle(x, y) {
+	if (isUndefined(Two.Vector.prototype.limit)){
+		Two.Vector.prototype.limit = function (max) {
+			const mSq = this.lengthSquared();
+			if (mSq > max * max) {
+				this.divideScalar(Math.sqrt(mSq)); //normalize it
+				this.multiplyScalar(max);
+			}
+			return this;
+		};
+	}
+
 	this.acceleration = createVector(0, 0);
 	this.velocity = createVector(0, -2);
 	this.position = createVector(x, y);

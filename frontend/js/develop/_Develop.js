@@ -34,6 +34,8 @@ const Develop = {
 	setupDevelopPanel: function () {
 		registerPartial('partials/developPanel.html')
 			.then(function () {
+				console.log('DevelopPanel DOM loaded');
+
 				this.setupToggleButtons();
 
 				this.setupItemAdding();
@@ -276,6 +278,8 @@ const Develop = {
 	}
 };
 
-if (getUrlParameter(Constants.MODE_PARAMETERS.DEVELOPMENT)) {
-	Develop.setup();
-}
+require(['develop/AABBs'], function () {
+	if (getUrlParameter(Constants.MODE_PARAMETERS.DEVELOPMENT)) {
+		Develop.setup();
+	}
+});

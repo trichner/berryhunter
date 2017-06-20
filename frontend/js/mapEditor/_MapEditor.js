@@ -116,5 +116,8 @@ const MapEditor = {
 };
 
 if (MapEditor.isActive()) {
-	registerPartial('partials/mapEditor.html');
+	registerPartial('partials/mapEditor.html')
+		.then(() => {
+			console.log('MapEditor DOM loaded');
+		});
 }
