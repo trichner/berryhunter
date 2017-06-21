@@ -1,10 +1,3 @@
-const ItemType = {
-	RESOURCE: 'RESOURCE',
-	PLACEABLE: 'PLACEABLE',
-	EQUIPMENT: 'EQUIPMENT',
-	CONSUMABLE: 'CONSUMABLE'
-};
-
 /**
  * Register of available items in the game.
  *

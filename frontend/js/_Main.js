@@ -98,10 +98,6 @@ function setup() {
 		}
 	});
 
-	if (Constants.MOVEMENT_INTERPOLATION) {
-		two.bind('update', moveInterpolatedObjects);
-	}
-
 	if (MapEditor.isActive()) {
 		MapEditor.afterSetup();
 	}
@@ -128,7 +124,11 @@ requirejs.config({
 		schema_client: [
 			'schema/client_generated',
 			'../../api/schema/js/client_generated'],
-		two: '../vendor/two/two'
+		Two: '../vendor/two/two',
+
+		GameObject: 'gameObjects/_GameObject',
+		MapEditor: 'mapEditor/_MapEditor',
+		Develop: 'develop/_Develop'
 	}
 });
 
@@ -143,7 +143,7 @@ require(['Utils', 'Preloading'], function () {
 
 				_import(
 					// Graphics
-					'two',
+					'Two',
 
 					// other libraries
 					'../vendor/tock',
@@ -166,7 +166,7 @@ require(['Utils', 'Preloading'], function () {
 					'Controls',
 					'Constants',
 					'InjectedSVG',
-					'gameObjects/_GameObject',
+					'GameObject',
 					'gameObjects/Animals',
 					'gameObjects/Resources',
 					'gameObjects/Border',
@@ -175,7 +175,7 @@ require(['Utils', 'Preloading'], function () {
 					'develop/DebugCircle',
 					'GameMapGenerator',
 					'GameMapWithBackend',
-					'items/EquipmentHelper',
+					'items/Equipment',
 					'items/Items',
 					'items/Recipes',
 					'items/InventorySlot',

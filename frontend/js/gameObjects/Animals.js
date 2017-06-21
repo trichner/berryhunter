@@ -1,6 +1,6 @@
 "use strict";
 
-require(['gameObjects/_GameObject'], function () {
+define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, Preloading, Utils) {
 	class Animal extends GameObject {
 		constructor(x, y, size, rotation) {
 			super(x, y, size, rotation);
@@ -12,7 +12,6 @@ require(['gameObjects/_GameObject'], function () {
 			return false;
 		}
 	}
-	window.Animal = Animal;
 
 	class Rabbit extends Animal {
 		constructor(x, y) {
@@ -79,26 +78,26 @@ require(['gameObjects/_GameObject'], function () {
 		}
 	}
 
-	window.Rabbit = Rabbit;
-
 	class SaberToothCat extends Animal {
 
 		constructor(x, y) {
-			super(x, y, randomInt(30, 50));
+			super(x, y, Utils.randomInt(30, 50));
 		}
 	}
-
-	window.SaberToothCat = SaberToothCat;
-	registerGameObjectSVG(SaberToothCat, 'img/saberToothCat.svg');
+	Preloading.registerGameObjectSVG(SaberToothCat, 'img/saberToothCat.svg');
 
 	class Mammoth extends Animal {
 
 		constructor(x, y) {
-			super(x, y, randomInt(60, 90));
+			super(x, y, Utils.randomInt(60, 90));
 		}
 	}
+	Preloading.registerGameObjectSVG(Mammoth, 'img/mammoth.svg');
 
-	window.Mammoth = Mammoth;
-	registerGameObjectSVG(Mammoth, 'img/mammoth.svg');
-
+	return {
+		Animal: Animal,
+		Rabbit: Rabbit,
+		SaberToothCat: SaberToothCat,
+		Mammoth: Mammoth
+	}
 });
