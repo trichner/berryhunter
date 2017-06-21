@@ -110,7 +110,7 @@ func (d *dynamicColliderShape) Translate(v Vec2f) {
 
 const returningForce = 0.2
 
-func (c *colliderShape) resolveCollisions_Thomas() {
+func (c *colliderShape) resolveCollisions() {
 
 	if len(c.collisions) == 0 {
 		return
@@ -138,34 +138,6 @@ func (c *colliderShape) resolveCollisions_Thomas() {
 	// apply force
 	force = force.Normalize().Mult(returningForce)
 	c.SetPosition(c.pos.Add(force))
-}
-
-func (c *colliderShape) resolveCollisions() {
-	if len(c.collisions) == 0 {
-		return
-	}
-
-
-	fmt.Printf("Resolving collision: %+v\n", c)
-
-
-	if len(c.collisions) > 1 {
-		fmt.Print("Not sure how to solve multi collision :(");
-	}
-
-	// calculate resulting force
-	for other := range c.collisions {
-		cRadius := c.bb.Left - c.pos.X
-		otherRadius := other.BoundingBox().Left - other.Position().X
-		// calculate required offset to resolve collision
-		offset := cRadius + otherRadius - c.pos.DistanceTo(other.Position())
-		angle := other.Position().AngleBetween(c.pos)
-
-		// adjust position with polar offset
-		c.pos.X = c.pos.X + cos32f(angle) * offset
-		c.pos.Y = c.pos.Y + sin32f(angle) * offset
-		break;
-	}
 }
 
 func (c *colliderShape) Layer() int {

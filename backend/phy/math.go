@@ -19,19 +19,6 @@ func abs32f(f float32) float32 {
 	return float32(math.Abs(float64(f)))
 }
 
-// abs32f calculates the 2-norm of a float32
-func atan232f(y float32, x float32) float32 {
-	return float32(math.Atan2(float64(y), float64(y)))
-}
-// acos32f calculates the acos of a float32
-func sin32f(f float32) float32 {
-	return float32(math.Sin(float64(f)))
-}
-// acos32f calculates the acos of a float32
-func cos32f(f float32) float32 {
-	return float32(math.Cos(float64(f)))
-}
-
 //==== Vec2f
 
 // Vec2f is a simple 2d float vector
