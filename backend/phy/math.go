@@ -64,6 +64,16 @@ func (v Vec2f) Normalize() Vec2f {
 	return Vec2f{x, y}
 }
 
+func (v Vec2f) DistanceTo(w Vec2f) float32 {
+	return sqrt32f(v.DistanceToSquared(w))
+}
+
+func (v Vec2f) DistanceToSquared(w Vec2f) float32 {
+	dx := v.X - w.X
+	dy := v.Y - w.Y;
+	return dx * dx + dy * dy;
+}
+
 // Mat2f is a simple 2x2 matrix
 // [ a b ]
 // [ c d ]
@@ -94,4 +104,3 @@ func (v Vec2i) Add(w Vec2i) Vec2i {
 func (v Vec2i) Sub(w Vec2i) Vec2i {
 	return Vec2i{v.X - w.X, v.Y - w.Y}
 }
-
