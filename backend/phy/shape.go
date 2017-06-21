@@ -153,36 +153,20 @@ func (c *colliderShape) resolveCollisions() {
 		fmt.Print("Not sure how to solve multi collision :(");
 	}
 
-	force := Vec2f{}
-
 	// calculate resulting force
 	for other := range c.collisions {
 		cRadius := c.bb.Left - c.pos.X
 		otherRadius := other.BoundingBox().Left - other.Position().X
+		// calculate required offset to resolve collision
 		offset := cRadius + otherRadius - c.pos.DistanceTo(other.Position())
+		angle := other.Position().AngleBetween(c.pos)
 
-		c.pos.X = c.pos.X *
-
-		d := c.pos.Sub(other.Position())
-		if d.AbsSq() == 0 {
-			continue
-		}
-		d = d.Normalize()
-		force = force.Add(d)
+		// adjust position with polar offset
+		c.pos.X = c.pos.X + cos32f(angle) * offset
+		c.pos.Y = c.pos.Y + sin32f(angle) * offset
 		break;
 	}
-
-	if force.AbsSq() == 0 {
-		//TODO: What do?
-		return
-	}
-
-	// apply force
-	force = force.Normalize().Mult(returningForce)
-	c.SetPosition(c.pos.Add(force))
 }
-
-
 
 func (c *colliderShape) Layer() int {
 	return c.Shape.Layer

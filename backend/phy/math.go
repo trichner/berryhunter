@@ -19,6 +19,19 @@ func abs32f(f float32) float32 {
 	return float32(math.Abs(float64(f)))
 }
 
+// abs32f calculates the 2-norm of a float32
+func atan232f(y float32, x float32) float32 {
+	return float32(math.Atan2(float64(y), float64(y)))
+}
+// acos32f calculates the acos of a float32
+func sin32f(f float32) float32 {
+	return float32(math.Sin(float64(f)))
+}
+// acos32f calculates the acos of a float32
+func cos32f(f float32) float32 {
+	return float32(math.Cos(float64(f)))
+}
+
 //==== Vec2f
 
 // Vec2f is a simple 2d float vector
@@ -72,6 +85,14 @@ func (v Vec2f) DistanceToSquared(w Vec2f) float32 {
 	dx := v.X - w.X
 	dy := v.Y - w.Y;
 	return dx * dx + dy * dy;
+}
+
+func (v Vec2f) AngleBetween(w Vec2f) float32 {
+	atan2 := atan232f(v.Y - w.Y, v.X - w.Y)
+	if (atan2 < 0) {
+		return float32(PI) * 2 + atan2;
+	}
+	return atan2
 }
 
 // Mat2f is a simple 2x2 matrix
