@@ -78,19 +78,17 @@ func (v Vec2f) Normalize() Vec2f {
 }
 
 func (v Vec2f) DistanceTo(w Vec2f) float32 {
-	return sqrt32f(v.DistanceToSquared(w))
+	return w.Sub(v).Abs()
 }
 
 func (v Vec2f) DistanceToSquared(w Vec2f) float32 {
-	dx := v.X - w.X
-	dy := v.Y - w.Y;
-	return dx * dx + dy * dy;
+	return w.Sub(v).AbsSq()
 }
 
 func (v Vec2f) AngleBetween(w Vec2f) float32 {
 	atan2 := atan232f(v.Y - w.Y, v.X - w.Y)
-	if (atan2 < 0) {
-		return float32(PI) * 2 + atan2;
+	if atan2 < 0 {
+		return float32(math.Pi)*2 + atan2
 	}
 	return atan2
 }
