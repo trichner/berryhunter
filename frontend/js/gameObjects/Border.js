@@ -1,6 +1,6 @@
 "use strict";
 
-define(['GameObject', 'Two'], function (GameObject, Two) {
+define(['Game', 'GameObject', 'Two'], function (Game, GameObject, Two) {
 	class Border extends GameObject {
 		constructor(x, y, side, length) {
 			super(x, y, side, length);
@@ -43,11 +43,11 @@ define(['GameObject', 'Two'], function (GameObject, Two) {
 		}
 
 		show() {
-			groups.mapBorders.add(this.shape);
+			Game.groups.mapBorders.add(this.shape);
 		}
 
 		hide() {
-			groups.mapBorders.remove(this.shape);
+			Game.groups.mapBorders.remove(this.shape);
 		}
 	}
 

@@ -1,8 +1,8 @@
 "use strict";
 
-define(['InjectedSVG', 'Constants', 'Two', 'Utils'], function (InjectedSVG, Constants, Two, Utils) {
+define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, InjectedSVG, Constants, Two, Utils) {
 
-	var movementInterpolatedObjects = new Set();
+	let movementInterpolatedObjects = new Set();
 
 	class GameObject {
 		constructor(x, y, size, rotation) {
@@ -94,17 +94,17 @@ define(['InjectedSVG', 'Constants', 'Two', 'Utils'], function (InjectedSVG, Cons
 		}
 
 		show() {
-			groups.gameObjects.add(this.shape);
+			Game.groups.gameObjects.add(this.shape);
 		}
 
 		hide() {
-			groups.gameObjects.remove(this.shape);
+			Game.groups.gameObjects.remove(this.shape);
 		}
 	}
 
 	GameObject.setup = function () {
 		if (Constants.MOVEMENT_INTERPOLATION) {
-			two.bind('update', moveInterpolatedObjects);
+			Game.two.bind('update', moveInterpolatedObjects);
 		}
 	};
 

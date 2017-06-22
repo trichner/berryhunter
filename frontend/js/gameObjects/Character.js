@@ -1,7 +1,7 @@
 "use strict";
 
-define(['GameObject', 'Two', 'Constants', 'Utils', 'MapEditor', 'items/Equipment', 'InjectedSVG', 'Preloading'],
-	function (GameObject, Two, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading) {
+define(['Game', 'GameObject', 'Two', 'Constants', 'Utils', 'MapEditor', 'items/Equipment', 'InjectedSVG', 'Preloading'],
+	function (Game, GameObject, Two, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading) {
 		class Character extends GameObject {
 			constructor(id, x, y) {
 				super(x, y, 30, Math.PI / 2);
@@ -133,7 +133,8 @@ define(['GameObject', 'Two', 'Constants', 'Utils', 'MapEditor', 'items/Equipment
 						func: function () {
 							return ': /';
 						}
-					}]);
+					}
+				]);
 
 				group.add(new Two.Text(smiley, 0, 0, {
 					size: 60 * 0.6,
@@ -152,11 +153,11 @@ define(['GameObject', 'Two', 'Constants', 'Utils', 'MapEditor', 'items/Equipment
 			}
 
 			show() {
-				groups.character.add(this.shape);
+				Game.groups.character.add(this.shape);
 			}
 
 			hide() {
-				groups.character.remove(this.shape);
+				Game.groups.character.remove(this.shape);
 			}
 
 			move(movement) {

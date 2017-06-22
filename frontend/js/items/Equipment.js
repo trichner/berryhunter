@@ -23,4 +23,4 @@ define(['items/ItemType'], function (ItemType) {
 	};
 
 	return Equipment;
-})
+});

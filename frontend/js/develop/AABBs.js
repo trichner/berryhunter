@@ -1,6 +1,6 @@
 "use strict";
 
-define(['GameObject', 'Develop', 'Utils', 'Two'], function (GameObject, Develop, Utils, Two) {
+define(['Game', 'GameObject', 'Develop', 'Utils', 'Two'], function (Game, GameObject, Develop, Utils, Two) {
 
 	const AABBs = {
 		setup: function () {
@@ -30,14 +30,14 @@ define(['GameObject', 'Develop', 'Utils', 'Two'], function (GameObject, Develop,
 					let x = startX + width;
 					let y = startY + height;
 					this.aabb = new Two.Rectangle(x, y, width, height);
-					groups.gameObjects.add(this.aabb);
+					Game.groups.gameObjects.add(this.aabb);
 
 					this.aabb.noFill();
 					this.aabb.stroke = Develop.settings.elementColor;
 					this.aabb.linewidth = Develop.settings.linewidth;
 
 					this.aabbConnector = new Two.Line(this.getX(), this.getY(), x, y);
-					groups.gameObjects.add(this.aabbConnector);
+					Game.groups.gameObjects.add(this.aabbConnector);
 					this.aabbConnector.stroke = Develop.settings.elementColor;
 					this.aabbConnector.linewidth = Develop.settings.linewidth;
 				} else {
@@ -46,13 +46,13 @@ define(['GameObject', 'Develop', 'Utils', 'Two'], function (GameObject, Develop,
 			};
 
 			GameObject.prototype.hideAABB = function () {
-				if (!_.isUndefined(this.aabb)) {
+				if (!Utils.isUndefined(this.aabb)) {
 					this.aabb.noStroke();
 				}
 			};
 
 			GameObject.prototype.showAABB = function () {
-				if (!_.isUndefined(this.aabb)) {
+				if (!Utils.isUndefined(this.aabb)) {
 					this.aabb.stroke = Develop.settings.elementColor;
 					this.aabb.linewidth = Develop.settings.linewidth;
 				}

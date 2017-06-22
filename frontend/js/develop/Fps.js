@@ -1,14 +1,14 @@
 "use strict";
 
-define(['Develop'], function (Develop) {
+define(['Game', 'Develop'], function (Game, Develop) {
 
 	let Fps = {
 		setup: function () {
-			two.bind('update', this.update.bind(this));
+			Game.two.bind('update', this.update.bind(this));
 		},
 
 		update: function () {
-			Develop.logFPS(1000 / two.timeDelta);
+			Develop.logFPS(1000 / Game.two.timeDelta);
 		}
 	};
 

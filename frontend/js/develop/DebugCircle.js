@@ -1,6 +1,6 @@
 "use strict";
 
-define(['GameObject', 'Develop', 'Two'], function (GameObject, Develop, Two) {
+define(['Game', 'GameObject', 'Develop', 'Two'], function (Game, GameObject, Develop, Two) {
 
 	class DebugCircle extends GameObject {
 		constructor(x, y, radius) {
@@ -8,12 +8,12 @@ define(['GameObject', 'Develop', 'Two'], function (GameObject, Develop, Two) {
 
 			this.timeToLife = 60;
 
-			two.bind('update', (frameCount, timeDelta) => {
+			Game.two.bind('update', (frameCount, timeDelta) => {
 				this.timeToLife -= timeDelta;
 				if (this.timeToLife < 0) {
 					this.hide();
 					// FIXME
-					delete gameMap.objects[gameMap.id];
+					delete Game.map.objects[this.id];
 					this.aabb.remove();
 					this.aabbConnector.remove();
 				}

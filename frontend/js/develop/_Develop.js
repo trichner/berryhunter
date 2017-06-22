@@ -1,7 +1,7 @@
 "use strict";
 
-define(['develop/AABBs', 'Preloading', 'Utils', 'MapEditor', 'items/ItemType', 'Constants'],
-	function (AABBs, Preloading, Utils, MapEditor, ItemType, Constants) {
+define(['Game', 'develop/AABBs', 'develop/Fps', 'Preloading', 'Utils', 'MapEditor', 'items/ItemType', 'Constants'],
+	function (Game, AABBs, Fps, Preloading, Utils, MapEditor, ItemType, Constants) {
 
 		const Develop = {
 
@@ -107,28 +107,28 @@ define(['develop/AABBs', 'Preloading', 'Utils', 'MapEditor', 'items/ItemType', '
 				document
 					.getElementById('develop_itemAdd')
 					.addEventListener('click', function () {
-						player.inventory.addItem(
+						Game.player.inventory.addItem(
 							Items[document.getElementById('develop_itemSelect').value],
 							parseInt(document.getElementById('develop_itemCount').value)
 						);
-						two.update();
+						Game.two.update();
 					});
 			},
 
 			onSettingToggle(setting, newValue){
 				switch (setting) {
 					case 'showAABBs':
-						Object.values(gameMap.objects)
+						Object.values(Game.map.objects)
 							.forEach(function (gameObject) {
 								if (newValue) {
 									gameObject.showAABB();
-									player.character.showAABB();
+									Game.player.character.showAABB();
 								} else {
 									gameObject.hideAABB();
-									player.character.hideAABB();
+									Game.player.character.hideAABB();
 								}
 							});
-						two.update();
+						Game.two.update();
 				}
 			},
 
@@ -152,6 +152,10 @@ define(['develop/AABBs', 'Preloading', 'Utils', 'MapEditor', 'items/ItemType', '
 					let serverTickPopup = document.getElementById('serverTickPopup');
 					serverTickPopup.classList.add('hidden');
 				});
+			},
+
+			onTwoAvailable: function(two){
+				Fps.setup(two);
 			},
 
 			logValue: function (name, value) {

@@ -1,5 +1,6 @@
 "use strict";
-define(['Two', 'Utils', 'InjectedSVG'], function (Two, Utils, InjectedSVG) {
+
+define(['Game', 'Two', 'Utils', 'InjectedSVG'], function (Game, Two, Utils, InjectedSVG) {
 	class ClickableIcon extends Two.Group {
 		constructor(size, svg) {
 			super();
@@ -18,7 +19,7 @@ define(['Two', 'Utils', 'InjectedSVG'], function (Two, Utils, InjectedSVG) {
 				this.setIconGraphic(svg);
 			}
 
-			two.once('render', this.onDomReady, this);
+			Game.two.once('render', this.onDomReady, this);
 		}
 
 		onDomReady() {
