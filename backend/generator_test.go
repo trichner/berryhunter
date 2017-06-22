@@ -4,7 +4,7 @@ import (
 	"testing"
 	"math/rand"
 	"fmt"
-	"github.com/trichner/death-io/backend/wrand"
+	"github.com/trichner/berryhunter/backend/wrand"
 )
 
 func Test_populate(t *testing.T) {
