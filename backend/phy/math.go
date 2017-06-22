@@ -64,24 +64,6 @@ func (v Vec2f) Normalize() Vec2f {
 	return Vec2f{x, y}
 }
 
-func (v Vec2f) DistanceTo(w Vec2f) float32 {
-	return sqrt32f(v.DistanceToSquared(w))
-}
-
-func (v Vec2f) DistanceToSquared(w Vec2f) float32 {
-	dx := v.X - w.X
-	dy := v.Y - w.Y;
-	return dx * dx + dy * dy;
-}
-
-func (v Vec2f) AngleBetween(w Vec2f) float32 {
-	atan2 := atan232f(v.Y - w.Y, v.X - w.Y)
-	if (atan2 < 0) {
-		return float32(PI) * 2 + atan2;
-	}
-	return atan2
-}
-
 // Mat2f is a simple 2x2 matrix
 // [ a b ]
 // [ c d ]
