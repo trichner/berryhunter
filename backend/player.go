@@ -27,7 +27,7 @@ type itemStack struct {
 const playerCollisionGroup = -1
 
 func NewPlayer(c *net.Client) *player {
-	e := newCircleEntity(0.5)
+	e := newCircleEntity(0.25)
 
 
 	e.body.UserData = e

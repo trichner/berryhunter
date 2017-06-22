@@ -18,7 +18,7 @@ func (bb *AABB) String() string {
 
 // Stab 'stabs' the AABB with a point and returns true if it is strictly inside the
 // AABB, otherwise false
-func (bb *AABB) Stab(p Vec2f) bool {
+func (bb *AABB) StabQuery(p Vec2f) bool {
 	if p.X < bb.Left { // left of bb
 		return false
 	}
@@ -57,10 +57,8 @@ func (bb *AABB) Translate(f Vec2f) AABB {
 	return AABB{l, b, u, r}
 }
 
+// MinkowskiDiff calculates the minkowski difference of two AABBs
 // roughly from here: http://hamaluik.com/posts/simple-aabb-collision-using-minkowski-difference/
-
-// MinkowskiDiff calculates the minkowski difference of two
-// AABBs
 func (bb *AABB) MinkowskiDiff(other AABB) AABB {
 
 	l := bb.Left - other.Right
@@ -95,4 +93,53 @@ func (bb *AABB) ClosestPointOnBounds(p Vec2f) Vec2f {
 	}
 
 	return boundsPoint
+}
+
+// OriginBoundIntersection returns the scaling of the provided translation vector t that
+// will make the AABB collide with the origin 0/0
+func (bb *AABB) OriginBoundIntersection(t Vec2f) float32 {
+	end := t
+
+	// for each of the AABB's four edges
+	// calculate the minimum fraction of "direction"
+	// in order to find where the ray FIRST intersects
+	// the AABB (if it ever does)
+	var p1, p2 Vec2f
+	var s1, s2 Segment
+	p1 = Vec2f{bb.Left, bb.Bottom}
+	p1 = Vec2f{bb.Left, bb.Upper}
+	s1 = Segment{VEC2F_ZERO, end}
+	s2 = Segment{p1, p2.Sub(p1)}
+	minT := ImpaleSegment(s1, s2)
+
+	var x float32
+	p1 = Vec2f{bb.Left, bb.Upper}
+	p2 = Vec2f{bb.Right, bb.Upper}
+	s1 = Segment{VEC2F_ZERO, end}
+	s2 = Segment{p1, p2.Sub(p1)}
+	x = ImpaleSegment(s1, s2)
+	if x < minT {
+		minT = x
+	}
+
+	p1 = Vec2f{bb.Right, bb.Upper}
+	p2 = Vec2f{bb.Right, bb.Bottom}
+	s1 = Segment{VEC2F_ZERO, end}
+	s2 = Segment{p1, p2.Sub(p1)}
+	x = ImpaleSegment(s1, s2)
+	if x < minT {
+		minT = x
+	}
+
+	p1 = Vec2f{bb.Right, bb.Bottom}
+	p2 = Vec2f{bb.Left, bb.Bottom}
+	s1 = Segment{VEC2F_ZERO, end}
+	s2 = Segment{p1, p2.Sub(p1)}
+	x = ImpaleSegment(s1, s2)
+	if x < minT {
+		minT = x
+	}
+
+	// ok, now we should have found the fractional component along the ray where we collided
+	return minT
 }

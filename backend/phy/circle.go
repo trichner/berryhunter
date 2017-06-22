@@ -27,22 +27,86 @@ func NewCircle(pos Vec2f, radius float32) *Circle {
 	return c
 }
 
-// updates the circles bounding box according to its radius and position.
-func (c *Circle) updateBB() {
+func (circle *Circle) MinkowskiDiff(other *Circle) *Circle {
 
-	radiusVector := Vec2f{c.Radius, c.Radius}
-	lower := c.pos.Sub(radiusVector)
-	upper := c.pos.Add(radiusVector)
+	r := circle.Radius + other.Radius
+	o := circle.pos.Sub(other.pos)
 
-	c.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
+	return NewCircle(o, r)
 }
 
-func (c *Circle) intersectionArea(o *Circle) float32 {
+// Stabs the shape and returns true if the point lies on the shape
+func (circle *Circle) StabQuery(p Vec2f) bool {
+
+	return circle.pos.Sub(p).AbsSq() < circle.Radius*circle.Radius
+}
+
+// Stabs the shape and returns true if the point lies on the shape
+func (circle *Circle) ImpaleQuery(s Segment) float32 {
+
+	// is the segment already inside?
+	if circle.StabQuery(s.origin) {
+		return 0
+	}
+
+	// Solve the following system for t
+	// 1: origin + t * (end-origin) = e
+	// 2: (ex - cx)^2 + (ey - cy)^2 = r^2
+
+	d := s.direction
+	o := s.origin
+	r := circle.Radius
+
+	f := o.Sub(circle.pos)
+
+	// values for quadratic equation
+	a := d.Dot(d)
+	b := 2 * f.Dot(d)
+	c := f.Dot(f) - r*r
+
+	// Solve quadratic equation
+	discriminant := b*b - 4*a*c
+	if discriminant < 0 {
+		// complex result, no intersection
+		return -1
+	}
+
+	discriminant = sqrt32f(discriminant)
+
+	// either solution may be on or off the ray so need to test both
+	// t1 is always the smaller value, because both discriminant and a are
+	// non-negative
+	t1 := (-b - discriminant) / (2 * a)
+	t2 := (-b + discriminant) / (2 * a)
+
+	if t1 >= 0 && t1 <= 1 {
+		return t1
+	}
+
+	if t2 >= 0 && t2 <= 1 {
+		return t2
+	}
+
+	// no impale
+	return -1
+}
+
+// updates the circles bounding box according to its radius and position.
+func (circle *Circle) updateBB() {
+
+	radiusVector := Vec2f{circle.Radius, circle.Radius}
+	lower := circle.pos.Sub(radiusVector)
+	upper := circle.pos.Add(radiusVector)
+
+	circle.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
+}
+
+func (circle *Circle) intersectionArea(o *Circle) float32 {
 
 	// from https://stackoverflow.com/questions/4247889/area-of-intersection-between-two-circles
-	r1 := c.Radius
+	r1 := circle.Radius
 	r2 := o.Radius
-	dSq := c.pos.Sub(o.pos).AbsSq()
+	dSq := circle.pos.Sub(o.pos).AbsSq()
 
 	rdSq := (r1 + r2) * (r1 + r2)
 

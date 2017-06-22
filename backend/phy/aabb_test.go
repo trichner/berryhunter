@@ -27,7 +27,7 @@ func TestAABB_MinkowskiDiff_positive(t *testing.T) {
 
 	diff := b1.MinkowskiDiff(b2)
 
-	intersects := diff.Stab(Vec2f{})
+	intersects := diff.StabQuery(Vec2f{})
 
 	fmt.Printf("CP: %+v", diff.ClosestPointOnBounds(VEC2F_ZERO))
 
@@ -43,7 +43,7 @@ func TestAABB_MinkowskiDiff_negative(t *testing.T) {
 
 	diff := b1.MinkowskiDiff(b2)
 
-	intersects := diff.Stab(Vec2f{})
+	intersects := diff.StabQuery(Vec2f{})
 
 	assert.Equal(t, IntersectAabb(&b1, &b2), intersects, "Do intersect")
 }
