@@ -1,11 +1,16 @@
 "use strict";
 
-let Fps = {
-	setup: function () {
-		two.bind('update', this.update.bind(this));
-	},
+define(['Develop'], function (Develop) {
 
-	update: function () {
-		Develop.logFPS(1000 / two.timeDelta);
-	}
-};
+	let Fps = {
+		setup: function () {
+			two.bind('update', this.update.bind(this));
+		},
+
+		update: function () {
+			Develop.logFPS(1000 / two.timeDelta);
+		}
+	};
+
+	return Fps;
+});

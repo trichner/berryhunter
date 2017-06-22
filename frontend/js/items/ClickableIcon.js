@@ -1,5 +1,5 @@
 "use strict";
-require(['two'], function (Two) {
+define(['Two', 'Utils', 'InjectedSVG'], function (Two, Utils, InjectedSVG) {
 	class ClickableIcon extends Two.Group {
 		constructor(size, svg) {
 			super();
@@ -14,7 +14,7 @@ require(['two'], function (Two) {
 			this.iconGroup = new Two.Group();
 			this.add(this.iconGroup);
 
-			if (isDefined(svg)) {
+			if (Utils.isDefined(svg)) {
 				this.setIconGraphic(svg);
 			}
 
@@ -52,7 +52,7 @@ require(['two'], function (Two) {
 
 		setClickable(toggle) {
 			this.clickable = toggle;
-			if (isUndefined(this.domElement)){
+			if (Utils.isUndefined(this.domElement)){
 				// domElement is not yet loaded, so skip class modification (it will be done onDomReady)
 				return;
 			}
@@ -91,7 +91,7 @@ require(['two'], function (Two) {
 		}
 
 		hasIcon() {
-			return isDefined(this.itemIcon);
+			return Utils.isDefined(this.itemIcon);
 		}
 
 		// TODO Display busy animation
@@ -111,6 +111,6 @@ require(['two'], function (Two) {
 		active: 'rgba(255, 255, 255, 0.6)'
 	};
 
-	window.ClickableIcon = ClickableIcon;
+	return ClickableIcon;
 });
 

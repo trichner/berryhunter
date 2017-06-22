@@ -6,7 +6,7 @@ define(['Utils'], function (Utils) {
 	const promises = [];
 	let numberOfPromises = 0;
 	let loadedPromises = 0;
-	let loadingBar = false;
+	Preloading.loadingBar = false;
 
 	Preloading.executePreload = function () {
 		return Promise.all(promises);

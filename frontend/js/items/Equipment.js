@@ -2,7 +2,7 @@
 
 define(['items/ItemType'], function (ItemType) {
 	let Equipment = {};
-	EquipmentSlot.Slots = {
+	Equipment.Slots = {
 		HAND: 'HAND',
 
 		/**
@@ -11,16 +11,16 @@ define(['items/ItemType'], function (ItemType) {
 		PLACEABLE: 'PLACEABLE'
 	};
 
-	EquipmentSlot.Helper = {
+	Equipment.Helper = {
 		getItemEquipmentSlot: function (item) {
 			switch (item.type) {
 				case ItemType.EQUIPMENT:
 					return item.equipmentSlot;
 				case ItemType.PLACEABLE:
-					return EquipmentSlot.PLACEABLE;
+					return Equipment.Slots.PLACEABLE;
 			}
 		}
 	};
 
-	return EquipmentSlot;
+	return Equipment;
 })
