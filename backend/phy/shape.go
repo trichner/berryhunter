@@ -108,36 +108,28 @@ func (d *dynamicColliderShape) Translate(v Vec2f) {
 	d.SetPosition(d.Position().Add(v))
 }
 
-const returningForce = 0.2
-
 func (c *colliderShape) resolveCollisions() {
-
 	if len(c.collisions) == 0 {
 		return
 	}
 
-	fmt.Printf("Resolving collision: %+v\n", c)
-
-	force := Vec2f{}
+	returningForce := Vec2f{}
 
 	// calculate resulting force
 	for other := range c.collisions {
-		d := c.pos.Sub(other.Position())
-		if d.AbsSq() == 0 {
-			continue
-		}
-		d = d.Normalize()
-		force = force.Add(d)
+		cRadius := c.pos.X - c.bb.Left
+		otherRadius := other.Position().X - other.BoundingBox().Left
+		// calculate required offset to resolve collision
+		offset := cRadius + otherRadius - c.pos.DistanceTo(other.Position())
+		// Push a little further away to prevent endless collisions
+		offset += 0.01
+		angle := c.pos.AngleBetween(other.Position())
+
+		// adjust position with polar offset
+		returningForce = returningForce.Add(Vec2f{cos32f(angle), sin32f(angle)}.Mult(offset))
 	}
 
-	if force.AbsSq() == 0 {
-		//TODO: What do?
-		return
-	}
-
-	// apply force
-	force = force.Normalize().Mult(returningForce)
-	c.SetPosition(c.pos.Add(force))
+	c.SetPosition(c.pos.Add(returningForce))
 }
 
 func (c *colliderShape) Layer() int {

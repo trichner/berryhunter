@@ -1,6 +1,9 @@
 package phy
 
-import "math"
+import (
+	"math"
+	"fmt"
+)
 
 var VEC2F_ZERO = Vec2f{0, 0}
 
@@ -26,6 +29,19 @@ func min32f(a, b float32) float32 {
 
 func inf32f(sign int) float32 {
 	return float32(math.Inf(sign))
+}
+
+// abs32f calculates the 2-norm of a float32
+func atan232f(y float32, x float32) float32 {
+	return float32(math.Atan2(float64(y), float64(x)))
+}
+// acos32f calculates the acos of a float32
+func sin32f(f float32) float32 {
+	return float32(math.Sin(float64(f)))
+}
+// acos32f calculates the acos of a float32
+func cos32f(f float32) float32 {
+	return float32(math.Cos(float64(f)))
 }
 
 //==== Vec2f
@@ -76,6 +92,26 @@ func (v Vec2f) Normalize() Vec2f {
 	x := v.X / a
 	y := v.Y / a
 	return Vec2f{x, y}
+}
+
+func (v Vec2f) DistanceTo(w Vec2f) float32 {
+	return w.Sub(v).Abs()
+}
+
+func (v Vec2f) DistanceToSquared(w Vec2f) float32 {
+	return w.Sub(v).AbsSq()
+}
+
+func (v Vec2f) AngleBetween(w Vec2f) float32 {
+	atan2 := atan232f(v.Y - w.Y, v.X - w.X)
+	if atan2 < 0 {
+		return float32(math.Pi) * 2 + atan2
+	}
+	return atan2
+}
+
+func (v Vec2f) String() string {
+	return fmt.Sprintf("%.2f / %.2f", v.X, v.Y)
 }
 
 // Mat2f is a simple 2x2 matrix

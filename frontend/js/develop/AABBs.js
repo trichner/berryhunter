@@ -23,10 +23,10 @@ const AABBs = {
 
 			if (_.isUndefined(this.aabb)) {
 
-				let width = (endX - startX) / 2;
-				let height = (endY - startY) / 2;
-				let x = startX + width;
-				let y = startY + height;
+				let width = (endX - startX);
+				let height = (endY - startY);
+				let x = startX + width / 2;
+				let y = startY + height / 2;
 				this.aabb = new Two.Rectangle(x, y, width, height);
 				groups.gameObjects.add(this.aabb);
 
