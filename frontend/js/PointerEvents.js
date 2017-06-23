@@ -1,11 +1,10 @@
 "use strict";
 
-const PointerType = {
-	LEFT: 'LEFT',
-	RIGHT: 'RIGHT'
-};
-
 let PointerEvents = {
+	PointerType: {
+		LEFT: 'LEFT',
+		RIGHT: 'RIGHT'
+	},
 	x: 0,
 	y: 0,
 	/*

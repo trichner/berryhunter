@@ -17,6 +17,7 @@ requirejs.config({
 			'../../api/schema/js/client_generated'
 		],
 		Two: '../vendor/two/two',
+		'vendor/flatbuffers': '../vendor/flatbuffers-1.6.0',
 
 		GameObject: 'gameObjects/_GameObject',
 		MapEditor: 'mapEditor/_MapEditor',
@@ -39,7 +40,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 
 					// other libraries
 					'../vendor/tock',
-					'../vendor/flatbuffers-1.6.0',
+					'vendor/flatbuffers',
 					'natureOfCode/arrive/vehicle',
 
 					// own libraries
@@ -70,6 +71,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'items/Equipment',
 					'items/Items',
 					'items/Recipes',
+					'items/RecipesHelper',
 					'items/InventorySlot',
 					'items/ClickableIcon',
 					'items/Crafting',

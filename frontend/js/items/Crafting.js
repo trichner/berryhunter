@@ -1,24 +1,24 @@
 "use strict";
 
-define(['Game', 'Two', 'ClickableIcon', 'MapEditor'], function (Game, Two, ClickableIcon, MapEditor) {
+define(['Game', 'Two', 'ClickableIcon', 'MapEditor', 'Utils', 'items/Items'], function (Game, Two, ClickableIcon, MapEditor, Utils, Items) {
 
 	const Crafting = {
 		displayedCrafts: [],
 
 		displayAvailableCrafts: function (availableCrafts) {
-			if (arraysEqual(this.displayedCrafts, availableCrafts)) {
+			if (Utils.arraysEqual(this.displayedCrafts, availableCrafts)) {
 				// Nothing to do here
 				return;
 			}
 
-			if (isDefined(this.displayGroup)) {
+			if (Utils.isDefined(this.displayGroup)) {
 				this.displayGroup.remove();
 			}
 			this.displayGroup = new Two.Group();
 			Game.groups.overlay.add(this.displayGroup);
 			// Display 7 crafts per Row, beginning top left corner
 			let craftsPerRow = 7;
-			let size = Relative.height(7);
+			let size = Utils.Relative.height(7);
 			let margin = ClickableIcon.relativeMargin * size;
 
 			this.displayGroup.translation.set(
