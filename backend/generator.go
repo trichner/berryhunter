@@ -8,7 +8,7 @@ import (
 )
 
 const gridSize = 100
-const chunkSize = 5
+const chunkSize = 3
 
 func populate(g *Game, rnd *rand.Rand) {
 
