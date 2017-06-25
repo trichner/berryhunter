@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 //---- player
@@ -14,7 +15,21 @@ type player struct {
 	Hunger uint
 	client *net.Client
 
+	viewport phy.DynamicCollider
+
 	inventory inventory
+}
+
+const viewPortWidth = 20.0
+const viewPortHeight = 12.0
+
+func (p *player) updateViewport() {
+	pos := p.body.Position()
+
+	extent := phy.Vec2f{viewPortWidth / 2, viewPortHeight / 2}
+
+	box := phy.NewBox(pos, extent)
+	p.viewport = box
 }
 
 type inventory struct {

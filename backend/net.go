@@ -34,9 +34,6 @@ func (n *NetSystem) AddPlayer(p *player) {
 	n.players = append(n.players, p)
 }
 
-const viewPortWidth = 20.0
-const viewPortHeight = 12.0
-
 func (n *NetSystem) Update(dt float32) {
 
 	// assemble game state prototype

@@ -45,11 +45,14 @@ func cos32f(f float32) float32 {
 }
 
 // acos32f calculates the acos of a float32
-func sig32f(f float32) float32 {
+func Signum32f(f float32) float32 {
 	if f < 0 {
 		return -1
 	}
-	return 1
+	if f > 0 {
+		return 1
+	}
+	return 0
 }
 
 //==== Vec2f

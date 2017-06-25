@@ -151,6 +151,7 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 		v = v.Mult(walkSpeed)
 		next := p.body.Position().Add(v)
 		p.body.SetPosition(next)
+
 	}
 
 	// process actions if available
@@ -165,11 +166,11 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 }
 
 func input2vec(i *InputDTO) phy.Vec2f {
-	x := signumf32(i.movement.X)
-	y := signumf32(i.movement.Y)
+	x := phy.Signum32f(i.movement.X)
+	y := phy.Signum32f(i.movement.Y)
 	// prevent division by zero
 	if x == 0 && y == 0 {
-		return phy.VEC2F_ZERO
+		return phy.Vec2f{}
 	}
 	v := phy.Vec2f{x, y}
 	return v.Normalize()

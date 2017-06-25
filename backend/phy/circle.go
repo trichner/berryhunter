@@ -53,7 +53,7 @@ func resolveCircleThomas(c *Circle, other *Circle) Vec2f {
 		fDirection = distance.Div(magnitude)
 	} else {
 		// deterministic tie breaker
-		sig := sig32f(c.Radius - other.Radius)
+		sig := Signum32f(c.Radius - other.Radius)
 
 		// didn't work out? screw this, we're out
 		if sig == 0 {
