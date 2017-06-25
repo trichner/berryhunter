@@ -28,7 +28,7 @@ func TestSpace_AddShape(t *testing.T) {
 
 	fmt.Printf("Grid:\n%s\n", s)
 
-	//found := s.getAt(s.grid, 1, 1)
+	//found := shape.getAt(shape.grid, 1, 1)
 	//assert.Equal(t, 1, len(found), "Find a shape")
 
 	s.Update()

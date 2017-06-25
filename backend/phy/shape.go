@@ -15,19 +15,7 @@ type Shape struct {
 }
 
 func (c *Shape) String() string {
-	return fmt.Sprintf("[ c: %.2f / %.2f, bb: (%s)]", c.pos.X, c.pos.Y, c.bb.String())
-}
-
-func (c *Shape) BoundingBox() AABB {
-	return c.bb
-}
-
-func (c *Shape) Position() Vec2f {
-	return c.pos
-}
-
-func (c *Shape) SetPosition(v Vec2f) {
-	c.pos = v
+	return fmt.Sprintf("[ c: %.2f / %.2f, bb: (%shape)]", c.pos.X, c.pos.Y, c.bb.String())
 }
 
 type DynamicShape struct {
@@ -51,15 +39,16 @@ type Collider interface {
 
 	Collisions() ColliderSet
 
-	Layer() int
-	Group() int
+	Shape() *Shape
 
 	updateBB()
 	resetCollisions()
 	resolveCollisions()
 	addCollision(s Collider)
 
+	// double dispatchers
 	CollisionResolver
+	Intersector
 }
 
 type DynamicCollider interface {
@@ -70,7 +59,7 @@ type DynamicCollider interface {
 
 func newColliderShape(pos Vec2f) colliderShape {
 	return colliderShape{
-		Shape:      Shape{pos: pos},
+		shape:      Shape{pos: pos},
 		collisions: make(ColliderSet),
 	}
 }
@@ -78,7 +67,7 @@ func newColliderShape(pos Vec2f) colliderShape {
 func newDynamicColliderShape(pos Vec2f) dynamicColliderShape {
 	return dynamicColliderShape{
 		colliderShape: colliderShape{
-			Shape:      Shape{
+			shape: Shape{
 				pos: pos,
 				Layer: -1,
 			},
@@ -88,7 +77,7 @@ func newDynamicColliderShape(pos Vec2f) dynamicColliderShape {
 }
 
 type colliderShape struct {
-	Shape
+	shape      Shape
 	collisions ColliderSet
 }
 
@@ -96,12 +85,20 @@ type dynamicColliderShape struct {
 	colliderShape
 }
 
-func (c *colliderShape) Layer() int {
-	return c.Shape.Layer
+func (c *colliderShape) BoundingBox() AABB {
+	return c.shape.bb
 }
 
-func (c *colliderShape) Group() int {
-	return c.Shape.Group
+func (c *colliderShape) Position() Vec2f {
+	return c.shape.pos
+}
+
+func (c *colliderShape) SetPosition(v Vec2f) {
+	c.shape.pos = v
+}
+
+func (c *colliderShape) Shape() *Shape {
+	return &c.shape
 }
 
 func (c *colliderShape) Collisions() ColliderSet {
@@ -122,11 +119,6 @@ func (c *colliderShape) resolveFancyCollisions() {
 
 func (c *colliderShape) resolveFancyCollision(other Collider) Vec2f {
 
-	md := c.bb.MinkowskiDiff(other.BoundingBox())
-	// they already collide!
-	if md.StabQuery(VEC2F_ZERO) {
-
-	}
 
 	// TODO
 	return VEC2F_ZERO

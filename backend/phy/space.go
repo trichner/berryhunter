@@ -23,7 +23,6 @@ func NewSpace() *Space {
 
 	return &Space{
 		shapes:     make(shapeSet),
-		tmpShapes:  make(shapeSet),
 		gridStatic: make(colliderGrid),
 	}
 }
@@ -32,9 +31,6 @@ func NewSpace() *Space {
 type Space struct {
 	// list of all dynamic dynamicShapes
 	shapes shapeSet
-
-	// list of temporary shapes
-	tmpShapes shapeSet
 
 	// grid for dynamic bodies
 	grid map[Vec2i][]DynamicCollider
@@ -61,13 +57,6 @@ func (s *Space) Update() {
 		s.insert(shape)
 	}
 
-	// reset all collisions and add temporary shapes
-	for shape := range s.tmpShapes {
-		shape.resetCollisions()
-		shape.updateBB()
-		s.insert(shape)
-	}
-
 	// iterate over all chunks and brute force collisions
 	for v, list := range s.grid {
 
@@ -81,7 +70,6 @@ func (s *Space) Update() {
 		shape.resolveCollisions()
 	}
 
-	s.tmpShapes = make(shapeSet)
 }
 
 // bruteIntersectShapes calculates collisions of a slice of dynamicShapes
@@ -102,10 +90,7 @@ func (s *Space) bruteIntersectShapes(statics []Collider, shapes []DynamicCollide
 				continue
 			}
 
-			//force circles for now
-			currentCircle := current.(*Circle)
-			otherCircle := other.(*Circle)
-			if !IntersectCircles(currentCircle, otherCircle) {
+			if !current.IntersectWith(other) {
 				continue
 			}
 
@@ -126,10 +111,7 @@ func (s *Space) bruteIntersectShapes(statics []Collider, shapes []DynamicCollide
 				continue
 			}
 
-			////force circles for now
-			currentCircle := current.(*Circle)
-			otherCircle := other.(*Circle)
-			if !IntersectCircles(currentCircle, otherCircle) {
+			if !current.IntersectWith(other) {
 				continue
 			}
 

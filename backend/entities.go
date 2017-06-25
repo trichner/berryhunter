@@ -101,7 +101,7 @@ func NewRandomEntityFrom(p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand)
 func NewStaticEntityWithBody(p phy.Vec2f, body *staticEntityBody) *entity {
 	e := newStaticCircleEntity(p, body.radius)
 	e.entityType = body.entityType
-	e.body.UserData = e
+	e.body.Shape().UserData = e
 	return e
 }
 

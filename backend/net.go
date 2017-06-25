@@ -40,27 +40,16 @@ func (n *NetSystem) Update(dt float32) {
 	gameState := GameState{}
 	gameState.Tick = n.game.tick
 	for _, player := range n.players {
-		//TODO
 
 		var entites []Entity
 
 		// find all entities in view
-		//pos := player.body.center
-		//bb := chipmunk.NewAABB(pos.X-viewPortWidth/2, pos.Y-viewPortHeight/2, pos.X+viewPortWidth/2, pos.Y+viewPortHeight/2)
-
-		entites = n.entities
-		//n.game.space.Query(nil, bb, func(a, b chipmunk.Indexable) {
-		//	u := b.Shape().Body.UserData
-		//	if u != nil {
-		//		entites = append(entites, u.(Entity))
-		//	}
-		//})
-		//n.game.space.QueryStatic(nil, bb, func(a, b chipmunk.Indexable) {
-		//	u := b.Shape().Body.UserData
-		//	if u != nil {
-		//		entites = append(entites, u.(Entity))
-		//	}
-		//})
+		for c := range player.viewport.Collisions() {
+			userData := c.Shape().UserData
+			if userData != nil {
+				entites = append(entites, userData.(Entity))
+			}
+		}
 
 		// copy gameStatePrototype
 		clientGameState := gameState

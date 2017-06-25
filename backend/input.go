@@ -149,8 +149,8 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	if inputs.movement != nil {
 		v := input2vec(inputs)
 		v = v.Mult(walkSpeed)
-		next := p.body.Position().Add(v)
-		p.body.SetPosition(next)
+		next := p.Position().Add(v)
+		p.SetPosition(next)
 
 	}
 

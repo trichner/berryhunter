@@ -99,7 +99,7 @@ func newStaticCircleEntity(p phy.Vec2f, r float32) *entity {
 	aEntity := &entity{BasicEntity: ecs.NewBasic()}
 
 	ball := phy.NewCircle(p, r)
-	ball.UserData = aEntity
+	ball.Shape().UserData = aEntity
 	aEntity.body = ball
 	return aEntity
 }
@@ -109,7 +109,7 @@ func newCircleEntity(r float32) *entity {
 	aEntity := &entity{BasicEntity: ecs.NewBasic()}
 	circle := phy.NewCircle(phy.VEC2F_ZERO, r)
 
-	circle.UserData = aEntity
+	circle.Shape().UserData = aEntity
 	aEntity.body = circle
 	return aEntity
 }

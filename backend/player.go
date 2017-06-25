@@ -15,7 +15,7 @@ type player struct {
 	Hunger uint
 	client *net.Client
 
-	viewport phy.DynamicCollider
+	viewport *phy.Box
 
 	inventory inventory
 }
@@ -23,13 +23,12 @@ type player struct {
 const viewPortWidth = 20.0
 const viewPortHeight = 12.0
 
-func (p *player) updateViewport() {
-	pos := p.body.Position()
-
-	extent := phy.Vec2f{viewPortWidth / 2, viewPortHeight / 2}
-
-	box := phy.NewBox(pos, extent)
-	p.viewport = box
+func (p *player) Position() phy.Vec2f {
+	return p.body.Position()
+}
+func (p *player) SetPosition(v phy.Vec2f) {
+	p.body.SetPosition(v)
+	p.viewport.SetPosition(v)
 }
 
 type inventory struct {
@@ -132,11 +131,16 @@ func NewPlayer(c *net.Client) *player {
 	e := newCircleEntity(0.25)
 
 
-	e.body.UserData = e
+	e.body.Shape().UserData = e
 
 	e.entityType = DeathioApi.EntityTypeCharacter
 	p := &player{entity: e, client: c}
-	p.body.UserData = p
+	p.body.Shape().UserData = p
+
+	p.viewport = phy.NewBox(e.body.Position(), phy.Vec2f{viewPortWidth / 2, viewPortHeight / 2})
+
+	p.viewport.Shape().IsSensor = true
+	p.viewport.Shape().Layer = -1
 
 	return p
 }

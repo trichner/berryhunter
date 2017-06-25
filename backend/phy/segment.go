@@ -8,7 +8,7 @@ func Project() {
 	p := Vec2f{}
 	s := Segment{Vec2f{}, Vec2f{1, 1}}
 
-	// a points now from s.origin to the original p
+	// a points now from shape.origin to the original p
 	a := p.Sub(s.origin)
 	b := s.direction
 

@@ -9,8 +9,25 @@ type Circle struct {
 	Radius float32
 }
 
+func (c *Circle) IntersectWith(i Intersector) bool {
+	return i.intersectWithCircle(c)
+}
+
+func (c *Circle) intersectWithBox(b *Box) bool {
+	return true
+}
+
+func (c *Circle) intersectWithCircle(circle *Circle) bool {
+	return IntersectCircles(c, circle)
+}
+
 func (c *Circle) resolveCollisions() {
+
 	if len(c.collisions) == 0 {
+		return
+	}
+
+	if c.shape.IsSensor {
 		return
 	}
 
@@ -18,12 +35,15 @@ func (c *Circle) resolveCollisions() {
 
 	// calculate resulting force
 	for other := range c.collisions {
+		if other.Shape().IsSensor {
+			continue
+		}
 
 		f := c.resolveCollsionWith(other)
 		returningForce = returningForce.Add(f)
 	}
 
-	c.SetPosition(c.pos.Add(returningForce))
+	c.SetPosition(c.shape.pos.Add(returningForce))
 }
 
 func (c *Circle) resolveCollsionWith(collider CollisionResolver) Vec2f {
@@ -38,7 +58,7 @@ func (c *Circle) resolveCollisionWithCircle(other *Circle) Vec2f {
 func resolveCircleThomas(c *Circle, other *Circle) Vec2f {
 
 	//distance := c.pos.Sub(other.pos)
-	distance := other.pos.Sub(c.pos)
+	distance := other.Position().Sub(c.Position())
 	magnitude := distance.Abs()
 
 	fMagnitude := c.Radius + other.Radius - magnitude
@@ -71,10 +91,10 @@ func resolveCircleRaoul(circle *Circle, other *Circle) Vec2f {
 	// calculate resulting force
 	radii := circle.Radius + other.Radius
 	// calculate required offset to resolve collision
-	offset := radii - circle.pos.DistanceTo(other.Position())
+	offset := radii - circle.Position().DistanceTo(other.Position())
 	// Push a little further away to prevent endless collisions
 	offset += 0.01
-	angle := circle.pos.AngleBetween(other.Position())
+	angle := circle.Position().AngleBetween(other.Position())
 
 	return Vec2f{cos32f(angle), sin32f(angle)}.Mult(-offset)
 }
@@ -90,7 +110,7 @@ func NewCircle(pos Vec2f, radius float32) *Circle {
 	}
 
 	// collide with everything
-	c.Shape.Layer = -1
+	c.Shape().Layer = -1
 
 	c.updateBB()
 	return c
@@ -99,7 +119,7 @@ func NewCircle(pos Vec2f, radius float32) *Circle {
 func (circle *Circle) MinkowskiDiff(other *Circle) *Circle {
 
 	r := circle.Radius + other.Radius
-	o := circle.pos.Sub(other.pos)
+	o := circle.Position().Sub(other.Position())
 
 	return NewCircle(o, r)
 }
@@ -107,7 +127,7 @@ func (circle *Circle) MinkowskiDiff(other *Circle) *Circle {
 // Stabs the shape and returns true if the point lies on the shape
 func (circle *Circle) StabQuery(p Vec2f) bool {
 
-	return circle.pos.Sub(p).AbsSq() < circle.Radius*circle.Radius
+	return circle.Position().Sub(p).AbsSq() < circle.Radius*circle.Radius
 }
 
 // Stabs the shape and returns true if the point lies on the shape
@@ -126,7 +146,7 @@ func (circle *Circle) ImpaleQuery(s Segment) float32 {
 	o := s.origin
 	r := circle.Radius
 
-	f := o.Sub(circle.pos)
+	f := o.Sub(circle.Position())
 
 	// values for quadratic equation
 	a := d.Dot(d)
@@ -164,8 +184,8 @@ func (circle *Circle) ImpaleQuery(s Segment) float32 {
 func (circle *Circle) updateBB() {
 
 	radiusVector := Vec2f{circle.Radius, circle.Radius}
-	lower := circle.pos.Sub(radiusVector)
-	upper := circle.pos.Add(radiusVector)
+	lower := circle.Position().Sub(radiusVector)
+	upper := circle.Position().Add(radiusVector)
 
-	circle.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
+	circle.shape.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
 }

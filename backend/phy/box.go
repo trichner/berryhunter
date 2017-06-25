@@ -10,6 +10,24 @@ type Box struct {
 	extent Vec2f
 }
 
+func (b *Box) IntersectWith(i Intersector) bool {
+	return i.intersectWithBox(b)
+}
+
+func (b *Box) intersectWithBox(box *Box) bool {
+	return IntersectAabb(&b.shape.bb, &box.shape.bb)
+}
+
+func (b *Box) intersectWithCircle(circle *Circle) bool {
+	return true
+}
+
+var _ = DynamicCollider(&Box{})
+
+func (b *Box) resolveCollisions() {
+
+}
+
 func (b *Box) resolveCollsionWith(c CollisionResolver) Vec2f {
 	// double dispatching
 	return c.resolveCollisionWithBox(b)
@@ -17,6 +35,7 @@ func (b *Box) resolveCollsionWith(c CollisionResolver) Vec2f {
 
 func (b *Box) resolveCollisionWithCircle(circle *Circle) Vec2f {
 	panic("implement me")
+	return Vec2f{}
 }
 
 func (b *Box) resolveCollisionWithBox(box *Box) Vec2f {
@@ -35,7 +54,7 @@ func NewBox(pos, extent Vec2f) *Box {
 
 // Stabs the shape and returns true if the point lies on the shape
 func (b *Box) StabQuery(p Vec2f) bool {
-	return b.bb.StabQuery(p)
+	return b.shape.bb.StabQuery(p)
 }
 
 // Stabs the shape and returns true if the point lies on the shape
@@ -47,8 +66,8 @@ func (b *Box) ImpaleQuery(s Segment) float32 {
 // updates the bounding box according to the size and position of this box
 func (b *Box) updateBB() {
 
-	lower := b.pos.Sub(b.extent)
-	upper := b.pos.Add(b.extent)
+	lower := b.shape.pos.Sub(b.extent)
+	upper := b.shape.pos.Add(b.extent)
 
-	b.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
+	b.shape.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
 }

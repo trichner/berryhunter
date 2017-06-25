@@ -1,5 +1,11 @@
 package phy
 
+type Intersector interface {
+	IntersectWith(i Intersector) bool
+	intersectWithBox(b *Box) bool
+	intersectWithCircle(c *Circle) bool
+}
+
 // IntersectAabb tests if two AABBs intersect
 func IntersectAabb(a *AABB, b *AABB) bool {
 
@@ -25,7 +31,7 @@ func IntersectAabb(a *AABB, b *AABB) bool {
 // IntersectCircles tests if two circles intersect
 func IntersectCircles(a *Circle, b *Circle) bool {
 
-	d := a.pos.Sub(b.pos).AbsSq()
+	d := a.Position().Sub(b.Position()).AbsSq()
 	r := a.Radius + b.Radius
 	return d < r*r
 }
@@ -34,11 +40,13 @@ func IntersectCircles(a *Circle, b *Circle) bool {
 // respective Group and Layer. Returns true if they can collide.
 func ArbiterShapes(a Collider, b Collider) bool {
 
-	if a.Group() > 0 && a.Group() == b.Group() {
+	as := a.Shape()
+	bs := b.Shape()
+	if as.Group > 0 && as.Group == bs.Group {
 		return false
 	}
 
-	return (a.Layer() & b.Layer()) != 0
+	return (as.Layer & bs.Layer) != 0
 }
 
 // taken from https://github.com/pgkelley4/line-segments-intersect/blob/master/js/line-segments-intersect.js
