@@ -13,7 +13,7 @@ type inventoryEntity struct {
 	inventory *inventory
 }
 
-func (*PhysicsSystem) New(w *ecs.World) {
+func (*InventorySystem) New(w *ecs.World) {
 	// do nothing for now
 }
 
@@ -34,11 +34,14 @@ func (is *InventorySystem) Update(dt float32) {
 
 		inInventory := false
 		for _, stack := range i.inventory.items {
-			if stack.itemType = itemToAdd.itemType {
+			if stack.itemType == itemToAdd.itemType {
 				inInventory = true
 				return
 			}
 		}
+
+		//TODO
+		_ = inInventory
 	}
 
 }

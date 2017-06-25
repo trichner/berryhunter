@@ -44,6 +44,14 @@ func cos32f(f float32) float32 {
 	return float32(math.Cos(float64(f)))
 }
 
+// acos32f calculates the acos of a float32
+func sig32f(f float32) float32 {
+	if f < 0 {
+		return -1
+	}
+	return 1
+}
+
 //==== Vec2f
 
 // Vec2f is a simple 2d float vector
@@ -76,6 +84,11 @@ func (v Vec2f) Mult(f float32) Vec2f {
 	return Vec2f{v.X * f, v.Y * f}
 }
 
+// Div divides the vector with a scalar and returns the resulting vector
+func (v Vec2f) Div(f float32) Vec2f {
+	return Vec2f{v.X / f, v.Y / f}
+}
+
 // Dot calculates the dot product between two vectors
 func (v Vec2f) Dot(w Vec2f) float32 {
 	return v.X*w.X + v.Y*w.Y
@@ -84,6 +97,11 @@ func (v Vec2f) Dot(w Vec2f) float32 {
 // Cross calculates the 2d cross product between two vectors
 func (v Vec2f) Cross(w Vec2f) float32 {
 	return v.X*w.Y - v.Y*w.X
+}
+
+// Rot90 rotates the vector by 90 degrees
+func (v Vec2f) Rot90() Vec2f {
+	return Vec2f{-v.Y, v.X}
 }
 
 // Dot calculates the dot product between two vectors

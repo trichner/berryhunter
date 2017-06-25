@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"math"
 	"testing"
+	"math/rand"
 )
 
 type circleIntersectionTestCase struct {
@@ -58,13 +59,30 @@ var circleIntersectionCases []circleIntersectionTestCase = []circleIntersectionT
 	},
 }
 
-func TestCircleIntersectionArea(t *testing.T) {
+func randomVector(rand *rand.Rand) Vec2f {
 
-	for _, test := range circleIntersectionCases {
+	dir := Vec2f{rand.Float32(), rand.Float32()}.Normalize()
+	return dir.Mult(5 * rand.Float32())
+}
 
-		a := test.c1.intersectionArea(test.c2)
-		fmt.Printf("Overlap: %f for %s\n", a, test.name)
-		assert.Equal(t, test.area, a)
+func randomCircle(rand *rand.Rand) *Circle {
+
+	return NewCircle(randomVector(rand), rand.Float32()*4)
+}
+
+func TestCircleResolveCircleCollision(t *testing.T) {
+
+	rand := rand.New(rand.NewSource(1))
+	var c1, c2 *Circle
+	var f1, f2 Vec2f
+	for i := 0; i < 100; i++ {
+		c1 = randomCircle(rand)
+		c2 = randomCircle(rand)
+
+		f1 = resolveCircleThomas(c1, c2)
+		f2 = resolveCircleRaoul(c1, c2)
+
+		assert.Equal(t, f1, f2, "Collision resolution matches")
 	}
 }
 

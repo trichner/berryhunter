@@ -58,14 +58,13 @@ type Collider interface {
 	resetCollisions()
 	resolveCollisions()
 	addCollision(s Collider)
+
+	CollisionResolver
 }
 
 type DynamicCollider interface {
 	Collider
 
-	Velocity() Vec2f
-	SetVelocity(v Vec2f)
-	Translate(v Vec2f)
 	SetPosition(p Vec2f)
 }
 
@@ -95,44 +94,6 @@ type colliderShape struct {
 
 type dynamicColliderShape struct {
 	colliderShape
-
-	v Vec2f
-}
-
-func (d *dynamicColliderShape) Velocity() Vec2f {
-	return d.v
-}
-
-func (d *dynamicColliderShape) SetVelocity(v Vec2f) {
-	d.v = v
-}
-
-func (d *dynamicColliderShape) Translate(v Vec2f) {
-	d.SetPosition(d.Position().Add(v))
-}
-
-func (c *colliderShape) resolveCollisions() {
-	if len(c.collisions) == 0 {
-		return
-	}
-
-	returningForce := Vec2f{}
-
-	// calculate resulting force
-	for other := range c.collisions {
-		cRadius := c.pos.X - c.bb.Left
-		otherRadius := other.Position().X - other.BoundingBox().Left
-		// calculate required offset to resolve collision
-		offset := cRadius + otherRadius - c.pos.DistanceTo(other.Position())
-		// Push a little further away to prevent endless collisions
-		offset += 0.01
-		angle := c.pos.AngleBetween(other.Position())
-
-		// adjust position with polar offset
-		returningForce = returningForce.Add(Vec2f{cos32f(angle), sin32f(angle)}.Mult(offset))
-	}
-
-	c.SetPosition(c.pos.Add(returningForce))
 }
 
 func (c *colliderShape) Layer() int {
@@ -170,45 +131,3 @@ func (c *colliderShape) resolveFancyCollision(other Collider) Vec2f {
 	// TODO
 	return VEC2F_ZERO
 }
-
-/*
-var md:AABB = boxB.minkowskiDifference(boxA);
-if (md.min.x <= 0 &&
-    md.max.x >= 0 &&
-    md.min.y <= 0 &&
-    md.max.y >= 0)
-{
-    // normal discrete collision detection / separation code
-}
-else
-{
-    // calculate the relative motion between the two boxes
-    var relativeMotion:Vector = (boxA.velocity - boxB.velocity) * dt;
-
-    // ray-cast the relativeMotion vector against the Minkowski AABB
-    var h:Float = md.getRayIntersectionFraction(Vector.zero, relativeMotion);
-
-    // check to see if a collision will happen this frame
-    // getRayIntersectionFraction returns Math.POSITIVE_INFINITY if there is no intersection
-    if(h < Math.POSITIVE_INFINITY)
-    {
-        // yup, there WILL be a collision this frame
-        // move the boxes appropriately
-        boxA.center += boxA.velocity * dt * h;
-        boxB.center += boxB.velocity * dt * h;
-
-        // zero the normal component of the velocity
-        // (project the velocity onto the tangent of the relative velocities
-        //  and only keep the projected component, tossing the normal component)
-        var tangent:Vector = relativeMotion.normalized.tangent;
-        boxA.velocity = Vector.dotProduct(boxA.velocity, tangent) * tangent;
-        boxB.velocity = Vector.dotProduct(boxB.velocity, tangent) * tangent;
-    }
-    else
-    {
-        // no intersection, move it along
-        boxA.center += boxA.velocity * dt;
-        boxB.center += boxB.velocity * dt;
-    }
-}
- */

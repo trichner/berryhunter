@@ -1,17 +1,86 @@
 package phy
 
-import (
-	"math"
-)
-
 type circleSet map[*Circle]struct{}
 
 type Circle struct {
+	CollisionResolver
 	dynamicColliderShape
 
 	Radius float32
+}
 
-	collisions circleSet
+func (c *Circle) resolveCollisions() {
+	if len(c.collisions) == 0 {
+		return
+	}
+
+	returningForce := Vec2f{}
+
+	// calculate resulting force
+	for other := range c.collisions {
+
+		f := c.resolveCollsionWith(other)
+		returningForce = returningForce.Add(f)
+	}
+
+	c.SetPosition(c.pos.Add(returningForce))
+}
+
+func (c *Circle) resolveCollsionWith(collider CollisionResolver) Vec2f {
+	return collider.resolveCollisionWithCircle(c)
+}
+
+func (c *Circle) resolveCollisionWithCircle(other *Circle) Vec2f {
+
+	return resolveCircleThomas(c, other)
+}
+
+func resolveCircleThomas(c *Circle, other *Circle) Vec2f {
+
+	//distance := c.pos.Sub(other.pos)
+	distance := other.pos.Sub(c.pos)
+	magnitude := distance.Abs()
+
+	fMagnitude := c.Radius + other.Radius - magnitude
+	if fMagnitude <= 0 {
+		return Vec2f{}
+	}
+
+	var fDirection Vec2f
+
+	// check that the circles are not exactly ontop of each other
+	if magnitude != 0 {
+		fDirection = distance.Div(magnitude)
+	} else {
+		// tie breaker, if they are exactly on each
+		sig := sig32f(c.Radius - other.Radius)
+
+		// screw this, we're out
+		if sig == 0 {
+			return Vec2f{}
+		}
+
+		fDirection = Vec2f{sig, 0}
+	}
+
+	return fDirection.Mult(fMagnitude)
+}
+
+func resolveCircleRaoul(circle *Circle, other *Circle) Vec2f {
+
+	// calculate resulting force
+	radii := circle.Radius + other.Radius
+	// calculate required offset to resolve collision
+	offset := radii - circle.pos.DistanceTo(other.Position())
+	// Push a little further away to prevent endless collisions
+	offset += 0.01
+	angle := circle.pos.AngleBetween(other.Position())
+
+	return Vec2f{cos32f(angle), sin32f(angle)}.Mult(-offset)
+}
+
+func (c *Circle) resolveCollisionWithBox(b *Box) Vec2f {
+	panic("implement me")
 }
 
 func NewCircle(pos Vec2f, radius float32) *Circle {
@@ -99,40 +168,4 @@ func (circle *Circle) updateBB() {
 	upper := circle.pos.Add(radiusVector)
 
 	circle.bb = AABB{lower.X, lower.Y, upper.Y, upper.X}
-}
-
-func (circle *Circle) intersectionArea(o *Circle) float32 {
-
-	// from https://stackoverflow.com/questions/4247889/area-of-intersection-between-two-circles
-	r1 := circle.Radius
-	r2 := o.Radius
-	dSq := circle.pos.Sub(o.pos).AbsSq()
-
-	rdSq := (r1 + r2) * (r1 + r2)
-
-	// not intersecting?
-	if rdSq < dSq {
-		return 0
-	}
-
-	if r2 < r1 {
-		// swap
-		r1, r2 = r2, r1
-	}
-
-	// fully intersecting?
-	if dSq == 0 {
-		return r2 * r2 * math.Pi
-	}
-
-	// pre-compute some reused values
-	d := float32(math.Sqrt(float64(dSq)))
-	r1Sq := r1 * r1
-	r2Sq := r2 * r2
-
-	p1 := r1Sq * acos32f((dSq+r1Sq-r2Sq)/(2*d*r1))
-	p2 := r2Sq * acos32f((dSq+r2Sq-r1Sq)/(2*d*r2))
-	p3 := 0.5 * sqrt32f((r1+r2-d)*(r1-r2+d)*(-r1+r2+d)*(r1+r2+d))
-
-	return p1 + p2 - p3
 }
