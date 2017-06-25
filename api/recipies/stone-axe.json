@@ -1,0 +1,26 @@
+{
+  "//": "The resulting itemStack",
+  "itemType": "STONE_AXE",
+  "count": 1,
+  "//": "Materials that will be consumed",
+  "materials": [
+    {
+      "itemType": "WOOD_AXE",
+      "count": 1
+    },
+    {
+      "itemType": "WOOD",
+      "count": 20
+    },
+    {
+      "itemType": "STONE",
+      "count": 10
+    }
+  ],
+  "//": "Tools required to craft this item.",
+  "tools": [
+    {
+      "entityType": "WORKBENCH"
+    }
+  ]
+}
