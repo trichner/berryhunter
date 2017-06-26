@@ -163,7 +163,7 @@ define(['../vendor/XieLongUtils'], function () {
 	};
 
 	Utils.isDefined = function (variable) {
-		return !isUndefined(variable);
+		return !Utils.isUndefined(variable);
 	};
 
 	Utils.isUndefined = function (variable) {

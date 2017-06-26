@@ -221,8 +221,8 @@ define([
 				const maxOffset = this.size * 0.4;
 				let offset;
 				if (this.actionAnimationFrame > 0.7 * Character.hitAnimationFrameDuration) {
-					offset = sq(( Character.hitAnimationFrameDuration + 1 - this.actionAnimationFrame)) /
-						sq(0.3 * Character.hitAnimationFrameDuration) * maxOffset;
+					offset = Utils.sq(( Character.hitAnimationFrameDuration + 1 - this.actionAnimationFrame)) /
+						Utils.sq(0.3 * Character.hitAnimationFrameDuration) * maxOffset;
 				} else if (this.actionAnimationFrame > 0.6 * Character.hitAnimationFrameDuration) {
 					offset = maxOffset;
 				} else {

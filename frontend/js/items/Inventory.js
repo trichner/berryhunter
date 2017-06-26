@@ -8,8 +8,9 @@ define([
 	'items/ClickableIcon',
 	'items/RecipesHelper',
 	'items/Crafting',
-	'items/Equipment'
-], function (Game, Two, Utils, Constants, ClickableIcon, RecipesHelper, Crafting, Equipment) {
+	'items/Equipment',
+	'items/InventorySlot'
+], function (Game, Two, Utils, Constants, ClickableIcon, RecipesHelper, Crafting, Equipment, InventorySlot) {
 	class Inventory {
 		constructor(character) {
 			this.character = character;

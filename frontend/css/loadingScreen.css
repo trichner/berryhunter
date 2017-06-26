@@ -17,7 +17,7 @@
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 1vh;
   overflow: hidden;
-  transition: all 5s;
+  transition: all 1s;
   transition-property: height, width, border-radius;
 }
 #loadingScreen > #loadingWrapper > h2 {
@@ -27,24 +27,33 @@
   margin: 0;
   color: white;
 }
-#loadingScreen > #loadingWrapper.finished {
+#loadingScreen.finished {
+  animation: fade-out 0.3s 1s forwards;
+}
+#loadingScreen.finished > #loadingWrapper {
   height: 100vh;
   width: 100vw;
   background-color: #006030;
   border-radius: 0;
 }
-#loadingScreen > #loadingWrapper.finished > h2 {
+#loadingScreen.finished > #loadingWrapper > h2 {
   display: none;
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 #loadingBar {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 0%;
+  width: 0;
   background-image: linear-gradient(to right, white, #006030);
   z-index: -1;
-  transition: opacity 5s;
+  transition: opacity 1s;
 }
 .finished > #loadingBar {
   opacity: 0;

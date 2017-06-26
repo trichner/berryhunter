@@ -57,7 +57,7 @@ define(['Two', 'Utils'], function (Two, Utils) {
 			const d = desired.length();
 			// Scale with arbitrary damping within 100 pixels
 			if (d < this.distanceBeforeStopping) {
-				const m = map(d, 0, this.distanceBeforeStopping, 0, this.maxspeed);
+				const m = Utils.map(d, 0, this.distanceBeforeStopping, 0, this.maxspeed);
 				desired.setLength(m);
 			} else {
 				desired.setLength(this.maxspeed);

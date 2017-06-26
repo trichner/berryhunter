@@ -1,4 +1,5 @@
 @loadingBarHeight: 10vh;
+@splashScreenAnimation: 1s;
 
 #loadingScreen {
 	background-color: #222;
@@ -7,6 +8,7 @@
 	right: 0;
 	bottom: 0;
 	left: 0;
+	z-index: 1000;
 
 	> #loadingWrapper {
 		position: relative;
@@ -18,23 +20,22 @@
 		background-color: rgba(0, 0, 0, 0.6);
 		border-radius: @loadingBarHeight * 0.1;
 		overflow: hidden;
-		transition: all 5s;
+		transition: all @splashScreenAnimation;
 		transition-property: height, width, border-radius;
-
-		//animation: finished 5s 3s forwards;
 
 		> h2 {
 			line-height: @loadingBarHeight;
 			font-size: (@loadingBarHeight / 2.5);
 			text-align: center;
 			margin: 0;
-			color: white; // #007FA5; //#006789;
-			//animation: remove 0s 3s forwards;
+			color: white;
 		}
+	}
 
-		&.finished {
-			//top: 0%;
-			//transform: translateY(0%);
+	&.finished {
+		animation: fade-out 0.3s @splashScreenAnimation forwards;
+
+		> #loadingWrapper {
 			height: 100vh;
 			width: 100vw;
 			background-color: rgb(0, 96, 48);
@@ -45,56 +46,27 @@
 			}
 		}
 	}
-
-	z-index: 1000;
 }
 
-//@keyframes finished {
-//	from {
-//		background-color: rgb(0, 96, 48);
-//	}
-//	to {
-//		//top: 0%;
-//		//transform: translateY(0%);
-//		height: 100vh;
-//		width: 100vw;
-//		background-color: rgb(0, 96, 48);
-//		border-radius: 0;
-//	}
-//}
-//
-//@keyframes remove {
-//	to {
-//		visibility: hidden;
-//	}
-//}
+@keyframes fade-out {
+	to {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
 
 #loadingBar {
 	position: absolute;
 	top: 0;
 	left: 0;
 	bottom: 0;
-	width: 0%;
-	//background-image: linear-gradient(to right, white, #006789);
+	width: 0;
 	background-image: linear-gradient(to right, white, rgb(0, 96, 48));
 	z-index: -1;
 
-	//animation: loading 3s linear forwards, finished-loading 5s 3s forwards;
-	transition: opacity 5s;
+	transition: opacity @splashScreenAnimation;
 
 	.finished > & {
 		opacity: 0;
 	}
 }
-
-//@keyframes loading {
-//	to {
-//		width: 100%;
-//	}
-//}
-//
-//@keyframes finished-loading {
-//	to {
-//		opacity: 0;
-//	}
-//}

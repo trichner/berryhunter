@@ -20,7 +20,11 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 				loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
 				if (loadedPromises >= numberOfPromises) {
 					console.log('Finished loading.');
-					document.getElementById('loadingWrapper').classList.add('finished');
+					var loadingScreenElement = document.getElementById('loadingScreen');
+					loadingScreenElement.classList.add('finished');
+					loadingScreenElement.addEventListener('animationend', function () {
+						this.parentNode.removeChild(loadingScreenElement);
+					})
 				}
 			}
 		});
@@ -37,7 +41,7 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 			})
 			.then((svgText) => {
 				gameObjectClass.svg = SvgLoader.load(svgText);
-				return gameObjectClass.svg;
+				return svgPath;
 			}));
 	};
 

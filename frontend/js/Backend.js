@@ -54,7 +54,7 @@ define([
 		},
 
 		sendInputTick: function (inputObj) {
-			if (isUndefined(this.lastServerTick)) {
+			if (Utils.isUndefined(this.lastServerTick)) {
 				// If the backend hasn't send a snapshot yet, don't send any input.
 				return;
 			}

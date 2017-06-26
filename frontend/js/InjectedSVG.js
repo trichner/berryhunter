@@ -1,11 +1,11 @@
 "use strict";
 
-define(['Game', 'Two', 'Constants'], function (Game, Two, Constants) {
+define(['Game', 'Two', 'Constants', 'Utils'], function (Game, Two, Constants, Utils) {
 	class InjectedSVG extends Two.Group {
 		constructor(svg, x, y, size, rotation) {
 			super();
 
-			if (isUndefined(svg) || typeof svg.cloneNode !== 'function') {
+			if (Utils.isUndefined(svg) || typeof svg.cloneNode !== 'function') {
 				throw svg + ' is not a valid SVG node';
 			}
 

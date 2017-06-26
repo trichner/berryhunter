@@ -9,7 +9,7 @@ define([
 	'MapEditor',
 	'Develop',
 	'schema_server'
-], function (Game, Resources, DebugCircle, Border, Character, MapEditor, Develop, DeathioApi) {
+], function (Game, Resources, DebugCircle, Border, Character, MapEditor, Develop) {
 
 	/**
 	 * Has to be in sync with DeathioApi.EntityType

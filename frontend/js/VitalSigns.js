@@ -12,8 +12,8 @@ define(['Game', 'Two', 'Utils'], function (Game, Two, Utils) {
 			this.width = Game.relativeWidth(15);
 			this.height = Game.relativeHeight(12);
 			this.group.translation.set(
-				width - this.width / 2,
-				height - this.height / 2
+				Game.width - this.width / 2,
+				Game.height - this.height / 2
 			);
 			// let background = new Two.RoundedRectangle(0, 0, this.width, this.height, 5);
 			// this.group.add(background);

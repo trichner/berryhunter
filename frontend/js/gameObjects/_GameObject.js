@@ -40,7 +40,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 		}
 
 		setPosition(x, y) {
-			if (isDefined(this.desiredPosition) &&
+			if (Utils.isDefined(this.desiredPosition) &&
 				this.desiredPosition.x > (x - 0.2) && this.desiredPosition.x < (x + 0.2) &&
 				this.desiredPosition.y > (y - 0.2) && this.desiredPosition.y < (y + 0.2)) {
 				return;

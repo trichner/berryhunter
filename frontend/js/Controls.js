@@ -10,8 +10,9 @@ define([
 	'items/Equipment',
 	'gameObjects/Placeable',
 	'Backend',
-	'Utils'
-], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Utils) {
+	'Utils',
+	'../vendor/tock'
+], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Utils, Tock) {
 	const UP_KEYS = [
 		'w'.charCodeAt(0),
 		'W'.charCodeAt(0),
@@ -210,7 +211,7 @@ define([
 				hasInput = true;
 			}
 
-			if (isUndefined(input.rotation)) {
+			if (Utils.isUndefined(input.rotation)) {
 				// Just send the current character rotation to not confuse the server
 				input.rotation = this.character.getRotation();
 			}
