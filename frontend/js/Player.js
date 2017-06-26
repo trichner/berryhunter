@@ -1,22 +1,35 @@
-class Player {
-	constructor(id, x, y) {
-		gameStarted = true;
+"use strict";
 
-		this.character = new Character(id, x, y);
+define([
+	'Game',
+	'gameObjects/Character',
+	'Controls',
+	'Camera',
+	'items/Inventory',
+	'VitalSigns'
+], function (Game, Character, Controls, Camera, Inventory, VitalSigns) {
+	class Player {
+		constructor(id, x, y) {
+			Game.started = true;
 
-		this.controls = new Controls(this.character);
+			this.character = new Character(id, x, y);
 
-		// Has to be registered only when it's the player character as
-		// we don't want to manipulate other players characters that are shown
-		two.bind('update', this.character.update.bind(this.character));
+			this.controls = new Controls(this.character);
 
-		this.camera = new Camera(this.character);
-		miniMap.register(this.character);
+			// Has to be registered only when it's the player character as
+			// we don't want to manipulate other players characters that are shown
+			Game.two.bind('update', this.character.update.bind(this.character));
 
-		this.inventory = new Inventory(this.character);
+			this.camera = new Camera(this.character);
+			Game.miniMap.register(this.character);
 
-		this.vitalSigns = new VitalSigns();
+			this.inventory = new Inventory(this.character);
 
-		this.craftableItems = [];
+			this.vitalSigns = new VitalSigns();
+
+			this.craftableItems = [];
+		}
 	}
-}
+
+	return Player;
+});

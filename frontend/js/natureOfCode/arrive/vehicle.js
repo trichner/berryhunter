@@ -4,7 +4,7 @@
 
 // The "Vehicle" class
 define(['Two', 'Utils'], function (Two, Utils) {
-	if (isUndefined(Two.Vector.prototype.limit)) {
+	if (Utils.isUndefined(Two.Vector.prototype.limit)) {
 		Two.Vector.prototype.limit = function (max) {
 			const mSq = this.lengthSquared();
 			if (mSq > max * max) {
@@ -16,9 +16,9 @@ define(['Two', 'Utils'], function (Two, Utils) {
 	}
 
 	function Vehicle(x, y) {
-		this.acceleration = Utils.createVector(0, 0);
-		this.velocity = Utils.createVector(0, -2);
-		this.position = Utils.createVector(x, y);
+		this.acceleration = new Two.Vector(0, 0);
+		this.velocity = new Two.Vector(0, -2);
+		this.position = new Two.Vector(x, y);
 		this.maxspeed = 4;
 		this.maxforce = 0.1;
 		this.distanceBeforeStopping = 100;

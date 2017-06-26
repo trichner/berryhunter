@@ -1,6 +1,6 @@
 "use strict";
 
-require(['two'], function (Two) {
+define(['Game', 'Two', 'Constants'], function (Game, Two, Constants) {
 	class InjectedSVG extends Two.Group {
 		constructor(svg, x, y, size, rotation) {
 			super();
@@ -18,11 +18,11 @@ require(['two'], function (Two) {
 			// injectionGroup.rotation = rotation;
 			injectionGroup.translation.set(-size, -size);
 
-			two.once('render', function () {
+			Game.two.once('render', function () {
 				injectionGroup._renderer.elem.appendChild(svg.cloneNode(true));
 			});
 		}
 	}
 
-	window.InjectedSVG = InjectedSVG;
+	return InjectedSVG;
 });

@@ -1,8 +1,14 @@
 "use strict";
 
-define(['Quadrants', 'gameObjects/Resources', 'gameObjects/Animals', 'Utils'], function (Quadrants, Resources, Animals, Utils) {
+define([
+	'Quadrants',
+	'gameObjects/Resources',
+	'gameObjects/Animals',
+	'Utils'
+], function (Quadrants, Resources, Animals, Utils) {
+	//noinspection UnnecessaryLocalVariableJS
 	let GameMapGenerator = {
-		generateFromQuadrants: function (width, height) {
+		generateFromQuadrants: function () {
 			let objects = [];
 
 			const gridSpacing = 100;
@@ -19,30 +25,33 @@ define(['Quadrants', 'gameObjects/Resources', 'gameObjects/Animals', 'Utils'], f
 					let gameObjectClass = field.object;
 					switch (gameObjectClass) {
 						case Resources.Tree:
-							gameObjectClass = Utils.executeRandomFunction([{
-								weight: 5,
-								func: () => {
-									return Resources.RoundTree;
+							gameObjectClass = Utils.executeRandomFunction([
+								{
+									weight: 5,
+									func: () => {
+										return Resources.RoundTree;
+									}
+								}, {
+									weight: 1,
+									func: () => {
+										return Resources.MarioTree;
+									}
 								}
-							}, {
-								weight: 1,
-								func: () => {
-									return Resources.MarioTree;
-								}
-							}]);
+							]);
 							break;
 						case Animals.Animal:
-							gameObjectClass = Utils.executeRandomFunction([{
-								weight: 3,
-								func: () => {
-									return Animals.Rabbit;
+							gameObjectClass = Utils.executeRandomFunction([
+								{
+									weight: 3,
+									func: () => {
+										return Animals.Rabbit;
+									}
+								}, {
+									weight: 1,
+									func: () => {
+										return Animals.SaberToothCat;
+									}
 								}
-							}, {
-								weight: 1,
-								func: () => {
-									return Animals.SaberToothCat;
-								}
-							}
 								// }, {
 								// 	weight: 1,
 								// 	func: () => {
@@ -77,59 +86,64 @@ define(['Quadrants', 'gameObjects/Resources', 'gameObjects/Animals', 'Utils'], f
 					// let rx = x;
 					// let ry = y;
 
-					let gameObject = Utils.executeRandomFunction([{
-						weight: 40,
-						func: () => {
-							return Utils.executeRandomFunction([{
-								weight: 5,
-								func: () => {
-									return new Resources.RoundTree(rx, ry);
-								}
-							}, {
-								weight: 1,
-								func: () => {
-									return new Resources.MarioTree(rx, ry);
-								}
-							}]);
-						}
-					}, {
-						weight: 5,
-						func: () => {
-							return new Resources.Stone(rx, ry);
-						}
-					}, {
-						weight: 5,
-						func: () => {
-							return new Resources.BerryBush(rx, ry);
-						}
-					}, {
-						weight: 1,
-						func: () => {
-							return new Resources.Bronze(rx, ry);
-						}
-					}, {
-						weight: 10,
-						func: () => {
-							return Utils.executeRandomFunction([{
-								weight: 3,
-								func: () => {
-									return new Animals.Rabbit(rx, ry);
-								}
-							}, {
-								weight: 1,
-								func: () => {
-									return new Animals.SaberToothCat(rx, ry);
-								}
+					let gameObject = Utils.executeRandomFunction([
+						{
+							weight: 40,
+							func: () => {
+								return Utils.executeRandomFunction([
+									{
+										weight: 5,
+										func: () => {
+											return new Resources.RoundTree(rx, ry);
+										}
+									}, {
+										weight: 1,
+										func: () => {
+											return new Resources.MarioTree(rx, ry);
+										}
+									}
+								]);
 							}
-								// }, {
-								// 	weight: 1,
-								// 	func: () => {
-								// 		return new Mammoth(rx, ry);
-								// 	}
-								// }
-							]);
+						}, {
+							weight: 5,
+							func: () => {
+								return new Resources.Stone(rx, ry);
+							}
+						}, {
+							weight: 5,
+							func: () => {
+								return new Resources.BerryBush(rx, ry);
+							}
+						}, {
+							weight: 1,
+							func: () => {
+								return new Resources.Bronze(rx, ry);
+							}
+						}, {
+							weight: 10,
+							func: () => {
+								return Utils.executeRandomFunction([
+									{
+										weight: 3,
+										func: () => {
+											return new Animals.Rabbit(rx, ry);
+										}
+									}, {
+										weight: 1,
+										func: () => {
+											return new Animals.SaberToothCat(rx, ry);
+										}
+									}
+									// }, {
+									// 	weight: 1,
+									// 	func: () => {
+									// 		return new Mammoth(rx, ry);
+									// 	}
+									// }
+								]);
+							}
 						}
-					}]);
+					]);
 					objects.push(gameObject);
 				}
 			}

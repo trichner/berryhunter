@@ -1,10 +1,17 @@
-/**
- * Created by raoulzander on 25.04.17.
- */
 'use strict';
 
-define(['Game', 'PointerEvents', 'KeyEvents', 'Constants', 'Develop', 'MapEditor', 'items/Equipment', 'gameObjects/Placeable', 'Backend', 'Utils'],
-	function (PointerEvents, KeyEvents, Constants, Develop, Game, MapEditor, Equipment, Placeable, Backend, Utils) {
+define([
+	'Game',
+	'PointerEvents',
+	'KeyEvents',
+	'Constants',
+	'Develop',
+	'MapEditor',
+	'items/Equipment',
+	'gameObjects/Placeable',
+	'Backend',
+	'Utils'
+], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Utils) {
 	const UP_KEYS = [
 		'w'.charCodeAt(0),
 		'W'.charCodeAt(0),

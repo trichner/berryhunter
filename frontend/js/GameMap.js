@@ -1,6 +1,12 @@
 "use strict";
 
-define(['Game', 'MapEditor', 'Constants', 'gameObjects/Border', 'GameMapGenerator'], function (Game, MapEditor, Constants, Border, GameMapGenerator) {
+define([
+	'Game',
+	'MapEditor',
+	'Constants',
+	'gameObjects/Border',
+	'GameMapGenerator'
+], function (Game, MapEditor, Constants, Border, GameMapGenerator) {
 	function GameMap() {
 		if (MapEditor.isActive()) {
 			let dimmensions = MapEditor.getMapDimensions();

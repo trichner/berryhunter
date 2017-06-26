@@ -1,7 +1,15 @@
 "use strict";
 
-define(['Game', 'Two', 'ClickableIcon', 'MapEditor', 'Utils', 'items/Items'], function (Game, Two, ClickableIcon, MapEditor, Utils, Items) {
+define([
+	'Game',
+	'Two',
+	'items/ClickableIcon',
+	'MapEditor',
+	'Utils',
+	'items/Items'
+], function (Game, Two, ClickableIcon, MapEditor, Utils, Items) {
 
+	//noinspection UnnecessaryLocalVariableJS
 	const Crafting = {
 		displayedCrafts: [],
 
@@ -18,7 +26,7 @@ define(['Game', 'Two', 'ClickableIcon', 'MapEditor', 'Utils', 'items/Items'], fu
 			Game.groups.overlay.add(this.displayGroup);
 			// Display 7 crafts per Row, beginning top left corner
 			let craftsPerRow = 7;
-			let size = Utils.Relative.height(7);
+			let size = Game.relativeHeight(7);
 			let margin = ClickableIcon.relativeMargin * size;
 
 			this.displayGroup.translation.set(

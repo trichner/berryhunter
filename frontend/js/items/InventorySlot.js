@@ -1,6 +1,11 @@
 "use strict";
 
-define(['items/ClickableIcon', 'items/Equipment', 'items/ItemType'], function (ClickableIcon, Equipment, ItemType) {
+define([
+	'Two',
+	'items/ClickableIcon',
+	'items/Equipment',
+	'items/ItemType'
+], function (Two, ClickableIcon, Equipment, ItemType) {
 
 	class InventorySlot {
 		/**

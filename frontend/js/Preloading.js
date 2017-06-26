@@ -1,6 +1,6 @@
 "use strict";
-define(['Utils'], function (Utils) {
 
+define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 	let Preloading = {};
 
 	const promises = [];
@@ -13,9 +13,9 @@ define(['Utils'], function (Utils) {
 	};
 
 	Preloading.registerPreload = function (preloadingPromise) {
-		preloadingPromise.then(function () {
+		preloadingPromise.then(function (payload) {
 			loadedPromises++;
-			console.log('Loaded ' + loadedPromises + '/' + numberOfPromises);
+			console.log('Loaded ' + loadedPromises + '/' + numberOfPromises + (payload ? ': ' + payload : ''));
 			if (loadingBar) {
 				loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
 				if (loadedPromises >= numberOfPromises) {
@@ -31,10 +31,10 @@ define(['Utils'], function (Utils) {
 
 	Preloading.registerGameObjectSVG = function (gameObjectClass, svgPath) {
 		// Create xhr promise to load svg
-		registerPreload(makeRequest({
-			method: 'GET',
-			url: svgPath
-		})
+		Preloading.registerPreload(Utils.makeRequest({
+				method: 'GET',
+				url: svgPath
+			})
 			.then((svgText) => {
 				gameObjectClass.svg = SvgLoader.load(svgText);
 				return gameObjectClass.svg;
@@ -42,9 +42,9 @@ define(['Utils'], function (Utils) {
 	};
 
 	Preloading.preloadScript = function (script) {
-		registerPreload(new Promise(function (resolve, reject) {
-			require([script], function ($) {
-				resolve();
+		Preloading.registerPreload(new Promise(function (resolve, reject) {
+			require([script], function () {
+				resolve(script);
 			}, function (err) {
 				reject(err);
 			});
@@ -53,32 +53,32 @@ define(['Utils'], function (Utils) {
 
 	Preloading._import = function () {
 		for (let i = 0; i < arguments.length; ++i) {
-			preloadScript(arguments[i]);
+			Preloading.preloadScript(arguments[i]);
 		}
 	};
 
 	Preloading.registerPartial = function (htmlUrl) {
 		let preloadingPromise = loadPartial(htmlUrl);
-		registerPreload(preloadingPromise);
+		Preloading.registerPreload(preloadingPromise);
 		return preloadingPromise;
 	};
 
 	Preloading.loadPartial = function (htmlUrl) {
-		return makeRequest({
+		return Utils.makeRequest({
 			method: 'GET',
 			url: htmlUrl
 		}).then(function (html) {
 			switch (document.readyState) {
 				case "interactive":
 				case "complete":
-					document.body.appendChild(htmlToElement(html));
+					document.body.appendChild(Utils.htmlToElement(html));
 					console.log('Loaded ' + htmlUrl + ' directly.');
 					return Promise.resolve();
 				case "loading":
 					return new Promise(function (resolve) {
 						console.log('Wait for loaded DOM for ' + htmlUrl + '.');
 						document.addEventListener("DOMContentLoaded", function () {
-							document.body.appendChild(htmlToElement(html));
+							document.body.appendChild(Utils.htmlToElement(html));
 							resolve();
 						});
 					});

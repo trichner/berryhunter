@@ -53,7 +53,7 @@ define(['Game', 'Two', 'Utils', 'InjectedSVG'], function (Game, Two, Utils, Inje
 
 		setClickable(toggle) {
 			this.clickable = toggle;
-			if (Utils.isUndefined(this.domElement)){
+			if (Utils.isUndefined(this.domElement)) {
 				// domElement is not yet loaded, so skip class modification (it will be done onDomReady)
 				return;
 			}

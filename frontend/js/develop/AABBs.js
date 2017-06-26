@@ -2,6 +2,7 @@
 
 define(['Game', 'GameObject', 'Develop', 'Utils', 'Two'], function (Game, GameObject, Develop, Utils, Two) {
 
+	//noinspection UnnecessaryLocalVariableJS
 	const AABBs = {
 		setup: function () {
 			/**

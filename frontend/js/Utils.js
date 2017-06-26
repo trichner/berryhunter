@@ -1,5 +1,11 @@
 "use strict";
-define(['../vendor/XieLongUtils'], function (XieLongUtils) {
+
+/**
+ * XieLongUtils have to be loaded so that the functions are available in global namespace.
+ */
+define(['../vendor/XieLongUtils'], function () {
+	console.log('Utils loaded');
+
 	let Utils = {};
 
 	// Copy all methods from XieLongUtils into Utils
@@ -15,33 +21,7 @@ define(['../vendor/XieLongUtils'], function (XieLongUtils) {
 	Utils.escapeRegExp = escapeRegExp;
 	Utils.replaceAll = replaceAll;
 
-	Utils.Relative = {
-		width: function (value) {
-			return value * width / 100;
-		},
-
-		height: function (value) {
-			return value * height / 100;
-		},
-
-		x: function (x) {
-			// TODO dpi?
-			// if (Config.scaleResolution) {
-			//     return x * width / 1920 * 1.25;
-			// }
-			return x;
-		},
-
-		y: function (y) {
-			// TODO dpi?
-			// if (Config.scaleResolution) {
-			//     return y * height / 1080 * 1.25;
-			// }
-			return y;
-		}
-	};
-
-	Utils.executeRandomFunction = function(weightedFunctions) {
+	Utils.executeRandomFunction = function (weightedFunctions) {
 		let weightTotal = 0;
 
 		weightedFunctions.forEach(function (weightedFunction) {
@@ -59,11 +39,7 @@ define(['../vendor/XieLongUtils'], function (XieLongUtils) {
 		return weightedFunctions[i - 1].func();
 	};
 
-	Utils.createVector = function(x, y) {
-		return new Two.Vector(x, y);
-	};
-
-	Utils.loadStrings = function(path, callback, errorCallback) {
+	Utils.loadStrings = function (path, callback, errorCallback) {
 		const ret = [];
 		const req = new XMLHttpRequest();
 		const decrementPreload = _getDecrementPreload.apply(this, arguments);
@@ -104,7 +80,7 @@ define(['../vendor/XieLongUtils'], function (XieLongUtils) {
 		return ret;
 	};
 
-	Utils._getDecrementPreload = function() {
+	Utils._getDecrementPreload = function () {
 		let decrementPreload = arguments[arguments.length - 1];
 
 		// when in preload decrementPreload will always be the last arg as it is set
@@ -117,15 +93,15 @@ define(['../vendor/XieLongUtils'], function (XieLongUtils) {
 		}
 	};
 
-	Utils.map = function(n, start1, stop1, start2, stop2) {
+	Utils.map = function (n, start1, stop1, start2, stop2) {
 		return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
 	};
 
-	Utils.sq = function(n) {
+	Utils.sq = function (n) {
 		return n * n;
 	};
 
-	Utils.setClass = function(svgElement, className) {
+	Utils.setClass = function (svgElement, className) {
 		svgElement._renderer.elem.setAttribute('class', className);
 		if (svgElement._renderer.type === 'group') {
 			svgElement.children.forEach(function (child) {
@@ -134,17 +110,22 @@ define(['../vendor/XieLongUtils'], function (XieLongUtils) {
 		}
 	};
 
-	Utils.hasClass = function(svgElement, className) {
+	Utils.hasClass = function (svgElement, className) {
 		return svgElement._renderer.elem.getAttribute('class') === className;
 	};
 
-	Utils.htmlToElement = function(html) {
+	Utils.htmlToElement = function (html) {
 		const template = document.createElement('template');
 		template.innerHTML = html;
 		return template.content.firstChild;
 	};
 
-	Utils.makeRequest = function(opts) {
+	/**
+	 *
+	 * @param {{method: String, url: String, [headers]: {}, [params]: String|{}}} opts
+	 * @returns {Promise}
+	 */
+	Utils.makeRequest = function (opts) {
 		return new Promise(function (resolve, reject) {
 			const xhr = new XMLHttpRequest();
 			xhr.open(opts.method, opts.url);
@@ -181,25 +162,33 @@ define(['../vendor/XieLongUtils'], function (XieLongUtils) {
 		});
 	};
 
-	Utils.isDefined = function(variable) {
+	Utils.isDefined = function (variable) {
 		return !isUndefined(variable);
 	};
 
-	Utils.isUndefined = function(variable) {
+	Utils.isUndefined = function (variable) {
 		return typeof variable === 'undefined';
 	};
 
-	Utils.isFunction = function(variable) {
+	Utils.isFunction = function (variable) {
 		return typeof variable === 'function';
 	};
 
-	Utils.arraysEqual = function(a, b) {
-		if (a === b) return true;
-		if (a == null || b == null) return false;
-		if (a.length != b.length) return false;
+	Utils.arraysEqual = function (a, b) {
+		if (a === b) {
+			return true;
+		}
+		if (a == null || b == null) {
+			return false;
+		}
+		if (a.length !== b.length) {
+			return false;
+		}
 
 		for (let i = 0; i < a.length; ++i) {
-			if (a[i] !== b[i]) return false;
+			if (a[i] !== b[i]) {
+				return false;
+			}
 		}
 		return true;
 	};
