@@ -7,17 +7,6 @@
 var DeathioApi = DeathioApi || {};
 
 /**
- * @enum
- */
-DeathioApi.Item = {
-  Fist: 0,
-  WoodClub: 1,
-  StoneTool: 2,
-  BronzeTool: 3,
-  IronTool: 4
-};
-
-/**
  * @constructor
  */
 DeathioApi.Action = function() {
@@ -57,7 +46,7 @@ DeathioApi.Action.getRootAsAction = function(bb, obj) {
  */
 DeathioApi.Action.prototype.item = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {DeathioApi.Item} */ (this.bb.readUint8(this.bb_pos + offset)) : DeathioApi.Item.Fist;
+  return offset ? /** @type {DeathioApi.Item} */ (this.bb.readUint8(this.bb_pos + offset)) : DeathioApi.Item.None;
 };
 
 /**
@@ -72,7 +61,7 @@ DeathioApi.Action.startAction = function(builder) {
  * @param {DeathioApi.Item} item
  */
 DeathioApi.Action.addItem = function(builder, item) {
-  builder.addFieldInt8(0, item, DeathioApi.Item.Fist);
+  builder.addFieldInt8(0, item, DeathioApi.Item.None);
 };
 
 /**

@@ -26,15 +26,63 @@ func (aabb AABB) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffse
 	return DeathioApi.CreateAABB(builder, f32ToPx(aabb.Left), f32ToPx(aabb.Bottom), f32ToPx(aabb.Right), f32ToPx(aabb.Upper))
 }
 
+func (p *player) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	// entity fields
+	e := p.entity
+	DeathioApi.EntityStart(builder)
+	DeathioApi.EntityAddId(builder, e.ID())
+
+	pos := DeathioApi.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
+	DeathioApi.EntityAddPos(builder, pos)
+
+	aabb := e.AABB().MarshalFlatbuf(builder)
+	DeathioApi.EntityAddAabb(builder, aabb)
+
+	DeathioApi.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
+	DeathioApi.EntityAddRotation(builder, e.Angle())
+	DeathioApi.EntityAddEntityType(builder, uint16(e.Type()))
+
+	// player
+	DeathioApi.EntityAddHand(builder, DeathioApi.ItemNone)
+	DeathioApi.EntityAddIsHit(builder, 0)
+	DeathioApi.EntityAddActionTick(builder, 0)
+
+	return DeathioApi.EntityEnd(builder)
+}
+
+func (i *itemStack) MarshalFlatbuf(builder *flatbuffers.Builder, slot uint8) flatbuffers.UOffsetT {
+
+	return DeathioApi.CreateItemStack(builder, byte(i.item), i.count, slot)
+}
+
+func (i *inventory) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	n := len(i.items)
+
+	offsets := make([]flatbuffers.UOffsetT, n)
+	for idx, item := range i.items {
+		offsets = append(offsets, item.MarshalFlatbuf(builder, uint8(idx)))
+	}
+
+	DeathioApi.GameStateStartInventoryVector(builder, n)
+	for _, o := range offsets {
+		builder.PrependUOffsetT(o)
+	}
+	return builder.EndVector(n)
+}
 // MarshalFlatbuf implements FlatbufCodec for GameState
 func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	entities := EntitiesFlatbufMarshal(gs.Entities, builder)
+	player := gs.Player.MarshalFlatbuf(builder)
+	inventory := gs.Player.inventory.MarshalFlatbuf(builder)
 
 	DeathioApi.GameStateStart(builder)
 	DeathioApi.GameStateAddTick(builder, gs.Tick)
-	DeathioApi.GameStateAddPlayerId(builder, gs.PlayerID)
+	DeathioApi.GameStateAddPlayer(builder, player)
 	DeathioApi.GameStateAddEntities(builder, entities)
+	DeathioApi.GameStateAddInventory(builder, inventory)
 
 	return DeathioApi.GameStateEnd(builder)
 }
@@ -71,14 +119,14 @@ func EntityFlatbufMarshal(e Entity, builder *flatbuffers.Builder) flatbuffers.UO
 
 	DeathioApi.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
 	DeathioApi.EntityAddRotation(builder, e.Angle())
-	DeathioApi.EntityAddType(builder, uint16(e.Type()))
+	DeathioApi.EntityAddEntityType(builder, uint16(e.Type()))
 
 	return DeathioApi.EntityEnd(builder)
 }
 
 // intermediate struct to serialize
 type GameState struct {
-	Tick     uint64
-	PlayerID uint64
-	Entities []Entity
+	Tick      uint64
+	Player    *player
+	Entities  []Entity
 }

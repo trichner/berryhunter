@@ -54,7 +54,7 @@ func (n *NetSystem) Update(dt float32) {
 		// copy gameStatePrototype
 		clientGameState := gameState
 		clientGameState.Entities = entites
-		clientGameState.PlayerID = player.ID()
+		clientGameState.Player = player
 
 		// marshal and send state
 		builder := flatbuffers.NewBuilder(64)

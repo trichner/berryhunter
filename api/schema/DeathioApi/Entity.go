@@ -75,7 +75,7 @@ func (rcv *Entity) MutateRotation(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
 }
 
-func (rcv *Entity) Type() uint16 {
+func (rcv *Entity) EntityType() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.GetUint16(o + rcv._tab.Pos)
@@ -83,12 +83,56 @@ func (rcv *Entity) Type() uint16 {
 	return 0
 }
 
-func (rcv *Entity) MutateType(n uint16) bool {
+func (rcv *Entity) MutateEntityType(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(12, n)
 }
 
-func (rcv *Entity) Aabb(obj *AABB) *AABB {
+func (rcv *Entity) IsHit() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Entity) MutateIsHit(n byte) bool {
+	return rcv._tab.MutateByteSlot(14, n)
+}
+
+func (rcv *Entity) Hand() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Entity) MutateHand(n byte) bool {
+	return rcv._tab.MutateByteSlot(16, n)
+}
+
+func (rcv *Entity) ActionTick() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Entity) MutateActionTick(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(18, n)
+}
+
+func (rcv *Entity) Name() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *Entity) Aabb(obj *AABB) *AABB {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -101,7 +145,7 @@ func (rcv *Entity) Aabb(obj *AABB) *AABB {
 }
 
 func EntityStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(10)
 }
 func EntityAddId(builder *flatbuffers.Builder, id uint64) {
 	builder.PrependUint64Slot(0, id, 0)
@@ -115,11 +159,23 @@ func EntityAddRadius(builder *flatbuffers.Builder, radius uint16) {
 func EntityAddRotation(builder *flatbuffers.Builder, rotation float32) {
 	builder.PrependFloat32Slot(3, rotation, 0.0)
 }
-func EntityAddType(builder *flatbuffers.Builder, t uint16) {
-	builder.PrependUint16Slot(4, t, 0)
+func EntityAddEntityType(builder *flatbuffers.Builder, entityType uint16) {
+	builder.PrependUint16Slot(4, entityType, 0)
+}
+func EntityAddIsHit(builder *flatbuffers.Builder, isHit byte) {
+	builder.PrependByteSlot(5, isHit, 0)
+}
+func EntityAddHand(builder *flatbuffers.Builder, hand byte) {
+	builder.PrependByteSlot(6, hand, 0)
+}
+func EntityAddActionTick(builder *flatbuffers.Builder, actionTick uint16) {
+	builder.PrependUint16Slot(7, actionTick, 0)
+}
+func EntityAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(name), 0)
 }
 func EntityAddAabb(builder *flatbuffers.Builder, aabb flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(5, flatbuffers.UOffsetT(aabb), 0)
+	builder.PrependStructSlot(9, flatbuffers.UOffsetT(aabb), 0)
 }
 func EntityEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

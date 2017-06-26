@@ -4,7 +4,8 @@ import (
 	"testing"
 	"math/rand"
 	"fmt"
-	"github.com/trichner/death-io/backend/wrand"
+	"github.com/trichner/berryhunter/backend/wrand"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 func Test_populate(t *testing.T) {
@@ -27,7 +28,7 @@ func Test_randomEntity(t *testing.T) {
 
 	rnd := rand.New(rand.NewSource(1234))
 	for y := int64(0); y < 100; y++ {
-		e := NewRandomEntityFrom(entities, rnd)
+		e := NewRandomEntityFrom(phy.Vec2f{},entities, rnd)
 		fmt.Printf("Selected: %v\n", e)
 	}
 

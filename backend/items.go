@@ -34,7 +34,7 @@ func (is *InventorySystem) Update(dt float32) {
 
 		inInventory := false
 		for _, stack := range i.inventory.items {
-			if stack.itemType == itemToAdd.itemType {
+			if stack.item == itemToAdd.item {
 				inInventory = true
 				return
 			}

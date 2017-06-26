@@ -3,7 +3,7 @@
 package DeathioApi
 
 const (
-	ItemFist = 0
+	ItemNone = 0
 	ItemWoodClub = 1
 	ItemStoneTool = 2
 	ItemBronzeTool = 3
@@ -11,7 +11,7 @@ const (
 )
 
 var EnumNamesItem = map[int]string{
-	ItemFist:"Fist",
+	ItemNone:"None",
 	ItemWoodClub:"WoodClub",
 	ItemStoneTool:"StoneTool",
 	ItemBronzeTool:"BronzeTool",

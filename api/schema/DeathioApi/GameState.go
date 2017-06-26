@@ -38,20 +38,40 @@ func (rcv *GameState) MutateTick(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(4, n)
 }
 
-func (rcv *GameState) PlayerId() uint64 {
+func (rcv *GameState) Player(obj *Entity) *Entity {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(Entity)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *GameState) Inventory(obj *ItemStack, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 12
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *GameState) InventoryLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *GameState) MutatePlayerId(n uint64) bool {
-	return rcv._tab.MutateUint64Slot(6, n)
-}
-
 func (rcv *GameState) Entities(obj *Entity, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -63,7 +83,7 @@ func (rcv *GameState) Entities(obj *Entity, j int) bool {
 }
 
 func (rcv *GameState) EntitiesLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -71,16 +91,22 @@ func (rcv *GameState) EntitiesLength() int {
 }
 
 func GameStateStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(4)
 }
 func GameStateAddTick(builder *flatbuffers.Builder, tick uint64) {
 	builder.PrependUint64Slot(0, tick, 0)
 }
-func GameStateAddPlayerId(builder *flatbuffers.Builder, playerId uint64) {
-	builder.PrependUint64Slot(1, playerId, 0)
+func GameStateAddPlayer(builder *flatbuffers.Builder, player flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(player), 0)
+}
+func GameStateAddInventory(builder *flatbuffers.Builder, inventory flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(inventory), 0)
+}
+func GameStateStartInventoryVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(12, numElems, 4)
 }
 func GameStateAddEntities(builder *flatbuffers.Builder, entities flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(entities), 0)
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(entities), 0)
 }
 func GameStateStartEntitiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)

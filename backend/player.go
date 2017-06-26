@@ -18,6 +18,8 @@ type player struct {
 	viewport *phy.Box
 
 	inventory inventory
+
+	actionTick uint
 }
 
 const viewPortWidth = 20.0
@@ -34,21 +36,21 @@ func (p *player) SetPosition(v phy.Vec2f) {
 type inventory struct {
 	items []*itemStack
 	cap   int
-	add   itemStack
+	add   *itemStack
 }
 
-type itemType uint16
+type item uint8
 
 type itemStack struct {
-	itemType itemType
-	count    uint32
+	item  item
+	count uint32
 }
 
 func (i *inventory) addItem(item *itemStack) bool {
 
 	foundAt := -1
 	for idx, stack := range i.items {
-		if stack.itemType == item.itemType {
+		if stack.item == item.item {
 			foundAt = idx
 			break
 		}
@@ -73,6 +75,9 @@ func (i *inventory) canConsumeItems(stacks []*itemStack) bool {
 	canConsume := true
 	for _, s := range stacks {
 		canConsume = canConsume && i.canConsume(s)
+		if !canConsume {
+			break
+		}
 	}
 
 	return canConsume
@@ -81,7 +86,7 @@ func (i *inventory) canConsumeItems(stacks []*itemStack) bool {
 func (i *inventory) canConsume(stack *itemStack) bool {
 
 	canConsume := false
-	i.iterateItems(stack.itemType, func(idx int) bool {
+	i.iterateItems(stack.item, func(idx int) bool {
 		if i.items[idx].count >= stack.count {
 			canConsume = true
 		}
@@ -105,7 +110,7 @@ func (i *inventory) consumeItems(stacks []*itemStack) bool {
 func (i *inventory) consumeItem(stack *itemStack) bool {
 
 	hasConsumed := false
-	i.iterateItems(stack.itemType, func(idx int) bool {
+	i.iterateItems(stack.item, func(idx int) bool {
 		if i.items[idx].count >= stack.count {
 			i.items[idx].count -= stack.count
 			hasConsumed = true
@@ -117,9 +122,9 @@ func (i *inventory) consumeItem(stack *itemStack) bool {
 	return hasConsumed
 }
 
-func (i *inventory) iterateItems(itemType itemType, p itemStackPredicate) {
+func (i *inventory) iterateItems(itemType item, p itemStackPredicate) {
 	for idx, stack := range i.items {
-		if stack.itemType == itemType {
+		if stack.item == itemType {
 			if !p(idx) {
 				break
 			}

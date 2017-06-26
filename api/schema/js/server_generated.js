@@ -85,6 +85,70 @@ DeathioApi.AABB.createAABB = function(builder, lower_x, lower_y, upper_x, upper_
 /**
  * @constructor
  */
+DeathioApi.ItemStack = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {DeathioApi.ItemStack}
+ */
+DeathioApi.ItemStack.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns {DeathioApi.Item}
+ */
+DeathioApi.ItemStack.prototype.item = function() {
+  return /** @type {DeathioApi.Item} */ (this.bb.readUint8(this.bb_pos));
+};
+
+/**
+ * @returns {number}
+ */
+DeathioApi.ItemStack.prototype.count = function() {
+  return this.bb.readUint32(this.bb_pos + 4);
+};
+
+/**
+ * @returns {number}
+ */
+DeathioApi.ItemStack.prototype.slot = function() {
+  return this.bb.readUint8(this.bb_pos + 8);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {DeathioApi.Item} item
+ * @param {number} count
+ * @param {number} slot
+ * @returns {flatbuffers.Offset}
+ */
+DeathioApi.ItemStack.createItemStack = function(builder, item, count, slot) {
+  builder.prep(4, 12);
+  builder.pad(3);
+  builder.writeInt8(slot);
+  builder.writeInt32(count);
+  builder.pad(3);
+  builder.writeInt8(item);
+  return builder.offset();
+};
+
+/**
+ * @constructor
+ */
 DeathioApi.Entity = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
@@ -153,9 +217,42 @@ DeathioApi.Entity.prototype.rotation = function() {
 /**
  * @returns {DeathioApi.EntityType}
  */
-DeathioApi.Entity.prototype.type = function() {
+DeathioApi.Entity.prototype.entityType = function() {
   var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+};
+
+/**
+ * @returns {boolean}
+ */
+DeathioApi.Entity.prototype.isHit = function() {
+  var offset = this.bb.__offset(this.bb_pos, 14);
+  return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
+};
+
+/**
+ * @returns {DeathioApi.Item}
+ */
+DeathioApi.Entity.prototype.hand = function() {
+  var offset = this.bb.__offset(this.bb_pos, 16);
+  return offset ? /** @type {DeathioApi.Item} */ (this.bb.readUint8(this.bb_pos + offset)) : DeathioApi.Item.None;
+};
+
+/**
+ * @returns {number}
+ */
+DeathioApi.Entity.prototype.actionTick = function() {
+  var offset = this.bb.__offset(this.bb_pos, 18);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array}
+ */
+DeathioApi.Entity.prototype.name = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 20);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
@@ -163,7 +260,7 @@ DeathioApi.Entity.prototype.type = function() {
  * @returns {DeathioApi.AABB}
  */
 DeathioApi.Entity.prototype.aabb = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 22);
   return offset ? (obj || new DeathioApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -171,7 +268,7 @@ DeathioApi.Entity.prototype.aabb = function(obj) {
  * @param {flatbuffers.Builder} builder
  */
 DeathioApi.Entity.startEntity = function(builder) {
-  builder.startObject(6);
+  builder.startObject(10);
 };
 
 /**
@@ -208,10 +305,42 @@ DeathioApi.Entity.addRotation = function(builder, rotation) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.EntityType} type
+ * @param {DeathioApi.EntityType} entityType
  */
-DeathioApi.Entity.addType = function(builder, type) {
-  builder.addFieldInt16(4, type, DeathioApi.EntityType.DebugCircle);
+DeathioApi.Entity.addEntityType = function(builder, entityType) {
+  builder.addFieldInt16(4, entityType, DeathioApi.EntityType.DebugCircle);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {boolean} isHit
+ */
+DeathioApi.Entity.addIsHit = function(builder, isHit) {
+  builder.addFieldInt8(5, +isHit, +false);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {DeathioApi.Item} hand
+ */
+DeathioApi.Entity.addHand = function(builder, hand) {
+  builder.addFieldInt8(6, hand, DeathioApi.Item.None);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} actionTick
+ */
+DeathioApi.Entity.addActionTick = function(builder, actionTick) {
+  builder.addFieldInt16(7, actionTick, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} nameOffset
+ */
+DeathioApi.Entity.addName = function(builder, nameOffset) {
+  builder.addFieldOffset(8, nameOffset, 0);
 };
 
 /**
@@ -219,7 +348,7 @@ DeathioApi.Entity.addType = function(builder, type) {
  * @param {flatbuffers.Offset} aabbOffset
  */
 DeathioApi.Entity.addAabb = function(builder, aabbOffset) {
-  builder.addFieldStruct(5, aabbOffset, 0);
+  builder.addFieldStruct(9, aabbOffset, 0);
 };
 
 /**
@@ -275,11 +404,30 @@ DeathioApi.GameState.prototype.tick = function() {
 };
 
 /**
- * @returns {flatbuffers.Long}
+ * @param {DeathioApi.Entity=} obj
+ * @returns {DeathioApi.Entity}
  */
-DeathioApi.GameState.prototype.playerId = function() {
+DeathioApi.GameState.prototype.player = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
+  return offset ? (obj || new DeathioApi.Entity).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+};
+
+/**
+ * @param {number} index
+ * @param {DeathioApi.ItemStack=} obj
+ * @returns {DeathioApi.ItemStack}
+ */
+DeathioApi.GameState.prototype.inventory = function(index, obj) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? (obj || new DeathioApi.ItemStack).__init(this.bb.__vector(this.bb_pos + offset) + index * 12, this.bb) : null;
+};
+
+/**
+ * @returns {number}
+ */
+DeathioApi.GameState.prototype.inventoryLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -288,7 +436,7 @@ DeathioApi.GameState.prototype.playerId = function() {
  * @returns {DeathioApi.Entity}
  */
 DeathioApi.GameState.prototype.entities = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? (obj || new DeathioApi.Entity).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -296,7 +444,7 @@ DeathioApi.GameState.prototype.entities = function(index, obj) {
  * @returns {number}
  */
 DeathioApi.GameState.prototype.entitiesLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -304,7 +452,7 @@ DeathioApi.GameState.prototype.entitiesLength = function() {
  * @param {flatbuffers.Builder} builder
  */
 DeathioApi.GameState.startGameState = function(builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 };
 
 /**
@@ -317,10 +465,26 @@ DeathioApi.GameState.addTick = function(builder, tick) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Long} playerId
+ * @param {flatbuffers.Offset} playerOffset
  */
-DeathioApi.GameState.addPlayerId = function(builder, playerId) {
-  builder.addFieldInt64(1, playerId, builder.createLong(0, 0));
+DeathioApi.GameState.addPlayer = function(builder, playerOffset) {
+  builder.addFieldOffset(1, playerOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} inventoryOffset
+ */
+DeathioApi.GameState.addInventory = function(builder, inventoryOffset) {
+  builder.addFieldOffset(2, inventoryOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+DeathioApi.GameState.startInventoryVector = function(builder, numElems) {
+  builder.startVector(12, numElems, 4);
 };
 
 /**
@@ -328,7 +492,7 @@ DeathioApi.GameState.addPlayerId = function(builder, playerId) {
  * @param {flatbuffers.Offset} entitiesOffset
  */
 DeathioApi.GameState.addEntities = function(builder, entitiesOffset) {
-  builder.addFieldOffset(2, entitiesOffset, 0);
+  builder.addFieldOffset(3, entitiesOffset, 0);
 };
 
 /**

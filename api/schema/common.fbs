@@ -10,3 +10,12 @@ struct Vec2f {
   x:float;
   y:float;
 }
+
+enum Item: ubyte {
+	None = 0,
+	WoodClub,
+	StoneTool,
+	BronzeTool,
+	IronTool
+}
+

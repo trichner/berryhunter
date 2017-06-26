@@ -2,14 +2,6 @@ include "common.fbs";
 
 namespace DeathioApi;
 
-enum Item: ubyte {
-	Fist = 0,
-	WoodClub,
-	StoneTool,
-	BronzeTool,
-	IronTool
-}
-
 table Action {
 	item:Item;
 }

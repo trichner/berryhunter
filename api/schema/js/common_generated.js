@@ -7,6 +7,17 @@
 var DeathioApi = DeathioApi || {};
 
 /**
+ * @enum
+ */
+DeathioApi.Item = {
+  None: 0,
+  WoodClub: 1,
+  StoneTool: 2,
+  BronzeTool: 3,
+  IronTool: 4
+};
+
+/**
  * @constructor
  */
 DeathioApi.Vec3f = function() {

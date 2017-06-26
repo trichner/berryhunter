@@ -19,18 +19,33 @@ struct AABB {
   upper:Vec2f;
 }
 
+struct ItemStack {
+  item:Item;
+  count:uint;
+  slot:ubyte;
+}
+
 table Entity {
   id:ulong;
   pos:Vec2f;
   radius:ushort;
   rotation:float;
-  type:EntityType;
+  entity_type:EntityType;
+  is_hit:bool = false;
+
+  hand:Item = None;
+  action_tick:ushort;
+  name:string;
+
   aabb:AABB;
 }
 
 table GameState {
   tick:ulong;
-  player_id:ulong;
+
+  player:Entity;
+  inventory:[ItemStack];
+
   entities:[Entity];
 }
 
