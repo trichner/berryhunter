@@ -12,7 +12,6 @@ define(['Game', 'GameObject', 'Develop', 'Two'], function (Game, GameObject, Dev
 				this.timeToLife -= timeDelta;
 				if (this.timeToLife < 0) {
 					this.hide();
-					// FIXME
 					delete Game.map.objects[this.id];
 					this.aabb.remove();
 					this.aabbConnector.remove();

@@ -133,7 +133,6 @@ define([
 
 			Game.map.newSnapshot();
 
-			// TODO revert to old snapshot
 			snapshot.entities.forEach(function (entity) {
 				if (entity.id === snapshot.playerId) {
 					if (Game.started) {
