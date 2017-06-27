@@ -1,0 +1,72 @@
+@loadingBarHeight: 10vh;
+@splashScreenAnimation: 1s;
+
+#loadingScreen {
+	background-color: #222;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+
+	> #loadingWrapper {
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+		height: @loadingBarHeight;
+		width: 50vw;
+		margin: 0 auto;
+		background-color: rgba(0, 0, 0, 0.6);
+		border-radius: @loadingBarHeight * 0.1;
+		overflow: hidden;
+		transition: all @splashScreenAnimation;
+		transition-property: height, width, border-radius;
+
+		> h2 {
+			line-height: @loadingBarHeight;
+			font-size: (@loadingBarHeight / 2.5);
+			text-align: center;
+			margin: 0;
+			color: white;
+		}
+	}
+
+	&.finished {
+		animation: fade-out 0.3s @splashScreenAnimation forwards;
+
+		> #loadingWrapper {
+			height: 100vh;
+			width: 100vw;
+			background-color: rgb(0, 96, 48);
+			border-radius: 0;
+
+			> h2 {
+				display: none;
+			}
+		}
+	}
+}
+
+@keyframes fade-out {
+	to {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
+
+#loadingBar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	background-image: linear-gradient(to right, white, rgb(0, 96, 48));
+	z-index: -1;
+
+	transition: opacity @splashScreenAnimation;
+
+	.finished > & {
+		opacity: 0;
+	}
+}

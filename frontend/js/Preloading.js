@@ -1,47 +1,94 @@
 "use strict";
-const promises = [];
-let numberOfPromises = 0;
-let loadedPromises = 0;
 
-function executePreload() {
-	return Promise.all(promises);
-}
+define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
+	let Preloading = {};
 
-function registerPreload(preloadingPromise) {
-	preloadingPromise.then(function () {
-		loadedPromises++;
-		console.log('Loaded ' + loadedPromises + '/' + numberOfPromises);
-	});
-	// add promise to list of promises executed before setup()
-	promises.push(preloadingPromise);
-	numberOfPromises++;
-}
+	const promises = [];
+	let numberOfPromises = 0;
+	let loadedPromises = 0;
+	Preloading.loadingBar = false;
 
-function registerGameObjectSVG(gameObjectClass, svgPath) {
-	// Create xhr promise to load svg
-	registerPreload(makeRequest({
-		method: 'GET',
-		url: svgPath
-	})
-		.then((svgText) => {
-			gameObjectClass.svg = SvgLoader.load(svgText);
-			return gameObjectClass.svg;
-		}));
-}
+	Preloading.executePreload = function () {
+		return Promise.all(promises);
+	};
 
-function preloadScript(script) {
-	registerPreload(new Promise(function (resolve, reject) {
-		require([script], function ($) {
-			resolve();
-		}, function (err) {
-			reject(err);
+	Preloading.registerPreload = function (preloadingPromise) {
+		preloadingPromise.then(function (payload) {
+			loadedPromises++;
+			console.log('Loaded ' + loadedPromises + '/' + numberOfPromises + (payload ? ': ' + payload : ''));
+			if (loadingBar) {
+				loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
+				if (loadedPromises >= numberOfPromises) {
+					console.log('Finished loading.');
+					var loadingScreenElement = document.getElementById('loadingScreen');
+					loadingScreenElement.classList.add('finished');
+					loadingScreenElement.addEventListener('animationend', function () {
+						this.parentNode.removeChild(loadingScreenElement);
+					})
+				}
+			}
 		});
-	}));
+		// add promise to list of promises executed before setup()
+		promises.push(preloadingPromise);
+		numberOfPromises++;
+	};
 
-}
+	Preloading.registerGameObjectSVG = function (gameObjectClass, svgPath) {
+		// Create xhr promise to load svg
+		Preloading.registerPreload(Utils.makeRequest({
+				method: 'GET',
+				url: svgPath
+			})
+			.then((svgText) => {
+				gameObjectClass.svg = SvgLoader.load(svgText);
+				return svgPath;
+			}));
+	};
 
-function _import() {
-	for (let i = 0; i < arguments.length; ++i){
-		preloadScript(arguments[i]);
-	}
-}
+	Preloading.preloadScript = function (script) {
+		Preloading.registerPreload(new Promise(function (resolve, reject) {
+			require([script], function () {
+				resolve(script);
+			}, function (err) {
+				reject(err);
+			});
+		}));
+	};
+
+	Preloading._import = function () {
+		for (let i = 0; i < arguments.length; ++i) {
+			Preloading.preloadScript(arguments[i]);
+		}
+	};
+
+	Preloading.registerPartial = function (htmlUrl) {
+		let preloadingPromise = loadPartial(htmlUrl);
+		Preloading.registerPreload(preloadingPromise);
+		return preloadingPromise;
+	};
+
+	Preloading.loadPartial = function (htmlUrl) {
+		return Utils.makeRequest({
+			method: 'GET',
+			url: htmlUrl
+		}).then(function (html) {
+			switch (document.readyState) {
+				case "interactive":
+				case "complete":
+					document.body.appendChild(Utils.htmlToElement(html));
+					console.log('Loaded ' + htmlUrl + ' directly.');
+					return Promise.resolve();
+				case "loading":
+					return new Promise(function (resolve) {
+						console.log('Wait for loaded DOM for ' + htmlUrl + '.');
+						document.addEventListener("DOMContentLoaded", function () {
+							document.body.appendChild(Utils.htmlToElement(html));
+							resolve();
+						});
+					});
+			}
+		});
+	};
+
+	return Preloading;
+});

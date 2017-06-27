@@ -1,5 +1,8 @@
-let Quadrants =
-	[
+define(['gameObjects/Resources'], function (Resources) {
+	let {Tree, RoundTree, MarioTree, Stone, Bronze, BerryBush} = Resources;
+
+	//noinspection UnnecessaryLocalVariableJS
+	let Quadrants = [
 		// Berries behind a row of trees
 		[
 			{
@@ -128,3 +131,6 @@ let Quadrants =
 			}
 		]
 	];
+
+	return Quadrants;
+});

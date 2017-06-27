@@ -1,20 +1,24 @@
 "use strict";
 
-class Placeable extends GameObject {
-	constructor(placeableItem, x, y) {
-		super(x, y, placeableItem.graphic.size, random(0, Math.PI * 2), placeableItem.graphic.svg);
+define(['GameObject', 'Utils', 'InjectedSVG'], function (GameObject, Utils, InjectedSVG) {
+	class Placeable extends GameObject {
+		constructor(placeableItem, x, y) {
+			super(x, y, placeableItem.graphic.size, Utils.random(0, Math.PI * 2), placeableItem.graphic.svg);
 
-		this.item = placeableItem;
-	}
-
-	createShape(x, y, size, rotation, svg) {
-		return new InjectedSVG(svg, x, y, size, rotation);
-	}
-
-	is(placeableItem) {
-		if (typeof placeableItem === 'string') {
-			return this.item.name = placeableItem;
+			this.item = placeableItem;
 		}
-		return this.item === placeableItem;
+
+		createShape(x, y, size, rotation, svg) {
+			return new InjectedSVG(svg, x, y, size, rotation);
+		}
+
+		is(placeableItem) {
+			if (typeof placeableItem === 'string') {
+				return this.item.name = placeableItem;
+			}
+			return this.item === placeableItem;
+		}
 	}
-}
+
+	return Placeable;
+});
