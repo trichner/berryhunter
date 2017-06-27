@@ -1,19 +1,18 @@
 {
   "//": "The resulting itemStack",
-  "itemType": "STONE_AXE",
-  "count": 1,
+  "item": "STONE_AXE",
   "//": "Materials that will be consumed",
   "materials": [
     {
-      "itemType": "WOOD_AXE",
+      "item": "WOOD_AXE",
       "count": 1
     },
     {
-      "itemType": "WOOD",
+      "item": "WOOD",
       "count": 20
     },
     {
-      "itemType": "STONE",
+      "item": "STONE",
       "count": 10
     }
   ],
