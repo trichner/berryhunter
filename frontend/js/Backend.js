@@ -189,7 +189,7 @@ define([
 			};
 
 			for (let i = 0; i < gameState.inventoryLength(); ++i) {
-				var itemStack = this.unmarshalItemStack(gameState.inventory(i));
+				let itemStack = this.unmarshalItemStack(gameState.inventory(i));
 				result.inventory[itemStack.slot] = itemStack;
 			}
 
