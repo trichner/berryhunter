@@ -1,0 +1,66 @@
+#gameUI {
+	box-sizing: border-box;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	* {
+		box-sizing: border-box;
+	}
+}
+
+#minimap {
+	width: 15%;
+	padding-bottom: 15%;
+
+	position: absolute;
+	bottom: 0;
+	left: 0;
+
+	background-color: Cornsilk;
+	border: 10px solid Cornsilk;
+}
+
+#inventory {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+
+	white-space: nowrap;
+
+	@slotSize: 7vh;
+
+	> .inventorySlot {
+		border-radius: 10%;
+		width: @slotSize;
+		height: @slotSize;
+		color: white;
+		font-size: (0.25 * @slotSize);
+		padding: (0.1 * @slotSize);
+		margin: (0.1 * @slotSize);
+		display: inline-block;
+
+		&.empty {
+			background-color: rgba(0, 0, 0, 0.6);
+		}
+
+		&.filled {
+			background-color: rgba(64, 64, 64, 0.6);
+		}
+
+		&.active {
+			background-color: rgba(255, 255, 255, 0.6);
+		}
+
+		position: relative;
+
+		> .count {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+		}
+	}
+}

@@ -16,8 +16,9 @@ define([], function () {
 		'KeyEvents',
 		'PointerEvents',
 		'Player',
-		'GameObject'
-	], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject) {
+		'GameObject',
+		'UserInterface'
+	], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, UserInterface) {
 
 		function createBackground() {
 			const background = new Two.Rectangle(Game.width / 2, Game.height / 2, Game.width, Game.height);
@@ -106,7 +107,8 @@ define([], function () {
 			MapEditor.afterSetup(Game);
 		}
 
-		document.body.classList.remove('loading');
+		// FIXME just for debugging
+		UserInterface.setup();
 
 		/**
 		 * Creating a player starts implicitly the game
@@ -116,7 +118,9 @@ define([], function () {
 			 * @type Player
 			 */
 			Game.player = new Player(id, x, y);
+			UserInterface.setup();
 			Game.two.play();
+			Game.started = true;
 		};
 	});
 

@@ -77,6 +77,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 				'MiniMap',
 				'Camera',
 				'Quadrants',
+				'UserInterface',
 
 				// Develop resources
 				'develop/Fps',
