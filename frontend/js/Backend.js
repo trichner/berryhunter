@@ -41,35 +41,35 @@ define([
 
 			this.webSocket.onmessage = this.receive.bind(this);
 
-		if (Develop.isActive()) {
-			this.lastMessageReceivedTime = performance.now();
-		}
-	},
-
-	prepareItemLookupTable: function () {
-		// DeathioApi.Item is an enum with numeric indices
-		// so the lookup table can be an array
-		this.itemLookupTable = [];
-		this.noneItem = "NONE_ITEM";
-		for (let item in DeathioApi.Item) {
-			if (!DeathioApi.Item.hasOwnProperty(item)) {
-				continue;
+			if (Develop.isActive()) {
+				this.lastMessageReceivedTime = performance.now();
 			}
+		},
 
-			let lookedupItem;
-			if (item === 'None') {
-				lookedupItem = this.noneItem;
-			} else {
-				if (Items.hasOwnProperty(item)) {
-					lookedupItem = Items[item];
-				} else {
-					console.error('Item "' + item + '" defined in DeathioApi.Item is unknown in items/Items.');
+		prepareItemLookupTable: function () {
+			// DeathioApi.Item is an enum with numeric indices
+			// so the lookup table can be an array
+			this.itemLookupTable = [];
+			this.noneItem = "NONE_ITEM";
+			for (let item in DeathioApi.Item) {
+				if (!DeathioApi.Item.hasOwnProperty(item)) {
+					continue;
 				}
-			}
 
-			this.itemLookupTable[DeathioApi.Item[item]] = lookedupItem;
-		}
-	},
+				let lookedupItem;
+				if (item === 'None') {
+					lookedupItem = this.noneItem;
+				} else {
+					if (Items.hasOwnProperty(item)) {
+						lookedupItem = Items[item];
+					} else {
+						console.error('Item "' + item + '" defined in DeathioApi.Item is unknown in items/Items.');
+					}
+				}
+
+				this.itemLookupTable[DeathioApi.Item[item]] = lookedupItem;
+			}
+		},
 
 		send: function (messageObj) {
 			if (this.webSocket.readyState !== WebSocket.OPEN) {
@@ -153,88 +153,86 @@ define([
 
 		/**
 		 *
-		 * @param {{tick: number, playerId: number, entities: Array}} snapshot
+		 * @param {{tick: number, player: {}, entities: Array}} snapshot
 		 */
 		receiveSnapshot: function (snapshot) {
 			this.lastServerTick = snapshot.tick;
 
 			Game.map.newSnapshot();
 
+			if (Game.started) {
+				Game.player.character.setPosition(snapshot.player.x, snapshot.player.y);
+			} else {
+				Game.createPlayer(snapshot.player.id, snapshot.player.x, snapshot.player.y);
+			}
+			if (Develop.isActive()) {
+				Game.player.character.updateAABB(snapshot.player.aabb);
+			}
+
 			snapshot.entities.forEach(function (entity) {
-				if (entity.id === snapshot.playerId) {
-					if (Game.started) {
-						Game.player.character.setPosition(entity.x, entity.y);
-					} else {
-						Game.createPlayer(entity.id, entity.x, entity.y);
-					}
-					if (Develop.isActive()) {
-						Game.player.character.updateAABB(entity.aabb);
-					}
-				} else {
-					Game.map.addOrUpdate(entity);
-				}
+				Game.map.addOrUpdate(entity);
 			});
 		},
 
-	/**
-	 * @param {DeathioApi.GameState} gameState
-	 * @return {{tick: number, playerId: number, entities: Array}}
-	 */
-	unmarshalGameState(gameState){
-		let result = {
-			tick: gameState.tick().toFloat64(),
+		/**
+		 * @param {DeathioApi.GameState} gameState
+		 * @return {{tick: number, playerId: number, entities: Array}}
+		 */
+		unmarshalGameState(gameState){
+			let result = {
+				tick: gameState.tick().toFloat64(),
 
-			player: this.unmarshalEntity(gameState.player()),
-			inventory: [],
+				player: this.unmarshalEntity(gameState.player()),
+				inventory: [],
 
-			entities: []
-		};
+				entities: []
+			};
 
-		for (let i = 0; i < gameState.inventoryLength(); ++i) {
-			var itemStack = this.unmarshalItemStack(gameState.inventory(i));
-			result.inventory[itemStack.slot] = itemStack;
-		}
+			for (let i = 0; i < gameState.inventoryLength(); ++i) {
+				var itemStack = this.unmarshalItemStack(gameState.inventory(i));
+				result.inventory[itemStack.slot] = itemStack;
+			}
 
-		for (let i = 0; i < gameState.entitiesLength(); ++i) {
-			result.entities.push(this.unmarshalEntity(gameState.entities(i)));
-		}
+			for (let i = 0; i < gameState.entitiesLength(); ++i) {
+				result.entities.push(this.unmarshalEntity(gameState.entities(i)));
+			}
 
 			return result;
 		},
 
-	/**
-	 *
-	 * @param {DeathioApi.ItemStack} itemStack
-	 */
-	unmarshalItemStack(itemStack){
-		return {
-			item: this.unmarshalItem(itemStack.item()),
-			count: itemStack.count(),
-			slot: itemStack.slot()
-		};
-	},
+		/**
+		 *
+		 * @param {DeathioApi.ItemStack} itemStack
+		 */
+		unmarshalItemStack(itemStack){
+			return {
+				item: this.unmarshalItem(itemStack.item()),
+				count: itemStack.count(),
+				slot: itemStack.slot()
+			};
+		},
 
-	/**
-	 * @param {DeathioApi.Item} item
-	 */
-	unmarshalItem(item){
-		return this.itemLookupTable[item];
-	},
+		/**
+		 * @param {DeathioApi.Item} item
+		 */
+		unmarshalItem(item){
+			return this.itemLookupTable[item];
+		},
 
-	/**
-	 * @param {DeathioApi.Entity} entity
-	 */
-	unmarshalEntity(entity){
-		return {
-			id: entity.id().toFloat64(),
-			x: entity.pos().x(),
-			y: entity.pos().y(),
-			radius: entity.radius(),
-			rotation: entity.rotation(),
-			type: entity.entityType(),
-			aabb: this.unmarshalAABB(entity.aabb())
-		}
-	},
+		/**
+		 * @param {DeathioApi.Entity} entity
+		 */
+		unmarshalEntity(entity){
+			return {
+				id: entity.id().toFloat64(),
+				x: entity.pos().x(),
+				y: entity.pos().y(),
+				radius: entity.radius(),
+				rotation: entity.rotation(),
+				type: entity.entityType(),
+				aabb: this.unmarshalAABB(entity.aabb())
+			}
+		},
 
 		/**
 		 *

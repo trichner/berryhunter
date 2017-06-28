@@ -1,63 +1,71 @@
 "use strict";
 
-define(['Game', 'GameObject', 'Develop', 'Utils', 'Two'], function (Game, GameObject, Develop, Utils, Two) {
-
+define([], function () {
 	//noinspection UnnecessaryLocalVariableJS
 	const AABBs = {
 		setup: function () {
-			/**
-			 *
-			 * @param {{LowerX: number, LowerY: number, UpperX: number, UpperY: number}} aabb
-			 */
-			GameObject.prototype.updateAABB = function (aabb) {
-				if (!(Develop.settings.showAABBs && //
-					aabb && //
-					!Utils.isUndefined(aabb.LowerX) && //
-					!Utils.isUndefined(aabb.LowerY) && //
-					!Utils.isUndefined(aabb.UpperX) && //
-					!Utils.isUndefined(aabb.UpperY))) {
-					return;
-				}
+			require([
+				'Game',
+				'GameObject',
+				'Develop',
+				'Utils',
+				'Two'
+			], function (Game, GameObject, Develop, Utils, Two) {
 
-				let startX = aabb.LowerX;
-				let startY = aabb.LowerY;
-				let endX = aabb.UpperX;
-				let endY = aabb.UpperY;
+				/**
+				 *
+				 * @param {{LowerX: number, LowerY: number, UpperX: number, UpperY: number}} aabb
+				 */
+				GameObject.prototype.updateAABB = function (aabb) {
+					if (!(Develop.settings.showAABBs && //
+						aabb && //
+						!Utils.isUndefined(aabb.LowerX) && //
+						!Utils.isUndefined(aabb.LowerY) && //
+						!Utils.isUndefined(aabb.UpperX) && //
+						!Utils.isUndefined(aabb.UpperY))) {
+						return;
+					}
 
-				if (Utils.isUndefined(this.aabb)) {
+					let startX = aabb.LowerX;
+					let startY = aabb.LowerY;
+					let endX = aabb.UpperX;
+					let endY = aabb.UpperY;
 
-					let width = (endX - startX);
-					let height = (endY - startY);
-					let x = startX + width / 2;
-					let y = startY + height / 2;
-					this.aabb = new Two.Rectangle(x, y, width, height);
-					Game.groups.gameObjects.add(this.aabb);
+					if (Utils.isUndefined(this.aabb)) {
 
-					this.aabb.noFill();
-					this.aabb.stroke = Develop.settings.elementColor;
-					this.aabb.linewidth = Develop.settings.linewidth;
+						let width = (endX - startX);
+						let height = (endY - startY);
+						let x = startX + width / 2;
+						let y = startY + height / 2;
+						this.aabb = new Two.Rectangle(x, y, width, height);
+						Game.groups.gameObjects.add(this.aabb);
 
-					this.aabbConnector = new Two.Line(this.getX(), this.getY(), x, y);
-					Game.groups.gameObjects.add(this.aabbConnector);
-					this.aabbConnector.stroke = Develop.settings.elementColor;
-					this.aabbConnector.linewidth = Develop.settings.linewidth;
-				} else {
-					this.aabb.translation.set((startX + endX) / 2, (startY + endY) / 2);
-				}
-			};
+						this.aabb.noFill();
+						this.aabb.stroke = Develop.settings.elementColor;
+						this.aabb.linewidth = Develop.settings.linewidth;
 
-			GameObject.prototype.hideAABB = function () {
-				if (!Utils.isUndefined(this.aabb)) {
-					this.aabb.noStroke();
-				}
-			};
+						this.aabbConnector = new Two.Line(this.getX(), this.getY(), x, y);
+						Game.groups.gameObjects.add(this.aabbConnector);
+						this.aabbConnector.stroke = Develop.settings.elementColor;
+						this.aabbConnector.linewidth = Develop.settings.linewidth;
+					} else {
+						this.aabb.translation.set((startX + endX) / 2, (startY + endY) / 2);
+					}
+				};
 
-			GameObject.prototype.showAABB = function () {
-				if (!Utils.isUndefined(this.aabb)) {
-					this.aabb.stroke = Develop.settings.elementColor;
-					this.aabb.linewidth = Develop.settings.linewidth;
-				}
-			};
+				GameObject.prototype.hideAABB = function () {
+					if (!Utils.isUndefined(this.aabb)) {
+						this.aabb.noStroke();
+					}
+				};
+
+				GameObject.prototype.showAABB = function () {
+					if (!Utils.isUndefined(this.aabb)) {
+						this.aabb.stroke = Develop.settings.elementColor;
+						this.aabb.linewidth = Develop.settings.linewidth;
+					}
+				};
+			});
 		}
 	};
 

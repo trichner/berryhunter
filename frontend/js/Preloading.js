@@ -62,7 +62,7 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 	};
 
 	Preloading.registerPartial = function (htmlUrl) {
-		let preloadingPromise = loadPartial(htmlUrl);
+		let preloadingPromise = Preloading.loadPartial(htmlUrl);
 		Preloading.registerPreload(preloadingPromise);
 		return preloadingPromise;
 	};

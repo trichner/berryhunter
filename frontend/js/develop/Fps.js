@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'Develop'], function (Game, Develop) {
+define(['Game'], function (Game) {
 
 	//noinspection UnnecessaryLocalVariableJS
 	let Fps = {
@@ -9,7 +9,9 @@ define(['Game', 'Develop'], function (Game, Develop) {
 		},
 
 		update: function () {
-			Develop.logFPS(1000 / Game.two.timeDelta);
+			require(['Develop'], function (Develop) {
+				Develop.logFPS(1000 / Game.two.timeDelta);
+			})
 		}
 	};
 
