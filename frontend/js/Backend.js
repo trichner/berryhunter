@@ -5,11 +5,12 @@ define([
 	'Utils',
 	'Constants',
 	'Develop',
+	'items/Items',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client'
-], function (Game, Utils, Constants, Develop) {
+], function (Game, Utils, Constants, Develop, Items) {
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
 		setup: function () {
