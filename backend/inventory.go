@@ -2,6 +2,7 @@ package main
 
 import (
 	"engo.io/ecs"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 type InventorySystem struct {
@@ -10,7 +11,7 @@ type InventorySystem struct {
 
 type inventoryEntity struct {
 	basic     *ecs.BasicEntity
-	inventory *inventory
+	inventory *items.Inventory
 }
 
 func (*InventorySystem) New(w *ecs.World) {
@@ -21,7 +22,7 @@ func (*InventorySystem) Priority() int {
 	return 50
 }
 
-func (is *InventorySystem) AddInventory(e *ecs.BasicEntity, i *inventory) {
+func (is *InventorySystem) AddInventory(e *ecs.BasicEntity, i *items.Inventory) {
 	ie := &inventoryEntity{e, i}
 	is.inventories = append(is.inventories, ie)
 }
@@ -30,18 +31,18 @@ func (is *InventorySystem) Update(dt float32) {
 	//log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
 
 	for _, i := range is.inventories {
-		itemToAdd := i.inventory.add
+		_ = i
+		//itemToAdd := i.inventory.
 
-		inInventory := false
-		for _, stack := range i.inventory.items {
-			if stack.item == itemToAdd.item {
-				inInventory = true
-				return
-			}
-		}
+		//inInventory := false
+		//for _, stack := range i.inventory.items {
+		//	if stack.item == itemToAdd.item {
+		//		inInventory = true
+		//		return
+		//	}
+		//}
 
 		//TODO
-		_ = inInventory
 	}
 
 }

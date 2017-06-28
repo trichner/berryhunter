@@ -4,6 +4,7 @@ import (
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 //---- player
@@ -17,7 +18,7 @@ type player struct {
 
 	viewport *phy.Box
 
-	inventory inventory
+	inventory items.Inventory
 
 	actionTick uint
 }
@@ -33,105 +34,6 @@ func (p *player) SetPosition(v phy.Vec2f) {
 	p.viewport.SetPosition(v)
 }
 
-type inventory struct {
-	items []*itemStack
-	cap   int
-	add   *itemStack
-}
-
-type item uint8
-
-type itemStack struct {
-	item  item
-	count uint32
-}
-
-func (i *inventory) addItem(item *itemStack) bool {
-
-	foundAt := -1
-	for idx, stack := range i.items {
-		if stack.item == item.item {
-			foundAt = idx
-			break
-		}
-	}
-
-	// if we already have the same in the inventory we simply add it
-	if foundAt >= 0 {
-		i.items[foundAt].count += item.count
-		return true
-	}
-
-	if i.cap > len(i.items) {
-		i.items = append(i.items, item)
-		return true
-	}
-
-	return false
-}
-
-func (i *inventory) canConsumeItems(stacks []*itemStack) bool {
-
-	canConsume := true
-	for _, s := range stacks {
-		canConsume = canConsume && i.canConsume(s)
-		if !canConsume {
-			break
-		}
-	}
-
-	return canConsume
-}
-
-func (i *inventory) canConsume(stack *itemStack) bool {
-
-	canConsume := false
-	i.iterateItems(stack.item, func(idx int) bool {
-		if i.items[idx].count >= stack.count {
-			canConsume = true
-		}
-		return false
-	})
-	return canConsume
-}
-
-type itemStackPredicate func(i int) bool
-
-func (i *inventory) consumeItems(stacks []*itemStack) bool {
-
-	allConsumed := true
-	for _, s := range stacks {
-		allConsumed = allConsumed && i.consumeItem(s)
-	}
-
-	return allConsumed
-}
-
-func (i *inventory) consumeItem(stack *itemStack) bool {
-
-	hasConsumed := false
-	i.iterateItems(stack.item, func(idx int) bool {
-		if i.items[idx].count >= stack.count {
-			i.items[idx].count -= stack.count
-			hasConsumed = true
-		}
-
-		return false
-	})
-
-	return hasConsumed
-}
-
-func (i *inventory) iterateItems(itemType item, p itemStackPredicate) {
-	for idx, stack := range i.items {
-		if stack.item == itemType {
-			if !p(idx) {
-				break
-			}
-		}
-	}
-}
-
 func NewPlayer(c *net.Client) *player {
 	e := newCircleEntity(0.25)
 
@@ -140,13 +42,19 @@ func NewPlayer(c *net.Client) *player {
 
 	e.entityType = DeathioApi.EntityTypeCharacter
 	p := &player{entity: e, client: c}
+	shapeGroup := int(p.ID())
 	p.body.Shape().UserData = p
+	p.body.Shape().Group = shapeGroup
 
 	p.viewport = phy.NewBox(e.body.Position(), phy.Vec2f{viewPortWidth / 2, viewPortHeight / 2})
 
 	p.viewport.Shape().IsSensor = true
 	p.viewport.Shape().Layer = -1
+	p.viewport.Shape().Group = shapeGroup
 
+	p.inventory = items.NewInventory()
+	p.inventory.AddItem(items.NewItemStack(DeathioApi.ItemWoodClub, 1))
+	p.inventory.AddItem(items.NewItemStack(DeathioApi.ItemIronTool, 3))
 	return p
 }
 

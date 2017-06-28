@@ -4,6 +4,7 @@ import (
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 //---- helper methods to convert points to pixels
@@ -44,6 +45,7 @@ func (p *player) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffse
 	DeathioApi.EntityAddEntityType(builder, uint16(e.Type()))
 
 	// player
+	// TODO
 	DeathioApi.EntityAddHand(builder, DeathioApi.ItemNone)
 	DeathioApi.EntityAddIsHit(builder, 0)
 	DeathioApi.EntityAddActionTick(builder, 0)
@@ -51,18 +53,19 @@ func (p *player) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffse
 	return DeathioApi.EntityEnd(builder)
 }
 
-func (i *itemStack) MarshalFlatbuf(builder *flatbuffers.Builder, slot uint8) flatbuffers.UOffsetT {
+func ItemStackMarshalFlatbuf(i *items.ItemStack, builder *flatbuffers.Builder, slot uint8) flatbuffers.UOffsetT {
 
-	return DeathioApi.CreateItemStack(builder, byte(i.item), i.count, slot)
+	return DeathioApi.CreateItemStack(builder, byte(i.Item), i.Count, slot)
 }
 
-func (i *inventory) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func InventoryMarshalFlatbuf(inventory items.Inventory, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	n := len(i.items)
+	inventoryItems := inventory.Items()
+	n := len(inventoryItems)
 
 	offsets := make([]flatbuffers.UOffsetT, n)
-	for idx, item := range i.items {
-		offsets = append(offsets, item.MarshalFlatbuf(builder, uint8(idx)))
+	for idx, item := range inventoryItems {
+		offsets = append(offsets, ItemStackMarshalFlatbuf(item, builder, uint8(idx)))
 	}
 
 	DeathioApi.GameStateStartInventoryVector(builder, n)
@@ -76,7 +79,7 @@ func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UO
 
 	entities := EntitiesFlatbufMarshal(gs.Entities, builder)
 	player := gs.Player.MarshalFlatbuf(builder)
-	inventory := gs.Player.inventory.MarshalFlatbuf(builder)
+	inventory := InventoryMarshalFlatbuf(gs.Player.inventory, builder)
 
 	DeathioApi.GameStateStart(builder)
 	DeathioApi.GameStateAddTick(builder, gs.Tick)
