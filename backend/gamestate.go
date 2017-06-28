@@ -62,15 +62,9 @@ func InventoryMarshalFlatbuf(inventory items.Inventory, builder *flatbuffers.Bui
 
 	inventoryItems := inventory.Items()
 	n := len(inventoryItems)
-
-	offsets := make([]flatbuffers.UOffsetT, n)
-	for idx, item := range inventoryItems {
-		offsets = append(offsets, ItemStackMarshalFlatbuf(item, builder, uint8(idx)))
-	}
-
 	DeathioApi.GameStateStartInventoryVector(builder, n)
-	for _, o := range offsets {
-		builder.PrependUOffsetT(o)
+	for idx, item := range inventoryItems {
+		ItemStackMarshalFlatbuf(item, builder, uint8(idx))
 	}
 	return builder.EndVector(n)
 }
