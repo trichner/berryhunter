@@ -13,14 +13,12 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 	};
 
 	Preloading.registerPreload = function (preloadingPromise) {
-		preloadingPromise.then(function (payload) {
+		preloadingPromise.then(function () {
 			loadedPromises++;
-			console.log('Loaded ' + loadedPromises + '/' + numberOfPromises + (payload ? ': ' + payload : ''));
 			if (loadingBar) {
 				loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
 				if (loadedPromises >= numberOfPromises) {
-					console.log('Finished loading.');
-					var loadingScreenElement = document.getElementById('loadingScreen');
+					let loadingScreenElement = document.getElementById('loadingScreen');
 					loadingScreenElement.classList.add('finished');
 					loadingScreenElement.addEventListener('animationend', function () {
 						this.parentNode.removeChild(loadingScreenElement);
@@ -76,11 +74,9 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 				case "interactive":
 				case "complete":
 					document.body.appendChild(Utils.htmlToElement(html));
-					console.log('Loaded ' + htmlUrl + ' directly.');
 					return Promise.resolve();
 				case "loading":
 					return new Promise(function (resolve) {
-						console.log('Wait for loaded DOM for ' + htmlUrl + '.');
 						document.addEventListener("DOMContentLoaded", function () {
 							document.body.appendChild(Utils.htmlToElement(html));
 							resolve();

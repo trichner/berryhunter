@@ -4,8 +4,6 @@
  * XieLongUtils have to be loaded so that the functions are available in global namespace.
  */
 define(['../vendor/XieLongUtils'], function () {
-	console.log('Utils loaded');
-
 	let Utils = {};
 
 	// Copy all methods from XieLongUtils into Utils

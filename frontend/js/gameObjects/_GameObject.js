@@ -119,14 +119,10 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 			function (gameObject) {
 				let elapsedTimePortion = (now - gameObject.desireTimestamp) / Constants.SERVER_TICKRATE;
 				if (elapsedTimePortion >= 1) {
-					// console.log('Last Interpolation length',
-					// gameObject.shape.translation.distanceTo(gameObject.desiredPosition));
 					gameObject.shape.translation.copy(gameObject.desiredPosition);
 					movementInterpolatedObjects.delete(gameObject);
 				} else {
-					// let prevPos = gameObject.shape.translation.clone();
 					gameObject.shape.translation.lerp(gameObject.desiredPosition, elapsedTimePortion);
-					// console.log('Interpolation length', prevPos.distanceTo(gameObject.shape.translation));
 				}
 			});
 	}

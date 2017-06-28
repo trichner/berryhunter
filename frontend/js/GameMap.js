@@ -31,9 +31,6 @@ define([
 			new Border(0, 0, 'WEST', this.height));
 
 		this.objects = GameMapGenerator.generate(this.width, this.height);
-
-		// console.info('Map is ' + this.width + ' x ' + this.height);
-		// console.log(this.objects.length + ' objects generated');
 	}
 
 	/**

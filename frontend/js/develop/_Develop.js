@@ -46,8 +46,6 @@ define([
 		setupDevelopPanel: function () {
 			Preloading.registerPartial('partials/developPanel.html')
 				.then(function () {
-					console.log('DevelopPanel DOM loaded');
-
 					this.setupToggleButtons();
 
 					this.setupItemAdding();

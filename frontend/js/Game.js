@@ -18,7 +18,6 @@ define([], function () {
 		'Player',
 		'GameObject'
 	], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject) {
-		console.log('Game.setup');
 
 		function createBackground() {
 			const background = new Two.Rectangle(Game.width / 2, Game.height / 2, Game.width, Game.height);

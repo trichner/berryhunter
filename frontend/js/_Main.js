@@ -23,17 +23,10 @@ requirejs.config({
 	}
 });
 
-console.log('Main.loading');
-
 define(['Utils', 'Preloading'], function (Utils, Preloading) {
-	console.log('Main loaded');
-
 	Preloading.loadPartial('partials/loadingScreen.html')
 		.then(function () {
 			Preloading.loadingBar = document.getElementById('loadingBar');
-			console.log('Loading Bar loaded');
-
-
 			Preloading._import(
 				// Graphics
 				'Two',
@@ -98,11 +91,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 				'Game'
 			);
 
-			Preloading.executePreload()
-				.then(() => {
-					console.log('Preloading done');
-					// setup();
-				});
+			Preloading.executePreload();
 		});
 
 

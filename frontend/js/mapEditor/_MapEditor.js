@@ -1,5 +1,4 @@
 "use strict";
-console.log('MapEditor.loading');
 
 define([
 	'Two',
@@ -13,9 +12,6 @@ define([
 	'Preloading',
 	'Quadrants'
 ], function (Two, Utils, Constants, Develop, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants) {
-	console.log('MapEditor.loaded');
-
-
 	const MapEditor = {
 		isActive: function () {
 			if (typeof this.active !== 'undefined') {
