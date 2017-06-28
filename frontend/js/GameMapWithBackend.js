@@ -107,7 +107,7 @@ define([
 					}
 				// Fallthrough
 				default:
-					gameObject = new gameObjectClasses[entity.object](entity.x, entity.y, entity.radius);
+					gameObject = new gameObjectClasses[entity.type](entity.x, entity.y, entity.radius);
 			}
 			if (entity.object !== 'Character') {
 				Game.miniMap.add(gameObject);
