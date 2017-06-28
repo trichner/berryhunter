@@ -15,8 +15,9 @@ define([], function () {
 		'SvgLoader',
 		'KeyEvents',
 		'PointerEvents',
-		'Player'
-	], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player) {
+		'Player',
+		'GameObject'
+	], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject) {
 		console.log('Game.setup');
 
 		function createBackground() {
@@ -61,6 +62,8 @@ define([], function () {
 		Game.groups.overlay = Game.two.makeGroup();
 
 		createBackground();
+
+		GameObject.setup();
 
 		// TODO if offline createPlayer
 		// player = new Character(1, width / 2, height / 2);
@@ -117,7 +120,6 @@ define([], function () {
 			Game.two.play();
 		};
 	});
-
 
 
 	Game.relativeWidth = function (value) {

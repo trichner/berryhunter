@@ -285,6 +285,10 @@ define([
 
 		logWebsocketStatus: function (text, status) {
 			let webSocketCell = document.getElementById('develop_webSocket');
+			// FIXME why? All DOM should be loaded if this code is run
+			if (webSocketCell === null){
+				return;
+			}
 			webSocketCell.textContent = text;
 			webSocketCell.classList.remove('neutral');
 			webSocketCell.classList.remove('good');
