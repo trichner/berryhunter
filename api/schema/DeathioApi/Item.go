@@ -8,6 +8,10 @@ const (
 	ItemStoneTool = 2
 	ItemBronzeTool = 3
 	ItemIronTool = 4
+	ItemWood = 5
+	ItemStone = 6
+	ItemBronze = 7
+	ItemBerry = 8
 )
 
 var EnumNamesItem = map[int]string{
@@ -16,5 +20,9 @@ var EnumNamesItem = map[int]string{
 	ItemStoneTool:"StoneTool",
 	ItemBronzeTool:"BronzeTool",
 	ItemIronTool:"IronTool",
+	ItemWood:"Wood",
+	ItemStone:"Stone",
+	ItemBronze:"Bronze",
+	ItemBerry:"Berry",
 }
 

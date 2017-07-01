@@ -35,10 +35,12 @@ func inf32f(sign int) float32 {
 func atan232f(y float32, x float32) float32 {
 	return float32(math.Atan2(float64(y), float64(x)))
 }
+
 // acos32f calculates the acos of a float32
 func sin32f(f float32) float32 {
 	return float32(math.Sin(float64(f)))
 }
+
 // acos32f calculates the acos of a float32
 func cos32f(f float32) float32 {
 	return float32(math.Cos(float64(f)))
@@ -124,9 +126,9 @@ func (v Vec2f) DistanceToSquared(w Vec2f) float32 {
 }
 
 func (v Vec2f) AngleBetween(w Vec2f) float32 {
-	atan2 := atan232f(v.Y - w.Y, v.X - w.X)
+	atan2 := atan232f(v.Y-w.Y, v.X-w.X)
 	if atan2 < 0 {
-		return float32(math.Pi) * 2 + atan2
+		return float32(math.Pi)*2 + atan2
 	}
 	return atan2
 }
@@ -143,10 +145,15 @@ type Mat2f struct {
 }
 
 // Mult multiplies the matrix with a vector and returns the resulting vector
-func (m *Mat2f) Mult(f Vec2f) Vec2f {
+func (m Mat2f) Mult(f Vec2f) Vec2f {
 	x := m.a*f.X + m.b*f.Y
 	y := m.c*f.X + m.d*f.Y
 	return Vec2f{x, y}
+}
+
+// String implements the Stringer interface
+func (m Mat2f) String() string {
+	return fmt.Sprintf("[%f,%f;%f,%f]", m.a, m.b, m.c, m.d)
 }
 
 //==== Vec2i
@@ -164,4 +171,14 @@ func (v Vec2i) Add(w Vec2i) Vec2i {
 // Sub subtracts the vector with another and returns the resulting vector
 func (v Vec2i) Sub(w Vec2i) Vec2i {
 	return Vec2i{v.X - w.X, v.Y - w.Y}
+}
+
+// NewRotMat2f create a new rotation matrix
+func NewRotMat2f(alpha float32) Mat2f {
+	c := cos32f(alpha)
+	s := sin32f(alpha)
+
+	return Mat2f{
+		c, -s, s, c,
+	}
 }

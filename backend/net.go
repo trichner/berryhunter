@@ -4,10 +4,11 @@ import (
 	"engo.io/ecs"
 	"log"
 	"github.com/google/flatbuffers/go"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 type NetSystem struct {
-	entities []Entity
+	entities []model.Entity
 	players  []*player
 	game     *Game
 }
@@ -25,7 +26,7 @@ func (n *NetSystem) New(w *ecs.World) {
 	log.Println("NetSystem nominal")
 }
 
-func (n *NetSystem) AddEntity(e Entity) {
+func (n *NetSystem) AddEntity(e model.Entity) {
 	n.entities = append(n.entities, e)
 }
 
@@ -41,13 +42,13 @@ func (n *NetSystem) Update(dt float32) {
 	gameState.Tick = n.game.tick
 	for _, player := range n.players {
 
-		var entites []Entity
+		var entites []model.Entity
 
 		// find all entities in view
 		for c := range player.viewport.Collisions() {
 			userData := c.Shape().UserData
 			if userData != nil {
-				entites = append(entites, userData.(Entity))
+				entites = append(entites, userData.(model.Entity))
 			}
 		}
 

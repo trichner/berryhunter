@@ -139,11 +139,23 @@ const walkSpeed = 0.1
 // applies the inputs to a player
 func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 
+	for v := range p.hand.Collisions() {
+		fmt.Printf("HIT!!!! Action on: %+v\n", v.Shape().UserData)
+		r, ok := v.Shape().UserData.(Interacter)
+		if !ok {
+			continue
+		}
+		r.PlayerHitsWith(p, p.handItem)
+	}
+
+	// reset
+	p.hand.Shape().Layer = 0
+
 	if inputs == nil {
 		return
 	}
 
-	p.angle = inputs.rotation
+	p.SetAngle(inputs.rotation)
 
 	// do we even have inputs?
 	if inputs.movement != nil {
@@ -156,13 +168,12 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 
 	// process actions if available
 	if inputs.action != nil {
-		//a := inputs.action
-		for _, v := range p.collisions {
-			fmt.Printf("Action on: %+v\n", v)
-		}
-	} else {
-		//p.body.CallbackHandler = nil
+		p.hand.Shape().Layer = -1
+		log.Printf("Action going on.")
+		log.Printf("Player: %s", p.Position())
+		log.Printf("Hand: %s", p.hand.Position())
 	}
+
 }
 
 func input2vec(i *InputDTO) phy.Vec2f {

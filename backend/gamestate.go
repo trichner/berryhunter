@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/google/flatbuffers/go"
-	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"github.com/trichner/berryhunter/backend/items"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 //---- helper methods to convert points to pixels
@@ -18,12 +18,7 @@ func f32ToU16Px(f float32) uint16 {
 	return uint16(f * points2px)
 }
 
-// AABB is an alias to not expose transitive dependencies
-type AABB phy.AABB
-
-// MarshalFlatbuf implements FlatbufCodec for AABBs
-func (aabb AABB) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
+func AabbMarshalFlatbuf(aabb model.AABB, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return DeathioApi.CreateAABB(builder, f32ToPx(aabb.Left), f32ToPx(aabb.Bottom), f32ToPx(aabb.Right), f32ToPx(aabb.Upper))
 }
 
@@ -37,7 +32,7 @@ func (p *player) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffse
 	pos := DeathioApi.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
 	DeathioApi.EntityAddPos(builder, pos)
 
-	aabb := e.AABB().MarshalFlatbuf(builder)
+	aabb := AabbMarshalFlatbuf(e.AABB(), builder)
 	DeathioApi.EntityAddAabb(builder, aabb)
 
 	DeathioApi.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
@@ -85,7 +80,7 @@ func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UO
 }
 
 // EntitiesFlatbufMarshal marshals a list of Entity interfaces
-func EntitiesFlatbufMarshal(entities []Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func EntitiesFlatbufMarshal(entities []model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	n := len(entities)
 
@@ -103,7 +98,7 @@ func EntitiesFlatbufMarshal(entities []Entity, builder *flatbuffers.Builder) fla
 
 // EntityFlatbufMarshal marshals an Entity interface to its corresponding
 // flatbuffer schema
-func EntityFlatbufMarshal(e Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func EntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	DeathioApi.EntityStart(builder)
 	DeathioApi.EntityAddId(builder, e.ID())
@@ -111,7 +106,7 @@ func EntityFlatbufMarshal(e Entity, builder *flatbuffers.Builder) flatbuffers.UO
 	pos := DeathioApi.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
 	DeathioApi.EntityAddPos(builder, pos)
 
-	aabb := e.AABB().MarshalFlatbuf(builder)
+	aabb := AabbMarshalFlatbuf(e.AABB(), builder)
 	DeathioApi.EntityAddAabb(builder, aabb)
 
 	DeathioApi.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
@@ -125,5 +120,5 @@ func EntityFlatbufMarshal(e Entity, builder *flatbuffers.Builder) flatbuffers.UO
 type GameState struct {
 	Tick      uint64
 	Player    *player
-	Entities  []Entity
+	Entities  []model.Entity
 }

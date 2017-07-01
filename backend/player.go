@@ -5,18 +5,21 @@ import (
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 //---- player
 type player struct {
 	*entity
 	angle  float32
-	collisionTracker
 	Health uint
 	Hunger uint
 	client *net.Client
 
 	viewport *phy.Box
+
+	hand     *phy.Circle
+	handItem items.Item
 
 	inventory items.Inventory
 
@@ -32,47 +35,60 @@ func (p *player) Position() phy.Vec2f {
 func (p *player) SetPosition(v phy.Vec2f) {
 	p.body.SetPosition(v)
 	p.viewport.SetPosition(v)
+	p.updateHand()
+}
+
+func (p *player) SetAngle(a float32) {
+	p.angle = a
+	p.updateHand()
 }
 
 func NewPlayer(c *net.Client) *player {
 	e := newCircleEntity(0.25)
 
-
-	e.body.Shape().UserData = e
-
 	e.entityType = DeathioApi.EntityTypeCharacter
 	p := &player{entity: e, client: c}
+
+	// setup body
 	shapeGroup := int(p.ID())
 	p.body.Shape().UserData = p
 	p.body.Shape().Group = shapeGroup
+	p.body.Shape().Layer = model.LayerStaticCollision
 
+	// setup viewport
 	p.viewport = phy.NewBox(e.body.Position(), phy.Vec2f{viewPortWidth / 2, viewPortHeight / 2})
 
 	p.viewport.Shape().IsSensor = true
-	p.viewport.Shape().Layer = -1
+	p.viewport.Shape().Layer = model.LayerAllCollision
 	p.viewport.Shape().Group = shapeGroup
 
+	// setup inventory
 	p.inventory = items.NewInventory()
 	p.inventory.AddItem(items.NewItemStack(DeathioApi.ItemWoodClub, 1))
 	p.inventory.AddItem(items.NewItemStack(DeathioApi.ItemIronTool, 3))
+
+	// setup hand sensor
+	p.hand = phy.NewCircle(e.body.Position(), 0.25)
+	p.hand.Shape().IsSensor = true
+	p.hand.Shape().Group = shapeGroup
+	p.hand.Shape().Layer = 0 //TODO
+
+	p.updateHand()
+
 	return p
 }
 
-type collisionTracker struct {
-	collisions map[uint64]Entity
+func (p *player) startAction(tool items.Item) {
+	p.handItem = tool
+	p.hand.Shape().Layer = model.LayerRessourceCollision
 }
 
-func newCollisionTracker() collisionTracker {
-	c := collisionTracker{}
-	c.collisions = make(map[uint64]Entity)
-	return c
-}
+var handOffset = phy.Vec2f{0.25, 0}
 
-func (c *collisionTracker) CollisionEnter(self Entity, other Entity) bool {
-	c.collisions[other.ID()] = other
-	return true
-}
+func (p *player) updateHand() {
 
-func (c *collisionTracker) CollisionExit(self Entity, other Entity) {
-	delete(c.collisions, other.ID())
+	// could cache rotation matrix/ handOffset
+	relativeOffset := phy.NewRotMat2f(p.angle).Mult(handOffset)
+	handPos := p.Position().Add(relativeOffset)
+	p.hand.SetPosition(handPos)
 }

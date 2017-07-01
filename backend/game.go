@@ -78,7 +78,7 @@ func (g *Game) Run() {
 	go http.ListenAndServe(addr, nil)
 }
 
-func (g *Game) addEntity(e *entity) {
+func (g *Game) AddResourceEntity(e *resourceEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
 

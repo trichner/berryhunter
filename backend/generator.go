@@ -2,9 +2,10 @@ package main
 
 import (
 	"math/rand"
-	"github.com/vova616/chipmunk"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 const gridSize = 100
@@ -29,7 +30,7 @@ func populate(g *Game, rnd *rand.Rand) {
 			ey := chunkSize*float32(y) + dy
 			ev := phy.Vec2f{ex, ey}
 			e := NewRandomEntityFrom(ev, entities, crnd)
-			g.addEntity(e)
+			g.AddResourceEntity(e)
 		}
 	}
 
@@ -47,13 +48,15 @@ var trees = []staticEntityBody{
 		DeathioApi.EntityTypeRoundTree,
 		100,
 		1,
-		staticCollisionLayer | ressourceCollisionLayer,
+		model.LayerStaticCollision | model.LayerRessourceCollision,
+		DeathioApi.ItemWood,
 	},
 	{
 		DeathioApi.EntityTypeMarioTree,
 		100,
 		1,
-		staticCollisionLayer | ressourceCollisionLayer,
+		model.LayerStaticCollision | model.LayerRessourceCollision,
+		DeathioApi.ItemWood,
 	},
 }
 
@@ -62,25 +65,30 @@ var resources = []staticEntityBody{
 		DeathioApi.EntityTypeBerryBush,
 		100,
 		0.5,
-		noneCollisionLayer | ressourceCollisionLayer,
+		model.LayerRessourceCollision,
+		DeathioApi.ItemBerry,
 	},
 	{
 		DeathioApi.EntityTypeStone,
 		100,
 		0.5,
-		staticCollisionLayer | ressourceCollisionLayer,
+		model.LayerStaticCollision | model.LayerRessourceCollision,
+		DeathioApi.ItemStone,
 	},
 	{
 		DeathioApi.EntityTypeBronze,
 		100,
 		0.5,
-		staticCollisionLayer | ressourceCollisionLayer,
+		model.LayerStaticCollision | model.LayerRessourceCollision,
+		DeathioApi.ItemBronze,
 	},
 }
 
 type staticEntityBody struct {
-	entityType     EntityType
+	entityType     model.EntityType
 	weight         int
 	radius         float32
-	collisionLayer chipmunk.Layer
+	collisionLayer int
+
+	ressource items.Item
 }

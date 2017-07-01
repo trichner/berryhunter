@@ -7,15 +7,6 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 )
 
-const (
-	noneCollisionLayer      = 0
-	allCollisionLayer       = -1
-	staticCollisionLayer    = 0x1 << 0
-	actionCollisionLayer    = 0x1 << 1
-	weaponCollisionLayer    = 0x1 << 2
-	ressourceCollisionLayer = 0x1 << 3
-)
-
 func DumpBodies(s *chipmunk.Space) {
 	fmt.Printf("x, y, w, h\n")
 	for _, b := range s.Bodies {
@@ -82,10 +73,11 @@ func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e phy.DynamicCollider) {
 }
 
 func (p *PhysicsSystem) AddPlayer(pl *player) {
-	pe := newDyamicPhysicsEntity(&pl.BasicEntity, pl.body, pl.viewport)
+	pe := newDyamicPhysicsEntity(&pl.BasicEntity, pl.body, pl.viewport, pl.hand)
 	p.entities = append(p.entities, pe)
-	p.game.space.AddShape(pe.dynamics[0])
-	p.game.space.AddShape(pe.dynamics[1])
+	for _, s := range pe.dynamics {
+		p.game.space.AddShape(s)
+	}
 }
 
 func (p *PhysicsSystem) Update(dt float32) {

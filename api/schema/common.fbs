@@ -16,6 +16,11 @@ enum Item: ubyte {
 	WoodClub,
 	StoneTool,
 	BronzeTool,
-	IronTool
+	IronTool,
+
+	Wood,
+	Stone,
+	Bronze,
+	Berry,
 }
 

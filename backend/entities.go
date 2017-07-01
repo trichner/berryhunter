@@ -5,30 +5,18 @@ import (
 	"math/rand"
 	"github.com/trichner/berryhunter/backend/wrand"
 	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
-type EntityType uint16
-
-//---- basic interface with getters
-type Entity interface {
-	ID() uint64
-	X() float32
-	Y() float32
-	Angle() float32
-	Radius() float32
-	Type() EntityType
-	AABB() AABB
-}
 
 //
 type debugCircleShapeEntity struct {
 	ecs.BasicEntity
 	circle     *phy.Circle
-	entityType EntityType
+	entityType model.EntityType
 }
 
-func (e *debugCircleShapeEntity) Type() EntityType {
+func (e *debugCircleShapeEntity) Type() model.EntityType {
 	return e.entityType
 }
 
@@ -40,8 +28,8 @@ func (e *debugCircleShapeEntity) Y() float32 {
 	return e.circle.Position().Y
 }
 
-func (e *debugCircleShapeEntity) AABB() AABB {
-	return AABB(e.circle.BoundingBox())
+func (e *debugCircleShapeEntity) AABB() model.AABB {
+	return model.AABB(e.circle.BoundingBox())
 }
 
 func (e *debugCircleShapeEntity) Angle() float32 {
@@ -56,10 +44,10 @@ func (e *debugCircleShapeEntity) Radius() float32 {
 type entity struct {
 	ecs.BasicEntity
 	body       *phy.Circle
-	entityType EntityType
+	entityType model.EntityType
 }
 
-func (e *entity) Type() EntityType {
+func (e *entity) Type() model.EntityType {
 	return e.entityType
 }
 
@@ -75,8 +63,8 @@ func (e *entity) Y() float32 {
 	return e.body.Position().Y
 }
 
-func (e *entity) AABB() AABB {
-	return AABB(e.body.BoundingBox())
+func (e *entity) AABB() model.AABB {
+	return model.AABB(e.body.BoundingBox())
 }
 
 func (e *entity) Angle() float32 {
@@ -87,7 +75,12 @@ func (e *entity) Radius() float32 {
 	return e.body.Radius
 }
 
-func NewRandomEntityFrom(p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) *entity {
+type resourceEntity struct {
+	entity
+	resource
+}
+
+func NewRandomEntityFrom(p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) *resourceEntity {
 	choices := []wrand.Choice{}
 	for _, b := range bodies {
 		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: b})
@@ -98,31 +91,13 @@ func NewRandomEntityFrom(p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand)
 	return NewStaticEntityWithBody(p, &selected)
 }
 
-func NewStaticEntityWithBody(p phy.Vec2f, body *staticEntityBody) *entity {
-	e := newStaticCircleEntity(p, body.radius)
-	e.entityType = body.entityType
-	e.body.Shape().UserData = e
-	return e
-}
-
-
-
-//---- DTO
-type MessageDTO struct {
-	Type string      `json:"type"`
-	Data interface{} `json:"body"`
-}
-
-const dist2px = 120.0
-
-func newDebugEntity(shape *phy.Circle) Entity {
-	return &debugCircleShapeEntity{
-		BasicEntity: ecs.NewBasic(),
-		circle:      shape,
-		entityType:  DeathioApi.EntityTypeDebugCircle,
-	}
-}
-
-type floatwrapper struct {
-	f float32
+func NewStaticEntityWithBody(p phy.Vec2f, body *staticEntityBody) *resourceEntity {
+	r := &resourceEntity{}
+	r.entity = entity{BasicEntity: ecs.NewBasic()}
+	newStaticCircleEntity(&r.entity, p, body.radius)
+	r.entityType = body.entityType
+	r.resource.resource = body.ressource
+	r.body.Shape().UserData = r
+	r.body.Shape().Layer = body.collisionLayer
+	return r
 }

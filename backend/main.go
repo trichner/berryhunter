@@ -7,6 +7,7 @@ import (
 	"time"
 	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 func main() {
@@ -42,7 +43,7 @@ func readConf() *conf.Config {
 
 const staticBodyGroup = 0x01
 
-var walls []Entity = make([]Entity, 0)
+var walls []model.Entity = make([]model.Entity, 0)
 
 func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 
@@ -93,15 +94,17 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 //	return s
 //}
 
-func newStaticCircleEntity(p phy.Vec2f, r float32) *entity {
+func newStaticCircleEntity(e *entity, p phy.Vec2f, r float32) *entity {
 
 	// Create a ball
-	aEntity := &entity{BasicEntity: ecs.NewBasic()}
+	if e == nil {
+		e = &entity{BasicEntity: ecs.NewBasic()}
+	}
 
 	ball := phy.NewCircle(p, r)
-	ball.Shape().UserData = aEntity
-	aEntity.body = ball
-	return aEntity
+	ball.Shape().UserData = e
+	e.body = ball
+	return e
 }
 
 func newCircleEntity(r float32) *entity {

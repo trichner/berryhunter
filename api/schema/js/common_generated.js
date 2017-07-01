@@ -14,7 +14,11 @@ DeathioApi.Item = {
   WoodClub: 1,
   StoneTool: 2,
   BronzeTool: 3,
-  IronTool: 4
+  IronTool: 4,
+  Wood: 5,
+  Stone: 6,
+  Bronze: 7,
+  Berry: 8
 };
 
 /**
