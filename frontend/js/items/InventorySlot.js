@@ -60,6 +60,11 @@ define([
 		}
 
 		setItem(item, count) {
+			if (this.item === item && this.count === count){
+				// Nothing to do
+				return;
+			}
+
 			count = count || 1;
 			this.item = item;
 			this.clickableIcon.setIconGraphic(item.icon.svg);
@@ -90,6 +95,11 @@ define([
 		}
 
 		dropItem() {
+			if (!this.isFilled()){
+				// Nothing to do
+				return;
+			}
+
 			this.clickableIcon.removeIconGraphic();
 			this.clickableIcon.setClickable(false);
 

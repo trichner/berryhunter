@@ -207,9 +207,25 @@ define([
 			this.logValue('serverTick', gameState.tick);
 			this.logSampledValue('serverTickRate', this.logs.serverTickRate, timeSinceLast, 'ms');
 			if (this.showNextGameState) {
-				document.getElementById('serverTickOutput').textContent = JSON.stringify(gameState, null, 2);
+				document.getElementById('serverTickOutput').textContent = JSON.stringify(gameState, this.serverTickReplacer, 2);
 				this.showNextGameState = false;
 			}
+		},
+		
+		serverTickReplacer: function (key, value) {
+			switch (key){
+				case 'item':
+					return value.name;
+				case 'x':
+				case 'y':
+				case 'LowerX':
+				case 'LowerY':
+				case 'UpperX':
+				case 'UpperY':
+					return Math.round(value * 100) / 100
+			}
+
+			return value;
 		},
 
 		logClientTick: function (inputObj) {

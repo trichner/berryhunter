@@ -191,5 +191,30 @@ define(['../vendor/XieLongUtils'], function () {
 		return true;
 	};
 
+	/**
+	 *
+	 * @param {number} a
+	 * @param {number} b
+	 * @param {number} epsilon - relative acceptable difference
+	 * @returns {boolean}
+	 */
+	Utils.nearlyEqual = function (a, b, epsilon) {
+		epsilon = epsilon || 0.00001;
+
+		let absA = Math.abs(a);
+		let absB = Math.abs(b);
+		let diff = Math.abs(a - b);
+
+		if (a == b) { // shortcut, handles infinities
+			return true;
+		} else if (a == 0 || b == 0 || diff < Number.EPSILON) {
+			// a or b is zero or both are extremely close to it
+			// relative error is less meaningful here
+			return diff < (epsilon * Number.EPSILON);
+		} else { // use relative error
+			return diff / (absA + absB) < epsilon;
+		}
+	};
+
 	return Utils;
 });

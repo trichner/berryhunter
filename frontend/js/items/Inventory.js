@@ -47,11 +47,16 @@ define([
 			let super_setPosition = character.setPosition;
 			let self = this;
 			character.setPosition = function (x, y) {
-				super_setPosition.call(this, x, y);
+				if (!super_setPosition.call(this, x, y)) {
+					return false;
+				}
+
 				if (self.craftableRecipes.length > 0) {
 					self.availableCrafts = RecipesHelper.checkNearbys(self.craftableRecipes);
 					Crafting.displayAvailableCrafts(self.availableCrafts);
 				}
+
+				return true;
 			}.bind(character);
 		}
 
@@ -134,18 +139,26 @@ define([
 		 * @param {[{item: Item, count: number}]} itemStacks
 		 */
 		updateFromBackend(itemStacks) {
-			if (this.slots.length !== itemStacks.length) {
-				throw 'Client and server inventory to not match in length! ' +
-				'(Client: ' + this.slots.length + ' vs Server: ' + itemStacks.length + ')';
-			}
+			// FIXME wenn der Server die richtige Inventargröße schickt
+			// if (this.slots.length !== itemStacks.length) {
+			// 	throw 'Client and server inventory to not match in length! ' +
+			// 	'(Client: ' + this.slots.length + ' vs Server: ' + itemStacks.length + ')';
+			// }
 
 			for (let i = 0; i < this.slots.length; ++i) {
+				// FIXME wenn der Server die richtige Inventargröße schickt
+				if (i >= itemStacks.length) {
+					break;
+				}
+
 				if (itemStacks[i] === null) {
 					this.slots[i].dropItem();
 				} else {
 					this.slots[i].setItem(itemStacks[i].item, itemStacks[i].count);
 				}
 			}
+
+			this.onChange();
 		}
 	}
 

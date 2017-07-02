@@ -81,12 +81,12 @@ define([
 		},
 
 		sendInputTick: function (inputObj) {
-			if (Utils.isUndefined(this.lastServerTick)) {
+			if (Utils.isUndefined(this.lastSnapshot)) {
 				// If the backend hasn't send a snapshot yet, don't send any input.
 				return;
 			}
 
-			inputObj.tick = this.lastServerTick + 1;
+			inputObj.tick = this.lastSnapshot.tick + 1;
 
 			if (Develop.isActive()) {
 				Develop.logClientTick(inputObj);
@@ -96,12 +96,15 @@ define([
 			this.send(this.marshalInput(inputObj));
 		},
 
-		receive: function (event) {
-			if (!Game.two.playing && Game.started) {
+		receive: function (message) {
+			if (Game.two.playing === false &&
+				Game.started &&
+				Develop.showNextGameState === false) {
+				// Reject message
 				return;
 			}
 
-			if (!event.data) {
+			if (!message.data) {
 				if (Develop.isActive()) {
 					Develop.logWebsocketStatus('Receiving empty messages', 'bad');
 				}
@@ -111,9 +114,9 @@ define([
 
 			let data, buffer, gameState;
 			try {
-				data = new Uint8Array(event.data);
+				data = new Uint8Array(message.data);
 			} catch (e) {
-				console.error("Error converting event.data to Uint8Array.", event.data, e);
+				console.error("Error converting message.data to Uint8Array.", message.data, e);
 				return;
 			}
 
@@ -156,8 +159,6 @@ define([
 		 * @param {{tick: number, player: {}, entities: Array}} snapshot
 		 */
 		receiveSnapshot: function (snapshot) {
-			this.lastServerTick = snapshot.tick;
-
 			Game.map.newSnapshot();
 
 			if (Game.started) {
@@ -173,7 +174,40 @@ define([
 				Game.map.addOrUpdate(entity);
 			});
 
-			Game.inventory.updateFromBackend(snapshot.inventory);
+			// FIXME Abfrage entfernen, wenn der Server tatsächlich Changesets schickt
+			if (Utils.isUndefined(this.lastSnapshot) ||
+				this.isInventoryDifferent(this.lastSnapshot.inventory, snapshot.inventory)) {
+				Game.player.inventory.updateFromBackend(snapshot.inventory);
+			}
+
+			this.lastSnapshot = snapshot;
+		},
+
+		/**
+		 *
+		 * @param lastInventory
+		 * @param inventory
+		 */
+		isInventoryDifferent(lastInventory, inventory){
+			if (!Utils.arraysEqual(lastInventory, inventory)) {
+				return true;
+			}
+
+			for (let i = 0; i < inventory.length; i++) {
+				let lastItemStack = lastInventory[i];
+				let itemStack = inventory[i];
+				if (lastItemStack.item !== itemStack.item) {
+					return true;
+				}
+				if (lastItemStack.count !== itemStack.count) {
+					return true;
+				}
+				if (lastItemStack.slot !== itemStack.slot) {
+					return true;
+				}
+			}
+
+			return false;
 		},
 
 		/**

@@ -40,10 +40,10 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 		}
 
 		setPosition(x, y) {
-			if (Utils.isDefined(this.desiredPosition) &&
-				this.desiredPosition.x > (x - 0.2) && this.desiredPosition.x < (x + 0.2) &&
-				this.desiredPosition.y > (y - 0.2) && this.desiredPosition.y < (y + 0.2)) {
-				return;
+			if (Utils.isDefined(this.desiredPosition) && //
+				Utils.nearlyEqual(this.desiredPosition.x, x, 0.01) && //
+				Utils.nearlyEqual(this.desiredPosition.y, y, 0.01)) {
+				return false;
 			}
 
 			if (this.rotateOnPositioning) {
@@ -57,6 +57,8 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 			} else {
 				this.shape.translation.set(x, y);
 			}
+
+			return true;
 		}
 
 		movePosition(deltaX, deltaY) {
