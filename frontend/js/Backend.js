@@ -172,6 +172,8 @@ define([
 			snapshot.entities.forEach(function (entity) {
 				Game.map.addOrUpdate(entity);
 			});
+
+			Game.inventory.updateFromBackend(snapshot.inventory);
 		},
 
 		/**

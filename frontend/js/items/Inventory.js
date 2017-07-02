@@ -127,6 +127,26 @@ define([
 			this.availableCrafts = RecipesHelper.checkNearbys(this.craftableRecipes);
 			Crafting.displayAvailableCrafts(this.availableCrafts);
 		}
+
+		/**
+		 * Replaces the current inventory contents with whatever is reported from backend.
+		 *
+		 * @param {[{item: Item, count: number}]} itemStacks
+		 */
+		updateFromBackend(itemStacks) {
+			if (this.slots.length !== itemStacks.length) {
+				throw 'Client and server inventory to not match in length! ' +
+				'(Client: ' + this.slots.length + ' vs Server: ' + itemStacks.length + ')';
+			}
+
+			for (let i = 0; i < this.slots.length; ++i) {
+				if (itemStacks[i] === null) {
+					this.slots[i].dropItem();
+				} else {
+					this.slots[i].setItem(itemStacks[i].item, itemStacks[i].count);
+				}
+			}
+		}
 	}
 
 	return Inventory;
