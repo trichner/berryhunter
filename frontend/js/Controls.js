@@ -9,7 +9,7 @@ define([
 	'MapEditor',
 	'items/Equipment',
 	'gameObjects/Placeable',
-	'Backend',
+	'backend/Backend',
 	'Utils',
 	'../vendor/tock'
 ], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Utils, Tock) {

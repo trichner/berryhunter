@@ -6,11 +6,12 @@ define([
 	'Constants',
 	'Develop',
 	'items/Items',
+	'backend/SnapshotFactory',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client'
-], function (Game, Utils, Constants, Develop, Items) {
+], function (Game, Utils, Constants, Develop, Items, SnapshotFactory) {
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
 		setup: function () {
@@ -81,12 +82,12 @@ define([
 		},
 
 		sendInputTick: function (inputObj) {
-			if (Utils.isUndefined(this.lastSnapshot)) {
+			if (SnapshotFactory.hasSnapshot()) {
 				// If the backend hasn't send a snapshot yet, don't send any input.
 				return;
 			}
 
-			inputObj.tick = this.lastSnapshot.tick + 1;
+			inputObj.tick = SnapshotFactory.getLastSnapshot().tick + 1;
 
 			if (Develop.isActive()) {
 				Develop.logClientTick(inputObj);
@@ -151,7 +152,7 @@ define([
 				this.lastMessageReceivedTime = messageReceivedTime;
 				Develop.logServerTick(gameState, timeSinceLastMessage);
 			}
-			this.receiveSnapshot(gameState);
+			this.receiveSnapshot(SnapshotFactory.newSnapshot(gameState));
 		},
 
 		/**
@@ -162,7 +163,9 @@ define([
 			Game.map.newSnapshot();
 
 			if (Game.started) {
-				Game.player.character.setPosition(snapshot.player.x, snapshot.player.y);
+				if (Utils.isDefined(snapshot.player)) {
+					Game.player.character.setPosition(snapshot.player.x, snapshot.player.y);
+				}
 			} else {
 				Game.createPlayer(snapshot.player.id, snapshot.player.x, snapshot.player.y);
 			}
@@ -175,39 +178,9 @@ define([
 			});
 
 			// FIXME Abfrage entfernen, wenn der Server tatsächlich Changesets schickt
-			if (Utils.isUndefined(this.lastSnapshot) ||
-				this.isInventoryDifferent(this.lastSnapshot.inventory, snapshot.inventory)) {
+			if (Utils.isDefined(snapshot.inventory)) {
 				Game.player.inventory.updateFromBackend(snapshot.inventory);
 			}
-
-			this.lastSnapshot = snapshot;
-		},
-
-		/**
-		 *
-		 * @param lastInventory
-		 * @param inventory
-		 */
-		isInventoryDifferent(lastInventory, inventory){
-			if (!Utils.arraysEqual(lastInventory, inventory)) {
-				return true;
-			}
-
-			for (let i = 0; i < inventory.length; i++) {
-				let lastItemStack = lastInventory[i];
-				let itemStack = inventory[i];
-				if (lastItemStack.item !== itemStack.item) {
-					return true;
-				}
-				if (lastItemStack.count !== itemStack.count) {
-					return true;
-				}
-				if (lastItemStack.slot !== itemStack.slot) {
-					return true;
-				}
-			}
-
-			return false;
 		},
 
 		/**
@@ -237,25 +210,6 @@ define([
 		},
 
 		/**
-		 *
-		 * @param {DeathioApi.ItemStack} itemStack
-		 */
-		unmarshalItemStack(itemStack){
-			return {
-				item: this.unmarshalItem(itemStack.item()),
-				count: itemStack.count(),
-				slot: itemStack.slot()
-			};
-		},
-
-		/**
-		 * @param {DeathioApi.Item} item
-		 */
-		unmarshalItem(item){
-			return this.itemLookupTable[item];
-		},
-
-		/**
 		 * @param {DeathioApi.Entity} entity
 		 */
 		unmarshalEntity(entity){
@@ -281,6 +235,25 @@ define([
 				UpperX: aabb.upper().x(),
 				UpperY: aabb.upper().y(),
 			}
+		},
+
+		/**
+		 *
+		 * @param {DeathioApi.ItemStack} itemStack
+		 */
+		unmarshalItemStack(itemStack){
+			return {
+				item: this.unmarshalItem(itemStack.item()),
+				count: itemStack.count(),
+				slot: itemStack.slot()
+			};
+		},
+
+		/**
+		 * @param {DeathioApi.Item} item
+		 */
+		unmarshalItem(item){
+			return this.itemLookupTable[item];
 		},
 
 		marshalInput: function (inputObj) {

@@ -46,7 +46,8 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 
 				// Game Modules
 				'SvgLoader',
-				'Backend',
+				'backend/Backend',
+				'backend/SnapshotFactory',
 				'KeyEvents',
 				'PointerEvents',
 				'Controls',
