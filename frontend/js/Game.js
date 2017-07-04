@@ -8,7 +8,7 @@ define([], function () {
 	require([
 		'Two',
 		'MapEditor',
-		'Backend',
+		'backend/Backend',
 		'Develop',
 		'GameMapWithBackend',
 		'MiniMap',
