@@ -62,6 +62,9 @@ svg .clickable text {
   -webkit-flex: 1;
   flex: 1;
 }
+.hidden {
+  display: none;
+}
 body {
   font-family: 'Roboto', sans-serif;
 }
@@ -203,9 +206,6 @@ dl.flatList > dd {
   max-width: 40em;
   background-color: white;
 }
-#serverTickPopup.hidden {
-  display: none;
-}
 #serverTickPopup h2 {
   margin: 0;
 }
@@ -281,4 +281,56 @@ dl.flatList > dd {
 }
 .finished > #loadingBar {
   opacity: 0;
+}
+#gameUI {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+#gameUI * {
+  box-sizing: border-box;
+}
+#minimap {
+  width: 15%;
+  padding-bottom: 15%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: Cornsilk;
+  border: 10px solid Cornsilk;
+}
+#inventory {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+#inventory > .inventorySlot {
+  border-radius: 10%;
+  width: 7vh;
+  height: 7vh;
+  color: white;
+  font-size: 1.75vh;
+  padding: 0.7vh;
+  margin: 0.7vh;
+  display: inline-block;
+  position: relative;
+}
+#inventory > .inventorySlot.empty {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+#inventory > .inventorySlot.filled {
+  background-color: rgba(64, 64, 64, 0.6);
+}
+#inventory > .inventorySlot.active {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+#inventory > .inventorySlot > .count {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
