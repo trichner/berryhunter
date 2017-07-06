@@ -1,8 +1,14 @@
 package items
 
+import "github.com/trichner/berryhunter/api/schema/DeathioApi"
+
 const DEFAULT_INVENTORY_CAP = 8
 
-type Item uint8
+type ItemEnum int
+
+func (i ItemEnum) String() string {
+	return DeathioApi.EnumNamesItem[int(i)]
+}
 
 type Inventory struct {
 	items []*ItemStack
@@ -17,11 +23,11 @@ func NewInventory() Inventory {
 }
 
 type ItemStack struct {
-	Item  Item
+	Item  ItemEnum
 	Count uint32
 }
 
-func NewItemStack(item Item, count uint32) *ItemStack {
+func NewItemStack(item ItemEnum, count uint32) *ItemStack {
 	return &ItemStack{
 		Item:  item,
 		Count: count,
@@ -119,7 +125,7 @@ func (i *Inventory) ConsumeItem(stack *ItemStack) bool {
 	return hasConsumed
 }
 
-func (i *Inventory) iterateItems(itemType Item, p itemStackPredicate) {
+func (i *Inventory) iterateItems(itemType ItemEnum, p itemStackPredicate) {
 	for idx, stack := range i.items {
 		if stack.Item == itemType {
 			if !p(idx) {

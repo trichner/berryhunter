@@ -18,7 +18,8 @@ DeathioApi.Item = {
   Wood: 5,
   Stone: 6,
   Bronze: 7,
-  Berry: 8
+  Berry: 8,
+  FirePlace: 9
 };
 
 /**

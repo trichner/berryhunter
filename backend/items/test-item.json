@@ -1,0 +1,25 @@
+{
+  "//": "The resulting itemStack",
+  "item": "IronTool",
+  "//": "Materials that will be consumed",
+  "materials": [
+    {
+      "item": "StoneTool",
+      "count": 1
+    },
+    {
+      "item": "Wood",
+      "count": 20
+    },
+    {
+      "item": "Stone",
+      "count": 10
+    }
+  ],
+  "//": "Tools required to craft this item.",
+  "tools": [
+    {
+      "entityType": "FirePlace"
+    }
+  ]
+}

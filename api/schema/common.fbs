@@ -22,5 +22,7 @@ enum Item: ubyte {
 	Stone,
 	Bronze,
 	Berry,
+
+	FirePlace,
 }
 
