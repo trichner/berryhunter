@@ -2,8 +2,17 @@ include "common.fbs";
 
 namespace DeathioApi;
 
+enum ActionType: ubyte {
+    Hit = 0,
+    Equip,
+    Craft,
+    Consume,
+    Drop
+}
+
 table Action {
 	item:Item;
+	actionType:ActionType = Hit;
 }
 
 table Input {

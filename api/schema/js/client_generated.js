@@ -7,6 +7,17 @@
 var DeathioApi = DeathioApi || {};
 
 /**
+ * @enum
+ */
+DeathioApi.ActionType = {
+  Hit: 0,
+  Equip: 1,
+  Craft: 2,
+  Consume: 3,
+  Drop: 4
+};
+
+/**
  * @constructor
  */
 DeathioApi.Action = function() {
@@ -50,10 +61,18 @@ DeathioApi.Action.prototype.item = function() {
 };
 
 /**
+ * @returns {DeathioApi.ActionType}
+ */
+DeathioApi.Action.prototype.actionType = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? /** @type {DeathioApi.ActionType} */ (this.bb.readUint8(this.bb_pos + offset)) : DeathioApi.ActionType.Hit;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 DeathioApi.Action.startAction = function(builder) {
-  builder.startObject(1);
+  builder.startObject(2);
 };
 
 /**
@@ -62,6 +81,14 @@ DeathioApi.Action.startAction = function(builder) {
  */
 DeathioApi.Action.addItem = function(builder, item) {
   builder.addFieldInt8(0, item, DeathioApi.Item.None);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {DeathioApi.ActionType} actionType
+ */
+DeathioApi.Action.addActionType = function(builder, actionType) {
+  builder.addFieldInt8(1, actionType, DeathioApi.ActionType.Hit);
 };
 
 /**
