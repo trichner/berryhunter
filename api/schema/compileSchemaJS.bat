@@ -1,0 +1,1 @@
+flatc -o js/ --js common.fbs client.fbs server.fbs
