@@ -2,15 +2,24 @@ include "common.fbs";
 
 namespace DeathioApi;
 
+enum ActionType: ubyte {
+    Primary = 0,
+    CraftItem,
+    EquipItem,
+    UnequipItem,
+    DropItem
+}
+
 table Action {
 	item:Item;
+	actionType:ActionType = Primary;
 }
 
 table Input {
-  tick:ulong;
-  movement:Vec2f;
-  rotation:float;
-  action:Action;
+    tick:ulong;
+    movement:Vec2f;
+    rotation:float;
+    action:Action;
 }
 
 root_type Input;

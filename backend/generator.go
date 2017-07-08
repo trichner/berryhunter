@@ -90,5 +90,5 @@ type staticEntityBody struct {
 	radius         float32
 	collisionLayer int
 
-	ressource items.Item
+	ressource items.ItemEnum
 }

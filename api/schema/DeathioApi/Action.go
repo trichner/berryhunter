@@ -38,11 +38,26 @@ func (rcv *Action) MutateItem(n byte) bool {
 	return rcv._tab.MutateByteSlot(4, n)
 }
 
+func (rcv *Action) ActionType() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Action) MutateActionType(n byte) bool {
+	return rcv._tab.MutateByteSlot(6, n)
+}
+
 func ActionStart(builder *flatbuffers.Builder) {
-	builder.StartObject(1)
+	builder.StartObject(2)
 }
 func ActionAddItem(builder *flatbuffers.Builder, item byte) {
 	builder.PrependByteSlot(0, item, 0)
+}
+func ActionAddActionType(builder *flatbuffers.Builder, actionType byte) {
+	builder.PrependByteSlot(1, actionType, 0)
 }
 func ActionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

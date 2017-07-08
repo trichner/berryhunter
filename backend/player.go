@@ -19,7 +19,7 @@ type player struct {
 	viewport *phy.Box
 
 	hand     *phy.Circle
-	handItem items.Item
+	handItem items.ItemEnum
 
 	inventory items.Inventory
 
@@ -78,7 +78,7 @@ func NewPlayer(c *net.Client) *player {
 	return p
 }
 
-func (p *player) startAction(tool items.Item) {
+func (p *player) startAction(tool items.ItemEnum) {
 	p.handItem = tool
 	p.hand.Shape().Layer = model.LayerRessourceCollision
 }
