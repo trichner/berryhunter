@@ -49,11 +49,12 @@ func NewRegistry() *Registry {
 }
 
 func (r *Registry) Add(i *ItemDefinition) {
-	r.items[i.Item] = i
+	r.items[i.ID] = i
 }
 
-func (r *Registry) Get(i ItemEnum) *ItemDefinition {
-	return r.items[i]
+func (r *Registry) Get(i ItemEnum) (Item, bool) {
+	def, ok := r.items[i]
+	return Item{def}, ok
 }
 
 func (r *Registry) Items() []*ItemDefinition {

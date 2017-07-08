@@ -1,5 +1,9 @@
 {
   "item": "StoneTool",
+
+  "_": "equipmentslot if applicable",
+  "slot": "PrimaryHand",
+
   "_": "stats of the item if in use",
   "stats": {
     "damage": 1,
@@ -7,6 +11,7 @@
     "warmth": 0,
     "armor": 0
   },
+
   "_": "recipe to craft the item",
   "recipe": {
     "craftTicks": 60,

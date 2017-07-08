@@ -29,7 +29,7 @@ func populate(g *Game, rnd *rand.Rand) {
 			ex := chunkSize*float32(x) + dx
 			ey := chunkSize*float32(y) + dy
 			ev := phy.Vec2f{ex, ey}
-			e := NewRandomEntityFrom(ev, entities, crnd)
+			e := NewRandomEntityFrom(g, ev, entities, crnd)
 			g.AddResourceEntity(e)
 		}
 	}

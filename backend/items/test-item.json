@@ -1,5 +1,7 @@
 {
   "item": "StoneTool",
+  "_": "equipmentslot if applicable",
+  "slot": "PrimaryHand",
   "_": "stats of the item if in use",
   "stats": {
     "damage": 1,

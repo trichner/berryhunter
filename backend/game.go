@@ -12,6 +12,7 @@ import (
 	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/net"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 type Game struct {
@@ -19,6 +20,7 @@ type Game struct {
 	space *phy.Space
 	tick  uint64
 	conf  *conf.Config
+	items *items.Registry
 }
 
 type wsHandler struct{}
@@ -35,9 +37,10 @@ func (h *wsHandler) OnMessage(c *net.Client, msg []byte) {
 
 }
 
-func (g *Game) Init(conf *conf.Config) {
+func (g *Game) Init(conf *conf.Config, items *items.Registry) {
 
 	g.conf = conf
+	g.items = items
 
 	//---- setup systems
 	p := newPhysicsSystem(g, 100, 100)

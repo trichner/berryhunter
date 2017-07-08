@@ -8,6 +8,7 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 
@@ -25,8 +26,11 @@ type movement struct {
 	X, Y float32
 }
 
+type actionType int
+
 type action struct {
-	Item byte
+	Item items.ItemEnum
+	Type actionType
 }
 
 type clientMessage struct {
@@ -65,7 +69,8 @@ func (i *InputDTO) FlatbufferUnmarshal(bytes []byte) {
 	a := fbInput.Action(nil)
 	if a != nil {
 		i.action = &action{
-			Item: a.Item(),
+			Item: items.ItemEnum(a.Item()),
+			Type: actionType(a.ActionType()),
 		}
 	}
 }
@@ -167,11 +172,31 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	}
 
 	// process actions if available
-	if inputs.action != nil {
-		p.hand.Shape().Layer = -1
-		log.Printf("Action going on.")
-		log.Printf("Player: %s", p.Position())
-		log.Printf("Hand: %s", p.hand.Position())
+	action := inputs.action
+	if action != nil {
+		item, ok := i.game.items.Get(action.Item)
+		if !ok {
+			fmt.Printf("Unknown Action Item: %d", action.Item)
+		}
+		switch action.Type {
+		case DeathioApi.ActionTypePrimary:
+			p.hand.Shape().Layer = -1
+			log.Printf("Action going on.")
+			log.Printf("Player: %s", p.Position())
+			log.Printf("Hand: %s", p.hand.Position())
+			break
+		case DeathioApi.ActionTypeDropItem:
+			p.inventory.DropAll(item)
+			break
+
+		case DeathioApi.ActionTypeEquipItem:
+			p.Equip(item)
+			break
+
+		case DeathioApi.ActionTypeUnequipItem:
+			p.Unequip(item)
+			break
+		}
 	}
 
 }

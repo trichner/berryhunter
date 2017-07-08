@@ -6,6 +6,7 @@ import (
 	"github.com/trichner/berryhunter/backend/wrand"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model"
+	"log"
 )
 
 
@@ -80,7 +81,7 @@ type resourceEntity struct {
 	resource
 }
 
-func NewRandomEntityFrom(p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) *resourceEntity {
+func NewRandomEntityFrom(g *Game, p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) *resourceEntity {
 	choices := []wrand.Choice{}
 	for _, b := range bodies {
 		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: b})
@@ -88,15 +89,20 @@ func NewRandomEntityFrom(p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand)
 
 	wc := wrand.NewWeightedChoice(choices)
 	selected := wc.Choose(rnd).(staticEntityBody)
-	return NewStaticEntityWithBody(p, &selected)
+	return NewStaticEntityWithBody(g, p, &selected)
 }
 
-func NewStaticEntityWithBody(p phy.Vec2f, body *staticEntityBody) *resourceEntity {
+func NewStaticEntityWithBody(g *Game, p phy.Vec2f, body *staticEntityBody) *resourceEntity {
 	r := &resourceEntity{}
-	r.entity = entity{BasicEntity: ecs.NewBasic()}
 	newStaticCircleEntity(&r.entity, p, body.radius)
 	r.entityType = body.entityType
-	r.resource.resource = body.ressource
+
+	ressource, ok := g.items.Get(body.ressource)
+	if !ok {
+		log.Fatalf("Unknown ressource: %d", body.ressource)
+	}
+
+	r.resource.resource = ressource
 	r.body.Shape().UserData = r
 	r.body.Shape().Layer = body.collisionLayer
 	return r

@@ -23,11 +23,11 @@ func NewInventory() Inventory {
 }
 
 type ItemStack struct {
-	Item  ItemEnum
+	Item  Item
 	Count uint32
 }
 
-func NewItemStack(item ItemEnum, count uint32) *ItemStack {
+func NewItemStack(item Item, count uint32) *ItemStack {
 	return &ItemStack{
 		Item:  item,
 		Count: count,
@@ -114,8 +114,12 @@ func (i *Inventory) ConsumeItem(stack *ItemStack) bool {
 
 	hasConsumed := false
 	i.iterateItems(stack.Item, func(idx int) bool {
-		if i.items[idx].Count >= stack.Count {
-			i.items[idx].Count -= stack.Count
+		cstack := i.items[idx]
+		if cstack.Count >= stack.Count {
+			cstack.Count -= stack.Count
+			if cstack.Count == 0 {
+				i.items[idx] = nil
+			}
 			hasConsumed = true
 		}
 
@@ -125,9 +129,16 @@ func (i *Inventory) ConsumeItem(stack *ItemStack) bool {
 	return hasConsumed
 }
 
-func (i *Inventory) iterateItems(itemType ItemEnum, p itemStackPredicate) {
+func (i *Inventory) DropAll(item Item) {
+	i.iterateItems(item, func(idx int) bool {
+		i.items[idx] = nil
+		return false
+	})
+}
+
+func (i *Inventory) iterateItems(itemType Item, p itemStackPredicate) {
 	for idx, stack := range i.items {
-		if stack.Item == itemType {
+		if stack != nil && stack.Item.ID == itemType.ID {
 			if !p(idx) {
 				break
 			}

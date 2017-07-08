@@ -6,6 +6,22 @@ import (
 	"fmt"
 )
 
+type EquipSlot int
+
+const (
+	EquipSlotPrimaryHand EquipSlot = iota
+	EquipSlotHead
+	EquipSlotBreast
+	EquipSlotBack
+)
+
+var NamesEnumEquipSlot = map[string]EquipSlot{
+	"PrimaryHand": EquipSlotPrimaryHand,
+	"Head":        EquipSlotHead,
+	"Breast":      EquipSlotBreast,
+	"Back":        EquipSlotBack,
+}
+
 type Material struct {
 	Item  ItemEnum
 	Count int
@@ -20,17 +36,24 @@ type Recipe struct {
 	Materials  []Material
 	Tools      []Tool
 }
+
 type ItemDefinition struct {
-	Item   ItemEnum
+	ID     ItemEnum
+	Name   string
+	Slot   EquipSlot
 	Recipe Recipe
 }
 
+type Item struct {
+	*ItemDefinition
+}
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
 
 	Item  string `json:"item"`
 	Stats map[string]int `json:"stats"`
+	Slot  string `json:"slot"`
 
 	Recipe struct {
 		CraftTicks int `json:"craftTicks"`
@@ -81,6 +104,8 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		return nil, err
 	}
 
+	slot := NamesEnumEquipSlot[i.Slot]
+
 	// map materials list
 	materials := make([]Material, 0)
 	for _, v := range i.Recipe.Materials {
@@ -107,7 +132,9 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	}
 
 	return &ItemDefinition{
-		Item:   enum,
+		ID:     enum,
+		Name:   i.Item,
+		Slot:   slot,
 		Recipe: Recipe{i.Recipe.CraftTicks, materials, tools},
 	}, nil
 }

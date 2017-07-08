@@ -50,16 +50,26 @@ func (p *player) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffse
 
 func ItemStackMarshalFlatbuf(i *items.ItemStack, builder *flatbuffers.Builder, slot uint8) flatbuffers.UOffsetT {
 
-	return DeathioApi.CreateItemStack(builder, byte(i.Item), i.Count, slot)
+	return DeathioApi.CreateItemStack(builder, byte(i.Item.ID), i.Count, slot)
 }
 
 func InventoryMarshalFlatbuf(inventory items.Inventory, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	inventoryItems := inventory.Items()
-	n := len(inventoryItems)
+
+	// only serialize non-nil elements
+	n := 0
+	for _, item := range inventoryItems {
+		if item != nil {
+			n++
+		}
+	}
+
 	DeathioApi.GameStateStartInventoryVector(builder, n)
 	for idx, item := range inventoryItems {
-		ItemStackMarshalFlatbuf(item, builder, uint8(idx))
+		if item != nil {
+			ItemStackMarshalFlatbuf(item, builder, uint8(idx))
+		}
 	}
 	return builder.EndVector(n)
 }

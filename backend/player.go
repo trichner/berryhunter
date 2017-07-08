@@ -19,9 +19,10 @@ type player struct {
 	viewport *phy.Box
 
 	hand     *phy.Circle
-	handItem items.ItemEnum
+	handItem items.Item
 
 	inventory items.Inventory
+	items.Equipment
 
 	actionTick uint
 }
@@ -47,7 +48,7 @@ func NewPlayer(c *net.Client) *player {
 	e := newCircleEntity(0.25)
 
 	e.entityType = DeathioApi.EntityTypeCharacter
-	p := &player{entity: e, client: c}
+	p := &player{entity: e, client: c, Equipment: items.NewEquipment()}
 
 	// setup body
 	shapeGroup := int(p.ID())
@@ -64,8 +65,6 @@ func NewPlayer(c *net.Client) *player {
 
 	// setup inventory
 	p.inventory = items.NewInventory()
-	p.inventory.AddItem(items.NewItemStack(DeathioApi.ItemWoodClub, 1))
-	p.inventory.AddItem(items.NewItemStack(DeathioApi.ItemIronTool, 3))
 
 	// setup hand sensor
 	p.hand = phy.NewCircle(e.body.Position(), 0.25)
@@ -78,7 +77,7 @@ func NewPlayer(c *net.Client) *player {
 	return p
 }
 
-func (p *player) startAction(tool items.ItemEnum) {
+func (p *player) startAction(tool items.Item) {
 	p.handItem = tool
 	p.hand.Shape().Layer = model.LayerRessourceCollision
 }

@@ -8,14 +8,22 @@ import (
 	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 func main() {
 
 	config := readConf()
+	items := items.RegistryFromFiles("../api/items/")
+
+	itemList := items.Items()
+	log.Printf("Loadded %d items:", len(itemList))
+	for _, i := range itemList {
+		log.Printf("- %s", i.Name)
+	}
 
 	g := &Game{}
-	g.Init(config)
+	g.Init(config, items)
 
 	populate(g, rand.New(rand.NewSource(0xDEADBEEF)))
 
