@@ -16,38 +16,46 @@ type Tool struct {
 }
 
 type Recipe struct {
-	Materials []Material
-	Tools     []Tool
+	CraftTicks int
+	Materials  []Material
+	Tools      []Tool
 }
 type ItemDefinition struct {
 	Item   ItemEnum
 	Recipe Recipe
 }
 
+
 // recipe matching the json schema for recipes
-type recipe struct {
-	Item string `json:"item"`
+type itemDefinition struct {
 
-	Materials []struct {
-		Item  string `json:"item"`
-		Count int   `json:"count"`
-	} `json:"materials"`
+	Item  string `json:"item"`
+	Stats map[string]int `json:"stats"`
 
-	Tools []struct {
-		EntityType string `json:"entityType"`
-	} `json:"tools"`
+	Recipe struct {
+		CraftTicks int `json:"craftTicks"`
+
+		Materials []struct {
+			Item  string `json:"item"`
+			Count int   `json:"count"`
+		} `json:"materials"`
+
+		Tools []struct {
+			EntityType string `json:"entityType"`
+		} `json:"tools"`
+	} `json:"recipe"`
 }
 
-// parseRecipe parses a json string from a byte array into the
+// parseItemDefinition parses a json string from a byte array into the
 // appropriate recipe object
-func parseRecipe(data []byte) (*recipe, error) {
-	var r recipe
-	err := json.Unmarshal(data, &r)
+func parseItemDefinition(data []byte) (*itemDefinition, error) {
+	var i itemDefinition
+	err := json.Unmarshal(data, &i)
 	if err != nil {
 		return nil, err
 	}
 
-	return &r, nil
+	return &i, nil
 }
 
 var ItemEnumMap = func() map[string]int {
@@ -67,15 +75,15 @@ func mapItemIdentifier(id string) (ItemEnum, error) {
 	return ItemEnum(enum), nil
 }
 
-func (r *recipe) mapToItemDefinition() (*ItemDefinition, error) {
-	enum, err := mapItemIdentifier(r.Item)
+func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
+	enum, err := mapItemIdentifier(i.Item)
 	if err != nil {
 		return nil, err
 	}
 
 	// map materials list
 	materials := make([]Material, 0)
-	for _, v := range r.Materials {
+	for _, v := range i.Recipe.Materials {
 		materialEnum, err := mapItemIdentifier(v.Item)
 		if err != nil {
 			return nil, err
@@ -89,7 +97,7 @@ func (r *recipe) mapToItemDefinition() (*ItemDefinition, error) {
 
 	// map tools list
 	tools := make([]Tool, 0)
-	for _, v := range r.Tools {
+	for _, v := range i.Recipe.Tools {
 		entityType, err := mapItemIdentifier(v.EntityType)
 		if err != nil {
 			return nil, err
@@ -100,6 +108,6 @@ func (r *recipe) mapToItemDefinition() (*ItemDefinition, error) {
 
 	return &ItemDefinition{
 		Item:   enum,
-		Recipe: Recipe{materials, tools},
+		Recipe: Recipe{i.Recipe.CraftTicks, materials, tools},
 	}, nil
 }
