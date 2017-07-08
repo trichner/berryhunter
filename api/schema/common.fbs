@@ -24,6 +24,10 @@ enum Item: ubyte {
 	Bronze,
 	Berry,
 
+	StoneSword,
+	BronzeSword,
+	IronSword,
+
 	FirePlace,
 }
 

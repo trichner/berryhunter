@@ -1,0 +1,30 @@
+{
+  "item": "StoneSword",
+  "_": "stats of the item if in use",
+  "stats": {
+    "damage": 2,
+    "yield": 1,
+    "warmth": 0,
+    "armor": 0
+  },
+  "_": "recipe to craft the item",
+  "recipe": {
+    "craftTicks": 60,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 40
+      },
+      {
+        "item": "Stone",
+        "count": 60
+      }
+    ],
+    "_": "Tools required to craft this item.",
+    "tools": [
+      {
+        "entityType": "FirePlace"
+      }
+    ]
+  }
+}

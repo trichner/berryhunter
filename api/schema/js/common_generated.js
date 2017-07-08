@@ -20,7 +20,10 @@ DeathioApi.Item = {
   Stone: 7,
   Bronze: 8,
   Berry: 9,
-  FirePlace: 10
+  StoneSword: 10,
+  BronzeSword: 11,
+  IronSword: 12,
+  FirePlace: 13
 };
 
 /**
