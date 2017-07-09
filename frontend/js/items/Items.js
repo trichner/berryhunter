@@ -337,10 +337,12 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			item.name = itemName;
 
 			if (item.icon && item.icon.file) {
-				Preloading.registerGameObjectSVG(item.icon, 'img/items/' + item.icon.file + '.svg');
+				item.icon.path = 'img/items/' + item.icon.file + '.svg';
+				Preloading.registerGameObjectSVG(item.icon, item.icon.path);
 			}
 			if (item.graphic && item.graphic.file) {
-				Preloading.registerGameObjectSVG(item.graphic, 'img/items/' + item.graphic.file + '.svg');
+				item.graphic.path = 'img/items/' + item.graphic.file + '.svg';
+				Preloading.registerGameObjectSVG(item.graphic, item.graphic.path);
 			}
 		}
 	})();

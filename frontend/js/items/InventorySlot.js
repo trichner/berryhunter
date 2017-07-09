@@ -2,40 +2,26 @@
 
 define([
 	'Two',
-	'items/ClickableIcon',
 	'items/Equipment',
-	'items/ItemType'
-], function (Two, ClickableIcon, Equipment, ItemType) {
+	'items/ItemType',
+	'UserInterface'
+], function (Two, Equipment, ItemType, UserInterface) {
 
 	class InventorySlot {
 		/**
 		 *
 		 * @param {Inventory} inventory
 		 * @param {int} index
-		 * @param {int} size
 		 */
-		constructor(inventory, index, size) {
+		constructor(inventory, index) {
 			this.inventory = inventory;
 			this.index = index;
-			this.size = size;
 
 			this.item = null;
 			this.count = 0;
 			this.active = false;
 
-			this.clickableIcon = new ClickableIcon(size);
-
-			let fontSize = this.size * 0.25;
-			this.countText =
-				new Two.Text(0,
-					this.size * (0.5 - ClickableIcon.relativePadding) - fontSize / 2,
-					this.size * (0.5 - ClickableIcon.relativePadding) - fontSize / 2,
-					{
-						visible: false,
-						fill: ClickableIcon.countColors.font,
-						size: fontSize
-					});
-			this.clickableIcon.add(this.countText);
+			this.clickableIcon = UserInterface.getInventorySlot(index);
 
 			this.clickableIcon.onClick = function (event) {
 				if (!this.isFilled()) {
@@ -67,13 +53,14 @@ define([
 
 			count = count || 1;
 			this.item = item;
-			this.clickableIcon.setIconGraphic(item.icon.svg);
+			this.clickableIcon.setIconGraphic(item.icon.path);
 
 			this.setCount(count);
 
 			switch (item.type) {
 				case ItemType.EQUIPMENT:
 				case ItemType.PLACEABLE:
+				case ItemType.CONSUMABLE:
 					this.clickableIcon.setClickable(true);
 					break;
 			}
@@ -81,12 +68,7 @@ define([
 
 		setCount(count) {
 			this.count = count;
-			if (this.count <= 1) {
-				this.countText.visible = false;
-			} else {
-				this.countText.visible = true;
-				this.countText.value = this.count;
-			}
+			this.clickableIcon.setCount(count);
 		}
 
 		addCount(count) {

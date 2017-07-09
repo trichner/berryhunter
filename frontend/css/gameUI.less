@@ -1,10 +1,11 @@
 #gameUI {
-	box-sizing: border-box;
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
+	//box-sizing: border-box;
+	//position: absolute;
+	//top: 0;
+	//right: 0;
+	//bottom: 0;
+	//left: 0;
+	//pointer-events: none;
 
 	* {
 		box-sizing: border-box;
@@ -41,10 +42,18 @@
 		font-size: (0.25 * @slotSize);
 		padding: (0.1 * @slotSize);
 		margin: (0.1 * @slotSize);
-		display: inline-block;
+		text-decoration: none;
+
+		&.disabled {
+			pointer-events: none;
+		}
 
 		&.empty {
 			background-color: rgba(0, 0, 0, 0.6);
+
+			> .itemIcon {
+				display: none;
+			}
 		}
 
 		&.filled {
@@ -61,6 +70,10 @@
 			position: absolute;
 			bottom: 0;
 			right: 0;
+		}
+
+		> .itemIcon {
+			width: 100%;
 		}
 	}
 }

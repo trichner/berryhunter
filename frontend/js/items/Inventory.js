@@ -5,22 +5,16 @@ define([
 	'Two',
 	'Utils',
 	'Constants',
-	'items/ClickableIcon',
 	'items/RecipesHelper',
 	'items/Crafting',
 	'items/Equipment',
 	'items/InventorySlot'
-], function (Game, Two, Utils, Constants, ClickableIcon, RecipesHelper, Crafting, Equipment, InventorySlot) {
+], function (Game, Two, Utils, Constants, RecipesHelper, Crafting, Equipment, InventorySlot) {
 	class Inventory {
 		constructor(character) {
 			this.character = character;
 			this.craftableRecipes = [];
 			this.availableCrafts = [];
-
-			this.height = Game.relativeHeight(7);
-
-			this.group = new Two.Group();
-			Game.groups.overlay.add(this.group);
 
 			/**
 			 *
@@ -28,19 +22,8 @@ define([
 			 */
 			this.slots = new Array(Constants.INVENTORY_SLOTS);
 
-			let margin = ClickableIcon.relativeMargin * this.height;
-			let inventoryWidth = (this.slots.length - 1) * (this.height + margin);
-
-			this.group.translation.set(
-				Game.centerX - inventoryWidth / 2,
-				Game.height - this.height / 2 - margin
-			);
-
 			for (let i = 0; i < this.slots.length; i++) {
-				this.slots[i] = new InventorySlot(this, i, this.height);
-				let slotGroup = this.slots[i].clickableIcon;
-				slotGroup.translation.x += i * (margin + this.height);
-				this.group.add(slotGroup)
+				this.slots[i] = new InventorySlot(this, i);
 			}
 
 			// Register movement listener to check for nearby craft requirements

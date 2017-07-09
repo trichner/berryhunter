@@ -93,7 +93,11 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 				'Game'
 			);
 
-			Preloading.executePreload();
+			Preloading.executePreload().then(() => {
+				require(['Game'], function (Game) {
+					Game.setup();
+				});
+			});
 		});
 
 

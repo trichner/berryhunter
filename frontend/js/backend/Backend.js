@@ -82,7 +82,7 @@ define([
 		},
 
 		sendInputTick: function (inputObj) {
-			if (SnapshotFactory.hasSnapshot()) {
+			if (!SnapshotFactory.hasSnapshot()) {
 				// If the backend hasn't send a snapshot yet, don't send any input.
 				return;
 			}
