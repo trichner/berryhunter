@@ -10,7 +10,7 @@ define([
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
-	'schema_client'
+	'schema_client',
 ], function (Game, Utils, Constants, Develop, Items, SnapshotFactory) {
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
@@ -194,7 +194,7 @@ define([
 				player: this.unmarshalEntity(gameState.player()),
 				inventory: [],
 
-				entities: []
+				entities: [],
 			};
 
 			for (let i = 0; i < gameState.inventoryLength(); ++i) {
@@ -213,17 +213,24 @@ define([
 		 * @param {DeathioApi.Entity} entity
 		 */
 		unmarshalEntity(entity){
-			return {
+			let result = {
 				id: entity.id().toFloat64(),
 				position: {
 					x: entity.pos().x(),
-					y: entity.pos().y()
+					y: entity.pos().y(),
 				},
 				radius: entity.radius(),
 				rotation: entity.rotation(),
 				type: entity.entityType(),
-				aabb: this.unmarshalAABB(entity.aabb())
+				aabb: this.unmarshalAABB(entity.aabb()),
+				equipment: [],
+			};
+
+			for (let i = 0; i < entity.equipmentLength(); ++i) {
+				result.equipment.push(this.unmarshalItem(entity.equipment(i)));
 			}
+
+			return result
 		},
 
 		/**
@@ -247,7 +254,7 @@ define([
 			return {
 				item: this.unmarshalItem(itemStack.item()),
 				count: itemStack.count(),
-				slot: itemStack.slot()
+				slot: itemStack.slot(),
 			};
 		},
 
@@ -292,7 +299,7 @@ define([
 			builder.finish(DeathioApi.Input.endInput(builder));
 
 			return builder.asUint8Array();
-		}
+		},
 	};
 
 	return Backend;
