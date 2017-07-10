@@ -5,10 +5,8 @@ define(['Preloading', 'Constants'], function (Preloading, Constants) {
 
 	let gameUiPromise = Preloading.registerPartial('partials/gameUI.html')
 		.then(() => {
-			// console.log("gameUI partial loaded");
 			UserInterface.rootElement = document.getElementById('gameUI');
 		});
-	// console.log("gameUI partial registered");
 
 	class ClickableIcon {
 		/**
@@ -83,13 +81,13 @@ define(['Preloading', 'Constants'], function (Preloading, Constants) {
 	}
 
 	class ClickableCountableIcon extends ClickableIcon {
-		constructor(node){
+		constructor(node) {
 			super(node);
 
 			this.countNode = this.domElement.querySelector('.count');
 		}
 
-		setCount(count){
+		setCount(count) {
 			if (count <= 1) {
 				this.countNode.classList.add('hidden');
 			} else {
@@ -100,22 +98,19 @@ define(['Preloading', 'Constants'], function (Preloading, Constants) {
 	}
 
 	UserInterface.setup = function () {
-		// FIXME eigentlich sollte das promise zum setup längst resolved sein - ist es aber nicht
-		gameUiPromise.then(() => {
-			this.rootElement.classList.remove('hidden');
+		this.rootElement.classList.remove('hidden');
 
-			let inventoryElement = document.getElementById('inventory');
-			let inventorySlot = document.querySelector('#inventory > .inventorySlot');
+		let inventoryElement = document.getElementById('inventory');
+		let inventorySlot = document.querySelector('#inventory > .inventorySlot');
 
-			this.inventorySlots = new Array(Constants.INVENTORY_SLOTS);
-			this.inventorySlots[0] = new ClickableCountableIcon(inventorySlot);
+		this.inventorySlots = new Array(Constants.INVENTORY_SLOTS);
+		this.inventorySlots[0] = new ClickableCountableIcon(inventorySlot);
 
-			for (let i = 1; i < Constants.INVENTORY_SLOTS; ++i) {
-				let inventorySlotCopy = inventorySlot.cloneNode(true);
-				inventoryElement.appendChild(inventorySlotCopy);
-				this.inventorySlots[i] = new ClickableCountableIcon(inventorySlotCopy);
-			}
-		});
+		for (let i = 1; i < Constants.INVENTORY_SLOTS; ++i) {
+			let inventorySlotCopy = inventorySlot.cloneNode(true);
+			inventoryElement.appendChild(inventorySlotCopy);
+			this.inventorySlots[i] = new ClickableCountableIcon(inventorySlotCopy);
+		}
 	};
 
 	/**

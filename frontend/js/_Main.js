@@ -34,78 +34,83 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 	Preloading.loadPartial('partials/loadingScreen.html')
 		.then(function () {
 			Preloading.loadingBar = document.getElementById('loadingBar');
-			Preloading._import(
-				// Graphics
-				'Two',
+			/*
+			 * Require all Modules, to create a reasonable loading bar.
+			 */
+			require([
+					// Graphics
+					'Two',
 
-				// other libraries
-				'../vendor/tock',
-				'vendor/flatbuffers',
-				'natureOfCode/arrive/vehicle',
+					// other libraries
+					'../vendor/tock',
+					'vendor/flatbuffers',
+					'natureOfCode/arrive/vehicle',
 
-				// own libraries
-				'../vendor/XieLongUtils',
+					// own libraries
+					'../vendor/XieLongUtils',
 
-				// API schema
-				'schema_common',
-				'schema_server',
-				'schema_client',
+					// API schema
+					'schema_common',
+					'schema_server',
+					'schema_client',
 
-				// Game Modules
-				'SvgLoader',
-				'backend/Backend',
-				'backend/SnapshotFactory',
-				'KeyEvents',
-				'PointerEvents',
-				'Controls',
-				'Constants',
-				'InjectedSVG',
-				'GameObject',
-				'gameObjects/Animals',
-				'gameObjects/Resources',
-				'gameObjects/Border',
-				'gameObjects/Character',
-				'gameObjects/Placeable',
-				'develop/DebugCircle',
-				'GameMapGenerator',
-				'GameMapWithBackend',
-				'items/Equipment',
-				'items/Items',
-				'items/ItemType',
-				'items/Recipes',
-				'items/RecipesHelper',
-				'items/InventorySlot',
-				'items/ClickableIcon',
-				'items/Crafting',
-				'items/Inventory',
-				'VitalSigns',
-				'Player',
-				'GameMap',
-				'MiniMap',
-				'Camera',
-				'Quadrants',
-				'UserInterface',
+					// Game Modules
+					'SvgLoader',
+					'backend/Backend',
+					'backend/SnapshotFactory',
+					'KeyEvents',
+					'PointerEvents',
+					'Controls',
+					'Constants',
+					'InjectedSVG',
+					'GameObject',
+					'gameObjects/Animals',
+					'gameObjects/Resources',
+					'gameObjects/Border',
+					'gameObjects/Character',
+					'gameObjects/Placeable',
+					'develop/DebugCircle',
+					'GameMapGenerator',
+					'GameMapWithBackend',
+					'items/Equipment',
+					'items/Items',
+					'items/ItemType',
+					'items/Recipes',
+					'items/RecipesHelper',
+					'items/InventorySlot',
+					'items/ClickableIcon',
+					'items/Crafting',
+					'items/Inventory',
+					'VitalSigns',
+					'Player',
+					'GameMap',
+					'MiniMap',
+					'Camera',
+					'Quadrants',
+					'UserInterface',
 
-				// Develop resources
-				'develop/Fps',
-				'develop/AABBs',
-				'Develop',
+					// Develop resources
+					'develop/Fps',
+					'develop/AABBs',
+					'Develop',
 
-				// Map Editor
-				'mapEditor/QuadrantGrid',
-				'MapEditor',
+					// Map Editor
+					'mapEditor/QuadrantGrid',
+					'MapEditor',
 
-				// The Game
-				// (you just lost it)
-				'Game'
+					// The Game
+					// (you just lost it)
+					'Game'], function () {
+					/*
+					 * All modules had a chance to register preloads - now setup waits for those reloads to resolve.
+					 */
+					Preloading.executePreload().then(() => {
+						require(['Game'], function (Game) {
+							Game.setup();
+						});
+					});
+				}
 			);
-
-			Preloading.executePreload().then(() => {
-				require(['Game'], function (Game) {
-					console.log("Start setup");
-					Game.setup();
-				});
-			});
 		});
 
 

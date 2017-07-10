@@ -9,12 +9,7 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 	Preloading.loadingBar = false;
 
 	Preloading.executePreload = function () {
-		// console.log("Execute Preload, " + promises.length + "/" + numberOfPromises + " promises queued.");
 		return Promise.all(promises);
-			// .then(() => {
-			// 	console.log("Execute Preload done, " + promises.length + "/" + numberOfPromises + " promises loaded.");
-			//
-			// });
 	};
 
 	Preloading.registerPreload = function (preloadingPromise) {
@@ -34,7 +29,6 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 		// add promise to list of promises executed before setup()
 		promises.push(preloadingPromise);
 		numberOfPromises++;
-		// console.log(numberOfPromises + " Preloading promises.");
 	};
 
 	Preloading.registerGameObjectSVG = function (gameObjectClass, svgPath) {
@@ -47,22 +41,6 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 				gameObjectClass.svg = SvgLoader.load(svgText);
 				return svgPath;
 			}));
-	};
-
-	Preloading.preloadScript = function (script) {
-		Preloading.registerPreload(new Promise(function (resolve, reject) {
-			require([script], function () {
-				resolve(script);
-			}, function (err) {
-				reject(err);
-			});
-		}));
-	};
-
-	Preloading._import = function () {
-		for (let i = 0; i < arguments.length; ++i) {
-			Preloading.preloadScript(arguments[i]);
-		}
 	};
 
 	Preloading.registerPartial = function (htmlUrl) {
