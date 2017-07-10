@@ -16,10 +16,17 @@ requirejs.config({
 		],
 		Two: '../vendor/two/two',
 		'vendor/flatbuffers': '../vendor/flatbuffers-1.6.0',
+		underscore: '../vendor/underscore-min',
 
 		GameObject: 'gameObjects/_GameObject',
 		MapEditor: 'mapEditor/_MapEditor',
 		Develop: 'develop/_Develop'
+	},
+
+	shim: {
+		'underscore': {
+			exports: '_'
+		}
 	}
 });
 
@@ -95,6 +102,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 
 			Preloading.executePreload().then(() => {
 				require(['Game'], function (Game) {
+					console.log("Start setup");
 					Game.setup();
 				});
 			});

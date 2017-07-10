@@ -40,6 +40,13 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 		}
 
 		setPosition(x, y) {
+			if (Utils.isUndefined(x)){
+				throw "x has to be defined.";
+			}
+			if (Utils.isUndefined(y)){
+				throw "y has to be defined.";
+			}
+
 			if (Utils.isDefined(this.desiredPosition) && //
 				Utils.nearlyEqual(this.desiredPosition.x, x, 0.01) && //
 				Utils.nearlyEqual(this.desiredPosition.y, y, 0.01)) {

@@ -87,7 +87,7 @@ define([
 				return;
 			}
 
-			inputObj.tick = SnapshotFactory.getLastSnapshot().tick + 1;
+			inputObj.tick = SnapshotFactory.getLastGameState().tick + 1;
 
 			if (Develop.isActive()) {
 				Develop.logClientTick(inputObj);
@@ -163,11 +163,11 @@ define([
 			Game.map.newSnapshot();
 
 			if (Game.started) {
-				if (Utils.isDefined(snapshot.player)) {
-					Game.player.character.setPosition(snapshot.player.x, snapshot.player.y);
+				if (Utils.isDefined(snapshot.player.position)) {
+					Game.player.character.setPosition(snapshot.player.position.x, snapshot.player.position.y);
 				}
 			} else {
-				Game.createPlayer(snapshot.player.id, snapshot.player.x, snapshot.player.y);
+				Game.createPlayer(snapshot.player.id, snapshot.player.position.x, snapshot.player.position.y);
 			}
 			if (Develop.isActive()) {
 				Game.player.character.updateAABB(snapshot.player.aabb);
@@ -215,8 +215,10 @@ define([
 		unmarshalEntity(entity){
 			return {
 				id: entity.id().toFloat64(),
-				x: entity.pos().x(),
-				y: entity.pos().y(),
+				position: {
+					x: entity.pos().x(),
+					y: entity.pos().y()
+				},
 				radius: entity.radius(),
 				rotation: entity.rotation(),
 				type: entity.entityType(),
