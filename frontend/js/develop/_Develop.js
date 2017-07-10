@@ -9,7 +9,7 @@ define([
 	'MapEditor',
 	'items/ItemType',
 	'Constants',
-	'items/Items'
+	'items/Items',
 ], function (Game, AABBs, Fps, Preloading, Utils, MapEditor, ItemType, Constants, Items) {
 
 	const Develop = {
@@ -24,7 +24,7 @@ define([
 			 * Aus wievielen Werten wird maximal der Durchschnitt und die
 			 * mittlere absolute Abweichung gebildet
 			 */
-			measurementSampleRate: 20
+			measurementSampleRate: 20,
 		},
 
 		isActive: function () {
@@ -39,7 +39,7 @@ define([
 			this.logs = {
 				fps: [],
 				serverTickRate: [],
-				clientTickRate: []
+				clientTickRate: [],
 			}
 		},
 
@@ -116,7 +116,7 @@ define([
 				.addEventListener('click', function () {
 					Game.player.inventory.addItem(
 						Items[document.getElementById('develop_itemSelect').value],
-						parseInt(document.getElementById('develop_itemCount').value)
+						parseInt(document.getElementById('develop_itemCount').value),
 					);
 					Game.two.update();
 				});
@@ -211,9 +211,9 @@ define([
 				this.showNextGameState = false;
 			}
 		},
-		
+
 		serverTickReplacer: function (key, value) {
-			switch (key){
+			switch (key) {
 				case 'item':
 					return value.name;
 				case 'x':
@@ -287,9 +287,20 @@ define([
 			}
 
 			if (Utils.isDefined(inputObj.action)) {
-				document.getElementById('develop_input_action').textContent = inputObj.action.item;
+				if (inputObj.action.item === null) {
+					document.getElementById('develop_input_action_item').textContent = 'None';
+				} else {
+					document.getElementById('develop_input_action_item').textContent = inputObj.action.item.name;
+				}
+				for (let actionType in DeathioApi.ActionType){
+					if (DeathioApi.ActionType[actionType] === inputObj.action.actionType){
+						document.getElementById('develop_input_action_type').textContent = actionType;
+						break;
+					}
+				}
 			} else {
-				document.getElementById('develop_input_action').textContent = '';
+				document.getElementById('develop_input_action_item').textContent = '';
+				document.getElementById('develop_input_action_type').textContent = '';
 			}
 		},
 
@@ -300,7 +311,7 @@ define([
 		logWebsocketStatus: function (text, status) {
 			let webSocketCell = document.getElementById('develop_webSocket');
 			// FIXME why? All DOM should be loaded if this code is run
-			if (webSocketCell === null){
+			if (webSocketCell === null) {
 				return;
 			}
 			webSocketCell.textContent = text;
@@ -309,7 +320,7 @@ define([
 			webSocketCell.classList.remove('bad');
 
 			webSocketCell.classList.add(status);
-		}
+		},
 	};
 
 	if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.DEVELOPMENT)) {

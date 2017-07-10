@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Preloading', 'Constants'], function (Preloading, Constants) {
+define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Utils) {
 	let UserInterface = {};
 
 	let gameUiPromise = Preloading.registerPartial('partials/gameUI.html')
@@ -19,6 +19,7 @@ define(['Preloading', 'Constants'], function (Preloading, Constants) {
 
 			this.domElement.addEventListener('pointerup', function (event) {
 				event.stopPropagation();
+				event.preventDefault();
 
 				if (this.clickable && typeof this.onPointerup === 'function') {
 					this.onPointerup(event);
@@ -26,6 +27,7 @@ define(['Preloading', 'Constants'], function (Preloading, Constants) {
 			});
 			this.domElement.addEventListener('pointerdown', function (event) {
 				event.stopPropagation();
+				event.preventDefault();
 
 				if (this.clickable && typeof this.onPointerdown === 'function') {
 					this.onPointerdown(event);
@@ -33,9 +35,18 @@ define(['Preloading', 'Constants'], function (Preloading, Constants) {
 			});
 			this.domElement.addEventListener('click', function (event) {
 				event.stopPropagation();
+				event.preventDefault();
 
-				if (this.clickable && typeof this.onClick === 'function') {
-					this.onClick(event);
+				if (this.clickable && Utils.isFunction(this.onLeftClick)) {
+					this.onLeftClick(event);
+				}
+			}.bind(this));
+			this.domElement.addEventListener('contextmenu', function (event) {
+				event.stopPropagation();
+				event.preventDefault();
+
+				if (Utils.isFunction(this.onRightClick)) {
+					this.onRightClick(event);
 				}
 			}.bind(this));
 
@@ -99,6 +110,9 @@ define(['Preloading', 'Constants'], function (Preloading, Constants) {
 
 	UserInterface.setup = function () {
 		this.rootElement.classList.remove('hidden');
+		// this.rootElement.addEventListener('contextmenu', function (event) {
+		// 	event.preventDefault();
+		// });
 
 		let inventoryElement = document.getElementById('inventory');
 		let inventorySlot = document.querySelector('#inventory > .inventorySlot');

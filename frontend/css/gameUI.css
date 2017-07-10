@@ -28,9 +28,6 @@
   text-decoration: none;
   position: relative;
 }
-#inventory > .inventorySlot.disabled {
-  pointer-events: none;
-}
 #inventory > .inventorySlot.empty {
   background-color: rgba(0, 0, 0, 0.6);
 }

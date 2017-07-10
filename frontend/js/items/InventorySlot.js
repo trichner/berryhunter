@@ -1,11 +1,14 @@
 "use strict";
 
 define([
+	'Game',
 	'Two',
 	'items/Equipment',
 	'items/ItemType',
-	'UserInterface'
-], function (Two, Equipment, ItemType, UserInterface) {
+	'UserInterface',
+	'Controls',
+	'schema_client',
+], function (Game, Two, Equipment, ItemType, UserInterface, Controls) {
 
 	class InventorySlot {
 		/**
@@ -23,30 +26,28 @@ define([
 
 			this.clickableIcon = UserInterface.getInventorySlot(index);
 
-			this.clickableIcon.onClick = function (event) {
+			this.clickableIcon.onLeftClick = function () {
 				if (!this.isFilled()) {
 					return;
 				}
-				switch (event.button) {
-					// Left Click
-					case 0:
-						let equipmentSlot = Equipment.Helper.getItemEquipmentSlot(this.item);
-						if (this.isActive()) {
-							this.deactivate();
-							this.inventory.deactivateSlot(equipmentSlot);
-						} else {
-							this.inventory.activateSlot(this.index, equipmentSlot);
-						}
-						break;
-					case 2:
-						// Right Click
-						break;
+				let equipmentSlot = Equipment.Helper.getItemEquipmentSlot(this.item);
+				if (this.isActive()) {
+					this.deactivate();
+					this.inventory.deactivateSlot(equipmentSlot);
+				} else {
+					this.inventory.activateSlot(this.index, equipmentSlot);
+				}
+			}.bind(this);
+
+			this.clickableIcon.onRightClick = function () {
+				if (this.isFilled()) {
+					Game.player.controls.onInventoryAction(this.item, DeathioApi.ActionType.DropItem);
 				}
 			}.bind(this);
 		}
 
 		setItem(item, count) {
-			if (this.item === item && this.count === count){
+			if (this.item === item && this.count === count) {
 				// Nothing to do
 				return;
 			}
@@ -77,7 +78,7 @@ define([
 		}
 
 		dropItem() {
-			if (!this.isFilled()){
+			if (!this.isFilled()) {
 				// Nothing to do
 				return;
 			}

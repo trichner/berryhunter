@@ -263,7 +263,12 @@ define([
 			let action = null;
 			if (Utils.isDefined(inputObj.action)) {
 				DeathioApi.Action.startAction(builder);
-				DeathioApi.Action.addItem(builder, DeathioApi.Item[inputObj.action.item]);
+				if (inputObj.action.item === null) {
+					DeathioApi.Action.addItem(builder, DeathioApi.Item.None);
+				} else {
+					DeathioApi.Action.addItem(builder, DeathioApi.Item[inputObj.action.item.name]);
+				}
+				DeathioApi.Action.addActionType(builder, inputObj.action.actionType);
 				action = DeathioApi.Action.endAction(builder);
 			}
 

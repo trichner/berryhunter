@@ -11,7 +11,8 @@ define([
 	'gameObjects/Placeable',
 	'backend/Backend',
 	'Utils',
-	'../vendor/tock'
+	'../vendor/tock',
+	'schema_client'
 ], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Utils, Tock) {
 	const UP_KEYS = [
 		'w'.charCodeAt(0),
@@ -55,7 +56,7 @@ define([
 
 	const PAUSE_KEYS = [
 		'p'.charCodeAt(0),
-		'P'.charCodeAt(0)
+		'P'.charCodeAt(0),
 	];
 
 	/**
@@ -90,7 +91,7 @@ define([
 
 			this.clock = new Tock({
 				interval: Constants.INPUT_TICKRATE,
-				callback: this.update.bind(this)
+				callback: this.update.bind(this),
 			});
 
 			this.clock.start();
@@ -105,6 +106,13 @@ define([
 			if (isFunctionKey) {
 				event.preventDefault();
 			}
+		}
+
+		onInventoryAction(item, actionType) {
+			this.inventoryAction = {
+				item: item,
+				actionType: actionType,
+			};
 		}
 
 		update() {
@@ -132,7 +140,7 @@ define([
 
 			let movement = {
 				x: 0,
-				y: 0
+				y: 0,
 			};
 
 			if (anyKeyIsPressed(UP_KEYS)) {
@@ -154,15 +162,17 @@ define([
 				this.hitAnimationTick--;
 				this.character.progressHitAnimation(this.hitAnimationTick);
 			} else {
-				if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
+				if (Utils.isDefined(this.inventoryAction)) {
+					action = this.inventoryAction;
+					delete this.inventoryAction;
+				} else if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
 					this.hitAnimationTick = this.character.action();
 					this.character.progressHitAnimation(this.hitAnimationTick);
 					switch (this.character.currentAction) {
 						case 'MAIN':
 							action = {
-								// TODO aktives Item eintragen
-								item: "fist",
-								alt: false
+								item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
+								actionType: DeathioApi.ActionType.Primary
 							};
 							break;
 						case 'PLACING':
@@ -172,7 +182,7 @@ define([
 								let placeableGameobject = new Placeable(
 									placedItem,
 									this.character.getX() + Math.cos(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
-									this.character.getY() + Math.sin(this.character.getRotation()) * Constants.PLACEMENT_RANGE
+									this.character.getY() + Math.sin(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
 								);
 								Game.map.objects.push(placeableGameobject);
 								Game.player.inventory.removeItem(placedItem, 1);
@@ -181,14 +191,12 @@ define([
 							}
 							break;
 					}
-				}
-				if (anyKeyIsPressed(ALT_ACTION_KEYS) || PointerEvents.pointerDown === ALT_ACTION_BUTTON) {
+				} else if (anyKeyIsPressed(ALT_ACTION_KEYS) || PointerEvents.pointerDown === ALT_ACTION_BUTTON) {
 					this.hitAnimationTick = this.character.altAction();
 					this.character.progressHitAnimation(this.hitAnimationTick);
 					action = {
-						// TODO aktives Item eintragen
-						item: "Fist",
-						alt: true
+						item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
+						actionType: DeathioApi.ActionType.Primary
 					};
 				}
 			}
@@ -241,7 +249,7 @@ define([
 					PointerEvents.x,
 					PointerEvents.y,
 					characterX,
-					characterY
+					characterY,
 				);
 
 				this.character.setRotation(rotation);
