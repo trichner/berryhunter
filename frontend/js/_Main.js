@@ -71,7 +71,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'gameObjects/Placeable',
 					'develop/DebugCircle',
 					'GameMapGenerator',
-					'GameMapWithBackend',
+					'backend/GameMapWithBackend',
 					'items/Equipment',
 					'items/Items',
 					'items/ItemType',

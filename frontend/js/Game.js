@@ -11,7 +11,7 @@ define([], function () {
 			'MapEditor',
 			'backend/Backend',
 			'Develop',
-			'GameMapWithBackend',
+			'backend/GameMapWithBackend',
 			'MiniMap',
 			'SvgLoader',
 			'KeyEvents',
