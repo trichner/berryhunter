@@ -256,6 +256,8 @@ define([
 			slotGroup.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
 
 			this.equippedItems[equipmentSlot] = item;
+
+			Game.player.controls.onInventoryAction(item, DeathioApi.ActionType.EquipItem);
 		}
 
 		unequipItem(equipmentSlot) {
@@ -264,7 +266,11 @@ define([
 				return;
 			}
 			slotGroup.children[0].remove();
+
+			let item = this.equippedItems[equipmentSlot];
 			this.equippedItems[equipmentSlot] = null;
+
+			Game.player.controls.onInventoryAction(item, DeathioApi.ActionType.UnequipItem);
 		}
 
 		getEquippedItem(equipmentSlot) {
