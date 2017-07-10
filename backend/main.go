@@ -102,13 +102,9 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 //	return s
 //}
 
-func newStaticCircleEntity(e *entity, p phy.Vec2f, r float32) *entity {
+func newStaticCircleEntity(p phy.Vec2f, r float32) *entity {
 
-	// Create a ball
-	if e == nil {
-		e = &entity{BasicEntity: ecs.NewBasic()}
-	}
-
+	e := &entity{BasicEntity: ecs.NewBasic()}
 	ball := phy.NewCircle(p, r)
 	ball.Shape().UserData = e
 	e.body = ball

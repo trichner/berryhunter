@@ -42,19 +42,19 @@ func (n *NetSystem) Update(dt float32) {
 	gameState.Tick = n.game.tick
 	for _, player := range n.players {
 
-		var entites []model.Entity
+		var entities []model.Entity
 
 		// find all entities in view
 		for c := range player.viewport.Collisions() {
 			userData := c.Shape().UserData
 			if userData != nil {
-				entites = append(entites, userData.(model.Entity))
+				entities = append(entities, userData.(model.Entity))
 			}
 		}
 
 		// copy gameStatePrototype
 		clientGameState := gameState
-		clientGameState.Entities = entites
+		clientGameState.Entities = entities
 		clientGameState.Player = player
 
 		// marshal and send state

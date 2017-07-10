@@ -94,7 +94,8 @@ func NewRandomEntityFrom(g *Game, p phy.Vec2f, bodies []staticEntityBody, rnd *r
 
 func NewStaticEntityWithBody(g *Game, p phy.Vec2f, body *staticEntityBody) *resourceEntity {
 	r := &resourceEntity{}
-	newStaticCircleEntity(&r.entity, p, body.radius)
+	r.entity = *newStaticCircleEntity(p, body.radius)
+
 	r.entityType = body.entityType
 
 	ressource, ok := g.items.Get(body.ressource)
