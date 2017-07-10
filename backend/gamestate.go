@@ -41,7 +41,6 @@ func (p *player) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffse
 
 	// player
 	// TODO
-	DeathioApi.EntityAddHand(builder, DeathioApi.ItemNone)
 	DeathioApi.EntityAddIsHit(builder, 0)
 	DeathioApi.EntityAddActionTick(builder, 0)
 
