@@ -144,8 +144,27 @@ func (rcv *Entity) Aabb(obj *AABB) *AABB {
 	return nil
 }
 
+func (rcv *Entity) Equipment(obj *Equipment, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 2
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *Entity) EquipmentLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
 func EntityStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(11)
 }
 func EntityAddId(builder *flatbuffers.Builder, id uint64) {
 	builder.PrependUint64Slot(0, id, 0)
@@ -176,6 +195,12 @@ func EntityAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
 }
 func EntityAddAabb(builder *flatbuffers.Builder, aabb flatbuffers.UOffsetT) {
 	builder.PrependStructSlot(9, flatbuffers.UOffsetT(aabb), 0)
+}
+func EntityAddEquipment(builder *flatbuffers.Builder, equipment flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(equipment), 0)
+}
+func EntityStartEquipmentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(2, numElems, 1)
 }
 func EntityEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
