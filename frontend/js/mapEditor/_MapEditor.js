@@ -4,14 +4,13 @@ define([
 	'Two',
 	'Utils',
 	'Constants',
-	'Develop',
 	'GameMapGenerator',
 	'mapEditor/QuadrantGrid',
 	'GameMap',
 	'MiniMap',
 	'Preloading',
 	'Quadrants'
-], function (Two, Utils, Constants, Develop, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants) {
+], function (Two, Utils, Constants, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants) {
 	const MapEditor = {
 		isActive: function () {
 			if (typeof this.active !== 'undefined') {
@@ -30,9 +29,11 @@ define([
 				type: Two.Types.svg
 			}).appendTo(document.getElementById('drawingContainer'));
 
-			if (Develop.isActive()) {
-				Develop.logWebsocketStatus('Disabled', 'neutral');
-			}
+			require(['Develop'], function (Develop) {
+				if (Develop.isActive()) {
+					Develop.logWebsocketStatus('Disabled', 'neutral');
+				}
+			});
 
 			// Empty quadrants
 			Quadrants = [[]];

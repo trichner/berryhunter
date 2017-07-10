@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'Two', 'Constants'], function (Two, Game, Constants) {
+define(['Game', 'Two', 'Constants'], function (Game, Two, Constants) {
 	class QuadrantGrid {
 		constructor(width, height) {
 			this.gridLines = new Two.Group();

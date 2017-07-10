@@ -91,9 +91,6 @@ dl.flatList > dd {
   max-width: 40em;
   background-color: white;
 }
-#serverTickPopup.hidden {
-  display: none;
-}
 #serverTickPopup h2 {
   margin: 0;
 }

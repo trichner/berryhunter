@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'Two', 'Utils'], function (Game, Two, Utils) {
+define(['Game', 'Two'], function (Game, Two) {
 	class MiniMap {
 		constructor(gameMap) {
 			this.gameMap = gameMap;

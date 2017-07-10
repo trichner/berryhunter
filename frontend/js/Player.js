@@ -10,8 +10,6 @@ define([
 ], function (Game, Character, Controls, Camera, Inventory, VitalSigns) {
 	class Player {
 		constructor(id, x, y) {
-			Game.started = true;
-
 			this.character = new Character(id, x, y);
 
 			this.controls = new Controls(this.character);

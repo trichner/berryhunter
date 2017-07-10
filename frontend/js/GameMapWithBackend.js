@@ -57,7 +57,7 @@ define([
 		if (gameObject) {
 			// FIXME Der Server sollte mir nur Entities liefern, die sich auch geändert haben
 			if (gameObject.isMoveable) {
-				gameObject.setPosition(entity.x, entity.y);
+				gameObject.setPosition(entity.position.x, entity.position.y);
 				gameObject.setRotation(entity.rotation);
 				if (Develop.isActive()) {
 					gameObject.updateAABB(entity.aabb);
@@ -107,7 +107,7 @@ define([
 					}
 				// Fallthrough
 				default:
-					gameObject = new gameObjectClasses[entity.type](entity.x, entity.y, entity.radius);
+					gameObject = new gameObjectClasses[entity.type](entity.position.x, entity.position.y, entity.radius);
 			}
 			if (entity.object !== 'Character') {
 				Game.miniMap.add(gameObject);

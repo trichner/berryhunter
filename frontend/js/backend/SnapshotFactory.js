@@ -1,7 +1,9 @@
 "use strict";
 
-define(['Utils'], function (Utils) {
+define(['Utils', 'underscore'], function (Utils, _) {
 	let SnapshotFactory = {};
+
+	let lastGameState;
 
 	SnapshotFactory.newSnapshot = function (gameState) {
 		let snapshot;
@@ -9,12 +11,14 @@ define(['Utils'], function (Utils) {
 			snapshot = {};
 			snapshot.tick = gameState.tick;
 
-			if (!Utils.nearlyEqual(this.lastSnapshot.player.x, gameState.player.x, 0.01) ||
-				!Utils.nearlyEqual(this.lastSnapshot.player.y, gameState.player.y, 0.01)){
-				snapshot.player = gameState.player;
+			snapshot.player =  _.clone(gameState.player);
+
+			if (Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
+				Utils.nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)){
+				delete snapshot.player.position;
 			}
 
-			if (isInventoryDifferent(this.lastSnapshot.inventory, gameState.inventory)){
+			if (isInventoryDifferent(lastGameState.inventory, gameState.inventory)){
 				snapshot.inventory = gameState.inventory;
 			}
 
@@ -24,17 +28,17 @@ define(['Utils'], function (Utils) {
 			snapshot = gameState;
 		}
 
-		this.lastSnapshot = snapshot;
+		lastGameState = gameState;
 
 		return snapshot;
 	};
 
 	SnapshotFactory.hasSnapshot = function () {
-		return Utils.isDefined(this.lastSnapshot);
+		return Utils.isDefined(lastGameState);
 	};
 
-	SnapshotFactory.getLastSnapshot = function () {
-		return this.lastSnapshot;
+	SnapshotFactory.getLastGameState = function () {
+		return lastGameState;
 	};
 
 	/**
