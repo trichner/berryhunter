@@ -25,15 +25,6 @@ struct ItemStack {
   slot:ubyte;
 }
 
-enum EquipmentSlot: ubyte {
-	PrimaryHand = 0
-}
-
-struct Equipment {
-  item:Item;
-  slot:EquipmentSlot;
-}
-
 table Entity {
   id:ulong;
   pos:Vec2f;
@@ -47,7 +38,7 @@ table Entity {
 
   aabb:AABB;
 
-  equipment:[Equipment];
+  equipment:[Item];
 }
 
 table GameState {
