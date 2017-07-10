@@ -99,20 +99,8 @@ func (rcv *Entity) MutateIsHit(n byte) bool {
 	return rcv._tab.MutateByteSlot(14, n)
 }
 
-func (rcv *Entity) Hand() byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		return rcv._tab.GetByte(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *Entity) MutateHand(n byte) bool {
-	return rcv._tab.MutateByteSlot(16, n)
-}
-
 func (rcv *Entity) ActionTick() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
@@ -120,11 +108,11 @@ func (rcv *Entity) ActionTick() uint16 {
 }
 
 func (rcv *Entity) MutateActionTick(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(18, n)
+	return rcv._tab.MutateUint16Slot(16, n)
 }
 
 func (rcv *Entity) Name() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -132,7 +120,7 @@ func (rcv *Entity) Name() []byte {
 }
 
 func (rcv *Entity) Aabb(obj *AABB) *AABB {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -145,7 +133,7 @@ func (rcv *Entity) Aabb(obj *AABB) *AABB {
 }
 
 func (rcv *Entity) Equipment(obj *Equipment, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 2
@@ -156,7 +144,7 @@ func (rcv *Entity) Equipment(obj *Equipment, j int) bool {
 }
 
 func (rcv *Entity) EquipmentLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -164,7 +152,7 @@ func (rcv *Entity) EquipmentLength() int {
 }
 
 func EntityStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(10)
 }
 func EntityAddId(builder *flatbuffers.Builder, id uint64) {
 	builder.PrependUint64Slot(0, id, 0)
@@ -184,20 +172,17 @@ func EntityAddEntityType(builder *flatbuffers.Builder, entityType uint16) {
 func EntityAddIsHit(builder *flatbuffers.Builder, isHit byte) {
 	builder.PrependByteSlot(5, isHit, 0)
 }
-func EntityAddHand(builder *flatbuffers.Builder, hand byte) {
-	builder.PrependByteSlot(6, hand, 0)
-}
 func EntityAddActionTick(builder *flatbuffers.Builder, actionTick uint16) {
-	builder.PrependUint16Slot(7, actionTick, 0)
+	builder.PrependUint16Slot(6, actionTick, 0)
 }
 func EntityAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(name), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(name), 0)
 }
 func EntityAddAabb(builder *flatbuffers.Builder, aabb flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(9, flatbuffers.UOffsetT(aabb), 0)
+	builder.PrependStructSlot(8, flatbuffers.UOffsetT(aabb), 0)
 }
 func EntityAddEquipment(builder *flatbuffers.Builder, equipment flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(equipment), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(equipment), 0)
 }
 func EntityStartEquipmentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(2, numElems, 1)

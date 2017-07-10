@@ -26,10 +26,7 @@ struct ItemStack {
 }
 
 enum EquipmentSlot: ubyte {
-	PrimaryHand = 0,
-	Head,
-	Breast,
-	Back
+	PrimaryHand = 0
 }
 
 struct Equipment {
@@ -45,7 +42,6 @@ table Entity {
   entity_type:EntityType;
   is_hit:bool = false;
 
-  hand:Item = None;
   action_tick:ushort;
   name:string;
 

@@ -4,15 +4,9 @@ package DeathioApi
 
 const (
 	EquipmentSlotPrimaryHand = 0
-	EquipmentSlotHead = 1
-	EquipmentSlotBreast = 2
-	EquipmentSlotBack = 3
 )
 
 var EnumNamesEquipmentSlot = map[int]string{
 	EquipmentSlotPrimaryHand:"PrimaryHand",
-	EquipmentSlotHead:"Head",
-	EquipmentSlotBreast:"Breast",
-	EquipmentSlotBack:"Back",
 }
 
