@@ -1,10 +1,8 @@
 {
   "item": "StoneTool",
 
-  "_": "equipmentslot if applicable",
   "slot": "PrimaryHand",
 
-  "_": "stats of the item if in use",
   "stats": {
     "damage": 1,
     "yield": 2,
@@ -12,14 +10,9 @@
     "armor": 0
   },
 
-  "_": "recipe to craft the item",
   "recipe": {
     "craftTicks": 60,
     "materials": [
-      {
-        "item": "WoodTool",
-        "count": 1
-      },
       {
         "item": "Wood",
         "count": 20
@@ -29,10 +22,9 @@
         "count": 10
       }
     ],
-    "_": "Tools required to craft this item.",
     "tools": [
       {
-        "entityType": "FirePlace"
+        "entityType": "Campfire"
       }
     ]
   }

@@ -51,6 +51,10 @@ func (i *Inventory) SetCap(cap int) {
 
 func (i *Inventory) AddItem(item *ItemStack) bool {
 
+	if item == nil {
+		return false
+	}
+
 	foundAt := -1
 	for idx, stack := range i.items {
 		if stack.Item == item.Item {

@@ -7,39 +7,9 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model"
 	"log"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
-
-//
-type debugCircleShapeEntity struct {
-	ecs.BasicEntity
-	circle     *phy.Circle
-	entityType model.EntityType
-}
-
-func (e *debugCircleShapeEntity) Type() model.EntityType {
-	return e.entityType
-}
-
-func (e *debugCircleShapeEntity) X() float32 {
-	return e.circle.Position().X
-}
-
-func (e *debugCircleShapeEntity) Y() float32 {
-	return e.circle.Position().Y
-}
-
-func (e *debugCircleShapeEntity) AABB() model.AABB {
-	return model.AABB(e.circle.BoundingBox())
-}
-
-func (e *debugCircleShapeEntity) Angle() float32 {
-	return 0
-}
-
-func (e *debugCircleShapeEntity) Radius() float32 {
-	return float32(e.circle.Radius)
-}
 
 //---- entity
 type entity struct {
@@ -81,7 +51,7 @@ type resourceEntity struct {
 	resource
 }
 
-func NewRandomEntityFrom(g *Game, p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) *resourceEntity {
+func NewRandomEntityFrom(items items.Registry, p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) *resourceEntity {
 	choices := []wrand.Choice{}
 	for _, b := range bodies {
 		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: b})
@@ -89,16 +59,16 @@ func NewRandomEntityFrom(g *Game, p phy.Vec2f, bodies []staticEntityBody, rnd *r
 
 	wc := wrand.NewWeightedChoice(choices)
 	selected := wc.Choose(rnd).(staticEntityBody)
-	return NewStaticEntityWithBody(g, p, &selected)
+	return NewStaticEntityWithBody(items, p, &selected)
 }
 
-func NewStaticEntityWithBody(g *Game, p phy.Vec2f, body *staticEntityBody) *resourceEntity {
+func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEntityBody) *resourceEntity {
 	r := &resourceEntity{}
 	r.entity = *newStaticCircleEntity(p, body.radius)
 
 	r.entityType = body.entityType
 
-	ressource, ok := g.items.Get(body.ressource)
+	ressource, ok := items.Get(body.ressource)
 	if !ok {
 		log.Fatalf("Unknown ressource: %d", body.ressource)
 	}

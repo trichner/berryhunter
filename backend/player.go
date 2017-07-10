@@ -44,7 +44,7 @@ func (p *player) SetAngle(a float32) {
 	p.updateHand()
 }
 
-func NewPlayer(c *net.Client) *player {
+func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	e := newCircleEntity(0.25)
 
 	e.entityType = DeathioApi.EntityTypeCharacter
@@ -65,6 +65,20 @@ func NewPlayer(c *net.Client) *player {
 
 	// setup inventory
 	p.inventory = items.NewInventory()
+
+	var item items.Item
+	var ok bool
+	item, ok = itemRegistry.Get(items.ItemEnum(DeathioApi.ItemWoodClub))
+	if !ok {
+		panic("Cannot find WoodClub.")
+	}
+	p.inventory.AddItem(items.NewItemStack(item, 1))
+
+	item, _ = itemRegistry.Get(items.ItemEnum(DeathioApi.ItemBronzeSword))
+	if !ok {
+		panic("Cannot find BronzeSword.")
+	}
+	p.inventory.AddItem(items.NewItemStack(item, 1))
 
 	// setup hand sensor
 	p.hand = phy.NewCircle(e.body.Position(), 0.25)

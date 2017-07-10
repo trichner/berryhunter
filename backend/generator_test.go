@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/trichner/berryhunter/backend/wrand"
 	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 func Test_populate(t *testing.T) {
@@ -20,6 +21,16 @@ func Test_populate(t *testing.T) {
 	}
 }
 
+type mockRegistry struct{}
+
+func (mockRegistry) Get(i items.ItemEnum) (items.Item, bool) {
+	return nil, true
+}
+
+func (mockRegistry) Items() []*items.ItemDefinition {
+	return make([]*items.ItemDefinition, 0)
+}
+
 func Test_randomEntity(t *testing.T) {
 
 	entities := []staticEntityBody{}
@@ -28,7 +39,7 @@ func Test_randomEntity(t *testing.T) {
 
 	rnd := rand.New(rand.NewSource(1234))
 	for y := int64(0); y < 100; y++ {
-		e := NewRandomEntityFrom(phy.Vec2f{},entities, rnd)
+		e := NewRandomEntityFrom(&mockRegistry{}, phy.Vec2f{}, entities, rnd)
 		fmt.Printf("Selected: %v\n", e)
 	}
 

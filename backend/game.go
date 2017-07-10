@@ -20,7 +20,7 @@ type Game struct {
 	space *phy.Space
 	tick  uint64
 	conf  *conf.Config
-	items *items.Registry
+	items items.Registry
 }
 
 type wsHandler struct{}
@@ -37,7 +37,7 @@ func (h *wsHandler) OnMessage(c *net.Client, msg []byte) {
 
 }
 
-func (g *Game) Init(conf *conf.Config, items *items.Registry) {
+func (g *Game) Init(conf *conf.Config, items items.Registry) {
 
 	g.conf = conf
 	g.items = items
@@ -66,7 +66,7 @@ func (g *Game) Run() {
 	}
 
 	handleFunc := net.NewHandleFunc(func(c *net.Client) {
-		player := NewPlayer(c)
+		player := NewPlayer(g.items, c)
 		g.addPlayer(player)
 	})
 

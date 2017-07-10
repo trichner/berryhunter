@@ -172,33 +172,40 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	}
 
 	// process actions if available
-	action := inputs.action
-	if action != nil {
-		item, ok := i.game.items.Get(action.Item)
-		if !ok {
-			fmt.Printf("Unknown Action Item: %d", action.Item)
-		}
-		switch action.Type {
-		case DeathioApi.ActionTypePrimary:
-			p.hand.Shape().Layer = -1
-			log.Printf("Action going on.")
-			log.Printf("Player: %s", p.Position())
-			log.Printf("Hand: %s", p.hand.Position())
-			break
-		case DeathioApi.ActionTypeDropItem:
-			p.inventory.DropAll(item)
-			break
+	i.applyAction(p, inputs.action)
+}
 
-		case DeathioApi.ActionTypeEquipItem:
-			p.Equip(item)
-			break
+func (i *InputSystem) applyAction(p *player, action *action) {
 
-		case DeathioApi.ActionTypeUnequipItem:
-			p.Unequip(item)
-			break
-		}
+	if action == nil {
+		return
 	}
 
+	item, ok := i.game.items.Get(action.Item)
+	if !ok {
+		fmt.Printf("Unknown Action Item: %d", action.Item)
+		return
+	}
+
+	switch action.Type {
+	case DeathioApi.ActionTypePrimary:
+		p.hand.Shape().Layer = -1
+		log.Printf("Action going on.")
+		log.Printf("Player: %s", p.Position())
+		log.Printf("Hand: %s", p.hand.Position())
+		break
+	case DeathioApi.ActionTypeDropItem:
+		p.inventory.DropAll(item)
+		break
+
+	case DeathioApi.ActionTypeEquipItem:
+		p.Equip(item)
+		break
+
+	case DeathioApi.ActionTypeUnequipItem:
+		p.Unequip(item)
+		break
+	}
 }
 
 func input2vec(i *InputDTO) phy.Vec2f {

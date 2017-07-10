@@ -10,16 +10,10 @@ type EquipSlot int
 
 const (
 	EquipSlotPrimaryHand EquipSlot = iota
-	EquipSlotHead
-	EquipSlotBreast
-	EquipSlotBack
 )
 
 var NamesEnumEquipSlot = map[string]EquipSlot{
 	"PrimaryHand": EquipSlotPrimaryHand,
-	"Head":        EquipSlotHead,
-	"Breast":      EquipSlotBreast,
-	"Back":        EquipSlotBack,
 }
 
 type Material struct {

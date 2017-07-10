@@ -22,10 +22,25 @@ func AabbMarshalFlatbuf(aabb model.AABB, builder *flatbuffers.Builder) flatbuffe
 	return DeathioApi.CreateAABB(builder, f32ToPx(aabb.Left), f32ToPx(aabb.Bottom), f32ToPx(aabb.Right), f32ToPx(aabb.Upper))
 }
 
-func (p *player) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	n := len(items)
+	DeathioApi.EntityStartEquipmentVector(builder, n)
+	for i := range items {
+		//HACK, generated code is not for enum!
+		DeathioApi.EntityAddEquipment(builder, flatbuffers.UOffsetT(i))
+	}
+
+	return builder.EndVector(n)
+}
+
+func PlayerMarshalFlatbuf(p *player, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	// entity fields
 	e := p.entity
+
+	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
+
 	DeathioApi.EntityStart(builder)
 	DeathioApi.EntityAddId(builder, e.ID())
 
@@ -38,6 +53,8 @@ func (p *player) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffse
 	DeathioApi.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
 	DeathioApi.EntityAddRotation(builder, e.Angle())
 	DeathioApi.EntityAddEntityType(builder, uint16(e.Type()))
+
+	DeathioApi.EntityAddEquipment(builder, equipment)
 
 	// player
 	// TODO
@@ -76,7 +93,7 @@ func InventoryMarshalFlatbuf(inventory items.Inventory, builder *flatbuffers.Bui
 func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	entities := EntitiesFlatbufMarshal(gs.Entities, builder)
-	player := gs.Player.MarshalFlatbuf(builder)
+	player := PlayerMarshalFlatbuf(gs.Player, builder)
 	inventory := InventoryMarshalFlatbuf(gs.Player.inventory, builder)
 
 	DeathioApi.GameStateStart(builder)

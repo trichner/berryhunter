@@ -11,7 +11,7 @@ import (
 const gridSize = 100
 const chunkSize = 3
 
-func populate(g *Game, rnd *rand.Rand) {
+func Generate(items items.Registry, rnd *rand.Rand) []*resourceEntity {
 
 	var steps int64 = gridSize / chunkSize
 	var chunkHalfSize float32 = chunkSize / 2.0
@@ -21,6 +21,7 @@ func populate(g *Game, rnd *rand.Rand) {
 	entities = append(entities, trees...)
 	entities = append(entities, resources...)
 
+	resourceEntities := make([]*resourceEntity, 0, steps*steps)
 	for x := int64(0); x < steps; x++ {
 		for y := int64(0); y < steps; y++ {
 			crnd := chunkRand(x, y, rnd)
@@ -29,11 +30,12 @@ func populate(g *Game, rnd *rand.Rand) {
 			ex := chunkSize*float32(x) + dx
 			ey := chunkSize*float32(y) + dy
 			ev := phy.Vec2f{ex, ey}
-			e := NewRandomEntityFrom(g, ev, entities, crnd)
-			g.AddResourceEntity(e)
+			e := NewRandomEntityFrom(items, ev, entities, crnd)
+			resourceEntities = append(resourceEntities, e)
 		}
 	}
 
+	return resourceEntities
 }
 
 func chunkRand(x, y int64, rnd *rand.Rand) *rand.Rand {

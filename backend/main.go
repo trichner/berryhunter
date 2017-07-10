@@ -25,7 +25,10 @@ func main() {
 	g := &Game{}
 	g.Init(config, items)
 
-	populate(g, rand.New(rand.NewSource(0xDEADBEEF)))
+	entities := Generate(g.items, rand.New(rand.NewSource(0xDEADBEEF)))
+	for _, e := range entities {
+		g.AddResourceEntity(e)
+	}
 
 	g.Run()
 

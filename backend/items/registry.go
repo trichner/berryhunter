@@ -7,11 +7,16 @@ import (
 	"log"
 )
 
-type Registry struct {
+type registry struct {
 	items map[ItemEnum]*ItemDefinition
 }
 
-func RegistryFromFiles(f ...string) *Registry {
+type Registry interface {
+	Get(i ItemEnum) (Item, bool)
+	Items() []*ItemDefinition
+}
+
+func RegistryFromFiles(f ...string) *registry {
 
 	r := NewRegistry()
 
@@ -44,20 +49,20 @@ func RegistryFromFiles(f ...string) *Registry {
 	return r
 }
 
-func NewRegistry() *Registry {
-	return &Registry{items: make(map[ItemEnum]*ItemDefinition)}
+func NewRegistry() *registry {
+	return &registry{items: make(map[ItemEnum]*ItemDefinition)}
 }
 
-func (r *Registry) Add(i *ItemDefinition) {
+func (r *registry) Add(i *ItemDefinition) {
 	r.items[i.ID] = i
 }
 
-func (r *Registry) Get(i ItemEnum) (Item, bool) {
+func (r *registry) Get(i ItemEnum) (Item, bool) {
 	def, ok := r.items[i]
 	return Item{def}, ok
 }
 
-func (r *Registry) Items() []*ItemDefinition {
+func (r *registry) Items() []*ItemDefinition {
 	v := make([]*ItemDefinition, 0, len(r.items))
 	for _, value := range r.items {
 		v = append(v, value)

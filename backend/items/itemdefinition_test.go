@@ -35,7 +35,7 @@ func TestMapRecipe(t *testing.T) {
 func TestCreateRegistry(t *testing.T) {
 
 	r := RegistryFromFiles("../../api/items/")
-	assert.NotNil(t, r, "Registry should be defined")
+	assert.NotNil(t, r, "registry should be defined")
 	assert.NotEmpty(t, r.Items(), "Should have some items.")
 
 	fmt.Printf("%+v", r)
