@@ -14,7 +14,6 @@ struct Vec2f {
 enum Item: ubyte {
 	None = 0,
 	WoodClub,
-	WoodTool,
 	StoneTool,
 	BronzeTool,
 	IronTool,
@@ -24,10 +23,10 @@ enum Item: ubyte {
 	Bronze,
 	Berry,
 
-	StoneSword,
+	StoneClub,
 	BronzeSword,
 	IronSword,
 
-	FirePlace,
+	Campfire,
 }
 

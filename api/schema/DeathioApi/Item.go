@@ -5,24 +5,22 @@ package DeathioApi
 const (
 	ItemNone = 0
 	ItemWoodClub = 1
-	ItemWoodTool = 2
-	ItemStoneTool = 3
-	ItemBronzeTool = 4
-	ItemIronTool = 5
-	ItemWood = 6
-	ItemStone = 7
-	ItemBronze = 8
-	ItemBerry = 9
-	ItemStoneSword = 10
-	ItemBronzeSword = 11
-	ItemIronSword = 12
-	ItemFirePlace = 13
+	ItemStoneTool = 2
+	ItemBronzeTool = 3
+	ItemIronTool = 4
+	ItemWood = 5
+	ItemStone = 6
+	ItemBronze = 7
+	ItemBerry = 8
+	ItemStoneClub = 9
+	ItemBronzeSword = 10
+	ItemIronSword = 11
+	ItemCampfire = 12
 )
 
 var EnumNamesItem = map[int]string{
 	ItemNone:"None",
 	ItemWoodClub:"WoodClub",
-	ItemWoodTool:"WoodTool",
 	ItemStoneTool:"StoneTool",
 	ItemBronzeTool:"BronzeTool",
 	ItemIronTool:"IronTool",
@@ -30,9 +28,9 @@ var EnumNamesItem = map[int]string{
 	ItemStone:"Stone",
 	ItemBronze:"Bronze",
 	ItemBerry:"Berry",
-	ItemStoneSword:"StoneSword",
+	ItemStoneClub:"StoneClub",
 	ItemBronzeSword:"BronzeSword",
 	ItemIronSword:"IronSword",
-	ItemFirePlace:"FirePlace",
+	ItemCampfire:"Campfire",
 }
 

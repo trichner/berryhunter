@@ -12,18 +12,17 @@ var DeathioApi = DeathioApi || {};
 DeathioApi.Item = {
   None: 0,
   WoodClub: 1,
-  WoodTool: 2,
-  StoneTool: 3,
-  BronzeTool: 4,
-  IronTool: 5,
-  Wood: 6,
-  Stone: 7,
-  Bronze: 8,
-  Berry: 9,
-  StoneSword: 10,
-  BronzeSword: 11,
-  IronSword: 12,
-  FirePlace: 13
+  StoneTool: 2,
+  BronzeTool: 3,
+  IronTool: 4,
+  Wood: 5,
+  Stone: 6,
+  Bronze: 7,
+  Berry: 8,
+  StoneClub: 9,
+  BronzeSword: 10,
+  IronSword: 11,
+  Campfire: 12
 };
 
 /**
