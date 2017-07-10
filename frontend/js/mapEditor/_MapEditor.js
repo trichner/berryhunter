@@ -9,45 +9,53 @@ define([
 	'GameMap',
 	'MiniMap',
 	'Preloading',
-	'Quadrants'
-], function (Two, Utils, Constants, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants) {
-	const MapEditor = {
-		isActive: function () {
-			if (typeof this.active !== 'undefined') {
-				return this.active;
-			}
+	'Quadrants',
+	'gameObjects/Animals',
+	'gameObjects/Resources',
+	'underscore',
+], function (Two, Utils, Constants, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants, Animals, Resources, _) {
+	let MapEditor = {};
 
-			let quadrantParameter = Utils.getUrlParameter(Constants.MODE_PARAMETERS.MAP_EDITOR);
-			this.active = !!quadrantParameter;
+	MapEditor.isActive = function () {
+		if (typeof this.active !== 'undefined') {
 			return this.active;
-		},
+		}
 
-		setup: function () {
-			let two = new Two({
-				width: Constants.QUADRANT_SIZE,
-				height: Constants.QUADRANT_SIZE,
-				type: Two.Types.svg
-			}).appendTo(document.getElementById('drawingContainer'));
+		let quadrantParameter = Utils.getUrlParameter(Constants.MODE_PARAMETERS.MAP_EDITOR);
+		this.active = !!quadrantParameter;
+		return this.active;
+	};
 
-			require(['Develop'], function (Develop) {
-				if (Develop.isActive()) {
-					Develop.logWebsocketStatus('Disabled', 'neutral');
-				}
-			});
+	MapEditor.setup = function () {
+		let two = new Two({
+			width: Constants.QUADRANT_SIZE,
+			height: Constants.QUADRANT_SIZE,
+			type: Two.Types.svg,
+		}).appendTo(document.getElementById('drawingContainer'));
 
-			// Empty quadrants
-			Quadrants = [[]];
-			this.calculateMapDimensions();
+		require(['Develop'], function (Develop) {
+			if (Develop.isActive()) {
+				Develop.logWebsocketStatus('Disabled', 'neutral');
+			}
+		});
 
-			GameMapGenerator.generate = GameMapGenerator.generateFromQuadrants;
+		// Empty quadrants
+		Quadrants = [[]];
+		this.calculateMapDimensions();
 
-			document.getElementById('quadrantJson').addEventListener('input', this.tryRenderQuadrants);
-			document.getElementById('renderButton').addEventListener('click', this.tryRenderQuadrants);
+		GameMapGenerator.generate = GameMapGenerator.generateFromQuadrants;
 
-			return two;
-		},
+		document.getElementById('quadrantJson').addEventListener('input', this.tryRenderQuadrants);
+		document.getElementById('renderButton').addEventListener('click', this.tryRenderQuadrants);
 
-		afterSetup: function (Game) {
+		_.extend(window, Animals);
+		_.extend(window, Resources);
+
+		return two;
+	};
+
+	require(['Game'], function (Game) {
+		MapEditor.afterSetup = function () {
 			Game.two.pause();
 
 			Game.createPlayer(0, Game.width / 2, Game.height / 2);
@@ -59,9 +67,9 @@ define([
 			}.bind(this);
 
 			this.tryRenderQuadrants();
-		},
+		};
 
-		tryRenderQuadrants: function () {
+		MapEditor.tryRenderQuadrants = function () {
 			let jsonStatus = document.getElementById('jsonStatus');
 			jsonStatus.classList.remove('error');
 			jsonStatus.classList.remove('success');
@@ -110,23 +118,24 @@ define([
 			Game.two.update();
 			jsonStatus.innerHTML = 'Rendered';
 			jsonStatus.classList.add('success');
-		},
+		};
 
-		calculateMapDimensions: function () {
+		MapEditor.calculateMapDimensions = function () {
 			// If there's no quadrant, at least render 1 empty quadrant
 			let quadrantCount = Math.max(1, Quadrants.length);
 			// TODO Quadranten möglichst quadratisch auslegen, statt alle in die Breite
 			this.mapWidth = Constants.QUADRANT_SIZE * quadrantCount;
 			this.mapHeight = Constants.QUADRANT_SIZE;
-		},
+		};
 
-		getMapDimensions: function () {
+		MapEditor.getMapDimensions = function () {
 			return {
 				width: this.mapWidth,
-				height: this.mapHeight
+				height: this.mapHeight,
 			}
-		}
-	};
+		};
+	});
+
 
 	if (MapEditor.isActive()) {
 		Preloading.registerPartial('partials/mapEditor.html');
