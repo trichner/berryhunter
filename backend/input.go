@@ -181,19 +181,22 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 		return
 	}
 
-	item, ok := i.game.items.Get(action.Item)
-	if !ok {
-		fmt.Printf("Unknown Action Item: %d", action.Item)
+	item, err := i.game.items.Get(action.Item)
+	if err != nil {
+		fmt.Printf("Unknown Action Item: %s", err)
 		return
 	}
+
+	log.Printf("Action going on: %s(%s)", DeathioApi.EnumNamesActionType[int(action.Type)], item.Name)
 
 	switch action.Type {
 	case DeathioApi.ActionTypePrimary:
 		p.hand.Shape().Layer = -1
-		log.Printf("Action going on.")
-		log.Printf("Player: %s", p.Position())
-		log.Printf("Hand: %s", p.hand.Position())
 		break
+	case DeathioApi.ActionTypeCraftItem:
+		p.Craft(item)
+		break
+
 	case DeathioApi.ActionTypeDropItem:
 		p.inventory.DropAll(item)
 		break

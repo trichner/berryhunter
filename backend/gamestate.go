@@ -65,7 +65,7 @@ func PlayerMarshalFlatbuf(p *player, builder *flatbuffers.Builder) flatbuffers.U
 
 func ItemStackMarshalFlatbuf(i *items.ItemStack, builder *flatbuffers.Builder, slot uint8) flatbuffers.UOffsetT {
 
-	return DeathioApi.CreateItemStack(builder, byte(i.Item.ID), i.Count, slot)
+	return DeathioApi.CreateItemStack(builder, byte(i.Item.ID), uint32(i.Count), slot)
 }
 
 func InventoryMarshalFlatbuf(inventory items.Inventory, builder *flatbuffers.Builder) flatbuffers.UOffsetT {

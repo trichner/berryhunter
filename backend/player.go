@@ -48,7 +48,11 @@ func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	e := newCircleEntity(0.25)
 
 	e.entityType = DeathioApi.EntityTypeCharacter
-	p := &player{entity: e, client: c, Equipment: items.NewEquipment()}
+	p := &player{entity: e,
+		client:      c,
+		Equipment:   items.NewEquipment(),
+		//items:       itemRegistry,
+	}
 
 	// setup body
 	shapeGroup := int(p.ID())
@@ -66,17 +70,18 @@ func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	// setup inventory
 	p.inventory = items.NewInventory()
 
+	//--- initialize inventory
 	var item items.Item
-	var ok bool
-	item, ok = itemRegistry.Get(items.ItemEnum(DeathioApi.ItemWoodClub))
-	if !ok {
-		panic("Cannot find WoodClub.")
+	var err error
+	item, err = itemRegistry.Get(items.ItemEnum(DeathioApi.ItemWoodClub))
+	if err != nil {
+		panic(err)
 	}
 	p.inventory.AddItem(items.NewItemStack(item, 1))
 
-	item, _ = itemRegistry.Get(items.ItemEnum(DeathioApi.ItemBronzeSword))
-	if !ok {
-		panic("Cannot find BronzeSword.")
+	item, err = itemRegistry.Get(items.ItemEnum(DeathioApi.ItemBronzeSword))
+	if err != nil {
+		panic(err)
 	}
 	p.inventory.AddItem(items.NewItemStack(item, 1))
 
@@ -104,4 +109,24 @@ func (p *player) updateHand() {
 	relativeOffset := phy.NewRotMat2f(p.angle).Mult(handOffset)
 	handPos := p.Position().Add(relativeOffset)
 	p.hand.SetPosition(handPos)
+}
+
+func (p *player) Craft(i items.Item) bool {
+
+	r := i.Recipe
+
+	stacks := make([]*items.ItemStack, 0)
+	for _, m := range r.Materials {
+		stacks = append(stacks, items.NewItemStack(m.Item, m.Count))
+	}
+
+	if !p.inventory.CanConsumeItems(stacks) {
+		return false
+	}
+
+	p.inventory.ConsumeItems(stacks)
+
+	//TODO defer
+	p.inventory.AddItem(items.NewItemStack(i, 1))
+	return true
 }

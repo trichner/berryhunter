@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"io/ioutil"
 	"log"
+	"fmt"
 )
 
 type registry struct {
@@ -12,7 +13,7 @@ type registry struct {
 }
 
 type Registry interface {
-	Get(i ItemEnum) (Item, bool)
+	Get(i ItemEnum) (Item, error)
 	Items() []*ItemDefinition
 }
 
@@ -46,7 +47,24 @@ func RegistryFromFiles(f ...string) *registry {
 		})
 	}
 
+	r.decorateMaterials()
+
 	return r
+}
+
+func (r *registry) decorateMaterials() {
+	for _, itemDef := range r.items {
+		decoratedMaterials := make([]Material, 0)
+		for _, m := range itemDef.Recipe.Materials {
+			item, err := r.Get(m.Item.ID)
+			if err != nil {
+				panic(err)
+			}
+
+			decoratedMaterials = append(decoratedMaterials, Material{item, m.Count})
+		}
+		itemDef.Recipe.Materials = decoratedMaterials
+	}
 }
 
 func NewRegistry() *registry {
@@ -57,9 +75,12 @@ func (r *registry) Add(i *ItemDefinition) {
 	r.items[i.ID] = i
 }
 
-func (r *registry) Get(i ItemEnum) (Item, bool) {
+func (r *registry) Get(i ItemEnum) (Item, error) {
 	def, ok := r.items[i]
-	return Item{def}, ok
+	if !ok {
+		return Item{}, fmt.Errorf("Cannot find ItemEnum '%d'", i)
+	}
+	return Item{def}, nil
 }
 
 func (r *registry) Items() []*ItemDefinition {

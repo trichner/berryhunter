@@ -17,7 +17,7 @@ var NamesEnumEquipSlot = map[string]EquipSlot{
 }
 
 type Material struct {
-	Item  ItemEnum
+	Item  Item
 	Count int
 }
 
@@ -35,7 +35,7 @@ type ItemDefinition struct {
 	ID     ItemEnum
 	Name   string
 	Slot   EquipSlot
-	Recipe Recipe
+	Recipe *Recipe
 }
 
 type Item struct {
@@ -92,6 +92,10 @@ func mapItemIdentifier(id string) (ItemEnum, error) {
 	return ItemEnum(enum), nil
 }
 
+func shallowItem(id ItemEnum) Item {
+	return Item{&ItemDefinition{ID: id}}
+}
+
 func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	enum, err := mapItemIdentifier(i.Item)
 	if err != nil {
@@ -108,7 +112,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			return nil, err
 		}
 		material := Material{
-			materialEnum,
+			shallowItem(materialEnum),
 			v.Count,
 		}
 		materials = append(materials, material)
@@ -129,6 +133,6 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		ID:     enum,
 		Name:   i.Item,
 		Slot:   slot,
-		Recipe: Recipe{i.Recipe.CraftTicks, materials, tools},
+		Recipe: &Recipe{i.Recipe.CraftTicks, materials, tools},
 	}, nil
 }

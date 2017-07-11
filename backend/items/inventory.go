@@ -24,10 +24,10 @@ func NewInventory() Inventory {
 
 type ItemStack struct {
 	Item  Item
-	Count uint32
+	Count int
 }
 
-func NewItemStack(item Item, count uint32) *ItemStack {
+func NewItemStack(item Item, count int) *ItemStack {
 	return &ItemStack{
 		Item:  item,
 		Count: count,
