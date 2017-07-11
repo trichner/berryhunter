@@ -187,7 +187,10 @@ define([
 								Game.map.objects.push(placeableGameobject);
 								Game.player.inventory.removeItem(placedItem, 1);
 							} else {
-								// TODO communicate placing to backend
+								action = {
+									item: placedItem,
+									actionType: DeathioApi.ActionType.PlaceItem
+								}
 							}
 							break;
 					}

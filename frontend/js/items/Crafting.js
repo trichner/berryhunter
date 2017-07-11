@@ -59,7 +59,7 @@ define([
 								}
 								Game.player.inventory.addItem(recipe.item);
 							} else {
-								// TODO Report craft request to backend
+								Game.player.controls.onInventoryAction(recipe.item, DeathioApi.ActionType.CraftItem);
 							}
 							break;
 						case 2:

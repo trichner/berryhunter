@@ -14,7 +14,8 @@ DeathioApi.ActionType = {
   CraftItem: 1,
   EquipItem: 2,
   UnequipItem: 3,
-  DropItem: 4
+  DropItem: 4,
+  PlaceItem: 5
 };
 
 /**
