@@ -189,6 +189,11 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 
 	log.Printf("Action going on: %s(%s)", DeathioApi.EnumNamesActionType[int(action.Type)], item.Name)
 
+	if !p.inventory.CanConsume(items.NewItemStack(item, 1)) {
+		fmt.Printf("Player tried to use an item he does not own!")
+		//TODO break here
+	}
+
 	switch action.Type {
 	case DeathioApi.ActionTypePrimary:
 		p.hand.Shape().Layer = -1

@@ -11,11 +11,7 @@
     "materials": [
       {
         "item": "Wood",
-        "count": 40
-      },
-      {
-        "item": "Stone",
-        "count": 60
+        "count": 10
       }
     ],
     "tools": [
