@@ -26,9 +26,8 @@ func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) f
 
 	n := len(items)
 	DeathioApi.EntityStartEquipmentVector(builder, n)
-	for i := range items {
-		//HACK, generated code is not for enum!
-		DeathioApi.EntityAddEquipment(builder, flatbuffers.UOffsetT(i))
+	for _, i := range items {
+		builder.PrependByte(byte(i.ID))
 	}
 
 	return builder.EndVector(n)
