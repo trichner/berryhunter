@@ -1,31 +1,31 @@
 {
-	"item": "IronTool",
-	"factors": {
-		"damage": 2,
-		"yield": 5
-	},
-	"recipe": {
-		"craftTimeSec": 30,
-		"materials": [
-			{
-				"item": "Stone",
-				"count": 100
-			},
-			{
-				"item": "Bronze",
-				"count": 60
-			},
-			{
-				"item": "Iron",
-				"count": 30
-			},
-			{
-				"item": "BronzeTool",
-				"count": 1
-			}
-		],
-		"tools": [
-			"Workbench"
-		]
-	}
+  "item": "IronTool",
+  "factors": {
+    "damage": 2,
+    "yield": 5
+  },
+  "recipe": {
+    "craftTimeSec": 30,
+    "materials": [
+      {
+        "item": "Stone",
+        "count": 100
+      },
+      {
+        "item": "Bronze",
+        "count": 60
+      },
+      {
+        "item": "Iron",
+        "count": 30
+      },
+      {
+        "item": "BronzeTool",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
 }

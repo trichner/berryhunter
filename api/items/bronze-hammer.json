@@ -1,32 +1,32 @@
 {
-	"item": "BronzeHammer",
-	"factors": {
-		"damage": 2,
-		"structureDamage": 4,
-		"yield": 2
-	},
-	"recipe": {
-		"craftTimeSec": 20,
-		"materials": [
-			{
-				"item": "Wood",
-				"count": 160
-			},
-			{
-				"item": "Stone",
-				"count": 120
-			},
-			{
-				"item": "Bronze",
-				"count": 80
-			},
-			{
-				"item": "StoneHammer",
-				"count": 1
-			}
-		],
-		"tools": [
-			"Workbench"
-		]
-	}
+  "item": "BronzeHammer",
+  "factors": {
+    "damage": 2,
+    "structureDamage": 4,
+    "yield": 2
+  },
+  "recipe": {
+    "craftTimeSec": 20,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 160
+      },
+      {
+        "item": "Stone",
+        "count": 120
+      },
+      {
+        "item": "Bronze",
+        "count": 80
+      },
+      {
+        "item": "StoneHammer",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
 }

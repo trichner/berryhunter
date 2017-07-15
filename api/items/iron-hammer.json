@@ -1,32 +1,32 @@
 {
-	"item": "IronHammer",
-	"factors": {
-		"damage": 2,
-		"structureDamage": 5,
-		"yield": 2
-	},
-	"recipe": {
-		"craftTimeSec": 30,
-		"materials": [
-			{
-				"item": "Stone",
-				"count": 200
-			},
-			{
-				"item": "Bronze",
-				"count": 150
-			},
-			{
-				"item": "Iron",
-				"count": 80
-			},
-			{
-				"item": "BronzeHammer",
-				"count": 1
-			}
-		],
-		"tools": [
-			"Workbench"
-		]
-	}
+  "item": "IronHammer",
+  "factors": {
+    "damage": 2,
+    "structureDamage": 5,
+    "yield": 2
+  },
+  "recipe": {
+    "craftTimeSec": 30,
+    "materials": [
+      {
+        "item": "Stone",
+        "count": 200
+      },
+      {
+        "item": "Bronze",
+        "count": 150
+      },
+      {
+        "item": "Iron",
+        "count": 80
+      },
+      {
+        "item": "BronzeHammer",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
 }

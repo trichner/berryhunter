@@ -1,11 +1,11 @@
 {
   "item": "WoodClub",
-	"factors": {
+  "factors": {
     "damage": 2,
-		"yield": 2
+    "yield": 2
   },
   "recipe": {
-	  "craftTimeSec": 5,
+    "craftTimeSec": 5,
     "materials": [
       {
         "item": "Wood",

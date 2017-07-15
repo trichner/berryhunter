@@ -1,27 +1,27 @@
 {
   "item": "StoneTool",
-	"factors": {
-		"damage": 2,
-		"yield": 3
+  "factors": {
+    "damage": 2,
+    "yield": 3
   },
   "recipe": {
-	  "craftTimeSec": 15,
+    "craftTimeSec": 15,
     "materials": [
       {
         "item": "Wood",
-	      "count": 60
+        "count": 60
       },
       {
-	      "item": "Stone",
-	      "count": 20
+        "item": "Stone",
+        "count": 20
       },
-	    {
-		    "item": "WoodClub",
-		    "count": 1
+      {
+        "item": "WoodClub",
+        "count": 1
       }
     ],
     "tools": [
-	    "Campfire"
+      "Campfire"
     ]
   }
 }
