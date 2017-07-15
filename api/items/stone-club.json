@@ -1,0 +1,27 @@
+{
+	"item": "StoneClub",
+	"factors": {
+		"damage": 3,
+		"yield": 2
+	},
+	"recipe": {
+		"craftTimeSec": 15,
+		"materials": [
+			{
+				"item": "Wood",
+				"count": 60
+			},
+			{
+				"item": "Stone",
+				"count": 30
+			},
+			{
+				"item": "WoodClub",
+				"count": 1
+			}
+		],
+		"tools": [
+			"Workbench"
+		]
+	}
+}

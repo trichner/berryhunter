@@ -1,0 +1,31 @@
+{
+	"item": "IronSword",
+	"factors": {
+		"damage": 5,
+		"yield": 2
+	},
+	"recipe": {
+		"craftTimeSec": 40,
+		"materials": [
+			{
+				"item": "Wood",
+				"count": 100
+			},
+			{
+				"item": "Bronze",
+				"count": 80
+			},
+			{
+				"item": "Iron",
+				"count": 50
+			},
+			{
+				"item": "BronzeSword",
+				"count": 1
+			}
+		],
+		"tools": [
+			"Workbench"
+		]
+	}
+}

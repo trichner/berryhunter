@@ -1,22 +1,15 @@
 {
   "item": "WoodClub",
-  "stats": {
+	"factors": {
     "damage": 2,
-    "yield": 1,
-    "warmth": 0,
-    "armor": 0
+		"yield": 2
   },
   "recipe": {
-    "craftTicks": 60,
+	  "craftTimeSec": 5,
     "materials": [
       {
         "item": "Wood",
         "count": 10
-      }
-    ],
-    "tools": [
-      {
-        "entityType": "Campfire"
       }
     ]
   }

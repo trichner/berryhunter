@@ -1,0 +1,32 @@
+{
+	"item": "TitaniumHammer",
+	"factors": {
+		"damage": 2,
+		"structureDamage": 6,
+		"yield": 2
+	},
+	"recipe": {
+		"craftTimeSec": 40,
+		"materials": [
+			{
+				"item": "Bronze",
+				"count": 250
+			},
+			{
+				"item": "Iron",
+				"count": 160
+			},
+			{
+				"item": "Titanium",
+				"count": 60
+			},
+			{
+				"item": "IronHammer",
+				"count": 1
+			}
+		],
+		"tools": [
+			"Workbench"
+		]
+	}
+}

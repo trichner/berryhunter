@@ -1,31 +1,27 @@
 {
   "item": "StoneTool",
-
-  "slot": "PrimaryHand",
-
-  "stats": {
-    "damage": 1,
-    "yield": 2,
-    "warmth": 0,
-    "armor": 0
+	"factors": {
+		"damage": 2,
+		"yield": 3,
   },
-
   "recipe": {
-    "craftTicks": 60,
+	  "craftTimeSec": 15,
     "materials": [
       {
         "item": "Wood",
-        "count": 20
+	      "count": 60
       },
       {
-        "item": "Stone",
-        "count": 10
+	      "item": "Stone",
+	      "count": 20
+      },
+	    {
+		    "item": "WoodClub",
+		    "count": 1
       }
     ],
     "tools": [
-      {
-        "entityType": "Campfire"
-      }
+	    "Campfire"
     ]
   }
 }

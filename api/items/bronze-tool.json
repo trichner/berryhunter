@@ -1,0 +1,31 @@
+{
+	"item": "BronzeTool",
+	"factors": {
+		"damage": 2,
+		"yield": 4,
+	},
+	"recipe": {
+		"craftTimeSec": 20,
+		"materials": [
+			{
+				"item": "Wood",
+				"count": 60
+			},
+			{
+				"item": "Stone",
+				"count": 40
+			},
+			{
+				"item": "Bronze",
+				"count": 30
+			},
+			{
+				"item": "StoneClub",
+				"count": 1
+			}
+		],
+		"tools": [
+			"Workbench"
+		]
+	}
+}

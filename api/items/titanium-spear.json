@@ -1,0 +1,31 @@
+{
+	"item": "TitaniumSpear",
+	"factors": {
+		"damage": 6,
+		"yield": 2
+	},
+	"recipe": {
+		"craftTimeSec": 40,
+		"materials": [
+			{
+				"item": "Bronze",
+				"count": 130
+			},
+			{
+				"item": "Iron",
+				"count": 80
+			},
+			{
+				"item": "Titanium",
+				"count": 50
+			},
+			{
+				"item": "IronSpear",
+				"count": 1
+			}
+		],
+		"tools": [
+			"Workbench"
+		]
+	}
+}

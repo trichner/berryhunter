@@ -1,0 +1,28 @@
+{
+	"item": "StoneHammer",
+	"factors": {
+		"damage": 2,
+		"structureDamage": 3,
+		"yield": 2
+	},
+	"recipe": {
+		"craftTimeSec": 15,
+		"materials": [
+			{
+				"item": "Wood",
+				"count": 90
+			},
+			{
+				"item": "Stone",
+				"count": 50
+			},
+			{
+				"item": "WoodClub",
+				"count": 1
+			}
+		],
+		"tools": [
+			"Workbench"
+		]
+	}
+}

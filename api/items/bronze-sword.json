@@ -1,28 +1,31 @@
 {
   "item": "BronzeSword",
-  "stats": {
-    "damage": 2,
-    "yield": 1,
-    "warmth": 0,
-    "armor": 0
+  "factors": {
+    "damage": 4,
+    "yield": 2
   },
   "recipe": {
-    "craftTicks": 60,
+    "craftTimeSec": 20,
     "materials": [
       {
         "item": "Wood",
-        "count": 40
+        "count": 80
       },
       {
         "item": "Stone",
         "count": 60
+      },
+      {
+        "item": "Bronze",
+        "count": 50
+      },
+      {
+        "item": "StoneClub",
+        "count": 1
       }
     ],
-    "_": "Tools required to craft this item.",
     "tools": [
-      {
-        "entityType": "Campfire"
-      }
+      "Workbench"
     ]
   }
 }
