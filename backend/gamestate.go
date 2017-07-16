@@ -125,6 +125,13 @@ func EntitiesFlatbufMarshal(entities []model.Entity, builder *flatbuffers.Builde
 // flatbuffer schema
 func EntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
+	// prepend entity specific things
+	var equipment flatbuffers.UOffsetT
+	switch v := e.(type) {
+	case model.PlayerEntity:
+		equipment = EquipmentMarshalFlatbuf(v.Equipped(), builder)
+	}
+
 	DeathioApi.EntityStart(builder)
 	DeathioApi.EntityAddId(builder, e.ID())
 
@@ -137,6 +144,10 @@ func EntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuff
 	DeathioApi.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
 	DeathioApi.EntityAddRotation(builder, e.Angle())
 	DeathioApi.EntityAddEntityType(builder, uint16(e.Type()))
+
+	if equipment > 0 {
+		DeathioApi.EntityAddEquipment(builder, equipment)
+	}
 
 	return DeathioApi.EntityEnd(builder)
 }

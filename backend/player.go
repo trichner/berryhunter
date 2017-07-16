@@ -6,10 +6,15 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
+	"fmt"
 )
+
+var _ = model.PlayerEntity(&player{})
 
 //---- player
 type player struct {
+	name string
+
 	*entity
 	angle  float32
 	Health uint
@@ -25,6 +30,10 @@ type player struct {
 	items.Equipment
 
 	actionTick uint
+}
+
+func (p *player) Name() string {
+	return fmt.Sprintf("player %d", p.ID())
 }
 
 const viewPortWidth = 20.0
