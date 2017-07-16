@@ -68,19 +68,6 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
-		TitaniumTool: {
-			// TODO
-			icon: {file: ''},
-			graphic: {
-				file: '',
-				size: 30,
-				offsetX: 10,
-				offsetY: -2.5
-			},
-			definition: 'titanium-tool',
-			type: ItemType.EQUIPMENT,
-			equipmentSlot: Equipment.Slots.HAND
-		},
 
 		/***********************************
 		 * WEAPONS
@@ -112,14 +99,6 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			icon: {file: ''},
 			graphic: {file: ''},
 			definition: 'iron-tool',
-			type: ItemType.EQUIPMENT,
-			equipmentSlot: Equipment.Slots.HAND
-		},
-		TitaniumSword: {
-			// TODO
-			icon: {file: ''},
-			graphic: {file: ''},
-			definition: 'titanium-tool',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -160,18 +139,6 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
-		TitaniumSpear: {
-			// TODO
-			icon: {file: ''},
-			graphic: {
-				file: '',
-				size: 60,
-				offsetX: 20
-			},
-			definition: 'titanium-spear',
-			type: ItemType.EQUIPMENT,
-			equipmentSlot: Equipment.Slots.HAND
-		},
 
 		/***********************************
 		 * HAMMERS
@@ -197,14 +164,6 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			icon: {file: ''},
 			graphic: {file: ''},
 			definition: 'iron-hammer',
-			type: ItemType.EQUIPMENT,
-			equipmentSlot: Equipment.Slots.HAND
-		},
-		TitaniumHammer: {
-			// TODO
-			icon: {file: ''},
-			graphic: {file: ''},
-			definition: 'titanium-hammer',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -429,12 +388,6 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 		Iron: {
 			icon: {file: 'ironIcon'},
 			definition: 'iron',
-			type: ItemType.RESOURCE
-		},
-		Titanium: {
-			// TODO
-			icon: {file: ''},
-			definition: 'titanium',
 			type: ItemType.RESOURCE
 		}
 	};
