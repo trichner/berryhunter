@@ -173,7 +173,7 @@ func (v Vec2i) Sub(w Vec2i) Vec2i {
 	return Vec2i{v.X - w.X, v.Y - w.Y}
 }
 
-// NewRotMat2f create a new rotation matrix
+// NewRotMat2f create a new rotation matrix with a angle alpha in radians
 func NewRotMat2f(alpha float32) Mat2f {
 	c := cos32f(alpha)
 	s := sin32f(alpha)

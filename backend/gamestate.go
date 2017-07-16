@@ -40,7 +40,7 @@ func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) fl
 	DeathioApi.EntityStart(builder)
 	DeathioApi.EntityAddId(builder, p.Basic().ID())
 
-	pos := DeathioApi.CreateVec2f(builder, f32ToPx(p.X()), f32ToPx(p.Y()))
+	pos := DeathioApi.CreateVec2f(builder, f32ToPx(p.Position().X), f32ToPx(p.Position().Y))
 	DeathioApi.EntityAddPos(builder, pos)
 
 	aabb := AabbMarshalFlatbuf(p.AABB(), builder)
@@ -131,7 +131,7 @@ func EntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuff
 	DeathioApi.EntityStart(builder)
 	DeathioApi.EntityAddId(builder, e.Basic().ID())
 
-	pos := DeathioApi.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
+	pos := DeathioApi.CreateVec2f(builder, f32ToPx(e.Position().X), f32ToPx(e.Position().Y))
 	DeathioApi.EntityAddPos(builder, pos)
 
 	aabb := AabbMarshalFlatbuf(e.AABB(), builder)

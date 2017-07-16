@@ -5,6 +5,11 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 )
 
+func NewBaseEntity(c *phy.Circle, t EntityType) BaseEntity {
+	return BaseEntity{BasicEntity: ecs.NewBasic(), Body: c, EntityType: t}
+}
+
+var _ = Entity(&BaseEntity{})
 type BaseEntity struct {
 	ecs.BasicEntity
 	Body       *phy.Circle
@@ -25,16 +30,12 @@ func (e *BaseEntity) Type() EntityType {
 	return e.EntityType
 }
 
+func (e *BaseEntity) Position() phy.Vec2f {
+	return e.Body.Position()
+}
+
 func (e *BaseEntity) SetPosition(x, y float32) {
 	e.Body.SetPosition(phy.Vec2f{x, y})
-}
-
-func (e *BaseEntity) X() float32 {
-	return e.Body.Position().X
-}
-
-func (e *BaseEntity) Y() float32 {
-	return e.Body.Position().Y
 }
 
 func (e *BaseEntity) AABB() AABB {

@@ -11,8 +11,7 @@ type Bodies []phy.DynamicCollider
 
 type Entity interface {
 	Basic() ecs.BasicEntity
-	X() float32
-	Y() float32
+	Position() phy.Vec2f
 	Angle() float32
 	Radius() float32
 	Type() EntityType
@@ -20,14 +19,12 @@ type Entity interface {
 	Bodies() Bodies
 }
 
-type MobVitalSigns struct {
-	Health          int
-}
-
 type MobEntity interface {
 	Entity
-	VitalSigns() *MobVitalSigns
-	Velocity() phy.Vec2f
+	Health() int
+	//Velocity() phy.Vec2f
+	//SetVelocity(v phy.Vec2f)
+	Update(dt float32)
 }
 
 // AABB is an alias to not expose transitive dependencies
