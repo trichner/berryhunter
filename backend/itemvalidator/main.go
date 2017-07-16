@@ -4,6 +4,7 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"os"
 	"fmt"
+	"sort"
 )
 
 var helpArgs = map[string]bool{
@@ -11,6 +12,7 @@ var helpArgs = map[string]bool{
 	"--help": true,
 	"-?":     true,
 }
+
 
 func main() {
 
@@ -27,8 +29,10 @@ func main() {
 
 	r := items.RegistryFromPaths(path)
 
+	parsedItems := r.Items()
+	sort.Sort(items.ByID(parsedItems))
 	fmt.Printf("Parsed items:\n")
-	for _, i := range r.Items() {
-		fmt.Printf(" - %s\n", i.Name)
+	for _, i := range parsedItems {
+		fmt.Printf(" - %2d: %s\n", i.ID, i.Name)
 	}
 }

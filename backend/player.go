@@ -30,10 +30,16 @@ type player struct {
 	items.Equipment
 
 	actionTick uint
+
+	model.PlayerVitalSigns
 }
 
 func (p *player) Name() string {
 	return fmt.Sprintf("player %d", p.ID())
+}
+
+func (p *player) VitalSigns() *model.PlayerVitalSigns {
+	return &p.PlayerVitalSigns
 }
 
 const viewPortWidth = 20.0
@@ -93,6 +99,11 @@ func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 		panic(err)
 	}
 	p.inventory.AddItem(items.NewItemStack(item, 1))
+
+	//--- setup vital signs
+	p.PlayerVitalSigns.Health = 100
+	p.PlayerVitalSigns.Satiety = 100
+	p.PlayerVitalSigns.BodyTemperature = 100
 
 	// setup hand sensor
 	p.hand = phy.NewCircle(e.body.Position(), 0.25)

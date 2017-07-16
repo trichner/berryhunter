@@ -9,21 +9,29 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/items"
+	"sort"
+	"os"
 )
 
 func main() {
 
 	config := readConf()
-	items := items.RegistryFromPaths("../api/items/")
+	registry, err := items.RegistryFromPaths("../api/items/")
+	if err != nil {
 
-	itemList := items.Items()
-	log.Printf("Loadded %d items:", len(itemList))
+		log.Printf("Error: %s", err)
+		os.Exit(1)
+	}
+
+	itemList := registry.Items()
+	log.Printf("Loaded %d item definitions:", len(itemList))
+	sort.Sort(items.ByID(itemList))
 	for _, i := range itemList {
-		log.Printf("- %s", i.Name)
+		log.Printf("%3d: %s", i.ID, i.Name)
 	}
 
 	g := &Game{}
-	g.Init(config, items)
+	g.Init(config, registry)
 
 	entities := Generate(g.items, rand.New(rand.NewSource(0xDEADBEEF)))
 	for _, e := range entities {

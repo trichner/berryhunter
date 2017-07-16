@@ -15,7 +15,7 @@ const (
 	EquipSlotBack
 )
 
-var NamesEnumEquipSlot = map[string]EquipSlot{
+var namesEnumEquipSlot = map[string]EquipSlot{
 	"PrimaryHand": EquipSlotPrimaryHand,
 	"Head":        EquipSlotHead,
 	"Breast":      EquipSlotBreast,
@@ -43,6 +43,12 @@ type ItemDefinition struct {
 	Slot   EquipSlot
 	Recipe *Recipe
 }
+
+type ByID []*ItemDefinition
+
+func (a ByID) Len() int           { return len(a) }
+func (a ByID) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByID) Less(i, j int) bool { return a[i].ID < a[j].ID }
 
 type Item struct {
 	*ItemDefinition
@@ -106,7 +112,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		return nil, err
 	}
 
-	slot := NamesEnumEquipSlot[i.Slot]
+	slot := namesEnumEquipSlot[i.Slot]
 
 	// map materials list
 	materials := make([]Material, 0)

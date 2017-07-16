@@ -1,0 +1,18 @@
+{
+  "item": "Campfire",
+  "recipe": {
+    "craftTimeSec": 20,
+
+    "comment": "TODO",
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 30
+      },
+      {
+        "item": "Stone",
+        "count": 20
+      }
+    ]
+  }
+}

@@ -17,10 +17,17 @@ type Entity interface {
 	AABB() AABB
 }
 
+type PlayerVitalSigns struct {
+	Satiety         int
+	BodyTemperature int
+	Health          int
+}
+
 type PlayerEntity interface {
 	Entity
 	Name() string
 	Equipped() []items.Item
+	VitalSigns() *PlayerVitalSigns
 }
 
 // AABB is an alias to not expose transitive dependencies

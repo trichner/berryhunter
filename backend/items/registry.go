@@ -4,7 +4,6 @@ import (
 	"os"
 	"path/filepath"
 	"io/ioutil"
-	"log"
 	"fmt"
 )
 
@@ -17,39 +16,43 @@ type Registry interface {
 	Items() []*ItemDefinition
 }
 
-func RegistryFromPaths(f ...string) *registry {
+func RegistryFromPaths(f ...string) (*registry, error) {
 
 	r := NewRegistry()
 
 	for _, path := range f {
-		filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return fmt.Errorf("Cannot read '%s': %s", path, err)
+			}
+
 			if !info.Mode().IsRegular() {
 				return nil
 			}
 
 			data, err := ioutil.ReadFile(path)
 			if err != nil {
-				log.Printf("Cannot read '%s': %s\n", path, err)
-				return nil
+				return fmt.Errorf("Cannot read '%s': %s", path, err)
 			}
 			itemParsed, err := parseItemDefinition(data)
 			if err != nil {
-				log.Printf("Cannot parse '%s': %s\n", path, err)
-				return nil
+				return fmt.Errorf("Cannot parse '%s': %s", path, err)
 			}
 			item, err := itemParsed.mapToItemDefinition()
 			if err != nil {
-				log.Printf("Cannot map '%s': %s\n", path, err)
-				return nil
+				return fmt.Errorf("Cannot map '%s': %s\n", path, err)
 			}
 			r.Add(item)
 			return nil
 		})
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	r.decorateMaterials()
 
-	return r
+	return r, nil
 }
 
 func (r *registry) decorateMaterials() {

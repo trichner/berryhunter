@@ -4,7 +4,6 @@ import (
 	"engo.io/ecs"
 	"log"
 	"sync"
-	"fmt"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
@@ -145,7 +144,6 @@ const walkSpeed = 0.1
 func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 
 	for v := range p.hand.Collisions() {
-		fmt.Printf("HIT!!!! Action on: %+v\n", v.Shape().UserData)
 		r, ok := v.Shape().UserData.(Interacter)
 		if !ok {
 			continue
@@ -183,15 +181,16 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 
 	item, err := i.game.items.Get(action.Item)
 	if err != nil {
-		fmt.Printf("Unknown Action Item: %s", err)
+		log.Printf("Unknown Action Item: %s", err)
 		return
 	}
 
 	log.Printf("Action going on: %s(%s)", DeathioApi.EnumNamesActionType[int(action.Type)], item.Name)
 
-	if !p.inventory.CanConsume(items.NewItemStack(item, 1)) {
-		fmt.Printf("Player tried to use an item he does not own!")
-		//TODO break here
+	// action item needs to either be in inventory or it's 'None'
+	if item.ID != 0 && !p.inventory.CanConsume(items.NewItemStack(item, 1)) {
+		log.Printf("Player tried to use an item he does not own!")
+		return
 	}
 
 	switch action.Type {
