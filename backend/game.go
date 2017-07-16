@@ -39,6 +39,7 @@ func (h *wsHandler) OnMessage(c *net.Client, msg []byte) {
 }
 
 func (g *Game) Init(conf *conf.Config, items items.Registry) {
+	
 
 	g.conf = conf
 	g.items = items
