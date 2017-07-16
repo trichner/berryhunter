@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// add some mobs
-	for i := 0; i < 20; i++ {
+	for i := 0; i < 100; i++ {
 		m := newMobEntity()
 		m.SetPosition(phy.Vec2f{float32(i), float32(i)})
 		g.AddMobEntity(m)

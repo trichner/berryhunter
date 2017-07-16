@@ -10,9 +10,17 @@ import (
 
 var _ = model.MobEntity(&Mob{})
 
+var types = []model.EntityType{
+	DeathioApi.EntityTypeDodo,
+	DeathioApi.EntityTypeMammoth,
+	DeathioApi.EntityTypeSaberToothCat,
+}
+
 func NewMob(body *phy.Circle) *Mob {
 	//TODO
-	base := model.NewBaseEntity(body, DeathioApi.EntityTypeDodo)
+	t := types[rand.Intn(len(types))]
+
+	base := model.NewBaseEntity(body, t)
 	m := &Mob{
 		BaseEntity: base,
 		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
