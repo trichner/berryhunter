@@ -2,7 +2,7 @@
 	"item": "BronzeTool",
 	"factors": {
 		"damage": 2,
-		"yield": 4,
+		"yield": 4
 	},
 	"recipe": {
 		"craftTimeSec": 20,

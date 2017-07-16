@@ -17,7 +17,7 @@ type Registry interface {
 	Items() []*ItemDefinition
 }
 
-func RegistryFromFiles(f ...string) *registry {
+func RegistryFromPaths(f ...string) *registry {
 
 	r := NewRegistry()
 

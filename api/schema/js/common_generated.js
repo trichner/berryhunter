@@ -22,7 +22,20 @@ DeathioApi.Item = {
   StoneClub: 9,
   BronzeSword: 10,
   IronSword: 11,
-  Campfire: 12
+  Campfire: 12,
+  BronzeHammer: 13,
+  BronzeSpear: 14,
+  Workbench: 15,
+  IronHammer: 16,
+  IronSpear: 17,
+  Iron: 18,
+  StoneHammer: 19,
+  StoneSpear: 20,
+  TitaniumSword: 21,
+  TitaniumTool: 22,
+  TitaniumHammer: 23,
+  TitaniumSpear: 24,
+  Titanium: 25
 };
 
 /**

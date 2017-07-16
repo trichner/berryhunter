@@ -2,7 +2,7 @@
   "item": "StoneTool",
 	"factors": {
 		"damage": 2,
-		"yield": 3,
+		"yield": 3
   },
   "recipe": {
 	  "craftTimeSec": 15,

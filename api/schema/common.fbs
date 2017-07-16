@@ -22,11 +22,26 @@ enum Item: ubyte {
 	Stone,
 	Bronze,
 	Berry,
-
 	StoneClub,
+
 	BronzeSword,
 	IronSword,
-
 	Campfire,
+	BronzeHammer,
+	BronzeSpear,
+
+	Workbench,
+	IronHammer,
+	IronSpear,
+	Iron,
+	StoneHammer,
+
+	StoneSpear,
+	TitaniumSword,
+	TitaniumTool,
+	TitaniumHammer,
+	TitaniumSpear,
+
+	Titanium
 }
 

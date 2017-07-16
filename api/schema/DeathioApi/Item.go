@@ -16,6 +16,19 @@ const (
 	ItemBronzeSword = 10
 	ItemIronSword = 11
 	ItemCampfire = 12
+	ItemBronzeHammer = 13
+	ItemBronzeSpear = 14
+	ItemWorkbench = 15
+	ItemIronHammer = 16
+	ItemIronSpear = 17
+	ItemIron = 18
+	ItemStoneHammer = 19
+	ItemStoneSpear = 20
+	ItemTitaniumSword = 21
+	ItemTitaniumTool = 22
+	ItemTitaniumHammer = 23
+	ItemTitaniumSpear = 24
+	ItemTitanium = 25
 )
 
 var EnumNamesItem = map[int]string{
@@ -32,5 +45,18 @@ var EnumNamesItem = map[int]string{
 	ItemBronzeSword:"BronzeSword",
 	ItemIronSword:"IronSword",
 	ItemCampfire:"Campfire",
+	ItemBronzeHammer:"BronzeHammer",
+	ItemBronzeSpear:"BronzeSpear",
+	ItemWorkbench:"Workbench",
+	ItemIronHammer:"IronHammer",
+	ItemIronSpear:"IronSpear",
+	ItemIron:"Iron",
+	ItemStoneHammer:"StoneHammer",
+	ItemStoneSpear:"StoneSpear",
+	ItemTitaniumSword:"TitaniumSword",
+	ItemTitaniumTool:"TitaniumTool",
+	ItemTitaniumHammer:"TitaniumHammer",
+	ItemTitaniumSpear:"TitaniumSpear",
+	ItemTitanium:"Titanium",
 }
 

@@ -2,7 +2,7 @@
 	"item": "TitaniumTool",
 	"factors": {
 		"damage": 2,
-		"yield": 6,
+		"yield": 6
 	},
 	"recipe": {
 		"craftTimeSec": 35,

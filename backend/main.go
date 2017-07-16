@@ -14,7 +14,7 @@ import (
 func main() {
 
 	config := readConf()
-	items := items.RegistryFromFiles("../api/items/")
+	items := items.RegistryFromPaths("../api/items/")
 
 	itemList := items.Items()
 	log.Printf("Loadded %d items:", len(itemList))

@@ -2,7 +2,7 @@
 	"item": "TitaniumSword",
 	"factors": {
 		"damage": 6,
-		"yield": 2,
+		"yield": 2
 	},
 	"recipe": {
 		"craftTimeSec": 40,
