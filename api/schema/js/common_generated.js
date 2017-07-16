@@ -30,12 +30,7 @@ DeathioApi.Item = {
   IronSpear: 17,
   Iron: 18,
   StoneHammer: 19,
-  StoneSpear: 20,
-  TitaniumSword: 21,
-  TitaniumTool: 22,
-  TitaniumHammer: 23,
-  TitaniumSpear: 24,
-  Titanium: 25
+	StoneSpear: 20
 };
 
 /**

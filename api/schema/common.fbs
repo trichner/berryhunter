@@ -35,13 +35,6 @@ enum Item: ubyte {
 	IronSpear,
 	Iron,
 	StoneHammer,
-
-	StoneSpear,
-	TitaniumSword,
-	TitaniumTool,
-	TitaniumHammer,
-	TitaniumSpear,
-
-	Titanium
+	StoneSpear
 }
 
