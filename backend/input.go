@@ -8,6 +8,7 @@ import (
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"github.com/trichner/berryhunter/backend/items"
+	"fmt"
 )
 
 
@@ -144,8 +145,15 @@ const walkSpeed = 0.1
 func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 
 	for v := range p.hand.Collisions() {
-		r, ok := v.Shape().UserData.(Interacter)
+		usr := v.Shape().UserData
+		if usr == nil {
+			fmt.Printf("Missing UserData!")
+			continue
+		}
+
+		r, ok := usr.(Interacter)
 		if !ok {
+			fmt.Printf("Non conformant UserData: %T", usr)
 			continue
 		}
 		r.PlayerHitsWith(p, p.handItem)
@@ -188,7 +196,7 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 	log.Printf("Action going on: %s(%s)", DeathioApi.EnumNamesActionType[int(action.Type)], item.Name)
 
 	// action item needs to either be in inventory or it's 'None'
-	if item.ID != 0 && !p.inventory.CanConsume(items.NewItemStack(item, 1)) {
+	if item.ID != 0 && !p.Inventory().CanConsume(items.NewItemStack(item, 1)) {
 		log.Printf("Player tried to use an item he does not own!")
 		return
 	}

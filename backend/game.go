@@ -90,7 +90,7 @@ func (g *Game) AddResourceEntity(e *resourceEntity) {
 
 		// Create a case for each System you want to use
 		case *PhysicsSystem:
-			sys.AddStaticBody(&e.BasicEntity, e.Body)
+			sys.AddStaticBody(e.BasicEntity, e.Body)
 		case *NetSystem:
 			sys.AddEntity(e)
 		}
@@ -106,7 +106,7 @@ func (g *Game) addPlayer(p *player) {
 
 		// Create a case for each System you want to use
 		case *PhysicsSystem:
-			sys.AddPlayer(p)
+			sys.AddEntity(p)
 		case *NetSystem:
 			sys.AddPlayer(p)
 			// Create a case for each System you want to use

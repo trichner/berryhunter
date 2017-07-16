@@ -9,7 +9,7 @@ import (
 
 type NetSystem struct {
 	entities []model.Entity
-	players  []*player
+	players  []model.PlayerEntity
 	game     *Game
 }
 
@@ -45,7 +45,7 @@ func (n *NetSystem) Update(dt float32) {
 		var entities []model.Entity
 
 		// find all entities in view
-		for c := range player.viewport.Collisions() {
+		for c := range player.Viewport().Collisions() {
 			userData := c.Shape().UserData
 			if userData != nil {
 				entities = append(entities, userData.(model.Entity))
@@ -61,9 +61,9 @@ func (n *NetSystem) Update(dt float32) {
 		builder := flatbuffers.NewBuilder(64)
 		gs := clientGameState.MarshalFlatbuf(builder)
 		builder.Finish(gs)
-		err := player.client.SendMessage(builder.FinishedBytes())
+		err := player.Client().SendMessage(builder.FinishedBytes())
 		if err != nil {
-			n.game.RemoveEntity(player.BasicEntity)
+			n.game.RemoveEntity(player.Basic())
 		}
 	}
 }
@@ -71,7 +71,7 @@ func (n *NetSystem) Update(dt float32) {
 func (n *NetSystem) Remove(b ecs.BasicEntity) {
 	var delete int = -1
 	for index, entity := range n.entities {
-		if entity.ID() == b.ID() {
+		if entity.Basic().ID() == b.ID() {
 			delete = index
 			break
 		}

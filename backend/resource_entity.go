@@ -9,6 +9,8 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 )
 
+var _ = Interacter(&resourceEntity{})
+
 type resourceEntity struct {
 	model.BaseEntity
 	resource

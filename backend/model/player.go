@@ -1,6 +1,10 @@
 package model
 
-import "github.com/trichner/berryhunter/backend/items"
+import (
+	"github.com/trichner/berryhunter/backend/items"
+	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/net"
+)
 
 type PlayerVitalSigns struct {
 	Satiety         int
@@ -14,4 +18,6 @@ type PlayerEntity interface {
 	Equipped() []items.Item
 	VitalSigns() *PlayerVitalSigns
 	Inventory() *items.Inventory
+	Viewport() phy.DynamicCollider
+	Client() *net.Client
 }

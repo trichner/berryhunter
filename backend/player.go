@@ -15,7 +15,7 @@ var _ = model.PlayerEntity(&player{})
 type player struct {
 	name string
 
-	*model.BaseEntity
+	model.BaseEntity
 
 	angle  float32
 	Health uint
@@ -39,12 +39,28 @@ func (p *player) Name() string {
 	return fmt.Sprintf("player %d", p.ID())
 }
 
+func (p *player) Bodies() model.Bodies {
+	b := make(model.Bodies, 3)
+	b[0] = p.Body
+	b[1] = p.hand
+	b[2] = p.viewport
+	return b
+}
+
 func (p *player) VitalSigns() *model.PlayerVitalSigns {
 	return &p.PlayerVitalSigns
 }
 
 func (p *player) Inventory() *items.Inventory {
 	return &p.inventory
+}
+
+func (p *player) Viewport() phy.DynamicCollider {
+	return p.viewport
+}
+
+func (p *player) Client() *net.Client {
+	return p.client
 }
 
 const viewPortWidth = 20.0

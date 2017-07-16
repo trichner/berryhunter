@@ -38,7 +38,7 @@ func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) fl
 	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
 
 	DeathioApi.EntityStart(builder)
-	DeathioApi.EntityAddId(builder, p.ID())
+	DeathioApi.EntityAddId(builder, p.Basic().ID())
 
 	pos := DeathioApi.CreateVec2f(builder, f32ToPx(p.X()), f32ToPx(p.Y()))
 	DeathioApi.EntityAddPos(builder, pos)
@@ -129,7 +129,7 @@ func EntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuff
 	}
 
 	DeathioApi.EntityStart(builder)
-	DeathioApi.EntityAddId(builder, e.ID())
+	DeathioApi.EntityAddId(builder, e.Basic().ID())
 
 	pos := DeathioApi.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
 	DeathioApi.EntityAddPos(builder, pos)
@@ -151,6 +151,6 @@ func EntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuff
 // intermediate struct to serialize
 type GameState struct {
 	Tick      uint64
-	Player    *player
+	Player    model.PlayerEntity
 	Entities  []model.Entity
 }

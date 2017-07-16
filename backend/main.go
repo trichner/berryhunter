@@ -122,9 +122,9 @@ func newStaticCircleEntity(p phy.Vec2f, r float32) *model.BaseEntity {
 	return e
 }
 
-func newCircleEntity(r float32) *model.BaseEntity {
+func newCircleEntity(r float32) model.BaseEntity {
 
-	aEntity := &model.BaseEntity{BasicEntity: ecs.NewBasic()}
+	aEntity := model.BaseEntity{BasicEntity: ecs.NewBasic()}
 	circle := phy.NewCircle(phy.VEC2F_ZERO, r)
 
 	circle.Shape().UserData = aEntity

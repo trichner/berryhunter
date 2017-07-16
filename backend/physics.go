@@ -5,6 +5,7 @@ import (
 	"github.com/vova616/chipmunk"
 	"fmt"
 	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 func DumpBodies(s *chipmunk.Space) {
@@ -30,16 +31,16 @@ func dumpBody(b *chipmunk.Body) {
 }
 
 type physicsEntity struct {
-	*ecs.BasicEntity
+	ecs.BasicEntity
 	static   phy.Collider
 	dynamics []phy.DynamicCollider
 }
 
-func newStaticPhysicsEntity(e *ecs.BasicEntity, c phy.Collider) *physicsEntity {
+func newStaticPhysicsEntity(e ecs.BasicEntity, c phy.Collider) *physicsEntity {
 	return &physicsEntity{e, c, nil}
 }
 
-func newDyamicPhysicsEntity(e *ecs.BasicEntity, colliders ...phy.DynamicCollider) physicsEntity {
+func newDyamicPhysicsEntity(e ecs.BasicEntity, colliders ...phy.DynamicCollider) physicsEntity {
 	dynamics := make([]phy.DynamicCollider, 0, 2)
 	for _, d := range colliders {
 		dynamics = append(dynamics, d)
@@ -60,20 +61,14 @@ func (p *PhysicsSystem) Priority() int {
 	return 50
 }
 
-func (p *PhysicsSystem) AddStaticBody(b *ecs.BasicEntity, e phy.Collider) {
+func (p *PhysicsSystem) AddStaticBody(b ecs.BasicEntity, e phy.Collider) {
 	pe := physicsEntity{b, e, nil}
 	p.entities = append(p.entities, pe)
 	p.game.space.AddStaticShape(pe.static)
 }
 
-func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e phy.DynamicCollider) {
-	pe := newDyamicPhysicsEntity(b, e)
-	p.entities = append(p.entities, pe)
-	p.game.space.AddShape(pe.dynamics[0])
-}
-
-func (p *PhysicsSystem) AddPlayer(pl *player) {
-	pe := newDyamicPhysicsEntity(&pl.BasicEntity, pl.Body, pl.viewport, pl.hand)
+func (p *PhysicsSystem) AddEntity(e model.Entity) {
+	pe := newDyamicPhysicsEntity(e.Basic(), e.Bodies()...)
 	p.entities = append(p.entities, pe)
 	for _, s := range pe.dynamics {
 		p.game.space.AddShape(s)

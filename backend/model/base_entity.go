@@ -11,6 +11,16 @@ type BaseEntity struct {
 	EntityType EntityType
 }
 
+func (e *BaseEntity) Basic() ecs.BasicEntity {
+	return e.BasicEntity
+}
+
+func (e *BaseEntity) Bodies() Bodies {
+	b := make(Bodies, 1)
+	b[0] = e.Body
+	return b
+}
+
 func (e *BaseEntity) Type() EntityType {
 	return e.EntityType
 }
