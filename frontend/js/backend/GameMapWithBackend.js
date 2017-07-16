@@ -1,6 +1,7 @@
 "use strict";
 
 define([
+	'underscore',
 	'Game',
 	'gameObjects/Resources',
 	'develop/DebugCircle',
@@ -8,8 +9,9 @@ define([
 	'gameObjects/Character',
 	'MapEditor',
 	'Develop',
+	'items/Equipment',
 	'schema_server'
-], function (Game, Resources, DebugCircle, Border, Character, MapEditor, Develop) {
+], function (_, Game, Resources, DebugCircle, Border, Character, MapEditor, Develop, Equipment) {
 
 	/**
 	 * Has to be in sync with DeathioApi.EntityType
@@ -109,13 +111,33 @@ define([
 				default:
 					gameObject = new gameObjectClasses[entity.type](entity.position.x, entity.position.y, entity.radius);
 			}
-			if (entity.object !== 'Character') {
-				Game.miniMap.add(gameObject);
-			}
+
+			Game.miniMap.add(gameObject);
+
 			this.objects[entity.id] = gameObject;
 			gameObject.id = entity.id;
 			if (Develop.isActive()) {
 				gameObject.updateAABB(entity.aabb);
+			}
+		}
+
+		/**
+		 * Handle equipment
+		 */
+		if (entity.object === 'Character') {
+			let slotsToHandle = _.clone(Equipment.Slots);
+			delete slotsToHandle.PLACEABLE;
+
+			entity.equipment.forEach((equippedItem) => {
+				let slot = Equipment.Helper.getItemEquipmentSlot(equippedItem);
+				gameObject.equipItem(equippedItem, slot);
+				delete slotsToHandle[slot];
+			});
+
+			// All Slots that are not equipped according to backend are dropped.
+			for (let slot in slotsToHandle){
+				//noinspection JSUnfilteredForInLoop
+				gameObject.unequipItem(slot);
 			}
 		}
 

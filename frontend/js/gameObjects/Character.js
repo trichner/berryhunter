@@ -241,6 +241,12 @@ define([
 		}
 
 		equipItem(item, equipmentSlot) {
+			// If the same item is already equipped, just cancel
+			if (this.equippedItems[equipmentSlot] === item) {
+				return;
+			}
+
+
 			let slotGroup = this.equipmentSlotGroups[equipmentSlot];
 			// Offsets are applied to the slot itself to respect the slot rotation
 			if (Utils.isDefined(item.graphic.offsetX)) {
@@ -257,10 +263,16 @@ define([
 
 			this.equippedItems[equipmentSlot] = item;
 
+			// FIXME only for the character of the player
 			Game.player.controls.onInventoryAction(item, DeathioApi.ActionType.EquipItem);
 		}
 
 		unequipItem(equipmentSlot) {
+			// If the slot is already empty, just cancel
+			if (this.equippedItems[equipmentSlot] === null) {
+				return;
+			}
+
 			let slotGroup = this.equipmentSlotGroups[equipmentSlot];
 			if (!this.isSlotEquipped(equipmentSlot)) {
 				return;
@@ -270,6 +282,7 @@ define([
 			let item = this.equippedItems[equipmentSlot];
 			this.equippedItems[equipmentSlot] = null;
 
+			// FIXME only for the character of the player
 			Game.player.controls.onInventoryAction(item, DeathioApi.ActionType.UnequipItem);
 		}
 
