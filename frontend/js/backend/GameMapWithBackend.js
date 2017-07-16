@@ -4,6 +4,7 @@ define([
 	'underscore',
 	'Game',
 	'gameObjects/Resources',
+	'gameObjects/Animals',
 	'develop/DebugCircle',
 	'gameObjects/Border',
 	'gameObjects/Character',
@@ -11,7 +12,7 @@ define([
 	'Develop',
 	'items/Equipment',
 	'schema_server'
-], function (_, Game, Resources, DebugCircle, Border, Character, MapEditor, Develop, Equipment) {
+], function (_, Game, Resources, Animals, DebugCircle, Border, Character, MapEditor, Develop, Equipment) {
 
 	/**
 	 * Has to be in sync with DeathioApi.EntityType
@@ -25,7 +26,10 @@ define([
 		Resources.Stone,
 		Resources.Bronze,
 		null,
-		Resources.BerryBush
+		Resources.BerryBush,
+		Animals.Rabbit,
+		Animals.SaberToothCat,
+		Animals.Mammoth
 	];
 
 	function GameMapWithBackend() {

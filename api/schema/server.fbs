@@ -12,6 +12,7 @@ enum EntityType : ushort {
   Bronze,
   Iron,
   BerryBush,
+  Dodo,
   SaberToothCat,
   Mammoth
 }
