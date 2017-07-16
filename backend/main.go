@@ -11,6 +11,7 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"sort"
 	"os"
+	"github.com/trichner/berryhunter/backend/mob"
 )
 
 func main() {
@@ -37,6 +38,13 @@ func main() {
 	for _, e := range entities {
 		g.AddResourceEntity(e)
 	}
+
+	// add some mobs
+	//for i := 0; i < 20; i++ {
+	//	m := newMobEntity()
+	//	m.SetPosition(phy.Vec2f{float32(i), float32(i)})
+	//	g.AddMobEntity(m)
+	//}
 
 	g.Run()
 
@@ -132,3 +140,7 @@ func newCircleEntity(r float32) model.BaseEntity {
 	return aEntity
 }
 
+func newMobEntity() model.MobEntity {
+	circle := phy.NewCircle(phy.VEC2F_ZERO, 0.5)
+	return mob.NewMob(circle)
+}

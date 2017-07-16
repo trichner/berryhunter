@@ -34,8 +34,8 @@ func (e *BaseEntity) Position() phy.Vec2f {
 	return e.Body.Position()
 }
 
-func (e *BaseEntity) SetPosition(x, y float32) {
-	e.Body.SetPosition(phy.Vec2f{x, y})
+func (e *BaseEntity) SetPosition(p phy.Vec2f) {
+	e.Body.SetPosition(p)
 }
 
 func (e *BaseEntity) AABB() AABB {

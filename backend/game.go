@@ -13,6 +13,7 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/backend/items"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 type Game struct {
@@ -51,6 +52,9 @@ func (g *Game) Init(conf *conf.Config, items items.Registry) {
 
 	i := NewInputSystem(g)
 	g.AddSystem(i)
+
+	m := NewMobSystem(g)
+	g.AddSystem(m)
 }
 
 func (g *Game) Run() {
@@ -79,6 +83,25 @@ func (g *Game) Run() {
 	}
 
 	go http.ListenAndServe(addr, nil)
+}
+
+func (g *Game) AddMobEntity(e model.MobEntity) {
+
+	// Loop over all Systems
+	for _, system := range g.Systems() {
+
+		// Use a type-switch to figure out which System is which
+		switch sys := system.(type) {
+
+		// Create a case for each System you want to use
+		case *PhysicsSystem:
+			sys.AddEntity(e)
+		case *NetSystem:
+			sys.AddEntity(e)
+		case *MobSystem:
+			sys.AddEntity(e)
+		}
+	}
 }
 
 func (g *Game) AddResourceEntity(e *resourceEntity) {

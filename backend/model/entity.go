@@ -12,6 +12,7 @@ type Bodies []phy.DynamicCollider
 type Entity interface {
 	Basic() ecs.BasicEntity
 	Position() phy.Vec2f
+	SetPosition(phy.Vec2f)
 	Angle() float32
 	Radius() float32
 	Type() EntityType
@@ -21,6 +22,7 @@ type Entity interface {
 
 type MobEntity interface {
 	Entity
+
 	Health() int
 	//Velocity() phy.Vec2f
 	//SetVelocity(v phy.Vec2f)
