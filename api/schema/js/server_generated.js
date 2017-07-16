@@ -18,7 +18,9 @@ DeathioApi.EntityType = {
   Stone: 5,
   Bronze: 6,
   Iron: 7,
-  BerryBush: 8
+  BerryBush: 8,
+  SaberToothCat: 9,
+  Mammoth: 10
 };
 
 /**

@@ -11,7 +11,9 @@ enum EntityType : ushort {
   Stone,
   Bronze,
   Iron,
-  BerryBush
+  BerryBush,
+  SaberToothCat,
+  Mammoth
 }
 
 struct AABB {

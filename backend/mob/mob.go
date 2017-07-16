@@ -6,14 +6,13 @@ import (
 	"math/rand"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"math"
-	"log"
 )
 
 var _ = model.MobEntity(&Mob{})
 
 func NewMob(body *phy.Circle) *Mob {
 	//TODO
-	base := model.NewBaseEntity(body, DeathioApi.EntityTypeBerryBush)
+	base := model.NewBaseEntity(body, DeathioApi.EntityTypeMammoth)
 	m := &Mob{
 		BaseEntity: base,
 		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
@@ -50,4 +49,3 @@ func (m *Mob) Update(dt float32) {
 func (m *Mob) Health() int {
 	return m.health
 }
-
