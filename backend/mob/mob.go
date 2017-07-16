@@ -16,7 +16,7 @@ func NewMob(body *phy.Circle) *Mob {
 	m := &Mob{
 		BaseEntity: base,
 		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
-		velocity:   phy.Vec2f{0.08, 0},
+		velocity:   phy.Vec2f{0.04, 0},
 	}
 	m.Body.Shape().UserData = m
 	return m
