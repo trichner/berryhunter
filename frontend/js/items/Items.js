@@ -28,6 +28,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				size: 40,
 				offsetX: 15
 			},
+			definition: 'wood-club',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -39,6 +40,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				offsetX: 10,
 				offsetY: -2.5
 			},
+			definition: 'stone-tool',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -50,6 +52,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				offsetX: 10,
 				offsetY: -2.5
 			},
+			definition: 'bronze-tool',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -61,6 +64,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				offsetX: 10,
 				offsetY: -2.5
 			},
+			definition: 'iron-tool',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -75,6 +79,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				size: 40,
 				offsetX: 15
 			},
+			definition: 'stone-club',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -85,6 +90,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				size: 40,
 				offsetX: 15
 			},
+			definition: 'bronze-sword',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -92,6 +98,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			definition: 'iron-tool',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -106,6 +113,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				size: 60,
 				offsetX: 20
 			},
+			definition: 'stone-spear',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -116,6 +124,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				size: 60,
 				offsetX: 20
 			},
+			definition: 'bronze-spear',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -126,6 +135,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				size: 60,
 				offsetX: 20
 			},
+			definition: 'iron-spear',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -137,6 +147,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			definition: 'stone-hammer',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -144,6 +155,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			definition: 'bronze-hammer',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -151,6 +163,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			definition: 'iron-hammer',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -164,6 +177,8 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				file: 'campFire',
 				size: 50
 			},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		BigCampfire: {
@@ -172,6 +187,8 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				file: 'bigCampFire',
 				size: 65
 			},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		Workbench: {
@@ -180,24 +197,32 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				file: 'workbench',
 				size: 40
 			},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		Chest: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		BigChest: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		Furnace: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		Seeds: {
@@ -206,6 +231,8 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 				file: '../berryBush',
 				size: 25
 			},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 
@@ -216,48 +243,64 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		WoodSpikyWall: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		StoneWall: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		StoneSpikyWall: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		BronzeWall: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		BronzeSpikyWall: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		IronWall: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		IronSpikyWall: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 
@@ -268,24 +311,32 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		StoneDoor: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		BronceDoor: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 		IronDoor: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
+			// TODO
+			definition: '',
 			type: ItemType.PLACEABLE
 		},
 
@@ -294,18 +345,25 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 		 ***********************************/
 		CookedMeat: {
 			icon: {file: 'meatCookedIcon'},
+			// TODO
+			definition: '',
 			type: ItemType.CONSUMABLE
 		},
 		RawMeat: {
 			icon: {file: 'meatRawIcon'},
+			// TODO
+			definition: '',
 			type: ItemType.CONSUMABLE
 		},
 		Berry: {
 			icon: {file: 'berryIcon'},
+			definition: 'berry',
 			type: ItemType.CONSUMABLE
 		},
 		BerryBowl: {
 			icon: {file: 'berryBowlIcon'},
+			// TODO
+			definition: '',
 			type: ItemType.CONSUMABLE
 		},
 
@@ -314,18 +372,22 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 		 ***********************************/
 		Wood: {
 			icon: {file: 'woodIcon'},
+			definition: 'wood',
 			type: ItemType.RESOURCE
 		},
 		Stone: {
 			icon: {file: 'stoneIcon'},
+			definition: 'stone',
 			type: ItemType.RESOURCE
 		},
 		Bronze: {
 			icon: {file: 'bronzeIcon'},
+			definition: 'bronze',
 			type: ItemType.RESOURCE
 		},
 		Iron: {
 			icon: {file: 'ironIcon'},
+			definition: 'iron',
 			type: ItemType.RESOURCE
 		}
 	};
