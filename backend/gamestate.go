@@ -33,29 +33,25 @@ func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) f
 	return builder.EndVector(n)
 }
 
-func PlayerMarshalFlatbuf(p *player, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
-	// entity fields
-	e := p.entity
+func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
 
 	DeathioApi.EntityStart(builder)
-	DeathioApi.EntityAddId(builder, e.ID())
+	DeathioApi.EntityAddId(builder, p.ID())
 
-	pos := DeathioApi.CreateVec2f(builder, f32ToPx(e.X()), f32ToPx(e.Y()))
+	pos := DeathioApi.CreateVec2f(builder, f32ToPx(p.X()), f32ToPx(p.Y()))
 	DeathioApi.EntityAddPos(builder, pos)
 
-	aabb := AabbMarshalFlatbuf(e.AABB(), builder)
+	aabb := AabbMarshalFlatbuf(p.AABB(), builder)
 	DeathioApi.EntityAddAabb(builder, aabb)
 
-	DeathioApi.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
-	DeathioApi.EntityAddRotation(builder, e.Angle())
-	DeathioApi.EntityAddEntityType(builder, uint16(e.Type()))
+	DeathioApi.EntityAddRadius(builder, f32ToU16Px(p.Radius()))
+	DeathioApi.EntityAddRotation(builder, p.Angle())
+	DeathioApi.EntityAddEntityType(builder, uint16(p.Type()))
 
 	DeathioApi.EntityAddEquipment(builder, equipment)
 
-	// player
 	// TODO
 	DeathioApi.EntityAddIsHit(builder, 0)
 	DeathioApi.EntityAddActionTick(builder, 0)
@@ -68,7 +64,7 @@ func ItemStackMarshalFlatbuf(i *items.ItemStack, builder *flatbuffers.Builder, s
 	return DeathioApi.CreateItemStack(builder, byte(i.Item.ID), uint32(i.Count), slot)
 }
 
-func InventoryMarshalFlatbuf(inventory items.Inventory, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func InventoryMarshalFlatbuf(inventory *items.Inventory, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	inventoryItems := inventory.Items()
 
@@ -93,7 +89,7 @@ func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UO
 
 	entities := EntitiesFlatbufMarshal(gs.Entities, builder)
 	player := PlayerMarshalFlatbuf(gs.Player, builder)
-	inventory := InventoryMarshalFlatbuf(gs.Player.inventory, builder)
+	inventory := InventoryMarshalFlatbuf(gs.Player.Inventory(), builder)
 
 	DeathioApi.GameStateStart(builder)
 	DeathioApi.GameStateAddTick(builder, gs.Tick)

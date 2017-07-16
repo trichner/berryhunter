@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/items"
 )
 
 type EntityType uint16
@@ -17,17 +16,14 @@ type Entity interface {
 	AABB() AABB
 }
 
-type PlayerVitalSigns struct {
-	Satiety         int
-	BodyTemperature int
+type MobVitalSigns struct {
 	Health          int
 }
 
-type PlayerEntity interface {
+type MobEntity interface {
 	Entity
-	Name() string
-	Equipped() []items.Item
-	VitalSigns() *PlayerVitalSigns
+	VitalSigns() *MobVitalSigns
+	Velocity() phy.Vec2f
 }
 
 // AABB is an alias to not expose transitive dependencies

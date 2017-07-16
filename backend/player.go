@@ -15,7 +15,8 @@ var _ = model.PlayerEntity(&player{})
 type player struct {
 	name string
 
-	*entity
+	*model.BaseEntity
+
 	angle  float32
 	Health uint
 	Hunger uint
@@ -42,14 +43,18 @@ func (p *player) VitalSigns() *model.PlayerVitalSigns {
 	return &p.PlayerVitalSigns
 }
 
+func (p *player) Inventory() *items.Inventory {
+	return &p.inventory
+}
+
 const viewPortWidth = 20.0
 const viewPortHeight = 12.0
 
 func (p *player) Position() phy.Vec2f {
-	return p.body.Position()
+	return p.Body.Position()
 }
 func (p *player) SetPosition(v phy.Vec2f) {
-	p.body.SetPosition(v)
+	p.Body.SetPosition(v)
 	p.viewport.SetPosition(v)
 	p.updateHand()
 }
@@ -62,8 +67,8 @@ func (p *player) SetAngle(a float32) {
 func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	e := newCircleEntity(0.25)
 
-	e.entityType = DeathioApi.EntityTypeCharacter
-	p := &player{entity: e,
+	e.EntityType = DeathioApi.EntityTypeCharacter
+	p := &player{BaseEntity: e,
 		client:      c,
 		Equipment:   items.NewEquipment(),
 		//items:       itemRegistry,
@@ -71,12 +76,12 @@ func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 
 	// setup body
 	shapeGroup := int(p.ID())
-	p.body.Shape().UserData = p
-	p.body.Shape().Group = shapeGroup
-	p.body.Shape().Layer = model.LayerStaticCollision
+	p.Body.Shape().UserData = p
+	p.Body.Shape().Group = shapeGroup
+	p.Body.Shape().Layer = model.LayerStaticCollision
 
 	// setup viewport
-	p.viewport = phy.NewBox(e.body.Position(), phy.Vec2f{viewPortWidth / 2, viewPortHeight / 2})
+	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{viewPortWidth / 2, viewPortHeight / 2})
 
 	p.viewport.Shape().IsSensor = true
 	p.viewport.Shape().Layer = model.LayerAllCollision
@@ -106,7 +111,7 @@ func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	p.PlayerVitalSigns.BodyTemperature = 100
 
 	// setup hand sensor
-	p.hand = phy.NewCircle(e.body.Position(), 0.25)
+	p.hand = phy.NewCircle(e.Body.Position(), 0.25)
 	p.hand.Shape().IsSensor = true
 	p.hand.Shape().Group = shapeGroup
 	p.hand.Shape().Layer = 0 //TODO

@@ -73,7 +73,7 @@ func (p *PhysicsSystem) AddBody(b *ecs.BasicEntity, e phy.DynamicCollider) {
 }
 
 func (p *PhysicsSystem) AddPlayer(pl *player) {
-	pe := newDyamicPhysicsEntity(&pl.BasicEntity, pl.body, pl.viewport, pl.hand)
+	pe := newDyamicPhysicsEntity(&pl.BasicEntity, pl.Body, pl.viewport, pl.hand)
 	p.entities = append(p.entities, pe)
 	for _, s := range pe.dynamics {
 		p.game.space.AddShape(s)

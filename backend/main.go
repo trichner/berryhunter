@@ -113,22 +113,22 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 //	return s
 //}
 
-func newStaticCircleEntity(p phy.Vec2f, r float32) *entity {
+func newStaticCircleEntity(p phy.Vec2f, r float32) *model.BaseEntity {
 
-	e := &entity{BasicEntity: ecs.NewBasic()}
+	e := &model.BaseEntity{BasicEntity: ecs.NewBasic()}
 	ball := phy.NewCircle(p, r)
 	ball.Shape().UserData = e
-	e.body = ball
+	e.Body = ball
 	return e
 }
 
-func newCircleEntity(r float32) *entity {
+func newCircleEntity(r float32) *model.BaseEntity {
 
-	aEntity := &entity{BasicEntity: ecs.NewBasic()}
+	aEntity := &model.BaseEntity{BasicEntity: ecs.NewBasic()}
 	circle := phy.NewCircle(phy.VEC2F_ZERO, r)
 
 	circle.Shape().UserData = aEntity
-	aEntity.body = circle
+	aEntity.Body = circle
 	return aEntity
 }
 
