@@ -42,9 +42,14 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 			if err != nil {
 				return fmt.Errorf("Cannot map '%s': %s\n", path, err)
 			}
-			r.Add(item)
+			err = r.Add(item)
+			if err != nil {
+				return fmt.Errorf("Cannot add '%s': %s\n", path, err)
+			}
 			return nil
 		})
+
+		// bail if there was an error
 		if err != nil {
 			return nil, err
 		}
@@ -59,7 +64,7 @@ func (r *registry) decorateMaterials() {
 	for _, itemDef := range r.items {
 		decoratedMaterials := make([]Material, 0)
 		for _, m := range itemDef.Recipe.Materials {
-			item, err := r.Get(m.Item.ID)
+			item, err := r.getByName(m.Item.Name)
 			if err != nil {
 				panic(err)
 			}
@@ -70,12 +75,27 @@ func (r *registry) decorateMaterials() {
 	}
 }
 
+func (r *registry) getByName(name string) (Item, error) {
+	for _, i := range r.items {
+		if i.Name == name {
+			return Item{i}, nil
+		}
+	}
+	return Item{}, fmt.Errorf("Cannot find item: %s", name)
+}
+
 func NewRegistry() *registry {
 	return &registry{items: make(map[ItemEnum]*ItemDefinition)}
 }
 
-func (r *registry) Add(i *ItemDefinition) {
+func (r *registry) Add(i *ItemDefinition) error {
+
+	_, ok := r.items[i.ID]
+	if ok {
+		return fmt.Errorf("Duplicate item ID: %d", i.ID)
+	}
 	r.items[i.ID] = i
+	return nil
 }
 
 func (r *registry) Get(i ItemEnum) (Item, error) {

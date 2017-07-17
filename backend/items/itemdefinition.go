@@ -56,7 +56,7 @@ type Item struct {
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
-
+	ID      int `json:"id"`
 	Item    string `json:"item"`
 	Factors map[string]int `json:"factors"`
 	Slot    string `json:"slot"`
@@ -102,27 +102,18 @@ func mapItemIdentifier(id string) (ItemEnum, error) {
 	return ItemEnum(enum), nil
 }
 
-func shallowItem(id ItemEnum) Item {
-	return Item{&ItemDefinition{ID: id}}
+func shallowItem(name string) Item {
+	return Item{&ItemDefinition{Name: name}}
 }
 
 func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
-	enum, err := mapItemIdentifier(i.Item)
-	if err != nil {
-		return nil, err
-	}
-
 	slot := namesEnumEquipSlot[i.Slot]
 
 	// map materials list
 	materials := make([]Material, 0)
 	for _, v := range i.Recipe.Materials {
-		materialEnum, err := mapItemIdentifier(v.Item)
-		if err != nil {
-			return nil, err
-		}
 		material := Material{
-			shallowItem(materialEnum),
+			shallowItem(v.Item),
 			v.Count,
 		}
 		materials = append(materials, material)
@@ -140,7 +131,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	}
 
 	return &ItemDefinition{
-		ID:     enum,
+		ID:     ItemEnum(i.ID),
 		Name:   i.Item,
 		Slot:   slot,
 		Recipe: &Recipe{i.Recipe.CraftTicks, materials, tools},

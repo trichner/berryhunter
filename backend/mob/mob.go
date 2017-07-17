@@ -54,6 +54,11 @@ func (m *Mob) Update(dt float32) {
 	m.SetPosition(pos)
 }
 
+func (m *Mob) Angle() float32 {
+	//return phy.Vec2f{1, 0}.AngleBetween(m.velocity)
+	return 0
+}
+
 func (m *Mob) Health() int {
 	return m.health
 }

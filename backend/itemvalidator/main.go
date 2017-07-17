@@ -5,6 +5,7 @@ import (
 	"os"
 	"fmt"
 	"sort"
+	"log"
 )
 
 var helpArgs = map[string]bool{
@@ -27,7 +28,10 @@ func main() {
 		path = arg
 	}
 
-	r := items.RegistryFromPaths(path)
+	r, err := items.RegistryFromPaths(path)
+	if err != nil {
+		log.Fatalf("Cannot parse items: %s", err)
+	}
 
 	parsedItems := r.Items()
 	sort.Sort(items.ByID(parsedItems))
