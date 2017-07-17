@@ -80,6 +80,10 @@ func (p *player) SetAngle(a float32) {
 	p.updateHand()
 }
 
+func (p *player) Angle() float32 {
+	return p.angle
+}
+
 func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	e := newCircleEntity(0.25)
 
