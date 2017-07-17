@@ -3,7 +3,7 @@
   "item": "Campfire",
   "itemType": "PLACEABLE",
   "recipe": {
-    "craftTimeSec": 20,
+    "craftTimeSec": 10,
     "comment": "TODO",
     "materials": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "item": "Stone",
-        "count": 20
+        "count": 5
       }
     ]
   }
