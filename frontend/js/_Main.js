@@ -30,6 +30,13 @@ requirejs.config({
 	}
 });
 
+// Disable caching
+if (window.location.host !== 'localhost:63342') {
+	requirejs.config({
+		urlArgs: '' + (new Date()).getTime()
+	})
+}
+
 define(['Utils', 'Preloading'], function (Utils, Preloading) {
 	Preloading.loadPartial('partials/loadingScreen.html')
 		.then(function () {

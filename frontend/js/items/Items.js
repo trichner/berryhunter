@@ -393,17 +393,24 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 	};
 
 	(function preloadItemIcons() {
+
+		// Disable caching
+		let cacheBuster = '';
+		if (window.location.host !== 'localhost:63342') {
+			cacheBuster = '?' + (new Date()).getTime();
+		}
+
 		for (let itemName in Items) {
 			let item = Items[itemName];
 
 			item.name = itemName;
 
 			if (item.icon && item.icon.file) {
-				item.icon.path = 'img/items/' + item.icon.file + '.svg';
+				item.icon.path = 'img/items/' + item.icon.file + '.svg' + cacheBuster;
 				Preloading.registerGameObjectSVG(item.icon, item.icon.path);
 			}
 			if (item.graphic && item.graphic.file) {
-				item.graphic.path = 'img/items/' + item.graphic.file + '.svg';
+				item.graphic.path = 'img/items/' + item.graphic.file + '.svg' + cacheBuster;
 				Preloading.registerGameObjectSVG(item.graphic, item.graphic.path);
 			}
 		}
