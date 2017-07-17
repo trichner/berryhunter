@@ -10,31 +10,3 @@ struct Vec2f {
   x:float;
   y:float;
 }
-
-enum Item: ubyte {
-	None = 0,
-	WoodClub,
-	StoneTool,
-	BronzeTool,
-	IronTool,
-
-	Wood,
-	Stone,
-	Bronze,
-	Berry,
-	StoneClub,
-
-	BronzeSword,
-	IronSword,
-	Campfire,
-	BronzeHammer,
-	BronzeSpear,
-
-	Workbench,
-	IronHammer,
-	IronSpear,
-	Iron,
-	StoneHammer,
-	StoneSpear
-}
-

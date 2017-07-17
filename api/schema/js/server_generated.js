@@ -112,10 +112,10 @@ DeathioApi.ItemStack.prototype.__init = function(i, bb) {
 };
 
 /**
- * @returns {DeathioApi.Item}
+ * @returns {number}
  */
 DeathioApi.ItemStack.prototype.item = function() {
-  return /** @type {DeathioApi.Item} */ (this.bb.readUint8(this.bb_pos));
+  return this.bb.readUint8(this.bb_pos);
 };
 
 /**
@@ -134,7 +134,7 @@ DeathioApi.ItemStack.prototype.slot = function() {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.Item} item
+ * @param {number} item
  * @param {number} count
  * @param {number} slot
  * @returns {flatbuffers.Offset}
@@ -261,11 +261,11 @@ DeathioApi.Entity.prototype.aabb = function(obj) {
 
 /**
  * @param {number} index
- * @returns {DeathioApi.Item}
+ * @returns {number}
  */
 DeathioApi.Entity.prototype.equipment = function(index) {
   var offset = this.bb.__offset(this.bb_pos, 22);
-  return offset ? /** @type {DeathioApi.Item} */ (this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index)) : /** @type {DeathioApi.Item} */ (0);
+  return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
 
 /**
@@ -373,7 +373,7 @@ DeathioApi.Entity.addEquipment = function(builder, equipmentOffset) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {Array.<DeathioApi.Item>} data
+ * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
 DeathioApi.Entity.createEquipmentVector = function(builder, data) {

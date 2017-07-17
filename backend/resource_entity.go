@@ -33,10 +33,9 @@ func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEnti
 
 	r.EntityType = body.entityType
 
-	ressource, err := items.Get(body.ressource)
+	ressource, err := items.GetByName(body.ressourceName)
 	if err != nil {
-		log.Printf("Unknown ressource: %d\n", body.ressource)
-		panic(err)
+		log.Fatalf("Unknown ressource: %s / %s\n", body.ressourceName, err)
 	}
 
 	r.resource.resource = ressource

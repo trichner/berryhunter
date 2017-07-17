@@ -51,14 +51,14 @@ var trees = []staticEntityBody{
 		100,
 		1,
 		model.LayerStaticCollision | model.LayerRessourceCollision,
-		DeathioApi.ItemWood,
+		"Wood",
 	},
 	{
 		DeathioApi.EntityTypeMarioTree,
 		100,
 		1,
 		model.LayerStaticCollision | model.LayerRessourceCollision,
-		DeathioApi.ItemWood,
+		"Wood",
 	},
 }
 
@@ -68,21 +68,21 @@ var resources = []staticEntityBody{
 		100,
 		0.5,
 		model.LayerRessourceCollision,
-		DeathioApi.ItemBerry,
+		"Berry",
 	},
 	{
 		DeathioApi.EntityTypeStone,
 		100,
 		0.5,
 		model.LayerStaticCollision | model.LayerRessourceCollision,
-		DeathioApi.ItemStone,
+		"Stone",
 	},
 	{
 		DeathioApi.EntityTypeBronze,
 		100,
 		0.5,
 		model.LayerStaticCollision | model.LayerRessourceCollision,
-		DeathioApi.ItemBronze,
+		"Bronze",
 	},
 }
 
@@ -92,5 +92,5 @@ type staticEntityBody struct {
 	radius         float32
 	collisionLayer int
 
-	ressource items.ItemEnum
+	ressourceName string
 }

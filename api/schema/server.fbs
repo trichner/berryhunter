@@ -23,7 +23,7 @@ struct AABB {
 }
 
 struct ItemStack {
-  item:Item;
+  item:ubyte;
   count:uint;
   slot:ubyte;
 }
@@ -41,7 +41,7 @@ table Entity {
 
   aabb:AABB;
 
-  equipment:[Item];
+  equipment:[ubyte];
 }
 
 table GameState {

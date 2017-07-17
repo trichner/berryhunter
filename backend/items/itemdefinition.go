@@ -2,8 +2,6 @@ package items
 
 import (
 	"encoding/json"
-	"github.com/trichner/berryhunter/api/schema/DeathioApi"
-	"fmt"
 )
 
 type EquipSlot int
@@ -85,23 +83,6 @@ func parseItemDefinition(data []byte) (*itemDefinition, error) {
 	return &i, nil
 }
 
-var ItemEnumMap = func() map[string]int {
-
-	m := make(map[string]int)
-	for enum, str := range DeathioApi.EnumNamesItem {
-		m[str] = enum
-	}
-	return m
-}()
-
-func mapItemIdentifier(id string) (ItemEnum, error) {
-	enum, ok := ItemEnumMap[id]
-	if !ok {
-		return DeathioApi.ItemNone, fmt.Errorf("Unknown ItemIdentifier: %s", id)
-	}
-	return ItemEnum(enum), nil
-}
-
 func shallowItem(name string) Item {
 	return Item{&ItemDefinition{Name: name}}
 }
@@ -122,12 +103,13 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	// map tools list
 	tools := make([]Tool, 0)
 	for _, v := range i.Recipe.Tools {
-		entityType, err := mapItemIdentifier(v)
-		if err != nil {
-			return nil, err
-		}
-		tool := Tool{entityType}
-		tools = append(tools, tool)
+		_ = v //TODO
+		//entityType, err := mapItemIdentifier(v)
+		//if err != nil {
+		//	return nil, err
+		//}
+		//tool := Tool{entityType}
+		//tools = append(tools, tool)
 	}
 
 	return &ItemDefinition{

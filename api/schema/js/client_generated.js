@@ -54,11 +54,11 @@ DeathioApi.Action.getRootAsAction = function(bb, obj) {
 };
 
 /**
- * @returns {DeathioApi.Item}
+ * @returns {number}
  */
 DeathioApi.Action.prototype.item = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {DeathioApi.Item} */ (this.bb.readUint8(this.bb_pos + offset)) : DeathioApi.Item.None;
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -78,10 +78,10 @@ DeathioApi.Action.startAction = function(builder) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.Item} item
+ * @param {number} item
  */
 DeathioApi.Action.addItem = function(builder, item) {
-  builder.addFieldInt8(0, item, DeathioApi.Item.None);
+  builder.addFieldInt8(0, item, 0);
 };
 
 /**

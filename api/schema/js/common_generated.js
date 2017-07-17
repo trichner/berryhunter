@@ -7,33 +7,6 @@
 var DeathioApi = DeathioApi || {};
 
 /**
- * @enum
- */
-DeathioApi.Item = {
-  None: 0,
-  WoodClub: 1,
-  StoneTool: 2,
-  BronzeTool: 3,
-  IronTool: 4,
-  Wood: 5,
-  Stone: 6,
-  Bronze: 7,
-  Berry: 8,
-  StoneClub: 9,
-  BronzeSword: 10,
-  IronSword: 11,
-  Campfire: 12,
-  BronzeHammer: 13,
-  BronzeSpear: 14,
-  Workbench: 15,
-  IronHammer: 16,
-  IronSpear: 17,
-  Iron: 18,
-  StoneHammer: 19,
-	StoneSpear: 20
-};
-
-/**
  * @constructor
  */
 DeathioApi.Vec3f = function() {

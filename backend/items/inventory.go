@@ -1,13 +1,15 @@
 package items
 
-import "github.com/trichner/berryhunter/api/schema/DeathioApi"
+import (
+	"fmt"
+)
 
 const DEFAULT_INVENTORY_CAP = 8
 
 type ItemEnum int
 
 func (i ItemEnum) String() string {
-	return DeathioApi.EnumNamesItem[int(i)]
+	return fmt.Sprintf("ItemEnum(%d)", i)
 }
 
 type Inventory struct {

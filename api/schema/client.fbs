@@ -12,7 +12,7 @@ enum ActionType: ubyte {
 }
 
 table Action {
-	item:Item;
+	item:ubyte;
 	actionType:ActionType = Primary;
 }
 

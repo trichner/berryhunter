@@ -13,6 +13,7 @@ type registry struct {
 
 type Registry interface {
 	Get(i ItemEnum) (Item, error)
+	GetByName(name string) (Item, error)
 	Items() []*ItemDefinition
 }
 
@@ -64,7 +65,7 @@ func (r *registry) decorateMaterials() {
 	for _, itemDef := range r.items {
 		decoratedMaterials := make([]Material, 0)
 		for _, m := range itemDef.Recipe.Materials {
-			item, err := r.getByName(m.Item.Name)
+			item, err := r.GetByName(m.Item.Name)
 			if err != nil {
 				panic(err)
 			}
@@ -75,7 +76,7 @@ func (r *registry) decorateMaterials() {
 	}
 }
 
-func (r *registry) getByName(name string) (Item, error) {
+func (r *registry) GetByName(name string) (Item, error) {
 	for _, i := range r.items {
 		if i.Name == name {
 			return Item{i}, nil

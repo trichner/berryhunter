@@ -109,13 +109,13 @@ func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	//--- initialize inventory
 	var item items.Item
 	var err error
-	item, err = itemRegistry.Get(items.ItemEnum(DeathioApi.ItemWoodClub))
+	item, err = itemRegistry.GetByName("WoodClub")
 	if err != nil {
 		panic(err)
 	}
 	p.inventory.AddItem(items.NewItemStack(item, 1))
 
-	item, err = itemRegistry.Get(items.ItemEnum(DeathioApi.ItemBronzeSword))
+	item, err = itemRegistry.GetByName("BronzeSword")
 	if err != nil {
 		panic(err)
 	}
