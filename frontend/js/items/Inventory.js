@@ -60,11 +60,14 @@ define([
 
 			let slot = this.slots[slotIndex];
 			slot.activate();
-			this.character.equipItem(slot.item, equipmentSlot);
+			if (this.character.equipItem(slot.item, equipmentSlot)) {
+				Game.player.controls.onInventoryAction(slot.item, DeathioApi.ActionType.EquipItem);
+			}
 		}
 
 		deactivateSlot(equipmentSlot) {
-			this.character.unequipItem(equipmentSlot);
+			let unequippedItem = this.character.unequipItem(equipmentSlot);
+			Game.player.controls.onInventoryAction(unequippedItem, DeathioApi.ActionType.UnequipItem);
 		}
 
 		addItem(item, count) {

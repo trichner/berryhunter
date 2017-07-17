@@ -240,10 +240,16 @@ define([
 			return this.equippedItems[equipmentSlot] !== null;
 		}
 
+		/**
+		 *
+		 * @param item
+		 * @param equipmentSlot
+		 * @return {Boolean} whether or not the item was equipped
+		 */
 		equipItem(item, equipmentSlot) {
 			// If the same item is already equipped, just cancel
 			if (this.equippedItems[equipmentSlot] === item) {
-				return;
+				return false;
 			}
 
 
@@ -263,10 +269,14 @@ define([
 
 			this.equippedItems[equipmentSlot] = item;
 
-			// FIXME only for the character of the player
-			Game.player.controls.onInventoryAction(item, DeathioApi.ActionType.EquipItem);
+			return true;
 		}
 
+		/**
+		 *
+		 * @param equipmentSlot
+		 * @return {Item} the item that was unequipped
+		 */
 		unequipItem(equipmentSlot) {
 			// If the slot is already empty, just cancel
 			if (this.equippedItems[equipmentSlot] === null) {
@@ -282,8 +292,7 @@ define([
 			let item = this.equippedItems[equipmentSlot];
 			this.equippedItems[equipmentSlot] = null;
 
-			// FIXME only for the character of the player
-			Game.player.controls.onInventoryAction(item, DeathioApi.ActionType.UnequipItem);
+			return item;
 		}
 
 		getEquippedItem(equipmentSlot) {
