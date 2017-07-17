@@ -60,7 +60,9 @@ define([
 
 		Items.StoneHammer,
 		Items.BronzeHammer,
-		Items.IronHammer
+		Items.IronHammer,
+
+		Items.Campfire
 	];
 
 	//noinspection UnnecessaryLocalVariableJS
