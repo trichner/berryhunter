@@ -3,8 +3,6 @@
 define([
 	'underscore',
 	'Game',
-	'gameObjects/Resources',
-	'gameObjects/Animals',
 	'develop/DebugCircle',
 	'gameObjects/Border',
 	'gameObjects/Character',
@@ -12,25 +10,7 @@ define([
 	'Develop',
 	'items/Equipment',
 	'schema_server'
-], function (_, Game, Resources, Animals, DebugCircle, Border, Character, MapEditor, Develop, Equipment) {
-
-	/**
-	 * Has to be in sync with DeathioApi.EntityType
-	 */
-	const gameObjectClasses = [
-		DebugCircle,
-		Border,
-		Resources.RoundTree,
-		Resources.MarioTree,
-		Character,
-		Resources.Stone,
-		Resources.Bronze,
-		null,
-		Resources.BerryBush,
-		Animals.Rabbit,
-		Animals.SaberToothCat,
-		Animals.Mammoth
-	];
+], function (_, Game, DebugCircle, Border, Character, MapEditor, Develop, Equipment) {
 
 	function GameMapWithBackend() {
 		if (MapEditor.isActive()) {
@@ -70,8 +50,8 @@ define([
 				}
 			}
 		} else {
-			switch (entity.object) {
-				case DeathioApi.EntityType.Border:
+			switch (entity.type) {
+				case Border:
 					let startX = entity.aabb.LowerX;
 					let startY = entity.aabb.LowerY;
 					let endX = entity.aabb.UpperX;
@@ -107,13 +87,13 @@ define([
 					}
 					gameObject = new Border(x1, y1, x2, y2);
 					break;
-				case DeathioApi.EntityType.DebugCircle:
+				case DebugCircle:
 					if (!Develop.isActive()) {
 						return;
 					}
 				// Fallthrough
 				default:
-					gameObject = new gameObjectClasses[entity.type](entity.position.x, entity.position.y, entity.radius);
+					gameObject = new entity.type(entity.position.x, entity.position.y, entity.radius);
 			}
 
 			Game.miniMap.add(gameObject);
@@ -128,14 +108,25 @@ define([
 		/**
 		 * Handle equipment
 		 */
-		if (entity.object === 'Character') {
+		if (entity.type === Character) {
+			/**
+			 * @type {Character}
+			 */
+			let character = gameObject;
 			let slotsToHandle = _.clone(Equipment.Slots);
 			delete slotsToHandle.PLACEABLE;
 
 			entity.equipment.forEach((equippedItem) => {
 				let slot = Equipment.Helper.getItemEquipmentSlot(equippedItem);
-				gameObject.equipItem(equippedItem, slot);
 				delete slotsToHandle[slot];
+				let currentlyEquippedItem = character.getEquippedItem(slot);
+				if (currentlyEquippedItem === equippedItem) {
+					return;
+				}
+				if (currentlyEquippedItem !== null) {
+					character.unequipItem(slot);
+				}
+				gameObject.equipItem(equippedItem, slot);
 			});
 
 			// All Slots that are not equipped according to backend are dropped.

@@ -252,7 +252,6 @@ define([
 				return false;
 			}
 
-
 			let slotGroup = this.equipmentSlotGroups[equipmentSlot];
 			// Offsets are applied to the slot itself to respect the slot rotation
 			if (Utils.isDefined(item.graphic.offsetX)) {

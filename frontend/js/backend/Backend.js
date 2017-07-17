@@ -6,17 +6,66 @@ define([
 	'Constants',
 	'Develop',
 	'items/Items',
+	'gameObjects/Resources',
+	'gameObjects/Animals',
+	'develop/DebugCircle',
+	'gameObjects/Border',
+	'gameObjects/Character',
 	'backend/SnapshotFactory',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Develop, Items, SnapshotFactory) {
+], function (Game, Utils, Constants, Develop, Items, Resources, Animals, DebugCircle, Border, Character, SnapshotFactory) {
+	/**
+	 * Has to be in sync with DeathioApi.EntityType
+	 */
+	const gameObjectClasses = [
+		DebugCircle,
+		Border,
+		Resources.RoundTree,
+		Resources.MarioTree,
+		Character,
+		Resources.Stone,
+		Resources.Bronze,
+		null,
+		Resources.BerryBush,
+		Animals.Rabbit,
+		Animals.SaberToothCat,
+		Animals.Mammoth
+	];
+
+	const NONE_ITEM = 0;
+
+	const itemLookupTable = [
+		null,
+		Items.Berry,
+		Items.Wood,
+		Items.Stone,
+		Items.Bronze,
+		Items.Iron,
+
+		Items.WoodClub,
+		Items.StoneTool,
+		Items.BronzeTool,
+		Items.IronTool,
+
+		Items.StoneClub,
+		Items.BronzeSword,
+		Items.IronSword,
+
+		Items.StoneSpear,
+		Items.BronzeSpear,
+		Items.IronSpear,
+
+		Items.StoneHammer,
+		Items.BronzeHammer,
+		Items.IronHammer
+	];
+
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
 		setup: function () {
-			this.prepareItemLookupTable();
-
 			if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
 				this.webSocket = new WebSocket('ws://' + window.location.host + '/game');
 			} else {
@@ -44,31 +93,6 @@ define([
 
 			if (Develop.isActive()) {
 				this.lastMessageReceivedTime = performance.now();
-			}
-		},
-
-		prepareItemLookupTable: function () {
-			// DeathioApi.Item is an enum with numeric indices
-			// so the lookup table can be an array
-			this.itemLookupTable = [];
-			this.noneItem = "NONE_ITEM";
-			for (let item in DeathioApi.Item) {
-				if (!DeathioApi.Item.hasOwnProperty(item)) {
-					continue;
-				}
-
-				let lookedupItem;
-				if (item === 'None') {
-					lookedupItem = this.noneItem;
-				} else {
-					if (Items.hasOwnProperty(item)) {
-						lookedupItem = Items[item];
-					} else {
-						console.error('Item "' + item + '" defined in DeathioApi.Item is unknown in items/Items.');
-					}
-				}
-
-				this.itemLookupTable[DeathioApi.Item[item]] = lookedupItem;
 			}
 		},
 
@@ -187,7 +211,7 @@ define([
 		 * @param {DeathioApi.GameState} gameState
 		 * @return {{tick: number, playerId: number, entities: Array}}
 		 */
-		unmarshalGameState(gameState){
+		unmarshalGameState(gameState) {
 			let result = {
 				tick: gameState.tick().toFloat64(),
 
@@ -212,7 +236,7 @@ define([
 		/**
 		 * @param {DeathioApi.Entity} entity
 		 */
-		unmarshalEntity(entity){
+		unmarshalEntity(entity) {
 			let result = {
 				id: entity.id().toFloat64(),
 				position: {
@@ -221,7 +245,7 @@ define([
 				},
 				radius: entity.radius(),
 				rotation: entity.rotation(),
-				type: entity.entityType(),
+				type: this.unmarshalEntityType(entity.entityType()),
 				aabb: this.unmarshalAABB(entity.aabb()),
 				equipment: [],
 			};
@@ -233,11 +257,15 @@ define([
 			return result
 		},
 
+		unmarshalEntityType(entityType) {
+			return gameObjectClasses[entityType];
+		},
+
 		/**
 		 *
 		 * @param {DeathioApi.AABB} aabb
 		 */
-		unmarshalAABB(aabb){
+		unmarshalAABB(aabb) {
 			return {
 				LowerX: aabb.lower().x(),
 				LowerY: aabb.lower().y(),
@@ -250,7 +278,7 @@ define([
 		 *
 		 * @param {DeathioApi.ItemStack} itemStack
 		 */
-		unmarshalItemStack(itemStack){
+		unmarshalItemStack(itemStack) {
 			return {
 				item: this.unmarshalItem(itemStack.item()),
 				count: itemStack.count(),
@@ -259,10 +287,10 @@ define([
 		},
 
 		/**
-		 * @param {DeathioApi.Item} item
+		 * @param {number} itemId
 		 */
-		unmarshalItem(item){
-			return this.itemLookupTable[item];
+		unmarshalItem(itemId) {
+			return itemLookupTable[itemId];
 		},
 
 		marshalInput: function (inputObj) {
@@ -271,9 +299,9 @@ define([
 			if (Utils.isDefined(inputObj.action)) {
 				DeathioApi.Action.startAction(builder);
 				if (inputObj.action.item === null) {
-					DeathioApi.Action.addItem(builder, DeathioApi.Item.None);
+					DeathioApi.Action.addItem(builder, NONE_ITEM);
 				} else {
-					DeathioApi.Action.addItem(builder, DeathioApi.Item[inputObj.action.item.name]);
+					DeathioApi.Action.addItem(builder, itemLookupTable.indexOf(inputObj.action.item));
 				}
 				DeathioApi.Action.addActionType(builder, inputObj.action.actionType);
 				action = DeathioApi.Action.endAction(builder);
