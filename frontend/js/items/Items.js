@@ -343,6 +343,11 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 		/***********************************
 		 * FOOD & HEALING
 		 ***********************************/
+		Berry: {
+			icon: {file: 'berryIcon'},
+			definition: 'berry',
+			type: ItemType.CONSUMABLE
+		},
 		CookedMeat: {
 			icon: {file: 'meatCookedIcon'},
 			// TODO
@@ -353,11 +358,6 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 			icon: {file: 'meatRawIcon'},
 			// TODO
 			definition: '',
-			type: ItemType.CONSUMABLE
-		},
-		Berry: {
-			icon: {file: 'berryIcon'},
-			definition: 'berry',
 			type: ItemType.CONSUMABLE
 		},
 		BerryBowl: {

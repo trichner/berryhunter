@@ -1,5 +1,7 @@
 {
+  "id": 13,
   "item": "StoneSpear",
+  "itemType": "EQUIPMENT",
   "factors": {
     "damage": 3,
     "yield": 2

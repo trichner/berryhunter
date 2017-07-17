@@ -1,3 +1,5 @@
 {
-  "item": "Berry"
+  "id": 1,
+  "item": "Berry",
+  "itemType": "CONSUMABLE"
 }

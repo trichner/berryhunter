@@ -1,8 +1,9 @@
 {
+  "id": 19,
   "item": "Campfire",
+  "itemType": "PLACEABLE",
   "recipe": {
     "craftTimeSec": 20,
-
     "comment": "TODO",
     "materials": [
       {

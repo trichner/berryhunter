@@ -1,5 +1,7 @@
 {
+  "id": 9,
   "item": "IronTool",
+  "itemType": "EQUIPMENT",
   "factors": {
     "damage": 2,
     "yield": 5

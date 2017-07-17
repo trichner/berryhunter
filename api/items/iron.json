@@ -1,3 +1,5 @@
 {
-  "item": "Iron"
+  "id": 5,
+  "item": "Iron",
+  "itemType": "RESOURCE"
 }
