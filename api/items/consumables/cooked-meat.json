@@ -1,0 +1,22 @@
+{
+  "item": "CookedMeat",
+  "id": 25,
+  "itemType": "CONSUMABLE",
+  "factors": {
+    "food": 0.80
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "RawMeat",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Campfire",
+      "BigCampfire",
+      "Furnace"
+    ]
+  }
+}

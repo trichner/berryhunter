@@ -1,0 +1,27 @@
+{
+  "item": "BigCampfire",
+  "id": 20,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "warmth": 0.25,
+    "duration": 300,
+    "radius": 6
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 40
+      },
+      {
+        "item": "Stone",
+        "count": 10
+      },
+      {
+        "item": "Campfire",
+        "count": 1
+      }
+    ]
+  }
+}

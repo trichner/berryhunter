@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Register of available items in the game.
  *
@@ -16,7 +18,7 @@
  *      type: ItemType,
  *      equipmentSlot: Equipment.Slots},
  */
-define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], function (Environment, Preloading, ItemType, Equipment) {
+define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment', 'underscore'], function (Environment, Utils, Preloading, ItemType, Equipment, _) {
 	const Items = {
 		/***********************************
 		 * TOOLS
@@ -28,7 +30,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				size: 40,
 				offsetX: 15
 			},
-			definition: 'wood-club',
+			definition: 'tools/wood-club',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -40,7 +42,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				offsetX: 10,
 				offsetY: -2.5
 			},
-			definition: 'stone-tool',
+			definition: 'tools/stone-tool',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -52,7 +54,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				offsetX: 10,
 				offsetY: -2.5
 			},
-			definition: 'bronze-tool',
+			definition: 'tools/bronze-tool',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -64,7 +66,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				offsetX: 10,
 				offsetY: -2.5
 			},
-			definition: 'iron-tool',
+			definition: 'tools/iron-tool',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -79,7 +81,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				size: 40,
 				offsetX: 15
 			},
-			definition: 'stone-club',
+			definition: 'swords/stone-club',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -90,7 +92,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				size: 40,
 				offsetX: 15
 			},
-			definition: 'bronze-sword',
+			definition: 'swords/bronze-sword',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -98,7 +100,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
-			definition: 'iron-tool',
+			definition: 'swords/iron-sword',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -113,7 +115,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				size: 60,
 				offsetX: 20
 			},
-			definition: 'stone-spear',
+			definition: 'spears/stone-spear',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -124,7 +126,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				size: 60,
 				offsetX: 20
 			},
-			definition: 'bronze-spear',
+			definition: 'spears/bronze-spear',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -135,7 +137,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				size: 60,
 				offsetX: 20
 			},
-			definition: 'iron-spear',
+			definition: 'spears/iron-spear',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -147,7 +149,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
-			definition: 'stone-hammer',
+			definition: 'hammers/stone-hammer',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -155,7 +157,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
-			definition: 'bronze-hammer',
+			definition: 'hammers/bronze-hammer',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -163,7 +165,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
-			definition: 'iron-hammer',
+			definition: 'hammers/iron-hammer',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
@@ -177,8 +179,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				file: 'campFire',
 				size: 50
 			},
-			// TODO
-			definition: '',
+			definition: 'placeables/campfire',
 			type: ItemType.PLACEABLE
 		},
 		BigCampfire: {
@@ -187,8 +188,7 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				file: 'bigCampFire',
 				size: 65
 			},
-			// TODO
-			definition: '',
+			definition: 'placeables/big-campfire',
 			type: ItemType.PLACEABLE
 		},
 		Workbench: {
@@ -197,32 +197,28 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 				file: 'workbench',
 				size: 40
 			},
-			// TODO
-			definition: '',
+			definition: 'placeables/workbench',
 			type: ItemType.PLACEABLE
 		},
 		Chest: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
-			// TODO
-			definition: '',
+			definition: 'placeables/chest',
 			type: ItemType.PLACEABLE
 		},
 		BigChest: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
-			// TODO
-			definition: '',
+			definition: 'placeables/big-chest',
 			type: ItemType.PLACEABLE
 		},
 		Furnace: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
-			// TODO
-			definition: '',
+			definition: 'placeables/furnace',
 			type: ItemType.PLACEABLE
 		},
 		Seeds: {
@@ -345,19 +341,17 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 		 ***********************************/
 		Berry: {
 			icon: {file: 'berryIcon'},
-			definition: 'berry',
+			definition: 'consumables/berry',
 			type: ItemType.CONSUMABLE
 		},
 		CookedMeat: {
 			icon: {file: 'meatCookedIcon'},
-			// TODO
-			definition: '',
+			definition: 'consumables/cooked-meat',
 			type: ItemType.CONSUMABLE
 		},
 		RawMeat: {
 			icon: {file: 'meatRawIcon'},
-			// TODO
-			definition: '',
+			definition: 'consumables/raw-meat',
 			type: ItemType.CONSUMABLE
 		},
 		BerryBowl: {
@@ -372,22 +366,22 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 		 ***********************************/
 		Wood: {
 			icon: {file: 'woodIcon'},
-			definition: 'wood',
+			definition: 'resources/wood',
 			type: ItemType.RESOURCE
 		},
 		Stone: {
 			icon: {file: 'stoneIcon'},
-			definition: 'stone',
+			definition: 'resources/stone',
 			type: ItemType.RESOURCE
 		},
 		Bronze: {
 			icon: {file: 'bronzeIcon'},
-			definition: 'bronze',
+			definition: 'resources/bronze',
 			type: ItemType.RESOURCE
 		},
 		Iron: {
 			icon: {file: 'ironIcon'},
-			definition: 'iron',
+			definition: 'resources/iron',
 			type: ItemType.RESOURCE
 		}
 	};
@@ -398,6 +392,13 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 		let cacheBuster = '';
 		if (Environment.cachingEnabled()) {
 			cacheBuster = '?' + (new Date()).getTime();
+		}
+
+		let definitionPath;
+		if (Environment.subfolderPath()) {
+			definitionPath = '../api/items/';
+		} else {
+			definitionPath = 'item-definitions/'
 		}
 
 		for (let itemName in Items) {
@@ -412,6 +413,21 @@ define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], funct
 			if (item.graphic && item.graphic.file) {
 				item.graphic.path = 'img/items/' + item.graphic.file + '.svg' + cacheBuster;
 				Preloading.registerGameObjectSVG(item.graphic, item.graphic.path);
+			}
+			if (item.definition) {
+				Preloading.registerPreload(Utils.makeRequest({
+					method: 'GET',
+					url: definitionPath + item.definition + '.json' + cacheBuster
+				}).then((itemDefinition) => {
+					itemDefinition = JSON.parse(itemDefinition);
+					if (item.name !== itemDefinition.item) {
+						throw 'Loaded "' + item.definition + '.json" for item "' + item.name + '" but got "' + itemDefinition.item + '".';
+					}
+
+					item.id = itemDefinition.id;
+					item.type = ItemType[itemDefinition.itemType];
+					item.recipe = itemDefinition.recipe;
+				}))
 			}
 		}
 	})();

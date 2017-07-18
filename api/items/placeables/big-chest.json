@@ -1,0 +1,34 @@
+{
+  "item": "BigChest",
+  "id": 23,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "health": 100,
+    "durability": 2,
+    "capacity": 2
+  },
+  "recipe": {
+    "craftTimeSec": 20,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 100
+      },
+      {
+        "item": "Stone",
+        "count": 30
+      },
+      {
+        "item": "Bronze",
+        "count": 20
+      },
+      {
+        "item": "Chest",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

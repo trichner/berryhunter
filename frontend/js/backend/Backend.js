@@ -35,35 +35,15 @@ define([
 		Animals.Mammoth
 	];
 
-	const NONE_ITEM = 0;
+	const NONE_ITEM_ID = 0;
 
-	const itemLookupTable = [
-		null,
-		Items.Berry,
-		Items.Wood,
-		Items.Stone,
-		Items.Bronze,
-		Items.Iron,
-
-		Items.WoodClub,
-		Items.StoneTool,
-		Items.BronzeTool,
-		Items.IronTool,
-
-		Items.StoneClub,
-		Items.BronzeSword,
-		Items.IronSword,
-
-		Items.StoneSpear,
-		Items.BronzeSpear,
-		Items.IronSpear,
-
-		Items.StoneHammer,
-		Items.BronzeHammer,
-		Items.IronHammer,
-
-		Items.Campfire
-	];
+	const itemLookupTable = [];
+	itemLookupTable[NONE_ITEM_ID] = null;
+	for (let itemName in Items) {
+		//noinspection JSUnfilteredForInLoop
+		let item = Items[itemName];
+		itemLookupTable[item.id] = item;
+	}
 
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
@@ -301,7 +281,7 @@ define([
 			if (Utils.isDefined(inputObj.action)) {
 				DeathioApi.Action.startAction(builder);
 				if (inputObj.action.item === null) {
-					DeathioApi.Action.addItem(builder, NONE_ITEM);
+					DeathioApi.Action.addItem(builder, NONE_ITEM_ID);
 				} else {
 					DeathioApi.Action.addItem(builder, itemLookupTable.indexOf(inputObj.action.item));
 				}

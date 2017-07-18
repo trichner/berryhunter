@@ -1,18 +1,21 @@
 {
-  "id": 19,
-  "item": "Campfire",
+  "item": "Workbench",
+  "id": 21,
   "itemType": "PLACEABLE",
+  "factors": {
+    "health": 50,
+    "durability": 2
+  },
   "recipe": {
     "craftTimeSec": 10,
-    "comment": "TODO",
     "materials": [
       {
         "item": "Wood",
-        "count": 30
+        "count": 40
       },
       {
         "item": "Stone",
-        "count": 5
+        "count": 20
       }
     ]
   }
