@@ -1,41 +1,42 @@
 "use strict";
 
-requirejs.config({
-	paths: {
-		schema_common: [
-			'schema/common_generated',
-			'../../api/schema/js/common_generated'
-		],
-		schema_server: [
-			'schema/server_generated',
-			'../../api/schema/js/server_generated'
-		],
-		schema_client: [
-			'schema/client_generated',
-			'../../api/schema/js/client_generated'
-		],
-		Two: '../vendor/two/two',
-		'vendor/flatbuffers': '../vendor/flatbuffers-1.6.0',
-		underscore: '../vendor/underscore-min',
+require(['Environment'], function (Environment) {
 
-		GameObject: 'gameObjects/_GameObject',
-		MapEditor: 'mapEditor/_MapEditor',
-		Develop: 'develop/_Develop'
-	},
+	requirejs.config({
+		paths: {
+			schema_common: Environment.subfolderPath() ?
+				'../../api/schema/js/common_generated' :
+				'schema/common_generated',
+			schema_server: Environment.subfolderPath() ?
+				'../../api/schema/js/server_generated' :
+				'schema/server_generated',
+			schema_client: Environment.subfolderPath() ?
+				'../../api/schema/js/client_generated' :
+				'schema/client_generated',
+			Two: '../vendor/two/two',
+			'vendor/flatbuffers': '../vendor/flatbuffers-1.6.0',
+			underscore: '../vendor/underscore-min',
 
-	shim: {
-		'underscore': {
-			exports: '_'
+			GameObject: 'gameObjects/_GameObject',
+			MapEditor: 'mapEditor/_MapEditor',
+			Develop: 'develop/_Develop'
+		},
+
+		shim: {
+			'underscore': {
+				exports: '_'
+			}
 		}
+	});
+
+// Disable caching
+	if (Environment.cachingEnabled()) {
+		requirejs.config({
+			urlArgs: '' + (new Date()).getTime()
+		})
 	}
 });
 
-// Disable caching
-if (window.location.host !== 'localhost:63342') {
-	requirejs.config({
-		urlArgs: '' + (new Date()).getTime()
-	})
-}
 
 define(['Utils', 'Preloading'], function (Utils, Preloading) {
 	Preloading.loadPartial('partials/loadingScreen.html')

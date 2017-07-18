@@ -16,7 +16,7 @@
  *      type: ItemType,
  *      equipmentSlot: Equipment.Slots},
  */
-define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading, ItemType, Equipment) {
+define(['Environment', 'Preloading', 'items/ItemType', 'items/Equipment'], function (Environment, Preloading, ItemType, Equipment) {
 	const Items = {
 		/***********************************
 		 * TOOLS
@@ -396,7 +396,7 @@ define(['Preloading', 'items/ItemType', 'items/Equipment'], function (Preloading
 
 		// Disable caching
 		let cacheBuster = '';
-		if (window.location.host !== 'localhost:63342') {
+		if (Environment.cachingEnabled()) {
 			cacheBuster = '?' + (new Date()).getTime();
 		}
 
