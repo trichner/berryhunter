@@ -853,12 +853,12 @@ DeathioApi.GameState.prototype.tick = function() {
 };
 
 /**
- * @param {DeathioApi.Entity=} obj
- * @returns {DeathioApi.Entity}
+ * @param {DeathioApi.Player=} obj
+ * @returns {DeathioApi.Player}
  */
 DeathioApi.GameState.prototype.player = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? (obj || new DeathioApi.Entity).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+  return offset ? (obj || new DeathioApi.Player).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
 /**

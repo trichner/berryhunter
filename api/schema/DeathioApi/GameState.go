@@ -38,12 +38,12 @@ func (rcv *GameState) MutateTick(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(4, n)
 }
 
-func (rcv *GameState) Player(obj *Entity) *Entity {
+func (rcv *GameState) Player(obj *Player) *Player {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(Entity)
+			obj = new(Player)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj

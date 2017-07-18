@@ -74,7 +74,7 @@ table Player {
 table GameState {
   tick:ulong;
 
-  player:Entity;
+  player:Player;
   inventory:[ItemStack];
 
   entities:[Entity];

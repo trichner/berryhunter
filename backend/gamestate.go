@@ -19,6 +19,10 @@ func f32ToU16Px(f float32) uint16 {
 	return uint16(f * points2px)
 }
 
+func Vec2fMarshalFlatbuf(v phy.Vec2f, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+	return DeathioApi.CreateVec2f(builder, f32ToPx(v.X), f32ToPx(v.Y))
+}
+
 func AabbMarshalFlatbuf(aabb model.AABB, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return DeathioApi.CreateAABB(builder, f32ToPx(aabb.Left), f32ToPx(aabb.Bottom), f32ToPx(aabb.Right), f32ToPx(aabb.Upper))
 }
@@ -32,10 +36,6 @@ func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) f
 	}
 
 	return builder.EndVector(n)
-}
-
-func Vec2fMarshalFlatbuf(v phy.Vec2f, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	return DeathioApi.CreateVec2f(builder, f32ToPx(v.X), f32ToPx(v.Y))
 }
 
 func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
@@ -56,6 +56,11 @@ func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) fl
 	DeathioApi.PlayerAddEntityType(builder, uint16(p.Type()))
 
 	DeathioApi.PlayerAddEquipment(builder, equipment)
+
+	vs := p.VitalSigns()
+	DeathioApi.PlayerAddHealth(builder, byte(vs.Health))
+	DeathioApi.PlayerAddSatiety(builder, byte(vs.Satiety))
+	DeathioApi.PlayerAddBodyTemperature(builder, byte(vs.BodyTemperature))
 
 	// TODO
 	DeathioApi.PlayerAddIsHit(builder, 0)
@@ -92,7 +97,7 @@ func InventoryMarshalFlatbuf(inventory *items.Inventory, builder *flatbuffers.Bu
 // MarshalFlatbuf implements FlatbufCodec for GameState
 func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	entities := EntitiesFlatbufMarshal(gs.Entities, builder)
+	entities := EntitiesMarshalFlatbuf(gs.Entities, builder)
 	player := PlayerMarshalFlatbuf(gs.Player, builder)
 	inventory := InventoryMarshalFlatbuf(gs.Player.Inventory(), builder)
 
@@ -105,8 +110,8 @@ func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UO
 	return DeathioApi.GameStateEnd(builder)
 }
 
-// EntitiesFlatbufMarshal marshals a list of Entity interfaces
-func EntitiesFlatbufMarshal(entities []model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+// EntitiesMarshalFlatbuf marshals a list of Entity interfaces
+func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	n := len(entities)
 
