@@ -28,20 +28,47 @@ struct ItemStack {
   slot:ubyte;
 }
 
-table Entity {
+// Workaround to make vector of union possible
+union AnyEntity { Player, Mob, Resource }
+table Entity { e:AnyEntity; }
+
+table Resource {
   id:ulong;
   pos:Vec2f;
   radius:ushort;
-  rotation:float;
   entity_type:EntityType;
+
+  aabb:AABB;
+}
+
+table Mob {
+  id:ulong;
+  pos:Vec2f;
+  radius:ushort;
+  entity_type:EntityType;
+
+  aabb:AABB;
+}
+
+table Player {
+  id:ulong;
+  pos:Vec2f;
+  radius:ushort;
+  entity_type:EntityType;
+
+  rotation:float;
   is_hit:bool = false;
 
   action_tick:ushort;
   name:string;
 
-  aabb:AABB;
-
   equipment:[ubyte];
+
+  health:ubyte;
+  satiety:ubyte;
+  body_temperature:ubyte;
+
+  aabb:AABB;
 }
 
 table GameState {
