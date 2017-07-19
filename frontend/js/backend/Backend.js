@@ -216,9 +216,16 @@ define([
 		},
 
 		/**
-		 * @param {DeathioApi.Entity} entity
+		 * @param {DeathioApi.Entity} wrappedEntity
 		 */
-		unmarshalEntity(entity) {
+		unmarshalEntity(wrappedEntity) {
+			let eType = wrappedEntity.eType();
+			/**
+			 *
+			 * @type {DeathioApi.Mob | DeathioApi.Resource | DeathioApi.Player}
+			 */
+			let entity = wrappedEntity.e();
+
 			let result = {
 				id: entity.id().toFloat64(),
 				position: {
@@ -226,11 +233,21 @@ define([
 					y: entity.pos().y(),
 				},
 				radius: entity.radius(),
-				rotation: entity.rotation(),
 				type: this.unmarshalEntityType(entity.entityType()),
 				aabb: this.unmarshalAABB(entity.aabb()),
-				equipment: [],
 			};
+
+			if (eType === DeathioApi.AnyEntity.Player) {
+				result.rotation = entity.rotation();
+				result.isHit = entity.isHit();
+				result.actionTick = entity.actionTick();
+				result.name = entity.name();
+				result.equipment = [];
+
+				result.health = entity.health();
+				result.satiety = entity.satiety();
+				result.bodyHeat = entity.bodyTemperature();
+			}
 
 			for (let i = 0; i < entity.equipmentLength(); ++i) {
 				result.equipment.push(this.unmarshalItem(entity.equipment(i)));
