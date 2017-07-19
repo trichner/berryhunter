@@ -9,6 +9,7 @@ const (
 	ActionTypeUnequipItem = 3
 	ActionTypeDropItem = 4
 	ActionTypePlaceItem = 5
+	ActionTypeConsumeItem = 6
 )
 
 var EnumNamesActionType = map[int]string{
@@ -18,5 +19,6 @@ var EnumNamesActionType = map[int]string{
 	ActionTypeUnequipItem:"UnequipItem",
 	ActionTypeDropItem:"DropItem",
 	ActionTypePlaceItem:"PlaceItem",
+	ActionTypeConsumeItem:"ConsumeItem",
 }
 
