@@ -30,6 +30,7 @@
 }
 #inventory > .inventorySlot.empty {
   background-color: rgba(0, 0, 0, 0.6);
+  pointer-events: none;
 }
 #inventory > .inventorySlot.empty > .itemIcon {
   display: none;

@@ -8,7 +8,8 @@ enum ActionType: ubyte {
     EquipItem,
     UnequipItem,
     DropItem,
-    PlaceItem
+    PlaceItem,
+    ConsumeItem
 }
 
 table Action {

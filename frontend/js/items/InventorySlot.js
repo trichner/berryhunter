@@ -6,9 +6,8 @@ define([
 	'items/Equipment',
 	'items/ItemType',
 	'UserInterface',
-	'Controls',
 	'schema_client',
-], function (Game, Two, Equipment, ItemType, UserInterface, Controls) {
+], function (Game, Two, Equipment, ItemType, UserInterface) {
 
 	class InventorySlot {
 		/**
@@ -30,13 +29,22 @@ define([
 				if (!this.isFilled()) {
 					return;
 				}
-				let equipmentSlot = Equipment.Helper.getItemEquipmentSlot(this.item);
-				if (this.isActive()) {
-					this.deactivate();
-					this.inventory.deactivateSlot(equipmentSlot);
-				} else {
-					this.inventory.activateSlot(this.index, equipmentSlot);
+				switch (this.item.type) {
+					case ItemType.EQUIPMENT:
+					case ItemType.PLACEABLE:
+						let equipmentSlot = Equipment.Helper.getItemEquipmentSlot(this.item);
+						if (this.isActive()) {
+							this.deactivate();
+							this.inventory.deactivateSlot(equipmentSlot);
+						} else {
+							this.inventory.activateSlot(this.index, equipmentSlot);
+						}
+						break;
+					case ItemType.CONSUMABLE:
+						Game.player.controls.onInventoryAction(this.item, DeathioApi.ActionType.ConsumeItem);
+						break;
 				}
+
 			}.bind(this);
 
 			this.clickableIcon.onRightClick = function () {
@@ -57,14 +65,6 @@ define([
 			this.clickableIcon.setIconGraphic(item.icon.path);
 
 			this.setCount(count);
-
-			switch (item.type) {
-				case ItemType.EQUIPMENT:
-				case ItemType.PLACEABLE:
-				case ItemType.CONSUMABLE:
-					this.clickableIcon.setClickable(true);
-					break;
-			}
 		}
 
 		setCount(count) {

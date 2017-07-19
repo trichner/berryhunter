@@ -21,7 +21,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 				event.stopPropagation();
 				event.preventDefault();
 
-				if (this.clickable && typeof this.onPointerup === 'function') {
+				if (this.clickable && Utils.isFunction( this.onPointerup )) {
 					this.onPointerup(event);
 				}
 			});
@@ -29,7 +29,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 				event.stopPropagation();
 				event.preventDefault();
 
-				if (this.clickable && typeof this.onPointerdown === 'function') {
+				if (this.clickable && Utils.isFunction( this.onPointerdown )) {
 					this.onPointerdown(event);
 				}
 			});
@@ -45,7 +45,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 				event.stopPropagation();
 				event.preventDefault();
 
-				if (Utils.isFunction(this.onRightClick)) {
+				if (this.clickable && Utils.isFunction(this.onRightClick)) {
 					this.onRightClick(event);
 				}
 			}.bind(this));
@@ -53,25 +53,18 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 			this.imageNode = this.domElement.querySelector('.itemIcon');
 		}
 
-		setClickable(toggle) {
-			this.clickable = toggle;
-			if (toggle) {
-				this.domElement.classList.remove('disabled');
-			} else {
-				this.domElement.classList.add('disabled');
-			}
-		}
-
 		setIconGraphic(svgPath) {
 			this.imageNode.setAttribute('src', svgPath);
 			this.domElement.classList.remove('empty');
 			this.domElement.classList.add('filled');
+			this.clickable = true;
 		}
 
 		removeIconGraphic() {
 			this.imageNode.removeAttribute('src');
 			this.domElement.classList.add('empty');
 			this.domElement.classList.remove('filled');
+			this.clickable = false;
 		}
 
 		activate() {
@@ -83,7 +76,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		}
 
 		hasIcon() {
-			return this.domElement.classList.contains('filled');
+			return this.clickable;
 		}
 
 		// TODO Display busy animation
