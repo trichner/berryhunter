@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'Two', 'Utils'], function (Game, Two, Utils) {
+define(['Game', 'Two', 'Utils', 'UserInterface'], function (Game, Two, Utils, UserInterface) {
 	class VitalSigns {
 		constructor() {
 			this.health = VitalSigns.maximumValues.HEALTH;
@@ -16,8 +16,13 @@ define(['Game', 'Two', 'Utils'], function (Game, Two, Utils) {
 				Game.height - this.height / 2
 			);
 
-			this.indicators = {};
+			this.indicators = {
+				health: UserInterface.getVitalSignBar('health'),
+				satiety: UserInterface.getVitalSignBar('satiety'),
+				bodyHeat: UserInterface.getVitalSignBar('bodyHeat')
+			};
 			this.group.add(this.createBar(0, 'HEALTH'));
+
 			this.group.add(this.createBar(1, 'SATIETY'));
 			this.group.add(this.createBar(2, 'BODYHEAT'));
 

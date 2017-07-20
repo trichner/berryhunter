@@ -24,15 +24,15 @@
 	border: 10px solid Cornsilk;
 }
 
+@uiElementHeight: 7vh;
+
 #inventory {
 	position: absolute;
 	bottom: 0;
 	left: 50%;
 	transform: translateX(-50%);
 
-	white-space: nowrap;
-
-	@slotSize: 7vh;
+	@slotSize: @uiElementHeight;
 
 	> .inventorySlot {
 		border-radius: 10%;
@@ -72,5 +72,46 @@
 		> .itemIcon {
 			width: 100%;
 		}
+	}
+}
+
+#vitalSigns {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 22vw;
+	height: 12vh;
+
+	> .bar {
+		margin: (0.1 * @uiElementHeight);
+
+		> .indicator {
+			height: 100%;
+			width: 66%;
+		}
+	}
+}
+
+#healthBar {
+	background-color: #840D25;
+
+	> .indicator {
+		background-color: crimson;
+	}
+}
+
+#satietyBar {
+	background-color: #1E7A1E;
+
+	> .indicator {
+		background-color: limegreen;
+	}
+}
+
+#bodyHeatBar {
+	background-color: #125799;
+
+	> .indicator {
+		background-color: dodgerblue;
 	}
 }

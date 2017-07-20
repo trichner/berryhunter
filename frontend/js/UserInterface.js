@@ -21,7 +21,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 				event.stopPropagation();
 				event.preventDefault();
 
-				if (this.clickable && Utils.isFunction( this.onPointerup )) {
+				if (this.clickable && Utils.isFunction(this.onPointerup)) {
 					this.onPointerup(event);
 				}
 			});
@@ -29,7 +29,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 				event.stopPropagation();
 				event.preventDefault();
 
-				if (this.clickable && Utils.isFunction( this.onPointerdown )) {
+				if (this.clickable && Utils.isFunction(this.onPointerdown)) {
 					this.onPointerdown(event);
 				}
 			});
@@ -101,6 +101,21 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		}
 	}
 
+	class VitalSignBar {
+		constructor(node) {
+			this.domElement = node;
+			this.indicator = node.querySelector('.indicator');
+		}
+
+		/**
+		 *
+		 * @param value 0.0 - 1.0
+		 */
+		setValue(value){
+			this.indicator.style.width = (value * 100).toFixed(2) + '%';
+		}
+	}
+
 	UserInterface.setup = function () {
 		this.rootElement.classList.remove('hidden');
 		// this.rootElement.addEventListener('contextmenu', function (event) {
@@ -118,6 +133,12 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 			inventoryElement.appendChild(inventorySlotCopy);
 			this.inventorySlots[i] = new ClickableCountableIcon(inventorySlotCopy);
 		}
+
+		this.vitalSignsBars = {
+			health: new VitalSignBar(document.getElementById('healthBar')),
+			satiety: new VitalSignBar(document.getElementById('satietyBar')),
+			bodyHeat: new VitalSignBar(document.getElementById('bodyHeatBar'))
+		}
 	};
 
 	/**
@@ -126,6 +147,10 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 	 */
 	UserInterface.getInventorySlot = function (slotIndex) {
 		return this.inventorySlots[slotIndex];
+	};
+
+	UserInterface.getVitalSignBar = function (vitalSign) {
+		return this.vitalSignsBars[vitalSign];
 	};
 
 

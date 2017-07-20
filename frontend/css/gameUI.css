@@ -15,7 +15,6 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  white-space: nowrap;
 }
 #inventory > .inventorySlot {
   border-radius: 10%;
@@ -48,4 +47,36 @@
 }
 #inventory > .inventorySlot > .itemIcon {
   width: 100%;
+}
+#vitalSigns {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 22vw;
+  height: 12vh;
+}
+#vitalSigns > .bar {
+  margin: 0.7vh;
+}
+#vitalSigns > .bar > .indicator {
+  height: 100%;
+  width: 66%;
+}
+#healthBar {
+  background-color: #840D25;
+}
+#healthBar > .indicator {
+  background-color: crimson;
+}
+#satietyBar {
+  background-color: #1E7A1E;
+}
+#satietyBar > .indicator {
+  background-color: limegreen;
+}
+#bodyHeatBar {
+  background-color: #125799;
+}
+#bodyHeatBar > .indicator {
+  background-color: dodgerblue;
 }
