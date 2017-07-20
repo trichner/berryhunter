@@ -209,7 +209,7 @@ define([
 			}
 
 			for (let i = 0; i < gameState.entitiesLength(); ++i) {
-				result.entities.push(this.unmarshalEntity(gameState.entities(i)));
+				result.entities.push(this.unmarshalWrappedEntity(gameState.entities(i)));
 			}
 
 			return result;
@@ -218,7 +218,7 @@ define([
 		/**
 		 * @param {DeathioApi.Entity} wrappedEntity
 		 */
-		unmarshalEntity(wrappedEntity) {
+		unmarshalWrappedEntity(wrappedEntity) {
 			let eType = wrappedEntity.eType();
 			/**
 			 *
@@ -226,6 +226,10 @@ define([
 			 */
 			let entity = wrappedEntity.e();
 
+			return this.unmarshalEntity(entity, eType);
+		},
+
+		unmarshalEntity(entity, eType){
 			let result = {
 				id: entity.id().toFloat64(),
 				position: {
