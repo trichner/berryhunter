@@ -172,6 +172,11 @@ define([
 				if (Utils.isDefined(snapshot.player.position)) {
 					Game.player.character.setPosition(snapshot.player.position.x, snapshot.player.position.y);
 				}
+				['health', 'satiety', 'bodyHeat'].forEach((vitalSign) => {
+					if (Utils.isDefined(snapshot.player[vitalSign])){
+						Game.player.vitalSigns.setValue(vitalSign, snapshot.player[vitalSign]);
+					}
+				});
 			} else {
 				Game.createPlayer(snapshot.player.id, snapshot.player.position.x, snapshot.player.position.y);
 			}

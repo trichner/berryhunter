@@ -344,7 +344,6 @@ dl.flatList > dd {
 }
 #vitalSigns > .bar > .indicator {
   height: 100%;
-  width: 66%;
 }
 #healthBar {
   background-color: #840D25;
