@@ -216,6 +216,8 @@ define([
 			switch (key) {
 				case 'item':
 					return value.name;
+				case 'type':
+					return value.name;
 				case 'x':
 				case 'y':
 				case 'LowerX':

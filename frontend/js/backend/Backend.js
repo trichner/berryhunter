@@ -38,16 +38,21 @@ define([
 	const NONE_ITEM_ID = 0;
 
 	const itemLookupTable = [];
-	itemLookupTable[NONE_ITEM_ID] = null;
-	for (let itemName in Items) {
-		//noinspection JSUnfilteredForInLoop
-		let item = Items[itemName];
-		itemLookupTable[item.id] = item;
+
+	function initializeItemLookupTable() {
+		itemLookupTable[NONE_ITEM_ID] = null;
+		for (let itemName in Items) {
+			//noinspection JSUnfilteredForInLoop
+			let item = Items[itemName];
+			itemLookupTable[item.id] = item;
+		}
 	}
 
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
 		setup: function () {
+			initializeItemLookupTable();
+
 			if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
 				this.webSocket = new WebSocket('ws://' + window.location.host + '/game');
 			} else {
@@ -220,16 +225,23 @@ define([
 		 */
 		unmarshalWrappedEntity(wrappedEntity) {
 			let eType = wrappedEntity.eType();
+			let entity;
+
+			for (let eTypeName in DeathioApi.AnyEntity) {
+				if (DeathioApi.AnyEntity[eTypeName] === eType) {
+					entity = new DeathioApi[eTypeName]();
+				}
+			}
 			/**
 			 *
 			 * @type {DeathioApi.Mob | DeathioApi.Resource | DeathioApi.Player}
 			 */
-			let entity = wrappedEntity.e();
+			entity = wrappedEntity.e(entity);
 
 			return this.unmarshalEntity(entity, eType);
 		},
 
-		unmarshalEntity(entity, eType){
+		unmarshalEntity(entity, eType) {
 			let result = {
 				id: entity.id().toFloat64(),
 				position: {
@@ -251,10 +263,10 @@ define([
 				result.health = entity.health();
 				result.satiety = entity.satiety();
 				result.bodyHeat = entity.bodyTemperature();
-			}
 
-			for (let i = 0; i < entity.equipmentLength(); ++i) {
-				result.equipment.push(this.unmarshalItem(entity.equipment(i)));
+				for (let i = 0; i < entity.equipmentLength(); ++i) {
+					result.equipment.push(this.unmarshalItem(entity.equipment(i)));
+				}
 			}
 
 			return result
