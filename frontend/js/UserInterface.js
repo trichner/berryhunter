@@ -111,7 +111,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		 *
 		 * @param value 0.0 - 1.0
 		 */
-		setValue(value){
+		setValue(value) {
 			this.indicator.style.width = (value * 100).toFixed(2) + '%';
 		}
 	}
@@ -122,6 +122,19 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		// 	event.preventDefault();
 		// });
 
+		setupCrafting();
+
+		setupInventory();
+
+		setupVitalSigns();
+	};
+
+	function setupCrafting() {
+		this.craftingElement = document.getElementById('crafting');
+		this.craftableItemTemplate = this.craftingElement.querySelector('craftableItem');
+	}
+
+	function setupInventory() {
 		let inventoryElement = document.getElementById('inventory');
 		let inventorySlot = document.querySelector('#inventory > .inventorySlot');
 
@@ -133,12 +146,31 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 			inventoryElement.appendChild(inventorySlotCopy);
 			this.inventorySlots[i] = new ClickableCountableIcon(inventorySlotCopy);
 		}
+	}
 
+	function setupVitalSigns() {
 		this.vitalSignsBars = {
 			health: new VitalSignBar(document.getElementById('healthBar')),
 			satiety: new VitalSignBar(document.getElementById('satietyBar')),
 			bodyHeat: new VitalSignBar(document.getElementById('bodyHeatBar'))
-		}
+		};
+	}
+
+	UserInterface.displayAvailableCrafts = function (availableCrafts, onLeftClick) {
+		let craftsPerColumn = Math.floor(Math.sqrt(availableCrafts.length));
+		let craftsPerRow = Math.ceil(availableCrafts.length / craftsPerColumn);
+
+
+		availableCrafts.forEach(function (recipe, index) {
+			let craftableItemElement = this.craftableItemTemplate.cloneNode(true);
+			let clickableIcon = new ClickableIcon(craftableItemElement);
+
+			if (index % craftsPerRow){
+				craftableItemElement.classList.add('newLine');
+			}
+
+			clickableIcon.onLeftClick = onLeftClick;
+		}, this);
 	};
 
 	/**
