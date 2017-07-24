@@ -46,7 +46,7 @@ func (m *Mob) Update(dt float32) {
 	// random in [-1,1)
 	alpha := (m.rand.Float32() * 2) - 1
 
-	// can tweek this for more eradic movements
+	// can tweak this for more erratic movements
 	alpha *= math.Pi / 8
 
 	rot := phy.NewRotMat2f(alpha)
