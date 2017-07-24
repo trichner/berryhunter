@@ -41,7 +41,11 @@ func main() {
 
 	// add some mobs
 	for i := 0; i < 100; i++ {
-		m := newMobEntity()
+		meat, err := registry.GetByName("RawMeat")
+		if err != nil {
+			panic(err)
+		}
+		m := newMobEntity(meat)
 		m.SetPosition(phy.Vec2f{float32(i), float32(i)})
 		g.AddEntity(m)
 	}
@@ -132,7 +136,7 @@ func newCircleEntity(r float32) model.BaseEntity {
 	return aEntity
 }
 
-func newMobEntity() model.MobEntity {
+func newMobEntity(drop items.Item) model.MobEntity {
 	circle := phy.NewCircle(phy.VEC2F_ZERO, 0.5)
-	return mob.NewMob(circle)
+	return mob.NewMob(circle, drop)
 }

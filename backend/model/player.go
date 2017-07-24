@@ -21,3 +21,8 @@ type PlayerEntity interface {
 	Viewport() phy.DynamicCollider
 	Client() *net.Client
 }
+
+type PlayerInteraction interface {
+	HitMob(m *MobEntity)
+	KilledMob(m *MobEntity)
+}

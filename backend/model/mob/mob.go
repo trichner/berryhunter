@@ -18,7 +18,7 @@ var types = []model.EntityType{
 	DeathioApi.EntityTypeSaberToothCat,
 }
 
-func NewMob(body *phy.Circle) *Mob {
+func NewMob(body *phy.Circle, drop items.Item) *Mob {
 	//TODO
 	t := types[rand.Intn(len(types))]
 
@@ -28,6 +28,7 @@ func NewMob(body *phy.Circle) *Mob {
 		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
 		velocity:   phy.Vec2f{0.04, 0},
 		health:     255,
+		drop:       drop,
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -39,6 +40,7 @@ type Mob struct {
 	health   int
 	velocity phy.Vec2f
 	rand     *rand.Rand
+	drop     items.Item
 }
 
 func (m *Mob) Update(dt float32) bool {
@@ -70,4 +72,7 @@ func (m *Mob) Health() int {
 func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	log.Printf("🎯")
 	m.health -= 50
+	if m.health <= 0 {
+		p.Inventory().AddItem(items.NewItemStack(m.drop, 1))
+	}
 }
