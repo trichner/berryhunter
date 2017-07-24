@@ -20,4 +20,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-/js_old/
+/item-definitions/
+/js/schema/
