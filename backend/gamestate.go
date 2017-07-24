@@ -149,6 +149,7 @@ func MobEntityFlatbufMarshal(m model.MobEntity, builder *flatbuffers.Builder) fl
 	DeathioApi.MobStart(builder)
 	DeathioApi.MobAddId(builder, m.Basic().ID())
 	DeathioApi.MobAddEntityType(builder, DeathioApi.EntityTypeMammoth)
+	DeathioApi.MobAddRotation(builder, m.Angle())
 
 	aabb := AabbMarshalFlatbuf(m.AABB(), builder)
 	DeathioApi.MobAddAabb(builder, aabb)

@@ -58,8 +58,7 @@ func (m *Mob) Update(dt float32) {
 }
 
 func (m *Mob) Angle() float32 {
-	//return phy.Vec2f{1, 0}.AngleBetween(m.velocity)
-	return 0
+	return phy.Vec2f{1, 0}.AngleBetween(m.velocity)
 }
 
 func (m *Mob) Health() int {
