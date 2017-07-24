@@ -1,12 +1,4 @@
 #gameUI {
-	//box-sizing: border-box;
-	//position: absolute;
-	//top: 0;
-	//right: 0;
-	//bottom: 0;
-	//left: 0;
-	//pointer-events: none;
-
 	* {
 		box-sizing: border-box;
 	}
@@ -118,6 +110,16 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+
+	.columnsLoop(@counter) when (@counter > 0){
+		.columnsLoop((@counter - 1));
+
+		&.@{counter}-columns {
+			width: (@counter * @slotSize);
+		}
+	}
+
+	.columnsLoop(7);
 
 	> .clickableItem {
 		float: left;

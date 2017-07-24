@@ -159,22 +159,29 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 	UserInterface.displayAvailableCrafts = function (availableCrafts, onLeftClick) {
 		Utils.clearNode(this.craftingElement);
 
-		let craftsPerColumn = Math.floor(Math.sqrt(availableCrafts.length));
+		if (availableCrafts.length === 0){
+			return;
+		}
+
+		let craftsPerColumn = Math.round(Math.sqrt(availableCrafts.length));
 		let craftsPerRow = Math.ceil(availableCrafts.length / craftsPerColumn);
 
 		availableCrafts.forEach(function (recipe, index) {
 			let craftableItemElement = this.craftableItemTemplate.cloneNode(true);
 			this.craftingElement.appendChild(craftableItemElement);
 
-			if (index % craftsPerRow) {
+			if (index % craftsPerRow === 0) {
 				craftableItemElement.classList.add('newLine');
 			}
 
 			let clickableIcon = new ClickableIcon(craftableItemElement);
-			clickableIcon.onLeftClick = onLeftClick;
+			clickableIcon.onLeftClick = function (event) {
+				onLeftClick.call(ClickableIcon, event, recipe);
+			};
 			clickableIcon.setIconGraphic(recipe.item.icon.path);
 		}, this);
 
+		this.craftingElement.className = '';
 		this.craftingElement.classList.add(craftsPerRow + '-columns')
 	};
 

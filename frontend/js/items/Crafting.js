@@ -20,26 +20,18 @@ define([
 				return;
 			}
 
-			UserInterface.displayAvailableCrafts(availableCrafts, function (event) {
-				switch (event.button) {
-					// Left Click
-					case 0:
-						if (MapEditor.isActive()) {
-							for (let material in recipe.materials) {
-								//noinspection JSUnfilteredForInLoop
-								Game.player.inventory.removeItem(
-									Items[material],
-									recipe.materials[material]
-								);
-							}
-							Game.player.inventory.addItem(recipe.item);
-						} else {
-							Game.player.controls.onInventoryAction(recipe.item, DeathioApi.ActionType.CraftItem);
-						}
-						break;
-					case 2:
-						// Right Click
-						break;
+			UserInterface.displayAvailableCrafts(availableCrafts, function (event, recipe) {
+				if (MapEditor.isActive()) {
+					for (let material in recipe.materials) {
+						//noinspection JSUnfilteredForInLoop
+						Game.player.inventory.removeItem(
+							Items[material],
+							recipe.materials[material],
+						);
+					}
+					Game.player.inventory.addItem(recipe.item);
+				} else {
+					Game.player.controls.onInventoryAction(recipe.item, DeathioApi.ActionType.CraftItem);
 				}
 			}.bind(this));
 

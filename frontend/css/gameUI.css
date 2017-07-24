@@ -79,3 +79,35 @@
 #bodyHeatBar > .indicator {
   background-color: dodgerblue;
 }
+#crafting {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#crafting.1-columns {
+  width: 7vh;
+}
+#crafting.2-columns {
+  width: 14vh;
+}
+#crafting.3-columns {
+  width: 21vh;
+}
+#crafting.4-columns {
+  width: 28vh;
+}
+#crafting.5-columns {
+  width: 35vh;
+}
+#crafting.6-columns {
+  width: 42vh;
+}
+#crafting.7-columns {
+  width: 49vh;
+}
+#crafting > .clickableItem {
+  float: left;
+}
+#crafting > .clickableItem.newLine {
+  clear: left;
+}

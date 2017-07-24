@@ -84,7 +84,6 @@ define([
 			}
 
 			this.clickableIcon.removeIconGraphic();
-			this.clickableIcon.setClickable(false);
 
 			if (this.isActive()) {
 				this.inventory.deactivateSlot(Equipment.Helper.getItemEquipmentSlot(this.item));
