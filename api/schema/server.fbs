@@ -46,6 +46,7 @@ table Mob {
   pos:Vec2f;
   radius:ushort;
   entity_type:EntityType;
+  rotation:float;
 
   aabb:AABB;
 }

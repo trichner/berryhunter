@@ -147,7 +147,7 @@ DeathioApi.Input.prototype.tick = function() {
 
 /**
  * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f}
+ * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.Input.prototype.movement = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -164,7 +164,7 @@ DeathioApi.Input.prototype.rotation = function() {
 
 /**
  * @param {DeathioApi.Action=} obj
- * @returns {DeathioApi.Action}
+ * @returns {DeathioApi.Action|null}
  */
 DeathioApi.Input.prototype.action = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 10);

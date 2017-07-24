@@ -62,7 +62,7 @@ DeathioApi.AABB.prototype.__init = function(i, bb) {
 
 /**
  * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f}
+ * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.AABB.prototype.lower = function(obj) {
   return (obj || new DeathioApi.Vec2f).__init(this.bb_pos, this.bb);
@@ -70,7 +70,7 @@ DeathioApi.AABB.prototype.lower = function(obj) {
 
 /**
  * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f}
+ * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.AABB.prototype.upper = function(obj) {
   return (obj || new DeathioApi.Vec2f).__init(this.bb_pos + 8, this.bb);
@@ -288,7 +288,7 @@ DeathioApi.Resource.prototype.id = function() {
 
 /**
  * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f}
+ * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.Resource.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -313,7 +313,7 @@ DeathioApi.Resource.prototype.entityType = function() {
 
 /**
  * @param {DeathioApi.AABB=} obj
- * @returns {DeathioApi.AABB}
+ * @returns {DeathioApi.AABB|null}
  */
 DeathioApi.Resource.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 12);
@@ -421,7 +421,7 @@ DeathioApi.Mob.prototype.id = function() {
 
 /**
  * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f}
+ * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.Mob.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -445,11 +445,19 @@ DeathioApi.Mob.prototype.entityType = function() {
 };
 
 /**
+ * @returns {number}
+ */
+DeathioApi.Mob.prototype.rotation = function() {
+  var offset = this.bb.__offset(this.bb_pos, 12);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
  * @param {DeathioApi.AABB=} obj
- * @returns {DeathioApi.AABB}
+ * @returns {DeathioApi.AABB|null}
  */
 DeathioApi.Mob.prototype.aabb = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? (obj || new DeathioApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -457,7 +465,7 @@ DeathioApi.Mob.prototype.aabb = function(obj) {
  * @param {flatbuffers.Builder} builder
  */
 DeathioApi.Mob.startMob = function(builder) {
-  builder.startObject(5);
+  builder.startObject(6);
 };
 
 /**
@@ -494,10 +502,18 @@ DeathioApi.Mob.addEntityType = function(builder, entityType) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {number} rotation
+ */
+DeathioApi.Mob.addRotation = function(builder, rotation) {
+  builder.addFieldFloat32(4, rotation, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} aabbOffset
  */
 DeathioApi.Mob.addAabb = function(builder, aabbOffset) {
-  builder.addFieldStruct(4, aabbOffset, 0);
+  builder.addFieldStruct(5, aabbOffset, 0);
 };
 
 /**
@@ -554,7 +570,7 @@ DeathioApi.Player.prototype.id = function() {
 
 /**
  * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f}
+ * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.Player.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -603,7 +619,7 @@ DeathioApi.Player.prototype.actionTick = function() {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array}
+ * @returns {string|Uint8Array|null}
  */
 DeathioApi.Player.prototype.name = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 18);
@@ -661,7 +677,7 @@ DeathioApi.Player.prototype.bodyTemperature = function() {
 
 /**
  * @param {DeathioApi.AABB=} obj
- * @returns {DeathioApi.AABB}
+ * @returns {DeathioApi.AABB|null}
  */
 DeathioApi.Player.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 28);
@@ -854,7 +870,7 @@ DeathioApi.GameState.prototype.tick = function() {
 
 /**
  * @param {DeathioApi.Player=} obj
- * @returns {DeathioApi.Player}
+ * @returns {DeathioApi.Player|null}
  */
 DeathioApi.GameState.prototype.player = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
