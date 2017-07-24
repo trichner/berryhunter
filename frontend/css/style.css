@@ -279,7 +279,7 @@ dl.flatList > dd {
   z-index: -1;
   transition: opacity 1s;
 }
-.finished > #loadingBar {
+.finished #loadingBar {
   opacity: 0;
 }
 #gameUI * {
