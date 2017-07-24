@@ -399,7 +399,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			if (Environment.subfolderPath()) {
 				definitionPath = '../api/items/';
 			} else {
-				definitionPath = 'item-definitions/'
+				definitionPath = 'js/item-definitions/'
 			}
 
 			for (let itemName in Items) {
