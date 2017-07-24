@@ -46,7 +46,7 @@ define(['Utils', 'underscore'], function (Utils, _) {
 	 * @param lastInventory
 	 * @param inventory
 	 */
-	function isInventoryDifferent(lastInventory, inventory){
+	function isInventoryDifferent(lastInventory, inventory) {
 		if (lastInventory.length !== inventory.length) {
 			return true;
 		}
@@ -54,6 +54,10 @@ define(['Utils', 'underscore'], function (Utils, _) {
 		for (let i = 0; i < inventory.length; i++) {
 			let lastItemStack = lastInventory[i];
 			let itemStack = inventory[i];
+			if (lastItemStack === itemStack) {
+				return false;
+			}
+
 			if (lastItemStack.item !== itemStack.item) {
 				return true;
 			}

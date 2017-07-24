@@ -67,7 +67,7 @@ define([
 				getObjectsInRange = Game.map.getObjectsInView
 			}
 
-			let placeablesInView = getObjectsInRange().filter(function (gameObject) {
+			let placeablesInView = getObjectsInRange.call(Game.map).filter(function (gameObject) {
 				return gameObject.constructor === Placeable;
 			});
 

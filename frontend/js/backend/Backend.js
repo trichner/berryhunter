@@ -258,6 +258,11 @@ define([
 				aabb: this.unmarshalAABB(entity.aabb()),
 			};
 
+
+			if (eType === DeathioApi.AnyEntity.Mob) {
+				result.rotation = entity.rotation();
+			}
+
 			if (eType === DeathioApi.AnyEntity.Player) {
 				result.rotation = entity.rotation();
 				result.isHit = entity.isHit();
