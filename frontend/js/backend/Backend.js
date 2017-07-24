@@ -207,7 +207,7 @@ define([
 			let result = {
 				tick: gameState.tick().toFloat64(),
 
-				player: this.unmarshalEntity(gameState.player()),
+				player: this.unmarshalEntity(gameState.player(), DeathioApi.AnyEntity.Player),
 				inventory: [],
 
 				entities: [],
