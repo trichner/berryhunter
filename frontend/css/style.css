@@ -363,3 +363,14 @@ dl.flatList > dd {
 #bodyHeatBar > .indicator {
   background-color: dodgerblue;
 }
+#crafting {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#crafting > .clickableItem {
+  float: left;
+}
+#crafting > .clickableItem.newLine {
+  clear: left;
+}

@@ -122,16 +122,16 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		// 	event.preventDefault();
 		// });
 
-		setupCrafting();
+		setupCrafting.call(this);
 
-		setupInventory();
+		setupInventory.call(this);
 
-		setupVitalSigns();
+		setupVitalSigns.call(this);
 	};
 
 	function setupCrafting() {
 		this.craftingElement = document.getElementById('crafting');
-		this.craftableItemTemplate = this.craftingElement.querySelector('craftableItem');
+		this.craftableItemTemplate = this.craftingElement.removeChild(this.craftingElement.querySelector('.craftableItem'));
 	}
 
 	function setupInventory() {
@@ -157,20 +157,25 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 	}
 
 	UserInterface.displayAvailableCrafts = function (availableCrafts, onLeftClick) {
+		Utils.clearNode(this.craftingElement);
+
 		let craftsPerColumn = Math.floor(Math.sqrt(availableCrafts.length));
 		let craftsPerRow = Math.ceil(availableCrafts.length / craftsPerColumn);
 
-
 		availableCrafts.forEach(function (recipe, index) {
 			let craftableItemElement = this.craftableItemTemplate.cloneNode(true);
-			let clickableIcon = new ClickableIcon(craftableItemElement);
+			this.craftingElement.appendChild(craftableItemElement);
 
-			if (index % craftsPerRow){
+			if (index % craftsPerRow) {
 				craftableItemElement.classList.add('newLine');
 			}
 
+			let clickableIcon = new ClickableIcon(craftableItemElement);
 			clickableIcon.onLeftClick = onLeftClick;
+			clickableIcon.setIconGraphic(recipe.item.icon.path);
 		}, this);
+
+		this.craftingElement.classList.add(craftsPerRow + '-columns')
 	};
 
 	/**
