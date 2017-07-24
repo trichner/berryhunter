@@ -22,20 +22,7 @@ define([
 			this.height = 100 * 100;
 		}
 
-		/*
-		 * Create map borders
-		 */
-		// groups.mapBorders.add(
-		// 	new Border(0, 0, 'NORTH', this.width),
-		// 	new Border(this.width, 0, 'EAST', this.height),
-		// 	new Border(0, this.height, 'SOUTH', this.width),
-		// 	new Border(0, 0, 'WEST', this.height));
-
 		this.objects = {};
-		this.objectsInView = [];
-
-		// console.info('Map is ' + this.width + ' x ' + this.height);
-		// console.log(this.objects.length + ' objects generated');
 	}
 
 	GameMapWithBackend.prototype.addOrUpdate = function (entity) {
@@ -130,21 +117,27 @@ define([
 			});
 
 			// All Slots that are not equipped according to backend are dropped.
-			for (let slot in slotsToHandle){
+			for (let slot in slotsToHandle) {
 				//noinspection JSUnfilteredForInLoop
 				gameObject.unequipItem(slot);
 			}
 		}
-
-		this.objectsInView.push(gameObject);
 	};
 
-	GameMapWithBackend.prototype.newSnapshot = function () {
-		this.objectsInView.length = 0;
+	GameMapWithBackend.prototype.newSnapshot = function (entities) {
+		let removedObjects = _.clone(this.objects);
+		entities.forEach((entity) => {
+			delete removedObjects[entity.id];
+		});
+
+		Object.values(removedObjects).forEach((entity) => {
+			this.objects[entity.id].hide();
+			delete this.objects[entity.id];
+		}, this);
 	};
 
 	GameMapWithBackend.prototype.getObjectsInView = function () {
-		return this.objectsInView;
+		return Object.values(this.objects);
 	};
 
 	return GameMapWithBackend;

@@ -171,7 +171,7 @@ define([
 		 * @param {{tick: number, player: {}, entities: Array}} snapshot
 		 */
 		receiveSnapshot: function (snapshot) {
-			Game.map.newSnapshot();
+			Game.map.newSnapshot(snapshot.entities);
 
 			if (Game.started) {
 				if (Utils.isDefined(snapshot.player.position)) {

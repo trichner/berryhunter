@@ -65,6 +65,13 @@ define([], function () {
 						this.aabb.linewidth = Develop.settings.linewidth;
 					}
 				};
+
+				let super_hide = GameObject.prototype.hide;
+				GameObject.prototype.hide = function () {
+					super_hide.call(this);
+
+					this.aabb.remove();
+				};
 			});
 		}
 	};
