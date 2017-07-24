@@ -4,7 +4,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 	class Animal extends GameObject {
 		constructor(x, y, size, rotation) {
 			super(x, y, size, rotation);
-			this.rotateOnPositioning = true;
+			this.rotateOnPositioning = false;
 			this.isMoveable = true;
 		}
 
