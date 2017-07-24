@@ -38,16 +38,21 @@ define([
 	const NONE_ITEM_ID = 0;
 
 	const itemLookupTable = [];
-	itemLookupTable[NONE_ITEM_ID] = null;
-	for (let itemName in Items) {
-		//noinspection JSUnfilteredForInLoop
-		let item = Items[itemName];
-		itemLookupTable[item.id] = item;
+
+	function initializeItemLookupTable() {
+		itemLookupTable[NONE_ITEM_ID] = null;
+		for (let itemName in Items) {
+			//noinspection JSUnfilteredForInLoop
+			let item = Items[itemName];
+			itemLookupTable[item.id] = item;
+		}
 	}
 
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
 		setup: function () {
+			initializeItemLookupTable();
+
 			if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
 				this.webSocket = new WebSocket('ws://' + window.location.host + '/game');
 			} else {
@@ -214,16 +219,34 @@ define([
 			}
 
 			for (let i = 0; i < gameState.entitiesLength(); ++i) {
-				result.entities.push(this.unmarshalEntity(gameState.entities(i)));
+				result.entities.push(this.unmarshalWrappedEntity(gameState.entities(i)));
 			}
 
 			return result;
 		},
 
 		/**
-		 * @param {DeathioApi.Entity} entity
+		 * @param {DeathioApi.Entity} wrappedEntity
 		 */
-		unmarshalEntity(entity) {
+		unmarshalWrappedEntity(wrappedEntity) {
+			let eType = wrappedEntity.eType();
+			let entity;
+
+			for (let eTypeName in DeathioApi.AnyEntity) {
+				if (DeathioApi.AnyEntity[eTypeName] === eType) {
+					entity = new DeathioApi[eTypeName]();
+				}
+			}
+			/**
+			 *
+			 * @type {DeathioApi.Mob | DeathioApi.Resource | DeathioApi.Player}
+			 */
+			entity = wrappedEntity.e(entity);
+
+			return this.unmarshalEntity(entity, eType);
+		},
+
+		unmarshalEntity(entity, eType) {
 			let result = {
 				id: entity.id().toFloat64(),
 				position: {
@@ -231,14 +254,24 @@ define([
 					y: entity.pos().y(),
 				},
 				radius: entity.radius(),
-				rotation: entity.rotation(),
 				type: this.unmarshalEntityType(entity.entityType()),
 				aabb: this.unmarshalAABB(entity.aabb()),
-				equipment: [],
 			};
 
-			for (let i = 0; i < entity.equipmentLength(); ++i) {
-				result.equipment.push(this.unmarshalItem(entity.equipment(i)));
+			if (eType === DeathioApi.AnyEntity.Player) {
+				result.rotation = entity.rotation();
+				result.isHit = entity.isHit();
+				result.actionTick = entity.actionTick();
+				result.name = entity.name();
+				result.equipment = [];
+
+				result.health = entity.health();
+				result.satiety = entity.satiety();
+				result.bodyHeat = entity.bodyTemperature();
+
+				for (let i = 0; i < entity.equipmentLength(); ++i) {
+					result.equipment.push(this.unmarshalItem(entity.equipment(i)));
+				}
 			}
 
 			return result

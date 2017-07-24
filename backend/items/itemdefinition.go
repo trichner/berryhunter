@@ -56,7 +56,7 @@ type Item struct {
 type itemDefinition struct {
 	ID      int `json:"id"`
 	Item    string `json:"item"`
-	Factors map[string]int `json:"factors"`
+	Factors map[string]float32 `json:"factors"`
 	Slot    string `json:"slot"`
 
 	Recipe struct {

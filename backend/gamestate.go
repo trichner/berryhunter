@@ -5,6 +5,7 @@ import (
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 //---- helper methods to convert points to pixels
@@ -18,6 +19,10 @@ func f32ToU16Px(f float32) uint16 {
 	return uint16(f * points2px)
 }
 
+func Vec2fMarshalFlatbuf(v phy.Vec2f, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+	return DeathioApi.CreateVec2f(builder, f32ToPx(v.X), f32ToPx(v.Y))
+}
+
 func AabbMarshalFlatbuf(aabb model.AABB, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return DeathioApi.CreateAABB(builder, f32ToPx(aabb.Left), f32ToPx(aabb.Bottom), f32ToPx(aabb.Right), f32ToPx(aabb.Upper))
 }
@@ -25,7 +30,7 @@ func AabbMarshalFlatbuf(aabb model.AABB, builder *flatbuffers.Builder) flatbuffe
 func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	n := len(items)
-	DeathioApi.EntityStartEquipmentVector(builder, n)
+	DeathioApi.PlayerStartEquipmentVector(builder, n)
 	for _, i := range items {
 		builder.PrependByte(byte(i.ID))
 	}
@@ -37,24 +42,29 @@ func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) fl
 
 	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
 
-	DeathioApi.EntityStart(builder)
-	DeathioApi.EntityAddId(builder, p.Basic().ID())
+	DeathioApi.PlayerStart(builder)
+	DeathioApi.PlayerAddId(builder, p.Basic().ID())
 
-	pos := DeathioApi.CreateVec2f(builder, f32ToPx(p.Position().X), f32ToPx(p.Position().Y))
-	DeathioApi.EntityAddPos(builder, pos)
+	pos := Vec2fMarshalFlatbuf(p.Position(), builder)
+	DeathioApi.PlayerAddPos(builder, pos)
 
 	aabb := AabbMarshalFlatbuf(p.AABB(), builder)
-	DeathioApi.EntityAddAabb(builder, aabb)
+	DeathioApi.PlayerAddAabb(builder, aabb)
 
-	DeathioApi.EntityAddRadius(builder, f32ToU16Px(p.Radius()))
-	DeathioApi.EntityAddRotation(builder, p.Angle())
-	DeathioApi.EntityAddEntityType(builder, uint16(p.Type()))
+	DeathioApi.PlayerAddRadius(builder, f32ToU16Px(p.Radius()))
+	DeathioApi.PlayerAddRotation(builder, p.Angle())
+	DeathioApi.PlayerAddEntityType(builder, uint16(p.Type()))
 
-	DeathioApi.EntityAddEquipment(builder, equipment)
+	DeathioApi.PlayerAddEquipment(builder, equipment)
+
+	vs := p.VitalSigns()
+	DeathioApi.PlayerAddHealth(builder, byte(vs.Health))
+	DeathioApi.PlayerAddSatiety(builder, byte(vs.Satiety))
+	DeathioApi.PlayerAddBodyTemperature(builder, byte(vs.BodyTemperature))
 
 	// TODO
-	DeathioApi.EntityAddIsHit(builder, 0)
-	DeathioApi.EntityAddActionTick(builder, 0)
+	DeathioApi.PlayerAddIsHit(builder, 0)
+	DeathioApi.PlayerAddActionTick(builder, 0)
 
 	return DeathioApi.EntityEnd(builder)
 }
@@ -87,7 +97,7 @@ func InventoryMarshalFlatbuf(inventory *items.Inventory, builder *flatbuffers.Bu
 // MarshalFlatbuf implements FlatbufCodec for GameState
 func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	entities := EntitiesFlatbufMarshal(gs.Entities, builder)
+	entities := EntitiesMarshalFlatbuf(gs.Entities, builder)
 	player := PlayerMarshalFlatbuf(gs.Player, builder)
 	inventory := InventoryMarshalFlatbuf(gs.Player.Inventory(), builder)
 
@@ -100,14 +110,28 @@ func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UO
 	return DeathioApi.GameStateEnd(builder)
 }
 
-// EntitiesFlatbufMarshal marshals a list of Entity interfaces
-func EntitiesFlatbufMarshal(entities []model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+// EntitiesMarshalFlatbuf marshals a list of Entity interfaces
+func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	n := len(entities)
 
 	offsets := make([]flatbuffers.UOffsetT, n)
 	for _, e := range entities {
-		offsets = append(offsets, EntityFlatbufMarshal(e, builder))
+		var marshalled flatbuffers.UOffsetT
+		var eType byte
+
+		switch v := e.(type) {
+		case model.PlayerEntity:
+			marshalled = PlayerEntityFlatbufMarshal(v, builder)
+			eType = DeathioApi.AnyEntityPlayer
+		case model.Entity:
+			marshalled = ResourceEntityFlatbufMarshal(v, builder)
+			eType = DeathioApi.AnyEntityResource
+		}
+		DeathioApi.EntityStart(builder)
+		DeathioApi.EntityAddE(builder, marshalled)
+		DeathioApi.EntityAddEType(builder, eType)
+		offsets = append(offsets, DeathioApi.EntityEnd(builder))
 	}
 
 	DeathioApi.GameStateStartEntitiesVector(builder, n)
@@ -117,35 +141,46 @@ func EntitiesFlatbufMarshal(entities []model.Entity, builder *flatbuffers.Builde
 	return builder.EndVector(n)
 }
 
-// EntityFlatbufMarshal marshals an Entity interface to its corresponding
-// flatbuffer schema
-func EntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func PlayerEntityFlatbufMarshal(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	// prepend entity specific things
-	var equipment flatbuffers.UOffsetT
-	switch v := e.(type) {
-	case model.PlayerEntity:
-		equipment = EquipmentMarshalFlatbuf(v.Equipped(), builder)
-	}
+	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
 
-	DeathioApi.EntityStart(builder)
-	DeathioApi.EntityAddId(builder, e.Basic().ID())
+	DeathioApi.PlayerStart(builder)
+	DeathioApi.PlayerAddId(builder, p.Basic().ID())
 
-	pos := DeathioApi.CreateVec2f(builder, f32ToPx(e.Position().X), f32ToPx(e.Position().Y))
-	DeathioApi.EntityAddPos(builder, pos)
+	pos := Vec2fMarshalFlatbuf(p.Position(), builder)
+	DeathioApi.PlayerAddPos(builder, pos)
+
+	aabb := AabbMarshalFlatbuf(p.AABB(), builder)
+	DeathioApi.PlayerAddAabb(builder, aabb)
+
+	DeathioApi.PlayerAddRadius(builder, f32ToU16Px(p.Radius()))
+	DeathioApi.PlayerAddRotation(builder, p.Angle())
+	DeathioApi.PlayerAddEntityType(builder, uint16(p.Type()))
+
+	DeathioApi.PlayerAddEquipment(builder, equipment)
+
+	return DeathioApi.PlayerEnd(builder)
+}
+
+// EntityFlatbufMarshal marshals an Entity interface to its corresponding
+// flatbuffer schema
+func ResourceEntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	DeathioApi.ResourceStart(builder)
+	DeathioApi.ResourceAddId(builder, e.Basic().ID())
+
+	pos := Vec2fMarshalFlatbuf(e.Position(), builder)
+	DeathioApi.ResourceAddPos(builder, pos)
 
 	aabb := AabbMarshalFlatbuf(e.AABB(), builder)
-	DeathioApi.EntityAddAabb(builder, aabb)
+	DeathioApi.ResourceAddAabb(builder, aabb)
 
-	DeathioApi.EntityAddRadius(builder, f32ToU16Px(e.Radius()))
-	DeathioApi.EntityAddRotation(builder, e.Angle())
-	DeathioApi.EntityAddEntityType(builder, uint16(e.Type()))
+	DeathioApi.ResourceAddRadius(builder, f32ToU16Px(e.Radius()))
+	DeathioApi.ResourceAddEntityType(builder, uint16(e.Type()))
 
-	if equipment > 0 {
-		DeathioApi.EntityAddEquipment(builder, equipment)
-	}
-
-	return DeathioApi.EntityEnd(builder)
+	return DeathioApi.ResourceEnd(builder)
 }
 
 // intermediate struct to serialize

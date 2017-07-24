@@ -95,6 +95,10 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 		}
 
 		setRotation(rotation) {
+			if (Utils.isUndefined(rotation)){
+				return;
+			}
+
 			this.shape.rotation = rotation;
 		}
 

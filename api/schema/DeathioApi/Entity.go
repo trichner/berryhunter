@@ -26,172 +26,35 @@ func (rcv *Entity) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *Entity) Id() uint64 {
+func (rcv *Entity) EType() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
-	if o != 0 {
-		return rcv._tab.GetUint64(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *Entity) MutateId(n uint64) bool {
-	return rcv._tab.MutateUint64Slot(4, n)
-}
-
-func (rcv *Entity) Pos(obj *Vec2f) *Vec2f {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
-	if o != 0 {
-		x := o + rcv._tab.Pos
-		if obj == nil {
-			obj = new(Vec2f)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *Entity) Radius() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
-	if o != 0 {
-		return rcv._tab.GetUint16(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *Entity) MutateRadius(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(8, n)
-}
-
-func (rcv *Entity) Rotation() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *Entity) MutateRotation(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(10, n)
-}
-
-func (rcv *Entity) EntityType() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		return rcv._tab.GetUint16(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *Entity) MutateEntityType(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(12, n)
-}
-
-func (rcv *Entity) IsHit() byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *Entity) MutateIsHit(n byte) bool {
-	return rcv._tab.MutateByteSlot(14, n)
+func (rcv *Entity) MutateEType(n byte) bool {
+	return rcv._tab.MutateByteSlot(4, n)
 }
 
-func (rcv *Entity) ActionTick() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+func (rcv *Entity) E(obj *flatbuffers.Table) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+		rcv._tab.Union(obj, o)
+		return true
 	}
-	return 0
-}
-
-func (rcv *Entity) MutateActionTick(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(16, n)
-}
-
-func (rcv *Entity) Name() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *Entity) Aabb(obj *AABB) *AABB {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		x := o + rcv._tab.Pos
-		if obj == nil {
-			obj = new(AABB)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *Entity) Equipment(j int) byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
-	}
-	return 0
-}
-
-func (rcv *Entity) EquipmentLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *Entity) EquipmentBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
+	return false
 }
 
 func EntityStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(2)
 }
-func EntityAddId(builder *flatbuffers.Builder, id uint64) {
-	builder.PrependUint64Slot(0, id, 0)
+func EntityAddEType(builder *flatbuffers.Builder, eType byte) {
+	builder.PrependByteSlot(0, eType, 0)
 }
-func EntityAddPos(builder *flatbuffers.Builder, pos flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(1, flatbuffers.UOffsetT(pos), 0)
-}
-func EntityAddRadius(builder *flatbuffers.Builder, radius uint16) {
-	builder.PrependUint16Slot(2, radius, 0)
-}
-func EntityAddRotation(builder *flatbuffers.Builder, rotation float32) {
-	builder.PrependFloat32Slot(3, rotation, 0.0)
-}
-func EntityAddEntityType(builder *flatbuffers.Builder, entityType uint16) {
-	builder.PrependUint16Slot(4, entityType, 0)
-}
-func EntityAddIsHit(builder *flatbuffers.Builder, isHit byte) {
-	builder.PrependByteSlot(5, isHit, 0)
-}
-func EntityAddActionTick(builder *flatbuffers.Builder, actionTick uint16) {
-	builder.PrependUint16Slot(6, actionTick, 0)
-}
-func EntityAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(name), 0)
-}
-func EntityAddAabb(builder *flatbuffers.Builder, aabb flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(8, flatbuffers.UOffsetT(aabb), 0)
-}
-func EntityAddEquipment(builder *flatbuffers.Builder, equipment flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(equipment), 0)
-}
-func EntityStartEquipmentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(1, numElems, 1)
+func EntityAddE(builder *flatbuffers.Builder, e flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(e), 0)
 }
 func EntityEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

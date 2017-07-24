@@ -14,7 +14,7 @@ require(['Environment'], function (Environment) {
 				'../../api/schema/js/client_generated' :
 				'schema/client_generated',
 			Two: '../vendor/two/two',
-			'vendor/flatbuffers': '../vendor/flatbuffers-1.6.0',
+			'vendor/flatbuffers': '../vendor/flatbuffers',
 			underscore: '../vendor/underscore-min',
 
 			GameObject: 'gameObjects/_GameObject',
