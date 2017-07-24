@@ -126,9 +126,9 @@ func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	p.inventory.AddItem(items.NewItemStack(item, 1))
 
 	//--- setup vital signs
-	p.PlayerVitalSigns.Health = 100
-	p.PlayerVitalSigns.Satiety = 100
-	p.PlayerVitalSigns.BodyTemperature = 100
+	p.PlayerVitalSigns.Health = 255
+	p.PlayerVitalSigns.Satiety = 255
+	p.PlayerVitalSigns.BodyTemperature = 255
 
 	// setup hand sensor
 	p.hand = phy.NewCircle(e.Body.Position(), 0.25)
