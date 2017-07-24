@@ -153,7 +153,7 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 
 		r, ok := usr.(Interacter)
 		if !ok {
-			fmt.Printf("Non conformant UserData: %T", usr)
+			log.Printf("Non conformant UserData: %T", usr)
 			continue
 		}
 		r.PlayerHitsWith(p, p.handItem)

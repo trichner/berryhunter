@@ -124,6 +124,9 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 		case model.PlayerEntity:
 			marshalled = PlayerEntityFlatbufMarshal(v, builder)
 			eType = DeathioApi.AnyEntityPlayer
+		case model.MobEntity:
+			marshalled = MobEntityFlatbufMarshal(v, builder)
+			eType = DeathioApi.AnyEntityMob
 		case model.Entity:
 			marshalled = ResourceEntityFlatbufMarshal(v, builder)
 			eType = DeathioApi.AnyEntityResource
@@ -139,6 +142,21 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 		builder.PrependUOffsetT(o)
 	}
 	return builder.EndVector(n)
+}
+
+func MobEntityFlatbufMarshal(m model.MobEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	DeathioApi.MobStart(builder)
+	DeathioApi.MobAddId(builder, m.Basic().ID())
+	DeathioApi.MobAddEntityType(builder, DeathioApi.EntityTypeMammoth)
+
+	aabb := AabbMarshalFlatbuf(m.AABB(), builder)
+	DeathioApi.MobAddAabb(builder, aabb)
+
+	pos := Vec2fMarshalFlatbuf(m.Position(), builder)
+	DeathioApi.MobAddPos(builder, pos)
+
+	return DeathioApi.MobEnd(builder)
 }
 
 func PlayerEntityFlatbufMarshal(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
