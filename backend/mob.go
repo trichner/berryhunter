@@ -30,7 +30,10 @@ func (n *MobSystem) AddEntity(e model.MobEntity) {
 func (n *MobSystem) Update(dt float32) {
 
 	for _, mob := range n.mobs {
-		mob.Update(dt)
+		alive := mob.Update(dt)
+		if !alive {
+			n.game.RemoveEntity(mob.Basic())
+		}
 	}
 }
 

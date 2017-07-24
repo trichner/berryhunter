@@ -11,7 +11,7 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"sort"
 	"os"
-	"github.com/trichner/berryhunter/backend/mob"
+	"github.com/trichner/berryhunter/backend/model/mob"
 )
 
 func main() {
@@ -36,14 +36,14 @@ func main() {
 
 	entities := Generate(g.items, rand.New(rand.NewSource(0xDEADBEEF)))
 	for _, e := range entities {
-		g.AddResourceEntity(e)
+		g.AddEntity(e)
 	}
 
 	// add some mobs
 	for i := 0; i < 100; i++ {
 		m := newMobEntity()
 		m.SetPosition(phy.Vec2f{float32(i), float32(i)})
-		g.AddMobEntity(m)
+		g.AddEntity(m)
 	}
 
 	g.Run()
@@ -121,14 +121,6 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 //	return s
 //}
 
-func newStaticCircleEntity(p phy.Vec2f, r float32) *model.BaseEntity {
-
-	e := &model.BaseEntity{BasicEntity: ecs.NewBasic()}
-	ball := phy.NewCircle(p, r)
-	ball.Shape().UserData = e
-	e.Body = ball
-	return e
-}
 
 func newCircleEntity(r float32) model.BaseEntity {
 

@@ -41,7 +41,7 @@ type Mob struct {
 	rand     *rand.Rand
 }
 
-func (m *Mob) Update(dt float32) {
+func (m *Mob) Update(dt float32) bool {
 
 	// random in [-1,1)
 	alpha := (m.rand.Float32() * 2) - 1
@@ -55,6 +55,8 @@ func (m *Mob) Update(dt float32) {
 	pos := m.Position()
 	pos = pos.Add(m.velocity)
 	m.SetPosition(pos)
+
+	return m.health > 0
 }
 
 func (m *Mob) Angle() float32 {
@@ -66,9 +68,6 @@ func (m *Mob) Health() int {
 }
 
 func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
-	log.Printf("🎯 Outch, mob was hit!")
-	m.health -= 5
-	if m.health < 0 {
-		log.Printf("💀")
-	}
+	log.Printf("🎯")
+	m.health -= 50
 }

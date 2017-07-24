@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"engo.io/ecs"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 type EntityType uint16
@@ -13,11 +14,18 @@ type Entity interface {
 	Basic() ecs.BasicEntity
 	Position() phy.Vec2f
 	SetPosition(phy.Vec2f)
-	Angle() float32
 	Radius() float32
-	Type() EntityType
 	AABB() AABB
 	Bodies() Bodies
+
+	Angle() float32
+	Type() EntityType
+}
+
+type ResourceEntity interface {
+	Entity
+
+	Resource() items.Item
 }
 
 type MobEntity interface {
@@ -26,7 +34,7 @@ type MobEntity interface {
 	Health() int
 	//Velocity() phy.Vec2f
 	//SetVelocity(v phy.Vec2f)
-	Update(dt float32)
+	Update(dt float32) bool
 }
 
 // AABB is an alias to not expose transitive dependencies

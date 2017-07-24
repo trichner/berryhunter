@@ -86,7 +86,33 @@ func (g *Game) Run() {
 	go http.ListenAndServe(addr, nil)
 }
 
-func (g *Game) AddMobEntity(e model.MobEntity) {
+func (g *Game) RemoveEntity(e ecs.BasicEntity) {
+
+	for _, system := range g.Systems() {
+
+		system.Remove(e)
+	}
+}
+
+func (g *Game) AddEntity(e model.Entity) {
+
+	switch v := e.(type) {
+	case model.PlayerEntity:
+		p, ok := v.(*player)
+		if !ok {
+			log.Fatal("Cannot add player!")
+		}
+		g.addPlayer(p)
+	case model.MobEntity:
+		g.addMobEntity(v)
+	case model.ResourceEntity:
+		g.addResourceEntity(v)
+	case model.Entity:
+		g.AddEntity(v)
+	}
+}
+
+func (g *Game) addMobEntity(e model.MobEntity) {
 
 	// Loop over all Systems
 	for _, system := range g.Systems() {
@@ -105,7 +131,7 @@ func (g *Game) AddMobEntity(e model.MobEntity) {
 	}
 }
 
-func (g *Game) AddResourceEntity(e *resourceEntity) {
+func (g *Game) addResourceEntity(e model.ResourceEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
 
@@ -114,7 +140,7 @@ func (g *Game) AddResourceEntity(e *resourceEntity) {
 
 		// Create a case for each System you want to use
 		case *PhysicsSystem:
-			sys.AddStaticBody(e.BasicEntity, e.Body)
+			sys.AddStaticBody(e.Basic(), e.Bodies()[0])
 		case *NetSystem:
 			sys.AddEntity(e)
 		}
