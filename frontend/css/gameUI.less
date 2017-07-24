@@ -1,12 +1,4 @@
 #gameUI {
-	//box-sizing: border-box;
-	//position: absolute;
-	//top: 0;
-	//right: 0;
-	//bottom: 0;
-	//left: 0;
-	//pointer-events: none;
-
 	* {
 		box-sizing: border-box;
 	}
@@ -25,53 +17,52 @@
 }
 
 @uiElementHeight: 7vh;
+@slotSize: @uiElementHeight;
 
 #inventory {
 	position: absolute;
 	bottom: 0;
 	left: 50%;
 	transform: translateX(-50%);
+}
 
-	@slotSize: @uiElementHeight;
+.clickableItem {
+	border-radius: 10%;
+	width: @slotSize;
+	height: @slotSize;
+	color: white;
+	font-size: (0.25 * @slotSize);
+	padding: (0.1 * @slotSize);
+	margin: (0.1 * @slotSize);
+	text-decoration: none;
 
-	> .inventorySlot {
-		border-radius: 10%;
-		width: @slotSize;
-		height: @slotSize;
-		color: white;
-		font-size: (0.25 * @slotSize);
-		padding: (0.1 * @slotSize);
-		margin: (0.1 * @slotSize);
-		text-decoration: none;
-
-		&.empty {
-			background-color: rgba(0, 0, 0, 0.6);
-			pointer-events: none;
-
-			> .itemIcon {
-				display: none;
-			}
-		}
-
-		&.filled {
-			background-color: rgba(64, 64, 64, 0.6);
-		}
-
-		&.active {
-			background-color: rgba(255, 255, 255, 0.6);
-		}
-
-		position: relative;
-
-		> .count {
-			position: absolute;
-			bottom: 0;
-			right: 0;
-		}
+	&.empty {
+		background-color: rgba(0, 0, 0, 0.6);
+		pointer-events: none;
 
 		> .itemIcon {
-			width: 100%;
+			display: none;
 		}
+	}
+
+	&.filled {
+		background-color: rgba(64, 64, 64, 0.6);
+	}
+
+	&.active {
+		background-color: rgba(255, 255, 255, 0.6);
+	}
+
+	position: relative;
+
+	> .count {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+	}
+
+	> .itemIcon {
+		width: 100%;
 	}
 }
 
@@ -112,5 +103,29 @@
 
 	> .indicator {
 		background-color: dodgerblue;
+	}
+}
+
+#crafting {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	.columnsLoop(@counter) when (@counter > 0){
+		.columnsLoop((@counter - 1));
+
+		&.@{counter}-columns {
+			width: (@counter * @slotSize);
+		}
+	}
+
+	.columnsLoop(7);
+
+	> .clickableItem {
+		float: left;
+
+		&.newLine {
+			clear: left;
+		}
 	}
 }

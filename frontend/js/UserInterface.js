@@ -111,7 +111,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		 *
 		 * @param value 0.0 - 1.0
 		 */
-		setValue(value){
+		setValue(value) {
 			this.indicator.style.width = (value * 100).toFixed(2) + '%';
 		}
 	}
@@ -122,6 +122,19 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		// 	event.preventDefault();
 		// });
 
+		setupCrafting.call(this);
+
+		setupInventory.call(this);
+
+		setupVitalSigns.call(this);
+	};
+
+	function setupCrafting() {
+		this.craftingElement = document.getElementById('crafting');
+		this.craftableItemTemplate = this.craftingElement.removeChild(this.craftingElement.querySelector('.craftableItem'));
+	}
+
+	function setupInventory() {
 		let inventoryElement = document.getElementById('inventory');
 		let inventorySlot = document.querySelector('#inventory > .inventorySlot');
 
@@ -133,12 +146,43 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 			inventoryElement.appendChild(inventorySlotCopy);
 			this.inventorySlots[i] = new ClickableCountableIcon(inventorySlotCopy);
 		}
+	}
 
+	function setupVitalSigns() {
 		this.vitalSignsBars = {
 			health: new VitalSignBar(document.getElementById('healthBar')),
 			satiety: new VitalSignBar(document.getElementById('satietyBar')),
 			bodyHeat: new VitalSignBar(document.getElementById('bodyHeatBar'))
+		};
+	}
+
+	UserInterface.displayAvailableCrafts = function (availableCrafts, onLeftClick) {
+		Utils.clearNode(this.craftingElement);
+
+		if (availableCrafts.length === 0){
+			return;
 		}
+
+		let craftsPerColumn = Math.round(Math.sqrt(availableCrafts.length));
+		let craftsPerRow = Math.ceil(availableCrafts.length / craftsPerColumn);
+
+		availableCrafts.forEach(function (recipe, index) {
+			let craftableItemElement = this.craftableItemTemplate.cloneNode(true);
+			this.craftingElement.appendChild(craftableItemElement);
+
+			if (index % craftsPerRow === 0) {
+				craftableItemElement.classList.add('newLine');
+			}
+
+			let clickableIcon = new ClickableIcon(craftableItemElement);
+			clickableIcon.onLeftClick = function (event) {
+				onLeftClick.call(ClickableIcon, event, recipe);
+			};
+			clickableIcon.setIconGraphic(recipe.item.icon.path);
+		}, this);
+
+		this.craftingElement.className = '';
+		this.craftingElement.classList.add(craftsPerRow + '-columns')
 	};
 
 	/**

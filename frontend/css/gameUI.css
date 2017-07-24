@@ -16,7 +16,7 @@
   left: 50%;
   transform: translateX(-50%);
 }
-#inventory > .inventorySlot {
+.clickableItem {
   border-radius: 10%;
   width: 7vh;
   height: 7vh;
@@ -27,25 +27,25 @@
   text-decoration: none;
   position: relative;
 }
-#inventory > .inventorySlot.empty {
+.clickableItem.empty {
   background-color: rgba(0, 0, 0, 0.6);
   pointer-events: none;
 }
-#inventory > .inventorySlot.empty > .itemIcon {
+.clickableItem.empty > .itemIcon {
   display: none;
 }
-#inventory > .inventorySlot.filled {
+.clickableItem.filled {
   background-color: rgba(64, 64, 64, 0.6);
 }
-#inventory > .inventorySlot.active {
+.clickableItem.active {
   background-color: rgba(255, 255, 255, 0.6);
 }
-#inventory > .inventorySlot > .count {
+.clickableItem > .count {
   position: absolute;
   bottom: 0;
   right: 0;
 }
-#inventory > .inventorySlot > .itemIcon {
+.clickableItem > .itemIcon {
   width: 100%;
 }
 #vitalSigns {
@@ -78,4 +78,36 @@
 }
 #bodyHeatBar > .indicator {
   background-color: dodgerblue;
+}
+#crafting {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#crafting.1-columns {
+  width: 7vh;
+}
+#crafting.2-columns {
+  width: 14vh;
+}
+#crafting.3-columns {
+  width: 21vh;
+}
+#crafting.4-columns {
+  width: 28vh;
+}
+#crafting.5-columns {
+  width: 35vh;
+}
+#crafting.6-columns {
+  width: 42vh;
+}
+#crafting.7-columns {
+  width: 49vh;
+}
+#crafting > .clickableItem {
+  float: left;
+}
+#crafting > .clickableItem.newLine {
+  clear: left;
 }
