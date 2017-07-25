@@ -18,8 +18,6 @@ type player struct {
 	model.BaseEntity
 
 	angle  float32
-	Health uint
-	Hunger uint
 	client *net.Client
 
 	viewport *phy.Box
@@ -36,10 +34,12 @@ type player struct {
 }
 
 func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
-	p.Health -= 50
-	if p.Health < 0 {
-		p.Health = 0
+	h := p.PlayerVitalSigns.Health
+	h -= 50
+	if h < 0 {
+		h = 0
 	}
+	p.PlayerVitalSigns.Health = h
 }
 
 func (p *player) Name() string {

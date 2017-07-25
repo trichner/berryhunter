@@ -8,7 +8,6 @@ import (
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"github.com/trichner/berryhunter/backend/items"
-	"fmt"
 )
 
 
@@ -147,7 +146,7 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	for v := range p.hand.Collisions() {
 		usr := v.Shape().UserData
 		if usr == nil {
-			fmt.Printf("Missing UserData!")
+			log.Printf("Missing UserData!")
 			continue
 		}
 
