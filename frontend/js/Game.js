@@ -18,8 +18,9 @@ define([], function () {
 			'PointerEvents',
 			'Player',
 			'GameObject',
+			'items/RecipesHelper',
 			'UserInterface'
-		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, UserInterface) {
+		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface) {
 			/**
 			 * Creating a player starts implicitly the game
 			 */
@@ -76,6 +77,7 @@ define([], function () {
 			createBackground();
 
 			GameObject.setup();
+			RecipesHelper.setup();
 
 			// TODO if offline createPlayer
 			// player = new Character(1, width / 2, height / 2);

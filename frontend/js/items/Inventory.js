@@ -8,7 +8,7 @@ define([
 	'items/RecipesHelper',
 	'items/Crafting',
 	'items/Equipment',
-	'items/InventorySlot'
+	'items/InventorySlot',
 ], function (Game, Two, Utils, Constants, RecipesHelper, Crafting, Equipment, InventorySlot) {
 	class Inventory {
 		constructor(character) {
@@ -134,13 +134,14 @@ define([
 			for (let i = 0; i < this.slots.length; ++i) {
 				// FIXME wenn der Server die richtige Inventargröße schickt
 				if (i >= itemStacks.length) {
-					break;
+					this.slots[i].dropItem();
+					continue;
 				}
 
-				if (itemStacks[i] === null) {
-					this.slots[i].dropItem();
-				} else {
+				if (Utils.isDefined(itemStacks[i])) {
 					this.slots[i].setItem(itemStacks[i].item, itemStacks[i].count);
+				} else {
+					this.slots[i].dropItem();
 				}
 			}
 

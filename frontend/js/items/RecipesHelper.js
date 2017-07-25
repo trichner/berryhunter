@@ -5,10 +5,78 @@ define([
 	'Utils',
 	'Constants',
 	'gameObjects/Placeable',
-	'items/Recipes'
-], function (Game, Utils, Constants, Placeable, Recipes) {
+	'items/Items',
+	'items/Recipes',
+	'underscore',
+], function (Game, Utils, Constants, Placeable, Items, Recipes, _) {
+	/*
+	 * Combinators
+	 */
+
+	/**
+	 * Any of the provided placeables have to be nearby.
+	 *
+	 * @returns {{operator: string, parameters: Array}}
+	 */
+	function any(items) {
+		return {
+			operator: 'or',
+			parameters: items,
+		}
+	}
+
+	/**
+	 * All of the provided placeables have to be nearby.
+	 *
+	 * @returns {{operator: string, parameters: Array}}
+	 */
+	function every(items) {
+		return {
+			operator: 'and',
+			parameters: items,
+		}
+	}
+
+
 	//noinspection UnnecessaryLocalVariableJS
 	const RecipesHelper = {
+		/**
+		 * Read all recipes from the items that have been loaded with definitions.
+		 */
+		setup: function () {
+			for (let itemName in Items) {
+				let item = Items[itemName];
+				/* Only list recipes for items that
+				 *	a) have a recipe and
+				 *	b) have an icon
+				 */
+				if (Utils.isDefined(item.recipe) && item.icon.file) {
+					let recipe = {
+						craftingTime: item.recipe.craftTimeSec,
+						materials: {},
+					};
+
+					if (Utils.isDefined(item.recipe.tools)) {
+						if (item.recipe.tools.length === 1) {
+							recipe.nearby = Items[item.recipe.tools[0]];
+						} else {
+							recipe.nearby = any(item.recipe.tools.map((itemName) => {
+								return Items[itemName];
+							}))
+						}
+					}
+
+					item.recipe.materials.forEach((material) => {
+						recipe.materials[material.item] = material.count;
+					});
+
+					recipe.item = item;
+					recipe.name = itemName;
+					Recipes.push(recipe);
+				}
+			}
+		},
+
 		/**
 		 *
 		 * @param {Inventory} inventory
@@ -22,7 +90,7 @@ define([
 				}
 			});
 
-			return Object.values(Recipes).filter(function (recipe) {
+			return Recipes.filter(function (recipe) {
 				for (let material in recipe.materials) {
 					//noinspection JSUnfilteredForInLoop
 					if (!availableItems.hasOwnProperty(material) ||
@@ -35,7 +103,11 @@ define([
 			});
 		},
 
-		checkNearbys(recipes){
+		checkNearbys(recipes) {
+			if (recipes.length === 0) {
+				return recipes;
+			}
+
 			let recipesWithNear = [];
 			let recipesWithoutNear = [];
 
@@ -123,7 +195,7 @@ define([
 			});
 
 			return recipesWithNear.concat(recipesWithoutNear);
-		}
+		},
 	};
 
 	return RecipesHelper;
