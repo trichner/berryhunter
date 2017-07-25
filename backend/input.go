@@ -220,7 +220,7 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 		ok := p.inventory.ConsumeItem(items.NewItemStack(item, 1))
 		if ok {
 			h := p.VitalSigns().Health
-			h += 10
+			h += item.Factors.Food
 			p.VitalSigns().Health = h
 		}
 		break
