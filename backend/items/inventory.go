@@ -58,7 +58,13 @@ func (i *Inventory) AddItem(item *ItemStack) bool {
 	}
 
 	foundAt := -1
+	emptyAt := -1
 	for idx, stack := range i.items {
+		if stack == nil {
+			emptyAt = idx
+			continue
+		}
+
 		if stack.Item == item.Item {
 			foundAt = idx
 			break
@@ -68,6 +74,12 @@ func (i *Inventory) AddItem(item *ItemStack) bool {
 	// if we already have the same in the Inventory we simply add it
 	if foundAt >= 0 {
 		i.items[foundAt].Count += item.Count
+		return true
+	}
+
+	// do we have a 'hole'?
+	if emptyAt >= 0 {
+		i.items[emptyAt] = item
 		return true
 	}
 

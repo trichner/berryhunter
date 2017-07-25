@@ -216,6 +216,15 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 		p.inventory.DropAll(item)
 		break
 
+	case DeathioApi.ActionTypeConsumeItem:
+		ok := p.inventory.ConsumeItem(items.NewItemStack(item, 1))
+		if ok {
+			h := p.VitalSigns().Health
+			h += 10
+			p.VitalSigns().Health = h
+		}
+		break
+
 	case DeathioApi.ActionTypeEquipItem:
 		p.Equip(item)
 		break

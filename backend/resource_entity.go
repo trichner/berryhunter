@@ -32,5 +32,9 @@ func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEnti
 		log.Fatalf("Unknown ressource: %s / %s\n", body.ressourceName, err)
 	}
 
-	return resource.NewResource(ball, resourceItem, body.entityType)
+	r, err := resource.NewResource(ball, resourceItem, body.entityType)
+	if err != nil {
+		panic(err)
+	}
+	return r
 }

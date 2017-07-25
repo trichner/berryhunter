@@ -35,12 +35,21 @@ type Recipe struct {
 	Tools      []Tool
 }
 
-type ItemDefinition struct {
-	ID     ItemEnum
-	Name   string
-	Slot   EquipSlot
-	Recipe *Recipe
+type Factors struct {
+	Food            int
+	Damage          int
+	StructureDamage int
+	Yield           int
 }
+
+type ItemDefinition struct {
+	ID      ItemEnum
+	Name    string
+	Slot    EquipSlot
+	Factors Factors
+	Recipe  *Recipe
+}
+
 
 type ByID []*ItemDefinition
 
@@ -56,7 +65,12 @@ type Item struct {
 type itemDefinition struct {
 	ID      int `json:"id"`
 	Item    string `json:"item"`
-	Factors map[string]float32 `json:"factors"`
+	Factors struct {
+		Food            int `json:"food"`
+		Damage          int `json:"damage"`
+		StructureDamage int `json:"structureDamage"`
+		Yield           int `json:"yield"`
+	} `json:"factors"`
 	Slot    string `json:"slot"`
 
 	Recipe struct {
@@ -113,9 +127,14 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	}
 
 	return &ItemDefinition{
-		ID:     ItemEnum(i.ID),
-		Name:   i.Item,
-		Slot:   slot,
+		ID:   ItemEnum(i.ID),
+		Name: i.Item,
+		Slot: slot,
+		Factors: Factors{
+			Food:            i.Factors.Food,
+			Damage:          i.Factors.Damage,
+			StructureDamage: i.Factors.StructureDamage,
+			Yield:           i.Factors.Yield},
 		Recipe: &Recipe{i.Recipe.CraftTicks, materials, tools},
 	}, nil
 }
