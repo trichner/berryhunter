@@ -35,6 +35,13 @@ type player struct {
 	model.PlayerVitalSigns
 }
 
+func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
+	p.Health -= 50
+	if p.Health < 0 {
+		p.Health = 0
+	}
+}
+
 func (p *player) Name() string {
 	return fmt.Sprintf("player %d", p.ID())
 }
