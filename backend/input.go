@@ -169,10 +169,14 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 
 	// do we even have inputs?
 	if inputs.movement != nil {
-		v := input2vec(inputs)
-		v = v.Mult(walkSpeed)
-		next := p.Position().Add(v)
-		p.SetPosition(next)
+
+		// we can only move if we are still alive!
+		if p.VitalSigns().Health != 0 {
+			v := input2vec(inputs)
+			v = v.Mult(walkSpeed)
+			next := p.Position().Add(v)
+			p.SetPosition(next)
+		}
 
 	}
 
