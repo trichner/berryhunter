@@ -58,6 +58,14 @@ define(['Utils', 'underscore'], function (Utils, _) {
 				return false;
 			}
 
+			if (Utils.isUndefined(lastItemStack)){
+				return true;
+			}
+
+			if (Utils.isUndefined(itemStack)){
+				return true;
+			}
+
 			if (lastItemStack.item !== itemStack.item) {
 				return true;
 			}
