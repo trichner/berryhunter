@@ -4,6 +4,7 @@ define(['Game', 'GameObject', 'Two'], function (Game, GameObject, Two) {
 	class Border extends GameObject {
 		constructor(x, y, side, length) {
 			super(x, y, side, length);
+			this.visibleOnMinimap = false;
 		}
 
 		createShape(x, y, side, length) {
@@ -36,10 +37,6 @@ define(['Game', 'GameObject', 'Two'], function (Game, GameObject, Two) {
 			shape.noFill();
 			shape.stroke = 'yellow';
 			return shape;
-		}
-
-		visibleOnMinimap() {
-			return false;
 		}
 
 		show() {

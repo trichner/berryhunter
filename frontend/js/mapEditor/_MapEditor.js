@@ -110,8 +110,7 @@ define([
 				return;
 			}
 
-			Game.miniMap.remove();
-			Game.miniMap = new MiniMap(Game.map);
+			Game.miniMap.clear();
 
 			MapEditor.grid = new QuadrantGrid(MapEditor.mapWidth, MapEditor.mapHeight);
 

@@ -18,8 +18,8 @@ define([
 			this.width = dimensions.width;
 			this.height = dimensions.height;
 		} else {
-			this.width = 100 * 100;
-			this.height = 100 * 100;
+			this.width = 100 * 120;
+			this.height = 100 * 120;
 		}
 
 		this.objects = {};

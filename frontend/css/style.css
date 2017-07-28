@@ -294,6 +294,13 @@ dl.flatList > dd {
   background-color: Cornsilk;
   border: 10px solid Cornsilk;
 }
+#minimap > .wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
 #inventory {
   position: absolute;
   bottom: 0;

@@ -18,6 +18,7 @@ define([
 
 			this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
 			this.isMoveable = true;
+			this.visibleOnMinimap = false;
 
 			this.show();
 
@@ -153,8 +154,8 @@ define([
 			return group;
 		}
 
-		createMinimapIcon(x, y, size) {
-			let shape = new Two.Ellipse(x, y, 30 * 7 * size, 30 * 7 * size);
+		createMinimapIcon() {
+			let shape = new Two.Ellipse(0, 0, 30 * 7, 30 * 7);
 			shape.fill = 'darkblue';
 			shape.noStroke();
 

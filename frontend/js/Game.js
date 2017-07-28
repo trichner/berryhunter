@@ -88,11 +88,6 @@ define([], function () {
 			 */
 			Game.map = new GameMapWithBackend();
 
-			/**
-			 * @type MiniMap
-			 */
-			Game.miniMap = new MiniMap(Game.map);
-
 			let domElement = Game.two.renderer.domElement;
 			SvgLoader.setup(domElement);
 			KeyEvents.setup(domElement);
@@ -116,6 +111,12 @@ define([], function () {
 			}
 
 			UserInterface.setup();
+
+			// MiniMap relies on the UI being set up.
+			/**
+			 * @type MiniMap
+			 */
+			Game.miniMap = new MiniMap(Game.map.width, Game.map.height);
 
 			if (Develop.isActive()) {
 				Develop.afterSetup(Game);

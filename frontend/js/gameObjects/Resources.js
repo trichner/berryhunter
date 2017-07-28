@@ -5,8 +5,8 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 			super(x, y, size, rotation);
 		}
 
-		createMinimapIcon(x, y, sizeFactor) {
-			let shape = new Two.Ellipse(x, y, this.size * sizeFactor);
+		createMinimapIcon() {
+			let shape = new Two.Ellipse(0, 0, this.size);
 			shape.stroke = 'green';
 			shape.linewidth = 1;
 			shape.noFill();
@@ -82,8 +82,8 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 			return shape;
 		}
 
-		createMinimapIcon(x, y, sizeFactor) {
-			let shape = new Two.Polygon(x, y, this.size * 2 * sizeFactor, 6);
+		createMinimapIcon() {
+			let shape = new Two.Polygon(0, 0, this.size * 2, 6);
 			shape.fill = 'dimgray';
 			shape.noStroke();
 
@@ -113,8 +113,8 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 			return shape;
 		}
 
-		createMinimapIcon(x, y, sizeFactor) {
-			let shape = new Two.Polygon(x, y, this.size * 2 * sizeFactor, this.sides);
+		createMinimapIcon() {
+			let shape = new Two.Polygon(0, 0, this.size * 2 , this.sides);
 			shape.fill = 'gold';
 			shape.noStroke();
 
@@ -162,8 +162,8 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 			return shape;
 		}
 
-		createMinimapIcon(x, y, sizeFactor) {
-			let shape = new Two.Ellipse(x, y, this.size * 3 * sizeFactor);
+		createMinimapIcon() {
+			let shape = new Two.Ellipse(0, 0, this.size * 3);
 			shape.fill = 'purple';
 			shape.noStroke();
 
