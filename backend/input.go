@@ -8,6 +8,7 @@ import (
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"github.com/trichner/berryhunter/backend/items"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 
@@ -198,14 +199,12 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 
 	log.Printf("Action going on: %s(%s)", DeathioApi.EnumNamesActionType[int(action.Type)], item.Name)
 
-	// action item needs to either be in inventory or it's 'None'
-	if item.ID != 0 && !p.Inventory().CanConsume(items.NewItemStack(item, 1)) {
-		log.Printf("Player tried to use an item he does not own!")
-		return
-	}
 
 	switch action.Type {
 	case DeathioApi.ActionTypePrimary:
+		if !hasItem(p, item) {
+			return
+		}
 		p.hand.Shape().Layer = -1
 		break
 	case DeathioApi.ActionTypeCraftItem:
@@ -213,10 +212,16 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 		break
 
 	case DeathioApi.ActionTypeDropItem:
+		if !hasItem(p, item) {
+			return
+		}
 		p.inventory.DropAll(item)
 		break
 
 	case DeathioApi.ActionTypeConsumeItem:
+		if !hasItem(p, item) {
+			return
+		}
 		ok := p.inventory.ConsumeItem(items.NewItemStack(item, 1))
 		if ok {
 			h := p.VitalSigns().Health
@@ -226,13 +231,28 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 		break
 
 	case DeathioApi.ActionTypeEquipItem:
+		if !hasItem(p, item) {
+			return
+		}
 		p.Equip(item)
 		break
 
 	case DeathioApi.ActionTypeUnequipItem:
+		if !hasItem(p, item) {
+			return
+		}
 		p.Unequip(item)
 		break
 	}
+}
+
+func hasItem(p model.PlayerEntity, item items.Item) bool {
+	// action item needs to either be in inventory or it's 'None'
+	if item.ID != 0 && !p.Inventory().CanConsume(items.NewItemStack(item, 1)) {
+		log.Printf("Player tried to use an item he does not own!")
+		return false
+	}
+	return true
 }
 
 func input2vec(i *InputDTO) phy.Vec2f {
