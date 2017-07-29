@@ -5,6 +5,7 @@ define(['Game', 'GameObject', 'Develop', 'Two'], function (Game, GameObject, Dev
 	class DebugCircle extends GameObject {
 		constructor(x, y, radius) {
 			super(x, y, radius);
+			this.visibleOnMinimap = false;
 
 			this.timeToLife = 60;
 
@@ -17,10 +18,6 @@ define(['Game', 'GameObject', 'Develop', 'Two'], function (Game, GameObject, Dev
 					this.aabbConnector.remove();
 				}
 			}, this);
-		}
-
-		visibleOnMinimap() {
-			return false;
 		}
 
 		createShape(x, y, radius) {

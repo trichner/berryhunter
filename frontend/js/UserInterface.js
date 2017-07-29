@@ -197,6 +197,14 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		return this.vitalSignsBars[vitalSign];
 	};
 
+	/**
+	 *
+	 * @return {Element}
+	 */
+	UserInterface.getMinimapContainer = function () {
+		return document.querySelector('#minimap > .wrapper');
+	};
+
 
 	return UserInterface;
 });

@@ -54,13 +54,13 @@ define([], function () {
 				};
 
 				GameObject.prototype.hideAABB = function () {
-					if (!Utils.isUndefined(this.aabb)) {
+					if (Utils.isDefined(this.aabb)) {
 						this.aabb.noStroke();
 					}
 				};
 
 				GameObject.prototype.showAABB = function () {
-					if (!Utils.isUndefined(this.aabb)) {
+					if (Utils.isDefined(this.aabb)) {
 						this.aabb.stroke = Develop.settings.elementColor;
 						this.aabb.linewidth = Develop.settings.linewidth;
 					}
@@ -70,7 +70,10 @@ define([], function () {
 				GameObject.prototype.hide = function () {
 					super_hide.call(this);
 
-					this.aabb.remove();
+					if (Utils.isDefined(this.aabb)) {
+						this.aabb.remove();
+						delete this.aabb;
+					}
 				};
 			});
 		}

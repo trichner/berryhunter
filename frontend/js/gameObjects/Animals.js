@@ -6,10 +6,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 			super(x, y, size, rotation);
 			this.rotateOnPositioning = false;
 			this.isMoveable = true;
-		}
-
-		visibleOnMinimap() {
-			return false;
+			this.visibleOnMinimap = false;
 		}
 	}
 

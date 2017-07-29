@@ -11,6 +11,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 
 			this.isMoveable = false;
 			this.rotateOnPositioning = false;
+			this.visibleOnMinimap = true;
 
 			if (this.constructor.svg) {
 				this.shape = new InjectedSVG(this.constructor.svg, x, y, this.size, this.rotation);
@@ -31,11 +32,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 			console.error('createShape not implemented for ' + this.constructor.name);
 		}
 
-		visibleOnMinimap() {
-			return true;
-		}
-
-		createMinimapIcon(x, y, sizeFactor) {
+		createMinimapIcon() {
 			console.error('createMinimapIcon not implemented for ' + this.constructor.name);
 		}
 

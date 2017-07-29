@@ -1,35 +1,47 @@
 "use strict";
 
-define(['Game', 'Two'], function (Game, Two) {
+define(['Game', 'Two', 'UserInterface'], function (Game, Two, UserInterface) {
 	class MiniMap {
-		constructor(gameMap) {
-			this.gameMap = gameMap;
+		constructor(mapWidth, mapHeight) {
+			this.mapWidth = mapWidth;
+			this.mapHeight = mapHeight;
 
+			/**
+			 * All game objects added to the minimap.
+			 */
 			this.registeredGameObjects = [];
 
-			this.size = Game.relativeWidth(15);
+			/**
+			 * Moveable game objects those minimap position will be updated continuously.
+			 */
+			this.trackedGameObjects = [];
 
-			this.group = new Two.Group();
-			Game.groups.overlay.add(this.group);
-			this.group.translation.set(0, Game.height - this.size);
+			let container = UserInterface.getMinimapContainer();
 
-			const background = new Two.Rectangle(this.size / 2, this.size / 2, this.size, this.size);
-			this.group.add(background);
+			this.width = container.clientWidth;
+			this.height = container.clientHeight;
+
+			this.two = new Two({
+				width: this.width,
+				height: this.height,
+				type: Two.Types.svg
+			}).appendTo(container);
+
+			const background = new Two.Rectangle(0, 0, this.width, this.height);
+			this.two.add(background);
 			background.fill = 'Cornsilk';
 			background.stroke = background.fill;
 			background.linewidth = 10;
 
+			this.iconGroup = new Two.Group();
+			this.two.add(this.iconGroup);
 
 			const sizeFactorRelatedToMapSize = 1;
-			this.iconSizeFactor = Game.width / gameMap.width * 0.15 * sizeFactorRelatedToMapSize;
+			this.iconSizeFactor = this.width / this.mapWidth * sizeFactorRelatedToMapSize;
 
-			// gameMap.objects.forEach(this.add, this);
+			this.two.bind('update', update.bind(this));
 
-
-			// this.register(player);
-
-			this.updateCallback = this.update.bind(this);
-			Game.two.bind('update', this.updateCallback);
+			this.two.play();
 		}
 
 		/**
@@ -37,38 +49,41 @@ define(['Game', 'Two'], function (Game, Two) {
 		 * @param gameObject
 		 */
 		add(gameObject) {
-			if (!gameObject.visibleOnMinimap()) {
+			if (!gameObject.visibleOnMinimap) {
 				return;
 			}
 
 			// Position each icon relative to its position on the real map.
-			let x = gameObject.getX() / this.gameMap.width * this.size;
-			let y = gameObject.getY() / this.gameMap.height * this.size;
-			const minimapIcon = gameObject.createMinimapIcon(x, y, this.iconSizeFactor);
-			this.group.add(minimapIcon);
+			const minimapIcon = gameObject.createMinimapIcon();
+			this.iconGroup.add(minimapIcon);
+
+			let x = gameObject.getX() / this.mapWidth * this.width;
+			let y = gameObject.getY() / this.mapHeight * this.height;
+			minimapIcon.translation.set(x, y);
+			minimapIcon.scale = this.iconSizeFactor;
+
+			if (gameObject.isMoveable) {
+				gameObject.minimapIcon = minimapIcon;
+				this.trackedGameObjects.push(gameObject);
+			}
 			return minimapIcon;
 		}
 
-		/**
-		 * Adds an object to the map and keeps track of its movement.
-		 * @param gameObject
-		 */
-		register(gameObject) {
-			gameObject.minimapIcon = this.add(gameObject);
-			this.registeredGameObjects.push(gameObject);
+		remove(gameObject) {
+			// TODO
 		}
 
-		update() {
-			this.registeredGameObjects.forEach(function (gameObject) {
-				gameObject.minimapIcon.translation.x = (Game.player.camera.getX() + gameObject.getX()) / this.gameMap.width * this.size;
-				gameObject.minimapIcon.translation.y = (Game.player.camera.getY() + gameObject.getY()) / this.gameMap.width * this.size;
-			}, this);
+		clear() {
+			// TODO
 		}
 
-		remove() {
-			Game.two.unbind('update', this.updateCallback);
-			this.group.remove();
-		}
+	}
+
+	function update() {
+		this.trackedGameObjects.forEach((gameObject) => {
+			gameObject.minimapIcon.translation.x = gameObject.getX() / this.mapWidth * this.width;
+			gameObject.minimapIcon.translation.y = gameObject.getY() / this.mapHeight * this.height;
+		});
 	}
 
 	return MiniMap;
