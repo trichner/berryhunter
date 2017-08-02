@@ -20,6 +20,9 @@ type PlayerEntity interface {
 	Inventory() *items.Inventory
 	Viewport() phy.DynamicCollider
 	Client() *net.Client
+
+	Update(dt float32)
+	UpdateInput(next, last *PlayerInput)
 }
 
 type PlayerInteraction interface {

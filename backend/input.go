@@ -15,30 +15,13 @@ import (
 const inputBuffererCount = 3
 
 //---- models for input
-type InputDTO struct {
-	tick     uint64
-	movement *movement
-	rotation float32
-	action   *action
-}
-
-type movement struct {
-	X, Y float32
-}
-
-type actionType int
-
-type action struct {
-	Item items.ItemEnum
-	Type actionType
-}
 
 type clientMessage struct {
 	playerId uint64
 	body     []byte
 }
 
-type InputSystem struct {
+type PlayerInputSystem struct {
 	players []*player
 	game    *Game
 	// currently two, one to read and one to fill
@@ -48,42 +31,44 @@ type InputSystem struct {
 	receive chan *clientMessage
 }
 
-func (i *InputDTO) FlatbufferUnmarshal(bytes []byte) {
+func PlayerInputFlatbufferUnmarshal(bytes []byte) *model.PlayerInput {
 
+	i := &model.PlayerInput{}
 	fbInput := DeathioApi.GetRootAsInput(bytes, 0)
 
 	// umarshal simple scalars
-	i.tick = fbInput.Tick()
-	i.rotation = fbInput.Rotation()
+	i.Tick = fbInput.Tick()
+	i.Rotation = fbInput.Rotation()
 
-	// parse movement if existing
+	// parse Movement if existing
 	m := fbInput.Movement(nil)
 	if m != nil {
-		i.movement = &movement{
+		i.Movement = &phy.Vec2f{
 			X: m.X(),
 			Y: m.Y(),
 		}
 	}
 
-	// parse action if existent
+	// parse Action if existent
 	a := fbInput.Action(nil)
 	if a != nil {
-		i.action = &action{
+		i.Action = &model.Action{
 			Item: items.ItemEnum(a.Item()),
-			Type: actionType(a.ActionType()),
+			Type: model.ActionType(a.ActionType()),
 		}
 	}
+	return i
 }
 
-func NewInputSystem(g *Game) *InputSystem {
-	return &InputSystem{game: g}
+func NewInputSystem(g *Game) *PlayerInputSystem {
+	return &PlayerInputSystem{game: g}
 }
 
-func (i *InputSystem) Priority() int {
-	return 0
+func (i *PlayerInputSystem) Priority() int {
+	return 100
 }
 
-func (i *InputSystem) New(w *ecs.World) {
+func (i *PlayerInputSystem) New(w *ecs.World) {
 
 	// initialize buffers
 	for idx := range i.ibufs {
@@ -96,29 +81,28 @@ func (i *InputSystem) New(w *ecs.World) {
 		for {
 			select {
 			case msg := <-i.receive:
-				var input InputDTO
-				input.FlatbufferUnmarshal(msg.body)
-				i.storeInput(msg.playerId, &input)
+				input := PlayerInputFlatbufferUnmarshal(msg.body)
+				i.storeInput(msg.playerId, input)
 			}
 		}
 	}()
-	log.Println("InputSystem nominal")
+	log.Println("PlayerInputSystem nominal")
 }
 
-func (i *InputSystem) storeInput(playerId uint64, input *InputDTO) {
+func (i *PlayerInputSystem) storeInput(playerId uint64, input *model.PlayerInput) {
 	i.mux.Lock()
 	i.ibufs[(i.game.tick+1)%inputBuffererCount][playerId] = input
 	i.mux.Unlock()
 }
 
-func (i *InputSystem) AddPlayer(p *player) {
+func (i *PlayerInputSystem) AddPlayer(p *player) {
 	i.players = append(i.players, p)
 	p.client.OnMessage(func(c *net.Client, msg []byte) {
 		i.receive <- &clientMessage{p.ID(), msg}
 	})
 }
 
-func (i *InputSystem) Update(dt float32) {
+func (i *PlayerInputSystem) Update(dt float32) {
 
 	// freeze input, concurrent reads are fine
 	i.mux.Lock()
@@ -130,7 +114,7 @@ func (i *InputSystem) Update(dt float32) {
 	for _, p := range i.players {
 		inputs, _ := ibuf[p.ID()]
 		last, _ := lastBuf[p.ID()]
-		i.UpdatePlayer(p, inputs, last)
+		p.UpdateInput(inputs, last)
 	}
 
 	// clear out buffer
@@ -142,7 +126,8 @@ func (i *InputSystem) Update(dt float32) {
 const walkSpeed = 0.1
 
 // applies the inputs to a player
-func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
+func (p *player) UpdateInput(next, last *model.PlayerInput) {
+	//func (i *PlayerInputSystem) UpdatePlayer(p *player, inputs, last *model.PlayerInput) {
 
 	for v := range p.hand.Collisions() {
 		usr := v.Shape().UserData
@@ -162,18 +147,18 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	// reset
 	p.hand.Shape().Layer = 0
 
-	if inputs == nil {
+	if next == nil {
 		return
 	}
 
-	p.SetAngle(inputs.rotation)
+	p.SetAngle(next.Rotation)
 
 	// do we even have inputs?
-	if inputs.movement != nil {
+	if next.Movement != nil {
 
 		// we can only move if we are still alive!
 		if p.VitalSigns().Health != 0 {
-			v := input2vec(inputs)
+			v := input2vec(next)
 			v = v.Mult(walkSpeed)
 			next := p.Position().Add(v)
 			p.SetPosition(next)
@@ -182,22 +167,22 @@ func (i *InputSystem) UpdatePlayer(p *player, inputs, last *InputDTO) {
 	}
 
 	// process actions if available
-	i.applyAction(p, inputs.action)
+	p.applyAction(next.Action)
 }
 
-func (i *InputSystem) applyAction(p *player, action *action) {
+func (p *player) applyAction(action *model.Action) {
 
 	if action == nil {
 		return
 	}
 
-	item, err := i.game.items.Get(action.Item)
+	item, err := p.registry.Get(action.Item)
 	if err != nil {
 		log.Printf("Unknown Action Item: %s", err)
 		return
 	}
 
-	log.Printf("Action going on: %s(%s)", DeathioApi.EnumNamesActionType[int(action.Type)], item.Name)
+	log.Printf("✊ Action going on: %s(%s)", DeathioApi.EnumNamesActionType[int(action.Type)], item.Name)
 
 
 	switch action.Type {
@@ -247,7 +232,7 @@ func (i *InputSystem) applyAction(p *player, action *action) {
 }
 
 func hasItem(p model.PlayerEntity, item items.Item) bool {
-	// action item needs to either be in inventory or it's 'None'
+	// Action item needs to either be in inventory or it's 'None'
 	if item.ID != 0 && !p.Inventory().CanConsume(items.NewItemStack(item, 1)) {
 		log.Printf("Player tried to use an item he does not own!")
 		return false
@@ -255,9 +240,9 @@ func hasItem(p model.PlayerEntity, item items.Item) bool {
 	return true
 }
 
-func input2vec(i *InputDTO) phy.Vec2f {
-	x := phy.Signum32f(i.movement.X)
-	y := phy.Signum32f(i.movement.Y)
+func input2vec(i *model.PlayerInput) phy.Vec2f {
+	x := phy.Signum32f(i.Movement.X)
+	y := phy.Signum32f(i.Movement.Y)
 	// prevent division by zero
 	if x == 0 && y == 0 {
 		return phy.Vec2f{}
@@ -266,7 +251,7 @@ func input2vec(i *InputDTO) phy.Vec2f {
 	return v.Normalize()
 }
 
-func (i *InputSystem) Remove(b ecs.BasicEntity) {
+func (i *PlayerInputSystem) Remove(b ecs.BasicEntity) {
 	var delete int = -1
 	for index, player := range i.players {
 		if player.ID() == b.ID() {
@@ -281,7 +266,7 @@ func (i *InputSystem) Remove(b ecs.BasicEntity) {
 }
 
 func NewInputBufferer() InputBufferer {
-	return InputBufferer(make(map[uint64]*InputDTO))
+	return make(InputBufferer)
 }
 
-type InputBufferer map[uint64]*InputDTO
+type InputBufferer map[uint64]*model.PlayerInput

@@ -72,59 +72,6 @@ func readConf() *conf.Config {
 	return config
 }
 
-const staticBodyGroup = 0x01
-
-var walls []model.Entity = make([]model.Entity, 0)
-
-func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
-
-	//overlap := vect.Float(3)
-	//xf := vect.Float(x)
-	//yf := vect.Float(y)
-	p := &PhysicsSystem{}
-	p.game = g
-	g.space = phy.NewSpace()
-
-	//---- adding walls around map
-
-	//var bdy *chipmunk.Body
-	//var wall *chipmunk.Shape
-	//
-	//// bottom
-	//wall = chipmunk.NewBox(toVect(xf/2.0, yf+overlap/2.0), 2.0*overlap+xf, overlap)
-	//bdy = shape2wall(wall)
-	//g.space.AddStaticBody(bdy)
-	//
-	//// top
-	//wall = chipmunk.NewBox(toVect(xf/2.0, 0-overlap/2.0), 2.0*overlap+xf, overlap)
-	//bdy = shape2wall(wall)
-	//g.space.AddStaticBody(bdy)
-	//
-	//// left
-	//wall = chipmunk.NewBox(toVect(0-overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
-	//bdy = shape2wall(wall)
-	//g.space.AddStaticBody(bdy)
-	//
-	//// right
-	//wall = chipmunk.NewBox(toVect(xf+overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
-	//bdy = shape2wall(wall)
-	//g.space.AddStaticBody(bdy)
-
-	return p
-}
-
-//func shape2wall(s *phy.Shape) *phy.Shape {
-//	s.Group = staticBodyGroup
-//	s.Layer = staticCollisionLayer | actionCollisionLayer
-//
-//	walls = append(walls, &entity{
-//		BasicEntity: ecs.NewBasic(),
-//		body:        s,
-//		entityType:  DeathioApi.EntityTypeBorder,
-//	})
-//	return s
-//}
-
 
 func newCircleEntity(r float32) model.BaseEntity {
 

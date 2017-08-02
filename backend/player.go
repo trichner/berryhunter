@@ -17,6 +17,8 @@ type player struct {
 
 	model.BaseEntity
 
+	registry items.Registry
+
 	angle  float32
 	client *net.Client
 
@@ -98,7 +100,7 @@ func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	p := &player{BaseEntity: e,
 		client:      c,
 		Equipment:   items.NewEquipment(),
-		//items:       itemRegistry,
+		registry:       itemRegistry,
 	}
 
 	// setup body
@@ -157,7 +159,7 @@ var handOffset = phy.Vec2f{0.25, 0}
 
 func (p *player) updateHand() {
 
-	// could cache rotation matrix/ handOffset
+	// could cache Rotation matrix/ handOffset
 	relativeOffset := phy.NewRotMat2f(p.angle).Mult(handOffset)
 	handPos := p.Position().Add(relativeOffset)
 	p.hand.SetPosition(handPos)
@@ -181,4 +183,10 @@ func (p *player) Craft(i items.Item) bool {
 	//TODO defer
 	p.inventory.AddItem(items.NewItemStack(i, 1))
 	return true
+}
+
+func (p *player) Update(dt float32) {
+	// update time based tings
+
+	// resolve collisions
 }

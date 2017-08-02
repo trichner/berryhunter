@@ -16,7 +16,7 @@ func NewMobSystem(g *Game) *MobSystem {
 }
 
 func (n *MobSystem) Priority() int {
-	return 0
+	return 20
 }
 
 func (n *MobSystem) New(w *ecs.World) {

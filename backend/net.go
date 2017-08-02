@@ -19,7 +19,7 @@ func NewNetSystem(g *Game) *NetSystem {
 }
 
 func (n *NetSystem) Priority() int {
-	return 0
+	return -100
 }
 
 func (n *NetSystem) New(w *ecs.World) {

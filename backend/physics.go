@@ -58,7 +58,7 @@ func (p *PhysicsSystem) New(w *ecs.World) {
 }
 
 func (p *PhysicsSystem) Priority() int {
-	return 50
+	return 0
 }
 
 func (p *PhysicsSystem) AddStaticBody(b ecs.BasicEntity, e phy.Collider) {
