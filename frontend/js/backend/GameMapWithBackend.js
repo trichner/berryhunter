@@ -38,6 +38,9 @@ define([
 			}
 		} else {
 			switch (entity.type) {
+				case Character:
+					gameObject = new Character(entity.id, entity.position.x, entity.position.y, entity.name);
+					break;
 				case Border:
 					let startX = entity.aabb.LowerX;
 					let startY = entity.aabb.LowerY;

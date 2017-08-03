@@ -19,16 +19,17 @@ define([], function () {
 			'Player',
 			'GameObject',
 			'items/RecipesHelper',
-			'UserInterface'
-		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface) {
+			'UserInterface',
+			'StartScreen'
+		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface, StartScreen) {
 			/**
 			 * Creating a player starts implicitly the game
 			 */
-			Game.createPlayer = function (id, x, y) {
+			Game.createPlayer = function (id, x, y, name) {
 				/**
 				 * @type Player
 				 */
-				Game.player = new Player(id, x, y);
+				Game.player = new Player(id, x, y, name);
 				Game.two.play();
 				Game.started = true;
 			};
@@ -89,6 +90,7 @@ define([], function () {
 			Game.map = new GameMapWithBackend();
 
 			let domElement = Game.two.renderer.domElement;
+			Game.domElement = domElement;
 			SvgLoader.setup(domElement);
 			KeyEvents.setup(domElement);
 			PointerEvents.setup(domElement);
@@ -117,6 +119,8 @@ define([], function () {
 			 * @type MiniMap
 			 */
 			Game.miniMap = new MiniMap(Game.map.width, Game.map.height);
+
+			StartScreen.show();
 
 			if (Develop.isActive()) {
 				Develop.afterSetup(Game);

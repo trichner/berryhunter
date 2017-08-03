@@ -96,6 +96,8 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'Camera',
 					'Quadrants',
 					'UserInterface',
+					'StartScreen',
+					'NameGenerator',
 
 					// Develop resources
 					'develop/Fps',

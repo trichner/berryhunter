@@ -6,11 +6,12 @@ define([
 	'Controls',
 	'Camera',
 	'items/Inventory',
-	'VitalSigns'
+	'VitalSigns',
+	'StartScreen'
 ], function (Game, Character, Controls, Camera, Inventory, VitalSigns) {
 	class Player {
-		constructor(id, x, y) {
-			this.character = new Character(id, x, y);
+		constructor(id, x, y, name) {
+			this.character = new Character(id, x, y, name);
 			this.character.visibleOnMinimap = true;
 
 			this.controls = new Controls(this.character);

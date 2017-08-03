@@ -53,11 +53,14 @@ define([
 		setup: function () {
 			initializeItemLookupTable();
 
+			let url;
 			if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
-				this.webSocket = new WebSocket('ws://' + window.location.host + '/game');
+				url = 'ws://' + window.location.host + '/game';
 			} else {
-				this.webSocket = new WebSocket(Constants.BACKEND.REMOTE_URL);
+				url = Constants.BACKEND.LOCAL_URL;
 			}
+			// url += '?name'
+			this.webSocket = new WebSocket(url);
 
 			this.webSocket.binaryType = 'arraybuffer';
 
@@ -178,12 +181,16 @@ define([
 					Game.player.character.setPosition(snapshot.player.position.x, snapshot.player.position.y);
 				}
 				['health', 'satiety', 'bodyHeat'].forEach((vitalSign) => {
-					if (Utils.isDefined(snapshot.player[vitalSign])){
+					if (Utils.isDefined(snapshot.player[vitalSign])) {
 						Game.player.vitalSigns.setValue(vitalSign, snapshot.player[vitalSign]);
 					}
 				});
 			} else {
-				Game.createPlayer(snapshot.player.id, snapshot.player.position.x, snapshot.player.position.y);
+				Game.createPlayer(
+					snapshot.player.id,
+					snapshot.player.position.x,
+					snapshot.player.position.y,
+					snapshot.player.name);
 			}
 			if (Develop.isActive()) {
 				Game.player.character.updateAABB(snapshot.player.aabb);

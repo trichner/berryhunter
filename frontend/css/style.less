@@ -2,9 +2,8 @@ body {
 	padding: 0;
 	margin: 0;
 
-	//&.loading > * {
-	//	display: none;
-	//}
+	font-family: 'stone-age', serif;
+	font-size: 1.5rem;
 }
 
 canvas, svg {
@@ -22,6 +21,9 @@ svg text {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+
+	font: inherit;
+	font-variant: small-caps;
 }
 
 svg text::selection {
@@ -79,3 +81,5 @@ svg .clickable text {
 @import "developPanel";
 @import "loadingScreen";
 @import "gameUI";
+@import "startScreen";
+@import "fonts/stylesheet.css";
