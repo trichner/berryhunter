@@ -14,6 +14,7 @@ define([], function () {
 		FIELDS_IN_QUADRANT: 8,
 		PIXEL_PER_METRE: 60,
 		BACKEND: {
+			LOCAL_URL: 'ws://localhost:2000/game',
 			REMOTE_URL: 'wss://k42.ch/death-io/game',
 		},
 		// Milliseconds between ticks

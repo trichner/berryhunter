@@ -1,6 +1,14 @@
 #gameUI {
 	* {
 		box-sizing: border-box;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+
+		&::selection {
+			background: none;
+		}
 	}
 }
 
@@ -119,7 +127,7 @@
 	top: 0;
 	left: 0;
 
-	.columnsLoop(@counter) when (@counter > 0){
+	.columnsLoop(@counter) when (@counter > 0) {
 		.columnsLoop((@counter - 1));
 
 		&.@{counter}-columns {

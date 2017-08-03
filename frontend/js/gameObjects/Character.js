@@ -12,20 +12,16 @@ define([
 	'Preloading'
 ], function (Game, GameObject, Two, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading) {
 	class Character extends GameObject {
-		constructor(id, x, y) {
+		constructor(id, x, y, name) {
 			super(x, y, 30, Math.PI / 2);
 			this.id = id;
+			this.name = name;
 
 			this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
 			this.isMoveable = true;
 			this.visibleOnMinimap = false;
 
-			this.show();
-
 			this.currentAction = false;
-
-			// Rotate the character according the 0-angle in drawing space
-			this.shape.rotation = Math.PI / -2;
 
 			/**
 			 * Needs the same properties as Equipment.Slots
@@ -38,7 +34,7 @@ define([
 			}
 
 			let placeableSlot = new Two.Group();
-			this.shape.add(placeableSlot);
+			this.actualShape.add(placeableSlot);
 			this.equipmentSlotGroups[Equipment.Slots.PLACEABLE] = placeableSlot;
 			placeableSlot.translation.set(
 				Constants.PLACEMENT_RANGE,
@@ -50,7 +46,29 @@ define([
 
 			Object.values(this.equipmentSlotGroups).forEach(function (equipmentSlot) {
 				equipmentSlot.originalTranslation = equipmentSlot.translation.clone();
-			})
+			});
+
+			// Rotate the character according the 0-angle in drawing space
+			this.setRotation(Math.PI / -2);
+
+			this.createName();
+		}
+
+		initShape(x, y, size, rotation) {
+			let group = new Two.Group();
+
+			this.actualShape = super.initShape(x, y, size, rotation);
+			group.add(this.actualShape);
+
+			return group;
+		}
+
+		setRotation(rotation) {
+			if (Utils.isUndefined(rotation)) {
+				return;
+			}
+
+			this.actualShape.rotation = rotation;
 		}
 
 		createHands() {
@@ -58,12 +76,12 @@ define([
 			const handAngleDistance = 0.4;
 
 			this.leftHand = this.createHand(-handAngleDistance).group;
-			this.shape.add(this.leftHand);
+			this.actualShape.add(this.leftHand);
 
 
 			let rightHand = this.createHand(handAngleDistance);
 			this.rightHand = rightHand.group;
-			this.shape.add(this.rightHand);
+			this.actualShape.add(this.rightHand);
 
 			this.equipmentSlotGroups[Equipment.Slots.HAND] = rightHand.slot;
 		}
@@ -154,6 +172,21 @@ define([
 			return group;
 		}
 
+		createName() {
+			if (!this.name) {
+				return;
+			}
+
+			let text = new Two.Text(this.name, 0, -1.3 * this.size, {
+				// family: '"stone-age", serif',
+				// size: 18,
+				alignment: 'center',
+				fill: 'white',
+				weight: '700'
+			});
+			this.shape.add(text);
+		}
+
 		createMinimapIcon() {
 			let shape = new Two.Ellipse(0, 0, 30 * 7, 30 * 7);
 			shape.fill = 'darkblue';
@@ -171,7 +204,6 @@ define([
 		}
 
 		move(movement) {
-			// TODO Offline mode
 			if (!MapEditor.isActive()) {
 				return;
 			}

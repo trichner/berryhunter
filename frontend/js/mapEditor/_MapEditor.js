@@ -58,7 +58,7 @@ define([
 		MapEditor.afterSetup = function () {
 			Game.two.pause();
 
-			Game.createPlayer(0, Game.width / 2, Game.height / 2);
+			Game.createPlayer(0, Game.width / 2, Game.height / 2, 'Map Architect');
 
 			this.grid = new QuadrantGrid();
 

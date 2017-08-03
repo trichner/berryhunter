@@ -3,7 +3,7 @@
 define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Utils) {
 	let UserInterface = {};
 
-	let gameUiPromise = Preloading.registerPartial('partials/gameUI.html')
+	Preloading.registerPartial('partials/gameUI.html')
 		.then(() => {
 			UserInterface.rootElement = document.getElementById('gameUI');
 		});
@@ -117,7 +117,6 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 	}
 
 	UserInterface.setup = function () {
-		this.rootElement.classList.remove('hidden');
 		// this.rootElement.addEventListener('contextmenu', function (event) {
 		// 	event.preventDefault();
 		// });
@@ -127,6 +126,17 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		setupInventory.call(this);
 
 		setupVitalSigns.call(this);
+	};
+
+	UserInterface.show = function () {
+		this.rootElement.classList.remove('hidden');
+		require(['Game'], function (Game) {
+			Game.domElement.focus();
+		});
+	};
+
+	UserInterface.hide = function () {
+		this.rootElement.classList.add('hidden');
 	};
 
 	function setupCrafting() {
@@ -159,7 +169,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 	UserInterface.displayAvailableCrafts = function (availableCrafts, onLeftClick) {
 		Utils.clearNode(this.craftingElement);
 
-		if (availableCrafts.length === 0){
+		if (availableCrafts.length === 0) {
 			return;
 		}
 

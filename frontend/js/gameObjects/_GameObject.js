@@ -13,14 +13,17 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 			this.rotateOnPositioning = false;
 			this.visibleOnMinimap = true;
 
+			this.shape = this.initShape.apply(this, arguments);
+			this.show();
+		}
+
+		initShape(x, y, size, rotation) {
 			if (this.constructor.svg) {
-				this.shape = new InjectedSVG(this.constructor.svg, x, y, this.size, this.rotation);
+				return new InjectedSVG(this.constructor.svg, x, y, this.size, this.rotation);
 			} else {
 				const args = Array.prototype.splice.call(arguments, 2);
-				this.shape = this.createShape.apply(this, [x, y].concat(args));
+				return this.createShape.apply(this, [x, y].concat(args));
 			}
-
-			this.show();
 		}
 
 		/**
@@ -37,10 +40,10 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 		}
 
 		setPosition(x, y) {
-			if (Utils.isUndefined(x)){
+			if (Utils.isUndefined(x)) {
 				throw "x has to be defined.";
 			}
-			if (Utils.isUndefined(y)){
+			if (Utils.isUndefined(y)) {
 				throw "y has to be defined.";
 			}
 
@@ -92,7 +95,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 		}
 
 		setRotation(rotation) {
-			if (Utils.isUndefined(rotation)){
+			if (Utils.isUndefined(rotation)) {
 				return;
 			}
 
