@@ -29,7 +29,7 @@ struct ItemStack {
 }
 
 // Workaround to make vector of union possible
-union AnyEntity { Player, Mob, Resource }
+union AnyEntity { Player, Mob, Resource, Placeable }
 table Entity { e:AnyEntity; }
 
 table Resource {
@@ -37,6 +37,15 @@ table Resource {
   pos:Vec2f;
   radius:ushort;
   entity_type:EntityType;
+
+  aabb:AABB;
+}
+
+table Placeable {
+  id:ulong;
+  pos:Vec2f;
+  radius:ushort;
+  item:ubyte;
 
   aabb:AABB;
 }

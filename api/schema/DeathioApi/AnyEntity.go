@@ -7,6 +7,7 @@ const (
 	AnyEntityPlayer = 1
 	AnyEntityMob = 2
 	AnyEntityResource = 3
+	AnyEntityPlaceable = 4
 )
 
 var EnumNamesAnyEntity = map[int]string{
@@ -14,5 +15,6 @@ var EnumNamesAnyEntity = map[int]string{
 	AnyEntityPlayer:"Player",
 	AnyEntityMob:"Mob",
 	AnyEntityResource:"Resource",
+	AnyEntityPlaceable:"Placeable",
 }
 

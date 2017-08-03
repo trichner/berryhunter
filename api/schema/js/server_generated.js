@@ -31,7 +31,8 @@ DeathioApi.AnyEntity = {
   NONE: 0,
   Player: 1,
   Mob: 2,
-  Resource: 3
+  Resource: 3,
+  Placeable: 4
 };
 
 /**
@@ -372,6 +373,139 @@ DeathioApi.Resource.addAabb = function(builder, aabbOffset) {
  * @returns {flatbuffers.Offset}
  */
 DeathioApi.Resource.endResource = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+DeathioApi.Placeable = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {DeathioApi.Placeable}
+ */
+DeathioApi.Placeable.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {DeathioApi.Placeable=} obj
+ * @returns {DeathioApi.Placeable}
+ */
+DeathioApi.Placeable.getRootAsPlaceable = function(bb, obj) {
+  return (obj || new DeathioApi.Placeable).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {flatbuffers.Long}
+ */
+DeathioApi.Placeable.prototype.id = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
+};
+
+/**
+ * @param {DeathioApi.Vec2f=} obj
+ * @returns {DeathioApi.Vec2f|null}
+ */
+DeathioApi.Placeable.prototype.pos = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
+};
+
+/**
+ * @returns {number}
+ */
+DeathioApi.Placeable.prototype.radius = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+DeathioApi.Placeable.prototype.item = function() {
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {DeathioApi.AABB=} obj
+ * @returns {DeathioApi.AABB|null}
+ */
+DeathioApi.Placeable.prototype.aabb = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 12);
+  return offset ? (obj || new DeathioApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+DeathioApi.Placeable.startPlaceable = function(builder) {
+  builder.startObject(5);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Long} id
+ */
+DeathioApi.Placeable.addId = function(builder, id) {
+  builder.addFieldInt64(0, id, builder.createLong(0, 0));
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} posOffset
+ */
+DeathioApi.Placeable.addPos = function(builder, posOffset) {
+  builder.addFieldStruct(1, posOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} radius
+ */
+DeathioApi.Placeable.addRadius = function(builder, radius) {
+  builder.addFieldInt16(2, radius, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} item
+ */
+DeathioApi.Placeable.addItem = function(builder, item) {
+  builder.addFieldInt8(3, item, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} aabbOffset
+ */
+DeathioApi.Placeable.addAabb = function(builder, aabbOffset) {
+  builder.addFieldStruct(4, aabbOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+DeathioApi.Placeable.endPlaceable = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
