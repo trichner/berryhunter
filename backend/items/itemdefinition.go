@@ -40,10 +40,15 @@ type Factors struct {
 	Damage          int
 	StructureDamage int
 	Yield           int
+	Duration        int
+
+	Warmth float32
+	Radius float32
 }
 
 type ItemDefinition struct {
 	ID      ItemEnum
+	Type    ItemType
 	Name    string
 	Slot    EquipSlot
 	Factors Factors
@@ -63,13 +68,17 @@ type Item struct {
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
-	ID      int `json:"id"`
-	Item    string `json:"item"`
+	ID       int `json:"id"`
+	ItemType string `json:"itemType"`
+	Item     string `json:"item"`
 	Factors struct {
 		Food            int `json:"food"`
 		Damage          int `json:"damage"`
 		StructureDamage int `json:"structureDamage"`
 		Yield           int `json:"yield"`
+		Duration        int `json:"duration"`
+		Warmth          float32 `json:"warmth"`
+		Radius          float32 `json:"radius"`
 	} `json:"factors"`
 	Slot    string `json:"slot"`
 
@@ -126,15 +135,25 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		//tools = append(tools, tool)
 	}
 
+	itemType, ok := ItemTypeMap[i.ItemType]
+	if !ok {
+		itemType = ItemTypeNone
+	}
+
 	return &ItemDefinition{
 		ID:   ItemEnum(i.ID),
+		Type: itemType,
 		Name: i.Item,
 		Slot: slot,
 		Factors: Factors{
 			Food:            i.Factors.Food,
 			Damage:          i.Factors.Damage,
 			StructureDamage: i.Factors.StructureDamage,
-			Yield:           i.Factors.Yield},
+			Yield:           i.Factors.Yield,
+			Warmth:          i.Factors.Warmth,
+			Radius:          i.Factors.Radius,
+			Duration:        i.Factors.Duration,
+		},
 		Recipe: &Recipe{i.Recipe.CraftTicks, materials, tools},
 	}, nil
 }

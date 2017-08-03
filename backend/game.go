@@ -71,7 +71,7 @@ func (g *Game) Run() {
 	}
 
 	handleFunc := net.NewHandleFunc(func(c *net.Client) {
-		player := NewPlayer(g.items, c)
+		player := NewPlayer(g, c)
 		g.addPlayer(player)
 	})
 
@@ -108,7 +108,7 @@ func (g *Game) AddEntity(e model.Entity) {
 	case model.ResourceEntity:
 		g.addResourceEntity(v)
 	case model.Entity:
-		g.AddEntity(v)
+		g.addEntity(v)
 	}
 }
 
@@ -126,6 +126,22 @@ func (g *Game) addMobEntity(e model.MobEntity) {
 		case *NetSystem:
 			sys.AddEntity(e)
 		case *MobSystem:
+			sys.AddEntity(e)
+		}
+	}
+}
+
+func (g *Game) addEntity(e model.Entity) {
+	// Loop over all Systems
+	for _, system := range g.Systems() {
+
+		// Use a type-switch to figure out which System is which
+		switch sys := system.(type) {
+
+		// Create a case for each System you want to use
+		case *PhysicsSystem:
+			sys.AddStaticBody(e.Basic(), e.Bodies()[0])
+		case *NetSystem:
 			sys.AddEntity(e)
 		}
 	}

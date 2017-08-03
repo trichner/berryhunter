@@ -10,6 +10,7 @@ func NewBaseEntity(c *phy.Circle, t EntityType) BaseEntity {
 }
 
 var _ = Entity(&BaseEntity{})
+
 type BaseEntity struct {
 	ecs.BasicEntity
 	Body       *phy.Circle

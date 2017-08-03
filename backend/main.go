@@ -28,7 +28,7 @@ func main() {
 	log.Printf("Loaded %d item definitions:", len(itemList))
 	sort.Sort(items.ByID(itemList))
 	for _, i := range itemList {
-		log.Printf("%3d: %s", i.ID, i.Name)
+		log.Printf("%3d: %s (%d)", i.ID, i.Name, i.Type)
 	}
 
 	g := &Game{}

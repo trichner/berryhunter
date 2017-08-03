@@ -18,6 +18,7 @@ type player struct {
 	model.BaseEntity
 
 	registry items.Registry
+	game     *Game
 
 	angle  float32
 	client *net.Client
@@ -93,14 +94,18 @@ func (p *player) Angle() float32 {
 	return p.angle
 }
 
-func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
+func NewPlayer(g *Game, c *net.Client) *player {
+
+	registry := g.items
+
 	e := newCircleEntity(0.25)
 
 	e.EntityType = DeathioApi.EntityTypeCharacter
 	p := &player{BaseEntity: e,
-		client:      c,
-		Equipment:   items.NewEquipment(),
-		registry:       itemRegistry,
+		client:              c,
+		Equipment:           items.NewEquipment(),
+		registry:            registry,
+		game:                g,
 	}
 
 	// setup body
@@ -122,13 +127,13 @@ func NewPlayer(itemRegistry items.Registry, c *net.Client) *player {
 	//--- initialize inventory
 	var item items.Item
 	var err error
-	item, err = itemRegistry.GetByName("WoodClub")
+	item, err = registry.GetByName("WoodClub")
 	if err != nil {
 		panic(err)
 	}
 	p.inventory.AddItem(items.NewItemStack(item, 1))
 
-	item, err = itemRegistry.GetByName("BronzeSword")
+	item, err = registry.GetByName("BronzeSword")
 	if err != nil {
 		panic(err)
 	}
