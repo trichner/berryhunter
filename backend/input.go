@@ -128,22 +128,8 @@ const walkSpeed = 0.1
 
 // applies the inputs to a player
 func (p *player) UpdateInput(next, last *model.PlayerInput) {
-	//func (i *PlayerInputSystem) UpdatePlayer(p *player, inputs, last *model.PlayerInput) {
 
-	for v := range p.hand.Collisions() {
-		usr := v.Shape().UserData
-		if usr == nil {
-			log.Printf("Missing UserData!")
-			continue
-		}
-
-		r, ok := usr.(Interacter)
-		if !ok {
-			log.Printf("Non conformant UserData: %T", usr)
-			continue
-		}
-		r.PlayerHitsWith(p, p.handItem)
-	}
+	p.resolveHandCollisions()
 
 	// reset
 	p.hand.Shape().Layer = 0
@@ -171,6 +157,27 @@ func (p *player) UpdateInput(next, last *model.PlayerInput) {
 	p.applyAction(next.Action)
 }
 
+func (p *player) resolveHandCollisions(){
+	if p.handItem.ItemDefinition == nil {
+		return
+	}
+
+	for v := range p.hand.Collisions() {
+		usr := v.Shape().UserData
+		if usr == nil {
+			log.Printf("Missing UserData!")
+			continue
+		}
+
+		r, ok := usr.(Interacter)
+		if !ok {
+			log.Printf("Non conformant UserData: %T", usr)
+			continue
+		}
+		r.PlayerHitsWith(p, p.handItem)
+	}
+}
+
 func (p *player) applyAction(action *model.Action) {
 
 	if action == nil {
@@ -192,6 +199,7 @@ func (p *player) applyAction(action *model.Action) {
 			return
 		}
 		p.hand.Shape().Layer = -1
+		p.handItem = item
 		break
 	case DeathioApi.ActionTypeCraftItem:
 		p.Craft(item)

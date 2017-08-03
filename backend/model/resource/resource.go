@@ -36,5 +36,9 @@ func NewResource(body *phy.Circle, resource items.Item, entityType model.EntityT
 }
 
 func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
-	p.Inventory().AddItem(items.NewItemStack(r.resource, 1))
+	yield := item.Factors.Yield
+	if yield < 1 {
+		yield = 1
+	}
+	p.Inventory().AddItem(items.NewItemStack(r.resource, yield))
 }

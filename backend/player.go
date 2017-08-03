@@ -38,7 +38,11 @@ type player struct {
 
 func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	h := p.PlayerVitalSigns.Health
-	h -= 50
+	dmg := item.Factors.Damage
+	if dmg < 1 {
+		dmg = 1
+	}
+	h -= dmg * 10
 	if h < 0 {
 		h = 0
 	}
