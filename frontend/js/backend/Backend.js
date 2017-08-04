@@ -59,7 +59,7 @@ define([
 			if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
 				url = 'ws://' + window.location.host + '/game';
 			} else {
-				url = Constants.BACKEND.LOCAL_URL;
+				url = Constants.BACKEND.REMOTE_URL;
 			}
 			// url += '?name'
 			this.webSocket = new WebSocket(url);
