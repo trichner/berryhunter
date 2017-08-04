@@ -5,7 +5,7 @@
   "factors": {
     "damage": 2,
     "structureDamage": 5,
-    "yield": 2
+    "yield": 0
   },
   "recipe": {
     "craftTimeSec": 30,

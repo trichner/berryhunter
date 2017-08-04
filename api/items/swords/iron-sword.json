@@ -4,7 +4,7 @@
   "itemType": "EQUIPMENT",
   "factors": {
     "damage": 5,
-    "yield": 2
+    "yield": 0
   },
   "recipe": {
     "craftTimeSec": 40,

@@ -1,4 +1,7 @@
 {
   "id": 0,
-  "item": "None"
+  "item": "None",
+  "factors": {
+    "yield": 1
+  }
 }
