@@ -5,6 +5,8 @@ define(['GameObject', 'Utils', 'InjectedSVG'], function (GameObject, Utils, Inje
 		constructor(placeableItem, x, y) {
 			super(x, y, placeableItem.graphic.size, Utils.random(0, Math.PI * 2), placeableItem.graphic.svg);
 
+			this.visibleOnMinimap = false;
+
 			this.item = placeableItem;
 		}
 
