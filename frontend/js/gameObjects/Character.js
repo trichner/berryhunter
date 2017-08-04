@@ -71,6 +71,10 @@ define([
 			this.actualShape.rotation = rotation;
 		}
 
+		getRotation() {
+			return this.actualShape.rotation;
+		}
+
 		createHands() {
 			// TODO Hände unter die Frisur rendern
 			const handAngleDistance = 0.4;

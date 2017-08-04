@@ -222,11 +222,6 @@ define([
 				hasInput = true;
 			}
 
-			if (Utils.isUndefined(input.rotation)) {
-				// Just send the current character rotation to not confuse the server
-				input.rotation = this.character.getRotation();
-			}
-
 			if (movement.x !== 0 || movement.y !== 0) {
 				input.movement = movement;
 				this.character.move(movement);
@@ -239,6 +234,11 @@ define([
 			}
 
 			if (hasInput) {
+				if (Utils.isUndefined(input.rotation)) {
+					// Just send the current character rotation to not confuse the server
+					input.rotation = this.character.getRotation();
+				}
+				
 				Backend.sendInputTick(input);
 			}
 		}
