@@ -6,11 +6,12 @@ define([
 	'develop/DebugCircle',
 	'gameObjects/Border',
 	'gameObjects/Character',
+	'gameObjects/Placeable',
 	'MapEditor',
 	'Develop',
 	'items/Equipment',
 	'schema_server'
-], function (_, Game, DebugCircle, Border, Character, MapEditor, Develop, Equipment) {
+], function (_, Game, DebugCircle, Border, Character, Placeable, MapEditor, Develop, Equipment) {
 
 	function GameMapWithBackend() {
 		if (MapEditor.isActive()) {
@@ -40,6 +41,9 @@ define([
 			switch (entity.type) {
 				case Character:
 					gameObject = new Character(entity.id, entity.position.x, entity.position.y, entity.name);
+					break;
+				case Placeable:
+					gameObject = new Placeable(entity.item,  entity.position.x, entity.position.y);
 					break;
 				case Border:
 					let startX = entity.aabb.LowerX;

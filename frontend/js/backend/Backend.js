@@ -11,12 +11,13 @@ define([
 	'develop/DebugCircle',
 	'gameObjects/Border',
 	'gameObjects/Character',
+	'gameObjects/Placeable',
 	'backend/SnapshotFactory',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Develop, Items, Resources, Animals, DebugCircle, Border, Character, SnapshotFactory) {
+], function (Game, Utils, Constants, Develop, Items, Resources, Animals, DebugCircle, Border, Character, Placeable, SnapshotFactory) {
 	/**
 	 * Has to be in sync with DeathioApi.EntityType
 	 */
@@ -32,7 +33,8 @@ define([
 		Resources.BerryBush,
 		Animals.Rabbit,
 		Animals.SaberToothCat,
-		Animals.Mammoth
+		Animals.Mammoth,
+		Placeable,
 	];
 
 	const NONE_ITEM_ID = 0;
@@ -265,6 +267,9 @@ define([
 				aabb: this.unmarshalAABB(entity.aabb()),
 			};
 
+			if (eType === DeathioApi.AnyEntity.Placeable) {
+				result.item = this.unmarshalItem(entity.item());
+			}
 
 			if (eType === DeathioApi.AnyEntity.Mob) {
 				result.rotation = entity.rotation();
