@@ -6,6 +6,7 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
+	"log"
 )
 
 //---- helper methods to convert points to pixels
@@ -127,9 +128,16 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 		case model.MobEntity:
 			marshalled = MobEntityFlatbufMarshal(v, builder)
 			eType = DeathioApi.AnyEntityMob
+		case model.PlaceableEntity:
+			marshalled = PlaceableEntityFlatbufMarshal(v, builder)
+			eType = DeathioApi.AnyEntityMob
+		case model.ResourceEntity:
+			marshalled = ResourceEntityFlatbufMarshal(v, builder)
+			eType = DeathioApi.AnyEntityPlaceable
 		case model.Entity:
 			marshalled = ResourceEntityFlatbufMarshal(v, builder)
 			eType = DeathioApi.AnyEntityResource
+			log.Print("Unknown entity!")
 		}
 		DeathioApi.EntityStart(builder)
 		DeathioApi.EntityAddE(builder, marshalled)
@@ -200,6 +208,25 @@ func ResourceEntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) 
 	DeathioApi.ResourceAddEntityType(builder, uint16(e.Type()))
 
 	return DeathioApi.ResourceEnd(builder)
+}
+
+func PlaceableEntityFlatbufMarshal(e model.PlaceableEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	DeathioApi.PlaceableStart(builder)
+	DeathioApi.PlaceableAddId(builder, e.Basic().ID())
+
+	pos := Vec2fMarshalFlatbuf(e.Position(), builder)
+	DeathioApi.PlaceableAddPos(builder, pos)
+
+	aabb := AabbMarshalFlatbuf(e.AABB(), builder)
+	DeathioApi.PlaceableAddAabb(builder, aabb)
+
+	DeathioApi.PlaceableAddRadius(builder, f32ToU16Px(e.Radius()))
+	DeathioApi.PlaceableAddEntityType(builder, uint16(e.Type()))
+
+	DeathioApi.PlaceableAddItem(builder, byte(e.Item().ID))
+
+	return DeathioApi.PlaceableEnd(builder)
 }
 
 // intermediate struct to serialize

@@ -21,7 +21,8 @@ DeathioApi.EntityType = {
   BerryBush: 8,
   Dodo: 9,
   SaberToothCat: 10,
-  Mammoth: 11
+  Mammoth: 11,
+  Placeable: 12
 };
 
 /**
@@ -288,11 +289,19 @@ DeathioApi.Resource.prototype.id = function() {
 };
 
 /**
+ * @returns {DeathioApi.EntityType}
+ */
+DeathioApi.Resource.prototype.entityType = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+};
+
+/**
  * @param {DeathioApi.Vec2f=} obj
  * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.Resource.prototype.pos = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -300,16 +309,8 @@ DeathioApi.Resource.prototype.pos = function(obj) {
  * @returns {number}
  */
 DeathioApi.Resource.prototype.radius = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns {DeathioApi.EntityType}
- */
-DeathioApi.Resource.prototype.entityType = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
-  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -338,10 +339,18 @@ DeathioApi.Resource.addId = function(builder, id) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {DeathioApi.EntityType} entityType
+ */
+DeathioApi.Resource.addEntityType = function(builder, entityType) {
+  builder.addFieldInt16(1, entityType, DeathioApi.EntityType.DebugCircle);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
 DeathioApi.Resource.addPos = function(builder, posOffset) {
-  builder.addFieldStruct(1, posOffset, 0);
+  builder.addFieldStruct(2, posOffset, 0);
 };
 
 /**
@@ -349,15 +358,7 @@ DeathioApi.Resource.addPos = function(builder, posOffset) {
  * @param {number} radius
  */
 DeathioApi.Resource.addRadius = function(builder, radius) {
-  builder.addFieldInt16(2, radius, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.EntityType} entityType
- */
-DeathioApi.Resource.addEntityType = function(builder, entityType) {
-  builder.addFieldInt16(3, entityType, DeathioApi.EntityType.DebugCircle);
+  builder.addFieldInt16(3, radius, 0);
 };
 
 /**
@@ -421,11 +422,19 @@ DeathioApi.Placeable.prototype.id = function() {
 };
 
 /**
+ * @returns {DeathioApi.EntityType}
+ */
+DeathioApi.Placeable.prototype.entityType = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+};
+
+/**
  * @param {DeathioApi.Vec2f=} obj
  * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.Placeable.prototype.pos = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -433,7 +442,7 @@ DeathioApi.Placeable.prototype.pos = function(obj) {
  * @returns {number}
  */
 DeathioApi.Placeable.prototype.radius = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
@@ -441,7 +450,7 @@ DeathioApi.Placeable.prototype.radius = function() {
  * @returns {number}
  */
 DeathioApi.Placeable.prototype.item = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
@@ -450,7 +459,7 @@ DeathioApi.Placeable.prototype.item = function() {
  * @returns {DeathioApi.AABB|null}
  */
 DeathioApi.Placeable.prototype.aabb = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? (obj || new DeathioApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -458,7 +467,7 @@ DeathioApi.Placeable.prototype.aabb = function(obj) {
  * @param {flatbuffers.Builder} builder
  */
 DeathioApi.Placeable.startPlaceable = function(builder) {
-  builder.startObject(5);
+  builder.startObject(6);
 };
 
 /**
@@ -471,10 +480,18 @@ DeathioApi.Placeable.addId = function(builder, id) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {DeathioApi.EntityType} entityType
+ */
+DeathioApi.Placeable.addEntityType = function(builder, entityType) {
+  builder.addFieldInt16(1, entityType, DeathioApi.EntityType.DebugCircle);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
 DeathioApi.Placeable.addPos = function(builder, posOffset) {
-  builder.addFieldStruct(1, posOffset, 0);
+  builder.addFieldStruct(2, posOffset, 0);
 };
 
 /**
@@ -482,7 +499,7 @@ DeathioApi.Placeable.addPos = function(builder, posOffset) {
  * @param {number} radius
  */
 DeathioApi.Placeable.addRadius = function(builder, radius) {
-  builder.addFieldInt16(2, radius, 0);
+  builder.addFieldInt16(3, radius, 0);
 };
 
 /**
@@ -490,7 +507,7 @@ DeathioApi.Placeable.addRadius = function(builder, radius) {
  * @param {number} item
  */
 DeathioApi.Placeable.addItem = function(builder, item) {
-  builder.addFieldInt8(3, item, 0);
+  builder.addFieldInt8(4, item, 0);
 };
 
 /**
@@ -498,7 +515,7 @@ DeathioApi.Placeable.addItem = function(builder, item) {
  * @param {flatbuffers.Offset} aabbOffset
  */
 DeathioApi.Placeable.addAabb = function(builder, aabbOffset) {
-  builder.addFieldStruct(4, aabbOffset, 0);
+  builder.addFieldStruct(5, aabbOffset, 0);
 };
 
 /**
@@ -554,11 +571,19 @@ DeathioApi.Mob.prototype.id = function() {
 };
 
 /**
+ * @returns {DeathioApi.EntityType}
+ */
+DeathioApi.Mob.prototype.entityType = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+};
+
+/**
  * @param {DeathioApi.Vec2f=} obj
  * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.Mob.prototype.pos = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -566,16 +591,8 @@ DeathioApi.Mob.prototype.pos = function(obj) {
  * @returns {number}
  */
 DeathioApi.Mob.prototype.radius = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns {DeathioApi.EntityType}
- */
-DeathioApi.Mob.prototype.entityType = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
-  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -612,10 +629,18 @@ DeathioApi.Mob.addId = function(builder, id) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {DeathioApi.EntityType} entityType
+ */
+DeathioApi.Mob.addEntityType = function(builder, entityType) {
+  builder.addFieldInt16(1, entityType, DeathioApi.EntityType.DebugCircle);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
 DeathioApi.Mob.addPos = function(builder, posOffset) {
-  builder.addFieldStruct(1, posOffset, 0);
+  builder.addFieldStruct(2, posOffset, 0);
 };
 
 /**
@@ -623,15 +648,7 @@ DeathioApi.Mob.addPos = function(builder, posOffset) {
  * @param {number} radius
  */
 DeathioApi.Mob.addRadius = function(builder, radius) {
-  builder.addFieldInt16(2, radius, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.EntityType} entityType
- */
-DeathioApi.Mob.addEntityType = function(builder, entityType) {
-  builder.addFieldInt16(3, entityType, DeathioApi.EntityType.DebugCircle);
+  builder.addFieldInt16(3, radius, 0);
 };
 
 /**
@@ -703,11 +720,19 @@ DeathioApi.Player.prototype.id = function() {
 };
 
 /**
+ * @returns {DeathioApi.EntityType}
+ */
+DeathioApi.Player.prototype.entityType = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+};
+
+/**
  * @param {DeathioApi.Vec2f=} obj
  * @returns {DeathioApi.Vec2f|null}
  */
 DeathioApi.Player.prototype.pos = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -715,16 +740,8 @@ DeathioApi.Player.prototype.pos = function(obj) {
  * @returns {number}
  */
 DeathioApi.Player.prototype.radius = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns {DeathioApi.EntityType}
- */
-DeathioApi.Player.prototype.entityType = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
-  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -835,10 +852,18 @@ DeathioApi.Player.addId = function(builder, id) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {DeathioApi.EntityType} entityType
+ */
+DeathioApi.Player.addEntityType = function(builder, entityType) {
+  builder.addFieldInt16(1, entityType, DeathioApi.EntityType.DebugCircle);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
 DeathioApi.Player.addPos = function(builder, posOffset) {
-  builder.addFieldStruct(1, posOffset, 0);
+  builder.addFieldStruct(2, posOffset, 0);
 };
 
 /**
@@ -846,15 +871,7 @@ DeathioApi.Player.addPos = function(builder, posOffset) {
  * @param {number} radius
  */
 DeathioApi.Player.addRadius = function(builder, radius) {
-  builder.addFieldInt16(2, radius, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.EntityType} entityType
- */
-DeathioApi.Player.addEntityType = function(builder, entityType) {
-  builder.addFieldInt16(3, entityType, DeathioApi.EntityType.DebugCircle);
+  builder.addFieldInt16(3, radius, 0);
 };
 
 /**

@@ -15,6 +15,7 @@ const (
 	EntityTypeDodo = 9
 	EntityTypeSaberToothCat = 10
 	EntityTypeMammoth = 11
+	EntityTypePlaceable = 12
 )
 
 var EnumNamesEntityType = map[int]string{
@@ -30,5 +31,6 @@ var EnumNamesEntityType = map[int]string{
 	EntityTypeDodo:"Dodo",
 	EntityTypeSaberToothCat:"SaberToothCat",
 	EntityTypeMammoth:"Mammoth",
+	EntityTypePlaceable:"Placeable",
 }
 

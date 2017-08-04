@@ -143,6 +143,12 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	}
 	p.inventory.AddItem(items.NewItemStack(item, 1))
 
+	item, err = registry.GetByName("Workbench")
+	if err != nil {
+		panic(err)
+	}
+	p.inventory.AddItem(items.NewItemStack(item, 1))
+
 	//--- setup vital signs
 	p.PlayerVitalSigns.Health = 255
 	p.PlayerVitalSigns.Satiety = 255

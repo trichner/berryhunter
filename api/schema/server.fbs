@@ -14,7 +14,8 @@ enum EntityType : ushort {
   BerryBush,
   Dodo,
   SaberToothCat,
-  Mammoth
+  Mammoth,
+  Placeable
 }
 
 struct AABB {
@@ -34,15 +35,18 @@ table Entity { e:AnyEntity; }
 
 table Resource {
   id:ulong;
+  entity_type:EntityType;
+
   pos:Vec2f;
   radius:ushort;
-  entity_type:EntityType;
 
   aabb:AABB;
 }
 
 table Placeable {
   id:ulong;
+  entity_type:EntityType;
+
   pos:Vec2f;
   radius:ushort;
   item:ubyte;
@@ -52,9 +56,10 @@ table Placeable {
 
 table Mob {
   id:ulong;
+  entity_type:EntityType;
+
   pos:Vec2f;
   radius:ushort;
-  entity_type:EntityType;
   rotation:float;
 
   aabb:AABB;
@@ -62,9 +67,9 @@ table Mob {
 
 table Player {
   id:ulong;
+  entity_type:EntityType;
   pos:Vec2f;
   radius:ushort;
-  entity_type:EntityType;
 
   rotation:float;
   is_hit:bool = false;

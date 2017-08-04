@@ -9,7 +9,7 @@ import (
 	"github.com/trichner/berryhunter/api/schema/DeathioApi"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
-	"github.com/trichner/berryhunter/backend/model/resource"
+	"github.com/trichner/berryhunter/backend/model/placeable"
 )
 
 
@@ -253,14 +253,14 @@ func (p *player) applyAction(action *model.Action) {
 		log.Printf("🏗 Placing: %s", item.Name)
 		// TODO add collision detection
 
-		body := phy.NewCircle(phy.VEC2F_ZERO, item.Factors.Radius)
+		body := phy.NewCircle(phy.VEC2F_ZERO, 0.5)
 		//e := model.NewBaseEntity(body, model.EntityType(item.ID))
-		r, err := resource.NewResource(body, item, DeathioApi.EntityTypeDodo)
+		e, err := placeable.NewPlaceable(body, item)
 		if err != nil {
 			panic(err)
 		}
-		r.SetPosition(p.Position())
-		p.game.AddEntity(r)
+		e.SetPosition(p.Position())
+		p.game.AddEntity(e)
 
 		break
 	}

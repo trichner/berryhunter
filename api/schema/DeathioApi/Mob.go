@@ -38,8 +38,20 @@ func (rcv *Mob) MutateId(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(4, n)
 }
 
-func (rcv *Mob) Pos(obj *Vec2f) *Vec2f {
+func (rcv *Mob) EntityType() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Mob) MutateEntityType(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(6, n)
+}
+
+func (rcv *Mob) Pos(obj *Vec2f) *Vec2f {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -52,18 +64,6 @@ func (rcv *Mob) Pos(obj *Vec2f) *Vec2f {
 }
 
 func (rcv *Mob) Radius() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
-	if o != 0 {
-		return rcv._tab.GetUint16(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *Mob) MutateRadius(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(8, n)
-}
-
-func (rcv *Mob) EntityType() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.GetUint16(o + rcv._tab.Pos)
@@ -71,7 +71,7 @@ func (rcv *Mob) EntityType() uint16 {
 	return 0
 }
 
-func (rcv *Mob) MutateEntityType(n uint16) bool {
+func (rcv *Mob) MutateRadius(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(10, n)
 }
 
@@ -106,14 +106,14 @@ func MobStart(builder *flatbuffers.Builder) {
 func MobAddId(builder *flatbuffers.Builder, id uint64) {
 	builder.PrependUint64Slot(0, id, 0)
 }
+func MobAddEntityType(builder *flatbuffers.Builder, entityType uint16) {
+	builder.PrependUint16Slot(1, entityType, 0)
+}
 func MobAddPos(builder *flatbuffers.Builder, pos flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(1, flatbuffers.UOffsetT(pos), 0)
+	builder.PrependStructSlot(2, flatbuffers.UOffsetT(pos), 0)
 }
 func MobAddRadius(builder *flatbuffers.Builder, radius uint16) {
-	builder.PrependUint16Slot(2, radius, 0)
-}
-func MobAddEntityType(builder *flatbuffers.Builder, entityType uint16) {
-	builder.PrependUint16Slot(3, entityType, 0)
+	builder.PrependUint16Slot(3, radius, 0)
 }
 func MobAddRotation(builder *flatbuffers.Builder, rotation float32) {
 	builder.PrependFloat32Slot(4, rotation, 0.0)

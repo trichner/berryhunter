@@ -22,10 +22,17 @@ type Entity interface {
 	Type() EntityType
 }
 
+type PlaceableEntity interface {
+	Entity
+
+	Item() items.Item
+}
+
 type ResourceEntity interface {
 	Entity
 
 	Resource() items.Item
+	// count
 }
 
 type MobEntity interface {
