@@ -147,7 +147,7 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	if err != nil {
 		panic(err)
 	}
-	p.inventory.AddItem(items.NewItemStack(item, 1))
+	p.inventory.AddItem(items.NewItemStack(item, 101))
 
 	//--- setup vital signs
 	p.PlayerVitalSigns.Health = 255
