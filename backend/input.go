@@ -254,7 +254,6 @@ func (p *player) applyAction(action *model.Action) {
 		// TODO add collision detection
 
 		body := phy.NewCircle(phy.VEC2F_ZERO, 0.5)
-		//e := model.NewBaseEntity(body, model.EntityType(item.ID))
 		e, err := placeable.NewPlaceable(body, item)
 		if err != nil {
 			panic(err)

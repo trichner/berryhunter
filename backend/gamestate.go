@@ -130,10 +130,10 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 			eType = DeathioApi.AnyEntityMob
 		case model.PlaceableEntity:
 			marshalled = PlaceableEntityFlatbufMarshal(v, builder)
-			eType = DeathioApi.AnyEntityMob
+			eType = DeathioApi.AnyEntityPlaceable
 		case model.ResourceEntity:
 			marshalled = ResourceEntityFlatbufMarshal(v, builder)
-			eType = DeathioApi.AnyEntityPlaceable
+			eType = DeathioApi.AnyEntityResource
 		case model.Entity:
 			marshalled = ResourceEntityFlatbufMarshal(v, builder)
 			eType = DeathioApi.AnyEntityResource

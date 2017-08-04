@@ -17,9 +17,9 @@ func (p *Placeable) Item() items.Item {
 	return p.item
 }
 
-func NewPlaceable(body *phy.Circle, resource items.Item) (*Placeable, error) {
+func NewPlaceable(body *phy.Circle, item items.Item) (*Placeable, error) {
 
-	if resource.ItemDefinition == nil {
+	if item.ItemDefinition == nil {
 		return nil, fmt.Errorf("No resource provided.")
 	}
 
@@ -28,10 +28,10 @@ func NewPlaceable(body *phy.Circle, resource items.Item) (*Placeable, error) {
 	}
 
 	base := model.NewBaseEntity(body, DeathioApi.EntityTypePlaceable)
-	r := &Placeable{
+	p := &Placeable{
 		BaseEntity: base,
-		item:       resource,
+		item:       item,
 	}
-	r.Body.Shape().UserData = r
-	return r, nil
+	p.Body.Shape().UserData = p
+	return p, nil
 }
