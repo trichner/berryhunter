@@ -64,6 +64,10 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 func (r *registry) decorateMaterials() {
 	for _, itemDef := range r.items {
 		decoratedMaterials := make([]Material, 0)
+		if itemDef.Recipe == nil {
+			continue
+		}
+
 		for _, m := range itemDef.Recipe.Materials {
 			item, err := r.GetByName(m.Item.Name)
 			if err != nil {

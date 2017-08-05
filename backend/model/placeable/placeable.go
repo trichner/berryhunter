@@ -17,11 +17,18 @@ func (p *Placeable) Item() items.Item {
 	return p.item
 }
 
-func NewPlaceable(body *phy.Circle, item items.Item) (*Placeable, error) {
+func NewPlaceable(item items.Item) (*Placeable, error) {
 
 	if item.ItemDefinition == nil {
 		return nil, fmt.Errorf("No resource provided.")
 	}
+
+	if item.ItemDefinition.Body == nil {
+		return nil, fmt.Errorf("ItemDefinition is missing body property.")
+	}
+
+	body := phy.NewCircle(phy.VEC2F_ZERO, item.Body.Radius)
+	body.Shape().IsSensor = true
 
 	if body == nil {
 		return nil, fmt.Errorf("No body provided.")

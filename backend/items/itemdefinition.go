@@ -46,6 +46,11 @@ type Factors struct {
 	Radius float32
 }
 
+type Body struct {
+	Radius float32
+	Layer  int
+}
+
 type ItemDefinition struct {
 	ID      ItemEnum
 	Type    ItemType
@@ -53,6 +58,7 @@ type ItemDefinition struct {
 	Slot    EquipSlot
 	Factors Factors
 	Recipe  *Recipe
+	Body    *Body
 }
 
 
@@ -82,7 +88,7 @@ type itemDefinition struct {
 	} `json:"factors"`
 	Slot    string `json:"slot"`
 
-	Recipe struct {
+	Recipe *struct {
 		CraftTicks int `json:"craftTicks"`
 
 		Materials []struct {
@@ -92,6 +98,11 @@ type itemDefinition struct {
 
 		Tools []string `json:"tools"`
 	} `json:"recipe"`
+
+	Body *struct {
+		Layer  int `json:"layer"`
+		Radius float32 `json:"radius"`
+	} `json:"body"`
 }
 
 // parseItemDefinition parses a json string from a byte array into the
@@ -113,26 +124,39 @@ func shallowItem(name string) Item {
 func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	slot := namesEnumEquipSlot[i.Slot]
 
-	// map materials list
-	materials := make([]Material, 0)
-	for _, v := range i.Recipe.Materials {
-		material := Material{
-			shallowItem(v.Item),
-			v.Count,
-		}
-		materials = append(materials, material)
+	// parse body
+	var body *Body = nil
+	if i.Body != nil {
+		body = &Body{Radius: i.Body.Radius, Layer: i.Body.Layer}
 	}
 
-	// map tools list
-	tools := make([]Tool, 0)
-	for _, v := range i.Recipe.Tools {
-		_ = v //TODO
-		//entityType, err := mapItemIdentifier(v)
-		//if err != nil {
-		//	return nil, err
-		//}
-		//tool := Tool{entityType}
-		//tools = append(tools, tool)
+	// parse recipe
+	var recipe *Recipe = nil
+	if i.Recipe != nil {
+
+		// map tools list
+		tools := make([]Tool, 0)
+		for _, v := range i.Recipe.Tools {
+			_ = v //TODO
+			//entityType, err := mapItemIdentifier(v)
+			//if err != nil {
+			//	return nil, err
+			//}
+			//tool := Tool{entityType}
+			//tools = append(tools, tool)
+		}
+
+		// map materials list
+		materials := make([]Material, 0)
+		for _, v := range i.Recipe.Materials {
+			material := Material{
+				shallowItem(v.Item),
+				v.Count,
+			}
+			materials = append(materials, material)
+		}
+
+		recipe = &Recipe{i.Recipe.CraftTicks, materials, tools}
 	}
 
 	itemType, ok := ItemTypeMap[i.ItemType]
@@ -154,6 +178,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			Radius:          i.Factors.Radius,
 			Duration:        i.Factors.Duration,
 		},
-		Recipe: &Recipe{i.Recipe.CraftTicks, materials, tools},
+		Recipe: recipe,
+		Body:   body,
 	}, nil
 }

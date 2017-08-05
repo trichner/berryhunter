@@ -19,5 +19,9 @@
         "count": 5
       }
     ]
+  },
+  "body": {
+    "layer": 0,
+    "radius": 0.5
   }
 }

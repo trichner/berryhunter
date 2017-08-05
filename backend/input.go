@@ -253,10 +253,7 @@ func (p *player) applyAction(action *model.Action) {
 		log.Printf("🏗 Placing: %s", item.Name)
 		// TODO add collision detection
 
-		body := phy.NewCircle(phy.VEC2F_ZERO, 0.5)
-		body.Shape().Layer = -1 //TODO
-		body.Shape().IsSensor = true // no collison response
-		e, err := placeable.NewPlaceable(body, item)
+		e, err := placeable.NewPlaceable(item)
 		if err != nil {
 			panic(err)
 		}
