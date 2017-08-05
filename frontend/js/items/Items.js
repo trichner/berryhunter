@@ -193,7 +193,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				type: ItemType.PLACEABLE
 			},
 			Workbench: {
-				icon: {file: 'workbenchIcon'},
+				icon: {file: 'workbench'},
 				graphic: {
 					file: 'workbench',
 					size: 40
@@ -202,9 +202,11 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				type: ItemType.PLACEABLE
 			},
 			Chest: {
-				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'chest'},
+				graphic: {
+					file: 'chest',
+					size: 35
+				},
 				definition: 'placeables/chest',
 				type: ItemType.PLACEABLE
 			},
