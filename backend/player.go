@@ -149,7 +149,7 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	}
 	p.inventory.AddItem(items.NewItemStack(item, 2))
 
-	item, err = registry.GetByName("Furnace")
+	item, err = registry.GetByName("Wood")
 	if err != nil {
 		panic(err)
 	}
