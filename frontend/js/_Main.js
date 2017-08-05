@@ -98,6 +98,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'UserInterface',
 					'StartScreen',
 					'NameGenerator',
+					'EndScreen',
 
 					// Develop resources
 					'develop/Fps',

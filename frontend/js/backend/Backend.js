@@ -57,7 +57,12 @@ define([
 
 			let url;
 			if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
-				url = 'ws://' + window.location.host + '/game';
+				let serverPort = Utils.getUrlParameter(Constants.MODE_PARAMETERS.SERVER_PORT);
+				if (serverPort) {
+					url = 'ws://' + window.location.hostname + ':' + serverPort + '/game';
+				} else {
+					url = 'ws://' + window.location.host + '/game';
+				}
 			} else {
 				url = Constants.BACKEND.REMOTE_URL;
 			}

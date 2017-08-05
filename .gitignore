@@ -4,3 +4,5 @@ frontend/death-io.sublime-project
 frontend/death-io.sublime-workspace
 .DS_Store
 *.log
+backend/backend.exe
+backend/conf.json

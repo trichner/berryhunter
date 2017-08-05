@@ -5,6 +5,7 @@ define([], function () {
 		MODE_PARAMETERS: {
 			MAP_EDITOR: 'map-editor',
 			LOCAL_SERVER: 'local',
+			SERVER_PORT: 'port',
 			DEVELOPMENT: 'develop'
 		},
 		BASE_MOVEMENT_SPEED: 10,

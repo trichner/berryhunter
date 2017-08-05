@@ -181,6 +181,11 @@ define([
 				return;
 			}
 
+			if (Utils.isDefined(this.nameElement)){
+				this.nameElement.value = name;
+				return;
+			}
+
 			let text = new Two.Text(this.name, 0, -1.3 * this.size, {
 				// family: '"stone-age", serif',
 				// size: 18,
@@ -189,6 +194,7 @@ define([
 				weight: '700'
 			});
 			this.shape.add(text);
+			this.nameElement = text;
 		}
 
 		createMinimapIcon() {

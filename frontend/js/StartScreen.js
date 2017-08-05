@@ -7,7 +7,8 @@ define(['Preloading', 'NameGenerator'], function (Preloading, NameGenerator) {
 
 	function onDomReady() {
 		StartScreen.rootElement = document.getElementById('startScreen');
-		StartScreen.playerNameInput = document.getElementById('playerNameInput');
+		StartScreen.playerNameInput = StartScreen.rootElement
+			.getElementsByClassName('playerNameInput').item(0);
 		StartScreen.playerNameInput.setAttribute('placeholder', NameGenerator.generate());
 		StartScreen.playerNameInput.setAttribute('maxlength', playerNameMaxLength);
 		StartScreen.playerNameInput.focus();

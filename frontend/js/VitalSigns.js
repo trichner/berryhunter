@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'Two', 'Utils', 'UserInterface'], function (Game, Two, Utils, UserInterface) {
+define(['Game', 'Two', 'Utils', 'UserInterface', 'EndScreen'], function (Game, Two, Utils, UserInterface, EndScreen) {
 	class VitalSigns {
 		constructor() {
 			this.health = VitalSigns.MAXIMUM_VALUES.health;
@@ -33,6 +33,11 @@ define(['Game', 'Two', 'Utils', 'UserInterface'], function (Game, Two, Utils, Us
 		setValue(valueIndex, value) {
 			this[valueIndex] = value;
 			this.indicators[valueIndex].setValue(value / VitalSigns.MAXIMUM_VALUES[valueIndex]);
+
+			if (valueIndex === 'health' && value <= 0){
+				// Player is dead
+				EndScreen.show();
+			}
 		}
 	}
 

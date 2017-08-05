@@ -129,6 +129,8 @@ define([], function () {
 			if (MapEditor.isActive()) {
 				MapEditor.afterSetup(Game);
 			}
+
+			window.Game = Game;
 		});
 	};
 
