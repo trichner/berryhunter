@@ -218,8 +218,12 @@ func (p *player) applyAction(action *model.Action) {
 		}
 		ok := p.inventory.ConsumeItem(items.NewItemStack(item, 1))
 		if ok {
-			h := p.VitalSigns().Health
+			// prevent overflow
+			h := int(p.VitalSigns().Health)
 			h += item.Factors.Food
+			if h > 255 {
+				h = 255
+			}
 			p.VitalSigns().Health = h
 		}
 		break
