@@ -7,4 +7,5 @@ const (
 	LayerActionCollision    = 0x1 << 1
 	LayerWeaponCollision    = 0x1 << 2
 	LayerRessourceCollision = 0x1 << 3
+	LayerHeatCollision      = 0x1 << 4
 )

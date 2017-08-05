@@ -3,7 +3,7 @@
   "id": 24,
   "itemType": "PLACEABLE",
   "factors": {
-    "warmth": 0.25,
+    "warmth": 2,
     "durationPerWood": 5,
     "radius": 6,
     "storedWood": 0

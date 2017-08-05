@@ -116,7 +116,7 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	shapeGroup := int(p.ID())
 	p.Body.Shape().UserData = p
 	p.Body.Shape().Group = shapeGroup
-	p.Body.Shape().Layer = model.LayerStaticCollision
+	p.Body.Shape().Layer = model.LayerStaticCollision | model.LayerHeatCollision
 
 	// setup viewport
 	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{viewPortWidth / 2, viewPortHeight / 2})
@@ -220,5 +220,11 @@ func (p *player) Craft(i items.Item) bool {
 func (p *player) Update(dt float32) {
 	// update time based tings
 
-	// resolve collisions
+	// heat
+	t := p.VitalSigns().BodyTemperature
+	t -= 1
+	if t < 0 {
+		t = 0
+	}
+	p.VitalSigns().BodyTemperature = t
 }

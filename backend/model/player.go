@@ -25,6 +25,11 @@ type PlayerEntity interface {
 	UpdateInput(next, last *PlayerInput)
 }
 
+type VitalSignEntity interface {
+	BasicEntity
+	VitalSigns() *PlayerVitalSigns
+}
+
 type PlayerInteraction interface {
 	HitMob(m *MobEntity)
 	KilledMob(m *MobEntity)

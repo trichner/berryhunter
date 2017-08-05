@@ -9,6 +9,10 @@ type PlayerUpdate struct {
 	players []model.PlayerEntity
 }
 
+func NewPlayerUpdateSystem() *PlayerUpdate {
+	return &PlayerUpdate{}
+}
+
 func (*PlayerUpdate) Priority() int {
 	return -50
 }

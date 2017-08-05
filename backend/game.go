@@ -56,6 +56,12 @@ func (g *Game) Init(conf *conf.Config, items items.Registry) {
 
 	m := NewMobSystem(g)
 	g.AddSystem(m)
+
+	f := NewFreezerSystem(g)
+	g.AddSystem(f)
+
+	pl := NewPlayerUpdateSystem()
+	g.AddSystem(pl)
 }
 
 func (g *Game) Run() {
@@ -107,6 +113,8 @@ func (g *Game) AddEntity(e model.Entity) {
 		g.addMobEntity(v)
 	case model.ResourceEntity:
 		g.addResourceEntity(v)
+	case model.PlaceableEntity:
+		g.addPlaceableEntity(v)
 	case model.Entity:
 		g.addEntity(v)
 	}
@@ -127,6 +135,26 @@ func (g *Game) addMobEntity(e model.MobEntity) {
 			sys.AddEntity(e)
 		case *MobSystem:
 			sys.AddEntity(e)
+		}
+	}
+}
+
+func (g *Game) addPlaceableEntity(p model.PlaceableEntity) {
+	// Loop over all Systems
+	for _, system := range g.Systems() {
+
+		// Use a type-switch to figure out which System is which
+		switch sys := system.(type) {
+
+		// Create a case for each System you want to use
+		case *PhysicsSystem:
+			sys.AddEntity(p)
+		case *NetSystem:
+			sys.AddEntity(p)
+		case *FreezerSystem:
+			if p.HeatRadiation() != nil {
+				sys.AddHeater(p)
+			}
 		}
 	}
 }
@@ -177,6 +205,8 @@ func (g *Game) addPlayer(p *player) {
 			sys.AddPlayer(p)
 			// Create a case for each System you want to use
 		case *PlayerInputSystem:
+			sys.AddPlayer(p)
+		case *PlayerUpdate:
 			sys.AddPlayer(p)
 		}
 	}

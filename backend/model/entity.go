@@ -10,8 +10,12 @@ type EntityType uint16
 
 type Bodies []phy.DynamicCollider
 
-type Entity interface {
+type BasicEntity interface {
 	Basic() ecs.BasicEntity
+}
+
+type Entity interface {
+	BasicEntity
 	Position() phy.Vec2f
 	SetPosition(phy.Vec2f)
 	Radius() float32
@@ -22,9 +26,15 @@ type Entity interface {
 	Type() EntityType
 }
 
+type Heater interface {
+	BasicEntity
+	HeatRadiation() *HeatRadiator
+}
+
 type PlaceableEntity interface {
 	Entity
 
+	HeatRadiation() *HeatRadiator
 	Item() items.Item
 }
 

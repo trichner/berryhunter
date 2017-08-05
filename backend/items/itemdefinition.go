@@ -37,7 +37,7 @@ type Factors struct {
 	Yield           int
 	Duration        int
 
-	Warmth float32
+	Warmth int
 	Radius float32
 }
 
@@ -55,7 +55,6 @@ type ItemDefinition struct {
 	Recipe  *Recipe
 	Body    *Body
 }
-
 
 type ByID []*ItemDefinition
 
@@ -78,10 +77,10 @@ type itemDefinition struct {
 		StructureDamage int `json:"structureDamage"`
 		Yield           int `json:"yield"`
 		Duration        int `json:"duration"`
-		Warmth          float32 `json:"warmth"`
+		Warmth          int `json:"warmth"`
 		Radius          float32 `json:"radius"`
 	} `json:"factors"`
-	Slot    string `json:"slot"`
+	Slot string `json:"slot"`
 
 	Recipe *struct {
 		CraftTicks int `json:"craftTicks"`

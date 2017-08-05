@@ -258,6 +258,7 @@ func (p *player) applyAction(action *model.Action) {
 		// TODO add collision detection
 
 		e, err := placeable.NewPlaceable(item)
+
 		if err != nil {
 			panic(err)
 		}
