@@ -20,6 +20,15 @@ DeathioApi.ActionType = {
 };
 
 /**
+ * @enum
+ */
+DeathioApi.ClientMessage = {
+  NONE: 0,
+  Input: 1,
+  Join: 2
+};
+
+/**
  * @constructor
  */
 DeathioApi.Action = function() {
@@ -220,11 +229,71 @@ DeathioApi.Input.endInput = function(builder) {
 };
 
 /**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} offset
+ * @constructor
  */
-DeathioApi.Input.finishInputBuffer = function(builder, offset) {
-  builder.finish(offset);
+DeathioApi.Join = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {DeathioApi.Join}
+ */
+DeathioApi.Join.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {DeathioApi.Join=} obj
+ * @returns {DeathioApi.Join}
+ */
+DeathioApi.Join.getRootAsJoin = function(bb, obj) {
+  return (obj || new DeathioApi.Join).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+DeathioApi.Join.prototype.playerName = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+DeathioApi.Join.startJoin = function(builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} playerNameOffset
+ */
+DeathioApi.Join.addPlayerName = function(builder, playerNameOffset) {
+  builder.addFieldOffset(0, playerNameOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+DeathioApi.Join.endJoin = function(builder) {
+  var offset = builder.endObject();
+  return offset;
 };
 
 // Exports for Node.js and RequireJS

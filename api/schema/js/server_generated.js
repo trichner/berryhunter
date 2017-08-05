@@ -37,6 +37,17 @@ DeathioApi.AnyEntity = {
 };
 
 /**
+ * @enum
+ */
+DeathioApi.ServerMessage = {
+  NONE: 0,
+  Welcome: 1,
+  GameState: 2,
+  Accept: 3,
+  Obituary: 4
+};
+
+/**
  * @constructor
  */
 DeathioApi.AABB = function() {
@@ -1142,11 +1153,190 @@ DeathioApi.GameState.endGameState = function(builder) {
 };
 
 /**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} offset
+ * @constructor
  */
-DeathioApi.GameState.finishGameStateBuffer = function(builder, offset) {
-  builder.finish(offset);
+DeathioApi.Welcome = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {DeathioApi.Welcome}
+ */
+DeathioApi.Welcome.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {DeathioApi.Welcome=} obj
+ * @returns {DeathioApi.Welcome}
+ */
+DeathioApi.Welcome.getRootAsWelcome = function(bb, obj) {
+  return (obj || new DeathioApi.Welcome).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+DeathioApi.Welcome.prototype.serverName = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {DeathioApi.Vec2f=} obj
+ * @returns {DeathioApi.Vec2f|null}
+ */
+DeathioApi.Welcome.prototype.mapSize = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+DeathioApi.Welcome.startWelcome = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} serverNameOffset
+ */
+DeathioApi.Welcome.addServerName = function(builder, serverNameOffset) {
+  builder.addFieldOffset(0, serverNameOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} mapSizeOffset
+ */
+DeathioApi.Welcome.addMapSize = function(builder, mapSizeOffset) {
+  builder.addFieldStruct(1, mapSizeOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+DeathioApi.Welcome.endWelcome = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+DeathioApi.Accept = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {DeathioApi.Accept}
+ */
+DeathioApi.Accept.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {DeathioApi.Accept=} obj
+ * @returns {DeathioApi.Accept}
+ */
+DeathioApi.Accept.getRootAsAccept = function(bb, obj) {
+  return (obj || new DeathioApi.Accept).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+DeathioApi.Accept.startAccept = function(builder) {
+  builder.startObject(0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+DeathioApi.Accept.endAccept = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+DeathioApi.Obituary = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {DeathioApi.Obituary}
+ */
+DeathioApi.Obituary.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {DeathioApi.Obituary=} obj
+ * @returns {DeathioApi.Obituary}
+ */
+DeathioApi.Obituary.getRootAsObituary = function(bb, obj) {
+  return (obj || new DeathioApi.Obituary).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+DeathioApi.Obituary.startObituary = function(builder) {
+  builder.startObject(0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+DeathioApi.Obituary.endObituary = function(builder) {
+  var offset = builder.endObject();
+  return offset;
 };
 
 // Exports for Node.js and RequireJS

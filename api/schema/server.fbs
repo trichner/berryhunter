@@ -89,10 +89,27 @@ table Player {
 table GameState {
   tick:ulong;
 
+  // only present if player alive
   player:Player;
   inventory:[ItemStack];
 
   entities:[Entity];
 }
 
-root_type GameState;
+table Welcome {
+  server_name:string;
+  map_size:Vec2f;
+}
+
+table Accept {
+    // nothing to send with it, purely for signaling
+}
+
+table Obituary {
+    // nothing to send with it, purely for signaling
+    // maybe killer? or stats?
+}
+
+// root
+union ServerMessage { Welcome, GameState, Accept, Obituary }
+

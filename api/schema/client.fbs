@@ -24,4 +24,9 @@ table Input {
     action:Action;
 }
 
-root_type Input;
+table Join {
+    player_name:string;
+}
+
+// root
+union ClientMessage { Input, Join }
