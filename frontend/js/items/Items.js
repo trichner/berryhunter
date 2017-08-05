@@ -219,7 +219,10 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			},
 			Furnace: {
 				icon: {file: 'furnace'},
-				graphic: {file: 'furnace'},
+				graphic: {
+					file: 'furnace'
+					size: 50
+				},
 				definition: 'placeables/furnace',
 				type: ItemType.PLACEABLE
 			},
