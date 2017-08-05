@@ -21,7 +21,6 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 					let loadingScreenElement = document.getElementById('loadingScreen');
 					loadingScreenElement.classList.add('finished');
 
-					let handler =
 					loadingScreenElement.addEventListener('animationend', function () {
 						if (this.parentNode === null){
 							// Element was already removed
