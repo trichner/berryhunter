@@ -125,35 +125,12 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	p.viewport.Shape().Layer = model.LayerAllCollision
 	p.viewport.Shape().Group = shapeGroup
 
-	// setup inventory
-	p.inventory = items.NewInventory()
-
 	//--- initialize inventory
-	var item items.Item
-	var err error
-	item, err = registry.GetByName("IronTool")
+	inventory, err := initializePlayerInventory(registry)
 	if err != nil {
 		panic(err)
 	}
-	p.inventory.AddItem(items.NewItemStack(item, 1))
-
-	item, err = registry.GetByName("BronzeSword")
-	if err != nil {
-		panic(err)
-	}
-	p.inventory.AddItem(items.NewItemStack(item, 1))
-
-	item, err = registry.GetByName("Workbench")
-	if err != nil {
-		panic(err)
-	}
-	p.inventory.AddItem(items.NewItemStack(item, 2))
-
-	item, err = registry.GetByName("Furnace")
-	if err != nil {
-		panic(err)
-	}
-	p.inventory.AddItem(items.NewItemStack(item, 2))
+	p.inventory = inventory
 
 	//--- setup vital signs
 	p.PlayerVitalSigns.Health = 255
@@ -169,6 +146,36 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	p.updateHand()
 
 	return p
+}
+
+func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
+
+	type startItem struct {
+		name  string
+		count int
+	}
+	inventory := items.NewInventory()
+
+	// This is the inventory a new player starts with
+	startItems := []startItem{
+		{"IronTool", 1},
+		{"BronzeSword", 1},
+		{"Workbench", 1},
+		{"Campfire", 1},
+	}
+
+	//--- initialize inventory
+	var item items.Item
+	var err error
+	for _, i := range startItems {
+		item, err = r.GetByName(i.name)
+		if err != nil {
+			return inventory, err
+		}
+		inventory.AddItem(items.NewItemStack(item, i.count))
+	}
+
+	return inventory, nil
 }
 
 func (p *player) startAction(tool items.Item) {
