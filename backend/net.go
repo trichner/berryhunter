@@ -59,7 +59,7 @@ func (n *NetSystem) Update(dt float32) {
 
 		// marshal and send state
 		builder := flatbuffers.NewBuilder(64)
-		gs := clientGameState.MarshalFlatbuf(builder)
+		gs := GameStateMessageMarshalFlatbuf(builder, &clientGameState)
 		builder.Finish(gs)
 		err := player.Client().SendMessage(builder.FinishedBytes())
 		if err != nil {

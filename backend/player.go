@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/trichner/berryhunter/backend/net"
-	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
@@ -104,7 +104,7 @@ func NewPlayer(g *Game, c *net.Client) *player {
 
 	e := newCircleEntity(0.25)
 
-	e.EntityType = DeathioApi.EntityTypeCharacter
+	e.EntityType = BerryhunterApi.EntityTypeCharacter
 	p := &player{BaseEntity: e,
 		client:              c,
 		Equipment:           items.NewEquipment(),

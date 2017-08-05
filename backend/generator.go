@@ -2,7 +2,7 @@ package main
 
 import (
 	"math/rand"
-	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/items"
@@ -47,14 +47,14 @@ func chunkRand(x, y int64, rnd *rand.Rand) *rand.Rand {
 
 var trees = []staticEntityBody{
 	{
-		DeathioApi.EntityTypeRoundTree,
+		BerryhunterApi.EntityTypeRoundTree,
 		100,
 		1,
 		model.LayerStaticCollision | model.LayerRessourceCollision,
 		"Wood",
 	},
 	{
-		DeathioApi.EntityTypeMarioTree,
+		BerryhunterApi.EntityTypeMarioTree,
 		100,
 		1,
 		model.LayerStaticCollision | model.LayerRessourceCollision,
@@ -64,21 +64,21 @@ var trees = []staticEntityBody{
 
 var resources = []staticEntityBody{
 	{
-		DeathioApi.EntityTypeBerryBush,
+		BerryhunterApi.EntityTypeBerryBush,
 		100,
 		0.5,
 		model.LayerRessourceCollision,
 		"Berry",
 	},
 	{
-		DeathioApi.EntityTypeStone,
+		BerryhunterApi.EntityTypeStone,
 		100,
 		0.5,
 		model.LayerStaticCollision | model.LayerRessourceCollision,
 		"Stone",
 	},
 	{
-		DeathioApi.EntityTypeBronze,
+		BerryhunterApi.EntityTypeBronze,
 		100,
 		0.5,
 		model.LayerStaticCollision | model.LayerRessourceCollision,
