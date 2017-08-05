@@ -1,0 +1,30 @@
+{
+  "item": "IronSpikyWall",
+  "id": 36,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "health": 50,
+    "durability": 5,
+    "damage": 5
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Iron",
+        "count": 20
+      },
+      {
+        "item": "Stone",
+        "count": 15
+      },
+      {
+        "item": "BronzeWall",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

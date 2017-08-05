@@ -1,0 +1,25 @@
+{
+  "item": "IronWall",
+  "id": 35,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "health": 50,
+    "durability": 5
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Iron",
+        "count": 20
+      },
+      {
+        "item": "BronzeWall",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "item": "IronDoor",
+  "id": 40,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "health": 50,
+    "durability": 5
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Iron",
+        "count": 60
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

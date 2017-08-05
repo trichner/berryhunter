@@ -1,0 +1,21 @@
+{
+  "item": "BronzeDoor",
+  "id": 39,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "health": 50,
+    "durability": 4
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Bronze",
+        "count": 60
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

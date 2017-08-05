@@ -1,0 +1,21 @@
+{
+  "item": "WoodWall",
+  "id": 29,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "health": 50,
+    "durability": 2
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 20
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

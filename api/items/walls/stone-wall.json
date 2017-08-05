@@ -1,0 +1,25 @@
+{
+  "item": "StoneWall",
+  "id": 30,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "health": 50,
+    "durability": 3
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Stone",
+        "count": 20
+      },
+      {
+        "item": "WoodWall",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

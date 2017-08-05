@@ -1,0 +1,30 @@
+{
+  "item": "BronzeSpikyWall",
+  "id": 34,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "health": 50,
+    "durability": 4,
+    "damage": 4
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Bronze",
+        "count": 20
+      },
+      {
+        "item": "Stone",
+        "count": 15
+      },
+      {
+        "item": "BronzeWall",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

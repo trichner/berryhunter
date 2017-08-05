@@ -1,0 +1,30 @@
+{
+  "item": "WoodSpikyWall",
+  "id": 32,
+  "itemType": "PLACEABLE",
+  "factors": {
+    "health": 50,
+    "durability": 2,
+    "damage": 2
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 20
+      },
+      {
+        "item": "Stone",
+        "count": 15
+      },
+      {
+        "item": "WoodWall",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

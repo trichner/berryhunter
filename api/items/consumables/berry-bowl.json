@@ -1,0 +1,28 @@
+{
+  "item": "BerryBowl",
+  "id": 28,
+  "itemType": "CONSUMABLE",
+  "factors": {
+    "food": 80
+  },
+  "recipe": {
+    "craftTimeSec": 10,
+    "materials": [
+      {
+        "item": "Berry",
+        "count": 10
+      },
+      {
+        "item": "Seeds",
+        "count": 2
+      },
+      {
+        "item": "Wood",
+        "count": 5
+      }
+    ],
+    "tools": [
+      "CampFire"
+    ]
+  }
+}
