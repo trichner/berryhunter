@@ -19,7 +19,7 @@ define([
 	'schema_client',
 ], function (Game, Utils, Constants, Develop, Items, Resources, Mobs, DebugCircle, Border, Character, Placeable, SnapshotFactory) {
 	/**
-	 * Has to be in sync with DeathioApi.EntityType
+	 * Has to be in sync with BerryhunterApi.EntityType
 	 */
 	const gameObjectClasses = [
 		DebugCircle,
@@ -150,7 +150,7 @@ define([
 			}
 
 			try {
-				gameState = DeathioApi.GameState.getRootAsGameState(buffer);
+				gameState = BerryhunterApi.GameState.getRootAsGameState(buffer);
 			} catch (e) {
 				console.error("Error reading GameState from ByteBuffer.", buffer, e);
 				return;
@@ -214,14 +214,14 @@ define([
 		},
 
 		/**
-		 * @param {DeathioApi.GameState} gameState
+		 * @param {BerryhunterApi.GameState} gameState
 		 * @return {{tick: number, playerId: number, entities: Array}}
 		 */
 		unmarshalGameState(gameState) {
 			let result = {
 				tick: gameState.tick().toFloat64(),
 
-				player: this.unmarshalEntity(gameState.player(), DeathioApi.AnyEntity.Player),
+				player: this.unmarshalEntity(gameState.player(), BerryhunterApi.AnyEntity.Player),
 				inventory: [],
 
 				entities: [],
@@ -240,20 +240,20 @@ define([
 		},
 
 		/**
-		 * @param {DeathioApi.Entity} wrappedEntity
+		 * @param {BerryhunterApi.Entity} wrappedEntity
 		 */
 		unmarshalWrappedEntity(wrappedEntity) {
 			let eType = wrappedEntity.eType();
 			let entity;
 
-			for (let eTypeName in DeathioApi.AnyEntity) {
-				if (DeathioApi.AnyEntity[eTypeName] === eType) {
-					entity = new DeathioApi[eTypeName]();
+			for (let eTypeName in BerryhunterApi.AnyEntity) {
+				if (BerryhunterApi.AnyEntity[eTypeName] === eType) {
+					entity = new BerryhunterApi[eTypeName]();
 				}
 			}
 			/**
 			 *
-			 * @type {DeathioApi.Mob | DeathioApi.Resource | DeathioApi.Player}
+			 * @type {BerryhunterApi.Mob | BerryhunterApi.Resource | BerryhunterApi.Player}
 			 */
 			entity = wrappedEntity.e(entity);
 
@@ -272,15 +272,15 @@ define([
 				aabb: this.unmarshalAABB(entity.aabb()),
 			};
 
-			if (eType === DeathioApi.AnyEntity.Placeable) {
+			if (eType === BerryhunterApi.AnyEntity.Placeable) {
 				result.item = this.unmarshalItem(entity.item());
 			}
 
-			if (eType === DeathioApi.AnyEntity.Mob) {
+			if (eType === BerryhunterApi.AnyEntity.Mob) {
 				result.rotation = entity.rotation();
 			}
 
-			if (eType === DeathioApi.AnyEntity.Player) {
+			if (eType === BerryhunterApi.AnyEntity.Player) {
 				result.rotation = entity.rotation();
 				result.isHit = entity.isHit();
 				result.actionTick = entity.actionTick();
@@ -305,7 +305,7 @@ define([
 
 		/**
 		 *
-		 * @param {DeathioApi.AABB} aabb
+		 * @param {BerryhunterApi.AABB} aabb
 		 */
 		unmarshalAABB(aabb) {
 			return {
@@ -318,7 +318,7 @@ define([
 
 		/**
 		 *
-		 * @param {DeathioApi.ItemStack} itemStack
+		 * @param {BerryhunterApi.ItemStack} itemStack
 		 */
 		unmarshalItemStack(itemStack) {
 			return {
@@ -339,34 +339,34 @@ define([
 			let builder = new flatbuffers.Builder(10);
 			let action = null;
 			if (Utils.isDefined(inputObj.action)) {
-				DeathioApi.Action.startAction(builder);
+				BerryhunterApi.Action.startAction(builder);
 				if (inputObj.action.item === null) {
-					DeathioApi.Action.addItem(builder, NONE_ITEM_ID);
+					BerryhunterApi.Action.addItem(builder, NONE_ITEM_ID);
 				} else {
-					DeathioApi.Action.addItem(builder, itemLookupTable.indexOf(inputObj.action.item));
+					BerryhunterApi.Action.addItem(builder, itemLookupTable.indexOf(inputObj.action.item));
 				}
-				DeathioApi.Action.addActionType(builder, inputObj.action.actionType);
-				action = DeathioApi.Action.endAction(builder);
+				BerryhunterApi.Action.addActionType(builder, inputObj.action.actionType);
+				action = BerryhunterApi.Action.endAction(builder);
 			}
 
-			DeathioApi.Input.startInput(builder);
+			BerryhunterApi.Input.startInput(builder);
 
 			if (action !== null) {
-				DeathioApi.Input.addAction(builder, action);
+				BerryhunterApi.Input.addAction(builder, action);
 			}
 
 			if (Utils.isDefined(inputObj.movement)) {
-				DeathioApi.Input.addMovement(builder,
-					DeathioApi.Vec2f.createVec2f(builder, inputObj.movement.x, inputObj.movement.y));
+				BerryhunterApi.Input.addMovement(builder,
+					BerryhunterApi.Vec2f.createVec2f(builder, inputObj.movement.x, inputObj.movement.y));
 			}
 
 			if (Utils.isDefined(inputObj.rotation)) {
-				DeathioApi.Input.addRotation(builder, inputObj.rotation);
+				BerryhunterApi.Input.addRotation(builder, inputObj.rotation);
 			}
 
-			DeathioApi.Input.addTick(builder, flatbuffers.Long.create(inputObj.tick, 0));
+			BerryhunterApi.Input.addTick(builder, flatbuffers.Long.create(inputObj.tick, 0));
 
-			builder.finish(DeathioApi.Input.endInput(builder));
+			builder.finish(BerryhunterApi.Input.endInput(builder));
 
 			return builder.asUint8Array();
 		},

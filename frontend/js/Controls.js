@@ -172,7 +172,7 @@ define([
 						case 'MAIN':
 							action = {
 								item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
-								actionType: DeathioApi.ActionType.Primary
+								actionType: BerryhunterApi.ActionType.Primary
 							};
 							break;
 						case 'PLACING':
@@ -189,7 +189,7 @@ define([
 							} else {
 								action = {
 									item: placedItem,
-									actionType: DeathioApi.ActionType.PlaceItem
+									actionType: BerryhunterApi.ActionType.PlaceItem
 								}
 							}
 							break;
@@ -199,7 +199,7 @@ define([
 					this.character.progressHitAnimation(this.hitAnimationTick);
 					action = {
 						item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
-						actionType: DeathioApi.ActionType.Primary
+						actionType: BerryhunterApi.ActionType.Primary
 					};
 				}
 			}
@@ -238,7 +238,7 @@ define([
 					// Just send the current character rotation to not confuse the server
 					input.rotation = this.character.getRotation();
 				}
-				
+
 				Backend.sendInputTick(input);
 			}
 		}

@@ -41,7 +41,7 @@ define([
 						}
 						break;
 					case ItemType.CONSUMABLE:
-						Game.player.controls.onInventoryAction(this.item, DeathioApi.ActionType.ConsumeItem);
+						Game.player.controls.onInventoryAction(this.item, BerryhunterApi.ActionType.ConsumeItem);
 						break;
 				}
 
@@ -49,7 +49,7 @@ define([
 
 			this.clickableIcon.onRightClick = function () {
 				if (this.isFilled()) {
-					Game.player.controls.onInventoryAction(this.item, DeathioApi.ActionType.DropItem);
+					Game.player.controls.onInventoryAction(this.item, BerryhunterApi.ActionType.DropItem);
 				}
 			}.bind(this);
 		}

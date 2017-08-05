@@ -294,8 +294,8 @@ define([
 				} else {
 					document.getElementById('develop_input_action_item').textContent = inputObj.action.item.name;
 				}
-				for (let actionType in DeathioApi.ActionType){
-					if (DeathioApi.ActionType[actionType] === inputObj.action.actionType){
+				for (let actionType in BerryhunterApi.ActionType){
+					if (BerryhunterApi.ActionType[actionType] === inputObj.action.actionType){
 						document.getElementById('develop_input_action_type').textContent = actionType;
 						break;
 					}

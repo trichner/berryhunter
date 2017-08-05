@@ -62,14 +62,14 @@ define([
 			slot.activate();
 			if (this.character.equipItem(slot.item, equipmentSlot) &&
 				equipmentSlot !== Equipment.Slots.PLACEABLE) {
-				Game.player.controls.onInventoryAction(slot.item, DeathioApi.ActionType.EquipItem);
+				Game.player.controls.onInventoryAction(slot.item, BerryhunterApi.ActionType.EquipItem);
 			}
 		}
 
 		deactivateSlot(equipmentSlot) {
 			let unequippedItem = this.character.unequipItem(equipmentSlot);
 			if (equipmentSlot !== Equipment.Slots.PLACEABLE) {
-				Game.player.controls.onInventoryAction(unequippedItem, DeathioApi.ActionType.UnequipItem);
+				Game.player.controls.onInventoryAction(unequippedItem, BerryhunterApi.ActionType.UnequipItem);
 			}
 		}
 
