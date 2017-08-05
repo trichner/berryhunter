@@ -20,18 +20,13 @@ var namesEnumEquipSlot = map[string]EquipSlot{
 	"Back":        EquipSlotBack,
 }
 
-type Material struct {
-	Item  Item
-	Count int
-}
-
 type Tool struct {
 	EntityType ItemEnum
 }
 
 type Recipe struct {
 	CraftTicks int
-	Materials  []Material
+	Materials  []*ItemStack
 	Tools      []Tool
 }
 
@@ -147,9 +142,9 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		}
 
 		// map materials list
-		materials := make([]Material, 0)
+		materials := make([]*ItemStack, 0)
 		for _, v := range i.Recipe.Materials {
-			material := Material{
+			material := &ItemStack{
 				shallowItem(v.Item),
 				v.Count,
 			}

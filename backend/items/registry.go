@@ -63,7 +63,7 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 
 func (r *registry) decorateMaterials() {
 	for _, itemDef := range r.items {
-		decoratedMaterials := make([]Material, 0)
+		decoratedMaterials := make([]*ItemStack, 0)
 		if itemDef.Recipe == nil {
 			continue
 		}
@@ -74,7 +74,7 @@ func (r *registry) decorateMaterials() {
 				panic(err)
 			}
 
-			decoratedMaterials = append(decoratedMaterials, Material{item, m.Count})
+			decoratedMaterials = append(decoratedMaterials, &ItemStack{item, m.Count})
 		}
 		itemDef.Recipe.Materials = decoratedMaterials
 	}

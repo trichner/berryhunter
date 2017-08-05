@@ -196,20 +196,24 @@ func (p *player) updateHand() {
 func (p *player) Craft(i items.Item) bool {
 
 	r := i.Recipe
+	inventory := p.Inventory()
 
-	stacks := make([]*items.ItemStack, 0)
-	for _, m := range r.Materials {
-		stacks = append(stacks, items.NewItemStack(m.Item, m.Count))
-	}
-
-	if !p.inventory.CanConsumeItems(stacks) {
+	stacks := r.Materials
+	if !inventory.CanConsumeItems(stacks) {
 		return false
 	}
 
-	p.inventory.ConsumeItems(stacks)
+	// check if there is space in the inventory
+	newItem := items.NewItemStack(i, 1)
+	if !inventory.CanConsume(newItem) && inventory.Cap() == inventory.Count() {
+		return false
+	}
+
+	// ok, we're good to go, remove materials & craft
+	inventory.ConsumeItems(stacks)
 
 	//TODO defer
-	p.inventory.AddItem(items.NewItemStack(i, 1))
+	inventory.AddItem(newItem)
 	return true
 }
 
