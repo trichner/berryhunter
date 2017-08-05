@@ -7,7 +7,7 @@ define([
 	'Develop',
 	'items/Items',
 	'gameObjects/Resources',
-	'gameObjects/Animals',
+	'gameObjects/Mobs',
 	'develop/DebugCircle',
 	'gameObjects/Border',
 	'gameObjects/Character',
@@ -17,7 +17,7 @@ define([
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Develop, Items, Resources, Animals, DebugCircle, Border, Character, Placeable, SnapshotFactory) {
+], function (Game, Utils, Constants, Develop, Items, Resources, Mobs, DebugCircle, Border, Character, Placeable, SnapshotFactory) {
 	/**
 	 * Has to be in sync with DeathioApi.EntityType
 	 */
@@ -31,9 +31,9 @@ define([
 		Resources.Bronze,
 		null,
 		Resources.BerryBush,
-		Animals.Rabbit,
-		Animals.SaberToothCat,
-		Animals.Mammoth,
+		Mobs.Dodo,
+		Mobs.SaberToothCat,
+		Mobs.Mammoth,
 		Placeable,
 	];
 

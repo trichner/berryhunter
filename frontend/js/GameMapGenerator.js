@@ -3,9 +3,9 @@
 define([
 	'Quadrants',
 	'gameObjects/Resources',
-	'gameObjects/Animals',
+	'gameObjects/Mobs',
 	'Utils'
-], function (Quadrants, Resources, Animals, Utils) {
+], function (Quadrants, Resources, Mobs, Utils) {
 	//noinspection UnnecessaryLocalVariableJS
 	let GameMapGenerator = {
 		generateFromQuadrants: function () {
@@ -39,17 +39,17 @@ define([
 								}
 							]);
 							break;
-						case Animals.Animal:
+						case Mobs.Mob:
 							gameObjectClass = Utils.executeRandomFunction([
 								{
 									weight: 3,
 									func: () => {
-										return Animals.Rabbit;
+										return Mobs.Dodo;
 									}
 								}, {
 									weight: 1,
 									func: () => {
-										return Animals.SaberToothCat;
+										return Mobs.SaberToothCat;
 									}
 								}
 								// }, {
@@ -126,12 +126,12 @@ define([
 									{
 										weight: 3,
 										func: () => {
-											return new Animals.Rabbit(rx, ry);
+											return new Mobs.Dodo(rx, ry);
 										}
 									}, {
 										weight: 1,
 										func: () => {
-											return new Animals.SaberToothCat(rx, ry);
+											return new Mobs.SaberToothCat(rx, ry);
 										}
 									}
 									// }, {

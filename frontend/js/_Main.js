@@ -72,7 +72,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'Constants',
 					'InjectedSVG',
 					'GameObject',
-					'gameObjects/Animals',
+					'gameObjects/Mobs',
 					'gameObjects/Resources',
 					'gameObjects/Border',
 					'gameObjects/Character',

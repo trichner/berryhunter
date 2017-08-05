@@ -10,10 +10,10 @@ define([
 	'MiniMap',
 	'Preloading',
 	'Quadrants',
-	'gameObjects/Animals',
+	'gameObjects/Mobs',
 	'gameObjects/Resources',
 	'underscore',
-], function (Two, Utils, Constants, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants, Animals, Resources, _) {
+], function (Two, Utils, Constants, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants, Mobs, Resources, _) {
 	let MapEditor = {};
 
 	MapEditor.isActive = function () {
@@ -48,7 +48,7 @@ define([
 		document.getElementById('quadrantJson').addEventListener('input', this.tryRenderQuadrants);
 		document.getElementById('renderButton').addEventListener('click', this.tryRenderQuadrants);
 
-		_.extend(window, Animals);
+		_.extend(window, Mobs);
 		_.extend(window, Resources);
 
 		return two;

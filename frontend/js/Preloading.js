@@ -19,6 +19,10 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 				Preloading.loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
 				if (loadedPromises >= numberOfPromises) {
 					let loadingScreenElement = document.getElementById('loadingScreen');
+					if (loadingScreenElement === null){
+						// Element was already removed
+						return;
+					}
 					loadingScreenElement.classList.add('finished');
 
 					loadingScreenElement.addEventListener('animationend', function () {
