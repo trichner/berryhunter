@@ -16,7 +16,7 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 		preloadingPromise.then(function () {
 			loadedPromises++;
 			if (Preloading.loadingBar) {
-				loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
+				Preloading.loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
 				if (loadedPromises >= numberOfPromises) {
 					let loadingScreenElement = document.getElementById('loadingScreen');
 					loadingScreenElement.classList.add('finished');
