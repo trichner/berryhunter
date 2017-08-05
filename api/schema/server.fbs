@@ -1,6 +1,6 @@
 include "common.fbs";
 
-namespace DeathioApi;
+namespace BerryhunterApi;
 
 enum EntityType : ushort {
   DebugCircle = 0,
@@ -110,6 +110,8 @@ table Obituary {
     // maybe killer? or stats?
 }
 
-// root
-union ServerMessage { Welcome, GameState, Accept, Obituary }
+union ServerMessageBody { Welcome, GameState, Accept, Obituary }
+table ServerMessage { body:ServerMessageBody; }
+
+root_type ServerMessage;
 

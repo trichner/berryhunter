@@ -1,6 +1,6 @@
 include "common.fbs";
 
-namespace DeathioApi;
+namespace BerryhunterApi;
 
 enum ActionType: ubyte {
     Primary = 0,
@@ -28,5 +28,7 @@ table Join {
     player_name:string;
 }
 
-// root
-union ClientMessage { Input, Join }
+union ClientMessageBody { Input, Join }
+table ClientMessage { body:ClientMessageBody; }
+
+root_type ClientMessage;

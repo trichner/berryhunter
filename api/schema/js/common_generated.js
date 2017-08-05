@@ -4,12 +4,12 @@
  * @const
  * @namespace
  */
-var DeathioApi = DeathioApi || {};
+var BerryhunterApi = BerryhunterApi || {};
 
 /**
  * @constructor
  */
-DeathioApi.Vec3f = function() {
+BerryhunterApi.Vec3f = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -24,9 +24,9 @@ DeathioApi.Vec3f = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.Vec3f}
+ * @returns {BerryhunterApi.Vec3f}
  */
-DeathioApi.Vec3f.prototype.__init = function(i, bb) {
+BerryhunterApi.Vec3f.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -35,21 +35,21 @@ DeathioApi.Vec3f.prototype.__init = function(i, bb) {
 /**
  * @returns {number}
  */
-DeathioApi.Vec3f.prototype.x = function() {
+BerryhunterApi.Vec3f.prototype.x = function() {
   return this.bb.readFloat32(this.bb_pos);
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.Vec3f.prototype.y = function() {
+BerryhunterApi.Vec3f.prototype.y = function() {
   return this.bb.readFloat32(this.bb_pos + 4);
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.Vec3f.prototype.z = function() {
+BerryhunterApi.Vec3f.prototype.z = function() {
   return this.bb.readFloat32(this.bb_pos + 8);
 };
 
@@ -60,7 +60,7 @@ DeathioApi.Vec3f.prototype.z = function() {
  * @param {number} z
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.Vec3f.createVec3f = function(builder, x, y, z) {
+BerryhunterApi.Vec3f.createVec3f = function(builder, x, y, z) {
   builder.prep(4, 12);
   builder.writeFloat32(z);
   builder.writeFloat32(y);
@@ -71,7 +71,7 @@ DeathioApi.Vec3f.createVec3f = function(builder, x, y, z) {
 /**
  * @constructor
  */
-DeathioApi.Vec2f = function() {
+BerryhunterApi.Vec2f = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -86,9 +86,9 @@ DeathioApi.Vec2f = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.Vec2f}
+ * @returns {BerryhunterApi.Vec2f}
  */
-DeathioApi.Vec2f.prototype.__init = function(i, bb) {
+BerryhunterApi.Vec2f.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -97,14 +97,14 @@ DeathioApi.Vec2f.prototype.__init = function(i, bb) {
 /**
  * @returns {number}
  */
-DeathioApi.Vec2f.prototype.x = function() {
+BerryhunterApi.Vec2f.prototype.x = function() {
   return this.bb.readFloat32(this.bb_pos);
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.Vec2f.prototype.y = function() {
+BerryhunterApi.Vec2f.prototype.y = function() {
   return this.bb.readFloat32(this.bb_pos + 4);
 };
 
@@ -114,7 +114,7 @@ DeathioApi.Vec2f.prototype.y = function() {
  * @param {number} y
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.Vec2f.createVec2f = function(builder, x, y) {
+BerryhunterApi.Vec2f.createVec2f = function(builder, x, y) {
   builder.prep(4, 8);
   builder.writeFloat32(y);
   builder.writeFloat32(x);
@@ -122,4 +122,4 @@ DeathioApi.Vec2f.createVec2f = function(builder, x, y) {
 };
 
 // Exports for Node.js and RequireJS
-this.DeathioApi = DeathioApi;
+this.BerryhunterApi = BerryhunterApi;
