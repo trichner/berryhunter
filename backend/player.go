@@ -137,7 +137,7 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	}
 	p.inventory.AddItem(items.NewItemStack(item, 1))
 
-	item, err = registry.GetByName("BronzeSword")
+	item, err = registry.GetByName("Furnace")
 	if err != nil {
 		panic(err)
 	}
@@ -148,12 +148,6 @@ func NewPlayer(g *Game, c *net.Client) *player {
 		panic(err)
 	}
 	p.inventory.AddItem(items.NewItemStack(item, 2))
-
-	item, err = registry.GetByName("Wood")
-	if err != nil {
-		panic(err)
-	}
-	p.inventory.AddItem(items.NewItemStack(item, 1))
 
 	//--- setup vital signs
 	p.PlayerVitalSigns.Health = 255
