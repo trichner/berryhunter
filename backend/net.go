@@ -5,6 +5,7 @@ import (
 	"log"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/codec"
 )
 
 type NetSystem struct {
@@ -38,7 +39,7 @@ func (n *NetSystem) AddPlayer(p *player) {
 func (n *NetSystem) Update(dt float32) {
 
 	// assemble game state prototype
-	gameState := GameState{}
+	gameState := codec.GameState{}
 	gameState.Tick = n.game.tick
 	for _, player := range n.players {
 
@@ -59,8 +60,9 @@ func (n *NetSystem) Update(dt float32) {
 
 		// marshal and send state
 		builder := flatbuffers.NewBuilder(64)
-		gs := GameStateMessageMarshalFlatbuf(builder, &clientGameState)
+		gs := codec.GameStateMessageMarshalFlatbuf(builder, &clientGameState)
 		builder.Finish(gs)
+
 		err := player.Client().SendMessage(builder.FinishedBytes())
 		if err != nil {
 			n.game.RemoveEntity(player.Basic())

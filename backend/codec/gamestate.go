@@ -1,4 +1,4 @@
-package main
+package codec
 
 import (
 	"github.com/google/flatbuffers/go"
@@ -9,18 +9,7 @@ import (
 	"log"
 )
 
-//---- helper methods to convert points to pixels
-const points2px = 120.0
-
-func f32ToPx(f float32) float32 {
-	return f * points2px
-}
-
-func f32ToU16Px(f float32) uint16 {
-	return uint16(f * points2px)
-}
-
-func Vec2fMarshalFlatbuf(v phy.Vec2f, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func Vec2fMarshalFlatbuf(builder *flatbuffers.Builder, v phy.Vec2f) flatbuffers.UOffsetT {
 	return BerryhunterApi.CreateVec2f(builder, f32ToPx(v.X), f32ToPx(v.Y))
 }
 
@@ -42,11 +31,14 @@ func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) f
 func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
+	name := builder.CreateString(p.Name())
 
+	// populate player table
 	BerryhunterApi.PlayerStart(builder)
 	BerryhunterApi.PlayerAddId(builder, p.Basic().ID())
+	BerryhunterApi.PlayerAddName(builder, name)
 
-	pos := Vec2fMarshalFlatbuf(p.Position(), builder)
+	pos := Vec2fMarshalFlatbuf(builder, p.Position())
 	BerryhunterApi.PlayerAddPos(builder, pos)
 
 	aabb := AabbMarshalFlatbuf(p.AABB(), builder)
@@ -95,6 +87,7 @@ func InventoryMarshalFlatbuf(inventory *items.Inventory, builder *flatbuffers.Bu
 	}
 	return builder.EndVector(n)
 }
+
 // MarshalFlatbuf implements FlatbufCodec for GameState
 func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
@@ -167,7 +160,7 @@ func MobEntityFlatbufMarshal(m model.MobEntity, builder *flatbuffers.Builder) fl
 	aabb := AabbMarshalFlatbuf(m.AABB(), builder)
 	BerryhunterApi.MobAddAabb(builder, aabb)
 
-	pos := Vec2fMarshalFlatbuf(m.Position(), builder)
+	pos := Vec2fMarshalFlatbuf(builder, m.Position())
 	BerryhunterApi.MobAddPos(builder, pos)
 
 	return BerryhunterApi.MobEnd(builder)
@@ -177,11 +170,14 @@ func PlayerEntityFlatbufMarshal(p model.PlayerEntity, builder *flatbuffers.Build
 
 	// prepend entity specific things
 	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
+	name := builder.CreateString(p.Name())
 
+	// populate player table
 	BerryhunterApi.PlayerStart(builder)
 	BerryhunterApi.PlayerAddId(builder, p.Basic().ID())
+	BerryhunterApi.PlayerAddName(builder, name)
 
-	pos := Vec2fMarshalFlatbuf(p.Position(), builder)
+	pos := Vec2fMarshalFlatbuf(builder, p.Position())
 	BerryhunterApi.PlayerAddPos(builder, pos)
 
 	aabb := AabbMarshalFlatbuf(p.AABB(), builder)
@@ -203,7 +199,7 @@ func ResourceEntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) 
 	BerryhunterApi.ResourceStart(builder)
 	BerryhunterApi.ResourceAddId(builder, e.Basic().ID())
 
-	pos := Vec2fMarshalFlatbuf(e.Position(), builder)
+	pos := Vec2fMarshalFlatbuf(builder, e.Position())
 	BerryhunterApi.ResourceAddPos(builder, pos)
 
 	aabb := AabbMarshalFlatbuf(e.AABB(), builder)
@@ -220,7 +216,7 @@ func PlaceableEntityFlatbufMarshal(e model.PlaceableEntity, builder *flatbuffers
 	BerryhunterApi.PlaceableStart(builder)
 	BerryhunterApi.PlaceableAddId(builder, e.Basic().ID())
 
-	pos := Vec2fMarshalFlatbuf(e.Position(), builder)
+	pos := Vec2fMarshalFlatbuf(builder, e.Position())
 	BerryhunterApi.PlaceableAddPos(builder, pos)
 
 	aabb := AabbMarshalFlatbuf(e.AABB(), builder)
@@ -232,13 +228,6 @@ func PlaceableEntityFlatbufMarshal(e model.PlaceableEntity, builder *flatbuffers
 	BerryhunterApi.PlaceableAddItem(builder, byte(e.Item().ID))
 
 	return BerryhunterApi.PlaceableEnd(builder)
-}
-
-func ServerMessageWrapFlatbufMarshal(builder *flatbuffers.Builder, body flatbuffers.UOffsetT, bodyType byte) flatbuffers.UOffsetT {
-	BerryhunterApi.ServerMessageStart(builder)
-	BerryhunterApi.ServerMessageAddBodyType(builder, bodyType)
-	BerryhunterApi.ServerMessageAddBody(builder, body)
-	return BerryhunterApi.ServerMessageEnd(builder)
 }
 
 // intermediate struct to serialize
