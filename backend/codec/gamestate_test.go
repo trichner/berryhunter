@@ -96,19 +96,44 @@ func (mockPlayer) Radius() float32 {
 	return 0.5
 }
 
+func unwrapGameState(msg *BerryhunterApi.ServerMessage) *BerryhunterApi.GameState {
+
+	unionTable := new(flatbuffers.Table)
+	if msg.Body(unionTable) {
+		g := &BerryhunterApi.GameState{}
+		g.Init(unionTable.Bytes, unionTable.Pos)
+		return g
+	}
+	return nil
+}
+
+func unwrapPlayerEntity(e *BerryhunterApi.Entity) *BerryhunterApi.Player {
+	if e.EType() != BerryhunterApi.AnyEntityPlayer {
+		panic("Not player.")
+	}
+
+	unionTable := new(flatbuffers.Table)
+	if e.E(unionTable) {
+		p := &BerryhunterApi.Player{}
+		p.Init(unionTable.Bytes, unionTable.Pos)
+		return p
+	}
+	return nil
+}
+
 func TestGameStateServerMessage(t *testing.T) {
 
-	g := GameState{}
+	gameState := GameState{}
 
 	p0 := newMockPlayer()
 	p1 := newMockPlayer()
 
-	g.Player = p0
-	g.Tick = 17
-	g.Entities = []model.Entity{p1}
+	gameState.Player = p0
+	gameState.Tick = 17
+	gameState.Entities = []model.Entity{p1}
 
 	builder := flatbuffers.NewBuilder(64)
-	builder.Finish(GameStateMessageMarshalFlatbuf(builder, &g))
+	builder.Finish(GameStateMessageMarshalFlatbuf(builder, &gameState))
 	bytes := builder.FinishedBytes()
 
 	// decode
@@ -117,16 +142,25 @@ func TestGameStateServerMessage(t *testing.T) {
 	msgType := byte(BerryhunterApi.ServerMessageBodyGameState)
 	assert.Equal(t, msgType, msg.BodyType(), "Type matches.")
 
-	unionTable := new(flatbuffers.Table)
-	if msg.Body(unionTable) {
-		g := &BerryhunterApi.GameState{}
-		g.Init(unionTable.Bytes, unionTable.Pos)
+	g := unwrapGameState(msg)
+	if g == nil {
+		t.Fail()
+	}
 
-		d0 := g.Player(nil)
-		assert.Equal(t, p0.Name(), string(d0.Name()), "Name matches.")
-		assert.Equal(t, p0.Type(), model.EntityType(d0.EntityType()), "EntityType matches.")
-		assert.Equal(t, f32ToU16Px(p0.Radius()), d0.Radius(), "Radius matches.")
-		assert.Equal(t, f32ToPx(p0.Position().X), d0.Pos(nil).X(), "X matches.")
-		assert.Equal(t, f32ToPx(p0.Position().Y), d0.Pos(nil).Y(), "Y matches.")
+	d0 := g.Player(nil)
+	assert.Equal(t, p0.Name(), string(d0.Name()), "Name matches.")
+	assert.Equal(t, p0.Type(), model.EntityType(d0.EntityType()), "EntityType matches.")
+	assert.Equal(t, f32ToU16Px(p0.Radius()), d0.Radius(), "Radius matches.")
+	assert.Equal(t, f32ToPx(p0.Position().X), d0.Pos(nil).X(), "X matches.")
+	assert.Equal(t, f32ToPx(p0.Position().Y), d0.Pos(nil).Y(), "Y matches.")
+
+	// check entities
+	assert.Equal(t, len(gameState.Entities), g.EntitiesLength(), "Entities size matches.")
+	for i := 0; i < g.EntitiesLength(); i++ {
+		var decoded BerryhunterApi.Entity
+		g.Entities(&decoded, i)
+		p := unwrapPlayerEntity(&decoded)
+		e := gameState.Entities[i]
+		assert.Equal(t, e.Basic().ID(), p.Id(), "Same id.")
 	}
 }
