@@ -124,6 +124,35 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 
 	Preloading.registerGameObjectSVG(Bronze, 'img/bronze.svg');
 
+	class Iron extends GameObject {
+		constructor(x, y, size) {
+			super(x, y,
+				size || Utils.randomInt(20, 60),
+				Utils.random(0, Math.PI * 2)
+			);
+		}
+
+		createShape(x, y) {
+			let shape = new Two.Polygon(x, y, this.size, 6);
+			shape.fill = 'darkgray';
+			shape.stroke = 'dimgray';
+			shape.linewidth = 2;
+			shape.rotation = Utils.random(0, Math.PI * 2);
+
+			return shape;
+		}
+
+		createMinimapIcon() {
+			let shape = new Two.Polygon(0, 0, this.size * 2, 6);
+			shape.fill = 'dimgray';
+			shape.noStroke();
+
+			return shape;
+		}
+	}
+
+	Preloading.registerGameObjectSVG(Iron, 'img/Iron.svg');
+
 	class BerryBush extends GameObject {
 		constructor(x, y, size) {
 			super(x, y, size || Utils.randomInt(20, 45));
