@@ -38,6 +38,11 @@ define(['backend/BackendConstants',
 	 */
 	function unmarshalWrappedEntity(wrappedEntity) {
 		let eType = wrappedEntity.eType();
+
+		if (eType === BerryhunterApi.AnyEntity.NONE){
+			return null;
+		}
+
 		let entity;
 
 		for (let eTypeName in BerryhunterApi.AnyEntity) {
@@ -55,8 +60,14 @@ define(['backend/BackendConstants',
 	}
 
 	function unmarshalEntity(entity, eType) {
+		let id = entity.id().toFloat64();
+
+		if (id === 0) {
+			return null;
+		}
+
 		let result = {
-			id: entity.id().toFloat64(),
+			id: id,
 			position: {
 				x: entity.pos().x(),
 				y: entity.pos().y(),

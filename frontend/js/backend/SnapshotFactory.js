@@ -7,18 +7,20 @@ define(['Utils', 'underscore'], function (Utils, _) {
 
 	SnapshotFactory.newSnapshot = function (gameState) {
 		let snapshot;
-		if (this.hasSnapshot()){
+		if (this.hasSnapshot()) {
 			snapshot = {};
 			snapshot.tick = gameState.tick;
 
-			snapshot.player =  _.clone(gameState.player);
+			snapshot.player = _.clone(gameState.player);
 
-			if (Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
-				Utils.nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)){
-				delete snapshot.player.position;
+			if (lastGameState.player !== null && gameState.player !== null) {
+				if (Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
+					Utils.nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)) {
+					delete snapshot.player.position;
+				}
 			}
 
-			if (isInventoryDifferent(lastGameState.inventory, gameState.inventory)){
+			if (isInventoryDifferent(lastGameState.inventory, gameState.inventory)) {
 				snapshot.inventory = gameState.inventory;
 			}
 
@@ -58,11 +60,11 @@ define(['Utils', 'underscore'], function (Utils, _) {
 				return false;
 			}
 
-			if (Utils.isUndefined(lastItemStack)){
+			if (Utils.isUndefined(lastItemStack)) {
 				return true;
 			}
 
-			if (Utils.isUndefined(itemStack)){
+			if (Utils.isUndefined(itemStack)) {
 				return true;
 			}
 

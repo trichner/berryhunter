@@ -119,7 +119,7 @@ define([
 			}
 
 			try {
-				serverMessage = BerryhunterApi.GameState.getRootAsServerMessage(buffer);
+				serverMessage = BerryhunterApi.ServerMessage.getRootAsServerMessage(buffer);
 			} catch (e) {
 				console.error("Error reading ServerMessage from ByteBuffer.", buffer, e);
 				return;
@@ -171,34 +171,36 @@ define([
 		receiveSnapshot: function (snapshot) {
 			Game.map.newSnapshot(snapshot.entities);
 
-			if (Game.started) {
-				if (Utils.isDefined(snapshot.player.position)) {
-					Game.player.character.setPosition(snapshot.player.position.x, snapshot.player.position.y);
-				}
-				['health', 'satiety', 'bodyHeat'].forEach((vitalSign) => {
-					if (Utils.isDefined(snapshot.player[vitalSign])) {
-						Game.player.vitalSigns.setValue(vitalSign, snapshot.player[vitalSign]);
+			if (snapshot.player !== null) {
+				if (Game.started) {
+					if (Utils.isDefined(snapshot.player.position)) {
+						Game.player.character.setPosition(snapshot.player.position.x, snapshot.player.position.y);
 					}
-				});
-			} else {
-				Game.createPlayer(
-					snapshot.player.id,
-					snapshot.player.position.x,
-					snapshot.player.position.y,
-					snapshot.player.name);
-			}
-			if (Develop.isActive()) {
-				Game.player.character.updateAABB(snapshot.player.aabb);
+					['health', 'satiety', 'bodyHeat'].forEach((vitalSign) => {
+						if (Utils.isDefined(snapshot.player[vitalSign])) {
+							Game.player.vitalSigns.setValue(vitalSign, snapshot.player[vitalSign]);
+						}
+					});
+
+					// FIXME Abfrage entfernen, wenn der Server tatsächlich Changesets schickt
+					if (Utils.isDefined(snapshot.inventory)) {
+						Game.player.inventory.updateFromBackend(snapshot.inventory);
+					}
+				} else {
+					Game.createPlayer(
+						snapshot.player.id,
+						snapshot.player.position.x,
+						snapshot.player.position.y,
+						snapshot.player.name);
+				}
+				if (Develop.isActive()) {
+					Game.player.character.updateAABB(snapshot.player.aabb);
+				}
 			}
 
 			snapshot.entities.forEach(function (entity) {
 				Game.map.addOrUpdate(entity);
 			});
-
-			// FIXME Abfrage entfernen, wenn der Server tatsächlich Changesets schickt
-			if (Utils.isDefined(snapshot.inventory)) {
-				Game.player.inventory.updateFromBackend(snapshot.inventory);
-			}
 		},
 
 		marshalInput: function (inputObj) {
