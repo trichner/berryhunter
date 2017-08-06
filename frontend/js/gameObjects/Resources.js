@@ -121,8 +121,23 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 			return shape;
 		}
 	}
-
 	Preloading.registerGameObjectSVG(Bronze, 'img/bronze.svg');
+
+	class Iron extends GameObject {
+		constructor(x, y, size) {
+			super(x, y, size || Utils.randomInt(30, 70));
+		}
+
+		createMinimapIcon() {
+			let shape = new Two.Polygon(0, 0, this.size * 2, this.sides);
+			shape.fill = '#a46262';
+			shape.noStroke();
+
+			return shape;
+		}
+	}
+
+	Preloading.registerGameObjectSVG(Bronze, 'img/iron.svg');
 
 	class BerryBush extends GameObject {
 		constructor(x, y, size) {
@@ -179,6 +194,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 		MarioTree: MarioTree,
 		Stone: Stone,
 		Bronze: Bronze,
+		Iron: Iron,
 		BerryBush: BerryBush
 	}
 });

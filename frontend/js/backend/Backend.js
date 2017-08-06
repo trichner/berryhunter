@@ -5,55 +5,19 @@ define([
 	'Utils',
 	'Constants',
 	'Develop',
-	'items/Items',
-	'gameObjects/Resources',
-	'gameObjects/Mobs',
-	'develop/DebugCircle',
-	'gameObjects/Border',
-	'gameObjects/Character',
-	'gameObjects/Placeable',
+	'backend/BackendConstants',
 	'backend/SnapshotFactory',
+	'backend/GameState',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Develop, Items, Resources, Mobs, DebugCircle, Border, Character, Placeable, SnapshotFactory) {
-	/**
-	 * Has to be in sync with BerryhunterApi.EntityType
-	 */
-	const gameObjectClasses = [
-		DebugCircle,
-		Border,
-		Resources.RoundTree,
-		Resources.MarioTree,
-		Character,
-		Resources.Stone,
-		Resources.Bronze,
-		null,
-		Resources.BerryBush,
-		Mobs.Dodo,
-		Mobs.SaberToothCat,
-		Mobs.Mammoth,
-		Placeable,
-	];
-
-	const NONE_ITEM_ID = 0;
-
-	const itemLookupTable = [];
-
-	function initializeItemLookupTable() {
-		itemLookupTable[NONE_ITEM_ID] = null;
-		for (let itemName in Items) {
-			//noinspection JSUnfilteredForInLoop
-			let item = Items[itemName];
-			itemLookupTable[item.id] = item;
-		}
-	}
+], function (Game, Utils, Constants, Develop, BackendConstants, SnapshotFactory, GameState) {
 
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
 		setup: function () {
-			initializeItemLookupTable();
+			BackendConstants.setup();
 
 			let url;
 			if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
@@ -134,7 +98,12 @@ define([
 				return;
 			}
 
-			let data, buffer, gameState;
+
+			let data, buffer;
+			/**
+			 * @type {BerryhunterApi.ServerMessage}
+			 */
+			let serverMessage;
 			try {
 				data = new Uint8Array(message.data);
 			} catch (e) {
@@ -150,16 +119,9 @@ define([
 			}
 
 			try {
-				gameState = BerryhunterApi.GameState.getRootAsGameState(buffer);
+				serverMessage = BerryhunterApi.GameState.getRootAsServerMessage(buffer);
 			} catch (e) {
-				console.error("Error reading GameState from ByteBuffer.", buffer, e);
-				return;
-			}
-
-			try {
-				gameState = this.unmarshalGameState(gameState);
-			} catch (e) {
-				console.error("Error unmarshalling GameState from FlatBuffer object.", gameState, e);
+				console.error("Error reading ServerMessage from ByteBuffer.", buffer, e);
 				return;
 			}
 
@@ -167,13 +129,39 @@ define([
 				Develop.logWebsocketStatus('Open', 'good');
 			}
 
+			let timeSinceLastMessage;
 			if (Develop.isActive()) {
 				let messageReceivedTime = performance.now();
-				let timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
+				timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
 				this.lastMessageReceivedTime = messageReceivedTime;
-				Develop.logServerTick(gameState, timeSinceLastMessage);
+
 			}
-			this.receiveSnapshot(SnapshotFactory.newSnapshot(gameState));
+
+			switch (serverMessage.bodyType()) {
+				case BerryhunterApi.ServerMessageBody.Welcome:
+					if (Develop.isActive()) {
+						Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Welcome()), 'Welcome', timeSinceLastMessage);
+					}
+					break;
+				case BerryhunterApi.ServerMessageBody.Accept:
+					if (Develop.isActive()) {
+						Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Accept()), 'Accept', timeSinceLastMessage);
+					}
+					break;
+				case BerryhunterApi.ServerMessageBody.Obituary:
+					if (Develop.isActive()) {
+						Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Obituary()), 'Obituary', timeSinceLastMessage);
+					}
+					break;
+				case BerryhunterApi.ServerMessageBody.GameState:
+					let gameState = new GameState(serverMessage.body(new BerryhunterApi.GameState()));
+					if (Develop.isActive()) {
+						Develop.logServerTick(gameState, timeSinceLastMessage);
+					}
+					this.receiveSnapshot(SnapshotFactory.newSnapshot(gameState));
+					break;
+			}
+
 		},
 
 		/**
@@ -213,137 +201,15 @@ define([
 			}
 		},
 
-		/**
-		 * @param {BerryhunterApi.GameState} gameState
-		 * @return {{tick: number, playerId: number, entities: Array}}
-		 */
-		unmarshalGameState(gameState) {
-			let result = {
-				tick: gameState.tick().toFloat64(),
-
-				player: this.unmarshalEntity(gameState.player(), BerryhunterApi.AnyEntity.Player),
-				inventory: [],
-
-				entities: [],
-			};
-
-			for (let i = 0; i < gameState.inventoryLength(); ++i) {
-				let itemStack = this.unmarshalItemStack(gameState.inventory(i));
-				result.inventory[itemStack.slot] = itemStack;
-			}
-
-			for (let i = 0; i < gameState.entitiesLength(); ++i) {
-				result.entities.push(this.unmarshalWrappedEntity(gameState.entities(i)));
-			}
-
-			return result;
-		},
-
-		/**
-		 * @param {BerryhunterApi.Entity} wrappedEntity
-		 */
-		unmarshalWrappedEntity(wrappedEntity) {
-			let eType = wrappedEntity.eType();
-			let entity;
-
-			for (let eTypeName in BerryhunterApi.AnyEntity) {
-				if (BerryhunterApi.AnyEntity[eTypeName] === eType) {
-					entity = new BerryhunterApi[eTypeName]();
-				}
-			}
-			/**
-			 *
-			 * @type {BerryhunterApi.Mob | BerryhunterApi.Resource | BerryhunterApi.Player}
-			 */
-			entity = wrappedEntity.e(entity);
-
-			return this.unmarshalEntity(entity, eType);
-		},
-
-		unmarshalEntity(entity, eType) {
-			let result = {
-				id: entity.id().toFloat64(),
-				position: {
-					x: entity.pos().x(),
-					y: entity.pos().y(),
-				},
-				radius: entity.radius(),
-				type: this.unmarshalEntityType(entity.entityType()),
-				aabb: this.unmarshalAABB(entity.aabb()),
-			};
-
-			if (eType === BerryhunterApi.AnyEntity.Placeable) {
-				result.item = this.unmarshalItem(entity.item());
-			}
-
-			if (eType === BerryhunterApi.AnyEntity.Mob) {
-				result.rotation = entity.rotation();
-			}
-
-			if (eType === BerryhunterApi.AnyEntity.Player) {
-				result.rotation = entity.rotation();
-				result.isHit = entity.isHit();
-				result.actionTick = entity.actionTick();
-				result.name = entity.name();
-				result.equipment = [];
-
-				result.health = entity.health();
-				result.satiety = entity.satiety();
-				result.bodyHeat = entity.bodyTemperature();
-
-				for (let i = 0; i < entity.equipmentLength(); ++i) {
-					result.equipment.push(this.unmarshalItem(entity.equipment(i)));
-				}
-			}
-
-			return result
-		},
-
-		unmarshalEntityType(entityType) {
-			return gameObjectClasses[entityType];
-		},
-
-		/**
-		 *
-		 * @param {BerryhunterApi.AABB} aabb
-		 */
-		unmarshalAABB(aabb) {
-			return {
-				LowerX: aabb.lower().x(),
-				LowerY: aabb.lower().y(),
-				UpperX: aabb.upper().x(),
-				UpperY: aabb.upper().y(),
-			}
-		},
-
-		/**
-		 *
-		 * @param {BerryhunterApi.ItemStack} itemStack
-		 */
-		unmarshalItemStack(itemStack) {
-			return {
-				item: this.unmarshalItem(itemStack.item()),
-				count: itemStack.count(),
-				slot: itemStack.slot(),
-			};
-		},
-
-		/**
-		 * @param {number} itemId
-		 */
-		unmarshalItem(itemId) {
-			return itemLookupTable[itemId];
-		},
-
 		marshalInput: function (inputObj) {
 			let builder = new flatbuffers.Builder(10);
 			let action = null;
 			if (Utils.isDefined(inputObj.action)) {
 				BerryhunterApi.Action.startAction(builder);
 				if (inputObj.action.item === null) {
-					BerryhunterApi.Action.addItem(builder, NONE_ITEM_ID);
+					BerryhunterApi.Action.addItem(builder, BackendConstants.NONE_ITEM_ID);
 				} else {
-					BerryhunterApi.Action.addItem(builder, itemLookupTable.indexOf(inputObj.action.item));
+					BerryhunterApi.Action.addItem(builder, BackendConstants.itemLookupTable.indexOf(inputObj.action.item));
 				}
 				BerryhunterApi.Action.addActionType(builder, inputObj.action.actionType);
 				action = BerryhunterApi.Action.endAction(builder);
