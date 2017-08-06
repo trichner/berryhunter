@@ -125,5 +125,8 @@ func TestGameStateServerMessage(t *testing.T) {
 		d0 := g.Player(nil)
 		assert.Equal(t, p0.Name(), string(d0.Name()), "Name matches.")
 		assert.Equal(t, p0.Type(), model.EntityType(d0.EntityType()), "EntityType matches.")
+		assert.Equal(t, f32ToU16Px(p0.Radius()), d0.Radius(), "Radius matches.")
+		assert.Equal(t, f32ToPx(p0.Position().X), d0.Pos(nil).X(), "X matches.")
+		assert.Equal(t, f32ToPx(p0.Position().Y), d0.Pos(nil).Y(), "Y matches.")
 	}
 }
