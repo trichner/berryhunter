@@ -28,8 +28,9 @@ func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) f
 	return builder.EndVector(n)
 }
 
-func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func playerCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerEntity) {
 
+	// prepend entity specific things
 	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
 	name := builder.CreateString(p.Name())
 
@@ -49,15 +50,25 @@ func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) fl
 	BerryhunterApi.PlayerAddEntityType(builder, uint16(p.Type()))
 
 	BerryhunterApi.PlayerAddEquipment(builder, equipment)
+}
 
+// general player as seen by other players
+func PlayerEntityFlatbufMarshal(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	// prepend entity specific things
+	playerCommonMarshalFlatbuf(builder, p)
+	return BerryhunterApi.PlayerEnd(builder)
+}
+
+// player marshalled for the acting player
+func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	playerCommonMarshalFlatbuf(builder, p)
+	// other stuffz
 	vs := p.VitalSigns()
 	BerryhunterApi.PlayerAddHealth(builder, byte(vs.Health))
 	BerryhunterApi.PlayerAddSatiety(builder, byte(vs.Satiety))
 	BerryhunterApi.PlayerAddBodyTemperature(builder, byte(vs.BodyTemperature))
-
-	// TODO
-	BerryhunterApi.PlayerAddIsHit(builder, 0)
-	BerryhunterApi.PlayerAddActionTick(builder, 0)
 
 	return BerryhunterApi.EntityEnd(builder)
 }
@@ -164,32 +175,6 @@ func MobEntityFlatbufMarshal(m model.MobEntity, builder *flatbuffers.Builder) fl
 	BerryhunterApi.MobAddPos(builder, pos)
 
 	return BerryhunterApi.MobEnd(builder)
-}
-
-func PlayerEntityFlatbufMarshal(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
-	// prepend entity specific things
-	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
-	name := builder.CreateString(p.Name())
-
-	// populate player table
-	BerryhunterApi.PlayerStart(builder)
-	BerryhunterApi.PlayerAddId(builder, p.Basic().ID())
-	BerryhunterApi.PlayerAddName(builder, name)
-
-	pos := Vec2fMarshalFlatbuf(builder, p.Position())
-	BerryhunterApi.PlayerAddPos(builder, pos)
-
-	aabb := AabbMarshalFlatbuf(p.AABB(), builder)
-	BerryhunterApi.PlayerAddAabb(builder, aabb)
-
-	BerryhunterApi.PlayerAddRadius(builder, f32ToU16Px(p.Radius()))
-	BerryhunterApi.PlayerAddRotation(builder, p.Angle())
-	BerryhunterApi.PlayerAddEntityType(builder, uint16(p.Type()))
-
-	BerryhunterApi.PlayerAddEquipment(builder, equipment)
-
-	return BerryhunterApi.PlayerEnd(builder)
 }
 
 // EntityFlatbufMarshal marshals an Entity interface to its corresponding
