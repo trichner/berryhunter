@@ -12,6 +12,7 @@ import (
 	"sort"
 	"os"
 	"github.com/trichner/berryhunter/backend/model/mob"
+	"github.com/trichner/berryhunter/backend/gen"
 )
 
 func main() {
@@ -34,7 +35,7 @@ func main() {
 	g := &Game{}
 	g.Init(config, registry)
 
-	entities := Generate(g.items, rand.New(rand.NewSource(0xDEADBEEF)))
+	entities := gen.Generate(g.items, rand.New(rand.NewSource(0xDEADBEEF)))
 	for _, e := range entities {
 		g.AddEntity(e)
 	}

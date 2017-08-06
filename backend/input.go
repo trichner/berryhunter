@@ -169,7 +169,7 @@ func (p *player) resolveHandCollisions(){
 			continue
 		}
 
-		r, ok := usr.(Interacter)
+		r, ok := usr.(model.Interacter)
 		if !ok {
 			log.Printf("Non conformant UserData: %T", usr)
 			continue

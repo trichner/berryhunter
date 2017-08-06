@@ -1,4 +1,4 @@
-package main
+package gen
 
 import (
 	"math/rand"
@@ -10,7 +10,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model/resource"
 )
 
-var _ = Interacter(&resource.Resource{})
+var _ = model.Interacter(&resource.Resource{})
 
 func NewRandomEntityFrom(items items.Registry, p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) model.ResourceEntity {
 	choices := []wrand.Choice{}
@@ -26,10 +26,11 @@ func NewRandomEntityFrom(items items.Registry, p phy.Vec2f, bodies []staticEntit
 func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEntityBody) model.ResourceEntity {
 
 	ball := phy.NewCircle(p, body.radius)
+	ball.Shape().Layer = body.collisionLayer
 
-	resourceItem, err := items.GetByName(body.ressourceName)
+	resourceItem, err := items.GetByName(body.resourceName)
 	if err != nil {
-		log.Fatalf("Unknown ressource: %s / %s\n", body.ressourceName, err)
+		log.Fatalf("Unknown ressource: %s / %s\n", body.resourceName, err)
 	}
 
 	r, err := resource.NewResource(ball, resourceItem, body.entityType)

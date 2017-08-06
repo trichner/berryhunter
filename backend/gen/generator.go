@@ -1,4 +1,4 @@
-package main
+package gen
 
 import (
 	"math/rand"
@@ -84,6 +84,13 @@ var resources = []staticEntityBody{
 		model.LayerStaticCollision | model.LayerRessourceCollision,
 		"Bronze",
 	},
+	{
+		DeathioApi.EntityTypeIron,
+		100,
+		0.5,
+		model.LayerStaticCollision | model.LayerRessourceCollision,
+		"Iron",
+	},
 }
 
 type staticEntityBody struct {
@@ -91,6 +98,5 @@ type staticEntityBody struct {
 	weight         int
 	radius         float32
 	collisionLayer int
-
-	ressourceName string
+	resourceName   string
 }
