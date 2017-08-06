@@ -151,7 +151,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 		}
 	}
 
-	Preloading.registerGameObjectSVG(Iron, 'img/Iron.svg');
+	Preloading.registerGameObjectSVG(Iron, 'img/iron.svg');
 
 	class BerryBush extends GameObject {
 		constructor(x, y, size) {
