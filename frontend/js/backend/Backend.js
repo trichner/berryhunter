@@ -8,11 +8,12 @@ define([
 	'backend/BackendConstants',
 	'backend/SnapshotFactory',
 	'backend/GameState',
+	'backend/ClientMessage',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Develop, BackendConstants, SnapshotFactory, GameState) {
+], function (Game, Utils, Constants, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage) {
 
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
@@ -57,13 +58,17 @@ define([
 			}
 		},
 
-		send: function (messageObj) {
+		/**
+		 *
+		 * @param {ClientMessage} clientMessage
+		 */
+		send: function (clientMessage) {
 			if (this.webSocket.readyState !== WebSocket.OPEN) {
 				// Websocket is not open (yet), ignore sending
 				return;
 			}
 
-			this.webSocket.send(messageObj);
+			this.webSocket.send(clientMessage.finish());
 		},
 
 		sendInputTick: function (inputObj) {
@@ -78,8 +83,11 @@ define([
 				Develop.logClientTick(inputObj);
 			}
 
+			this.send(ClientMessage.fromInput(inputObj));
+		},
 
-			this.send(this.marshalInput(inputObj));
+		sendJoin: function (joinObj) {
+			this.send(ClientMessage.fromJoin(joinObj));
 		},
 
 		receive: function (message) {
@@ -160,6 +168,8 @@ define([
 					}
 					this.receiveSnapshot(SnapshotFactory.newSnapshot(gameState));
 					break;
+				default:
+					console.warn('Received unknown body type ' + serverMessage.bodyType());
 			}
 
 		},
@@ -203,41 +213,7 @@ define([
 			});
 		},
 
-		marshalInput: function (inputObj) {
-			let builder = new flatbuffers.Builder(10);
-			let action = null;
-			if (Utils.isDefined(inputObj.action)) {
-				BerryhunterApi.Action.startAction(builder);
-				if (inputObj.action.item === null) {
-					BerryhunterApi.Action.addItem(builder, BackendConstants.NONE_ITEM_ID);
-				} else {
-					BerryhunterApi.Action.addItem(builder, BackendConstants.itemLookupTable.indexOf(inputObj.action.item));
-				}
-				BerryhunterApi.Action.addActionType(builder, inputObj.action.actionType);
-				action = BerryhunterApi.Action.endAction(builder);
-			}
 
-			BerryhunterApi.Input.startInput(builder);
-
-			if (action !== null) {
-				BerryhunterApi.Input.addAction(builder, action);
-			}
-
-			if (Utils.isDefined(inputObj.movement)) {
-				BerryhunterApi.Input.addMovement(builder,
-					BerryhunterApi.Vec2f.createVec2f(builder, inputObj.movement.x, inputObj.movement.y));
-			}
-
-			if (Utils.isDefined(inputObj.rotation)) {
-				BerryhunterApi.Input.addRotation(builder, inputObj.rotation);
-			}
-
-			BerryhunterApi.Input.addTick(builder, flatbuffers.Long.create(inputObj.tick, 0));
-
-			builder.finish(BerryhunterApi.Input.endInput(builder));
-
-			return builder.asUint8Array();
-		},
 	};
 
 	return Backend;
