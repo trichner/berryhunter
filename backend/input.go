@@ -3,14 +3,11 @@ package main
 import (
 	"engo.io/ecs"
 	"log"
-	"sync"
 	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/model/placeable"
-	"github.com/trichner/berryhunter/backend/codec"
 )
 
 
@@ -28,9 +25,6 @@ type PlayerInputSystem struct {
 	game    *Game
 	// currently two, one to read and one to fill
 	ibufs [inputBuffererCount]InputBufferer
-	mux   sync.Mutex
-
-	receive chan *clientMessage
 }
 
 
@@ -48,44 +42,30 @@ func (i *PlayerInputSystem) New(w *ecs.World) {
 	for idx := range i.ibufs {
 		i.ibufs[idx] = NewInputBufferer()
 	}
-	i.receive = make(chan *clientMessage, 256)
-
-	// receive pump, otherwise we have concurrent map writes
-	go func() {
-		for {
-			select {
-			case msg := <-i.receive:
-				input := codec.ClientMessageFlatbufferUnmarshal(msg.body)
-				if input == nil {
-					break
-				}
-				i.storeInput(msg.playerId, input)
-			}
-		}
-	}()
 	log.Println("PlayerInputSystem nominal")
 }
 
 func (i *PlayerInputSystem) storeInput(playerId uint64, input *model.PlayerInput) {
-	i.mux.Lock()
-	i.ibufs[(i.game.tick+1)%inputBuffererCount][playerId] = input
-	i.mux.Unlock()
+	i.ibufs[i.game.tick%inputBuffererCount][playerId] = input
 }
 
 func (i *PlayerInputSystem) AddPlayer(p *player) {
 	i.players = append(i.players, p)
-	p.client.OnMessage(func(c *net.Client, msg []byte) {
-		i.receive <- &clientMessage{p.ID(), msg}
-	})
 }
 
 func (i *PlayerInputSystem) Update(dt float32) {
 
+	// get all inputs
+	for _, p := range i.players {
+		input := p.Client().NextInput()
+		if input != nil {
+			i.storeInput(p.ID(), input)
+		}
+	}
+
 	// freeze input, concurrent reads are fine
-	i.mux.Lock()
 	ibuf := i.ibufs[i.game.tick%inputBuffererCount]
 	lastBuf := i.ibufs[(i.game.tick+inputBuffererCount-1 )%inputBuffererCount]
-	i.mux.Unlock()
 
 	// apply inputs to player
 	for _, p := range i.players {
@@ -95,9 +75,7 @@ func (i *PlayerInputSystem) Update(dt float32) {
 	}
 
 	// clear out buffer
-	i.mux.Lock()
 	i.ibufs[i.game.tick%inputBuffererCount] = NewInputBufferer()
-	i.mux.Unlock()
 }
 
 const walkSpeed = 0.1

@@ -7,17 +7,32 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
 	"log"
+	"fmt"
 )
 
-func unwrapInput(msg *BerryhunterApi.ClientMessage) *BerryhunterApi.Input {
+type tableInitializer interface {
+	Init(buf []byte, i flatbuffers.UOffsetT)
+}
+
+func unwrapUnion(msg *BerryhunterApi.ClientMessage, b tableInitializer) error {
 
 	unionTable := new(flatbuffers.Table)
 	if msg.Body(unionTable) {
-		i := &BerryhunterApi.Input{}
-		i.Init(unionTable.Bytes, unionTable.Pos)
-		return i
+		b.Init(unionTable.Bytes, unionTable.Pos)
+		return nil
 	}
-	return nil
+
+	return fmt.Errorf("Cannot unwrap union.")
+}
+
+func unwrapInput(msg *BerryhunterApi.ClientMessage) *BerryhunterApi.Input {
+
+	i := &BerryhunterApi.Input{}
+	err := unwrapUnion(msg, i)
+	if err != nil {
+		return nil
+	}
+	return i
 }
 
 func unmarshalInput(fbInput *BerryhunterApi.Input) *model.PlayerInput {
@@ -51,15 +66,46 @@ func unmarshalInput(fbInput *BerryhunterApi.Input) *model.PlayerInput {
 	return i
 }
 
-func ClientMessageFlatbufferUnmarshal(bytes []byte) *model.PlayerInput {
+func unwrapJoin(msg *BerryhunterApi.ClientMessage) *BerryhunterApi.Join {
 
-	msg := BerryhunterApi.GetRootAsClientMessage(bytes, 0)
+	i := &BerryhunterApi.Join{}
+	err := unwrapUnion(msg, i)
+	if err != nil {
+		return nil
+	}
+	return i
+}
 
-	if msg.BodyType() == BerryhunterApi.ClientMessageBodyInput {
-		return unmarshalInput(unwrapInput(msg))
+func unmarshalJoin(j *BerryhunterApi.Join) *model.Join {
+	if j == nil {
+		return nil
 	}
 
-	log.Printf("Unhandled client message: %s (%d)", BerryhunterApi.EnumNamesClientMessageBody[int(msg.BodyType())], msg.BodyType())
+	join := &model.Join{string(j.PlayerName())}
+	return join
+}
 
-	return nil
+func assertBodyType(msg *BerryhunterApi.ClientMessage, expected byte) {
+
+	bodyType := msg.BodyType()
+	if bodyType != expected {
+		log.Fatalf("Illegal client message: %s (%d)", BerryhunterApi.EnumNamesClientMessageBody[int(bodyType)], bodyType)
+	}
+}
+
+func InputMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.PlayerInput {
+
+	assertBodyType(msg, BerryhunterApi.ClientMessageBodyInput)
+	return unmarshalInput(unwrapInput(msg))
+}
+
+func JoinMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.Join {
+
+	assertBodyType(msg, BerryhunterApi.ClientMessageBodyJoin)
+	return unmarshalJoin(unwrapJoin(msg))
+}
+
+func ClientMessageFlatbufferUnmarshal(bytes []byte) *BerryhunterApi.ClientMessage {
+
+	return BerryhunterApi.GetRootAsClientMessage(bytes, 0)
 }

@@ -3,7 +3,6 @@ package model
 import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/net"
 )
 
 const VitalSignMax = ^VitalSign(0)
@@ -31,7 +30,6 @@ func (v VitalSign) UInt32() uint32 {
 	return uint32(v)
 }
 
-
 type PlayerVitalSigns struct {
 	Satiety         VitalSign
 	BodyTemperature VitalSign
@@ -45,7 +43,7 @@ type PlayerEntity interface {
 	VitalSigns() *PlayerVitalSigns
 	Inventory() *items.Inventory
 	Viewport() phy.DynamicCollider
-	Client() *net.Client
+	Client() Client
 
 	Update(dt float32)
 	UpdateInput(next, last *PlayerInput)

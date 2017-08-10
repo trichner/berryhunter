@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/trichner/berryhunter/backend/codec"
 	"github.com/google/flatbuffers/go"
+	"github.com/trichner/berryhunter/backend/model/client"
 )
 
 var _ = model.PlayerEntity(&player{})
@@ -23,7 +24,7 @@ type player struct {
 	game     *Game
 
 	angle  float32
-	client *net.Client
+	client model.Client
 
 	viewport *phy.Box
 
@@ -73,7 +74,7 @@ func (p *player) Viewport() phy.DynamicCollider {
 	return p.viewport
 }
 
-func (p *player) Client() *net.Client {
+func (p *player) Client() model.Client {
 	return p.client
 }
 
@@ -116,7 +117,7 @@ func NewPlayer(g *Game, c *net.Client) *player {
 
 	e.EntityType = BerryhunterApi.EntityTypeCharacter
 	p := &player{BaseEntity: e,
-		client:              c,
+		client:              client.NewClient(c),
 		Equipment:           items.NewEquipment(),
 		registry:            registry,
 		game:                g,
