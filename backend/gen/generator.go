@@ -85,7 +85,7 @@ var resources = []staticEntityBody{
 		"Bronze",
 	},
 	{
-		DeathioApi.EntityTypeIron,
+		BerryhunterApi.EntityTypeIron,
 		100,
 		0.5,
 		model.LayerStaticCollision | model.LayerRessourceCollision,
