@@ -6,10 +6,10 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
-	"fmt"
 	"github.com/trichner/berryhunter/backend/codec"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/backend/model/client"
+	"log"
 )
 
 var _ = model.PlayerEntity(&player{})
@@ -51,7 +51,7 @@ func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 }
 
 func (p *player) Name() string {
-	return fmt.Sprintf("player %d", p.ID())
+	return p.name
 }
 
 func (p *player) Bodies() model.Bodies {
@@ -240,4 +240,11 @@ func (p *player) Update(dt float32) {
 	s := p.VitalSigns().Satiety
 	satietyStep := uint32(150000)
 	p.VitalSigns().Satiety = s.Sub(satietyStep)
+
+	//TODO Hack
+	join := p.Client().NextJoin()
+	if join != nil {
+		p.name = join.PlayerName
+		log.Printf("Join message: %s", join.PlayerName)
+	}
 }

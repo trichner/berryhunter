@@ -43,6 +43,24 @@ func (c *client) SendMessage(bytes []byte) error {
 	return c.c.SendMessage(bytes)
 }
 
+func (c *client) routeMessage(msg *BerryhunterApi.ClientMessage) {
+
+	// route message
+	switch msg.BodyType() {
+	case BerryhunterApi.ClientMessageBodyInput:
+		i := codec.InputMessageFlatbufferUnmarshal(msg)
+		// push input if possible, drop if overflow
+		select {
+		case c.inputs <- i:
+		default:
+			log.Print("Input dropped.")
+		}
+	case BerryhunterApi.ClientMessageBodyJoin:
+		j := codec.JoinMessageFlatbufferUnmarshal(msg)
+		c.joins <- j
+	}
+}
+
 func NewClient(c *net.Client) model.Client {
 	newClient := &client{
 		c:      c,
@@ -52,19 +70,7 @@ func NewClient(c *net.Client) model.Client {
 
 	c.OnMessage(func(client *net.Client, bytes []byte) {
 		msg := codec.ClientMessageFlatbufferUnmarshal(bytes)
-		switch msg.BodyType() {
-		case BerryhunterApi.ClientMessageBodyInput:
-			i := codec.InputMessageFlatbufferUnmarshal(msg)
-			// push input if possible, drop if overflow
-			select {
-			case newClient.inputs <- i:
-			default:
-				log.Print("Input dropped.")
-			}
-		case BerryhunterApi.ClientMessageBodyJoin:
-			j := codec.JoinMessageFlatbufferUnmarshal(msg)
-			newClient.joins <- j
-		}
+		newClient.routeMessage(msg)
 	})
 
 	c.OnDisconnect(func(o *net.Client) {
