@@ -237,8 +237,11 @@ func (p *player) Update(dt float32) {
 
 	// heat
 	t := p.VitalSigns().BodyTemperature
-	if t > 0 {
-		t -= 1
+	step := uint32(100000)
+	if t > step {
+		t -= step
+	}else{
+		t = 0
 	}
 	p.VitalSigns().BodyTemperature = t
 }
