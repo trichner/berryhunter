@@ -55,9 +55,12 @@ func (f *FreezerSystem) UpdateHeater(h model.Heater) {
 			continue
 		}
 		t := p.VitalSigns().BodyTemperature
-		t += radiator.Heat
-		if t > 255 {
-			t = 255
+		remaining := maxUInt32 - t
+		heat := uint32(radiator.Heat)
+		if heat > remaining {
+			t = maxUInt32
+		} else {
+			t += heat
 		}
 		p.VitalSigns().BodyTemperature = t
 	}

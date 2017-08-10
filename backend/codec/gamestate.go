@@ -66,9 +66,9 @@ func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) fl
 	playerCommonMarshalFlatbuf(builder, p)
 	// other stuffz
 	vs := p.VitalSigns()
-	BerryhunterApi.PlayerAddHealth(builder, byte(vs.Health))
-	BerryhunterApi.PlayerAddSatiety(builder, byte(vs.Satiety))
-	BerryhunterApi.PlayerAddBodyTemperature(builder, byte(vs.BodyTemperature))
+	BerryhunterApi.PlayerAddHealth(builder, vs.Health)
+	BerryhunterApi.PlayerAddSatiety(builder, vs.Satiety)
+	BerryhunterApi.PlayerAddBodyTemperature(builder, vs.BodyTemperature)
 
 	return BerryhunterApi.EntityEnd(builder)
 }

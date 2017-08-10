@@ -15,6 +15,7 @@ import (
 
 
 const inputBuffererCount = 3
+const maxUInt32 = 0xFFFFFFFF
 
 //---- models for input
 
@@ -195,11 +196,17 @@ func (p *player) applyAction(action *model.Action) {
 		ok := p.inventory.ConsumeItem(items.NewItemStack(item, 1))
 		if ok {
 			// prevent overflow
-			h := int(p.VitalSigns().Health)
-			h += item.Factors.Food
-			if h > 255 {
-				h = 255
+			h := p.VitalSigns().Health
+
+			d := maxUInt32 - h
+			food := uint32(item.Factors.Food)
+
+			if food > d {
+				h = maxUInt32
+			} else {
+				h += food
 			}
+
 			p.VitalSigns().Health = h
 		}
 		break

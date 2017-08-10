@@ -144,40 +144,40 @@ func (rcv *Player) EquipmentBytes() []byte {
 	return nil
 }
 
-func (rcv *Player) Health() byte {
+func (rcv *Player) Health() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
-		return rcv._tab.GetByte(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *Player) MutateHealth(n byte) bool {
-	return rcv._tab.MutateByteSlot(22, n)
+func (rcv *Player) MutateHealth(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(22, n)
 }
 
-func (rcv *Player) Satiety() byte {
+func (rcv *Player) Satiety() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return rcv._tab.GetByte(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *Player) MutateSatiety(n byte) bool {
-	return rcv._tab.MutateByteSlot(24, n)
+func (rcv *Player) MutateSatiety(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(24, n)
 }
 
-func (rcv *Player) BodyTemperature() byte {
+func (rcv *Player) BodyTemperature() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
-		return rcv._tab.GetByte(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *Player) MutateBodyTemperature(n byte) bool {
-	return rcv._tab.MutateByteSlot(26, n)
+func (rcv *Player) MutateBodyTemperature(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(26, n)
 }
 
 func (rcv *Player) Aabb(obj *AABB) *AABB {
@@ -226,14 +226,14 @@ func PlayerAddEquipment(builder *flatbuffers.Builder, equipment flatbuffers.UOff
 func PlayerStartEquipmentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
-func PlayerAddHealth(builder *flatbuffers.Builder, health byte) {
-	builder.PrependByteSlot(9, health, 0)
+func PlayerAddHealth(builder *flatbuffers.Builder, health uint32) {
+	builder.PrependUint32Slot(9, health, 0)
 }
-func PlayerAddSatiety(builder *flatbuffers.Builder, satiety byte) {
-	builder.PrependByteSlot(10, satiety, 0)
+func PlayerAddSatiety(builder *flatbuffers.Builder, satiety uint32) {
+	builder.PrependUint32Slot(10, satiety, 0)
 }
-func PlayerAddBodyTemperature(builder *flatbuffers.Builder, bodyTemperature byte) {
-	builder.PrependByteSlot(11, bodyTemperature, 0)
+func PlayerAddBodyTemperature(builder *flatbuffers.Builder, bodyTemperature uint32) {
+	builder.PrependUint32Slot(11, bodyTemperature, 0)
 }
 func PlayerAddAabb(builder *flatbuffers.Builder, aabb flatbuffers.UOffsetT) {
 	builder.PrependStructSlot(12, flatbuffers.UOffsetT(aabb), 0)

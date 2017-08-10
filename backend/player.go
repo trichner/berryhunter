@@ -40,13 +40,16 @@ type player struct {
 
 func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	h := p.PlayerVitalSigns.Health
-	dmg := item.Factors.Damage
+	dmg := uint32(item.Factors.Damage)
 	if dmg < 1 {
 		dmg = 1
 	}
-	h -= dmg * 10
-	if h < 0 {
+
+	dmg = dmg * 10000
+	if dmg > h {
 		h = 0
+	}else {
+		h -= dmg
 	}
 	p.PlayerVitalSigns.Health = h
 }
@@ -145,9 +148,9 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	p.inventory = inventory
 
 	//--- setup vital signs
-	p.PlayerVitalSigns.Health = 255
-	p.PlayerVitalSigns.Satiety = 255
-	p.PlayerVitalSigns.BodyTemperature = 255
+	p.PlayerVitalSigns.Health = maxUInt32
+	p.PlayerVitalSigns.Satiety = maxUInt32
+	p.PlayerVitalSigns.BodyTemperature = maxUInt32
 
 	// setup hand sensor
 	p.hand = phy.NewCircle(e.Body.Position(), 0.25)
@@ -234,9 +237,8 @@ func (p *player) Update(dt float32) {
 
 	// heat
 	t := p.VitalSigns().BodyTemperature
-	t -= 1
-	if t < 0 {
-		t = 0
+	if t > 0 {
+		t -= 1
 	}
 	p.VitalSigns().BodyTemperature = t
 }

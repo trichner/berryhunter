@@ -818,7 +818,7 @@ BerryhunterApi.Player.prototype.equipmentArray = function() {
  */
 BerryhunterApi.Player.prototype.health = function() {
   var offset = this.bb.__offset(this.bb_pos, 22);
-  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -826,7 +826,7 @@ BerryhunterApi.Player.prototype.health = function() {
  */
 BerryhunterApi.Player.prototype.satiety = function() {
   var offset = this.bb.__offset(this.bb_pos, 24);
-  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -834,7 +834,7 @@ BerryhunterApi.Player.prototype.satiety = function() {
  */
 BerryhunterApi.Player.prototype.bodyTemperature = function() {
   var offset = this.bb.__offset(this.bb_pos, 26);
-  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -951,7 +951,7 @@ BerryhunterApi.Player.startEquipmentVector = function(builder, numElems) {
  * @param {number} health
  */
 BerryhunterApi.Player.addHealth = function(builder, health) {
-  builder.addFieldInt8(9, health, 0);
+  builder.addFieldInt32(9, health, 0);
 };
 
 /**
@@ -959,7 +959,7 @@ BerryhunterApi.Player.addHealth = function(builder, health) {
  * @param {number} satiety
  */
 BerryhunterApi.Player.addSatiety = function(builder, satiety) {
-  builder.addFieldInt8(10, satiety, 0);
+  builder.addFieldInt32(10, satiety, 0);
 };
 
 /**
@@ -967,7 +967,7 @@ BerryhunterApi.Player.addSatiety = function(builder, satiety) {
  * @param {number} bodyTemperature
  */
 BerryhunterApi.Player.addBodyTemperature = function(builder, bodyTemperature) {
-  builder.addFieldInt8(11, bodyTemperature, 0);
+  builder.addFieldInt32(11, bodyTemperature, 0);
 };
 
 /**

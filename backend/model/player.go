@@ -7,9 +7,9 @@ import (
 )
 
 type PlayerVitalSigns struct {
-	Satiety         int
-	BodyTemperature int
-	Health          int
+	Satiety         uint32
+	BodyTemperature uint32
+	Health          uint32
 }
 
 type PlayerEntity interface {

@@ -79,9 +79,9 @@ table Player {
 
   equipment:[ubyte];
 
-  health:ubyte;
-  satiety:ubyte;
-  body_temperature:ubyte;
+  health:uint;
+  satiety:uint;
+  body_temperature:uint;
 
   aabb:AABB;
 }
