@@ -25,7 +25,7 @@ define(['Preloading', 'NameGenerator'], function (Preloading, NameGenerator) {
 		}
 		name = name.substr(0, playerNameMaxLength);
 
-		require(['backend/Backend'], function (Backend) {
+		require(['backend/Backend', 'UserInterface'], function (Backend, UserInterface) {
 			Backend.sendJoin({
 				playerName: name
 			});
