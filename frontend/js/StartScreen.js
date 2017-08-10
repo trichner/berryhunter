@@ -25,14 +25,6 @@ define(['Preloading', 'NameGenerator'], function (Preloading, NameGenerator) {
 		}
 		name = name.substr(0, playerNameMaxLength);
 
-		// TODO remove when backend works accordingly
-		// require(['Game', 'UserInterface'], function (Game, UserInterface) {
-		// 	Game.player.character.name = name;
-		// 	Game.player.character.createName();
-		//
-		// 	StartScreen.hide();
-		// 	UserInterface.show();
-		// });
 		require(['backend/Backend'], function (Backend) {
 			Backend.sendJoin({
 				playerName: name

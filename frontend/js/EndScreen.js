@@ -23,12 +23,12 @@ define(['Preloading', 'Game'], function (Preloading, Game) {
 		}
 		name = name.substr(0, playerNameMaxLength);
 
-		// TODO remove when backend works accordingly
-		require(['Game', 'UserInterface'], function (Game, UserInterface) {
-			Game.player.character.name = name;
-			Game.player.character.createName();
 
-			// TODO restart game
+		require(['backend/Backend', 'UserInterface'], function (Backend, UserInterface) {
+			Backend.sendJoin({
+				playerName: name
+			});
+
 			EndScreen.hide();
 			UserInterface.show();
 		});
