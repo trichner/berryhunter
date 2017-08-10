@@ -34,14 +34,9 @@ func (c *client) NextJoin() *model.Join {
 	return nil
 }
 
-func (c *client) OnDisconnect(h func(model.Client)) {
-	c.c.OnDisconnect(func(o *net.Client) {
-		h(c)
-
-		//TODO channel leak
-		close(c.inputs)
-		close(c.joins)
-	})
+func (c *client) Close() {
+	close(c.inputs)
+	close(c.joins)
 }
 
 func (c *client) SendMessage(bytes []byte) error {
@@ -70,6 +65,11 @@ func NewClient(c *net.Client) model.Client {
 			j := codec.JoinMessageFlatbufferUnmarshal(msg)
 			newClient.joins <- j
 		}
+	})
+
+	c.OnDisconnect(func(o *net.Client) {
+		//TODO channel leak?
+		//newClient.Close()
 	})
 	return newClient
 }
