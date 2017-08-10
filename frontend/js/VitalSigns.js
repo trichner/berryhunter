@@ -10,7 +10,7 @@ define(['Game', 'Two', 'Utils', 'UserInterface', 'EndScreen'], function (Game, T
 			this.indicators = {
 				health: UserInterface.getVitalSignBar('health'),
 				satiety: UserInterface.getVitalSignBar('satiety'),
-				bodyHeat: UserInterface.getVitalSignBar('bodyHeat')
+				bodyHeat: UserInterface.getVitalSignBar('bodyHeat'),
 			};
 
 			this.setHealth(Utils.randomInt(VitalSigns.MAXIMUM_VALUES.health * 0.25, VitalSigns.MAXIMUM_VALUES.health));
@@ -34,17 +34,22 @@ define(['Game', 'Two', 'Utils', 'UserInterface', 'EndScreen'], function (Game, T
 			this[valueIndex] = value;
 			this.indicators[valueIndex].setValue(value / VitalSigns.MAXIMUM_VALUES[valueIndex]);
 
-			if (valueIndex === 'health' && value <= 0){
+			if (valueIndex === 'health' && value <= 0) {
 				// Player is dead
 				EndScreen.show();
 			}
 		}
 	}
 
+	/**
+	 * All values are 32bit.
+	 *
+	 * @type {{health: number, satiety: number, bodyHeat: number}}
+	 */
 	VitalSigns.MAXIMUM_VALUES = {
-		health: 255,
-		satiety: 255,
-		bodyHeat: 255
+		health: 0xffffffff,
+		satiety: 0xffffffff,
+		bodyHeat: 0xffffffff,
 	};
 
 	return VitalSigns;
