@@ -1,4 +1,4 @@
-namespace DeathioApi;
+namespace BerryhunterApi;
 
 struct Vec3f {
   x:float;

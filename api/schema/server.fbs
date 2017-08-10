@@ -1,6 +1,6 @@
 include "common.fbs";
 
-namespace DeathioApi;
+namespace BerryhunterApi;
 
 enum EntityType : ushort {
   DebugCircle = 0,
@@ -89,10 +89,29 @@ table Player {
 table GameState {
   tick:ulong;
 
+  // only present if player alive
   player:Player;
   inventory:[ItemStack];
 
   entities:[Entity];
 }
 
-root_type GameState;
+table Welcome {
+  server_name:string;
+  map_size:Vec2f;
+}
+
+table Accept {
+    // nothing to send with it, purely for signaling
+}
+
+table Obituary {
+    // nothing to send with it, purely for signaling
+    // maybe killer? or stats?
+}
+
+union ServerMessageBody { Welcome, GameState, Accept, Obituary }
+table ServerMessage { body:ServerMessageBody; }
+
+root_type ServerMessage;
+

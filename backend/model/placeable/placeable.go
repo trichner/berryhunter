@@ -5,7 +5,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
 	"fmt"
-	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 )
 
 var _ = model.PlaceableEntity(&Placeable{})
@@ -70,7 +70,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		radiator.Body = heaterBody
 	}
 
-	base := model.NewBaseEntity(body, DeathioApi.EntityTypePlaceable)
+	base := model.NewBaseEntity(body, BerryhunterApi.EntityTypePlaceable)
 	p := &Placeable{
 		BaseEntity: base,
 		item:       item,

@@ -203,6 +203,16 @@ define([
 			this.logSampledValue('fps', this.logs.fps, fps);
 		},
 
+		logServerMessage: function (message, messageType, timeSinceLast) {
+			console.info('Received ' + messageType + ' message.');
+
+			this.logSampledValue('serverTickRate', this.logs.serverTickRate, timeSinceLast, 'ms');
+			if (this.showNextGameState) {
+				document.getElementById('serverTickOutput').textContent = JSON.stringify(message, null, 2);
+				this.showNextGameState = false;
+			}
+		},
+
 		logServerTick: function (gameState, timeSinceLast) {
 			this.logValue('serverTick', gameState.tick);
 			this.logSampledValue('serverTickRate', this.logs.serverTickRate, timeSinceLast, 'ms');
@@ -294,8 +304,8 @@ define([
 				} else {
 					document.getElementById('develop_input_action_item').textContent = inputObj.action.item.name;
 				}
-				for (let actionType in DeathioApi.ActionType){
-					if (DeathioApi.ActionType[actionType] === inputObj.action.actionType){
+				for (let actionType in BerryhunterApi.ActionType){
+					if (BerryhunterApi.ActionType[actionType] === inputObj.action.actionType){
 						document.getElementById('develop_input_action_type').textContent = actionType;
 						break;
 					}

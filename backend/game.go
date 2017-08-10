@@ -14,6 +14,7 @@ import (
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/codec"
 )
 
 type Game struct {
@@ -22,6 +23,8 @@ type Game struct {
 	tick  uint64
 	conf  *conf.Config
 	items items.Registry
+
+	welcomeMsg *codec.Welcome
 }
 
 type wsHandler struct{}
@@ -44,8 +47,14 @@ func (g *Game) Init(conf *conf.Config, items items.Registry) {
 	g.conf = conf
 	g.items = items
 
+	mapSide := 100
+	g.welcomeMsg = &codec.Welcome{
+		"k42.ch [Alpha]",
+		mapSide,
+	}
+
 	//---- setup systems
-	p := newPhysicsSystem(g, 100, 100)
+	p := newPhysicsSystem(g, mapSide, mapSide)
 	g.AddSystem(p)
 
 	n := NewNetSystem(g)

@@ -4,7 +4,7 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model"
 	"math/rand"
-	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"math"
 	"github.com/trichner/berryhunter/backend/items"
 	"log"
@@ -13,9 +13,9 @@ import (
 var _ = model.MobEntity(&Mob{})
 
 var types = []model.EntityType{
-	DeathioApi.EntityTypeDodo,
-	DeathioApi.EntityTypeMammoth,
-	DeathioApi.EntityTypeSaberToothCat,
+	BerryhunterApi.EntityTypeDodo,
+	BerryhunterApi.EntityTypeMammoth,
+	BerryhunterApi.EntityTypeSaberToothCat,
 }
 
 func NewMob(body *phy.Circle, drop items.Item) *Mob {

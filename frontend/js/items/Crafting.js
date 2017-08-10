@@ -31,7 +31,7 @@ define([
 					}
 					Game.player.inventory.addItem(recipe.item);
 				} else {
-					Game.player.controls.onInventoryAction(recipe.item, DeathioApi.ActionType.CraftItem);
+					Game.player.controls.onInventoryAction(recipe.item, BerryhunterApi.ActionType.CraftItem);
 				}
 			}.bind(this));
 

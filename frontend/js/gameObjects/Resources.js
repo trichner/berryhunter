@@ -145,6 +145,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 		createMinimapIcon() {
 			let shape = new Two.Polygon(0, 0, this.size * 2, 6);
 			shape.fill = 'dimgray';
+			// shape.fill = '#a46262';
 			shape.noStroke();
 
 			return shape;
@@ -208,6 +209,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 		MarioTree: MarioTree,
 		Stone: Stone,
 		Bronze: Bronze,
+		Iron: Iron,
 		BerryBush: BerryBush
 	}
 });

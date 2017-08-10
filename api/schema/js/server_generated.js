@@ -4,12 +4,12 @@
  * @const
  * @namespace
  */
-var DeathioApi = DeathioApi || {};
+var BerryhunterApi = BerryhunterApi || {};
 
 /**
  * @enum
  */
-DeathioApi.EntityType = {
+BerryhunterApi.EntityType = {
   DebugCircle: 0,
   Border: 1,
   RoundTree: 2,
@@ -28,7 +28,7 @@ DeathioApi.EntityType = {
 /**
  * @enum
  */
-DeathioApi.AnyEntity = {
+BerryhunterApi.AnyEntity = {
   NONE: 0,
   Player: 1,
   Mob: 2,
@@ -37,9 +37,20 @@ DeathioApi.AnyEntity = {
 };
 
 /**
+ * @enum
+ */
+BerryhunterApi.ServerMessageBody = {
+  NONE: 0,
+  Welcome: 1,
+  GameState: 2,
+  Accept: 3,
+  Obituary: 4
+};
+
+/**
  * @constructor
  */
-DeathioApi.AABB = function() {
+BerryhunterApi.AABB = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -54,28 +65,28 @@ DeathioApi.AABB = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.AABB}
+ * @returns {BerryhunterApi.AABB}
  */
-DeathioApi.AABB.prototype.__init = function(i, bb) {
+BerryhunterApi.AABB.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
 };
 
 /**
- * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f|null}
+ * @param {BerryhunterApi.Vec2f=} obj
+ * @returns {BerryhunterApi.Vec2f|null}
  */
-DeathioApi.AABB.prototype.lower = function(obj) {
-  return (obj || new DeathioApi.Vec2f).__init(this.bb_pos, this.bb);
+BerryhunterApi.AABB.prototype.lower = function(obj) {
+  return (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos, this.bb);
 };
 
 /**
- * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f|null}
+ * @param {BerryhunterApi.Vec2f=} obj
+ * @returns {BerryhunterApi.Vec2f|null}
  */
-DeathioApi.AABB.prototype.upper = function(obj) {
-  return (obj || new DeathioApi.Vec2f).__init(this.bb_pos + 8, this.bb);
+BerryhunterApi.AABB.prototype.upper = function(obj) {
+  return (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + 8, this.bb);
 };
 
 /**
@@ -86,7 +97,7 @@ DeathioApi.AABB.prototype.upper = function(obj) {
  * @param {number} upper_y
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.AABB.createAABB = function(builder, lower_x, lower_y, upper_x, upper_y) {
+BerryhunterApi.AABB.createAABB = function(builder, lower_x, lower_y, upper_x, upper_y) {
   builder.prep(4, 16);
   builder.prep(4, 8);
   builder.writeFloat32(upper_y);
@@ -100,7 +111,7 @@ DeathioApi.AABB.createAABB = function(builder, lower_x, lower_y, upper_x, upper_
 /**
  * @constructor
  */
-DeathioApi.ItemStack = function() {
+BerryhunterApi.ItemStack = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -115,9 +126,9 @@ DeathioApi.ItemStack = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.ItemStack}
+ * @returns {BerryhunterApi.ItemStack}
  */
-DeathioApi.ItemStack.prototype.__init = function(i, bb) {
+BerryhunterApi.ItemStack.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -126,21 +137,21 @@ DeathioApi.ItemStack.prototype.__init = function(i, bb) {
 /**
  * @returns {number}
  */
-DeathioApi.ItemStack.prototype.item = function() {
+BerryhunterApi.ItemStack.prototype.item = function() {
   return this.bb.readUint8(this.bb_pos);
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.ItemStack.prototype.count = function() {
+BerryhunterApi.ItemStack.prototype.count = function() {
   return this.bb.readUint32(this.bb_pos + 4);
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.ItemStack.prototype.slot = function() {
+BerryhunterApi.ItemStack.prototype.slot = function() {
   return this.bb.readUint8(this.bb_pos + 8);
 };
 
@@ -151,7 +162,7 @@ DeathioApi.ItemStack.prototype.slot = function() {
  * @param {number} slot
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.ItemStack.createItemStack = function(builder, item, count, slot) {
+BerryhunterApi.ItemStack.createItemStack = function(builder, item, count, slot) {
   builder.prep(4, 12);
   builder.pad(3);
   builder.writeInt8(slot);
@@ -164,7 +175,7 @@ DeathioApi.ItemStack.createItemStack = function(builder, item, count, slot) {
 /**
  * @constructor
  */
-DeathioApi.Entity = function() {
+BerryhunterApi.Entity = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -179,9 +190,9 @@ DeathioApi.Entity = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.Entity}
+ * @returns {BerryhunterApi.Entity}
  */
-DeathioApi.Entity.prototype.__init = function(i, bb) {
+BerryhunterApi.Entity.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -189,26 +200,26 @@ DeathioApi.Entity.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {DeathioApi.Entity=} obj
- * @returns {DeathioApi.Entity}
+ * @param {BerryhunterApi.Entity=} obj
+ * @returns {BerryhunterApi.Entity}
  */
-DeathioApi.Entity.getRootAsEntity = function(bb, obj) {
-  return (obj || new DeathioApi.Entity).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+BerryhunterApi.Entity.getRootAsEntity = function(bb, obj) {
+  return (obj || new BerryhunterApi.Entity).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
- * @returns {DeathioApi.AnyEntity}
+ * @returns {BerryhunterApi.AnyEntity}
  */
-DeathioApi.Entity.prototype.eType = function() {
+BerryhunterApi.Entity.prototype.eType = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? /** @type {DeathioApi.AnyEntity} */ (this.bb.readUint8(this.bb_pos + offset)) : DeathioApi.AnyEntity.NONE;
+  return offset ? /** @type {BerryhunterApi.AnyEntity} */ (this.bb.readUint8(this.bb_pos + offset)) : BerryhunterApi.AnyEntity.NONE;
 };
 
 /**
  * @param {flatbuffers.Table} obj
  * @returns {?flatbuffers.Table}
  */
-DeathioApi.Entity.prototype.e = function(obj) {
+BerryhunterApi.Entity.prototype.e = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? this.bb.__union(obj, this.bb_pos + offset) : null;
 };
@@ -216,23 +227,23 @@ DeathioApi.Entity.prototype.e = function(obj) {
 /**
  * @param {flatbuffers.Builder} builder
  */
-DeathioApi.Entity.startEntity = function(builder) {
+BerryhunterApi.Entity.startEntity = function(builder) {
   builder.startObject(2);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.AnyEntity} eType
+ * @param {BerryhunterApi.AnyEntity} eType
  */
-DeathioApi.Entity.addEType = function(builder, eType) {
-  builder.addFieldInt8(0, eType, DeathioApi.AnyEntity.NONE);
+BerryhunterApi.Entity.addEType = function(builder, eType) {
+  builder.addFieldInt8(0, eType, BerryhunterApi.AnyEntity.NONE);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} eOffset
  */
-DeathioApi.Entity.addE = function(builder, eOffset) {
+BerryhunterApi.Entity.addE = function(builder, eOffset) {
   builder.addFieldOffset(1, eOffset, 0);
 };
 
@@ -240,7 +251,7 @@ DeathioApi.Entity.addE = function(builder, eOffset) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.Entity.endEntity = function(builder) {
+BerryhunterApi.Entity.endEntity = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -248,7 +259,7 @@ DeathioApi.Entity.endEntity = function(builder) {
 /**
  * @constructor
  */
-DeathioApi.Resource = function() {
+BerryhunterApi.Resource = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -263,9 +274,9 @@ DeathioApi.Resource = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.Resource}
+ * @returns {BerryhunterApi.Resource}
  */
-DeathioApi.Resource.prototype.__init = function(i, bb) {
+BerryhunterApi.Resource.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -273,59 +284,59 @@ DeathioApi.Resource.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {DeathioApi.Resource=} obj
- * @returns {DeathioApi.Resource}
+ * @param {BerryhunterApi.Resource=} obj
+ * @returns {BerryhunterApi.Resource}
  */
-DeathioApi.Resource.getRootAsResource = function(bb, obj) {
-  return (obj || new DeathioApi.Resource).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+BerryhunterApi.Resource.getRootAsResource = function(bb, obj) {
+  return (obj || new BerryhunterApi.Resource).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {flatbuffers.Long}
  */
-DeathioApi.Resource.prototype.id = function() {
+BerryhunterApi.Resource.prototype.id = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
 };
 
 /**
- * @returns {DeathioApi.EntityType}
+ * @returns {BerryhunterApi.EntityType}
  */
-DeathioApi.Resource.prototype.entityType = function() {
+BerryhunterApi.Resource.prototype.entityType = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+  return offset ? /** @type {BerryhunterApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : BerryhunterApi.EntityType.DebugCircle;
 };
 
 /**
- * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f|null}
+ * @param {BerryhunterApi.Vec2f=} obj
+ * @returns {BerryhunterApi.Vec2f|null}
  */
-DeathioApi.Resource.prototype.pos = function(obj) {
+BerryhunterApi.Resource.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.Resource.prototype.radius = function() {
+BerryhunterApi.Resource.prototype.radius = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
 /**
- * @param {DeathioApi.AABB=} obj
- * @returns {DeathioApi.AABB|null}
+ * @param {BerryhunterApi.AABB=} obj
+ * @returns {BerryhunterApi.AABB|null}
  */
-DeathioApi.Resource.prototype.aabb = function(obj) {
+BerryhunterApi.Resource.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? (obj || new DeathioApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  */
-DeathioApi.Resource.startResource = function(builder) {
+BerryhunterApi.Resource.startResource = function(builder) {
   builder.startObject(5);
 };
 
@@ -333,23 +344,23 @@ DeathioApi.Resource.startResource = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Long} id
  */
-DeathioApi.Resource.addId = function(builder, id) {
+BerryhunterApi.Resource.addId = function(builder, id) {
   builder.addFieldInt64(0, id, builder.createLong(0, 0));
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.EntityType} entityType
+ * @param {BerryhunterApi.EntityType} entityType
  */
-DeathioApi.Resource.addEntityType = function(builder, entityType) {
-  builder.addFieldInt16(1, entityType, DeathioApi.EntityType.DebugCircle);
+BerryhunterApi.Resource.addEntityType = function(builder, entityType) {
+  builder.addFieldInt16(1, entityType, BerryhunterApi.EntityType.DebugCircle);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
-DeathioApi.Resource.addPos = function(builder, posOffset) {
+BerryhunterApi.Resource.addPos = function(builder, posOffset) {
   builder.addFieldStruct(2, posOffset, 0);
 };
 
@@ -357,7 +368,7 @@ DeathioApi.Resource.addPos = function(builder, posOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} radius
  */
-DeathioApi.Resource.addRadius = function(builder, radius) {
+BerryhunterApi.Resource.addRadius = function(builder, radius) {
   builder.addFieldInt16(3, radius, 0);
 };
 
@@ -365,7 +376,7 @@ DeathioApi.Resource.addRadius = function(builder, radius) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} aabbOffset
  */
-DeathioApi.Resource.addAabb = function(builder, aabbOffset) {
+BerryhunterApi.Resource.addAabb = function(builder, aabbOffset) {
   builder.addFieldStruct(4, aabbOffset, 0);
 };
 
@@ -373,7 +384,7 @@ DeathioApi.Resource.addAabb = function(builder, aabbOffset) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.Resource.endResource = function(builder) {
+BerryhunterApi.Resource.endResource = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -381,7 +392,7 @@ DeathioApi.Resource.endResource = function(builder) {
 /**
  * @constructor
  */
-DeathioApi.Placeable = function() {
+BerryhunterApi.Placeable = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -396,9 +407,9 @@ DeathioApi.Placeable = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.Placeable}
+ * @returns {BerryhunterApi.Placeable}
  */
-DeathioApi.Placeable.prototype.__init = function(i, bb) {
+BerryhunterApi.Placeable.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -406,42 +417,42 @@ DeathioApi.Placeable.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {DeathioApi.Placeable=} obj
- * @returns {DeathioApi.Placeable}
+ * @param {BerryhunterApi.Placeable=} obj
+ * @returns {BerryhunterApi.Placeable}
  */
-DeathioApi.Placeable.getRootAsPlaceable = function(bb, obj) {
-  return (obj || new DeathioApi.Placeable).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+BerryhunterApi.Placeable.getRootAsPlaceable = function(bb, obj) {
+  return (obj || new BerryhunterApi.Placeable).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {flatbuffers.Long}
  */
-DeathioApi.Placeable.prototype.id = function() {
+BerryhunterApi.Placeable.prototype.id = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
 };
 
 /**
- * @returns {DeathioApi.EntityType}
+ * @returns {BerryhunterApi.EntityType}
  */
-DeathioApi.Placeable.prototype.entityType = function() {
+BerryhunterApi.Placeable.prototype.entityType = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+  return offset ? /** @type {BerryhunterApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : BerryhunterApi.EntityType.DebugCircle;
 };
 
 /**
- * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f|null}
+ * @param {BerryhunterApi.Vec2f=} obj
+ * @returns {BerryhunterApi.Vec2f|null}
  */
-DeathioApi.Placeable.prototype.pos = function(obj) {
+BerryhunterApi.Placeable.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.Placeable.prototype.radius = function() {
+BerryhunterApi.Placeable.prototype.radius = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -449,24 +460,24 @@ DeathioApi.Placeable.prototype.radius = function() {
 /**
  * @returns {number}
  */
-DeathioApi.Placeable.prototype.item = function() {
+BerryhunterApi.Placeable.prototype.item = function() {
   var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
 /**
- * @param {DeathioApi.AABB=} obj
- * @returns {DeathioApi.AABB|null}
+ * @param {BerryhunterApi.AABB=} obj
+ * @returns {BerryhunterApi.AABB|null}
  */
-DeathioApi.Placeable.prototype.aabb = function(obj) {
+BerryhunterApi.Placeable.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 14);
-  return offset ? (obj || new DeathioApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  */
-DeathioApi.Placeable.startPlaceable = function(builder) {
+BerryhunterApi.Placeable.startPlaceable = function(builder) {
   builder.startObject(6);
 };
 
@@ -474,23 +485,23 @@ DeathioApi.Placeable.startPlaceable = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Long} id
  */
-DeathioApi.Placeable.addId = function(builder, id) {
+BerryhunterApi.Placeable.addId = function(builder, id) {
   builder.addFieldInt64(0, id, builder.createLong(0, 0));
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.EntityType} entityType
+ * @param {BerryhunterApi.EntityType} entityType
  */
-DeathioApi.Placeable.addEntityType = function(builder, entityType) {
-  builder.addFieldInt16(1, entityType, DeathioApi.EntityType.DebugCircle);
+BerryhunterApi.Placeable.addEntityType = function(builder, entityType) {
+  builder.addFieldInt16(1, entityType, BerryhunterApi.EntityType.DebugCircle);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
-DeathioApi.Placeable.addPos = function(builder, posOffset) {
+BerryhunterApi.Placeable.addPos = function(builder, posOffset) {
   builder.addFieldStruct(2, posOffset, 0);
 };
 
@@ -498,7 +509,7 @@ DeathioApi.Placeable.addPos = function(builder, posOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} radius
  */
-DeathioApi.Placeable.addRadius = function(builder, radius) {
+BerryhunterApi.Placeable.addRadius = function(builder, radius) {
   builder.addFieldInt16(3, radius, 0);
 };
 
@@ -506,7 +517,7 @@ DeathioApi.Placeable.addRadius = function(builder, radius) {
  * @param {flatbuffers.Builder} builder
  * @param {number} item
  */
-DeathioApi.Placeable.addItem = function(builder, item) {
+BerryhunterApi.Placeable.addItem = function(builder, item) {
   builder.addFieldInt8(4, item, 0);
 };
 
@@ -514,7 +525,7 @@ DeathioApi.Placeable.addItem = function(builder, item) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} aabbOffset
  */
-DeathioApi.Placeable.addAabb = function(builder, aabbOffset) {
+BerryhunterApi.Placeable.addAabb = function(builder, aabbOffset) {
   builder.addFieldStruct(5, aabbOffset, 0);
 };
 
@@ -522,7 +533,7 @@ DeathioApi.Placeable.addAabb = function(builder, aabbOffset) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.Placeable.endPlaceable = function(builder) {
+BerryhunterApi.Placeable.endPlaceable = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -530,7 +541,7 @@ DeathioApi.Placeable.endPlaceable = function(builder) {
 /**
  * @constructor
  */
-DeathioApi.Mob = function() {
+BerryhunterApi.Mob = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -545,9 +556,9 @@ DeathioApi.Mob = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.Mob}
+ * @returns {BerryhunterApi.Mob}
  */
-DeathioApi.Mob.prototype.__init = function(i, bb) {
+BerryhunterApi.Mob.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -555,42 +566,42 @@ DeathioApi.Mob.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {DeathioApi.Mob=} obj
- * @returns {DeathioApi.Mob}
+ * @param {BerryhunterApi.Mob=} obj
+ * @returns {BerryhunterApi.Mob}
  */
-DeathioApi.Mob.getRootAsMob = function(bb, obj) {
-  return (obj || new DeathioApi.Mob).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+BerryhunterApi.Mob.getRootAsMob = function(bb, obj) {
+  return (obj || new BerryhunterApi.Mob).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {flatbuffers.Long}
  */
-DeathioApi.Mob.prototype.id = function() {
+BerryhunterApi.Mob.prototype.id = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
 };
 
 /**
- * @returns {DeathioApi.EntityType}
+ * @returns {BerryhunterApi.EntityType}
  */
-DeathioApi.Mob.prototype.entityType = function() {
+BerryhunterApi.Mob.prototype.entityType = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+  return offset ? /** @type {BerryhunterApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : BerryhunterApi.EntityType.DebugCircle;
 };
 
 /**
- * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f|null}
+ * @param {BerryhunterApi.Vec2f=} obj
+ * @returns {BerryhunterApi.Vec2f|null}
  */
-DeathioApi.Mob.prototype.pos = function(obj) {
+BerryhunterApi.Mob.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.Mob.prototype.radius = function() {
+BerryhunterApi.Mob.prototype.radius = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -598,24 +609,24 @@ DeathioApi.Mob.prototype.radius = function() {
 /**
  * @returns {number}
  */
-DeathioApi.Mob.prototype.rotation = function() {
+BerryhunterApi.Mob.prototype.rotation = function() {
   var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
 /**
- * @param {DeathioApi.AABB=} obj
- * @returns {DeathioApi.AABB|null}
+ * @param {BerryhunterApi.AABB=} obj
+ * @returns {BerryhunterApi.AABB|null}
  */
-DeathioApi.Mob.prototype.aabb = function(obj) {
+BerryhunterApi.Mob.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 14);
-  return offset ? (obj || new DeathioApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  */
-DeathioApi.Mob.startMob = function(builder) {
+BerryhunterApi.Mob.startMob = function(builder) {
   builder.startObject(6);
 };
 
@@ -623,23 +634,23 @@ DeathioApi.Mob.startMob = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Long} id
  */
-DeathioApi.Mob.addId = function(builder, id) {
+BerryhunterApi.Mob.addId = function(builder, id) {
   builder.addFieldInt64(0, id, builder.createLong(0, 0));
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.EntityType} entityType
+ * @param {BerryhunterApi.EntityType} entityType
  */
-DeathioApi.Mob.addEntityType = function(builder, entityType) {
-  builder.addFieldInt16(1, entityType, DeathioApi.EntityType.DebugCircle);
+BerryhunterApi.Mob.addEntityType = function(builder, entityType) {
+  builder.addFieldInt16(1, entityType, BerryhunterApi.EntityType.DebugCircle);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
-DeathioApi.Mob.addPos = function(builder, posOffset) {
+BerryhunterApi.Mob.addPos = function(builder, posOffset) {
   builder.addFieldStruct(2, posOffset, 0);
 };
 
@@ -647,7 +658,7 @@ DeathioApi.Mob.addPos = function(builder, posOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} radius
  */
-DeathioApi.Mob.addRadius = function(builder, radius) {
+BerryhunterApi.Mob.addRadius = function(builder, radius) {
   builder.addFieldInt16(3, radius, 0);
 };
 
@@ -655,7 +666,7 @@ DeathioApi.Mob.addRadius = function(builder, radius) {
  * @param {flatbuffers.Builder} builder
  * @param {number} rotation
  */
-DeathioApi.Mob.addRotation = function(builder, rotation) {
+BerryhunterApi.Mob.addRotation = function(builder, rotation) {
   builder.addFieldFloat32(4, rotation, 0.0);
 };
 
@@ -663,7 +674,7 @@ DeathioApi.Mob.addRotation = function(builder, rotation) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} aabbOffset
  */
-DeathioApi.Mob.addAabb = function(builder, aabbOffset) {
+BerryhunterApi.Mob.addAabb = function(builder, aabbOffset) {
   builder.addFieldStruct(5, aabbOffset, 0);
 };
 
@@ -671,7 +682,7 @@ DeathioApi.Mob.addAabb = function(builder, aabbOffset) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.Mob.endMob = function(builder) {
+BerryhunterApi.Mob.endMob = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -679,7 +690,7 @@ DeathioApi.Mob.endMob = function(builder) {
 /**
  * @constructor
  */
-DeathioApi.Player = function() {
+BerryhunterApi.Player = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -694,9 +705,9 @@ DeathioApi.Player = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.Player}
+ * @returns {BerryhunterApi.Player}
  */
-DeathioApi.Player.prototype.__init = function(i, bb) {
+BerryhunterApi.Player.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -704,42 +715,42 @@ DeathioApi.Player.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {DeathioApi.Player=} obj
- * @returns {DeathioApi.Player}
+ * @param {BerryhunterApi.Player=} obj
+ * @returns {BerryhunterApi.Player}
  */
-DeathioApi.Player.getRootAsPlayer = function(bb, obj) {
-  return (obj || new DeathioApi.Player).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+BerryhunterApi.Player.getRootAsPlayer = function(bb, obj) {
+  return (obj || new BerryhunterApi.Player).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {flatbuffers.Long}
  */
-DeathioApi.Player.prototype.id = function() {
+BerryhunterApi.Player.prototype.id = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
 };
 
 /**
- * @returns {DeathioApi.EntityType}
+ * @returns {BerryhunterApi.EntityType}
  */
-DeathioApi.Player.prototype.entityType = function() {
+BerryhunterApi.Player.prototype.entityType = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? /** @type {DeathioApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : DeathioApi.EntityType.DebugCircle;
+  return offset ? /** @type {BerryhunterApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : BerryhunterApi.EntityType.DebugCircle;
 };
 
 /**
- * @param {DeathioApi.Vec2f=} obj
- * @returns {DeathioApi.Vec2f|null}
+ * @param {BerryhunterApi.Vec2f=} obj
+ * @returns {BerryhunterApi.Vec2f|null}
  */
-DeathioApi.Player.prototype.pos = function(obj) {
+BerryhunterApi.Player.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? (obj || new DeathioApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.Player.prototype.radius = function() {
+BerryhunterApi.Player.prototype.radius = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -747,7 +758,7 @@ DeathioApi.Player.prototype.radius = function() {
 /**
  * @returns {number}
  */
-DeathioApi.Player.prototype.rotation = function() {
+BerryhunterApi.Player.prototype.rotation = function() {
   var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
@@ -755,7 +766,7 @@ DeathioApi.Player.prototype.rotation = function() {
 /**
  * @returns {boolean}
  */
-DeathioApi.Player.prototype.isHit = function() {
+BerryhunterApi.Player.prototype.isHit = function() {
   var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
@@ -763,7 +774,7 @@ DeathioApi.Player.prototype.isHit = function() {
 /**
  * @returns {number}
  */
-DeathioApi.Player.prototype.actionTick = function() {
+BerryhunterApi.Player.prototype.actionTick = function() {
   var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -772,7 +783,7 @@ DeathioApi.Player.prototype.actionTick = function() {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-DeathioApi.Player.prototype.name = function(optionalEncoding) {
+BerryhunterApi.Player.prototype.name = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
@@ -781,7 +792,7 @@ DeathioApi.Player.prototype.name = function(optionalEncoding) {
  * @param {number} index
  * @returns {number}
  */
-DeathioApi.Player.prototype.equipment = function(index) {
+BerryhunterApi.Player.prototype.equipment = function(index) {
   var offset = this.bb.__offset(this.bb_pos, 20);
   return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
@@ -789,7 +800,7 @@ DeathioApi.Player.prototype.equipment = function(index) {
 /**
  * @returns {number}
  */
-DeathioApi.Player.prototype.equipmentLength = function() {
+BerryhunterApi.Player.prototype.equipmentLength = function() {
   var offset = this.bb.__offset(this.bb_pos, 20);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -797,7 +808,7 @@ DeathioApi.Player.prototype.equipmentLength = function() {
 /**
  * @returns {Uint8Array}
  */
-DeathioApi.Player.prototype.equipmentArray = function() {
+BerryhunterApi.Player.prototype.equipmentArray = function() {
   var offset = this.bb.__offset(this.bb_pos, 20);
   return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -805,7 +816,7 @@ DeathioApi.Player.prototype.equipmentArray = function() {
 /**
  * @returns {number}
  */
-DeathioApi.Player.prototype.health = function() {
+BerryhunterApi.Player.prototype.health = function() {
   var offset = this.bb.__offset(this.bb_pos, 22);
   return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
@@ -813,7 +824,7 @@ DeathioApi.Player.prototype.health = function() {
 /**
  * @returns {number}
  */
-DeathioApi.Player.prototype.satiety = function() {
+BerryhunterApi.Player.prototype.satiety = function() {
   var offset = this.bb.__offset(this.bb_pos, 24);
   return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
@@ -821,24 +832,24 @@ DeathioApi.Player.prototype.satiety = function() {
 /**
  * @returns {number}
  */
-DeathioApi.Player.prototype.bodyTemperature = function() {
+BerryhunterApi.Player.prototype.bodyTemperature = function() {
   var offset = this.bb.__offset(this.bb_pos, 26);
   return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
 /**
- * @param {DeathioApi.AABB=} obj
- * @returns {DeathioApi.AABB|null}
+ * @param {BerryhunterApi.AABB=} obj
+ * @returns {BerryhunterApi.AABB|null}
  */
-DeathioApi.Player.prototype.aabb = function(obj) {
+BerryhunterApi.Player.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 28);
-  return offset ? (obj || new DeathioApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  */
-DeathioApi.Player.startPlayer = function(builder) {
+BerryhunterApi.Player.startPlayer = function(builder) {
   builder.startObject(13);
 };
 
@@ -846,23 +857,23 @@ DeathioApi.Player.startPlayer = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Long} id
  */
-DeathioApi.Player.addId = function(builder, id) {
+BerryhunterApi.Player.addId = function(builder, id) {
   builder.addFieldInt64(0, id, builder.createLong(0, 0));
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {DeathioApi.EntityType} entityType
+ * @param {BerryhunterApi.EntityType} entityType
  */
-DeathioApi.Player.addEntityType = function(builder, entityType) {
-  builder.addFieldInt16(1, entityType, DeathioApi.EntityType.DebugCircle);
+BerryhunterApi.Player.addEntityType = function(builder, entityType) {
+  builder.addFieldInt16(1, entityType, BerryhunterApi.EntityType.DebugCircle);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
-DeathioApi.Player.addPos = function(builder, posOffset) {
+BerryhunterApi.Player.addPos = function(builder, posOffset) {
   builder.addFieldStruct(2, posOffset, 0);
 };
 
@@ -870,7 +881,7 @@ DeathioApi.Player.addPos = function(builder, posOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} radius
  */
-DeathioApi.Player.addRadius = function(builder, radius) {
+BerryhunterApi.Player.addRadius = function(builder, radius) {
   builder.addFieldInt16(3, radius, 0);
 };
 
@@ -878,7 +889,7 @@ DeathioApi.Player.addRadius = function(builder, radius) {
  * @param {flatbuffers.Builder} builder
  * @param {number} rotation
  */
-DeathioApi.Player.addRotation = function(builder, rotation) {
+BerryhunterApi.Player.addRotation = function(builder, rotation) {
   builder.addFieldFloat32(4, rotation, 0.0);
 };
 
@@ -886,7 +897,7 @@ DeathioApi.Player.addRotation = function(builder, rotation) {
  * @param {flatbuffers.Builder} builder
  * @param {boolean} isHit
  */
-DeathioApi.Player.addIsHit = function(builder, isHit) {
+BerryhunterApi.Player.addIsHit = function(builder, isHit) {
   builder.addFieldInt8(5, +isHit, +false);
 };
 
@@ -894,7 +905,7 @@ DeathioApi.Player.addIsHit = function(builder, isHit) {
  * @param {flatbuffers.Builder} builder
  * @param {number} actionTick
  */
-DeathioApi.Player.addActionTick = function(builder, actionTick) {
+BerryhunterApi.Player.addActionTick = function(builder, actionTick) {
   builder.addFieldInt16(6, actionTick, 0);
 };
 
@@ -902,7 +913,7 @@ DeathioApi.Player.addActionTick = function(builder, actionTick) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} nameOffset
  */
-DeathioApi.Player.addName = function(builder, nameOffset) {
+BerryhunterApi.Player.addName = function(builder, nameOffset) {
   builder.addFieldOffset(7, nameOffset, 0);
 };
 
@@ -910,7 +921,7 @@ DeathioApi.Player.addName = function(builder, nameOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} equipmentOffset
  */
-DeathioApi.Player.addEquipment = function(builder, equipmentOffset) {
+BerryhunterApi.Player.addEquipment = function(builder, equipmentOffset) {
   builder.addFieldOffset(8, equipmentOffset, 0);
 };
 
@@ -919,7 +930,7 @@ DeathioApi.Player.addEquipment = function(builder, equipmentOffset) {
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.Player.createEquipmentVector = function(builder, data) {
+BerryhunterApi.Player.createEquipmentVector = function(builder, data) {
   builder.startVector(1, data.length, 1);
   for (var i = data.length - 1; i >= 0; i--) {
     builder.addInt8(data[i]);
@@ -931,7 +942,7 @@ DeathioApi.Player.createEquipmentVector = function(builder, data) {
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-DeathioApi.Player.startEquipmentVector = function(builder, numElems) {
+BerryhunterApi.Player.startEquipmentVector = function(builder, numElems) {
   builder.startVector(1, numElems, 1);
 };
 
@@ -939,7 +950,7 @@ DeathioApi.Player.startEquipmentVector = function(builder, numElems) {
  * @param {flatbuffers.Builder} builder
  * @param {number} health
  */
-DeathioApi.Player.addHealth = function(builder, health) {
+BerryhunterApi.Player.addHealth = function(builder, health) {
   builder.addFieldInt8(9, health, 0);
 };
 
@@ -947,7 +958,7 @@ DeathioApi.Player.addHealth = function(builder, health) {
  * @param {flatbuffers.Builder} builder
  * @param {number} satiety
  */
-DeathioApi.Player.addSatiety = function(builder, satiety) {
+BerryhunterApi.Player.addSatiety = function(builder, satiety) {
   builder.addFieldInt8(10, satiety, 0);
 };
 
@@ -955,7 +966,7 @@ DeathioApi.Player.addSatiety = function(builder, satiety) {
  * @param {flatbuffers.Builder} builder
  * @param {number} bodyTemperature
  */
-DeathioApi.Player.addBodyTemperature = function(builder, bodyTemperature) {
+BerryhunterApi.Player.addBodyTemperature = function(builder, bodyTemperature) {
   builder.addFieldInt8(11, bodyTemperature, 0);
 };
 
@@ -963,7 +974,7 @@ DeathioApi.Player.addBodyTemperature = function(builder, bodyTemperature) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} aabbOffset
  */
-DeathioApi.Player.addAabb = function(builder, aabbOffset) {
+BerryhunterApi.Player.addAabb = function(builder, aabbOffset) {
   builder.addFieldStruct(12, aabbOffset, 0);
 };
 
@@ -971,7 +982,7 @@ DeathioApi.Player.addAabb = function(builder, aabbOffset) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.Player.endPlayer = function(builder) {
+BerryhunterApi.Player.endPlayer = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -979,7 +990,7 @@ DeathioApi.Player.endPlayer = function(builder) {
 /**
  * @constructor
  */
-DeathioApi.GameState = function() {
+BerryhunterApi.GameState = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -994,9 +1005,9 @@ DeathioApi.GameState = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {DeathioApi.GameState}
+ * @returns {BerryhunterApi.GameState}
  */
-DeathioApi.GameState.prototype.__init = function(i, bb) {
+BerryhunterApi.GameState.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -1004,62 +1015,62 @@ DeathioApi.GameState.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {DeathioApi.GameState=} obj
- * @returns {DeathioApi.GameState}
+ * @param {BerryhunterApi.GameState=} obj
+ * @returns {BerryhunterApi.GameState}
  */
-DeathioApi.GameState.getRootAsGameState = function(bb, obj) {
-  return (obj || new DeathioApi.GameState).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+BerryhunterApi.GameState.getRootAsGameState = function(bb, obj) {
+  return (obj || new BerryhunterApi.GameState).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {flatbuffers.Long}
  */
-DeathioApi.GameState.prototype.tick = function() {
+BerryhunterApi.GameState.prototype.tick = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
 };
 
 /**
- * @param {DeathioApi.Player=} obj
- * @returns {DeathioApi.Player|null}
+ * @param {BerryhunterApi.Player=} obj
+ * @returns {BerryhunterApi.Player|null}
  */
-DeathioApi.GameState.prototype.player = function(obj) {
+BerryhunterApi.GameState.prototype.player = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? (obj || new DeathioApi.Player).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.Player).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
 };
 
 /**
  * @param {number} index
- * @param {DeathioApi.ItemStack=} obj
- * @returns {DeathioApi.ItemStack}
+ * @param {BerryhunterApi.ItemStack=} obj
+ * @returns {BerryhunterApi.ItemStack}
  */
-DeathioApi.GameState.prototype.inventory = function(index, obj) {
+BerryhunterApi.GameState.prototype.inventory = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? (obj || new DeathioApi.ItemStack).__init(this.bb.__vector(this.bb_pos + offset) + index * 12, this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.ItemStack).__init(this.bb.__vector(this.bb_pos + offset) + index * 12, this.bb) : null;
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.GameState.prototype.inventoryLength = function() {
+BerryhunterApi.GameState.prototype.inventoryLength = function() {
   var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
 /**
  * @param {number} index
- * @param {DeathioApi.Entity=} obj
- * @returns {DeathioApi.Entity}
+ * @param {BerryhunterApi.Entity=} obj
+ * @returns {BerryhunterApi.Entity}
  */
-DeathioApi.GameState.prototype.entities = function(index, obj) {
+BerryhunterApi.GameState.prototype.entities = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 10);
-  return offset ? (obj || new DeathioApi.Entity).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new BerryhunterApi.Entity).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**
  * @returns {number}
  */
-DeathioApi.GameState.prototype.entitiesLength = function() {
+BerryhunterApi.GameState.prototype.entitiesLength = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -1067,7 +1078,7 @@ DeathioApi.GameState.prototype.entitiesLength = function() {
 /**
  * @param {flatbuffers.Builder} builder
  */
-DeathioApi.GameState.startGameState = function(builder) {
+BerryhunterApi.GameState.startGameState = function(builder) {
   builder.startObject(4);
 };
 
@@ -1075,7 +1086,7 @@ DeathioApi.GameState.startGameState = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Long} tick
  */
-DeathioApi.GameState.addTick = function(builder, tick) {
+BerryhunterApi.GameState.addTick = function(builder, tick) {
   builder.addFieldInt64(0, tick, builder.createLong(0, 0));
 };
 
@@ -1083,7 +1094,7 @@ DeathioApi.GameState.addTick = function(builder, tick) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} playerOffset
  */
-DeathioApi.GameState.addPlayer = function(builder, playerOffset) {
+BerryhunterApi.GameState.addPlayer = function(builder, playerOffset) {
   builder.addFieldOffset(1, playerOffset, 0);
 };
 
@@ -1091,7 +1102,7 @@ DeathioApi.GameState.addPlayer = function(builder, playerOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} inventoryOffset
  */
-DeathioApi.GameState.addInventory = function(builder, inventoryOffset) {
+BerryhunterApi.GameState.addInventory = function(builder, inventoryOffset) {
   builder.addFieldOffset(2, inventoryOffset, 0);
 };
 
@@ -1099,7 +1110,7 @@ DeathioApi.GameState.addInventory = function(builder, inventoryOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-DeathioApi.GameState.startInventoryVector = function(builder, numElems) {
+BerryhunterApi.GameState.startInventoryVector = function(builder, numElems) {
   builder.startVector(12, numElems, 4);
 };
 
@@ -1107,7 +1118,7 @@ DeathioApi.GameState.startInventoryVector = function(builder, numElems) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} entitiesOffset
  */
-DeathioApi.GameState.addEntities = function(builder, entitiesOffset) {
+BerryhunterApi.GameState.addEntities = function(builder, entitiesOffset) {
   builder.addFieldOffset(3, entitiesOffset, 0);
 };
 
@@ -1116,7 +1127,7 @@ DeathioApi.GameState.addEntities = function(builder, entitiesOffset) {
  * @param {Array.<flatbuffers.Offset>} data
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.GameState.createEntitiesVector = function(builder, data) {
+BerryhunterApi.GameState.createEntitiesVector = function(builder, data) {
   builder.startVector(4, data.length, 4);
   for (var i = data.length - 1; i >= 0; i--) {
     builder.addOffset(data[i]);
@@ -1128,7 +1139,7 @@ DeathioApi.GameState.createEntitiesVector = function(builder, data) {
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-DeathioApi.GameState.startEntitiesVector = function(builder, numElems) {
+BerryhunterApi.GameState.startEntitiesVector = function(builder, numElems) {
   builder.startVector(4, numElems, 4);
 };
 
@@ -1136,7 +1147,278 @@ DeathioApi.GameState.startEntitiesVector = function(builder, numElems) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-DeathioApi.GameState.endGameState = function(builder) {
+BerryhunterApi.GameState.endGameState = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.Welcome = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.Welcome}
+ */
+BerryhunterApi.Welcome.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.Welcome=} obj
+ * @returns {BerryhunterApi.Welcome}
+ */
+BerryhunterApi.Welcome.getRootAsWelcome = function(bb, obj) {
+  return (obj || new BerryhunterApi.Welcome).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+BerryhunterApi.Welcome.prototype.serverName = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {BerryhunterApi.Vec2f=} obj
+ * @returns {BerryhunterApi.Vec2f|null}
+ */
+BerryhunterApi.Welcome.prototype.mapSize = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.Welcome.startWelcome = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} serverNameOffset
+ */
+BerryhunterApi.Welcome.addServerName = function(builder, serverNameOffset) {
+  builder.addFieldOffset(0, serverNameOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} mapSizeOffset
+ */
+BerryhunterApi.Welcome.addMapSize = function(builder, mapSizeOffset) {
+  builder.addFieldStruct(1, mapSizeOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Welcome.endWelcome = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.Accept = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.Accept}
+ */
+BerryhunterApi.Accept.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.Accept=} obj
+ * @returns {BerryhunterApi.Accept}
+ */
+BerryhunterApi.Accept.getRootAsAccept = function(bb, obj) {
+  return (obj || new BerryhunterApi.Accept).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.Accept.startAccept = function(builder) {
+  builder.startObject(0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Accept.endAccept = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.Obituary = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.Obituary}
+ */
+BerryhunterApi.Obituary.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.Obituary=} obj
+ * @returns {BerryhunterApi.Obituary}
+ */
+BerryhunterApi.Obituary.getRootAsObituary = function(bb, obj) {
+  return (obj || new BerryhunterApi.Obituary).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.Obituary.startObituary = function(builder) {
+  builder.startObject(0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Obituary.endObituary = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.ServerMessage = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.ServerMessage}
+ */
+BerryhunterApi.ServerMessage.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.ServerMessage=} obj
+ * @returns {BerryhunterApi.ServerMessage}
+ */
+BerryhunterApi.ServerMessage.getRootAsServerMessage = function(bb, obj) {
+  return (obj || new BerryhunterApi.ServerMessage).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {BerryhunterApi.ServerMessageBody}
+ */
+BerryhunterApi.ServerMessage.prototype.bodyType = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? /** @type {BerryhunterApi.ServerMessageBody} */ (this.bb.readUint8(this.bb_pos + offset)) : BerryhunterApi.ServerMessageBody.NONE;
+};
+
+/**
+ * @param {flatbuffers.Table} obj
+ * @returns {?flatbuffers.Table}
+ */
+BerryhunterApi.ServerMessage.prototype.body = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.__union(obj, this.bb_pos + offset) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.ServerMessage.startServerMessage = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {BerryhunterApi.ServerMessageBody} bodyType
+ */
+BerryhunterApi.ServerMessage.addBodyType = function(builder, bodyType) {
+  builder.addFieldInt8(0, bodyType, BerryhunterApi.ServerMessageBody.NONE);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} bodyOffset
+ */
+BerryhunterApi.ServerMessage.addBody = function(builder, bodyOffset) {
+  builder.addFieldOffset(1, bodyOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.ServerMessage.endServerMessage = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -1145,9 +1427,9 @@ DeathioApi.GameState.endGameState = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} offset
  */
-DeathioApi.GameState.finishGameStateBuffer = function(builder, offset) {
+BerryhunterApi.ServerMessage.finishServerMessageBuffer = function(builder, offset) {
   builder.finish(offset);
 };
 
 // Exports for Node.js and RequireJS
-this.DeathioApi = DeathioApi;
+this.BerryhunterApi = BerryhunterApi;

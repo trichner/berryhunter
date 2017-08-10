@@ -2,11 +2,13 @@ package main
 
 import (
 	"github.com/trichner/berryhunter/backend/net"
-	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"fmt"
+	"github.com/trichner/berryhunter/backend/codec"
+	"github.com/google/flatbuffers/go"
 )
 
 var _ = model.PlayerEntity(&player{})
@@ -98,13 +100,23 @@ func (p *player) Angle() float32 {
 	return p.angle
 }
 
+func sendWelcomeMessage(g *Game, c *net.Client) {
+
+	builder := flatbuffers.NewBuilder(32)
+	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, g.welcomeMsg)
+	builder.Finish(welcomeMsg)
+	c.SendMessage(builder.FinishedBytes())
+}
+
 func NewPlayer(g *Game, c *net.Client) *player {
+
+	sendWelcomeMessage(g, c)
 
 	registry := g.items
 
 	e := newCircleEntity(0.25)
 
-	e.EntityType = DeathioApi.EntityTypeCharacter
+	e.EntityType = BerryhunterApi.EntityTypeCharacter
 	p := &player{BaseEntity: e,
 		client:              c,
 		Equipment:           items.NewEquipment(),

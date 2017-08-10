@@ -6,10 +6,11 @@ import (
 	"sync"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/net"
-	"github.com/trichner/berryhunter/api/schema/DeathioApi"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/model/placeable"
+	"github.com/trichner/berryhunter/backend/codec"
 )
 
 
@@ -32,34 +33,6 @@ type PlayerInputSystem struct {
 	receive chan *clientMessage
 }
 
-func PlayerInputFlatbufferUnmarshal(bytes []byte) *model.PlayerInput {
-
-	i := &model.PlayerInput{}
-	fbInput := DeathioApi.GetRootAsInput(bytes, 0)
-
-	// umarshal simple scalars
-	i.Tick = fbInput.Tick()
-	i.Rotation = fbInput.Rotation()
-
-	// parse Movement if existing
-	m := fbInput.Movement(nil)
-	if m != nil {
-		i.Movement = &phy.Vec2f{
-			X: m.X(),
-			Y: m.Y(),
-		}
-	}
-
-	// parse Action if existent
-	a := fbInput.Action(nil)
-	if a != nil {
-		i.Action = &model.Action{
-			Item: items.ItemEnum(a.Item()),
-			Type: model.ActionType(a.ActionType()),
-		}
-	}
-	return i
-}
 
 func NewInputSystem(g *Game) *PlayerInputSystem {
 	return &PlayerInputSystem{game: g}
@@ -82,7 +55,10 @@ func (i *PlayerInputSystem) New(w *ecs.World) {
 		for {
 			select {
 			case msg := <-i.receive:
-				input := PlayerInputFlatbufferUnmarshal(msg.body)
+				input := codec.ClientMessageFlatbufferUnmarshal(msg.body)
+				if input == nil {
+					break
+				}
 				i.storeInput(msg.playerId, input)
 			}
 		}
@@ -190,29 +166,29 @@ func (p *player) applyAction(action *model.Action) {
 		return
 	}
 
-	log.Printf("✊ Action going on: %s(%s)", DeathioApi.EnumNamesActionType[int(action.Type)], item.Name)
+	log.Printf("✊ Action going on: %s(%s)", BerryhunterApi.EnumNamesActionType[int(action.Type)], item.Name)
 
 
 	switch action.Type {
-	case DeathioApi.ActionTypePrimary:
+	case BerryhunterApi.ActionTypePrimary:
 		if !hasItem(p, item) {
 			return
 		}
 		p.hand.Shape().Layer = -1
 		p.handItem = item
 		break
-	case DeathioApi.ActionTypeCraftItem:
+	case BerryhunterApi.ActionTypeCraftItem:
 		p.Craft(item)
 		break
 
-	case DeathioApi.ActionTypeDropItem:
+	case BerryhunterApi.ActionTypeDropItem:
 		if !hasItem(p, item) {
 			return
 		}
 		p.inventory.DropAll(item)
 		break
 
-	case DeathioApi.ActionTypeConsumeItem:
+	case BerryhunterApi.ActionTypeConsumeItem:
 		if !hasItem(p, item) {
 			return
 		}
@@ -228,21 +204,21 @@ func (p *player) applyAction(action *model.Action) {
 		}
 		break
 
-	case DeathioApi.ActionTypeEquipItem:
+	case BerryhunterApi.ActionTypeEquipItem:
 		if !hasItem(p, item) {
 			return
 		}
 		p.Equip(item)
 		break
 
-	case DeathioApi.ActionTypeUnequipItem:
+	case BerryhunterApi.ActionTypeUnequipItem:
 		if !hasItem(p, item) {
 			return
 		}
 		p.Unequip(item)
 		break
 
-	case DeathioApi.ActionTypePlaceItem:
+	case BerryhunterApi.ActionTypePlaceItem:
 		if item.Type != items.ItemTypePlaceable {
 
 			log.Printf("😠 Tried to place: %s", item.Name)
