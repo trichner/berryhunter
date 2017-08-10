@@ -46,12 +46,7 @@ func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	}
 
 	dmg = dmg * 10000
-	if dmg > h {
-		h = 0
-	}else {
-		h -= dmg
-	}
-	p.PlayerVitalSigns.Health = h
+	p.PlayerVitalSigns.Health = h.Sub(dmg)
 }
 
 func (p *player) Name() string {
@@ -148,9 +143,9 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	p.inventory = inventory
 
 	//--- setup vital signs
-	p.PlayerVitalSigns.Health = maxUInt32
-	p.PlayerVitalSigns.Satiety = maxUInt32
-	p.PlayerVitalSigns.BodyTemperature = maxUInt32
+	p.PlayerVitalSigns.Health =	model.VitalSignMax
+	p.PlayerVitalSigns.Satiety = model.VitalSignMax
+	p.PlayerVitalSigns.BodyTemperature = model.VitalSignMax
 
 	// setup hand sensor
 	p.hand = phy.NewCircle(e.Body.Position(), 0.25)
@@ -237,11 +232,11 @@ func (p *player) Update(dt float32) {
 
 	// heat
 	t := p.VitalSigns().BodyTemperature
-	step := uint32(100000)
-	if t > step {
-		t -= step
-	}else{
-		t = 0
-	}
-	p.VitalSigns().BodyTemperature = t
+	temperatureStep := uint32(100000)
+	p.VitalSigns().BodyTemperature = t.Sub(temperatureStep)
+
+	// satiety
+	s := p.VitalSigns().Satiety
+	satietyStep := uint32(150000)
+	p.VitalSigns().Satiety = s.Sub(satietyStep)
 }

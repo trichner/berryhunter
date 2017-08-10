@@ -6,10 +6,36 @@ import (
 	"github.com/trichner/berryhunter/backend/net"
 )
 
+const VitalSignMax = ^VitalSign(0)
+
+type VitalSign uint32
+
+func (v VitalSign) Add(n uint32) VitalSign {
+	d := VitalSignMax - v
+	add := VitalSign(n)
+	if d > add {
+		return v + add
+	}
+	return VitalSignMax
+}
+
+func (v VitalSign) Sub(n uint32) VitalSign {
+	sub := VitalSign(n)
+	if v < sub {
+		return 0
+	}
+	return v - sub
+}
+
+func (v VitalSign) UInt32() uint32 {
+	return uint32(v)
+}
+
+
 type PlayerVitalSigns struct {
-	Satiety         uint32
-	BodyTemperature uint32
-	Health          uint32
+	Satiety         VitalSign
+	BodyTemperature VitalSign
+	Health          VitalSign
 }
 
 type PlayerEntity interface {

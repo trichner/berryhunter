@@ -15,7 +15,6 @@ import (
 
 
 const inputBuffererCount = 3
-const maxUInt32 = 0xFFFFFFFF
 
 //---- models for input
 
@@ -197,17 +196,8 @@ func (p *player) applyAction(action *model.Action) {
 		if ok {
 			// prevent overflow
 			h := p.VitalSigns().Health
-
-			d := maxUInt32 - h
 			food := uint32(item.Factors.Food)
-
-			if food > d {
-				h = maxUInt32
-			} else {
-				h += food
-			}
-
-			p.VitalSigns().Health = h
+			p.VitalSigns().Health = h.Add(food)
 		}
 		break
 
