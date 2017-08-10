@@ -55,7 +55,7 @@ func ClientMessageFlatbufferUnmarshal(bytes []byte) *model.PlayerInput {
 
 	msg := BerryhunterApi.GetRootAsClientMessage(bytes, 0)
 
-	if (msg.BodyType() == BerryhunterApi.ClientMessageBodyInput) {
+	if msg.BodyType() == BerryhunterApi.ClientMessageBodyInput {
 		return unmarshalInput(unwrapInput(msg))
 	}
 

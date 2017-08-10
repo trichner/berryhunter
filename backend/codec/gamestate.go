@@ -215,6 +215,7 @@ func PlaceableEntityFlatbufMarshal(e model.PlaceableEntity, builder *flatbuffers
 	return BerryhunterApi.PlaceableEnd(builder)
 }
 
+
 // intermediate struct to serialize
 type GameState struct {
 	Tick      uint64

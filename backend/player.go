@@ -7,6 +7,8 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"fmt"
+	"github.com/trichner/berryhunter/backend/codec"
+	"github.com/google/flatbuffers/go"
 )
 
 var _ = model.PlayerEntity(&player{})
@@ -98,7 +100,17 @@ func (p *player) Angle() float32 {
 	return p.angle
 }
 
+func sendWelcomeMessage(g *Game, c *net.Client) {
+
+	builder := flatbuffers.NewBuilder(32)
+	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, g.welcomeMsg)
+	builder.Finish(welcomeMsg)
+	c.SendMessage(builder.FinishedBytes())
+}
+
 func NewPlayer(g *Game, c *net.Client) *player {
+
+	sendWelcomeMessage(g, c)
 
 	registry := g.items
 
