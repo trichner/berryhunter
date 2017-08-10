@@ -1,4 +1,4 @@
-package main
+package gen
 
 import (
 	"testing"
@@ -23,13 +23,19 @@ func Test_populate(t *testing.T) {
 
 type mockRegistry struct{}
 
-func (mockRegistry) Get(i items.ItemEnum) (items.Item, bool) {
-	return nil, true
+func (*mockRegistry) Get(i items.ItemEnum) (items.Item, error) {
+	return items.Item{}, fmt.Errorf("Not implemented")
 }
 
-func (mockRegistry) Items() []*items.ItemDefinition {
+func (*mockRegistry) GetByName(name string) (items.Item, error) {
+	return items.Item{}, fmt.Errorf("Not implemented")
+}
+
+func (*mockRegistry) Items() []*items.ItemDefinition {
 	return make([]*items.ItemDefinition, 0)
 }
+
+var _ = items.Registry(&mockRegistry{})
 
 func Test_randomEntity(t *testing.T) {
 
