@@ -14,14 +14,18 @@ type BasicEntity interface {
 	Basic() ecs.BasicEntity
 }
 
-type Entity interface {
+type BodiedEntity interface {
 	BasicEntity
 	Position() phy.Vec2f
 	SetPosition(phy.Vec2f)
+	Bodies() Bodies
+}
+
+type Entity interface {
+	BodiedEntity
+
 	Radius() float32
 	AABB() AABB
-	Bodies() Bodies
-
 	Angle() float32
 	Type() EntityType
 }

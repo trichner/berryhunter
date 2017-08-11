@@ -15,6 +15,7 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/codec"
+	"github.com/trichner/berryhunter/backend/model/client"
 )
 
 type Game struct {
@@ -86,7 +87,8 @@ func (g *Game) Run() {
 	}
 
 	handleFunc := net.NewHandleFunc(func(c *net.Client) {
-		player := NewPlayer(g, c)
+		client := client.NewClient(c)
+		player := NewPlayer(g, client)
 		g.addPlayer(player)
 	})
 
@@ -109,7 +111,7 @@ func (g *Game) RemoveEntity(e ecs.BasicEntity) {
 	}
 }
 
-func (g *Game) AddEntity(e model.Entity) {
+func (g *Game) AddEntity(e model.BasicEntity) {
 
 	switch v := e.(type) {
 	case model.PlayerEntity:
@@ -124,8 +126,27 @@ func (g *Game) AddEntity(e model.Entity) {
 		g.addResourceEntity(v)
 	case model.PlaceableEntity:
 		g.addPlaceableEntity(v)
+	case model.Spectator:
+		g.addSpectator(v)
 	case model.Entity:
 		g.addEntity(v)
+	}
+}
+
+func (g *Game) addSpectator(e model.Spectator) {
+
+	// Loop over all Systems
+	for _, system := range g.Systems() {
+
+		// Use a type-switch to figure out which System is which
+		switch sys := system.(type) {
+
+		// Create a case for each System you want to use
+		case *PhysicsSystem:
+			sys.AddEntity(e)
+		case *NetSystem:
+			sys.AddSpectator(e)
+		}
 	}
 }
 

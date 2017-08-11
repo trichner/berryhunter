@@ -67,7 +67,7 @@ func (p *PhysicsSystem) AddStaticBody(b ecs.BasicEntity, e phy.Collider) {
 	p.game.space.AddStaticShape(pe.static)
 }
 
-func (p *PhysicsSystem) AddEntity(e model.Entity) {
+func (p *PhysicsSystem) AddEntity(e model.BodiedEntity) {
 	pe := newDyamicPhysicsEntity(e.Basic(), e.Bodies()...)
 	p.entities = append(p.entities, pe)
 	for _, s := range pe.dynamics {

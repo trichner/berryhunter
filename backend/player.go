@@ -1,14 +1,10 @@
 package main
 
 import (
-	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
-	"github.com/trichner/berryhunter/backend/codec"
-	"github.com/google/flatbuffers/go"
-	"github.com/trichner/berryhunter/backend/model/client"
 	"log"
 )
 
@@ -78,9 +74,6 @@ func (p *player) Client() model.Client {
 	return p.client
 }
 
-const viewPortWidth = 20.0
-const viewPortHeight = 12.0
-
 func (p *player) Position() phy.Vec2f {
 	return p.Body.Position()
 }
@@ -99,17 +92,7 @@ func (p *player) Angle() float32 {
 	return p.angle
 }
 
-func sendWelcomeMessage(g *Game, c *net.Client) {
-
-	builder := flatbuffers.NewBuilder(32)
-	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, g.welcomeMsg)
-	builder.Finish(welcomeMsg)
-	c.SendMessage(builder.FinishedBytes())
-}
-
-func NewPlayer(g *Game, c *net.Client) *player {
-
-	sendWelcomeMessage(g, c)
+func NewPlayer(g *Game, c model.Client) *player {
 
 	registry := g.items
 
@@ -117,7 +100,7 @@ func NewPlayer(g *Game, c *net.Client) *player {
 
 	e.EntityType = BerryhunterApi.EntityTypeCharacter
 	p := &player{BaseEntity: e,
-		client:              client.NewClient(c),
+		client:              c,
 		Equipment:           items.NewEquipment(),
 		registry:            registry,
 		game:                g,
@@ -130,7 +113,7 @@ func NewPlayer(g *Game, c *net.Client) *player {
 	p.Body.Shape().Layer = model.LayerStaticCollision | model.LayerHeatCollision
 
 	// setup viewport
-	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{viewPortWidth / 2, viewPortHeight / 2})
+	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{model.ViewPortWidth / 2, model.ViewPortHeight / 2})
 
 	p.viewport.Shape().IsSensor = true
 	p.viewport.Shape().Layer = model.LayerAllCollision

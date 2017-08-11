@@ -9,9 +9,10 @@ import (
 )
 
 type NetSystem struct {
-	entities []model.Entity
-	players  []model.PlayerEntity
-	game     *Game
+	entities   []model.Entity
+	players    []model.PlayerEntity
+	spectators []model.Spectator
+	game       *Game
 }
 
 func NewNetSystem(g *Game) *NetSystem {
@@ -31,9 +32,13 @@ func (n *NetSystem) AddEntity(e model.Entity) {
 	n.entities = append(n.entities, e)
 }
 
-func (n *NetSystem) AddPlayer(p *player) {
+func (n *NetSystem) AddPlayer(p model.PlayerEntity) {
 	n.AddEntity(p)
 	n.players = append(n.players, p)
+}
+
+func (n *NetSystem) AddSpectator(s model.Spectator) {
+	n.spectators = append(n.spectators, s)
 }
 
 func (n *NetSystem) Update(dt float32) {
