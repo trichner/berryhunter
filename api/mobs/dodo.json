@@ -5,8 +5,10 @@
   "factors": {
     "health": 20
   },
-  "loot": {
-    "item": "RawMeat",
-    "count": 1
-  }
+  "drops": [
+    {
+      "item": "RawMeat",
+      "count": 3
+    }
+  ]
 }
