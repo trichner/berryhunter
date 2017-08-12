@@ -1,7 +1,7 @@
 {
-  "item": "CookedMeat",
+  "name": "CookedMeat",
   "id": 25,
-  "itemType": "CONSUMABLE",
+  "type": "CONSUMABLE",
   "factors": {
     "food": 80
   },

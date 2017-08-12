@@ -1,9 +1,9 @@
 {
   "id": 10,
-  "item": "StoneClub",
-  "itemType": "EQUIPMENT",
+  "name": "StoneClub",
+  "type": "EQUIPMENT",
   "factors": {
-    "damage": 3,
+    "damage": 5,
     "yield": 0
   },
   "recipe": {

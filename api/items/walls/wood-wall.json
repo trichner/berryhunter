@@ -1,7 +1,7 @@
 {
-  "item": "WoodWall",
+  "name": "WoodWall",
   "id": 29,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "health": 50,
     "durability": 2

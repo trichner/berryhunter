@@ -1,9 +1,9 @@
 {
   "id": 2,
   "name": "Mammoth",
-  "objecttype": "MOB",
+  "type": "MOB",
   "factors": {
-    "health": 200
+    "vulnerability": 0.5
   },
   "drops": [
     {

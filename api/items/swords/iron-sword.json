@@ -1,7 +1,7 @@
 {
   "id": 12,
-  "item": "IronSword",
-  "itemType": "EQUIPMENT",
+  "name": "IronSword",
+  "type": "EQUIPMENT",
   "factors": {
     "damage": 5,
     "yield": 0

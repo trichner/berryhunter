@@ -1,7 +1,7 @@
 {
   "id": 17,
-  "item": "BronzeHammer",
-  "itemType": "EQUIPMENT",
+  "name": "BronzeHammer",
+  "type": "EQUIPMENT",
   "factors": {
     "damage": 2,
     "structureDamage": 4,

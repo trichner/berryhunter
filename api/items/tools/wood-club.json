@@ -1,7 +1,7 @@
 {
   "id": 6,
-  "item": "WoodClub",
-  "itemType": "EQUIPMENT",
+  "name": "WoodClub",
+  "type": "EQUIPMENT",
   "factors": {
     "damage": 2,
     "yield": 2

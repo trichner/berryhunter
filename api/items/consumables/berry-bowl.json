@@ -1,7 +1,7 @@
 {
-  "item": "BerryBowl",
+  "name": "BerryBowl",
   "id": 28,
-  "itemType": "CONSUMABLE",
+  "type": "CONSUMABLE",
   "factors": {
     "food": 80
   },

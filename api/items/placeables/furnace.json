@@ -1,7 +1,7 @@
 {
-  "item": "Furnace",
+  "name": "Furnace",
   "id": 24,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "warmth": 2,
     "durationPerWood": 5,

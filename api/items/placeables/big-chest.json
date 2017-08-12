@@ -1,7 +1,7 @@
 {
-  "item": "BigChest",
+  "name": "BigChest",
   "id": 23,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "health": 100,
     "durability": 2,

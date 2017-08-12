@@ -1,7 +1,7 @@
 {
-  "item": "BronzeDoor",
+  "name": "BronzeDoor",
   "id": 39,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "health": 50,
     "durability": 4

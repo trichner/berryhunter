@@ -1,7 +1,7 @@
 {
   "id": 16,
-  "item": "StoneHammer",
-  "itemType": "EQUIPMENT",
+  "name": "StoneHammer",
+  "type": "EQUIPMENT",
   "factors": {
     "damage": 2,
     "structureDamage": 3,

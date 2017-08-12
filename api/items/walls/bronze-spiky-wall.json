@@ -1,7 +1,7 @@
 {
-  "item": "BronzeSpikyWall",
+  "name": "BronzeSpikyWall",
   "id": 34,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "health": 50,
     "durability": 4,

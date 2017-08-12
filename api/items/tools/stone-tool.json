@@ -1,7 +1,7 @@
 {
   "id": 7,
-  "item": "StoneTool",
-  "itemType": "EQUIPMENT",
+  "name": "StoneTool",
+  "type": "EQUIPMENT",
   "factors": {
     "damage": 2,
     "yield": 3

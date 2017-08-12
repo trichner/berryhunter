@@ -1,7 +1,7 @@
 {
-  "item": "StoneWall",
+  "name": "StoneWall",
   "id": 30,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "health": 50,
     "durability": 3

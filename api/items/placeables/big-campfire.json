@@ -1,7 +1,7 @@
 {
-  "item": "BigCampfire",
+  "name": "BigCampfire",
   "id": 20,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "warmth": 2,
     "duration": 300,

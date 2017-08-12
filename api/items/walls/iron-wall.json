@@ -1,7 +1,7 @@
 {
-  "item": "IronWall",
+  "name": "IronWall",
   "id": 35,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "health": 50,
     "durability": 5

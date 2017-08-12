@@ -1,7 +1,7 @@
 {
-  "item": "Seeds",
+  "name": "Seeds",
   "id": 41,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "recipe": {
     "craftTimeSec": 10,
     "materials": [

@@ -1,7 +1,7 @@
 {
-  "item": "Workbench",
+  "name": "Workbench",
   "id": 21,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "health": 50,
     "durability": 2

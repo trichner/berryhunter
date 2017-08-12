@@ -1,7 +1,7 @@
 {
   "id": 1,
-  "item": "Berry",
-  "itemType": "CONSUMABLE",
+  "name": "Berry",
+  "type": "CONSUMABLE",
   "factors": {
     "food": 20
   }

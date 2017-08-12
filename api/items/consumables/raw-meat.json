@@ -1,7 +1,7 @@
 {
-  "item": "RawMeat",
+  "name": "RawMeat",
   "id": 26,
-  "itemType": "CONSUMABLE",
+  "type": "CONSUMABLE",
   "factors": {
     "food": 10
   }

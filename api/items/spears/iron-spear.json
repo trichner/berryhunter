@@ -1,7 +1,7 @@
 {
   "id": 15,
-  "item": "IronSpear",
-  "itemType": "EQUIPMENT",
+  "name": "IronSpear",
+  "type": "EQUIPMENT",
   "factors": {
     "damage": 5,
     "yield": 0

@@ -1,7 +1,7 @@
 {
-  "item": "WoodSpikyWall",
+  "name": "WoodSpikyWall",
   "id": 32,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "health": 50,
     "durability": 2,

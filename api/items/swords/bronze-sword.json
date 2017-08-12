@@ -1,7 +1,7 @@
 {
   "id": 11,
-  "item": "BronzeSword",
-  "itemType": "EQUIPMENT",
+  "name": "BronzeSword",
+  "type": "EQUIPMENT",
   "factors": {
     "damage": 4,
     "yield": 0

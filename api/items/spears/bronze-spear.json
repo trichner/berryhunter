@@ -1,7 +1,7 @@
 {
   "id": 14,
-  "item": "BronzeSpear",
-  "itemType": "EQUIPMENT",
+  "name": "BronzeSpear",
+  "type": "EQUIPMENT",
   "factors": {
     "damage": 4,
     "yield": 0

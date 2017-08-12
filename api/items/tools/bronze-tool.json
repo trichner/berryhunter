@@ -1,7 +1,7 @@
 {
   "id": 8,
-  "item": "BronzeTool",
-  "itemType": "EQUIPMENT",
+  "name": "BronzeTool",
+  "type": "EQUIPMENT",
   "factors": {
     "damage": 2,
     "yield": 4

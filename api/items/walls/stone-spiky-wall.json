@@ -1,7 +1,7 @@
 {
-  "item": "StoneSpikyWall",
+  "name": "StoneSpikyWall",
   "id": 33,
-  "itemType": "PLACEABLE",
+  "type": "PLACEABLE",
   "factors": {
     "health": 50,
     "durability": 3,

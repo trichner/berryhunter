@@ -1,9 +1,9 @@
 {
   "id": 1,
   "name": "Dodo",
-  "objecttype": "MOB",
+  "type": "MOB",
   "factors": {
-    "health": 20
+    "vulnerability": 5.0
   },
   "drops": [
     {
