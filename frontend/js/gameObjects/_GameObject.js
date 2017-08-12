@@ -14,7 +14,9 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 			this.rotateOnPositioning = false;
 			this.visibleOnMinimap = true;
 
-			this.shape = this.initShape.apply(this, arguments);
+			const args = Array.prototype.splice.call(arguments, 5);
+			this.shape = this.initShape.apply(this, [x, y, size, rotation].concat(args));
+			this.show();
 		}
 
 		initShape(x, y, size, rotation) {

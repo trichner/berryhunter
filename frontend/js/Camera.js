@@ -76,9 +76,7 @@ define(['Game', 'Two', 'natureOfCode/arrive/vehicle', 'Develop'], function (Game
 			let translation = this.translation.clone();
 			translation.negate();
 			translation.addSelf(this.offset);
-			Game.layers.gameObjects.translation.copy(translation);
-			Game.layers.mapBorders.translation.copy(translation);
-			Game.layers.character.translation.copy(translation);
+			Game.cameraGroup.translation.copy(translation);
 
 			if (typeof this.onUpdate === 'function') {
 				this.onUpdate(translation);

@@ -66,7 +66,6 @@ define([
 			return shape;
 		}
 	}
-
 	Preloading.registerGameObjectSVG(MarioTree, 'img/deciduousTree.svg');
 
 	class Stone extends GameObject {
@@ -95,7 +94,6 @@ define([
 			return shape;
 		}
 	}
-
 	Preloading.registerGameObjectSVG(Stone, 'img/stone.svg');
 
 	class Bronze extends GameObject {
@@ -126,7 +124,6 @@ define([
 			return shape;
 		}
 	}
-
 	Preloading.registerGameObjectSVG(Bronze, 'img/bronze.svg');
 
 	class Iron extends GameObject {

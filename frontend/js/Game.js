@@ -68,7 +68,6 @@ define([], function () {
 			 * Ordered by z-index
 			 */
 			// TODO: Grids, Borders, AABBs?
-			// FIXME: 1 group, die per Kamera verschoben wird
 			Game.layers = {
 				terrain: {
 					background: new Two.Group(),
@@ -83,7 +82,7 @@ define([], function () {
 					doors: new Two.Group(),
 					walls: new Two.Group(),
 				},
-				characters: undefined,
+				characters: new Two.Group(),
 				mobs: {
 					dodo: new Two.Group(),
 					saberToothCat: new Two.Group(),
@@ -99,26 +98,41 @@ define([], function () {
 
 			// Terrain
 			Game.two.makeGroup(
-				Game.layers.terrain.background,
-				Game.layers.terrain.textures);
+				Game.layers.terrain.background);
+
+			Game.cameraGroup = Game.two.makeGroup();
+
+			// Terrain Textures moving with the camera
+			Game.cameraGroup.add(
+				Game.layers.terrain.textures
+			);
 
 			// Lower Placeables
-			Game.two.makeGroup(
+			Game.cameraGroup.add(
 				Game.layers.placeables.campfire,
 				Game.layers.placeables.chest,
 				Game.layers.placeables.workbench,
 				Game.layers.placeables.furnace
 			);
 
-			Game.layers.characters = Game.two.makeGroup();
+			// Characters
+			Game.cameraGroup.add(Game.layers.characters);
 
-			Game.two.makeGroup(
+			// Mobs
+			Game.cameraGroup.add(
 				Game.layers.mobs.dodo,
 				Game.layers.mobs.saberToothCat,
 				Game.layers.mobs.mammoth
 			);
 
-			Game.two.makeGroup(
+			// Higher Placeables
+			Game.cameraGroup.add(
+				Game.layers.placeables.doors,
+				Game.layers.placeables.walls
+			);
+
+			// Resources
+			Game.cameraGroup.add(
 				Game.layers.resources.berryBush,
 				Game.layers.resources.minerals,
 				Game.layers.resources.trees
@@ -128,10 +142,6 @@ define([], function () {
 
 			GameObject.setup();
 			RecipesHelper.setup();
-
-			// TODO if offline createPlayer
-			// player = new Character(1, width / 2, height / 2);
-			// playerCam = new Camera(player);
 
 			/**
 			 * @type GameMap|GameMapWithBackend

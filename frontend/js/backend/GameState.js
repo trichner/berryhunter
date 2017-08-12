@@ -9,6 +9,17 @@ define(['backend/BackendConstants',
 	'gameObjects/Placeable',
 	'schema_client'
 ], function (BackendConstants, Resources, Mobs, DebugCircle, Border, Character, Placeable,) {
+	class Spectator {
+		/**
+		 * @param {BerryhunterApi.Spectator} spectator
+		 */
+		constructor(spectator) {
+			this.id = spectator.id();
+			this.x = spectator.pos().x();
+			this.y = spectator.pos().y();
+		}
+	}
+
 	class GameState {
 		/**
 		 *
@@ -17,7 +28,17 @@ define(['backend/BackendConstants',
 		constructor(gameState) {
 			this.tick = gameState.tick().toFloat64();
 
-			this.player = unmarshalEntity(gameState.player(), BerryhunterApi.AnyEntity.Player);
+			switch (gameState.playerType()) {
+				case BerryhunterApi.Player.Spectator:
+					this.player = new Spectator(gameState.player(new BerryhunterApi.Spectator()));
+					break;
+				case BerryhunterApi.Player.Character:
+					this.player = unmarshalEntity(gameState.player(
+						new BerryhunterApi.Character()),
+						BerryhunterApi.AnyEntity.Player);
+					break;
+			}
+
 			this.inventory = [];
 
 			this.entities = [];
@@ -39,7 +60,7 @@ define(['backend/BackendConstants',
 	function unmarshalWrappedEntity(wrappedEntity) {
 		let eType = wrappedEntity.eType();
 
-		if (eType === BerryhunterApi.AnyEntity.NONE){
+		if (eType === BerryhunterApi.AnyEntity.NONE) {
 			return null;
 		}
 

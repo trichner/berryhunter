@@ -205,14 +205,6 @@ define([
 			return shape;
 		}
 
-		show() {
-			Game.layers.character.add(this.shape);
-		}
-
-		hide() {
-			Game.layers.character.remove(this.shape);
-		}
-
 		move(movement) {
 			if (!MapEditor.isActive()) {
 				return;
@@ -343,7 +335,6 @@ define([
 	}
 
 	Character.hitAnimationFrameDuration = 15;
-
 	Preloading.registerGameObjectSVG(Character, 'img/character.svg');
 
 	return Character;

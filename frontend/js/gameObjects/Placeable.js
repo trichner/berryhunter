@@ -8,6 +8,7 @@ define(['Game', 'GameObject', 'Utils', 'InjectedSVG', 'items/Items'], function (
 			this.visibleOnMinimap = false;
 
 			this.item = placeableItem;
+			this.layer = getGameLayer(placeableItem);
 		}
 
 		createShape(x, y, size, rotation, svg) {
