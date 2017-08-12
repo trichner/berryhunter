@@ -30,7 +30,7 @@ struct ItemStack {
 }
 
 // Workaround to make vector of union possible
-union AnyEntity { Player, Mob, Resource, Placeable }
+union AnyEntity { Character, Mob, Resource, Placeable }
 table Entity { e:AnyEntity; }
 
 table Resource {
@@ -65,7 +65,7 @@ table Mob {
   aabb:AABB;
 }
 
-table Player {
+table Character {
   id:ulong;
   entity_type:EntityType;
   pos:Vec2f;
@@ -86,11 +86,19 @@ table Player {
   aabb:AABB;
 }
 
+table Spectator {
+  id:ulong;
+  pos:Vec2f;
+}
+
+union Player { Character, Spectator }
+
 table GameState {
   tick:ulong;
 
-  // only present if player alive
+  // character or spectator
   player:Player;
+
   inventory:[ItemStack];
 
   entities:[Entity];

@@ -44,34 +44,75 @@ func (n *NetSystem) AddSpectator(s model.Spectator) {
 func (n *NetSystem) Update(dt float32) {
 
 	// assemble game state prototype
-	gameState := codec.GameState{}
-	gameState.Tick = n.game.tick
+	characterGameState := codec.CharacterGameState{}
+	characterGameState.Tick = n.game.tick
+
+	// process players
 	for _, player := range n.players {
+		n.playerSendState(player, characterGameState)
+	}
 
-		var entities []model.Entity
+	// assemble game state prototype
+	spectatorGameState := codec.SpectatorGameState{}
+	spectatorGameState.Tick = n.game.tick
 
-		// find all entities in view
-		for c := range player.Viewport().Collisions() {
-			userData := c.Shape().UserData
-			if userData != nil {
-				entities = append(entities, userData.(model.Entity))
-			}
+	// process players
+	for _, spectator := range n.spectators {
+		n.spectatorSendState(spectator, spectatorGameState)
+	}
+}
+
+func (n *NetSystem) playerSendState(p model.PlayerEntity, gs codec.CharacterGameState) {
+
+	var entities []model.Entity
+
+	// find all entities in view
+	for c := range p.Viewport().Collisions() {
+		userData := c.Shape().UserData
+		if userData != nil {
+			entities = append(entities, userData.(model.Entity))
 		}
+	}
 
-		// copy gameStatePrototype
-		clientGameState := gameState
-		clientGameState.Entities = entities
-		clientGameState.Player = player
+	// copy gameStatePrototype
+	gs.Entities = entities
+	gs.Player = p
 
-		// marshal and send state
-		builder := flatbuffers.NewBuilder(64)
-		gs := codec.GameStateMessageMarshalFlatbuf(builder, &clientGameState)
-		builder.Finish(gs)
+	// marshal and send state
+	builder := flatbuffers.NewBuilder(64)
+	msg := codec.CharacterGameStateMessageMarshalFlatbuf(builder, &gs)
+	builder.Finish(msg)
 
-		err := player.Client().SendMessage(builder.FinishedBytes())
-		if err != nil {
-			n.game.RemoveEntity(player.Basic())
+	err := p.Client().SendMessage(builder.FinishedBytes())
+	if err != nil {
+		n.game.RemoveEntity(p.Basic())
+	}
+}
+
+func (n *NetSystem) spectatorSendState(s model.Spectator, gs codec.SpectatorGameState) {
+
+	var entities []model.Entity
+
+	// find all entities in view
+	for c := range s.Viewport().Collisions() {
+		userData := c.Shape().UserData
+		if userData != nil {
+			entities = append(entities, userData.(model.Entity))
 		}
+	}
+
+	// copy gameStatePrototype
+	gs.Entities = entities
+	gs.Spectator = s
+
+	// marshal and send state
+	builder := flatbuffers.NewBuilder(64)
+	msg := codec.SpectatorGameStateMessageMarshalFlatbuf(builder, &gs)
+	builder.Finish(msg)
+
+	err := s.Client().SendMessage(builder.FinishedBytes())
+	if err != nil {
+		n.game.RemoveEntity(s.Basic())
 	}
 }
 

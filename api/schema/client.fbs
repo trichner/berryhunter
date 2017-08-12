@@ -28,7 +28,12 @@ table Join {
     player_name:string;
 }
 
-union ClientMessageBody { Input, Join }
+table Cheat {
+    token:string;
+    command:string;
+}
+
+union ClientMessageBody { Input, Join, Cheat }
 table ClientMessage { body:ClientMessageBody; }
 
 root_type ClientMessage;

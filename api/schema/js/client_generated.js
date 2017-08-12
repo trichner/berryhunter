@@ -25,7 +25,8 @@ BerryhunterApi.ActionType = {
 BerryhunterApi.ClientMessageBody = {
   NONE: 0,
   Input: 1,
-  Join: 2
+  Join: 2,
+  Cheat: 3
 };
 
 /**
@@ -292,6 +293,91 @@ BerryhunterApi.Join.addPlayerName = function(builder, playerNameOffset) {
  * @returns {flatbuffers.Offset}
  */
 BerryhunterApi.Join.endJoin = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.Cheat = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.Cheat}
+ */
+BerryhunterApi.Cheat.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.Cheat=} obj
+ * @returns {BerryhunterApi.Cheat}
+ */
+BerryhunterApi.Cheat.getRootAsCheat = function(bb, obj) {
+  return (obj || new BerryhunterApi.Cheat).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+BerryhunterApi.Cheat.prototype.token = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+BerryhunterApi.Cheat.prototype.command = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.Cheat.startCheat = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} tokenOffset
+ */
+BerryhunterApi.Cheat.addToken = function(builder, tokenOffset) {
+  builder.addFieldOffset(0, tokenOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} commandOffset
+ */
+BerryhunterApi.Cheat.addCommand = function(builder, commandOffset) {
+  builder.addFieldOffset(1, commandOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Cheat.endCheat = function(builder) {
   var offset = builder.endObject();
   return offset;
 };

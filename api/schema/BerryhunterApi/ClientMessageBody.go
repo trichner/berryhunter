@@ -6,11 +6,13 @@ const (
 	ClientMessageBodyNONE = 0
 	ClientMessageBodyInput = 1
 	ClientMessageBodyJoin = 2
+	ClientMessageBodyCheat = 3
 )
 
 var EnumNamesClientMessageBody = map[int]string{
 	ClientMessageBodyNONE:"NONE",
 	ClientMessageBodyInput:"Input",
 	ClientMessageBodyJoin:"Join",
+	ClientMessageBodyCheat:"Cheat",
 }
 

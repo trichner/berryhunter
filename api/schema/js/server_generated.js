@@ -30,10 +30,19 @@ BerryhunterApi.EntityType = {
  */
 BerryhunterApi.AnyEntity = {
   NONE: 0,
-  Player: 1,
+  Character: 1,
   Mob: 2,
   Resource: 3,
   Placeable: 4
+};
+
+/**
+ * @enum
+ */
+BerryhunterApi.Player = {
+  NONE: 0,
+  Character: 1,
+  Spectator: 2
 };
 
 /**
@@ -690,7 +699,7 @@ BerryhunterApi.Mob.endMob = function(builder) {
 /**
  * @constructor
  */
-BerryhunterApi.Player = function() {
+BerryhunterApi.Character = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -705,9 +714,9 @@ BerryhunterApi.Player = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {BerryhunterApi.Player}
+ * @returns {BerryhunterApi.Character}
  */
-BerryhunterApi.Player.prototype.__init = function(i, bb) {
+BerryhunterApi.Character.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -715,17 +724,17 @@ BerryhunterApi.Player.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {BerryhunterApi.Player=} obj
- * @returns {BerryhunterApi.Player}
+ * @param {BerryhunterApi.Character=} obj
+ * @returns {BerryhunterApi.Character}
  */
-BerryhunterApi.Player.getRootAsPlayer = function(bb, obj) {
-  return (obj || new BerryhunterApi.Player).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+BerryhunterApi.Character.getRootAsCharacter = function(bb, obj) {
+  return (obj || new BerryhunterApi.Character).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {flatbuffers.Long}
  */
-BerryhunterApi.Player.prototype.id = function() {
+BerryhunterApi.Character.prototype.id = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
 };
@@ -733,7 +742,7 @@ BerryhunterApi.Player.prototype.id = function() {
 /**
  * @returns {BerryhunterApi.EntityType}
  */
-BerryhunterApi.Player.prototype.entityType = function() {
+BerryhunterApi.Character.prototype.entityType = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
   return offset ? /** @type {BerryhunterApi.EntityType} */ (this.bb.readUint16(this.bb_pos + offset)) : BerryhunterApi.EntityType.DebugCircle;
 };
@@ -742,7 +751,7 @@ BerryhunterApi.Player.prototype.entityType = function() {
  * @param {BerryhunterApi.Vec2f=} obj
  * @returns {BerryhunterApi.Vec2f|null}
  */
-BerryhunterApi.Player.prototype.pos = function(obj) {
+BerryhunterApi.Character.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
   return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
@@ -750,7 +759,7 @@ BerryhunterApi.Player.prototype.pos = function(obj) {
 /**
  * @returns {number}
  */
-BerryhunterApi.Player.prototype.radius = function() {
+BerryhunterApi.Character.prototype.radius = function() {
   var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -758,7 +767,7 @@ BerryhunterApi.Player.prototype.radius = function() {
 /**
  * @returns {number}
  */
-BerryhunterApi.Player.prototype.rotation = function() {
+BerryhunterApi.Character.prototype.rotation = function() {
   var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
@@ -766,7 +775,7 @@ BerryhunterApi.Player.prototype.rotation = function() {
 /**
  * @returns {boolean}
  */
-BerryhunterApi.Player.prototype.isHit = function() {
+BerryhunterApi.Character.prototype.isHit = function() {
   var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
@@ -774,7 +783,7 @@ BerryhunterApi.Player.prototype.isHit = function() {
 /**
  * @returns {number}
  */
-BerryhunterApi.Player.prototype.actionTick = function() {
+BerryhunterApi.Character.prototype.actionTick = function() {
   var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -783,7 +792,7 @@ BerryhunterApi.Player.prototype.actionTick = function() {
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-BerryhunterApi.Player.prototype.name = function(optionalEncoding) {
+BerryhunterApi.Character.prototype.name = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
@@ -792,7 +801,7 @@ BerryhunterApi.Player.prototype.name = function(optionalEncoding) {
  * @param {number} index
  * @returns {number}
  */
-BerryhunterApi.Player.prototype.equipment = function(index) {
+BerryhunterApi.Character.prototype.equipment = function(index) {
   var offset = this.bb.__offset(this.bb_pos, 20);
   return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
@@ -800,7 +809,7 @@ BerryhunterApi.Player.prototype.equipment = function(index) {
 /**
  * @returns {number}
  */
-BerryhunterApi.Player.prototype.equipmentLength = function() {
+BerryhunterApi.Character.prototype.equipmentLength = function() {
   var offset = this.bb.__offset(this.bb_pos, 20);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -808,7 +817,7 @@ BerryhunterApi.Player.prototype.equipmentLength = function() {
 /**
  * @returns {Uint8Array}
  */
-BerryhunterApi.Player.prototype.equipmentArray = function() {
+BerryhunterApi.Character.prototype.equipmentArray = function() {
   var offset = this.bb.__offset(this.bb_pos, 20);
   return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -816,7 +825,7 @@ BerryhunterApi.Player.prototype.equipmentArray = function() {
 /**
  * @returns {number}
  */
-BerryhunterApi.Player.prototype.health = function() {
+BerryhunterApi.Character.prototype.health = function() {
   var offset = this.bb.__offset(this.bb_pos, 22);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
@@ -824,7 +833,7 @@ BerryhunterApi.Player.prototype.health = function() {
 /**
  * @returns {number}
  */
-BerryhunterApi.Player.prototype.satiety = function() {
+BerryhunterApi.Character.prototype.satiety = function() {
   var offset = this.bb.__offset(this.bb_pos, 24);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
@@ -832,7 +841,7 @@ BerryhunterApi.Player.prototype.satiety = function() {
 /**
  * @returns {number}
  */
-BerryhunterApi.Player.prototype.bodyTemperature = function() {
+BerryhunterApi.Character.prototype.bodyTemperature = function() {
   var offset = this.bb.__offset(this.bb_pos, 26);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
@@ -841,7 +850,7 @@ BerryhunterApi.Player.prototype.bodyTemperature = function() {
  * @param {BerryhunterApi.AABB=} obj
  * @returns {BerryhunterApi.AABB|null}
  */
-BerryhunterApi.Player.prototype.aabb = function(obj) {
+BerryhunterApi.Character.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 28);
   return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
@@ -849,7 +858,7 @@ BerryhunterApi.Player.prototype.aabb = function(obj) {
 /**
  * @param {flatbuffers.Builder} builder
  */
-BerryhunterApi.Player.startPlayer = function(builder) {
+BerryhunterApi.Character.startCharacter = function(builder) {
   builder.startObject(13);
 };
 
@@ -857,7 +866,7 @@ BerryhunterApi.Player.startPlayer = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Long} id
  */
-BerryhunterApi.Player.addId = function(builder, id) {
+BerryhunterApi.Character.addId = function(builder, id) {
   builder.addFieldInt64(0, id, builder.createLong(0, 0));
 };
 
@@ -865,7 +874,7 @@ BerryhunterApi.Player.addId = function(builder, id) {
  * @param {flatbuffers.Builder} builder
  * @param {BerryhunterApi.EntityType} entityType
  */
-BerryhunterApi.Player.addEntityType = function(builder, entityType) {
+BerryhunterApi.Character.addEntityType = function(builder, entityType) {
   builder.addFieldInt16(1, entityType, BerryhunterApi.EntityType.DebugCircle);
 };
 
@@ -873,7 +882,7 @@ BerryhunterApi.Player.addEntityType = function(builder, entityType) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
-BerryhunterApi.Player.addPos = function(builder, posOffset) {
+BerryhunterApi.Character.addPos = function(builder, posOffset) {
   builder.addFieldStruct(2, posOffset, 0);
 };
 
@@ -881,7 +890,7 @@ BerryhunterApi.Player.addPos = function(builder, posOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} radius
  */
-BerryhunterApi.Player.addRadius = function(builder, radius) {
+BerryhunterApi.Character.addRadius = function(builder, radius) {
   builder.addFieldInt16(3, radius, 0);
 };
 
@@ -889,7 +898,7 @@ BerryhunterApi.Player.addRadius = function(builder, radius) {
  * @param {flatbuffers.Builder} builder
  * @param {number} rotation
  */
-BerryhunterApi.Player.addRotation = function(builder, rotation) {
+BerryhunterApi.Character.addRotation = function(builder, rotation) {
   builder.addFieldFloat32(4, rotation, 0.0);
 };
 
@@ -897,7 +906,7 @@ BerryhunterApi.Player.addRotation = function(builder, rotation) {
  * @param {flatbuffers.Builder} builder
  * @param {boolean} isHit
  */
-BerryhunterApi.Player.addIsHit = function(builder, isHit) {
+BerryhunterApi.Character.addIsHit = function(builder, isHit) {
   builder.addFieldInt8(5, +isHit, +false);
 };
 
@@ -905,7 +914,7 @@ BerryhunterApi.Player.addIsHit = function(builder, isHit) {
  * @param {flatbuffers.Builder} builder
  * @param {number} actionTick
  */
-BerryhunterApi.Player.addActionTick = function(builder, actionTick) {
+BerryhunterApi.Character.addActionTick = function(builder, actionTick) {
   builder.addFieldInt16(6, actionTick, 0);
 };
 
@@ -913,7 +922,7 @@ BerryhunterApi.Player.addActionTick = function(builder, actionTick) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} nameOffset
  */
-BerryhunterApi.Player.addName = function(builder, nameOffset) {
+BerryhunterApi.Character.addName = function(builder, nameOffset) {
   builder.addFieldOffset(7, nameOffset, 0);
 };
 
@@ -921,7 +930,7 @@ BerryhunterApi.Player.addName = function(builder, nameOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} equipmentOffset
  */
-BerryhunterApi.Player.addEquipment = function(builder, equipmentOffset) {
+BerryhunterApi.Character.addEquipment = function(builder, equipmentOffset) {
   builder.addFieldOffset(8, equipmentOffset, 0);
 };
 
@@ -930,7 +939,7 @@ BerryhunterApi.Player.addEquipment = function(builder, equipmentOffset) {
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-BerryhunterApi.Player.createEquipmentVector = function(builder, data) {
+BerryhunterApi.Character.createEquipmentVector = function(builder, data) {
   builder.startVector(1, data.length, 1);
   for (var i = data.length - 1; i >= 0; i--) {
     builder.addInt8(data[i]);
@@ -942,7 +951,7 @@ BerryhunterApi.Player.createEquipmentVector = function(builder, data) {
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-BerryhunterApi.Player.startEquipmentVector = function(builder, numElems) {
+BerryhunterApi.Character.startEquipmentVector = function(builder, numElems) {
   builder.startVector(1, numElems, 1);
 };
 
@@ -950,7 +959,7 @@ BerryhunterApi.Player.startEquipmentVector = function(builder, numElems) {
  * @param {flatbuffers.Builder} builder
  * @param {number} health
  */
-BerryhunterApi.Player.addHealth = function(builder, health) {
+BerryhunterApi.Character.addHealth = function(builder, health) {
   builder.addFieldInt32(9, health, 0);
 };
 
@@ -958,7 +967,7 @@ BerryhunterApi.Player.addHealth = function(builder, health) {
  * @param {flatbuffers.Builder} builder
  * @param {number} satiety
  */
-BerryhunterApi.Player.addSatiety = function(builder, satiety) {
+BerryhunterApi.Character.addSatiety = function(builder, satiety) {
   builder.addFieldInt32(10, satiety, 0);
 };
 
@@ -966,7 +975,7 @@ BerryhunterApi.Player.addSatiety = function(builder, satiety) {
  * @param {flatbuffers.Builder} builder
  * @param {number} bodyTemperature
  */
-BerryhunterApi.Player.addBodyTemperature = function(builder, bodyTemperature) {
+BerryhunterApi.Character.addBodyTemperature = function(builder, bodyTemperature) {
   builder.addFieldInt32(11, bodyTemperature, 0);
 };
 
@@ -974,7 +983,7 @@ BerryhunterApi.Player.addBodyTemperature = function(builder, bodyTemperature) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} aabbOffset
  */
-BerryhunterApi.Player.addAabb = function(builder, aabbOffset) {
+BerryhunterApi.Character.addAabb = function(builder, aabbOffset) {
   builder.addFieldStruct(12, aabbOffset, 0);
 };
 
@@ -982,7 +991,91 @@ BerryhunterApi.Player.addAabb = function(builder, aabbOffset) {
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-BerryhunterApi.Player.endPlayer = function(builder) {
+BerryhunterApi.Character.endCharacter = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.Spectator = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.Spectator}
+ */
+BerryhunterApi.Spectator.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.Spectator=} obj
+ * @returns {BerryhunterApi.Spectator}
+ */
+BerryhunterApi.Spectator.getRootAsSpectator = function(bb, obj) {
+  return (obj || new BerryhunterApi.Spectator).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {flatbuffers.Long}
+ */
+BerryhunterApi.Spectator.prototype.id = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
+};
+
+/**
+ * @param {BerryhunterApi.Vec2f=} obj
+ * @returns {BerryhunterApi.Vec2f|null}
+ */
+BerryhunterApi.Spectator.prototype.pos = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.Spectator.startSpectator = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Long} id
+ */
+BerryhunterApi.Spectator.addId = function(builder, id) {
+  builder.addFieldInt64(0, id, builder.createLong(0, 0));
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} posOffset
+ */
+BerryhunterApi.Spectator.addPos = function(builder, posOffset) {
+  builder.addFieldStruct(1, posOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Spectator.endSpectator = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -1031,12 +1124,20 @@ BerryhunterApi.GameState.prototype.tick = function() {
 };
 
 /**
- * @param {BerryhunterApi.Player=} obj
- * @returns {BerryhunterApi.Player|null}
+ * @returns {BerryhunterApi.Player}
+ */
+BerryhunterApi.GameState.prototype.playerType = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? /** @type {BerryhunterApi.Player} */ (this.bb.readUint8(this.bb_pos + offset)) : BerryhunterApi.Player.NONE;
+};
+
+/**
+ * @param {flatbuffers.Table} obj
+ * @returns {?flatbuffers.Table}
  */
 BerryhunterApi.GameState.prototype.player = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? (obj || new BerryhunterApi.Player).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__union(obj, this.bb_pos + offset) : null;
 };
 
 /**
@@ -1045,7 +1146,7 @@ BerryhunterApi.GameState.prototype.player = function(obj) {
  * @returns {BerryhunterApi.ItemStack}
  */
 BerryhunterApi.GameState.prototype.inventory = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? (obj || new BerryhunterApi.ItemStack).__init(this.bb.__vector(this.bb_pos + offset) + index * 12, this.bb) : null;
 };
 
@@ -1053,7 +1154,7 @@ BerryhunterApi.GameState.prototype.inventory = function(index, obj) {
  * @returns {number}
  */
 BerryhunterApi.GameState.prototype.inventoryLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -1063,7 +1164,7 @@ BerryhunterApi.GameState.prototype.inventoryLength = function() {
  * @returns {BerryhunterApi.Entity}
  */
 BerryhunterApi.GameState.prototype.entities = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? (obj || new BerryhunterApi.Entity).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -1071,7 +1172,7 @@ BerryhunterApi.GameState.prototype.entities = function(index, obj) {
  * @returns {number}
  */
 BerryhunterApi.GameState.prototype.entitiesLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -1079,7 +1180,7 @@ BerryhunterApi.GameState.prototype.entitiesLength = function() {
  * @param {flatbuffers.Builder} builder
  */
 BerryhunterApi.GameState.startGameState = function(builder) {
-  builder.startObject(4);
+  builder.startObject(5);
 };
 
 /**
@@ -1092,10 +1193,18 @@ BerryhunterApi.GameState.addTick = function(builder, tick) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {BerryhunterApi.Player} playerType
+ */
+BerryhunterApi.GameState.addPlayerType = function(builder, playerType) {
+  builder.addFieldInt8(1, playerType, BerryhunterApi.Player.NONE);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} playerOffset
  */
 BerryhunterApi.GameState.addPlayer = function(builder, playerOffset) {
-  builder.addFieldOffset(1, playerOffset, 0);
+  builder.addFieldOffset(2, playerOffset, 0);
 };
 
 /**
@@ -1103,7 +1212,7 @@ BerryhunterApi.GameState.addPlayer = function(builder, playerOffset) {
  * @param {flatbuffers.Offset} inventoryOffset
  */
 BerryhunterApi.GameState.addInventory = function(builder, inventoryOffset) {
-  builder.addFieldOffset(2, inventoryOffset, 0);
+  builder.addFieldOffset(3, inventoryOffset, 0);
 };
 
 /**
@@ -1119,7 +1228,7 @@ BerryhunterApi.GameState.startInventoryVector = function(builder, numElems) {
  * @param {flatbuffers.Offset} entitiesOffset
  */
 BerryhunterApi.GameState.addEntities = function(builder, entitiesOffset) {
-  builder.addFieldOffset(3, entitiesOffset, 0);
+  builder.addFieldOffset(4, entitiesOffset, 0);
 };
 
 /**

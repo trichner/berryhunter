@@ -20,7 +20,7 @@ func AabbMarshalFlatbuf(aabb model.AABB, builder *flatbuffers.Builder) flatbuffe
 func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	n := len(items)
-	BerryhunterApi.PlayerStartEquipmentVector(builder, n)
+	BerryhunterApi.CharacterStartEquipmentVector(builder, n)
 	for _, i := range items {
 		builder.PrependByte(byte(i.ID))
 	}
@@ -28,49 +28,58 @@ func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) f
 	return builder.EndVector(n)
 }
 
-func playerCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerEntity) {
+func characterCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerEntity) {
 
 	// prepend entity specific things
 	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
 	name := builder.CreateString(p.Name())
 
 	// populate player table
-	BerryhunterApi.PlayerStart(builder)
-	BerryhunterApi.PlayerAddId(builder, p.Basic().ID())
-	BerryhunterApi.PlayerAddName(builder, name)
+	BerryhunterApi.CharacterStart(builder)
+	BerryhunterApi.CharacterAddId(builder, p.Basic().ID())
+	BerryhunterApi.CharacterAddName(builder, name)
 
 	pos := Vec2fMarshalFlatbuf(builder, p.Position())
-	BerryhunterApi.PlayerAddPos(builder, pos)
+	BerryhunterApi.CharacterAddPos(builder, pos)
 
 	aabb := AabbMarshalFlatbuf(p.AABB(), builder)
-	BerryhunterApi.PlayerAddAabb(builder, aabb)
+	BerryhunterApi.CharacterAddAabb(builder, aabb)
 
-	BerryhunterApi.PlayerAddRadius(builder, f32ToU16Px(p.Radius()))
-	BerryhunterApi.PlayerAddRotation(builder, p.Angle())
-	BerryhunterApi.PlayerAddEntityType(builder, uint16(p.Type()))
+	BerryhunterApi.CharacterAddRadius(builder, f32ToU16Px(p.Radius()))
+	BerryhunterApi.CharacterAddRotation(builder, p.Angle())
+	BerryhunterApi.CharacterAddEntityType(builder, uint16(p.Type()))
 
-	BerryhunterApi.PlayerAddEquipment(builder, equipment)
+	BerryhunterApi.CharacterAddEquipment(builder, equipment)
 }
 
 // general player as seen by other players
-func PlayerEntityFlatbufMarshal(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func CharacterEntityFlatbufMarshal(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	// prepend entity specific things
-	playerCommonMarshalFlatbuf(builder, p)
-	return BerryhunterApi.PlayerEnd(builder)
+	characterCommonMarshalFlatbuf(builder, p)
+	return BerryhunterApi.CharacterEnd(builder)
 }
 
 // player marshalled for the acting player
-func PlayerMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func CharacterMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	playerCommonMarshalFlatbuf(builder, p)
+	characterCommonMarshalFlatbuf(builder, p)
 	// other stuffz
 	vs := p.VitalSigns()
-	BerryhunterApi.PlayerAddHealth(builder, vs.Health.UInt32())
-	BerryhunterApi.PlayerAddSatiety(builder, vs.Satiety.UInt32())
-	BerryhunterApi.PlayerAddBodyTemperature(builder, vs.BodyTemperature.UInt32())
+	BerryhunterApi.CharacterAddHealth(builder, vs.Health.UInt32())
+	BerryhunterApi.CharacterAddSatiety(builder, vs.Satiety.UInt32())
+	BerryhunterApi.CharacterAddBodyTemperature(builder, vs.BodyTemperature.UInt32())
 
 	return BerryhunterApi.EntityEnd(builder)
+}
+
+func SpectatorMarshalFlatbuf(b *flatbuffers.Builder, s model.Spectator) flatbuffers.UOffsetT {
+
+	BerryhunterApi.SpectatorStart(b)
+	BerryhunterApi.SpectatorAddId(b, s.Basic().ID())
+	pos := Vec2fMarshalFlatbuf(b, s.Position())
+	BerryhunterApi.SpectatorAddPos(b, pos)
+	return BerryhunterApi.SpectatorEnd(b)
 }
 
 func ItemStackMarshalFlatbuf(i *items.ItemStack, builder *flatbuffers.Builder, slot uint8) flatbuffers.UOffsetT {
@@ -100,22 +109,45 @@ func InventoryMarshalFlatbuf(inventory *items.Inventory, builder *flatbuffers.Bu
 }
 
 // MarshalFlatbuf implements FlatbufCodec for GameState
-func (gs *GameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func (gs *CharacterGameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	entities := EntitiesMarshalFlatbuf(gs.Entities, builder)
-	player := PlayerMarshalFlatbuf(gs.Player, builder)
+	character := CharacterMarshalFlatbuf(gs.Player, builder)
 	inventory := InventoryMarshalFlatbuf(gs.Player.Inventory(), builder)
 
 	BerryhunterApi.GameStateStart(builder)
 	BerryhunterApi.GameStateAddTick(builder, gs.Tick)
-	BerryhunterApi.GameStateAddPlayer(builder, player)
+
+	BerryhunterApi.GameStateAddPlayerType(builder, BerryhunterApi.PlayerCharacter)
+	BerryhunterApi.GameStateAddPlayer(builder, character)
+
 	BerryhunterApi.GameStateAddEntities(builder, entities)
 	BerryhunterApi.GameStateAddInventory(builder, inventory)
 
 	return BerryhunterApi.GameStateEnd(builder)
 }
 
-func GameStateMessageMarshalFlatbuf(builder *flatbuffers.Builder, g *GameState) flatbuffers.UOffsetT {
+func CharacterGameStateMessageMarshalFlatbuf(builder *flatbuffers.Builder, g *CharacterGameState) flatbuffers.UOffsetT {
+	gs := g.MarshalFlatbuf(builder)
+	return ServerMessageWrapFlatbufMarshal(builder, gs, BerryhunterApi.ServerMessageBodyGameState)
+}
+
+// MarshalFlatbuf implements FlatbufCodec for GameState
+func (gs *SpectatorGameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	entities := EntitiesMarshalFlatbuf(gs.Entities, builder)
+	spectator := SpectatorMarshalFlatbuf(builder, gs.Spectator)
+
+	BerryhunterApi.GameStateStart(builder)
+	BerryhunterApi.GameStateAddTick(builder, gs.Tick)
+	BerryhunterApi.GameStateAddPlayerType(builder, BerryhunterApi.PlayerSpectator)
+	BerryhunterApi.GameStateAddPlayer(builder, spectator)
+	BerryhunterApi.GameStateAddEntities(builder, entities)
+
+	return BerryhunterApi.GameStateEnd(builder)
+}
+
+func SpectatorGameStateMessageMarshalFlatbuf(builder *flatbuffers.Builder, g *SpectatorGameState) flatbuffers.UOffsetT {
 	gs := g.MarshalFlatbuf(builder)
 	return ServerMessageWrapFlatbufMarshal(builder, gs, BerryhunterApi.ServerMessageBodyGameState)
 }
@@ -132,8 +164,8 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 
 		switch v := e.(type) {
 		case model.PlayerEntity:
-			marshalled = PlayerEntityFlatbufMarshal(v, builder)
-			eType = BerryhunterApi.AnyEntityPlayer
+			marshalled = CharacterEntityFlatbufMarshal(v, builder)
+			eType = BerryhunterApi.AnyEntityCharacter
 		case model.MobEntity:
 			marshalled = MobEntityFlatbufMarshal(v, builder)
 			eType = BerryhunterApi.AnyEntityMob
@@ -215,10 +247,16 @@ func PlaceableEntityFlatbufMarshal(e model.PlaceableEntity, builder *flatbuffers
 	return BerryhunterApi.PlaceableEnd(builder)
 }
 
+// intermediate struct to serialize
+type SpectatorGameState struct {
+	Tick      uint64
+	Spectator model.Spectator
+	Entities  []model.Entity
+}
 
 // intermediate struct to serialize
-type GameState struct {
-	Tick      uint64
-	Player    model.PlayerEntity
-	Entities  []model.Entity
+type CharacterGameState struct {
+	Tick     uint64
+	Player   model.PlayerEntity
+	Entities []model.Entity
 }

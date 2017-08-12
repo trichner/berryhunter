@@ -4,7 +4,7 @@ package BerryhunterApi
 
 const (
 	AnyEntityNONE = 0
-	AnyEntityPlayer = 1
+	AnyEntityCharacter = 1
 	AnyEntityMob = 2
 	AnyEntityResource = 3
 	AnyEntityPlaceable = 4
@@ -12,7 +12,7 @@ const (
 
 var EnumNamesAnyEntity = map[int]string{
 	AnyEntityNONE:"NONE",
-	AnyEntityPlayer:"Player",
+	AnyEntityCharacter:"Character",
 	AnyEntityMob:"Mob",
 	AnyEntityResource:"Resource",
 	AnyEntityPlaceable:"Placeable",
