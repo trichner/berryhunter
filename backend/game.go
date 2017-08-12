@@ -16,6 +16,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/codec"
 	"github.com/trichner/berryhunter/backend/model/client"
+	"github.com/trichner/berryhunter/backend/model/spectator"
 )
 
 type Game struct {
@@ -95,8 +96,8 @@ func (g *Game) Run() {
 
 	handleFunc := net.NewHandleFunc(func(c *net.Client) {
 		client := client.NewClient(c)
-		player := NewPlayer(g, client)
-		g.addPlayer(player)
+		s := spectator.NewSpectator(phy.VEC2F_ZERO, client)
+		g.AddEntity(s)
 	})
 
 	addr := fmt.Sprintf(":%d", g.conf.Port)

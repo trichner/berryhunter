@@ -68,9 +68,9 @@ type Item struct {
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
-	ID       int `json:"id"`
-	ItemType string `json:"itemType"`
-	Item     string `json:"item"`
+	ID   int `json:"id"`
+	Type string `json:"type"`
+	Name string `json:"name"`
 	Factors struct {
 		Food            int `json:"food"`
 		Damage          int `json:"damage"`
@@ -153,7 +153,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		recipe = &Recipe{i.Recipe.CraftTicks, materials, tools}
 	}
 
-	itemType, ok := ItemTypeMap[i.ItemType]
+	itemType, ok := ItemTypeMap[i.Type]
 	if !ok {
 		itemType = ItemTypeNone
 	}
@@ -161,7 +161,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	return &ItemDefinition{
 		ID:   ItemEnum(i.ID),
 		Type: itemType,
-		Name: i.Item,
+		Name: i.Name,
 		Slot: slot,
 		Factors: Factors{
 			Food:            i.Factors.Food,
