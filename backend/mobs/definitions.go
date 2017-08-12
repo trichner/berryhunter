@@ -1,6 +1,10 @@
 package mobs
 
-import "github.com/trichner/berryhunter/backend/items"
+import (
+	"github.com/trichner/berryhunter/backend/items"
+	"encoding/json"
+	"fmt"
+)
 
 //{
 //"id": 1,
@@ -44,4 +48,43 @@ type mobDefinition struct {
 		Item  string `json:"item"`
 		Count int   `json:"count"`
 	} `json:"drops"`
+}
+
+// parseItemDefinition parses a json string from a byte array into the
+// appropriate recipe object
+func parseMobDefinition(data []byte) (*mobDefinition, error) {
+	var mob mobDefinition
+	err := json.Unmarshal(data, &mob)
+	if err != nil {
+		return nil, err
+	}
+
+	return &mob, nil
+}
+
+func (m *mobDefinition) mapToItemDefinition(r items.Registry) (*MobDefinition, error) {
+
+	mob := &MobDefinition{
+		ID:   MobID(m.Id),
+		Name: m.Name,
+		Type: m.Type,
+		Factors: Factors{
+			Vulnerability: m.Factors.Vulnerability,
+		},
+		Drops: make(Drops, 1, 0),
+	}
+
+	// append drops
+	for _, d := range m.Drops {
+		i, err := r.GetByName(d.Item)
+		if err != nil {
+			return nil, err
+		}
+		if d.Count < 1 {
+			return nil, fmt.Errorf("Invalid Mob Definition, drop count is %d", d.Count)
+		}
+		mob.Drops = append(mob.Drops, items.NewItemStack(i, d.Count))
+	}
+
+	return mob, nil
 }
