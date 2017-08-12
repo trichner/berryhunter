@@ -85,6 +85,25 @@ func unmarshalJoin(j *BerryhunterApi.Join) *model.Join {
 	return join
 }
 
+func unwrapCheat(msg *BerryhunterApi.ClientMessage) *BerryhunterApi.Cheat {
+
+	i := &BerryhunterApi.Cheat{}
+	err := unwrapUnion(msg, i)
+	if err != nil {
+		return nil
+	}
+	return i
+}
+
+func unmarshalCheat(c *BerryhunterApi.Cheat) *model.Cheat {
+	if c == nil {
+		return nil
+	}
+
+	cheat := &model.Cheat{string(c.Token()), string(c.Command())}
+	return cheat
+}
+
 func assertBodyType(msg *BerryhunterApi.ClientMessage, expected byte) {
 
 	bodyType := msg.BodyType()
@@ -103,6 +122,12 @@ func JoinMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.Jo
 
 	assertBodyType(msg, BerryhunterApi.ClientMessageBodyJoin)
 	return unmarshalJoin(unwrapJoin(msg))
+}
+
+func CheatMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.Cheat {
+
+	assertBodyType(msg, BerryhunterApi.ClientMessageBodyCheat)
+	return unmarshalCheat(unwrapCheat(msg))
 }
 
 func ClientMessageFlatbufferUnmarshal(bytes []byte) *BerryhunterApi.ClientMessage {
