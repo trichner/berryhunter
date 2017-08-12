@@ -92,7 +92,7 @@ func (p *player) Angle() float32 {
 	return p.angle
 }
 
-func NewPlayer(g *Game, c model.Client) *player {
+func NewPlayer(g *Game, c model.Client, name string) *player {
 
 	registry := g.items
 
@@ -104,6 +104,7 @@ func NewPlayer(g *Game, c model.Client) *player {
 		Equipment:           items.NewEquipment(),
 		registry:            registry,
 		game:                g,
+		name:                name,
 	}
 
 	// setup body

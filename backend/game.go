@@ -72,6 +72,13 @@ func (g *Game) Init(conf *conf.Config, items items.Registry) {
 
 	pl := NewPlayerUpdateSystem()
 	g.AddSystem(pl)
+
+	s := NewSpectatorSystem(g)
+	g.AddSystem(s)
+
+	c := NewCheatSystem(g, []string{})
+	g.AddSystem(c)
+
 }
 
 func (g *Game) Run() {

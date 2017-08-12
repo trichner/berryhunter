@@ -28,10 +28,12 @@ func (s *SpectatorSystem) AddSpectator(spectator model.Spectator) {
 func (s *SpectatorSystem) Update(dt float32) {
 	for _, spectator := range s.spectators {
 		j := spectator.Client().NextJoin()
+
 		if j != nil {
 			s.g.RemoveEntity(spectator.Basic())
 			// upgrade to player
-			p := NewPlayer(s.g, spectator.Client())
+			name := j.PlayerName // resolve collisions!
+			p := NewPlayer(s.g, spectator.Client(), name)
 			s.g.AddEntity(p)
 		}
 	}
