@@ -5,7 +5,8 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 	let movementInterpolatedObjects = new Set();
 
 	class GameObject {
-		constructor(x, y, size, rotation) {
+		constructor(gameLayer, x, y, size, rotation) {
+			this.layer = gameLayer;
 			this.size = size || Constants.GRID_SPACING / 2;
 			this.rotation = rotation || 0;
 
@@ -14,7 +15,6 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 			this.visibleOnMinimap = true;
 
 			this.shape = this.initShape.apply(this, arguments);
-			this.show();
 		}
 
 		initShape(x, y, size, rotation) {
@@ -107,11 +107,11 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 		}
 
 		show() {
-			Game.groups.gameObjects.add(this.shape);
+			this.layer.add(this.shape);
 		}
 
 		hide() {
-			Game.groups.gameObjects.remove(this.shape);
+			this.layer.remove(this.shape);
 		}
 	}
 

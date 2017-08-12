@@ -1,8 +1,13 @@
-define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, Preloading, Utils) {
+define([
+	'Game',
+	'GameObject',
+	'Two',
+	'Preloading',
+	'Utils'], function (Game, GameObject, Two, Preloading, Utils) {
 
 	class Tree extends GameObject {
 		constructor(x, y, size, rotation) {
-			super(x, y, size, rotation);
+			super(Game.layers.resources.trees, x, y, size, rotation);
 		}
 
 		createMinimapIcon() {
@@ -66,7 +71,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 
 	class Stone extends GameObject {
 		constructor(x, y, size) {
-			super(x, y,
+			super(Game.layers.resources.minerals, x, y,
 				size || Utils.randomInt(30, 90),
 				Utils.random(0, Math.PI * 2)
 			);
@@ -95,7 +100,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 
 	class Bronze extends GameObject {
 		constructor(x, y, size) {
-			super(x, y, size || Utils.randomInt(30, 70));
+			super(Game.layers.resources.minerals, x, y, size || Utils.randomInt(30, 70));
 		}
 
 		createShape(x, y) {
@@ -114,7 +119,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 		}
 
 		createMinimapIcon() {
-			let shape = new Two.Polygon(0, 0, this.size * 2 , this.sides);
+			let shape = new Two.Polygon(0, 0, this.size * 2, this.sides);
 			shape.fill = 'gold';
 			shape.noStroke();
 
@@ -126,7 +131,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 
 	class Iron extends GameObject {
 		constructor(x, y, size) {
-			super(x, y,
+			super(Game.layers.resources.minerals, x, y,
 				size || Utils.randomInt(20, 60),
 				Utils.random(0, Math.PI * 2)
 			);
@@ -156,7 +161,7 @@ define(['GameObject', 'Two', 'Preloading', 'Utils'], function (GameObject, Two, 
 
 	class BerryBush extends GameObject {
 		constructor(x, y, size) {
-			super(x, y, size || Utils.randomInt(20, 45));
+			super(Game.layers.resources.berryBush, x, y, size || Utils.randomInt(20, 45));
 
 		}
 

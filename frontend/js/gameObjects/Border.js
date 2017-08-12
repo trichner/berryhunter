@@ -40,11 +40,11 @@ define(['Game', 'GameObject', 'Two'], function (Game, GameObject, Two) {
 		}
 
 		show() {
-			Game.groups.mapBorders.add(this.shape);
+			Game.layers.mapBorders.add(this.shape);
 		}
 
 		hide() {
-			Game.groups.mapBorders.remove(this.shape);
+			Game.layers.mapBorders.remove(this.shape);
 		}
 	}
 

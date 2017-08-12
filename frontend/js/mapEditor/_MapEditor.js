@@ -94,13 +94,13 @@ define([
 
 			MapEditor.calculateMapDimensions();
 
-			Game.groups.mapBorders.remove();
-			Game.groups.mapBorders = Game.two.makeGroup();
-			Game.groups.gameObjects.remove();
-			Game.groups.gameObjects = Game.two.makeGroup();
+			Game.layers.mapBorders.remove();
+			Game.layers.mapBorders = Game.two.makeGroup();
+			Game.layers.gameObjects.remove();
+			Game.layers.gameObjects = Game.two.makeGroup();
 
 			// Re-add overlay to ensure z-index
-			Game.two.add(Game.groups.overlay.remove());
+			Game.two.add(Game.layers.overlay.remove());
 
 			try {
 				Game.map = new GameMap();

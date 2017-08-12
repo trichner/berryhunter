@@ -36,7 +36,7 @@ define([], function () {
 
 			function createBackground() {
 				const background = new Two.Rectangle(Game.width / 2, Game.height / 2, Game.width, Game.height);
-				Game.groups.background.add(background);
+				Game.layers.terrain.background.add(background);
 				background.fill = 'rgb(0, 96, 48)';
 				background.noStroke();
 			}
@@ -67,13 +67,62 @@ define([], function () {
 			/**
 			 * Ordered by z-index
 			 */
-			Game.groups = {};
+			// TODO: Grids, Borders, AABBs?
+			// FIXME: 1 group, die per Kamera verschoben wird
+			Game.layers = {
+				terrain: {
+					background: new Two.Group(),
+					textures: new Two.Group(),
+				},
+				placeables: {
+					campfire: new Two.Group(),
+					chest: new Two.Group(),
+					workbench: new Two.Group(),
+					furnace: new Two.Group(),
 
-			Game.groups.background = Game.two.makeGroup();
-			Game.groups.character = Game.two.makeGroup();
-			Game.groups.mapBorders = Game.two.makeGroup();
-			Game.groups.gameObjects = Game.two.makeGroup();
-			Game.groups.overlay = Game.two.makeGroup();
+					doors: new Two.Group(),
+					walls: new Two.Group(),
+				},
+				characters: undefined,
+				mobs: {
+					dodo: new Two.Group(),
+					saberToothCat: new Two.Group(),
+					mammoth: new Two.Group(),
+				},
+				resources: {
+					berryBush: new Two.Group(),
+					minerals: new Two.Group(),
+					trees: new Two.Group(),
+				}
+				// UI Overlay is the highest layer, but not managed with Two.js
+			};
+
+			// Terrain
+			Game.two.makeGroup(
+				Game.layers.terrain.background,
+				Game.layers.terrain.textures);
+
+			// Lower Placeables
+			Game.two.makeGroup(
+				Game.layers.placeables.campfire,
+				Game.layers.placeables.chest,
+				Game.layers.placeables.workbench,
+				Game.layers.placeables.furnace
+			);
+
+			Game.layers.characters = Game.two.makeGroup();
+
+			Game.two.makeGroup(
+				Game.layers.mobs.dodo,
+				Game.layers.mobs.saberToothCat,
+				Game.layers.mobs.mammoth
+			);
+
+			Game.two.makeGroup(
+				Game.layers.resources.berryBush,
+				Game.layers.resources.minerals,
+				Game.layers.resources.trees
+			);
 
 			createBackground();
 

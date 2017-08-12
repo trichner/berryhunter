@@ -4,11 +4,11 @@ define(['Game', 'Two', 'Constants'], function (Game, Two, Constants) {
 	class QuadrantGrid {
 		constructor(width, height) {
 			this.gridLines = new Two.Group();
-			Game.groups.mapBorders.add(this.gridLines);
+			Game.layers.mapBorders.add(this.gridLines);
 
 			this.xIndices = new Two.Group();
 			this.yIndices = new Two.Group();
-			Game.groups.overlay.add(this.xIndices, this.yIndices);
+			Game.layers.overlay.add(this.xIndices, this.yIndices);
 
 			let index = 1;
 			const gridSpacing = Constants.GRID_SPACING;
@@ -38,13 +38,13 @@ define(['Game', 'Two', 'Constants'], function (Game, Two, Constants) {
 
 		cameraUpdate(translation) {
 			this.xIndices.translation.set(translation.x, 0);
-			if (Game.groups.mapBorders.translation.y > 0) {
-				this.xIndices.translation.y = Game.groups.mapBorders.translation.y;
+			if (Game.layers.mapBorders.translation.y > 0) {
+				this.xIndices.translation.y = Game.layers.mapBorders.translation.y;
 			}
 
 			this.yIndices.translation.set(0, translation.y);
-			if (Game.groups.mapBorders.translation.x > 0) {
-				this.yIndices.translation.x = Game.groups.mapBorders.translation.x;
+			if (Game.layers.mapBorders.translation.x > 0) {
+				this.yIndices.translation.x = Game.layers.mapBorders.translation.x;
 			}
 		}
 

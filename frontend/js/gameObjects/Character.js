@@ -13,7 +13,7 @@ define([
 ], function (Game, GameObject, Two, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading) {
 	class Character extends GameObject {
 		constructor(id, x, y, name) {
-			super(x, y, 30, Math.PI / 2);
+			super(Game.layers.characters, x, y, 30, Math.PI / 2);
 			this.id = id;
 			this.name = name;
 
@@ -206,11 +206,11 @@ define([
 		}
 
 		show() {
-			Game.groups.character.add(this.shape);
+			Game.layers.character.add(this.shape);
 		}
 
 		hide() {
-			Game.groups.character.remove(this.shape);
+			Game.layers.character.remove(this.shape);
 		}
 
 		move(movement) {
