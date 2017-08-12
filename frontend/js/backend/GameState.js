@@ -17,6 +17,7 @@ define(['backend/BackendConstants',
 			this.id = spectator.id();
 			this.x = spectator.pos().x();
 			this.y = spectator.pos().y();
+			this.isSpectator = true;
 		}
 	}
 
@@ -33,8 +34,8 @@ define(['backend/BackendConstants',
 					this.player = new Spectator(gameState.player(new BerryhunterApi.Spectator()));
 					break;
 				case BerryhunterApi.Player.Character:
-					this.player = unmarshalEntity(gameState.player(
-						new BerryhunterApi.Character()),
+					this.player = unmarshalEntity(
+						gameState.player(new BerryhunterApi.Character()),
 						BerryhunterApi.AnyEntity.Player);
 					break;
 			}
@@ -107,6 +108,8 @@ define(['backend/BackendConstants',
 		}
 
 		if (eType === BerryhunterApi.AnyEntity.Player) {
+			result.isSpectator = false;
+
 			result.rotation = entity.rotation();
 			result.isHit = entity.isHit();
 			result.actionTick = entity.actionTick();

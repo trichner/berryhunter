@@ -181,7 +181,7 @@ define([
 		receiveSnapshot: function (snapshot) {
 			Game.map.newSnapshot(snapshot.entities);
 
-			if (snapshot.player !== null) {
+			if (!snapshot.player.isSpectator) {
 				if (Game.started) {
 					if (Utils.isDefined(snapshot.player.position)) {
 						Game.player.character.setPosition(snapshot.player.position.x, snapshot.player.position.y);

@@ -13,7 +13,7 @@ define(['Utils', 'underscore'], function (Utils, _) {
 
 			snapshot.player = _.clone(gameState.player);
 
-			if (lastGameState.player !== null && gameState.player !== null) {
+			if (!lastGameState.player.isSpectator && !gameState.player.isSpectator) {
 				if (Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
 					Utils.nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)) {
 					delete snapshot.player.position;
