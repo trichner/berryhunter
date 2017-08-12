@@ -146,6 +146,8 @@ func (g *Game) addSpectator(e model.Spectator) {
 			sys.AddEntity(e)
 		case *NetSystem:
 			sys.AddSpectator(e)
+		case *SpectatorSystem:
+			sys.AddSpectator(e)
 		}
 	}
 }
