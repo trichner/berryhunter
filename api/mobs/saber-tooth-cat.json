@@ -1,0 +1,12 @@
+{
+  "id": 3,
+  "name": "SaberToothCat",
+  "objecttype": "MOB",
+  "factors": {
+    "health": 150
+  },
+  "loot": {
+    "item": "RawMeat",
+    "count": 2
+  }
+}

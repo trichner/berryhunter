@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "name": "Dodo",
+  "objecttype": "MOB",
+  "factors": {
+    "health": 20
+  },
+  "loot": {
+    "item": "RawMeat",
+    "count": 1
+  }
+}

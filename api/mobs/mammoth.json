@@ -1,0 +1,12 @@
+{
+  "id": 2,
+  "name": "Mammoth",
+  "objecttype": "MOB",
+  "factors": {
+    "health": 200
+  },
+  "loot": {
+    "item": "RawMeat",
+    "count": 3
+  }
+}
