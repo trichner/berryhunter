@@ -15,6 +15,6 @@ type PlayerInput struct {
 type ActionType int
 
 type Action struct {
-	Item items.ItemEnum
+	Item items.ItemID
 	Type ActionType
 }

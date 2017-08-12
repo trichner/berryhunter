@@ -31,3 +31,11 @@ type Welcome struct {
 	ServerName string
 	MapSize    int
 }
+
+func AcceptMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	BerryhunterApi.AcceptStart(builder)
+	accept := BerryhunterApi.AcceptEnd(builder)
+
+	return ServerMessageWrapFlatbufMarshal(builder, accept, BerryhunterApi.ServerMessageBodyAccept)
+}

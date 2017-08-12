@@ -59,7 +59,7 @@ func unmarshalInput(fbInput *BerryhunterApi.Input) *model.PlayerInput {
 	a := fbInput.Action(nil)
 	if a != nil {
 		i.Action = &model.Action{
-			Item: items.ItemEnum(a.Item()),
+			Item: items.ItemID(a.Item()),
 			Type: model.ActionType(a.ActionType()),
 		}
 	}

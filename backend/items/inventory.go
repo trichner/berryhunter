@@ -6,11 +6,11 @@ import (
 
 const DEFAULT_INVENTORY_CAP = 8
 
-// ItemEnum represents the ID of the item
-type ItemEnum int
+// ItemID represents the ID of the item
+type ItemID int
 
-func (i ItemEnum) String() string {
-	return fmt.Sprintf("ItemEnum(%d)", i)
+func (i ItemID) String() string {
+	return fmt.Sprintf("ItemID(%d)", i)
 }
 
 type Inventory struct {

@@ -8,11 +8,11 @@ import (
 )
 
 type registry struct {
-	items map[ItemEnum]*ItemDefinition
+	items map[ItemID]*ItemDefinition
 }
 
 type Registry interface {
-	Get(i ItemEnum) (Item, error)
+	Get(i ItemID) (Item, error)
 	GetByName(name string) (Item, error)
 	Items() []*ItemDefinition
 }
@@ -90,7 +90,7 @@ func (r *registry) GetByName(name string) (Item, error) {
 }
 
 func NewRegistry() *registry {
-	return &registry{items: make(map[ItemEnum]*ItemDefinition)}
+	return &registry{items: make(map[ItemID]*ItemDefinition)}
 }
 
 func (r *registry) Add(i *ItemDefinition) error {
@@ -103,10 +103,10 @@ func (r *registry) Add(i *ItemDefinition) error {
 	return nil
 }
 
-func (r *registry) Get(i ItemEnum) (Item, error) {
+func (r *registry) Get(i ItemID) (Item, error) {
 	def, ok := r.items[i]
 	if !ok {
-		return Item{}, fmt.Errorf("Cannot find ItemEnum '%d'", i)
+		return Item{}, fmt.Errorf("Cannot find ItemID '%d'", i)
 	}
 	return Item{def}, nil
 }

@@ -21,7 +21,7 @@ var namesEnumEquipSlot = map[string]EquipSlot{
 }
 
 type Tool struct {
-	EntityType ItemEnum
+	EntityType ItemID
 }
 
 type Recipe struct {
@@ -47,7 +47,7 @@ type Body struct {
 }
 
 type ItemDefinition struct {
-	ID      ItemEnum
+	ID      ItemID
 	Type    ItemType
 	Name    string
 	Slot    EquipSlot
@@ -159,7 +159,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	}
 
 	return &ItemDefinition{
-		ID:   ItemEnum(i.ID),
+		ID:   ItemID(i.ID),
 		Type: itemType,
 		Name: i.Name,
 		Slot: slot,
