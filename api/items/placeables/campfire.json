@@ -3,9 +3,10 @@
   "id": 19,
   "type": "PLACEABLE",
   "factors": {
-    "warmth": 2,
+    "warmth": 0.04,
     "duration": 150,
-    "radius": 5
+    "radius": 1.6,
+    "vulnerability": 0.01
   },
   "recipe": {
     "craftTimeSec": 5,

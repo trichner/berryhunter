@@ -3,6 +3,6 @@
   "id": 26,
   "type": "CONSUMABLE",
   "factors": {
-    "food": 10
+    "food": 0.1
   }
 }

@@ -3,8 +3,7 @@
   "id": 22,
   "type": "PLACEABLE",
   "factors": {
-    "health": 50,
-    "durability": 2,
+    "vulnerability": 5.0,
     "capacity": 1
   },
   "recipe": {

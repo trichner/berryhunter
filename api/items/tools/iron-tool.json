@@ -3,7 +3,7 @@
   "name": "IronTool",
   "type": "EQUIPMENT",
   "factors": {
-    "damage": 2,
+    "damage": 0.05,
     "yield": 5
   },
   "recipe": {

@@ -3,7 +3,7 @@
   "name": "StoneHammer",
   "type": "EQUIPMENT",
   "factors": {
-    "damage": 2,
+    "damage": 0.03,
     "structureDamage": 3,
     "yield": 0
   },

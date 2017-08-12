@@ -3,7 +3,7 @@
   "name": "StoneTool",
   "type": "EQUIPMENT",
   "factors": {
-    "damage": 2,
+    "damage":0.02,
     "yield": 3
   },
   "recipe": {

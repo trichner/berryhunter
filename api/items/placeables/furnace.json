@@ -3,10 +3,10 @@
   "id": 24,
   "type": "PLACEABLE",
   "factors": {
-    "warmth": 2,
-    "durationPerWood": 5,
-    "radius": 6,
-    "storedWood": 0
+    "heatPerSecond": 0.06,
+    "durationInSeconds": -1,
+    "radius": 2.5,
+    "vulnerability": 0.01
   },
   "recipe": {
     "craftTimeSec": 10,

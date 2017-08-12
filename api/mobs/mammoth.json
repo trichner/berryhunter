@@ -3,7 +3,9 @@
   "name": "Mammoth",
   "type": "MOB",
   "factors": {
-    "vulnerability": 0.5
+    "vulnerability": 0.5,
+    "damage": 0.1,
+    "speed": 0.8
   },
   "drops": [
     {

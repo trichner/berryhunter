@@ -3,7 +3,9 @@
   "name": "SaberToothCat",
   "type": "MOB",
   "factors": {
-    "vulnerability": 0.667
+    "vulnerability": 0.667,
+    "damage": 0.2,
+    "speed": 1.2
   },
   "drops": [
     {

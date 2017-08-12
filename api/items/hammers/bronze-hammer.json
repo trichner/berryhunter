@@ -3,7 +3,7 @@
   "name": "BronzeHammer",
   "type": "EQUIPMENT",
   "factors": {
-    "damage": 2,
+    "damage": 0.08,
     "structureDamage": 4,
     "yield": 0
   },

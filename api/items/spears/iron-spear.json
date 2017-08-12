@@ -3,7 +3,7 @@
   "name": "IronSpear",
   "type": "EQUIPMENT",
   "factors": {
-    "damage": 5,
+    "damage": 0.15,
     "yield": 0
   },
   "recipe": {

@@ -3,8 +3,7 @@
   "id": 40,
   "type": "PLACEABLE",
   "factors": {
-    "health": 50,
-    "durability": 5
+    "vulnerability": 0.1
   },
   "recipe": {
     "craftTimeSec": 10,

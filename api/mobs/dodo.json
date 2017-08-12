@@ -3,7 +3,9 @@
   "name": "Dodo",
   "type": "MOB",
   "factors": {
-    "vulnerability": 5.0
+    "vulnerability": 5.0,
+    "damage": 0,
+    "speed": 1.0
   },
   "drops": [
     {

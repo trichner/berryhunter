@@ -3,7 +3,7 @@
   "name": "BronzeSpear",
   "type": "EQUIPMENT",
   "factors": {
-    "damage": 4,
+    "damage": 0.1,
     "yield": 0
   },
   "recipe": {
