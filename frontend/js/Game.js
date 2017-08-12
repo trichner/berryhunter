@@ -3,6 +3,11 @@
 define([], function () {
 	let Game = {};
 
+	// Game.States = {
+	//	SPECTATING: 'SPECTATING',
+	//	PLAYING: 'PLAYING',
+	//};
+
 	Game.started = false;
 
 	Game.setup = function () {

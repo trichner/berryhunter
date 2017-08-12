@@ -130,7 +130,7 @@
 	.columnsLoop(@counter) when (@counter > 0) {
 		.columnsLoop((@counter - 1));
 
-		&.@{counter}-columns {
+		&.columns-@{counter} {
 			width: (@counter * @slotSize);
 		}
 	}

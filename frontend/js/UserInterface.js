@@ -192,7 +192,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		}, this);
 
 		this.craftingElement.className = '';
-		this.craftingElement.classList.add(craftsPerRow + '-columns')
+		this.craftingElement.classList.add('columns-' + craftsPerRow);
 	};
 
 	/**

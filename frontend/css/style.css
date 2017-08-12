@@ -429,25 +429,32 @@ dl.flatList > dd {
   top: 0;
   left: 0;
 }
-#crafting.1-columns {
+
+#crafting.columns-1 {
   width: 7vh;
 }
-#crafting.2-columns {
+
+#crafting.columns-2 {
   width: 14vh;
 }
-#crafting.3-columns {
+
+#crafting.columns-3 {
   width: 21vh;
 }
-#crafting.4-columns {
+
+#crafting.columns-4 {
   width: 28vh;
 }
-#crafting.5-columns {
+
+#crafting.columns-5 {
   width: 35vh;
 }
-#crafting.6-columns {
+
+#crafting.columns-6 {
   width: 42vh;
 }
-#crafting.7-columns {
+
+#crafting.columns-7 {
   width: 49vh;
 }
 #crafting > .clickableItem {
@@ -473,6 +480,7 @@ body {
   text-align: center;
   margin: 0;
   font-size: 20vw;
+  letter-spacing: 0.04em;
   color: #e37313;
   font-variant: small-caps;
   text-shadow: #ffffff 5px 0px 0px, #ffffff 4.9px 1px 0px, #ffffff 4.6px 1.95px 0px, #ffffff 4.13333px 2.81667px 0px, #ffffff 3.48333px 3.58333px 0px, #ffffff 2.7px 4.2px 0px, #ffffff 1.81667px 4.66667px 0px, #ffffff 0.85px 4.93333px 0px, #ffffff -0.15px 5px 0px, #ffffff -1.13333px 4.86667px 0px, #ffffff -2.08333px 4.55px 0px, #ffffff -2.95px 4.05px 0px, #ffffff -3.68333px 3.38333px 0px, #ffffff -4.28333px 2.58333px 0px, #ffffff -4.71667px 1.66667px 0px, #ffffff -4.95px 0.7px 0px, #ffffff -4.98333px -0.3px 0px, #ffffff -4.83333px -1.28333px 0px, #ffffff -4.48333px -2.21667px 0px, #ffffff -3.95px -3.06667px 0px, #ffffff -3.26667px -3.78333px 0px, #ffffff -2.45px -4.35px 0px, #ffffff -1.53333px -4.75px 0px, #ffffff -0.566667px -4.96667px 0px, #ffffff 0.433333px -4.98333px 0px, #ffffff 1.41667px -4.8px 0px, #ffffff 2.35px -4.41667px 0px, #ffffff 3.16667px -3.86667px 0px, #ffffff 3.88333px -3.15px 0px, #ffffff 4.43333px -2.31667px 0px, #ffffff 4.8px -1.4px 0px, #ffffff 4.98333px -0.416667px 0px;
