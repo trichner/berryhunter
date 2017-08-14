@@ -61,7 +61,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 
 	if item.Factors.Warmth != 0 {
 		radiator = &model.HeatRadiator{}
-		radiator.Heat = item.Factors.Warmth
+		radiator.Heat = int(item.Factors.Warmth * float32(model.VitalSignMax))
 		radiator.Radius = item.Factors.Radius
 		heaterBody := phy.NewCircle(phy.VEC2F_ZERO, radiator.Radius)
 		heaterBody.Shape().IsSensor = true

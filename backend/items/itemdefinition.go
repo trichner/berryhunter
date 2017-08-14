@@ -31,13 +31,13 @@ type Recipe struct {
 }
 
 type Factors struct {
-	Food            int
-	Damage          int
-	StructureDamage int
+	Food            float32
+	Damage          float32
+	StructureDamage float32
 	Yield           int
 	Duration        int
 
-	Warmth int
+	Warmth float32
 	Radius float32
 }
 
@@ -72,12 +72,12 @@ type itemDefinition struct {
 	Type string `json:"type"`
 	Name string `json:"name"`
 	Factors struct {
-		Food            int `json:"food"`
-		Damage          int `json:"damage"`
-		StructureDamage int `json:"structureDamage"`
+		Food            float32 `json:"food"`
+		Damage          float32 `json:"damage"`
+		StructureDamage float32 `json:"structureDamage"`
 		Yield           int `json:"yield"`
 		Duration        int `json:"duration"`
-		Warmth          int `json:"warmth"`
+		Warmth          float32 `json:"warmth"`
 		Radius          float32 `json:"radius"`
 	} `json:"factors"`
 	Slot string `json:"slot"`
