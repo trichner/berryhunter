@@ -267,7 +267,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 					file: 'wallWood',
 					size: 40
 				},
-				definition: 'wall/wood-wall',
+				definition: 'walls/wood-wall',
 				type: ItemType.PLACEABLE
 			},
 			WoodSpikyWall: {
