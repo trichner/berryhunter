@@ -99,8 +99,12 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			},
 			IronSword: {
 				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'swordIronIcon'},
+				graphic: {file: 'swordIron',
+					size: 30,
+					offsetX: 10,
+					offsetY: -2.5
+				},
 				definition: 'swords/iron-sword',
 				type: ItemType.EQUIPMENT,
 				equipmentSlot: Equipment.Slots.HAND
@@ -148,24 +152,39 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			 ***********************************/
 			StoneHammer: {
 				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'hammerStoneIcon'},
+				graphic: {
+					file: 'hammerStone',
+					size: 30,
+					offsetX: 10,
+					offsetY: -2.5
+				},
 				definition: 'hammers/stone-hammer',
 				type: ItemType.EQUIPMENT,
 				equipmentSlot: Equipment.Slots.HAND
 			},
 			BronzeHammer: {
 				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'hammerBronzeIcon'},
+				graphic: {
+					file: 'hammerBronze',
+					size: 30,
+					offsetX: 10,
+					offsetY: -2.5
+				},
 				definition: 'hammers/bronze-hammer',
 				type: ItemType.EQUIPMENT,
 				equipmentSlot: Equipment.Slots.HAND
 			},
 			IronHammer: {
 				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'hammerIronIcon'},
+				graphic: {
+					file: 'hammerIron',
+					size: 50,
+					offsetX: 10,
+					offsetY: -2.5
+				},
 				definition: 'hammers/iron-hammer',
 				type: ItemType.EQUIPMENT,
 				equipmentSlot: Equipment.Slots.HAND
@@ -175,18 +194,18 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			 * PLACEABLES
 			 ***********************************/
 			Campfire: {
-				icon: {file: 'campFireIcon'},
+				icon: {file: 'fireCampIcon'},
 				graphic: {
-					file: 'campFire',
+					file: 'fireCamp',
 					size: 50
 				},
 				definition: 'placeables/campfire',
 				type: ItemType.PLACEABLE
 			},
 			BigCampfire: {
-				icon: {file: 'bigCampFireIcon'},
+				icon: {file: 'fireBigCampIcon'},
 				graphic: {
-					file: 'bigCampFire',
+					file: 'fireBigCamp',
 					size: 65
 				},
 				definition: 'placeables/big-campfire',
@@ -211,16 +230,18 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				type: ItemType.PLACEABLE
 			},
 			BigChest: {
-				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'chestBig'},
+				graphic: {
+					file: 'chestBig',
+					size: 50
+				},
 				definition: 'placeables/big-chest',
 				type: ItemType.PLACEABLE
 			},
 			Furnace: {
-				icon: {file: 'furnace'},
+				icon: {file: 'fireFurnace'},
 				graphic: {
-					file: 'furnace',
+					file: 'fireFurnace',
 					size: 50
 				},
 				definition: 'placeables/furnace',
@@ -241,11 +262,12 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			 * WALLS
 			 ***********************************/
 			WoodWall: {
-				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
-				// TODO
-				definition: '',
+				icon: {file: 'wallWood'},
+				graphic: {
+					file: 'wallWood',
+					size: 40
+				},
+				definition: 'placeables/wood-wall',
 				type: ItemType.PLACEABLE
 			},
 			WoodSpikyWall: {
@@ -362,7 +384,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			BerryBowl: {
 				icon: {file: 'berryBowlIcon'},
 				// TODO
-				definition: '',
+				definition: 'consumables/berry-bowl',
 				type: ItemType.CONSUMABLE
 			},
 
