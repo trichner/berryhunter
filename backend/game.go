@@ -18,6 +18,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model/client"
 	"github.com/trichner/berryhunter/backend/model/spectator"
 	"github.com/trichner/berryhunter/backend/mobs"
+	"github.com/trichner/berryhunter/backend/chat"
 )
 
 type Game struct {
@@ -82,6 +83,9 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 
 	c := NewCheatSystem(g, []string{})
 	g.AddSystem(c)
+
+	chat := chat.New()
+	g.AddSystem(chat)
 
 }
 
@@ -252,6 +256,8 @@ func (g *Game) addPlayer(p *player) {
 		case *PlayerUpdate:
 			sys.AddPlayer(p)
 		case *CheatSystem:
+			sys.AddPlayer(p)
+		case *chat.ChatSystem:
 			sys.AddPlayer(p)
 		}
 	}

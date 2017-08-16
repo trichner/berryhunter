@@ -15,6 +15,7 @@ type client struct {
 	joins  chan *model.Join
 	inputs chan *model.PlayerInput
 	cheats chan *model.Cheat
+	chat   chan *model.ChatMessage
 }
 
 func (c *client) NextInput() *model.PlayerInput {
@@ -44,10 +45,20 @@ func (c *client) NextCheat() *model.Cheat {
 	return nil
 }
 
+func (c *client) NextChatMessage() *model.ChatMessage {
+	select {
+	case msg := <-c.chat:
+		return msg
+	default:
+	}
+	return nil
+}
+
 func (c *client) Close() {
 	close(c.inputs)
 	close(c.joins)
 	close(c.cheats)
+	close(c.chat)
 }
 
 func (c *client) SendMessage(bytes []byte) error {
@@ -80,6 +91,13 @@ func (c *client) routeMessage(msg *BerryhunterApi.ClientMessage) {
 		default:
 			log.Print("Cheat dropped.")
 		}
+	case BerryhunterApi.ClientMessageBodyChatMessage:
+		m := codec.ChatMessageFlatbufferUnmarshal(msg)
+		select {
+		case c.chat <- m:
+		default:
+			log.Print("ChatMessage dropped.")
+		}
 	}
 }
 
@@ -89,6 +107,7 @@ func NewClient(c *net.Client) model.Client {
 		inputs: make(chan *model.PlayerInput, 2),
 		joins:  make(chan *model.Join, 2),
 		cheats: make(chan *model.Cheat, 2),
+		chat:   make(chan *model.ChatMessage, 2),
 	}
 
 	c.OnMessage(func(client *net.Client, bytes []byte) {

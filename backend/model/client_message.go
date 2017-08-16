@@ -7,3 +7,5 @@ type Join struct {
 type Cheat struct {
 	Token, Command string
 }
+
+type ChatMessage string

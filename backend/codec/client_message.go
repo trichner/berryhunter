@@ -104,6 +104,25 @@ func unmarshalCheat(c *BerryhunterApi.Cheat) *model.Cheat {
 	return cheat
 }
 
+func unwrapChatMessage(msg *BerryhunterApi.ClientMessage) *BerryhunterApi.ChatMessage {
+
+	i := &BerryhunterApi.ChatMessage{}
+	err := unwrapUnion(msg, i)
+	if err != nil {
+		return nil
+	}
+	return i
+}
+
+func unmarshalChatMessage(c *BerryhunterApi.ChatMessage) *model.ChatMessage {
+	if c == nil {
+		return nil
+	}
+
+	cheat := model.ChatMessage(string(c.Message()))
+	return &cheat
+}
+
 func assertBodyType(msg *BerryhunterApi.ClientMessage, expected byte) {
 
 	bodyType := msg.BodyType()
@@ -128,6 +147,12 @@ func CheatMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.C
 
 	assertBodyType(msg, BerryhunterApi.ClientMessageBodyCheat)
 	return unmarshalCheat(unwrapCheat(msg))
+}
+
+func ChatMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.ChatMessage {
+
+	assertBodyType(msg, BerryhunterApi.ClientMessageBodyChatMessage)
+	return unmarshalChatMessage(unwrapChatMessage(msg))
 }
 
 func ClientMessageFlatbufferUnmarshal(bytes []byte) *BerryhunterApi.ClientMessage {
