@@ -21,7 +21,7 @@ type clientMessage struct {
 }
 
 type PlayerInputSystem struct {
-	players []*player
+	players model.Players
 	game    *Game
 	// currently two, one to read and one to fill
 	ibufs [inputBuffererCount]InputBufferer
@@ -49,7 +49,7 @@ func (i *PlayerInputSystem) storeInput(playerId uint64, input *model.PlayerInput
 	i.ibufs[i.game.tick%inputBuffererCount][playerId] = input
 }
 
-func (i *PlayerInputSystem) AddPlayer(p *player) {
+func (i *PlayerInputSystem) AddPlayer(p model.PlayerEntity) {
 	i.players = append(i.players, p)
 }
 
@@ -59,7 +59,7 @@ func (i *PlayerInputSystem) Update(dt float32) {
 	for _, p := range i.players {
 		input := p.Client().NextInput()
 		if input != nil {
-			i.storeInput(p.ID(), input)
+			i.storeInput(p.Basic().ID(), input)
 		}
 	}
 
@@ -69,9 +69,9 @@ func (i *PlayerInputSystem) Update(dt float32) {
 
 	// apply inputs to player
 	for _, p := range i.players {
-		inputs, _ := ibuf[p.ID()]
-		last, _ := lastBuf[p.ID()]
-		p.UpdateInput(inputs, last)
+		inputs, _ := ibuf[p.Basic().ID()]
+		last, _ := lastBuf[p.Basic().ID()]
+		i.updateInput(p, inputs, last)
 	}
 
 	// clear out buffer
@@ -81,12 +81,12 @@ func (i *PlayerInputSystem) Update(dt float32) {
 const walkSpeed = 0.1
 
 // applies the inputs to a player
-func (p *player) UpdateInput(next, last *model.PlayerInput) {
+func (i *PlayerInputSystem) updateInput(p model.PlayerEntity, next, last *model.PlayerInput) {
 
-	p.resolveHandCollisions()
+	resolveHandCollisions(p)
 
 	// reset
-	p.hand.Shape().Layer = 0
+	p.Hand().Collider.Shape().Layer = 0
 
 	if next == nil {
 		return
@@ -108,15 +108,16 @@ func (p *player) UpdateInput(next, last *model.PlayerInput) {
 	}
 
 	// process actions if available
-	p.applyAction(next.Action)
+	i.applyAction(p, next.Action)
 }
 
-func (p *player) resolveHandCollisions(){
-	if p.handItem.ItemDefinition == nil {
+func resolveHandCollisions(player model.PlayerEntity) {
+	hand := player.Hand()
+	if hand.Item.ItemDefinition == nil {
 		return
 	}
 
-	for v := range p.hand.Collisions() {
+	for v := range hand.Collider.Collisions() {
 		usr := v.Shape().UserData
 		if usr == nil {
 			log.Printf("Missing UserData!")
@@ -128,17 +129,17 @@ func (p *player) resolveHandCollisions(){
 			log.Printf("Non conformant UserData: %T", usr)
 			continue
 		}
-		r.PlayerHitsWith(p, p.handItem)
+		r.PlayerHitsWith(player, hand.Item)
 	}
 }
 
-func (p *player) applyAction(action *model.Action) {
+func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Action) {
 
 	if action == nil {
 		return
 	}
 
-	item, err := p.registry.Get(action.Item)
+	item, err := i.game.items.Get(action.Item)
 	if err != nil {
 		log.Printf("😩 Unknown Action Item: %s", err)
 		return
@@ -152,8 +153,8 @@ func (p *player) applyAction(action *model.Action) {
 		if !hasItem(p, item) {
 			return
 		}
-		p.hand.Shape().Layer = -1
-		p.handItem = item
+		p.Hand().Collider.Shape().Layer = -1
+		p.Hand().Item = item
 		break
 	case BerryhunterApi.ActionTypeCraftItem:
 		p.Craft(item)
@@ -163,14 +164,14 @@ func (p *player) applyAction(action *model.Action) {
 		if !hasItem(p, item) {
 			return
 		}
-		p.inventory.DropAll(item)
+		p.Inventory().DropAll(item)
 		break
 
 	case BerryhunterApi.ActionTypeConsumeItem:
 		if !hasItem(p, item) {
 			return
 		}
-		ok := p.inventory.ConsumeItem(items.NewItemStack(item, 1))
+		ok := p.Inventory().ConsumeItem(items.NewItemStack(item, 1))
 		if ok {
 			// prevent overflow
 			h := p.VitalSigns().Health
@@ -183,14 +184,14 @@ func (p *player) applyAction(action *model.Action) {
 		if !hasItem(p, item) {
 			return
 		}
-		p.Equip(item)
+		p.Equipment().Equip(item)
 		break
 
 	case BerryhunterApi.ActionTypeUnequipItem:
 		if !hasItem(p, item) {
 			return
 		}
-		p.Unequip(item)
+		p.Equipment().Unequip(item)
 		break
 
 	case BerryhunterApi.ActionTypePlaceItem:
@@ -214,7 +215,7 @@ func (p *player) applyAction(action *model.Action) {
 			panic(err)
 		}
 		e.SetPosition(p.Position())
-		p.game.AddEntity(e)
+		i.game.AddEntity(e)
 
 		break
 	}
@@ -243,7 +244,7 @@ func input2vec(i *model.PlayerInput) phy.Vec2f {
 func (i *PlayerInputSystem) Remove(b ecs.BasicEntity) {
 	var delete int = -1
 	for index, player := range i.players {
-		if player.ID() == b.ID() {
+		if player.Basic().ID() == b.ID() {
 			delete = index
 			break
 		}

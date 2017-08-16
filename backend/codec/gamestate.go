@@ -31,7 +31,7 @@ func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) f
 func characterCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerEntity) {
 
 	// prepend entity specific things
-	equipment := EquipmentMarshalFlatbuf(p.Equipped(), builder)
+	equipment := EquipmentMarshalFlatbuf(p.Equipment().Equipped(), builder)
 	name := builder.CreateString(p.Name())
 
 	// populate player table

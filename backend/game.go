@@ -18,7 +18,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model/client"
 	"github.com/trichner/berryhunter/backend/model/spectator"
 	"github.com/trichner/berryhunter/backend/mobs"
-	"github.com/trichner/berryhunter/backend/chat"
+	"github.com/trichner/berryhunter/backend/sys/chat"
 )
 
 type Game struct {
@@ -238,7 +238,7 @@ func (g *Game) addResourceEntity(e model.ResourceEntity) {
 	}
 }
 
-func (g *Game) addPlayer(p *player) {
+func (g *Game) addPlayer(p model.PlayerEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
 

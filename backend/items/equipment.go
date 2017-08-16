@@ -1,26 +1,24 @@
 package items
 
-type Equipment struct {
-	equipped map[EquipSlot]Item
+type Equipment map[EquipSlot]Item
+
+func NewEquipment() *Equipment {
+	e := make(Equipment)
+	return &e
 }
 
-func NewEquipment() Equipment {
-	return Equipment{make(map[EquipSlot]Item)}
-}
-
-func (e *Equipment) Equip(item Item) {
-	e.equipped[item.Slot] = item
-}
-
-func (e *Equipment) Unequip(item Item) {
-	delete(e.equipped, item.Slot)
-}
-
-func (e *Equipment) Equipped() []Item {
-	equips := make([]Item, 0, len(e.equipped))
-	for _, v := range e.equipped {
-		equips = append(equips, v)
+func (e Equipment) Equipped() []Item {
+	equipped := make([]Item, 0, len(e))
+	for _, v := range e {
+		equipped = append(equipped, v)
 	}
+	return equipped
+}
 
-	return equips
+func (e Equipment) Equip(item Item) {
+	e[item.Slot] = item
+}
+
+func (e Equipment) Unequip(item Item) {
+	delete(e, item.Slot)
 }

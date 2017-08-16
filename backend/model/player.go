@@ -36,17 +36,27 @@ type PlayerVitalSigns struct {
 	Health          VitalSign
 }
 
+type Hand struct {
+	Collider phy.DynamicCollider
+	Item     items.Item
+}
+
+type Players []PlayerEntity
+
 type PlayerEntity interface {
 	Entity
 	Name() string
-	Equipped() []items.Item
+	Equipment() *items.Equipment
 	VitalSigns() *PlayerVitalSigns
 	Inventory() *items.Inventory
+	Craft(i items.Item) bool
 	Viewport() phy.DynamicCollider
+	Hand() *Hand
 	Client() Client
+	SetAngle(a float32)
 
 	Update(dt float32)
-	UpdateInput(next, last *PlayerInput)
+	//UpdateInput(next, last *PlayerInput)
 }
 
 type VitalSignEntity interface {

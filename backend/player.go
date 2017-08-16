@@ -16,7 +16,6 @@ type player struct {
 
 	model.BaseEntity
 
-	registry items.Registry
 	game     *Game
 
 	angle  float32
@@ -24,11 +23,12 @@ type player struct {
 
 	viewport *phy.Box
 
-	hand     *phy.Circle
-	handItem items.Item
+	hand *model.Hand
+	//hand     *phy.Circle
+	//handItem items.Item
 
 	inventory items.Inventory
-	items.Equipment
+	equipment *items.Equipment
 
 	actionTick uint
 
@@ -50,10 +50,14 @@ func (p *player) Name() string {
 	return p.name
 }
 
+func (p *player) Equipment() *items.Equipment {
+	return p.equipment
+}
+
 func (p *player) Bodies() model.Bodies {
 	b := make(model.Bodies, 3)
 	b[0] = p.Body
-	b[1] = p.hand
+	b[1] = p.hand.Collider
 	b[2] = p.viewport
 	return b
 }
@@ -92,17 +96,18 @@ func (p *player) Angle() float32 {
 	return p.angle
 }
 
-func NewPlayer(g *Game, c model.Client, name string) *player {
+func (p *player) Hand() *model.Hand {
+	return p.hand
+}
 
-	registry := g.items
+func NewPlayer(g *Game, c model.Client, name string) *player {
 
 	e := newCircleEntity(0.25)
 
 	e.EntityType = BerryhunterApi.EntityTypeCharacter
 	p := &player{BaseEntity: e,
 		client:              c,
-		Equipment:           items.NewEquipment(),
-		registry:            registry,
+		equipment:           items.NewEquipment(),
 		game:                g,
 		name:                name,
 	}
@@ -121,7 +126,7 @@ func NewPlayer(g *Game, c model.Client, name string) *player {
 	p.viewport.Shape().Group = shapeGroup
 
 	//--- initialize inventory
-	inventory, err := initializePlayerInventory(registry)
+	inventory, err := initializePlayerInventory(g.items)
 	if err != nil {
 		panic(err)
 	}
@@ -133,10 +138,11 @@ func NewPlayer(g *Game, c model.Client, name string) *player {
 	p.PlayerVitalSigns.BodyTemperature = model.VitalSignMax
 
 	// setup hand sensor
-	p.hand = phy.NewCircle(e.Body.Position(), 0.25)
-	p.hand.Shape().IsSensor = true
-	p.hand.Shape().Group = shapeGroup
-	p.hand.Shape().Layer = 0 //TODO
+	hand := phy.NewCircle(e.Body.Position(), 0.25)
+	hand.Shape().IsSensor = true
+	hand.Shape().Group = shapeGroup
+	hand.Shape().Layer = 0 //TODO
+	p.hand = &model.Hand{Collider: hand}
 
 	p.updateHand()
 
@@ -174,8 +180,8 @@ func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
 }
 
 func (p *player) startAction(tool items.Item) {
-	p.handItem = tool
-	p.hand.Shape().Layer = model.LayerRessourceCollision
+	p.hand.Item = tool
+	p.hand.Collider.Shape().Layer = model.LayerRessourceCollision
 }
 
 var handOffset = phy.Vec2f{0.25, 0}
@@ -185,7 +191,7 @@ func (p *player) updateHand() {
 	// could cache Rotation matrix/ handOffset
 	relativeOffset := phy.NewRotMat2f(p.angle).Mult(handOffset)
 	handPos := p.Position().Add(relativeOffset)
-	p.hand.SetPosition(handPos)
+	p.hand.Collider.SetPosition(handPos)
 }
 
 func (p *player) Craft(i items.Item) bool {
