@@ -37,6 +37,17 @@ var commands = map[string]CheatCommand{
 
 		return nil
 	},
+	"PING": func(g *Game, p model.PlayerEntity, arg *string) error {
+
+		msg := "PONG"
+		if arg != nil && len(*arg) > 0 {
+			msg += " " + *arg
+		}
+
+		log.Println(msg)
+
+		return nil
+	},
 }
 
 type CheatSystem struct {
