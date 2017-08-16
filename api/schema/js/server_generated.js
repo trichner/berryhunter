@@ -53,7 +53,8 @@ BerryhunterApi.ServerMessageBody = {
   Welcome: 1,
   GameState: 2,
   Accept: 3,
-  Obituary: 4
+  Obituary: 4,
+  EntityMessage: 5
 };
 
 /**
@@ -1460,6 +1461,90 @@ BerryhunterApi.Obituary.startObituary = function(builder) {
  * @returns {flatbuffers.Offset}
  */
 BerryhunterApi.Obituary.endObituary = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.EntityMessage = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.EntityMessage}
+ */
+BerryhunterApi.EntityMessage.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.EntityMessage=} obj
+ * @returns {BerryhunterApi.EntityMessage}
+ */
+BerryhunterApi.EntityMessage.getRootAsEntityMessage = function(bb, obj) {
+  return (obj || new BerryhunterApi.EntityMessage).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {flatbuffers.Long}
+ */
+BerryhunterApi.EntityMessage.prototype.id = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+BerryhunterApi.EntityMessage.prototype.message = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.EntityMessage.startEntityMessage = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Long} id
+ */
+BerryhunterApi.EntityMessage.addId = function(builder, id) {
+  builder.addFieldInt64(0, id, builder.createLong(0, 0));
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} messageOffset
+ */
+BerryhunterApi.EntityMessage.addMessage = function(builder, messageOffset) {
+  builder.addFieldOffset(1, messageOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.EntityMessage.endEntityMessage = function(builder) {
   var offset = builder.endObject();
   return offset;
 };

@@ -7,6 +7,7 @@ const (
 	ClientMessageBodyInput = 1
 	ClientMessageBodyJoin = 2
 	ClientMessageBodyCheat = 3
+	ClientMessageBodyChatMessage = 4
 )
 
 var EnumNamesClientMessageBody = map[int]string{
@@ -14,5 +15,6 @@ var EnumNamesClientMessageBody = map[int]string{
 	ClientMessageBodyInput:"Input",
 	ClientMessageBodyJoin:"Join",
 	ClientMessageBodyCheat:"Cheat",
+	ClientMessageBodyChatMessage:"ChatMessage",
 }
 

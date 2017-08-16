@@ -33,7 +33,11 @@ table Cheat {
     command:string;
 }
 
-union ClientMessageBody { Input, Join, Cheat }
+table ChatMessage {
+    message:string;
+}
+
+union ClientMessageBody { Input, Join, Cheat, ChatMessage }
 table ClientMessage { body:ClientMessageBody; }
 
 root_type ClientMessage;

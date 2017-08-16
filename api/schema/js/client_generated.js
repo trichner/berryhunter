@@ -26,7 +26,8 @@ BerryhunterApi.ClientMessageBody = {
   NONE: 0,
   Input: 1,
   Join: 2,
-  Cheat: 3
+  Cheat: 3,
+  ChatMessage: 4
 };
 
 /**
@@ -378,6 +379,74 @@ BerryhunterApi.Cheat.addCommand = function(builder, commandOffset) {
  * @returns {flatbuffers.Offset}
  */
 BerryhunterApi.Cheat.endCheat = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.ChatMessage = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.ChatMessage}
+ */
+BerryhunterApi.ChatMessage.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.ChatMessage=} obj
+ * @returns {BerryhunterApi.ChatMessage}
+ */
+BerryhunterApi.ChatMessage.getRootAsChatMessage = function(bb, obj) {
+  return (obj || new BerryhunterApi.ChatMessage).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+BerryhunterApi.ChatMessage.prototype.message = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.ChatMessage.startChatMessage = function(builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} messageOffset
+ */
+BerryhunterApi.ChatMessage.addMessage = function(builder, messageOffset) {
+  builder.addFieldOffset(0, messageOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.ChatMessage.endChatMessage = function(builder) {
   var offset = builder.endObject();
   return offset;
 };

@@ -120,7 +120,12 @@ table Obituary {
     // maybe killer? or stats?
 }
 
-union ServerMessageBody { Welcome, GameState, Accept, Obituary }
+table EntityMessage {
+    id:ulong;
+    message:string;
+}
+
+union ServerMessageBody { Welcome, GameState, Accept, Obituary, EntityMessage }
 table ServerMessage { body:ServerMessageBody; }
 
 root_type ServerMessage;
