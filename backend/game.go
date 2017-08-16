@@ -248,6 +248,8 @@ func (g *Game) addPlayer(p *player) {
 			sys.AddPlayer(p)
 		case *PlayerUpdate:
 			sys.AddPlayer(p)
+		case *CheatSystem:
+			sys.AddPlayer(p)
 		}
 	}
 }
