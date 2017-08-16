@@ -68,6 +68,10 @@ func (c *CheatSystem) Update(dt float32) {
 	// handle cheat commands
 	for _, player := range c.players {
 		cheat := player.Client().NextCheat()
+		if cheat == nil {
+			continue
+		}
+
 		if !c.validateToken(cheat.Token) {
 			log.Printf("⛔️ Invalid Cheat Token: %s", cheat.Token)
 			continue
