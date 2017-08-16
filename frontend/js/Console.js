@@ -5,7 +5,7 @@ define(['Preloading', 'Utils', 'backend/Backend'], function (Preloading, Utils, 
 
 	Console.KEYS = [
 		220, // ^ for german keyboards
-		221, // ` for US keyboards
+		192, // ` for US keyboards
 	];
 
 	const FILTERED_KEYCODES = [

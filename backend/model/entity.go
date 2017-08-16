@@ -52,7 +52,7 @@ type ResourceEntity interface {
 type MobEntity interface {
 	Entity
 
-	Health() int
+	Health() VitalSign
 	//Velocity() phy.Vec2f
 	//SetVelocity(v phy.Vec2f)
 	Update(dt float32) bool

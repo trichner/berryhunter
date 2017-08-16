@@ -8,27 +8,30 @@ import (
 	"math"
 	"github.com/trichner/berryhunter/backend/items"
 	"log"
+	"github.com/trichner/berryhunter/backend/mobs"
 )
 
 var _ = model.MobEntity(&Mob{})
 
-var types = []model.EntityType{
-	BerryhunterApi.EntityTypeDodo,
-	BerryhunterApi.EntityTypeMammoth,
-	BerryhunterApi.EntityTypeSaberToothCat,
+var types = map[string]model.EntityType{
+	"Dodo":          BerryhunterApi.EntityTypeDodo,
+	"Mammoth":       BerryhunterApi.EntityTypeMammoth,
+	"SaberToothCat": BerryhunterApi.EntityTypeSaberToothCat,
 }
 
-func NewMob(body *phy.Circle, drop items.Item) *Mob {
-	//TODO
-	t := types[rand.Intn(len(types))]
+func NewMob(body *phy.Circle, d *mobs.MobDefinition) *Mob {
+	entityType, ok := types[d.Name]
+	if !ok {
+		log.Fatalf("Mob type not found: %d/%s", d.ID, d.Name)
+	}
 
-	base := model.NewBaseEntity(body, t)
+	base := model.NewBaseEntity(body, entityType)
 	m := &Mob{
 		BaseEntity: base,
 		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
 		velocity:   phy.Vec2f{0.04, 0},
-		health:     255,
-		drop:       drop,
+		health:     model.VitalSignMax,
+		m:          d,
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -37,10 +40,11 @@ func NewMob(body *phy.Circle, drop items.Item) *Mob {
 type Mob struct {
 	model.BaseEntity
 
-	health   int
+	m *mobs.MobDefinition
+
+	health   model.VitalSign
 	velocity phy.Vec2f
 	rand     *rand.Rand
-	drop     items.Item
 }
 
 func (m *Mob) Update(dt float32) bool {
@@ -65,7 +69,7 @@ func (m *Mob) Angle() float32 {
 	return phy.Vec2f{1, 0}.AngleBetween(m.velocity)
 }
 
-func (m *Mob) Health() int {
+func (m *Mob) Health() model.VitalSign {
 	return m.health
 }
 
@@ -73,6 +77,8 @@ func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	log.Printf("🎯")
 	m.health -= 50
 	if m.health <= 0 {
-		p.Inventory().AddItem(items.NewItemStack(m.drop, 1))
+		for _, i := range m.m.Drops {
+			p.Inventory().AddItem(i)
+		}
 	}
 }
