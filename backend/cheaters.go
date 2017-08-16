@@ -50,6 +50,11 @@ func NewCheatSystem(g *Game, tokens []string) *CheatSystem {
 	return &CheatSystem{tokens: tokens, g: g}
 }
 
+func (*CheatSystem) New(w *ecs.World) {
+
+	log.Println("CheatSystem nominal")
+}
+
 func (*CheatSystem) Priority() int {
 	return -50
 }
