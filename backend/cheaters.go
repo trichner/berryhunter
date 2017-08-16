@@ -82,10 +82,12 @@ func (c *CheatSystem) Update(dt float32) {
 			continue
 		}
 		cmd := strings.ToUpper(argv[0])
-		action := commands[cmd]
-		if action == nil {
-			log.Printf("⁉️ Invalid Action: %s", action)
+		action, ok := commands[cmd]
+		if action == nil || !ok {
+			log.Printf("⁉️ Invalid Action.")
+			continue
 		}
+
 		var actionArg *string = nil
 		if len(argv) > 1 {
 			actionArg = &argv[1]
@@ -93,7 +95,9 @@ func (c *CheatSystem) Update(dt float32) {
 		err := action(c.g, player, actionArg)
 		if err != nil {
 			log.Printf("😰 Action '%s' failed.", cmd)
+			continue
 		}
+
 		log.Printf("😎 Cheated '%s'.", cmd)
 	}
 }
