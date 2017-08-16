@@ -72,7 +72,7 @@ func (c *CheatSystem) Update(dt float32) {
 		if len(argv) < 1 {
 			continue
 		}
-		cmd := argv[0]
+		cmd := strings.ToUpper(argv[0])
 		action := commands[cmd]
 		if action == nil {
 			log.Printf("⁉️ Invalid Action: %s", action)
