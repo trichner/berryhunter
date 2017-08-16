@@ -42,11 +42,15 @@ define(['Preloading', 'Utils', 'backend/Backend'], function (Preloading, Utils, 
 	}
 
 	function onCommand(command) {
-		Backend.sendCommand({
-			command: command,
-			token: token
-		});
 		Console.log(command);
+		if (token) {
+			Backend.sendCommand({
+				command: command,
+				token: token
+			});
+		} else {
+			Console.log('ERROR: URL parameter "token" is not defined!');
+		}
 	}
 
 	Console.log = function (string) {
