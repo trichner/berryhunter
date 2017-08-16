@@ -193,22 +193,6 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 	return builder.EndVector(n)
 }
 
-func MobEntityFlatbufMarshal(m model.MobEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
-	BerryhunterApi.MobStart(builder)
-	BerryhunterApi.MobAddId(builder, m.Basic().ID())
-	BerryhunterApi.MobAddMobId(builder, uint16(m.MobID()))
-	BerryhunterApi.MobAddEntityType(builder, uint16(m.Type()))
-	BerryhunterApi.MobAddRotation(builder, m.Angle())
-
-	aabb := AabbMarshalFlatbuf(m.AABB(), builder)
-	BerryhunterApi.MobAddAabb(builder, aabb)
-
-	pos := Vec2fMarshalFlatbuf(builder, m.Position())
-	BerryhunterApi.MobAddPos(builder, pos)
-
-	return BerryhunterApi.MobEnd(builder)
-}
 
 // EntityFlatbufMarshal marshals an Entity interface to its corresponding
 // flatbuffer schema

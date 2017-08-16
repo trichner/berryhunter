@@ -26,7 +26,7 @@ func (rcv *EntityMessage) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *EntityMessage) Id() uint64 {
+func (rcv *EntityMessage) EntityId() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.GetUint64(o + rcv._tab.Pos)
@@ -34,7 +34,7 @@ func (rcv *EntityMessage) Id() uint64 {
 	return 0
 }
 
-func (rcv *EntityMessage) MutateId(n uint64) bool {
+func (rcv *EntityMessage) MutateEntityId(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(4, n)
 }
 
@@ -49,8 +49,8 @@ func (rcv *EntityMessage) Message() []byte {
 func EntityMessageStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }
-func EntityMessageAddId(builder *flatbuffers.Builder, id uint64) {
-	builder.PrependUint64Slot(0, id, 0)
+func EntityMessageAddEntityId(builder *flatbuffers.Builder, entityId uint64) {
+	builder.PrependUint64Slot(0, entityId, 0)
 }
 func EntityMessageAddMessage(builder *flatbuffers.Builder, message flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(message), 0)

@@ -121,7 +121,7 @@ table Obituary {
 }
 
 table EntityMessage {
-    id:ulong;
+    entity_id:ulong;
     message:string;
 }
 

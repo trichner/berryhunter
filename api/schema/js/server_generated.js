@@ -1503,7 +1503,7 @@ BerryhunterApi.EntityMessage.getRootAsEntityMessage = function(bb, obj) {
 /**
  * @returns {flatbuffers.Long}
  */
-BerryhunterApi.EntityMessage.prototype.id = function() {
+BerryhunterApi.EntityMessage.prototype.entityId = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
 };
@@ -1526,10 +1526,10 @@ BerryhunterApi.EntityMessage.startEntityMessage = function(builder) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Long} id
+ * @param {flatbuffers.Long} entityId
  */
-BerryhunterApi.EntityMessage.addId = function(builder, id) {
-  builder.addFieldInt64(0, id, builder.createLong(0, 0));
+BerryhunterApi.EntityMessage.addEntityId = function(builder, entityId) {
+  builder.addFieldInt64(0, entityId, builder.createLong(0, 0));
 };
 
 /**
