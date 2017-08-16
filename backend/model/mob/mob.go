@@ -13,11 +13,13 @@ import (
 
 var _ = model.MobEntity(&Mob{})
 
-var types = map[string]model.EntityType{
-	"Dodo":          BerryhunterApi.EntityTypeDodo,
-	"Mammoth":       BerryhunterApi.EntityTypeMammoth,
-	"SaberToothCat": BerryhunterApi.EntityTypeSaberToothCat,
-}
+var types = func() map[string]model.EntityType {
+	t := map[string]model.EntityType{}
+	for id, name := range BerryhunterApi.EnumNamesEntityType {
+		t[name] = model.EntityType(id)
+	}
+	return t
+}()
 
 func NewMob(body *phy.Circle, d *mobs.MobDefinition) *Mob {
 	entityType, ok := types[d.Name]
