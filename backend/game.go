@@ -17,6 +17,7 @@ import (
 	"github.com/trichner/berryhunter/backend/codec"
 	"github.com/trichner/berryhunter/backend/model/client"
 	"github.com/trichner/berryhunter/backend/model/spectator"
+	"github.com/trichner/berryhunter/backend/mobs"
 )
 
 type Game struct {
@@ -25,6 +26,7 @@ type Game struct {
 	tick  uint64
 	conf  *conf.Config
 	items items.Registry
+	mobs  mobs.Registry
 
 	welcomeMsg *codec.Welcome
 }
@@ -43,15 +45,16 @@ func (h *wsHandler) OnMessage(c *net.Client, msg []byte) {
 
 }
 
-func (g *Game) Init(conf *conf.Config, items items.Registry) {
+func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry) {
 	
 
 	g.conf = conf
 	g.items = items
+	g.mobs = mobs
 
 	mapSide := 100
 	g.welcomeMsg = &codec.Welcome{
-		"k42.ch [Alpha]",
+		"berryhunter.io [Alpha] rza, n1b, gino & co.",
 		mapSide,
 	}
 

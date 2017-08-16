@@ -27,7 +27,7 @@ type Factors struct {
 	Vulnerability float32
 }
 
-type Drops []items.ItemStack
+type Drops []*items.ItemStack
 
 type MobDefinition struct {
 	ID      MobID
@@ -62,7 +62,7 @@ func parseMobDefinition(data []byte) (*mobDefinition, error) {
 	return &mob, nil
 }
 
-func (m *mobDefinition) mapToItemDefinition(r items.Registry) (*MobDefinition, error) {
+func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, error) {
 
 	mob := &MobDefinition{
 		ID:   MobID(m.Id),
@@ -71,7 +71,7 @@ func (m *mobDefinition) mapToItemDefinition(r items.Registry) (*MobDefinition, e
 		Factors: Factors{
 			Vulnerability: m.Factors.Vulnerability,
 		},
-		Drops: make(Drops, 1, 0),
+		Drops: make(Drops, 0, 1),
 	}
 
 	// append drops
