@@ -3,14 +3,14 @@
 define(['Utils', 'backend/BackendConstants'], function (Utils, BackendConstants) {
 
 	class ClientMessage {
-		constructor(builder, type, body){
+		constructor(builder, type, body) {
 			this.builder = builder;
 			BerryhunterApi.ClientMessage.startClientMessage(builder);
 			BerryhunterApi.ClientMessage.addBodyType(builder, type);
 			BerryhunterApi.ClientMessage.addBody(builder, body);
 		}
 
-		finish(){
+		finish() {
 			this.builder.finish(BerryhunterApi.ClientMessage.endClientMessage(this.builder));
 			return this.builder.asUint8Array();
 		}
@@ -26,6 +26,16 @@ define(['Utils', 'backend/BackendConstants'], function (Utils, BackendConstants)
 		let builder = new flatbuffers.Builder(10);
 		join = marshalJoin(builder, join);
 		return new ClientMessage(builder, BerryhunterApi.ClientMessageBody.Join, join);
+	};
+
+	ClientMessage.fromCommand = function (command) {
+		let builder = new flatbuffers.Builder(10);
+		let commandString = builder.createString(command.command);
+		let tokenString = builder.createString(command.token);
+		BerryhunterApi.Cheat.startCheat(builder);
+		BerryhunterApi.Cheat.addCommand(builder, commandString);
+		BerryhunterApi.Cheat.addToken(builder, tokenString);
+		return new ClientMessage(builder, BerryhunterApi.ClientMessageBody.Cheat, BerryhunterApi.Cheat.endCheat(builder));
 	};
 
 	function marshalInput(builder, inputObj) {

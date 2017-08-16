@@ -10,10 +10,11 @@ define([
 	'items/Equipment',
 	'gameObjects/Placeable',
 	'backend/Backend',
+	'Console',
 	'Utils',
 	'../vendor/tock',
 	'schema_client'
-], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Utils, Tock) {
+], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Utils, Tock) {
 	const UP_KEYS = [
 		'w'.charCodeAt(0),
 		'W'.charCodeAt(0),
@@ -73,6 +74,8 @@ define([
 		});
 	}
 
+	let consoleCooldown = 0;
+
 	class Controls {
 		/**
 		 *
@@ -102,6 +105,20 @@ define([
 
 		static handleFunctionKeys(event) {
 			// TODO check if in chat mode
+			if (Console.KEYS.indexOf(event.which) !== -1) {
+				if (consoleCooldown > 0) {
+					consoleCooldown--;
+				} else {
+					Console.toggle();
+					consoleCooldown = 30;
+				}
+				event.preventDefault();
+				return;
+			}
+			if (Console.isOpen()) {
+				return;
+			}
+
 			let isFunctionKey = FUNCTION_KEYS.indexOf(event.keyCode) !== -1;
 			if (isFunctionKey) {
 				event.preventDefault();
@@ -136,6 +153,10 @@ define([
 					Game.two.play();
 				}
 				return;
+			}
+
+			if (consoleCooldown > 0) {
+				consoleCooldown--;
 			}
 
 			let movement = {

@@ -90,6 +90,10 @@ define([
 			this.send(ClientMessage.fromJoin(joinObj));
 		},
 
+		sendCommand: function (commandObj) {
+			this.send(ClientMessage.fromCommand(commandObj));
+		},
+
 		receive: function (message) {
 			if (Game.two.playing === false &&
 				Game.started &&
