@@ -63,6 +63,8 @@ table Mob {
   rotation:float;
 
   aabb:AABB;
+
+  mob_id:ushort;
 }
 
 table Character {

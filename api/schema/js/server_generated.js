@@ -633,10 +633,18 @@ BerryhunterApi.Mob.prototype.aabb = function(obj) {
 };
 
 /**
+ * @returns {number}
+ */
+BerryhunterApi.Mob.prototype.mobId = function() {
+  var offset = this.bb.__offset(this.bb_pos, 16);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 BerryhunterApi.Mob.startMob = function(builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 };
 
 /**
@@ -685,6 +693,14 @@ BerryhunterApi.Mob.addRotation = function(builder, rotation) {
  */
 BerryhunterApi.Mob.addAabb = function(builder, aabbOffset) {
   builder.addFieldStruct(5, aabbOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} mobId
+ */
+BerryhunterApi.Mob.addMobId = function(builder, mobId) {
+  builder.addFieldInt16(6, mobId, 0);
 };
 
 /**

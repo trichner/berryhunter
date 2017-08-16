@@ -33,7 +33,7 @@ func NewMob(body *phy.Circle, d *mobs.MobDefinition) *Mob {
 		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
 		velocity:   phy.Vec2f{0.04, 0},
 		health:     model.VitalSignMax,
-		m:          d,
+		definition: d,
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -42,11 +42,15 @@ func NewMob(body *phy.Circle, d *mobs.MobDefinition) *Mob {
 type Mob struct {
 	model.BaseEntity
 
-	m *mobs.MobDefinition
+	definition *mobs.MobDefinition
 
 	health   model.VitalSign
 	velocity phy.Vec2f
 	rand     *rand.Rand
+}
+
+func (m *Mob) MobID() mobs.MobID {
+	return m.definition.ID
 }
 
 func (m *Mob) Update(dt float32) bool {
@@ -79,7 +83,7 @@ func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	log.Printf("🎯")
 	m.health -= 50
 	if m.health <= 0 {
-		for _, i := range m.m.Drops {
+		for _, i := range m.definition.Drops {
 			p.Inventory().AddItem(i)
 		}
 	}

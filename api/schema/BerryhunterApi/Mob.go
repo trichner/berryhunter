@@ -100,8 +100,20 @@ func (rcv *Mob) Aabb(obj *AABB) *AABB {
 	return nil
 }
 
+func (rcv *Mob) MobId() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Mob) MutateMobId(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(16, n)
+}
+
 func MobStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(7)
 }
 func MobAddId(builder *flatbuffers.Builder, id uint64) {
 	builder.PrependUint64Slot(0, id, 0)
@@ -120,6 +132,9 @@ func MobAddRotation(builder *flatbuffers.Builder, rotation float32) {
 }
 func MobAddAabb(builder *flatbuffers.Builder, aabb flatbuffers.UOffsetT) {
 	builder.PrependStructSlot(5, flatbuffers.UOffsetT(aabb), 0)
+}
+func MobAddMobId(builder *flatbuffers.Builder, mobId uint16) {
+	builder.PrependUint16Slot(6, mobId, 0)
 }
 func MobEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -4,6 +4,7 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"engo.io/ecs"
 	"github.com/trichner/berryhunter/backend/items"
+	"github.com/trichner/berryhunter/backend/mobs"
 )
 
 type EntityType uint16
@@ -52,6 +53,7 @@ type ResourceEntity interface {
 type MobEntity interface {
 	Entity
 
+	MobID() mobs.MobID
 	Health() VitalSign
 	//Velocity() phy.Vec2f
 	//SetVelocity(v phy.Vec2f)
