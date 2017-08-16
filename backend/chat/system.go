@@ -41,6 +41,11 @@ func updatePlayer(p model.PlayerEntity) {
 		return
 	}
 
+	builder := flatbuffers.NewBuilder(32)
+	entityMessage := codec.EntityMessageFlatbufMarshal(builder, p.Basic().ID(), string(*msg))
+	builder.Finish(entityMessage)
+	bytes := builder.FinishedBytes()
+
 	for v := range p.Viewport().Collisions() {
 		usr := v.Shape().UserData
 		if usr == nil {
@@ -50,13 +55,9 @@ func updatePlayer(p model.PlayerEntity) {
 
 		listener, ok := usr.(model.PlayerEntity)
 		if !ok {
-			log.Printf("Non conformant UserData: %T", usr)
 			continue
 		}
-		builder := flatbuffers.NewBuilder(32)
-		entityMessage := codec.EntityMessageFlatbufMarshal(builder, p.Basic().ID(), string(*msg))
-		builder.Finish(entityMessage)
-		listener.Client().SendMessage(builder.FinishedBytes())
+		listener.Client().SendMessage(bytes)
 	}
 }
 
