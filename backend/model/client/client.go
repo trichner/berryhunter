@@ -68,10 +68,18 @@ func (c *client) routeMessage(msg *BerryhunterApi.ClientMessage) {
 		}
 	case BerryhunterApi.ClientMessageBodyJoin:
 		j := codec.JoinMessageFlatbufferUnmarshal(msg)
-		c.joins <- j
+		select {
+		case c.joins <- j:
+		default:
+			log.Print("Join dropped.")
+		}
 	case BerryhunterApi.ClientMessageBodyCheat:
 		m := codec.CheatMessageFlatbufferUnmarshal(msg)
-		c.cheats <- m
+		select {
+		case c.cheats <- m:
+		default:
+			log.Print("Cheat dropped.")
+		}
 	}
 }
 

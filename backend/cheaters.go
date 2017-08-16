@@ -85,6 +85,7 @@ func (c *CheatSystem) Update(dt float32) {
 		if err != nil {
 			log.Printf("😰 Action '%s' failed.", cmd)
 		}
+		log.Printf("😎 Cheated '%s'.", cmd)
 	}
 }
 
