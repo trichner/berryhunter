@@ -6,15 +6,16 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"engo.io/ecs"
 	"log"
+	"github.com/trichner/berryhunter/backend/model/player"
 )
 
 type SpectatorSystem struct {
 	spectators []model.Spectator
-	g          *Game
+	game       *Game
 }
 
 func NewSpectatorSystem(g *Game) *SpectatorSystem {
-	return &SpectatorSystem{g: g}
+	return &SpectatorSystem{game: g}
 }
 
 func (*SpectatorSystem) Priority() int {
@@ -23,7 +24,7 @@ func (*SpectatorSystem) Priority() int {
 
 func (s *SpectatorSystem) AddSpectator(spectator model.Spectator) {
 	s.spectators = append(s.spectators, spectator)
-	sendWelcomeMessage(s.g, spectator.Client())
+	sendWelcomeMessage(s.game, spectator.Client())
 }
 
 func (s *SpectatorSystem) Update(dt float32) {
@@ -31,14 +32,14 @@ func (s *SpectatorSystem) Update(dt float32) {
 		j := spectator.Client().NextJoin()
 
 		if j != nil {
-			s.g.RemoveEntity(spectator.Basic())
+			s.game.RemoveEntity(spectator.Basic())
 			// upgrade to player
 			name := j.PlayerName // resolve collisions!
 			client := spectator.Client()
 			log.Printf("☺️ Accepting new player: %s", name)
 			sendAcceptMessage(client)
-			p := NewPlayer(s.g, client, name)
-			s.g.AddEntity(p)
+			p := player.New(s.game.Items, client, name)
+			s.game.AddEntity(p)
 		}
 	}
 }

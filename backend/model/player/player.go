@@ -1,4 +1,4 @@
-package sys
+package player
 
 import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
@@ -6,6 +6,7 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"log"
+	"github.com/trichner/berryhunter/backend/minions"
 )
 
 var _ = model.PlayerEntity(&player{})
@@ -15,8 +16,6 @@ type player struct {
 	name string
 
 	model.BaseEntity
-
-	game *Game
 
 	angle  float32
 	client model.Client
@@ -97,15 +96,14 @@ func (p *player) Hand() *model.Hand {
 	return &p.hand
 }
 
-func NewPlayer(g *Game, c model.Client, name string) *player {
+func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 
-	e := newCircleEntity(0.25)
+	e := minions.NewCircleEntity(0.25)
 
 	e.EntityType = BerryhunterApi.EntityTypeCharacter
 	p := &player{BaseEntity: e,
 		client:              c,
 		equipment:           items.NewEquipment(),
-		game:                g,
 		name:                name,
 	}
 
@@ -123,7 +121,7 @@ func NewPlayer(g *Game, c model.Client, name string) *player {
 	p.viewport.Shape().Group = shapeGroup
 
 	//--- initialize inventory
-	inventory, err := initializePlayerInventory(g.Items)
+	inventory, err := initializePlayerInventory(r)
 	if err != nil {
 		panic(err)
 	}

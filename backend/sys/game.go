@@ -131,11 +131,7 @@ func (g *Game) AddEntity(e model.BasicEntity) {
 
 	switch v := e.(type) {
 	case model.PlayerEntity:
-		p, ok := v.(*player)
-		if !ok {
-			log.Fatal("Cannot add player!")
-		}
-		g.addPlayer(p)
+		g.addPlayer(v)
 	case model.MobEntity:
 		g.addMobEntity(v)
 	case model.ResourceEntity:
@@ -302,22 +298,22 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 	//// bottom
 	//wall = chipmunk.NewBox(toVect(xf/2.0, yf+overlap/2.0), 2.0*overlap+xf, overlap)
 	//bdy = shape2wall(wall)
-	//g.space.AddStaticBody(bdy)
+	//game.space.AddStaticBody(bdy)
 	//
 	//// top
 	//wall = chipmunk.NewBox(toVect(xf/2.0, 0-overlap/2.0), 2.0*overlap+xf, overlap)
 	//bdy = shape2wall(wall)
-	//g.space.AddStaticBody(bdy)
+	//game.space.AddStaticBody(bdy)
 	//
 	//// left
 	//wall = chipmunk.NewBox(toVect(0-overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
 	//bdy = shape2wall(wall)
-	//g.space.AddStaticBody(bdy)
+	//game.space.AddStaticBody(bdy)
 	//
 	//// right
 	//wall = chipmunk.NewBox(toVect(xf+overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
 	//bdy = shape2wall(wall)
-	//g.space.AddStaticBody(bdy)
+	//game.space.AddStaticBody(bdy)
 
 	return p
 }
