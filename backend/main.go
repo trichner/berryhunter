@@ -42,6 +42,11 @@ func main() {
 		}
 	}
 
+	gameLoop(g)
+}
+
+func gameLoop(g *sys.Game) {
+
 	g.Run()
 
 	//---- run game loop
