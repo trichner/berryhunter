@@ -1,4 +1,4 @@
-package main
+package sys
 
 import (
 	"engo.io/ecs"
@@ -19,17 +19,18 @@ import (
 	"github.com/trichner/berryhunter/backend/model/spectator"
 	"github.com/trichner/berryhunter/backend/mobs"
 	"github.com/trichner/berryhunter/backend/sys/chat"
+	"github.com/trichner/berryhunter/backend/sys/freezer"
 )
 
 type Game struct {
 	ecs.World
-	space *phy.Space
-	tick  uint64
+	Space *phy.Space
+	Tick  uint64
 	conf  *conf.Config
-	items items.Registry
-	mobs  mobs.Registry
+	Items items.Registry
+	Mobs  mobs.Registry
 
-	welcomeMsg *codec.Welcome
+	WelcomeMsg *codec.Welcome
 }
 
 type wsHandler struct{}
@@ -50,11 +51,11 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 	
 
 	g.conf = conf
-	g.items = items
-	g.mobs = mobs
+	g.Items = items
+	g.Mobs = mobs
 
 	mapSide := 100
-	g.welcomeMsg = &codec.Welcome{
+	g.WelcomeMsg = &codec.Welcome{
 		"berryhunter.io [Alpha] rza, n1b, gino & co.",
 		mapSide,
 	}
@@ -72,10 +73,10 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 	m := NewMobSystem(g)
 	g.AddSystem(m)
 
-	f := NewFreezerSystem(g)
+	f := freezer.New()
 	g.AddSystem(f)
 
-	pl := NewPlayerUpdateSystem()
+	pl := NewPlayerSystem()
 	g.AddSystem(pl)
 
 	s := NewSpectatorSystem(g)
@@ -198,7 +199,7 @@ func (g *Game) addPlaceableEntity(p model.PlaceableEntity) {
 			sys.AddEntity(p)
 		case *NetSystem:
 			sys.AddEntity(p)
-		case *FreezerSystem:
+		case *freezer.FreezerSystem:
 			if p.HeatRadiation() != nil {
 				sys.AddHeater(p)
 			}
@@ -281,7 +282,7 @@ func (g *Game) Update() {
 	}
 
 	// needs to be atomic to prevent race conditions
-	atomic.AddUint64(&g.tick, 1)
+	atomic.AddUint64(&g.Tick, 1)
 }
 
 func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
@@ -291,7 +292,7 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 	//yf := vect.Float(y)
 	p := &PhysicsSystem{}
 	p.game = g
-	g.space = phy.NewSpace()
+	g.Space = phy.NewSpace()
 
 	//---- adding walls around map
 

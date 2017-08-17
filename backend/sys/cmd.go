@@ -1,4 +1,4 @@
-package main
+package sys
 
 import (
 	"github.com/trichner/berryhunter/backend/model"
@@ -27,7 +27,7 @@ var commands = map[string]CheatCommand{
 			}
 			count = int(i)
 		}
-		item, err := g.items.GetByName(argv[0])
+		item, err := g.Items.GetByName(argv[0])
 		if err != nil {
 			return err
 		}

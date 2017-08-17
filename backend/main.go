@@ -1,7 +1,6 @@
 package main
 
 import (
-	"engo.io/ecs"
 	"log"
 	"math/rand"
 	"time"
@@ -14,6 +13,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model/mob"
 	"github.com/trichner/berryhunter/backend/gen"
 	"github.com/trichner/berryhunter/backend/mobs"
+	"github.com/trichner/berryhunter/backend/sys"
 )
 
 func main() {
@@ -22,10 +22,10 @@ func main() {
 	registry := readItems("../api/items/")
 	mobs := readMobs(registry, "../api/mobs/")
 
-	g := &Game{}
+	g := &sys.Game{}
 	g.Init(config, registry, mobs)
 
-	entities := gen.Generate(g.items, rand.New(rand.NewSource(0xDEADBEEF)))
+	entities := gen.Generate(g.Items, rand.New(rand.NewSource(0xDEADBEEF)))
 	for _, e := range entities {
 		g.AddEntity(e)
 	}
@@ -96,17 +96,6 @@ func readConf() *conf.Config {
 		log.Panicf("Cannot read config '%s':%v", configFile, err)
 	}
 	return config
-}
-
-
-func newCircleEntity(r float32) model.BaseEntity {
-
-	aEntity := model.BaseEntity{BasicEntity: ecs.NewBasic()}
-	circle := phy.NewCircle(phy.VEC2F_ZERO, r)
-
-	circle.Shape().UserData = aEntity
-	aEntity.Body = circle
-	return aEntity
 }
 
 func newMobEntity(def *mobs.MobDefinition) model.MobEntity {

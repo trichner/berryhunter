@@ -1,4 +1,4 @@
-package main
+package sys
 
 import (
 	"engo.io/ecs"
@@ -27,7 +27,6 @@ type PlayerInputSystem struct {
 	ibufs [inputBuffererCount]InputBufferer
 }
 
-
 func NewInputSystem(g *Game) *PlayerInputSystem {
 	return &PlayerInputSystem{game: g}
 }
@@ -46,7 +45,7 @@ func (i *PlayerInputSystem) New(w *ecs.World) {
 }
 
 func (i *PlayerInputSystem) storeInput(playerId uint64, input *model.PlayerInput) {
-	i.ibufs[i.game.tick%inputBuffererCount][playerId] = input
+	i.ibufs[i.game.Tick%inputBuffererCount][playerId] = input
 }
 
 func (i *PlayerInputSystem) AddPlayer(p model.PlayerEntity) {
@@ -64,8 +63,8 @@ func (i *PlayerInputSystem) Update(dt float32) {
 	}
 
 	// freeze input, concurrent reads are fine
-	ibuf := i.ibufs[i.game.tick%inputBuffererCount]
-	lastBuf := i.ibufs[(i.game.tick+inputBuffererCount-1 )%inputBuffererCount]
+	ibuf := i.ibufs[i.game.Tick%inputBuffererCount]
+	lastBuf := i.ibufs[(i.game.Tick+inputBuffererCount-1 )%inputBuffererCount]
 
 	// apply inputs to player
 	for _, p := range i.players {
@@ -75,7 +74,7 @@ func (i *PlayerInputSystem) Update(dt float32) {
 	}
 
 	// clear out buffer
-	i.ibufs[i.game.tick%inputBuffererCount] = NewInputBufferer()
+	i.ibufs[i.game.Tick%inputBuffererCount] = NewInputBufferer()
 }
 
 const walkSpeed = 0.1
@@ -139,7 +138,7 @@ func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Acti
 		return
 	}
 
-	item, err := i.game.items.Get(action.Item)
+	item, err := i.game.Items.Get(action.Item)
 	if err != nil {
 		log.Printf("😩 Unknown Action Item: %s", err)
 		return

@@ -1,4 +1,4 @@
-package main
+package sys
 
 import (
 	"engo.io/ecs"
@@ -9,7 +9,7 @@ type PlayerUpdate struct {
 	players []model.PlayerEntity
 }
 
-func NewPlayerUpdateSystem() *PlayerUpdate {
+func NewPlayerSystem() *PlayerUpdate {
 	return &PlayerUpdate{}
 }
 

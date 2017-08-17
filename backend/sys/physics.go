@@ -1,4 +1,4 @@
-package main
+package sys
 
 import (
 	"engo.io/ecs"
@@ -64,20 +64,20 @@ func (p *PhysicsSystem) Priority() int {
 func (p *PhysicsSystem) AddStaticBody(b ecs.BasicEntity, e phy.Collider) {
 	pe := physicsEntity{b, e, nil}
 	p.entities = append(p.entities, pe)
-	p.game.space.AddStaticShape(pe.static)
+	p.game.Space.AddStaticShape(pe.static)
 }
 
 func (p *PhysicsSystem) AddEntity(e model.BodiedEntity) {
 	pe := newDyamicPhysicsEntity(e.Basic(), e.Bodies()...)
 	p.entities = append(p.entities, pe)
 	for _, s := range pe.dynamics {
-		p.game.space.AddShape(s)
+		p.game.Space.AddShape(s)
 	}
 }
 
 func (p *PhysicsSystem) Update(dt float32) {
 	//log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
-	p.game.space.Update()
+	p.game.Space.Update()
 }
 
 func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
@@ -93,7 +93,7 @@ func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
 		p.entities = append(p.entities[:delete], p.entities[delete+1:]...)
 		if e.dynamics != nil {
 			for _, d := range e.dynamics {
-				p.game.space.RemoveShape(d)
+				p.game.Space.RemoveShape(d)
 			}
 		}else{
 			panic("Cannot remove static entities!")

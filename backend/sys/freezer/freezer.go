@@ -1,4 +1,4 @@
-package main
+package freezer
 
 import (
 	"engo.io/ecs"
@@ -10,7 +10,7 @@ type FreezerSystem struct {
 	heaters []model.Heater
 }
 
-func NewFreezerSystem(g *Game) *FreezerSystem {
+func New() *FreezerSystem {
 	return &FreezerSystem{}
 }
 

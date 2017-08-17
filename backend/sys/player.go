@@ -1,4 +1,4 @@
-package main
+package sys
 
 import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
@@ -16,7 +16,7 @@ type player struct {
 
 	model.BaseEntity
 
-	game     *Game
+	game *Game
 
 	angle  float32
 	client model.Client
@@ -126,7 +126,7 @@ func NewPlayer(g *Game, c model.Client, name string) *player {
 	p.viewport.Shape().Group = shapeGroup
 
 	//--- initialize inventory
-	inventory, err := initializePlayerInventory(g.items)
+	inventory, err := initializePlayerInventory(g.Items)
 	if err != nil {
 		panic(err)
 	}

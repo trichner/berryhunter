@@ -1,4 +1,4 @@
-package main
+package sys
 
 import (
 	"engo.io/ecs"
@@ -45,7 +45,7 @@ func (n *NetSystem) Update(dt float32) {
 
 	// assemble game state prototype
 	characterGameState := codec.CharacterGameState{}
-	characterGameState.Tick = n.game.tick
+	characterGameState.Tick = n.game.Tick
 
 	// process players
 	for _, player := range n.players {
@@ -54,7 +54,7 @@ func (n *NetSystem) Update(dt float32) {
 
 	// assemble game state prototype
 	spectatorGameState := codec.SpectatorGameState{}
-	spectatorGameState.Tick = n.game.tick
+	spectatorGameState.Tick = n.game.Tick
 
 	// process players
 	for _, spectator := range n.spectators {

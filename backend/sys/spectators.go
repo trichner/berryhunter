@@ -1,4 +1,4 @@
-package main
+package sys
 
 import (
 	"github.com/google/flatbuffers/go"
@@ -60,7 +60,7 @@ func (s *SpectatorSystem) Remove(e ecs.BasicEntity) {
 func sendWelcomeMessage(g *Game, c model.Client) {
 
 	builder := flatbuffers.NewBuilder(32)
-	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, g.welcomeMsg)
+	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, g.WelcomeMsg)
 	builder.Finish(welcomeMsg)
 	c.SendMessage(builder.FinishedBytes())
 }
