@@ -9,25 +9,25 @@ import (
 	"github.com/trichner/berryhunter/backend/model/player"
 )
 
-type SpectatorSystem struct {
+type ConnectionStateSystem struct {
 	spectators []model.Spectator
 	game       *Game
 }
 
-func NewSpectatorSystem(g *Game) *SpectatorSystem {
-	return &SpectatorSystem{game: g}
+func NewConnectionStateSystem(g *Game) *ConnectionStateSystem {
+	return &ConnectionStateSystem{game: g}
 }
 
-func (*SpectatorSystem) Priority() int {
+func (*ConnectionStateSystem) Priority() int {
 	return 10
 }
 
-func (s *SpectatorSystem) AddSpectator(spectator model.Spectator) {
+func (s *ConnectionStateSystem) AddSpectator(spectator model.Spectator) {
 	s.spectators = append(s.spectators, spectator)
 	sendWelcomeMessage(s.game, spectator.Client())
 }
 
-func (s *SpectatorSystem) Update(dt float32) {
+func (s *ConnectionStateSystem) Update(dt float32) {
 	for _, spectator := range s.spectators {
 		j := spectator.Client().NextJoin()
 
@@ -44,7 +44,7 @@ func (s *SpectatorSystem) Update(dt float32) {
 	}
 }
 
-func (s *SpectatorSystem) Remove(e ecs.BasicEntity) {
+func (s *ConnectionStateSystem) Remove(e ecs.BasicEntity) {
 	var delete int = -1
 	for index, entity := range s.spectators {
 		if entity.Basic().ID() == e.ID() {

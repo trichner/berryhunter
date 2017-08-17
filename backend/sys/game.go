@@ -79,7 +79,7 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 	pl := NewPlayerSystem()
 	g.AddSystem(pl)
 
-	s := NewSpectatorSystem(g)
+	s := NewConnectionStateSystem(g)
 	g.AddSystem(s)
 
 	c := NewCheatSystem(g, []string{})
@@ -158,7 +158,7 @@ func (g *Game) addSpectator(e model.Spectator) {
 			sys.AddEntity(e)
 		case *NetSystem:
 			sys.AddSpectator(e)
-		case *SpectatorSystem:
+		case *ConnectionStateSystem:
 			sys.AddSpectator(e)
 		}
 	}

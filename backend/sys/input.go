@@ -173,9 +173,9 @@ func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Acti
 		ok := p.Inventory().ConsumeItem(items.NewItemStack(item, 1))
 		if ok {
 			// prevent overflow
-			h := p.VitalSigns().Health
+			h := p.VitalSigns().Satiety
 			foodFraction := item.Factors.Food
-			p.VitalSigns().Health = h.AddFraction(foodFraction)
+			p.VitalSigns().Satiety = h.AddFraction(foodFraction)
 		}
 		break
 
@@ -215,6 +215,7 @@ func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Acti
 		}
 		e.SetPosition(p.Position())
 		i.game.AddEntity(e)
+		p.OwnedEntities().Add(e)
 
 		break
 	}

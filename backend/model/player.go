@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/phy"
+	"engo.io/ecs"
 )
 
 const VitalSignMax = ^VitalSign(0)
@@ -66,7 +67,29 @@ type PlayerEntity interface {
 	SetAngle(a float32)
 
 	Update(dt float32)
-	//UpdateInput(next, last *PlayerInput)
+	OwnedEntities() BasicEntities
+}
+
+type BasicEntities map[uint64]ecs.BasicEntity
+
+func NewBasicEntities() BasicEntities {
+	return make(BasicEntities)
+}
+
+func (b BasicEntities) All() []ecs.BasicEntity {
+	entities := []ecs.BasicEntity{}
+	for _, v := range b {
+		entities = append(entities, v)
+	}
+	return entities
+}
+
+func (b BasicEntities) Add(e BasicEntity) {
+	b[e.Basic().ID()] = e.Basic()
+}
+
+func (b BasicEntities) Remove(e BasicEntity) {
+	delete(b, e.Basic().ID())
 }
 
 type VitalSignEntity interface {

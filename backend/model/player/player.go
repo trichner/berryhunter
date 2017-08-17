@@ -5,11 +5,60 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
-	"log"
 	"github.com/trichner/berryhunter/backend/minions"
 )
 
 var _ = model.PlayerEntity(&player{})
+
+func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
+
+	e := minions.NewCircleEntity(0.25)
+
+	e.EntityType = BerryhunterApi.EntityTypeCharacter
+	p := &player{BaseEntity: e,
+		client: c,
+		equipment: items.NewEquipment(),
+		name: name,
+		ownedEntitites: model.NewBasicEntities(),
+	}
+
+	// setup body
+	shapeGroup := int(p.ID())
+	p.Body.Shape().UserData = p
+	p.Body.Shape().Group = shapeGroup
+	p.Body.Shape().Layer = model.LayerStaticCollision | model.LayerHeatCollision
+
+	// setup viewport
+	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{model.ViewPortWidth / 2, model.ViewPortHeight / 2})
+
+	p.viewport.Shape().IsSensor = true
+	p.viewport.Shape().Layer = model.LayerAllCollision
+	p.viewport.Shape().Group = shapeGroup
+
+	//--- initialize inventory
+	inventory, err := initializePlayerInventory(r)
+	if err != nil {
+		panic(err)
+	}
+	p.inventory = inventory
+
+	//--- setup vital signs
+	p.PlayerVitalSigns.Health = model.VitalSignMax
+	p.PlayerVitalSigns.Satiety = model.VitalSignMax
+	p.PlayerVitalSigns.BodyTemperature = model.VitalSignMax
+
+	// setup hand sensor
+	hand := phy.NewCircle(e.Body.Position(), 0.25)
+	hand.Shape().IsSensor = true
+	hand.Shape().Group = shapeGroup
+	hand.Shape().Layer = 0 //TODO
+	p.hand = model.Hand{Collider: hand}
+
+	p.updateHand()
+
+	return p
+}
+
 
 //---- player
 type player struct {
@@ -29,6 +78,8 @@ type player struct {
 	actionTick uint
 
 	model.PlayerVitalSigns
+
+	ownedEntitites model.BasicEntities
 }
 
 func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
@@ -92,54 +143,6 @@ func (p *player) Hand() *model.Hand {
 	return &p.hand
 }
 
-func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
-
-	e := minions.NewCircleEntity(0.25)
-
-	e.EntityType = BerryhunterApi.EntityTypeCharacter
-	p := &player{BaseEntity: e,
-		client:              c,
-		equipment:           items.NewEquipment(),
-		name:                name,
-	}
-
-	// setup body
-	shapeGroup := int(p.ID())
-	p.Body.Shape().UserData = p
-	p.Body.Shape().Group = shapeGroup
-	p.Body.Shape().Layer = model.LayerStaticCollision | model.LayerHeatCollision
-
-	// setup viewport
-	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{model.ViewPortWidth / 2, model.ViewPortHeight / 2})
-
-	p.viewport.Shape().IsSensor = true
-	p.viewport.Shape().Layer = model.LayerAllCollision
-	p.viewport.Shape().Group = shapeGroup
-
-	//--- initialize inventory
-	inventory, err := initializePlayerInventory(r)
-	if err != nil {
-		panic(err)
-	}
-	p.inventory = inventory
-
-	//--- setup vital signs
-	p.PlayerVitalSigns.Health =	model.VitalSignMax
-	p.PlayerVitalSigns.Satiety = model.VitalSignMax
-	p.PlayerVitalSigns.BodyTemperature = model.VitalSignMax
-
-	// setup hand sensor
-	hand := phy.NewCircle(e.Body.Position(), 0.25)
-	hand.Shape().IsSensor = true
-	hand.Shape().Group = shapeGroup
-	hand.Shape().Layer = 0 //TODO
-	p.hand = model.Hand{Collider: hand}
-
-	p.updateHand()
-
-	return p
-}
-
 func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
 
 	type startItem struct {
@@ -185,6 +188,10 @@ func (p *player) updateHand() {
 	p.hand.Collider.SetPosition(handPos)
 }
 
+func (p *player) OwnedEntities() model.BasicEntities {
+	return p.ownedEntitites
+}
+
 func (p *player) Craft(i items.Item) bool {
 
 	r := i.Recipe
@@ -209,23 +216,3 @@ func (p *player) Craft(i items.Item) bool {
 	return true
 }
 
-func (p *player) Update(dt float32) {
-	// update time based tings
-
-	// heat
-	t := p.VitalSigns().BodyTemperature
-	temperatureFraction := float32(0.0008)
-	p.VitalSigns().BodyTemperature = t.SubFraction(temperatureFraction)
-
-	// satiety
-	s := p.VitalSigns().Satiety
-	satietyFraction := float32(0.0006)
-	p.VitalSigns().Satiety = s.SubFraction(satietyFraction)
-
-	//TODO Hack
-	join := p.Client().NextJoin()
-	if join != nil {
-		p.name = join.PlayerName
-		log.Printf("Join message: %s", join.PlayerName)
-	}
-}
