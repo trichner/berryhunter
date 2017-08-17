@@ -45,6 +45,7 @@ func main() {
 	gameLoop(g)
 }
 
+// gameLoop starts and runs the actual loop of the entire game
 func gameLoop(g *sys.Game) {
 
 	g.Run()
@@ -59,6 +60,7 @@ func gameLoop(g *sys.Game) {
 	}
 }
 
+// readMobs parses the mob definitions from the definition files
 func readMobs(r items.Registry, path string) mobs.Registry {
 	registry, err := mobs.RegistryFromPaths(r, path)
 	if err != nil {
@@ -76,6 +78,7 @@ func readMobs(r items.Registry, path string) mobs.Registry {
 	return registry
 }
 
+// readItems parses the item definitions from the definition files
 func readItems(path string) items.Registry {
 	registry, err := items.RegistryFromPaths(path)
 	if err != nil {
@@ -93,6 +96,7 @@ func readItems(path string) items.Registry {
 	return registry
 }
 
+// readConf parses the config file
 func readConf() *conf.Config {
 
 	configFile := "./conf.json"

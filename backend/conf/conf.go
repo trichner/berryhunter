@@ -12,10 +12,6 @@ type Config struct {
 	Path string `json:"path"`
 }
 
-func ReadDefaultConfig() (*Config, error) {
-	return ReadConfig(configFilename)
-}
-
 // reads the config from file
 func ReadConfig(filename string) (*Config, error) {
 

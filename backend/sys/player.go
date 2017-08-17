@@ -23,10 +23,7 @@ type player struct {
 
 	viewport *phy.Box
 
-	hand *model.Hand
-	//hand     *phy.Circle
-	//handItem items.Item
-
+	hand      model.Hand
 	inventory items.Inventory
 	equipment *items.Equipment
 
@@ -97,7 +94,7 @@ func (p *player) Angle() float32 {
 }
 
 func (p *player) Hand() *model.Hand {
-	return p.hand
+	return &p.hand
 }
 
 func NewPlayer(g *Game, c model.Client, name string) *player {
@@ -142,7 +139,7 @@ func NewPlayer(g *Game, c model.Client, name string) *player {
 	hand.Shape().IsSensor = true
 	hand.Shape().Group = shapeGroup
 	hand.Shape().Layer = 0 //TODO
-	p.hand = &model.Hand{Collider: hand}
+	p.hand = model.Hand{Collider: hand}
 
 	p.updateHand()
 
