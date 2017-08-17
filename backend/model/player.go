@@ -9,6 +9,16 @@ const VitalSignMax = ^VitalSign(0)
 
 type VitalSign uint32
 
+func (v VitalSign) AddFraction(n float32) VitalSign {
+	add := uint32(float32(VitalSignMax) * n)
+	return v.Add(add)
+}
+
+func (v VitalSign) SubFraction(n float32) VitalSign {
+	sub := uint32(float32(VitalSignMax) * n)
+	return v.Sub(sub)
+}
+
 func (v VitalSign) Add(n uint32) VitalSign {
 	d := VitalSignMax - v
 	add := VitalSign(n)

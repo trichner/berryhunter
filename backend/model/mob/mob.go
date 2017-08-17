@@ -81,7 +81,16 @@ func (m *Mob) Health() model.VitalSign {
 
 func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	log.Printf("🎯")
-	m.health -= 50
+
+	vulnerability := m.definition.Factors.Vulnerability
+	if vulnerability == 0 {
+		vulnerability = 1
+	}
+
+	dmgFraction := item.Factors.Damage * vulnerability
+	m.health = m.health.SubFraction(dmgFraction)
+
+	// is it dead?
 	if m.health <= 0 {
 		for _, i := range m.definition.Drops {
 			p.Inventory().AddItem(i)

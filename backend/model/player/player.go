@@ -33,13 +33,9 @@ type player struct {
 
 func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	h := p.PlayerVitalSigns.Health
-	dmg := uint32(item.Factors.Damage)
-	if dmg < 1 {
-		dmg = 1
-	}
 
-	dmg = dmg * 10000
-	p.PlayerVitalSigns.Health = h.Sub(dmg)
+	dmgFraction := item.Factors.Damage // * vulnerability
+	p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)
 }
 
 func (p *player) Name() string {
