@@ -11,6 +11,7 @@ define(['Utils'], function (Utils) {
 		'Barney',
 		'Bert',
 		'Bob',
+		'Flinn',
 		'Fred',
 		'George',
 		'Gim-Gim',
