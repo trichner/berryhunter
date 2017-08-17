@@ -1,4 +1,4 @@
-package freezer
+package heater
 
 import (
 	"engo.io/ecs"
@@ -6,24 +6,24 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 )
 
-type FreezerSystem struct {
+type HeaterSystem struct {
 	heaters []model.Heater
 }
 
-func New() *FreezerSystem {
-	return &FreezerSystem{}
+func New() *HeaterSystem {
+	return &HeaterSystem{}
 }
 
-func (*FreezerSystem) Priority() int {
+func (*HeaterSystem) Priority() int {
 	return -10
 }
 
-func (*FreezerSystem) New(w *ecs.World) {
+func (*HeaterSystem) New(w *ecs.World) {
 
-	log.Println("FreezerSystem nominal")
+	log.Println("HeaterSystem nominal")
 }
 
-func (f *FreezerSystem) AddHeater(h model.Heater) {
+func (f *HeaterSystem) AddHeater(h model.Heater) {
 	radiator := h.HeatRadiation()
 	if radiator == nil {
 		return
@@ -31,7 +31,7 @@ func (f *FreezerSystem) AddHeater(h model.Heater) {
 	f.heaters = append(f.heaters, h)
 }
 
-func (f *FreezerSystem) Update(dt float32) {
+func (f *HeaterSystem) Update(dt float32) {
 
 	// apply inputs to player
 	for _, h := range f.heaters {
@@ -40,7 +40,7 @@ func (f *FreezerSystem) Update(dt float32) {
 }
 
 // applies the inputs to a player
-func (f *FreezerSystem) UpdateHeater(h model.Heater) {
+func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 
 	radiator := h.HeatRadiation()
 	if radiator == nil {
@@ -55,13 +55,11 @@ func (f *FreezerSystem) UpdateHeater(h model.Heater) {
 			continue
 		}
 		t := p.VitalSigns().BodyTemperature
-		heat := uint32(radiator.Heat)
-		heat *= 1000000
-		p.VitalSigns().BodyTemperature = t.Add(heat)
+		p.VitalSigns().BodyTemperature = t.AddFraction(0.001)
 	}
 }
 
-func (f *FreezerSystem) Remove(b ecs.BasicEntity) {
+func (f *HeaterSystem) Remove(b ecs.BasicEntity) {
 	var delete int = -1
 	for index, h := range f.heaters {
 		if h.Basic().ID() == b.ID() {

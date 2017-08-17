@@ -3,6 +3,6 @@
   "name": "Berry",
   "type": "CONSUMABLE",
   "factors": {
-    "xfood": 0.2
+    "food": 0.2
   }
 }

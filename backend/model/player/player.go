@@ -214,13 +214,13 @@ func (p *player) Update(dt float32) {
 
 	// heat
 	t := p.VitalSigns().BodyTemperature
-	temperatureStep := uint32(100000)
-	p.VitalSigns().BodyTemperature = t.Sub(temperatureStep)
+	temperatureFraction := float32(0.0008)
+	p.VitalSigns().BodyTemperature = t.SubFraction(temperatureFraction)
 
 	// satiety
 	s := p.VitalSigns().Satiety
-	satietyStep := uint32(150000)
-	p.VitalSigns().Satiety = s.Sub(satietyStep)
+	satietyFraction := float32(0.0006)
+	p.VitalSigns().Satiety = s.SubFraction(satietyFraction)
 
 	//TODO Hack
 	join := p.Client().NextJoin()

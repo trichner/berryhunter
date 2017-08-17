@@ -174,8 +174,8 @@ func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Acti
 		if ok {
 			// prevent overflow
 			h := p.VitalSigns().Health
-			food := uint32(item.Factors.Food)
-			p.VitalSigns().Health = h.Add(food)
+			foodFraction := item.Factors.Food
+			p.VitalSigns().Health = h.AddFraction(foodFraction)
 		}
 		break
 

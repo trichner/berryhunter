@@ -19,7 +19,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model/spectator"
 	"github.com/trichner/berryhunter/backend/mobs"
 	"github.com/trichner/berryhunter/backend/sys/chat"
-	"github.com/trichner/berryhunter/backend/sys/freezer"
+	"github.com/trichner/berryhunter/backend/sys/heater"
 )
 
 type Game struct {
@@ -73,7 +73,7 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 	m := NewMobSystem(g)
 	g.AddSystem(m)
 
-	f := freezer.New()
+	f := heater.New()
 	g.AddSystem(f)
 
 	pl := NewPlayerSystem()
@@ -195,7 +195,7 @@ func (g *Game) addPlaceableEntity(p model.PlaceableEntity) {
 			sys.AddEntity(p)
 		case *NetSystem:
 			sys.AddEntity(p)
-		case *freezer.FreezerSystem:
+		case *heater.HeaterSystem:
 			if p.HeatRadiation() != nil {
 				sys.AddHeater(p)
 			}
@@ -208,13 +208,13 @@ func (g *Game) addEntity(e model.Entity) {
 	for _, system := range g.Systems() {
 
 		// Use a type-switch to figure out which System is which
-		switch sys := system.(type) {
+		switch s := system.(type) {
 
 		// Create a case for each System you want to use
 		case *PhysicsSystem:
-			sys.AddStaticBody(e.Basic(), e.Bodies()[0])
+			s.AddStaticBody(e.Basic(), e.Bodies()[0])
 		case *NetSystem:
-			sys.AddEntity(e)
+			s.AddEntity(e)
 		}
 	}
 }
@@ -290,43 +290,7 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 	p.game = g
 	g.Space = phy.NewSpace()
 
-	//---- adding walls around map
-
-	//var bdy *chipmunk.Body
-	//var wall *chipmunk.Shape
-	//
-	//// bottom
-	//wall = chipmunk.NewBox(toVect(xf/2.0, yf+overlap/2.0), 2.0*overlap+xf, overlap)
-	//bdy = shape2wall(wall)
-	//game.space.AddStaticBody(bdy)
-	//
-	//// top
-	//wall = chipmunk.NewBox(toVect(xf/2.0, 0-overlap/2.0), 2.0*overlap+xf, overlap)
-	//bdy = shape2wall(wall)
-	//game.space.AddStaticBody(bdy)
-	//
-	//// left
-	//wall = chipmunk.NewBox(toVect(0-overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
-	//bdy = shape2wall(wall)
-	//game.space.AddStaticBody(bdy)
-	//
-	//// right
-	//wall = chipmunk.NewBox(toVect(xf+overlap/2.0, yf/2.0), overlap, 2.0*overlap+yf)
-	//bdy = shape2wall(wall)
-	//game.space.AddStaticBody(bdy)
-
 	return p
 }
 
-//func shape2wall(s *phy.Shape) *phy.Shape {
-//	s.Group = staticBodyGroup
-//	s.Layer = staticCollisionLayer | actionCollisionLayer
-//
-//	walls = append(walls, &entity{
-//		BasicEntity: ecs.NewBasic(),
-//		body:        s,
-//		entityType:  DeathioApi.EntityTypeBorder,
-//	})
-//	return s
-//}
 
