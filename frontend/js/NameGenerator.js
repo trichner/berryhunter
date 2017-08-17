@@ -9,15 +9,18 @@ define(['Utils'], function (Utils) {
 		'Arthur',
 		'Bamm-Bamm',
 		'Barney',
+		'Bert',
 		'Bob',
 		'Fred',
 		'George',
+		'Gim-Gim',
 		'Henry',
 		'Joe',
 		'Nate',
 		'Oscar',
 		'Pebbles',
 		'Philo',
+		'Pilli',
 		'Sam',
 		'Stoney',
 		'Stony',
@@ -30,24 +33,30 @@ define(['Utils'], function (Utils) {
 		'Doris',
 		'Pearl',
 		'Tanya',
-		'Wilma'
+		'Wilma',
+		'Maggie',
 	];
 
 	const lastNames = [
+		'Bone-Scaff',
+		'Bull',
+		'Cobble',
 		'Flintstone',
 		'Gypsum',
 		'Hardrock',
 		'Malachite',
 		'Marble',
-		'McMarble',
 		'McMagma',
+		'McMarble',
+		'Pala',
 		'Quartz',
-		'Rockhead',
 		'Rockfeller',
+		'Rockhead',
 		'Rubble',
 		'Slaghead',
 		'Slaghoople',
-		'Slate'
+		'Slate',
+		'Snowy',
 	];
 
 	function randomElement(array) {
