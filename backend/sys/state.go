@@ -35,7 +35,8 @@ func (s *ConnectionStateSystem) AddPlayer(player model.PlayerEntity) {
 }
 
 func (s *ConnectionStateSystem) Update(dt float32) {
-	// upgrade spectators
+
+	// upgrade spectators if they want to join
 	for _, sp := range s.spectators {
 		j := sp.Client().NextJoin()
 
@@ -51,7 +52,7 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 		}
 	}
 
-	// downgrade players
+	// downgrade players if they died
 	for _, p := range s.players {
 
 		if p.VitalSigns().Health == 0 {
@@ -60,12 +61,15 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			sendObituaryMessage(p.Client())
 			deathspot := p.Position()
 
+			// remove the players placed entities
 			for _, e := range p.OwnedEntities() {
 				s.game.RemoveEntity(e)
 			}
 
+			// remove the player from the game
 			s.game.RemoveEntity(p.Basic())
 
+			// let the player be a new spectator at the spot of his demise
 			deathView := spectator.NewSpectator(deathspot, p.Client())
 			s.game.AddEntity(deathView)
 
