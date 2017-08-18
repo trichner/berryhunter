@@ -7,10 +7,12 @@ import (
 	"engo.io/ecs"
 	"log"
 	"github.com/trichner/berryhunter/backend/model/player"
+	"github.com/trichner/berryhunter/backend/model/spectator"
 )
 
 type ConnectionStateSystem struct {
 	spectators []model.Spectator
+	players    []model.PlayerEntity
 	game       *Game
 }
 
@@ -27,21 +29,42 @@ func (s *ConnectionStateSystem) AddSpectator(spectator model.Spectator) {
 	sendWelcomeMessage(s.game, spectator.Client())
 }
 
+func (s *ConnectionStateSystem) AddPlayer(player model.PlayerEntity) {
+	s.players = append(s.players, player)
+}
+
 func (s *ConnectionStateSystem) Update(dt float32) {
-	for _, spectator := range s.spectators {
-		j := spectator.Client().NextJoin()
+	// upgrade spectators
+	for _, sp := range s.spectators {
+		j := sp.Client().NextJoin()
 
 		if j != nil {
-			s.game.RemoveEntity(spectator.Basic())
-			// upgrade to player
+			s.game.RemoveEntity(sp.Basic())
+			// upgrade to p
 			name := j.PlayerName // resolve collisions!
-			client := spectator.Client()
-			log.Printf("☺️ Accepting new player: %s", name)
+			client := sp.Client()
+			log.Printf("☺️ Accepting new p: %s", name)
 			sendAcceptMessage(client)
 			p := player.New(s.game.Items, client, name)
 			s.game.AddEntity(p)
 		}
 	}
+
+	// downgrade players
+	for _, p := range s.players {
+
+		if p.VitalSigns().Health == 0 {
+			// kill p
+			sendObituaryMessage(p.Client())
+			deathspot := p.Position()
+			s.game.RemoveEntity(p.Basic())
+
+			deathView := spectator.NewSpectator(deathspot, p.Client())
+			s.game.AddEntity(deathView)
+
+		}
+	}
+
 }
 
 func (s *ConnectionStateSystem) Remove(e ecs.BasicEntity) {
@@ -58,18 +81,18 @@ func (s *ConnectionStateSystem) Remove(e ecs.BasicEntity) {
 	}
 }
 
-func sendWelcomeMessage(g *Game, c model.Client) {
-
-	builder := flatbuffers.NewBuilder(32)
-	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, g.WelcomeMsg)
-	builder.Finish(welcomeMsg)
-	c.SendMessage(builder.FinishedBytes())
-}
-
 func sendAcceptMessage(c model.Client) {
 
 	builder := flatbuffers.NewBuilder(32)
 	acceptMsg := codec.AcceptMessageFlatbufMarshal(builder)
+	builder.Finish(acceptMsg)
+	c.SendMessage(builder.FinishedBytes())
+}
+
+func sendObituaryMessage(c model.Client) {
+
+	builder := flatbuffers.NewBuilder(32)
+	acceptMsg := codec.ObituaryMessageFlatbufMarshal(builder)
 	builder.Finish(acceptMsg)
 	c.SendMessage(builder.FinishedBytes())
 }

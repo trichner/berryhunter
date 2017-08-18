@@ -20,6 +20,7 @@ import (
 	"github.com/trichner/berryhunter/backend/mobs"
 	"github.com/trichner/berryhunter/backend/sys/chat"
 	"github.com/trichner/berryhunter/backend/sys/heater"
+	"github.com/google/flatbuffers/go"
 )
 
 type Game struct {
@@ -104,7 +105,9 @@ func (g *Game) Run() {
 
 	handleFunc := net.NewHandleFunc(func(c *net.Client) {
 		client := client.NewClient(c)
+		sendWelcomeMessage(g, client)
 		s := spectator.NewSpectator(phy.VEC2F_ZERO, client)
+
 		g.AddEntity(s)
 	})
 
@@ -256,6 +259,8 @@ func (g *Game) addPlayer(p model.PlayerEntity) {
 			sys.AddPlayer(p)
 		case *chat.ChatSystem:
 			sys.AddPlayer(p)
+		case *ConnectionStateSystem:
+			sys.AddPlayer(p)
 		}
 	}
 }
@@ -293,4 +298,10 @@ func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
 	return p
 }
 
+func sendWelcomeMessage(g *Game, c model.Client) {
 
+	builder := flatbuffers.NewBuilder(32)
+	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, g.WelcomeMsg)
+	builder.Finish(welcomeMsg)
+	c.SendMessage(builder.FinishedBytes())
+}

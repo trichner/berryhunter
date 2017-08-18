@@ -39,3 +39,11 @@ func AcceptMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffs
 
 	return ServerMessageWrapFlatbufMarshal(builder, accept, BerryhunterApi.ServerMessageBodyAccept)
 }
+
+func ObituaryMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+
+	BerryhunterApi.ObituaryStart(builder)
+	accept := BerryhunterApi.ObituaryEnd(builder)
+
+	return ServerMessageWrapFlatbufMarshal(builder, accept, BerryhunterApi.ServerMessageBodyObituary)
+}
