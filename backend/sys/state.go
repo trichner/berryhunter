@@ -111,7 +111,7 @@ func sendAcceptMessage(c model.Client) {
 func sendObituaryMessage(c model.Client) {
 
 	builder := flatbuffers.NewBuilder(32)
-	acceptMsg := codec.ObituaryMessageFlatbufMarshal(builder)
-	builder.Finish(acceptMsg)
+	obituaryMsg := codec.ObituaryMessageFlatbufMarshal(builder)
+	builder.Finish(obituaryMsg)
 	c.SendMessage(builder.FinishedBytes())
 }
