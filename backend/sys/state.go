@@ -11,14 +11,31 @@ import (
 	"github.com/trichner/berryhunter/backend/minions"
 )
 
+type stringSet map[string]struct{}
+
+func (s stringSet) add(str string) {
+	s[str] = struct{}{}
+}
+
+func (s stringSet) remove(str string) {
+	delete(s, str)
+}
+
+func (s stringSet) contains(str string) bool {
+	_, ok := s[str]
+	return ok
+}
+
 type ConnectionStateSystem struct {
 	spectators []model.Spectator
 	players    []model.PlayerEntity
 	game       *Game
+
+	names stringSet
 }
 
 func NewConnectionStateSystem(g *Game) *ConnectionStateSystem {
-	return &ConnectionStateSystem{game: g}
+	return &ConnectionStateSystem{game: g, names: stringSet{}}
 }
 
 func (*ConnectionStateSystem) Priority() int {
@@ -32,6 +49,7 @@ func (s *ConnectionStateSystem) AddSpectator(spectator model.Spectator) {
 
 func (s *ConnectionStateSystem) AddPlayer(player model.PlayerEntity) {
 	s.players = append(s.players, player)
+	s.names.add(player.Name())
 }
 
 func (s *ConnectionStateSystem) Update(dt float32) {
@@ -45,6 +63,7 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			// upgrade to p
 			name := j.PlayerName // resolve collisions!
 			client := sp.Client()
+			name = s.manglePlayerName(name)
 			log.Printf("☺️ '%s' joined!", name)
 			sendAcceptMessage(client)
 			p := player.New(s.game.Items, client, name)
@@ -96,9 +115,22 @@ func (s *ConnectionStateSystem) removeFromPlayers(e ecs.BasicEntity) {
 	arr := s.players
 	delete := minions.FindBasic(func(i int) model.BasicEntity { return arr[i] }, len(arr), e)
 	if delete >= 0 {
+		p := arr[delete]
+		s.names.remove(p.Name())
 		s.players = append(arr[:delete], arr[delete+1:]...)
 	}
 }
+
+func (s *ConnectionStateSystem) manglePlayerName(name string) string {
+
+	mangler := minions.DefaultMangler
+	for s.names.contains(name) {
+		name, mangler = mangler(name)
+	}
+	return name
+}
+
+
 
 func sendAcceptMessage(c model.Client) {
 
@@ -115,3 +147,4 @@ func sendObituaryMessage(c model.Client) {
 	builder.Finish(obituaryMsg)
 	c.SendMessage(builder.FinishedBytes())
 }
+
