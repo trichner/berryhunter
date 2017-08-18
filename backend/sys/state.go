@@ -43,7 +43,7 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			// upgrade to p
 			name := j.PlayerName // resolve collisions!
 			client := sp.Client()
-			log.Printf("☺️ Accepting new p: %s", name)
+			log.Printf("☺️ '%s' joined!", name)
 			sendAcceptMessage(client)
 			p := player.New(s.game.Items, client, name)
 			s.game.AddEntity(p)
@@ -55,6 +55,7 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 
 		if p.VitalSigns().Health == 0 {
 			// kill p
+			log.Printf("💀 '%s' died.", p.Name())
 			sendObituaryMessage(p.Client())
 			deathspot := p.Position()
 			s.game.RemoveEntity(p.Basic())
