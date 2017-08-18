@@ -26,18 +26,19 @@ func CustomMangler(s string) (string, stringMangler) {
 }
 
 func NewNumberMangler(i int) stringMangler {
-	if i <= 0 {
+	if i < 1 {
 		panic("Only >0 allowed.")
 	}
 
 	suffix := "th"
-	if i-1 < len(numberSuffix) {
-		suffix = numberSuffix[i]
+	idx := i - 1
+	if idx < len(numberSuffix) {
+		suffix = numberSuffix[idx]
 	}
 
-	suffix = fmt.Sprintf("%d%s", i, suffix)
+	suffix = fmt.Sprintf(" the %d%s", i, suffix)
 	return func(s string) (string, stringMangler) {
 
-		return s + " " + suffix, NewNumberMangler(i + 1)
+		return s + suffix, NewNumberMangler(i + 1)
 	}
 }
