@@ -8,6 +8,7 @@ import (
 	"log"
 	"github.com/trichner/berryhunter/backend/model/player"
 	"github.com/trichner/berryhunter/backend/model/spectator"
+	"github.com/trichner/berryhunter/backend/minions"
 )
 
 type ConnectionStateSystem struct {
@@ -58,6 +59,11 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			log.Printf("💀 '%s' died.", p.Name())
 			sendObituaryMessage(p.Client())
 			deathspot := p.Position()
+
+			for _, e := range p.OwnedEntities() {
+				s.game.RemoveEntity(e)
+			}
+
 			s.game.RemoveEntity(p.Basic())
 
 			deathView := spectator.NewSpectator(deathspot, p.Client())
@@ -69,16 +75,24 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 }
 
 func (s *ConnectionStateSystem) Remove(e ecs.BasicEntity) {
-	var delete int = -1
-	for index, entity := range s.spectators {
-		if entity.Basic().ID() == e.ID() {
-			delete = index
-			break
-		}
-	}
+
+	s.removeFromPlayers(e)
+	s.removeFromSpectators(e)
+}
+
+func (s *ConnectionStateSystem) removeFromSpectators(e ecs.BasicEntity) {
+	arr := s.spectators
+	delete := minions.FindBasic(func(i int) model.BasicEntity { return arr[i] }, len(arr), e)
 	if delete >= 0 {
-		//e := p.players[delete]
-		s.spectators = append(s.spectators[:delete], s.spectators[delete+1:]...)
+		s.spectators = append(arr[:delete], arr[delete+1:]...)
+	}
+}
+
+func (s *ConnectionStateSystem) removeFromPlayers(e ecs.BasicEntity) {
+	arr := s.players
+	delete := minions.FindBasic(func(i int) model.BasicEntity { return arr[i] }, len(arr), e)
+	if delete >= 0 {
+		s.players = append(arr[:delete], arr[delete+1:]...)
 	}
 }
 

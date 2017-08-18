@@ -15,3 +15,12 @@ func NewCircleEntity(r float32) model.BaseEntity {
 	aEntity.Body = circle
 	return aEntity
 }
+
+func FindBasic(haystack func(i int) model.BasicEntity, n int, needle ecs.BasicEntity) int {
+	for i := 0; i < n; i++ {
+		if haystack(i).Basic().ID() == needle.ID() {
+			return i
+		}
+	}
+	return -1
+}
