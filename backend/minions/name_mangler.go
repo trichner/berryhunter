@@ -9,23 +9,29 @@ var numberSuffix = []string{"st", "nd", "rd"}
 var adjectiveSuffix = []string{"ugly", "hard", "dump", "crazy", "tall", "lunatic"}
 var customSuffix = []string{"breaker of stones", "father of rocks", "bundle of sticks"}
 
-type stringMangler func(s string) (mangled string, next stringMangler)
+type StringMangler func(s string) (mangled string, next StringMangler)
 
-var DefaultMangler = AdjectiveMangler
+var DefaultMangler = NewAdjectiveMangler(NewCustomMangler(NewIncrementingNumberMangler(1)))
 
-func AdjectiveMangler(s string) (string, stringMangler) {
-	pick := adjectiveSuffix[rand.Intn(len(adjectiveSuffix))]
+func NewAdjectiveMangler(next StringMangler) StringMangler {
 
-	return s + " the " + pick, CustomMangler
+	return func(s string) (string, StringMangler) {
+		pick := adjectiveSuffix[rand.Intn(len(adjectiveSuffix))]
+
+		return s + " the " + pick, next
+	}
 }
 
-func CustomMangler(s string) (string, stringMangler) {
+func NewCustomMangler(next StringMangler) StringMangler {
 
-	pick := customSuffix[rand.Intn(len(customSuffix))]
-	return s + ", " + pick, NewNumberMangler(1)
+	return func(s string) (string, StringMangler) {
+
+		pick := customSuffix[rand.Intn(len(customSuffix))]
+		return s + ", " + pick, next
+	}
 }
 
-func NewNumberMangler(i int) stringMangler {
+func NewIncrementingNumberMangler(i int) StringMangler {
 	if i < 1 {
 		panic("Only >0 allowed.")
 	}
@@ -37,8 +43,8 @@ func NewNumberMangler(i int) stringMangler {
 	}
 
 	suffix = fmt.Sprintf(" the %d%s", i, suffix)
-	return func(s string) (string, stringMangler) {
+	return func(s string) (string, StringMangler) {
 
-		return s + suffix, NewNumberMangler(i + 1)
+		return s + suffix, NewIncrementingNumberMangler(i + 1)
 	}
 }
