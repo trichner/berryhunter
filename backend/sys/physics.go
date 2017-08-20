@@ -48,21 +48,15 @@ func newDyamicPhysicsEntity(e ecs.BasicEntity, colliders ...phy.DynamicCollider)
 	return physicsEntity{e, nil, dynamics}
 }
 
-func NewPhysicsSystem(g *game, x, y int) *PhysicsSystem {
-
-	//overlap := vect.Float(3)
-	//xf := vect.Float(x)
-	//yf := vect.Float(y)
-	p := &PhysicsSystem{}
-	p.game = g
-	g.Space = phy.NewSpace()
-
-	return p
+func NewPhysicsSystem(x, y int) *PhysicsSystem {
+	return &PhysicsSystem{
+		space: phy.NewSpace(),
+	}
 }
 
 type PhysicsSystem struct {
 	entities []physicsEntity
-	game     *game
+	space    *phy.Space
 }
 
 func (p *PhysicsSystem) New(w *ecs.World) {
@@ -76,20 +70,20 @@ func (p *PhysicsSystem) Priority() int {
 func (p *PhysicsSystem) AddStaticBody(b ecs.BasicEntity, e phy.Collider) {
 	pe := physicsEntity{b, e, nil}
 	p.entities = append(p.entities, pe)
-	p.game.Space.AddStaticShape(pe.static)
+	p.space.AddStaticShape(pe.static)
 }
 
 func (p *PhysicsSystem) AddEntity(e model.BodiedEntity) {
 	pe := newDyamicPhysicsEntity(e.Basic(), e.Bodies()...)
 	p.entities = append(p.entities, pe)
 	for _, s := range pe.dynamics {
-		p.game.Space.AddShape(s)
+		p.space.AddShape(s)
 	}
 }
 
 func (p *PhysicsSystem) Update(dt float32) {
 	//log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
-	p.game.Space.Update()
+	p.space.Update()
 }
 
 func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
@@ -105,7 +99,7 @@ func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
 		p.entities = append(p.entities[:delete], p.entities[delete+1:]...)
 		if e.dynamics != nil {
 			for _, d := range e.dynamics {
-				p.game.Space.RemoveShape(d)
+				p.space.RemoveShape(d)
 			}
 		}else{
 			panic("Cannot remove static entities!")

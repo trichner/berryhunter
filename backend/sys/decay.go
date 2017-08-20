@@ -4,7 +4,6 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"engo.io/ecs"
 	"github.com/trichner/berryhunter/backend/minions"
-	"log"
 )
 
 type DecaySystem struct {
@@ -27,7 +26,6 @@ func (d *DecaySystem) AddDecayable(e model.Decayer) {
 
 func (d *DecaySystem) Update(dt float32) {
 	for _, e := range d.decayables {
-		log.Printf("Is decayed? %v", e)
 		if e.Decayed() {
 			d.g.RemoveEntity(e.Basic())
 		}

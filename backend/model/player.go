@@ -10,6 +10,10 @@ const VitalSignMax = ^VitalSign(0)
 
 type VitalSign uint32
 
+func (v VitalSign) Fraction() float32 {
+	return float32(float32(v) / float32(VitalSignMax))
+}
+
 func (v VitalSign) AddFraction(n float32) VitalSign {
 	add := uint32(float32(VitalSignMax) * n)
 	return v.Add(add)

@@ -24,7 +24,6 @@ import (
 
 type game struct {
 	ecs.World
-	Space        *phy.Space
 	Tick         uint64
 	conf         *conf.Config
 	itemRegistry items.Registry
@@ -33,19 +32,8 @@ type game struct {
 	welcomeMsg []byte
 }
 
-type wsHandler struct{}
-
-func (h *wsHandler) OnConnected(c *net.Client) {
-
-}
-
-func (h *wsHandler) OnDisconnected(c *net.Client) {
-
-}
-
-func (h *wsHandler) OnMessage(c *net.Client, msg []byte) {
-
-}
+// assert game implements its interface
+var _ = model.Game(&game{})
 
 func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry) model.Game {
 	g := &game{
@@ -56,6 +44,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry) model.
 
 	mapSide := 100
 
+	// Prepare welcome message. Its static anyways.
 	msg := &codec.Welcome{
 		"berryhunter.io [Alpha] rza, n1b, gino & co.",
 		mapSide,
@@ -66,7 +55,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry) model.
 	g.welcomeMsg = builder.FinishedBytes()
 
 	//---- setup systems
-	p := NewPhysicsSystem(g, mapSide, mapSide)
+	p := NewPhysicsSystem(mapSide, mapSide)
 	g.AddSystem(p)
 
 	n := NewNetSystem(g)
@@ -127,7 +116,7 @@ func (g *game) Loop() {
 
 	ticker := time.NewTicker(tickrate)
 	for {
-		g.Update()
+		g.update()
 		<-ticker.C
 	}
 }
@@ -250,13 +239,10 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 
 		// Use a type-switch to figure out which System is which
 		switch sys := system.(type) {
-
-		// Create a case for each System you want to use
 		case *PhysicsSystem:
 			sys.AddEntity(p)
 		case *NetSystem:
 			sys.AddPlayer(p)
-			// Create a case for each System you want to use
 		case *PlayerInputSystem:
 			sys.AddPlayer(p)
 		case *UpdateSystem:
@@ -273,7 +259,7 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 
 const stepMillis = 33.0
 
-func (g *game) Update() {
+func (g *game) update() {
 
 	// fixed 33ms steps
 	beforeMillis := time.Now().UnixNano() / 1000000

@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"math"
-	"log"
 )
 
 var _ = model.PlaceableEntity(&Placeable{})
@@ -23,7 +22,6 @@ type Placeable struct {
 func (p *Placeable) Update(dt float32) {
 	p.millisLeft -= int(dt)
 
-	log.Printf("TIme left: %d", p.millisLeft)
 	// prevent underflow
 	if p.millisLeft < 0 {
 		p.millisLeft = 0
