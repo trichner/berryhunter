@@ -1,4 +1,4 @@
-package sys
+package core
 
 import (
 	"engo.io/ecs"

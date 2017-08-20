@@ -9,10 +9,10 @@ import (
 	"github.com/trichner/berryhunter/backend/model/mob"
 	"github.com/trichner/berryhunter/backend/gen"
 	"github.com/trichner/berryhunter/backend/mobs"
-	"github.com/trichner/berryhunter/backend/sys"
 	"flag"
 	"fmt"
 	"net/http"
+	"github.com/trichner/berryhunter/backend/core"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	registry := loadItems("../api/items/")
 	mobs := loadMobs(registry, "../api/mobs/")
 
-	g := sys.NewGame(config, registry, mobs)
+	g := core.NewGame(config, registry, mobs)
 
 	entities := gen.Generate(g.Items(), rand.New(rand.NewSource(0xDEADBEEF)))
 	for _, e := range entities {

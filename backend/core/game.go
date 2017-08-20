@@ -1,4 +1,4 @@
-package sys
+package core
 
 import (
 	"engo.io/ecs"
@@ -20,6 +20,7 @@ import (
 	"github.com/google/flatbuffers/go"
 	"log"
 	"github.com/trichner/berryhunter/backend/sys/cmd"
+	"github.com/trichner/berryhunter/backend/sys"
 )
 
 type game struct {
@@ -55,7 +56,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry) model.
 	g.welcomeMsg = builder.FinishedBytes()
 
 	//---- setup systems
-	p := NewPhysicsSystem(mapSide, mapSide)
+	p := sys.NewPhysicsSystem(mapSide, mapSide)
 	g.AddSystem(p)
 
 	n := NewNetSystem(g)
@@ -64,16 +65,16 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry) model.
 	i := NewInputSystem(g)
 	g.AddSystem(i)
 
-	m := NewMobSystem(g)
+	m := sys.NewMobSystem(g)
 	g.AddSystem(m)
 
 	f := heater.New()
 	g.AddSystem(f)
 
-	pl := NewUpdateSystem()
+	pl := sys.NewUpdateSystem()
 	g.AddSystem(pl)
 
-	s := NewConnectionStateSystem(g)
+	s := sys.NewConnectionStateSystem(g)
 	g.AddSystem(s)
 
 	c := cmd.NewCommandSystem(g, []string{})
@@ -82,7 +83,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry) model.
 	chat := chat.New()
 	g.AddSystem(chat)
 
-	d := NewDecaySystem(g)
+	d := sys.NewDecaySystem(g)
 	g.AddSystem(d)
 
 	return g
@@ -148,11 +149,11 @@ func (g *game) addSpectator(e model.Spectator) {
 		switch sys := system.(type) {
 
 		// Create a case for each System you want to use
-		case *PhysicsSystem:
+		case *sys.PhysicsSystem:
 			sys.AddEntity(e)
 		case *NetSystem:
 			sys.AddSpectator(e)
-		case *ConnectionStateSystem:
+		case *sys.ConnectionStateSystem:
 			sys.AddSpectator(e)
 		}
 	}
@@ -167,11 +168,11 @@ func (g *game) addMobEntity(e model.MobEntity) {
 		switch sys := system.(type) {
 
 		// Create a case for each System you want to use
-		case *PhysicsSystem:
+		case *sys.PhysicsSystem:
 			sys.AddEntity(e)
 		case *NetSystem:
 			sys.AddEntity(e)
-		case *MobSystem:
+		case *sys.MobSystem:
 			sys.AddEntity(e)
 		}
 	}
@@ -185,13 +186,13 @@ func (g *game) addPlaceableEntity(p model.PlaceableEntity) {
 		switch sys := system.(type) {
 
 		// Create a case for each System you want to use
-		case *PhysicsSystem:
+		case *sys.PhysicsSystem:
 			sys.AddEntity(p)
 		case *NetSystem:
 			sys.AddEntity(p)
-		case *UpdateSystem:
+		case *sys.UpdateSystem:
 			sys.AddUpdateable(p)
-		case *DecaySystem:
+		case *sys.DecaySystem:
 			sys.AddDecayable(p)
 		case *heater.HeaterSystem:
 			if p.HeatRadiation() != nil {
@@ -209,7 +210,7 @@ func (g *game) addEntity(e model.Entity) {
 		switch s := system.(type) {
 
 		// Create a case for each System you want to use
-		case *PhysicsSystem:
+		case *sys.PhysicsSystem:
 			s.AddStaticBody(e.Basic(), e.Bodies()[0])
 		case *NetSystem:
 			s.AddEntity(e)
@@ -225,7 +226,7 @@ func (g *game) addResourceEntity(e model.ResourceEntity) {
 		switch sys := system.(type) {
 
 		// Create a case for each System you want to use
-		case *PhysicsSystem:
+		case *sys.PhysicsSystem:
 			sys.AddStaticBody(e.Basic(), e.Bodies()[0])
 		case *NetSystem:
 			sys.AddEntity(e)
@@ -239,19 +240,19 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 
 		// Use a type-switch to figure out which System is which
 		switch sys := system.(type) {
-		case *PhysicsSystem:
+		case *sys.PhysicsSystem:
 			sys.AddEntity(p)
 		case *NetSystem:
 			sys.AddPlayer(p)
 		case *PlayerInputSystem:
 			sys.AddPlayer(p)
-		case *UpdateSystem:
+		case *sys.UpdateSystem:
 			sys.AddUpdateable(p)
 		case *cmd.CommandSystem:
 			sys.AddPlayer(p)
 		case *chat.ChatSystem:
 			sys.AddPlayer(p)
-		case *ConnectionStateSystem:
+		case *sys.ConnectionStateSystem:
 			sys.AddPlayer(p)
 		}
 	}
