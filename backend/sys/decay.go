@@ -10,10 +10,10 @@ import (
 type DecaySystem struct {
 	decayables []model.Decayer
 
-	g *Game
+	g model.Game
 }
 
-func NewDecaySystem(g *Game) *DecaySystem {
+func NewDecaySystem(g model.Game) *DecaySystem {
 	return &DecaySystem{g: g}
 }
 

@@ -21,10 +21,9 @@ func main() {
 	registry := loadItems("../api/items/")
 	mobs := loadMobs(registry, "../api/mobs/")
 
-	g := &sys.Game{}
-	g.Init(config, registry, mobs)
+	g := sys.NewGame(config, registry, mobs)
 
-	entities := gen.Generate(g.Items, rand.New(rand.NewSource(0xDEADBEEF)))
+	entities := gen.Generate(g.Items(), rand.New(rand.NewSource(0xDEADBEEF)))
 	for _, e := range entities {
 		g.AddEntity(e)
 	}

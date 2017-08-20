@@ -12,10 +12,10 @@ type NetSystem struct {
 	entities   []model.Entity
 	players    []model.PlayerEntity
 	spectators []model.Spectator
-	game       *Game
+	game       *game
 }
 
-func NewNetSystem(g *Game) *NetSystem {
+func NewNetSystem(g *game) *NetSystem {
 	//TODO configure path/ports here
 	return &NetSystem{game: g}
 }

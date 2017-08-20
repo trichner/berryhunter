@@ -1,4 +1,4 @@
-package sys
+package cmd
 
 import (
 	"github.com/trichner/berryhunter/backend/model"
@@ -10,8 +10,8 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 )
 
-var commands = map[string]CheatCommand{
-	"GIVE": func(g *Game, p model.PlayerEntity, arg *string) error {
+var commands = map[string]Command{
+	"GIVE": func(g model.Game, p model.PlayerEntity, arg *string) error {
 		argv := strings.Split(*arg, " ")
 		args := len(argv)
 		if args < 1 {
@@ -27,7 +27,7 @@ var commands = map[string]CheatCommand{
 			}
 			count = int(i)
 		}
-		item, err := g.Items.GetByName(argv[0])
+		item, err := g.Items().GetByName(argv[0])
 		if err != nil {
 			return err
 		}
@@ -37,7 +37,7 @@ var commands = map[string]CheatCommand{
 
 		return nil
 	},
-	"PING": func(g *Game, p model.PlayerEntity, arg *string) error {
+	"PING": func(g model.Game, p model.PlayerEntity, arg *string) error {
 
 		msg := "PONG"
 		if arg != nil && len(*arg) > 0 {
@@ -50,31 +50,31 @@ var commands = map[string]CheatCommand{
 	},
 }
 
-type CheatSystem struct {
+type CommandSystem struct {
 	players  []model.PlayerEntity
 	tokens   []string
-	commands map[string]CheatCommand
-	g        *Game
+	commands map[string]Command
+	g        model.Game
 }
 
-func NewCheatSystem(g *Game, tokens []string) *CheatSystem {
-	return &CheatSystem{tokens: tokens, g: g}
+func NewCommandSystem(g model.Game, tokens []string) *CommandSystem {
+	return &CommandSystem{tokens: tokens, g: g}
 }
 
-func (*CheatSystem) New(w *ecs.World) {
+func (*CommandSystem) New(w *ecs.World) {
 
-	log.Println("CheatSystem nominal")
+	log.Println("CommandSystem nominal")
 }
 
-func (*CheatSystem) Priority() int {
+func (*CommandSystem) Priority() int {
 	return -50
 }
 
-func (c *CheatSystem) AddPlayer(p model.PlayerEntity) {
+func (c *CommandSystem) AddPlayer(p model.PlayerEntity) {
 	c.players = append(c.players, p)
 }
 
-func (c *CheatSystem) Update(dt float32) {
+func (c *CommandSystem) Update(dt float32) {
 
 	// handle cheat commands
 	for _, player := range c.players {
@@ -113,7 +113,7 @@ func (c *CheatSystem) Update(dt float32) {
 	}
 }
 
-func (c *CheatSystem) validateToken(token string) bool {
+func (c *CommandSystem) validateToken(token string) bool {
 
 	// TODO authentication!
 	return true
@@ -126,7 +126,7 @@ func (c *CheatSystem) validateToken(token string) bool {
 	return false
 }
 
-func (c *CheatSystem) Remove(e ecs.BasicEntity) {
+func (c *CommandSystem) Remove(e ecs.BasicEntity) {
 	var delete int = -1
 	for index, entity := range c.players {
 		if entity.Basic().ID() == e.ID() {
@@ -140,4 +140,4 @@ func (c *CheatSystem) Remove(e ecs.BasicEntity) {
 	}
 }
 
-type CheatCommand func(g *Game, p model.PlayerEntity, arg *string) error
+type Command func(g model.Game, p model.PlayerEntity, arg *string) error

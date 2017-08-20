@@ -29,12 +29,11 @@ func (s stringSet) contains(str string) bool {
 type ConnectionStateSystem struct {
 	spectators []model.Spectator
 	players    []model.PlayerEntity
-	game       *Game
-
-	names stringSet
+	game       model.Game
+	names      stringSet
 }
 
-func NewConnectionStateSystem(g *Game) *ConnectionStateSystem {
+func NewConnectionStateSystem(g model.Game) *ConnectionStateSystem {
 	return &ConnectionStateSystem{game: g, names: stringSet{}}
 }
 
@@ -44,7 +43,6 @@ func (*ConnectionStateSystem) Priority() int {
 
 func (s *ConnectionStateSystem) AddSpectator(spectator model.Spectator) {
 	s.spectators = append(s.spectators, spectator)
-	sendWelcomeMessage(s.game, spectator.Client())
 }
 
 func (s *ConnectionStateSystem) AddPlayer(player model.PlayerEntity) {
@@ -66,7 +64,7 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			name = s.manglePlayerName(name)
 			log.Printf("☺️ '%s' joined!", name)
 			sendAcceptMessage(client)
-			p := player.New(s.game.Items, client, name)
+			p := player.New(s.game.Items(), client, name)
 			s.game.AddEntity(p)
 		}
 	}
@@ -129,8 +127,6 @@ func (s *ConnectionStateSystem) manglePlayerName(name string) string {
 	}
 	return name
 }
-
-
 
 func sendAcceptMessage(c model.Client) {
 

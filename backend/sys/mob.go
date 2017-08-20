@@ -8,10 +8,10 @@ import (
 
 type MobSystem struct {
 	mobs []model.MobEntity
-	game *Game
+	game model.Game
 }
 
-func NewMobSystem(g *Game) *MobSystem {
+func NewMobSystem(g model.Game) *MobSystem {
 	return &MobSystem{game: g}
 }
 

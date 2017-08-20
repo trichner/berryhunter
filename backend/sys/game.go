@@ -19,17 +19,18 @@ import (
 	"github.com/trichner/berryhunter/backend/sys/heater"
 	"github.com/google/flatbuffers/go"
 	"log"
+	"github.com/trichner/berryhunter/backend/sys/cmd"
 )
 
-type Game struct {
+type game struct {
 	ecs.World
-	Space *phy.Space
-	Tick  uint64
-	conf  *conf.Config
-	Items items.Registry
-	Mobs  mobs.Registry
+	Space        *phy.Space
+	Tick         uint64
+	conf         *conf.Config
+	itemRegistry items.Registry
+	mobRegistry  mobs.Registry
 
-	WelcomeMsg *codec.Welcome
+	welcomeMsg []byte
 }
 
 type wsHandler struct{}
@@ -46,20 +47,26 @@ func (h *wsHandler) OnMessage(c *net.Client, msg []byte) {
 
 }
 
-func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry) {
-
-	g.conf = conf
-	g.Items = items
-	g.Mobs = mobs
+func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry) model.Game {
+	g := &game{
+		conf:         conf,
+		itemRegistry: items,
+		mobRegistry:  mobs,
+	}
 
 	mapSide := 100
-	g.WelcomeMsg = &codec.Welcome{
+
+	msg := &codec.Welcome{
 		"berryhunter.io [Alpha] rza, n1b, gino & co.",
 		mapSide,
 	}
+	builder := flatbuffers.NewBuilder(32)
+	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, msg)
+	builder.Finish(welcomeMsg)
+	g.welcomeMsg = builder.FinishedBytes()
 
 	//---- setup systems
-	p := newPhysicsSystem(g, mapSide, mapSide)
+	p := NewPhysicsSystem(g, mapSide, mapSide)
 	g.AddSystem(p)
 
 	n := NewNetSystem(g)
@@ -80,7 +87,7 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 	s := NewConnectionStateSystem(g)
 	g.AddSystem(s)
 
-	c := NewCheatSystem(g, []string{})
+	c := cmd.NewCommandSystem(g, []string{})
 	g.AddSystem(c)
 
 	chat := chat.New()
@@ -89,20 +96,29 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 	d := NewDecaySystem(g)
 	g.AddSystem(d)
 
+	return g
 }
 
-func (g *Game) Handler() http.HandlerFunc {
+func (g *game) Items() items.Registry {
+	return g.itemRegistry
+}
+
+func (g *game) Mobs() mobs.Registry {
+	return g.mobRegistry
+}
+
+func (g *game) Handler() http.HandlerFunc {
 
 	return net.NewHandleFunc(func(c *net.Client) {
 		client := client.NewClient(c)
-		sendWelcomeMessage(g, client)
+		g.sendWelcomeMessage(client)
 		s := spectator.NewSpectator(phy.VEC2F_ZERO, client)
 
 		g.AddEntity(s)
 	})
 }
 
-func (g *Game) Loop() {
+func (g *game) Loop() {
 
 	//---- run game loop
 	tickrate := time.Millisecond * 33
@@ -116,7 +132,7 @@ func (g *Game) Loop() {
 	}
 }
 
-func (g *Game) AddEntity(e model.BasicEntity) {
+func (g *game) AddEntity(e model.BasicEntity) {
 
 	switch v := e.(type) {
 	case model.PlayerEntity:
@@ -134,7 +150,7 @@ func (g *Game) AddEntity(e model.BasicEntity) {
 	}
 }
 
-func (g *Game) addSpectator(e model.Spectator) {
+func (g *game) addSpectator(e model.Spectator) {
 
 	// Loop over all Systems
 	for _, system := range g.Systems() {
@@ -153,7 +169,7 @@ func (g *Game) addSpectator(e model.Spectator) {
 	}
 }
 
-func (g *Game) addMobEntity(e model.MobEntity) {
+func (g *game) addMobEntity(e model.MobEntity) {
 
 	// Loop over all Systems
 	for _, system := range g.Systems() {
@@ -172,7 +188,7 @@ func (g *Game) addMobEntity(e model.MobEntity) {
 	}
 }
 
-func (g *Game) addPlaceableEntity(p model.PlaceableEntity) {
+func (g *game) addPlaceableEntity(p model.PlaceableEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
 
@@ -196,7 +212,7 @@ func (g *Game) addPlaceableEntity(p model.PlaceableEntity) {
 	}
 }
 
-func (g *Game) addEntity(e model.Entity) {
+func (g *game) addEntity(e model.Entity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
 
@@ -212,7 +228,7 @@ func (g *Game) addEntity(e model.Entity) {
 	}
 }
 
-func (g *Game) addResourceEntity(e model.ResourceEntity) {
+func (g *game) addResourceEntity(e model.ResourceEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
 
@@ -228,7 +244,7 @@ func (g *Game) addResourceEntity(e model.ResourceEntity) {
 	}
 }
 
-func (g *Game) addPlayer(p model.PlayerEntity) {
+func (g *game) addPlayer(p model.PlayerEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
 
@@ -245,7 +261,7 @@ func (g *Game) addPlayer(p model.PlayerEntity) {
 			sys.AddPlayer(p)
 		case *UpdateSystem:
 			sys.AddUpdateable(p)
-		case *CheatSystem:
+		case *cmd.CommandSystem:
 			sys.AddPlayer(p)
 		case *chat.ChatSystem:
 			sys.AddPlayer(p)
@@ -257,9 +273,7 @@ func (g *Game) addPlayer(p model.PlayerEntity) {
 
 const stepMillis = 33.0
 
-//const step = float32(stepMillis / 1000.0)
-
-func (g *Game) Update() {
+func (g *game) Update() {
 
 	// fixed 33ms steps
 	beforeMillis := time.Now().UnixNano() / 1000000
@@ -277,22 +291,6 @@ func (g *Game) Update() {
 	atomic.AddUint64(&g.Tick, 1)
 }
 
-func newPhysicsSystem(g *Game, x, y int) *PhysicsSystem {
-
-	//overlap := vect.Float(3)
-	//xf := vect.Float(x)
-	//yf := vect.Float(y)
-	p := &PhysicsSystem{}
-	p.game = g
-	g.Space = phy.NewSpace()
-
-	return p
-}
-
-func sendWelcomeMessage(g *Game, c model.Client) {
-
-	builder := flatbuffers.NewBuilder(32)
-	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, g.WelcomeMsg)
-	builder.Finish(welcomeMsg)
-	c.SendMessage(builder.FinishedBytes())
+func (g *game) sendWelcomeMessage(c model.Client) {
+	c.SendMessage(g.welcomeMsg)
 }

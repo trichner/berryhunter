@@ -48,9 +48,21 @@ func newDyamicPhysicsEntity(e ecs.BasicEntity, colliders ...phy.DynamicCollider)
 	return physicsEntity{e, nil, dynamics}
 }
 
+func NewPhysicsSystem(g *game, x, y int) *PhysicsSystem {
+
+	//overlap := vect.Float(3)
+	//xf := vect.Float(x)
+	//yf := vect.Float(y)
+	p := &PhysicsSystem{}
+	p.game = g
+	g.Space = phy.NewSpace()
+
+	return p
+}
+
 type PhysicsSystem struct {
 	entities []physicsEntity
-	game     *Game
+	game     *game
 }
 
 func (p *PhysicsSystem) New(w *ecs.World) {

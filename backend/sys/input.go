@@ -22,12 +22,12 @@ type clientMessage struct {
 
 type PlayerInputSystem struct {
 	players model.Players
-	game    *Game
+	game    *game
 	// currently two, one to read and one to fill
 	ibufs [inputBuffererCount]InputBufferer
 }
 
-func NewInputSystem(g *Game) *PlayerInputSystem {
+func NewInputSystem(g *game) *PlayerInputSystem {
 	return &PlayerInputSystem{game: g}
 }
 
@@ -138,7 +138,7 @@ func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Acti
 		return
 	}
 
-	item, err := i.game.Items.Get(action.Item)
+	item, err := i.game.itemRegistry.Get(action.Item)
 	if err != nil {
 		log.Printf("😩 Unknown Action Item: %s", err)
 		return
