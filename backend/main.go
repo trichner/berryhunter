@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"math/rand"
-	"time"
 	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model"
@@ -14,6 +13,9 @@ import (
 	"github.com/trichner/berryhunter/backend/gen"
 	"github.com/trichner/berryhunter/backend/mobs"
 	"github.com/trichner/berryhunter/backend/sys"
+	"flag"
+	"fmt"
+	"net/http"
 )
 
 func main() {
@@ -42,22 +44,33 @@ func main() {
 		}
 	}
 
-	gameLoop(g)
+	//---- set up server
+	var dev, help bool
+	flag.BoolVar(&dev, "dev", false, "Serve frontend directly")
+	flag.BoolVar(&help, "help", false, "Show usage help")
+	flag.Parse()
+	if help {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	bootServer(g.Handler(), config.Port, config.Path, dev)
+
+	g.Loop()
 }
 
-// gameLoop starts and runs the actual loop of the entire game
-func gameLoop(g *sys.Game) {
+func bootServer(h http.HandlerFunc, port int, path string, dev bool) {
 
-	g.Run()
+	log.Printf("Booting server at :%d%s", port, path)
+	addr := fmt.Sprintf(":%d", port)
+	http.HandleFunc(path, h)
 
-	//---- run game loop
-	log.Printf("Starting loop")
-	tickrate := time.Millisecond * 33
-	ticker := time.NewTicker(tickrate)
-	for {
-		g.Update()
-		<-ticker.C
+	if dev {
+		log.Print("Using development server.")
+		http.Handle("/", http.FileServer(http.Dir("./../frontend")))
 	}
+	// start server
+	go http.ListenAndServe(addr, nil)
 }
 
 // readMobs parses the mob definitions from the definition files

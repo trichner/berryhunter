@@ -6,9 +6,6 @@ import (
 	"net/http"
 	"sync/atomic"
 	"time"
-	"flag"
-	"log"
-	"os"
 	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/net"
@@ -21,6 +18,7 @@ import (
 	"github.com/trichner/berryhunter/backend/sys/chat"
 	"github.com/trichner/berryhunter/backend/sys/heater"
 	"github.com/google/flatbuffers/go"
+	"log"
 )
 
 type Game struct {
@@ -49,7 +47,6 @@ func (h *wsHandler) OnMessage(c *net.Client, msg []byte) {
 }
 
 func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry) {
-	
 
 	g.conf = conf
 	g.Items = items
@@ -94,35 +91,29 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 
 }
 
-func (g *Game) Run() {
+func (g *Game) Handler() http.HandlerFunc {
 
-	//TODO move into main
-	var dev, help bool
-	flag.BoolVar(&dev, "dev", false, "Serve frontend directly")
-	flag.BoolVar(&help, "help", false, "Show usage help")
-	flag.Parse()
-	if help {
-		flag.Usage()
-		os.Exit(1)
-	}
-
-	handleFunc := net.NewHandleFunc(func(c *net.Client) {
+	return net.NewHandleFunc(func(c *net.Client) {
 		client := client.NewClient(c)
 		sendWelcomeMessage(g, client)
 		s := spectator.NewSpectator(phy.VEC2F_ZERO, client)
 
 		g.AddEntity(s)
 	})
+}
 
-	addr := fmt.Sprintf(":%d", g.conf.Port)
-	http.HandleFunc(g.conf.Path, handleFunc)
+func (g *Game) Loop() {
 
-	if dev {
-		log.Print("Using development server.")
-		http.Handle("/", http.FileServer(http.Dir("./../frontend")))
+	//---- run game loop
+	tickrate := time.Millisecond * 33
+	tps := time.Second / tickrate
+	log.Printf("Starting loop with %d tps", tps)
+
+	ticker := time.NewTicker(tickrate)
+	for {
+		g.Update()
+		<-ticker.C
 	}
-
-	go http.ListenAndServe(addr, nil)
 }
 
 func (g *Game) AddEntity(e model.BasicEntity) {
