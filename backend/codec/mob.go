@@ -1,9 +1,9 @@
 package codec
 
 import (
-	"github.com/trichner/berryhunter/backend/model"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 func MobEntityFlatbufMarshal(m model.MobEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {

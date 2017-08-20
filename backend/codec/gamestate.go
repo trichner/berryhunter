@@ -193,7 +193,6 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 	return builder.EndVector(n)
 }
 
-
 // EntityFlatbufMarshal marshals an Entity interface to its corresponding
 // flatbuffer schema
 func ResourceEntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {

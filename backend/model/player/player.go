@@ -2,10 +2,10 @@ package player
 
 import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
-	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
-	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/minions"
+	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 var _ = model.PlayerEntity(&player{})
@@ -16,9 +16,9 @@ func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 
 	e.EntityType = BerryhunterApi.EntityTypeCharacter
 	p := &player{BaseEntity: e,
-		client: c,
-		equipment: items.NewEquipment(),
-		name: name,
+		client:         c,
+		equipment:      items.NewEquipment(),
+		name:           name,
 		ownedEntitites: model.NewBasicEntities(),
 	}
 
@@ -58,7 +58,6 @@ func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 
 	return p
 }
-
 
 //---- player
 type player struct {
@@ -215,4 +214,3 @@ func (p *player) Craft(i items.Item) bool {
 	inventory.AddItem(newItem)
 	return true
 }
-

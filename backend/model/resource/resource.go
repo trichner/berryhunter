@@ -1,10 +1,10 @@
 package resource
 
 import (
+	"fmt"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
-	"fmt"
 )
 
 type Resource struct {

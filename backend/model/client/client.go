@@ -1,11 +1,11 @@
 package client
 
 import (
-	"github.com/trichner/berryhunter/backend/net"
-	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
-	"log"
 	"github.com/trichner/berryhunter/backend/codec"
+	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/net"
+	"log"
 )
 
 var _ = model.Client(&client{})

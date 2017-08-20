@@ -7,5 +7,3 @@ import (
 type Interacter interface {
 	PlayerHitsWith(p PlayerEntity, item items.Item)
 }
-
-

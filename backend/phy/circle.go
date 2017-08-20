@@ -105,7 +105,7 @@ func (c *Circle) resolveCollisionWithBox(b *Box) Vec2f {
 
 func NewCircle(pos Vec2f, radius float32) *Circle {
 	c := &Circle{
-		Radius:        radius,
+		Radius:               radius,
 		dynamicColliderShape: newDynamicColliderShape(pos),
 	}
 

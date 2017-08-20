@@ -1,14 +1,14 @@
 package sys
 
 import (
+	"engo.io/ecs"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/backend/codec"
+	"github.com/trichner/berryhunter/backend/minions"
 	"github.com/trichner/berryhunter/backend/model"
-	"engo.io/ecs"
-	"log"
 	"github.com/trichner/berryhunter/backend/model/player"
 	"github.com/trichner/berryhunter/backend/model/spectator"
-	"github.com/trichner/berryhunter/backend/minions"
+	"log"
 )
 
 type stringSet map[string]struct{}
@@ -143,4 +143,3 @@ func sendObituaryMessage(c model.Client) {
 	builder.Finish(obituaryMsg)
 	c.SendMessage(builder.FinishedBytes())
 }
-

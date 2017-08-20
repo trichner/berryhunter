@@ -2,8 +2,8 @@ package sys
 
 import (
 	"engo.io/ecs"
-	"log"
 	"github.com/trichner/berryhunter/backend/model"
+	"log"
 )
 
 type MobSystem struct {

@@ -1,11 +1,11 @@
 package gen
 
 import (
-	"math/rand"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
-	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/items"
+	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/phy"
+	"math/rand"
 )
 
 const gridSize = 100

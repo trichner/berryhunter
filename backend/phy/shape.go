@@ -68,7 +68,7 @@ func newDynamicColliderShape(pos Vec2f) dynamicColliderShape {
 	return dynamicColliderShape{
 		colliderShape: colliderShape{
 			shape: Shape{
-				pos: pos,
+				pos:   pos,
 				Layer: -1,
 			},
 			collisions: make(ColliderSet),
@@ -118,7 +118,6 @@ func (c *colliderShape) resolveFancyCollisions() {
 }
 
 func (c *colliderShape) resolveFancyCollision(other Collider) Vec2f {
-
 
 	// TODO
 	return VEC2F_ZERO

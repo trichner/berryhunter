@@ -5,9 +5,9 @@ package net
 // license that can be found in the LICENSE file.
 
 import (
-	"net/http"
-	"log"
 	"github.com/gorilla/websocket"
+	"log"
+	"net/http"
 )
 
 // serveWs handles websocket requests from the peer.

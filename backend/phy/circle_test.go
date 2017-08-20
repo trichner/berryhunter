@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"math"
-	"testing"
 	"math/rand"
+	"testing"
 )
 
 type circleIntersectionTestCase struct {
@@ -128,4 +128,3 @@ func TestCircle_ImpaleQuery(t *testing.T) {
 	}
 
 }
-

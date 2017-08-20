@@ -2,10 +2,10 @@ package chat
 
 import (
 	"engo.io/ecs"
+	"github.com/google/flatbuffers/go"
+	"github.com/trichner/berryhunter/backend/codec"
 	"github.com/trichner/berryhunter/backend/model"
 	"log"
-	"github.com/trichner/berryhunter/backend/codec"
-	"github.com/google/flatbuffers/go"
 )
 
 type ChatSystem struct {

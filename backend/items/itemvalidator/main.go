@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/trichner/berryhunter/backend/items"
-	"os"
 	"fmt"
-	"sort"
+	"github.com/trichner/berryhunter/backend/items"
 	"log"
+	"os"
+	"sort"
 )
 
 var helpArgs = map[string]bool{
@@ -13,7 +13,6 @@ var helpArgs = map[string]bool{
 	"--help": true,
 	"-?":     true,
 }
-
 
 func main() {
 

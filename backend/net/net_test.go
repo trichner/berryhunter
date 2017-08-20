@@ -1,10 +1,10 @@
 package net
 
 import (
-	"testing"
-	"net/http"
-	"log"
 	"fmt"
+	"log"
+	"net/http"
+	"testing"
 	"time"
 )
 

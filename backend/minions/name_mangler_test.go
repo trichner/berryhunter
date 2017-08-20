@@ -1,8 +1,8 @@
 package minions
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestMangler(t *testing.T) {

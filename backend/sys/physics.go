@@ -2,10 +2,10 @@ package sys
 
 import (
 	"engo.io/ecs"
-	"github.com/vova616/chipmunk"
 	"fmt"
-	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/vova616/chipmunk"
 )
 
 func DumpBodies(s *chipmunk.Space) {
@@ -101,7 +101,7 @@ func (p *PhysicsSystem) Remove(b ecs.BasicEntity) {
 			for _, d := range e.dynamics {
 				p.space.RemoveShape(d)
 			}
-		}else{
+		} else {
 			panic("Cannot remove static entities!")
 		}
 	}

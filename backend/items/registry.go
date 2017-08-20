@@ -1,10 +1,10 @@
 package items
 
 import (
+	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
-	"io/ioutil"
-	"fmt"
 )
 
 type registry struct {

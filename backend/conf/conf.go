@@ -1,14 +1,14 @@
 package conf
 
 import (
-	"io/ioutil"
 	"encoding/json"
+	"io/ioutil"
 )
 
 const configFilename = "./conf.json"
 
 type Config struct {
-	Port int `json:"port"`
+	Port int    `json:"port"`
 	Path string `json:"path"`
 }
 

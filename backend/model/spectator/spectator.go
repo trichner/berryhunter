@@ -1,9 +1,9 @@
 package spectator
 
 import (
-	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/model"
 	"engo.io/ecs"
+	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 func NewSpectator(pos phy.Vec2f, client model.Client) model.Spectator {

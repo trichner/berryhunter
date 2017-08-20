@@ -1,11 +1,11 @@
 package mobs
 
 import (
-	"path/filepath"
-	"os"
 	"fmt"
-	"io/ioutil"
 	"github.com/trichner/berryhunter/backend/items"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 )
 
 type mobMap map[MobID]*MobDefinition

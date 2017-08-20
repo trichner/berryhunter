@@ -1,8 +1,8 @@
 package wrand
 
 import (
-	"sort"
 	"math/rand"
+	"sort"
 )
 
 type Choice struct {

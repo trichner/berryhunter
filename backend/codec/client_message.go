@@ -1,13 +1,13 @@
 package codec
 
 import (
-	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
+	"fmt"
 	"github.com/google/flatbuffers/go"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
+	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/items"
 	"log"
-	"fmt"
 )
 
 type tableInitializer interface {

@@ -68,15 +68,15 @@ type Item struct {
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
-	ID   int `json:"id"`
-	Type string `json:"type"`
-	Name string `json:"name"`
+	ID      int    `json:"id"`
+	Type    string `json:"type"`
+	Name    string `json:"name"`
 	Factors struct {
 		Food            float32 `json:"food"`
 		Damage          float32 `json:"damage"`
 		StructureDamage float32 `json:"structureDamage"`
-		Yield           int `json:"yield"`
-		DurationInS     int `json:"durationInSeconds"`
+		Yield           int     `json:"yield"`
+		DurationInS     int     `json:"durationInSeconds"`
 		Warmth          float32 `json:"warmth"`
 		Radius          float32 `json:"radius"`
 	} `json:"factors"`
@@ -87,14 +87,14 @@ type itemDefinition struct {
 
 		Materials []struct {
 			Item  string `json:"item"`
-			Count int   `json:"count"`
+			Count int    `json:"count"`
 		} `json:"materials"`
 
 		Tools []string `json:"tools"`
 	} `json:"recipe"`
 
 	Body *struct {
-		Layer  int `json:"layer"`
+		Layer  int     `json:"layer"`
 		Radius float32 `json:"radius"`
 	} `json:"body"`
 }

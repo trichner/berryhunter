@@ -1,13 +1,13 @@
 package gen
 
 import (
-	"math/rand"
-	"github.com/trichner/berryhunter/backend/wrand"
-	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/model"
-	"log"
 	"github.com/trichner/berryhunter/backend/items"
+	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/model/resource"
+	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/wrand"
+	"log"
+	"math/rand"
 )
 
 var _ = model.Interacter(&resource.Resource{})

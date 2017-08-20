@@ -3,7 +3,7 @@ package items
 type ItemType int
 
 const (
-	ItemTypeNone       ItemType = iota
+	ItemTypeNone ItemType = iota
 	ItemTypePlaceable
 	ItemTypeResource
 	ItemTypeEquipment

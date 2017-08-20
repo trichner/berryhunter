@@ -2,8 +2,8 @@ package sys
 
 import (
 	"engo.io/ecs"
-	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/minions"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 type UpdateSystem struct {

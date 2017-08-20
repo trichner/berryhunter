@@ -1,9 +1,9 @@
 package wrand
 
 import (
-	"testing"
-	"math/rand"
 	"fmt"
+	"math/rand"
+	"testing"
 )
 
 func TestWeightedChoice_Choose(t *testing.T) {

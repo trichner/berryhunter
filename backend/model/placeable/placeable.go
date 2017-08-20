@@ -1,11 +1,11 @@
 package placeable
 
 import (
+	"fmt"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
-	"fmt"
-	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"math"
 )
 

@@ -4,11 +4,11 @@ package net
 // license that can be found in the LICENSE file.
 
 import (
-	"time"
-	"log"
 	"bytes"
-	"github.com/gorilla/websocket"
 	"errors"
+	"github.com/gorilla/websocket"
+	"log"
+	"time"
 )
 
 const (
@@ -112,7 +112,7 @@ func (c *Client) Run() {
 }
 
 // SendMessage sends a message to this client
-func (c *Client) SendMessage(msg []byte) (error) {
+func (c *Client) SendMessage(msg []byte) error {
 	// is channel already closed?
 	select {
 	case <-c.quit:

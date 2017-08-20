@@ -1,10 +1,10 @@
 package items
 
 import (
-	"testing"
-	"io/ioutil"
-	"github.com/stretchr/testify/assert"
 	"fmt"
+	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"testing"
 )
 
 func TestParseRecipe(t *testing.T) {

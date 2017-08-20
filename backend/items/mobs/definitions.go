@@ -1,9 +1,9 @@
 package mobs
 
 import (
-	"github.com/trichner/berryhunter/backend/items"
 	"encoding/json"
 	"fmt"
+	"github.com/trichner/berryhunter/backend/items"
 )
 
 //{
@@ -38,15 +38,15 @@ type MobDefinition struct {
 }
 
 type mobDefinition struct {
-	Id   uint64 `json:"id"`
-	Name string `json:"name"`
-	Type string `json:"type"`
+	Id      uint64 `json:"id"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
 	Factors struct {
 		Vulnerability float32 `json:"vulnerability"`
 	} `json:"factors"`
 	Drops []struct {
 		Item  string `json:"item"`
-		Count int   `json:"count"`
+		Count int    `json:"count"`
 	} `json:"drops"`
 }
 

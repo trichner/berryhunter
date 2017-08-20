@@ -2,10 +2,10 @@ package core
 
 import (
 	"engo.io/ecs"
-	"log"
 	"github.com/google/flatbuffers/go"
-	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/codec"
+	"github.com/trichner/berryhunter/backend/model"
+	"log"
 )
 
 type NetSystem struct {

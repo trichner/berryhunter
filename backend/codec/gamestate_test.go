@@ -1,14 +1,14 @@
 package codec
 
 import (
-	"testing"
 	"github.com/google/flatbuffers/go"
-	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/stretchr/testify/assert"
-	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/items"
-	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/net"
+	"github.com/trichner/berryhunter/backend/phy"
+	"testing"
 )
 
 func TestWelcomeServerMessage(t *testing.T) {
@@ -59,7 +59,6 @@ func (p *mockPlayer) VitalSigns() *model.PlayerVitalSigns {
 	return &model.PlayerVitalSigns{
 		Health:          100,
 		BodyTemperature: 70,
-
 	}
 }
 

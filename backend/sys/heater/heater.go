@@ -2,8 +2,8 @@ package heater
 
 import (
 	"engo.io/ecs"
-	"log"
 	"github.com/trichner/berryhunter/backend/model"
+	"log"
 )
 
 type HeaterSystem struct {

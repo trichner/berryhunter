@@ -14,4 +14,3 @@ type Spectator interface {
 	Viewport() phy.DynamicCollider
 	Client() Client
 }
-

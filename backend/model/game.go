@@ -1,9 +1,9 @@
 package model
 
 import (
+	"engo.io/ecs"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/items/mobs"
-	"engo.io/ecs"
 	"net/http"
 )
 

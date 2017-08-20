@@ -1,8 +1,8 @@
 package phy
 
 import (
-	"math"
 	"fmt"
+	"math"
 )
 
 var VEC2F_ZERO = Vec2f{0, 0}

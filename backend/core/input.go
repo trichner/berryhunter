@@ -2,14 +2,13 @@ package core
 
 import (
 	"engo.io/ecs"
-	"log"
-	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/model/placeable"
+	"github.com/trichner/berryhunter/backend/phy"
+	"log"
 )
-
 
 const inputBuffererCount = 3
 
@@ -64,7 +63,7 @@ func (i *PlayerInputSystem) Update(dt float32) {
 
 	// freeze input, concurrent reads are fine
 	ibuf := i.ibufs[i.game.Tick%inputBuffererCount]
-	lastBuf := i.ibufs[(i.game.Tick+inputBuffererCount-1 )%inputBuffererCount]
+	lastBuf := i.ibufs[(i.game.Tick+inputBuffererCount-1)%inputBuffererCount]
 
 	// apply inputs to player
 	for _, p := range i.players {
@@ -145,7 +144,6 @@ func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Acti
 	}
 
 	log.Printf("✊ Action going on: %s(%s)", BerryhunterApi.EnumNamesActionType[int(action.Type)], item.Name)
-
 
 	switch action.Type {
 	case BerryhunterApi.ActionTypePrimary:

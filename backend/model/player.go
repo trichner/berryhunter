@@ -1,9 +1,9 @@
 package model
 
 import (
+	"engo.io/ecs"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/phy"
-	"engo.io/ecs"
 )
 
 const VitalSignMax = ^VitalSign(0)

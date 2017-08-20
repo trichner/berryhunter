@@ -1,12 +1,12 @@
 package gen
 
 import (
-	"testing"
-	"math/rand"
 	"fmt"
-	"github.com/trichner/berryhunter/backend/wrand"
-	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/items"
+	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/wrand"
+	"math/rand"
+	"testing"
 )
 
 func Test_populate(t *testing.T) {

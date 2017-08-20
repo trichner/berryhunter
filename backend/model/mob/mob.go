@@ -1,14 +1,14 @@
 package mob
 
 import (
-	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/model"
-	"math/rand"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
-	"math"
 	"github.com/trichner/berryhunter/backend/items"
-	"log"
 	"github.com/trichner/berryhunter/backend/items/mobs"
+	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/phy"
+	"log"
+	"math"
+	"math/rand"
 )
 
 var _ = model.MobEntity(&Mob{})

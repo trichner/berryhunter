@@ -1,10 +1,10 @@
 package phy
 
 import (
-	"testing"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"math/rand"
+	"testing"
 )
 
 type testCaseCircle struct {
