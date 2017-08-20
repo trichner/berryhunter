@@ -4,7 +4,7 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"engo.io/ecs"
 	"github.com/trichner/berryhunter/backend/items"
-	"github.com/trichner/berryhunter/backend/mobs"
+	"github.com/trichner/berryhunter/backend/items/mobs"
 )
 
 // EntityType is an enum describing the type of the entity

@@ -8,7 +8,7 @@ import (
 	"math"
 	"github.com/trichner/berryhunter/backend/items"
 	"log"
-	"github.com/trichner/berryhunter/backend/mobs"
+	"github.com/trichner/berryhunter/backend/items/mobs"
 )
 
 var _ = model.MobEntity(&Mob{})

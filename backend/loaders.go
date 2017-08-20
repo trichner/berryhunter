@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/items"
-	"github.com/trichner/berryhunter/backend/mobs"
+	"github.com/trichner/berryhunter/backend/items/mobs"
 	"log"
 	"os"
 	"sort"
-	"github.com/trichner/berryhunter/backend/conf"
 )
 
 // loadMobs parses the mob definitions from the definition files

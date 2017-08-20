@@ -14,7 +14,7 @@ import (
 	"github.com/trichner/berryhunter/backend/codec"
 	"github.com/trichner/berryhunter/backend/model/client"
 	"github.com/trichner/berryhunter/backend/model/spectator"
-	"github.com/trichner/berryhunter/backend/mobs"
+	"github.com/trichner/berryhunter/backend/items/mobs"
 	"github.com/trichner/berryhunter/backend/sys/chat"
 	"github.com/trichner/berryhunter/backend/sys/heater"
 	"github.com/google/flatbuffers/go"

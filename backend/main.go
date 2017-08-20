@@ -1,18 +1,18 @@
 package main
 
 import (
-	"log"
-	"math/rand"
-	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/model"
-	"os"
-	"github.com/trichner/berryhunter/backend/model/mob"
-	"github.com/trichner/berryhunter/backend/gen"
-	"github.com/trichner/berryhunter/backend/mobs"
 	"flag"
 	"fmt"
-	"net/http"
 	"github.com/trichner/berryhunter/backend/core"
+	"github.com/trichner/berryhunter/backend/gen"
+	"github.com/trichner/berryhunter/backend/items/mobs"
+	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/model/mob"
+	"github.com/trichner/berryhunter/backend/phy"
+	"log"
+	"math/rand"
+	"net/http"
+	"os"
 )
 
 func main() {
