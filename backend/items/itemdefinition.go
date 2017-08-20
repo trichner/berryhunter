@@ -35,7 +35,7 @@ type Factors struct {
 	Damage          float32
 	StructureDamage float32
 	Yield           int
-	Duration        int
+	DurationInS     int
 
 	Warmth float32
 	Radius float32
@@ -76,7 +76,7 @@ type itemDefinition struct {
 		Damage          float32 `json:"damage"`
 		StructureDamage float32 `json:"structureDamage"`
 		Yield           int `json:"yield"`
-		Duration        int `json:"duration"`
+		DurationInS     int `json:"durationInSeconds"`
 		Warmth          float32 `json:"warmth"`
 		Radius          float32 `json:"radius"`
 	} `json:"factors"`
@@ -170,7 +170,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			Yield:           i.Factors.Yield,
 			Warmth:          i.Factors.Warmth,
 			Radius:          i.Factors.Radius,
-			Duration:        i.Factors.Duration,
+			DurationInS:     i.Factors.DurationInS,
 		},
 		Recipe: recipe,
 		Body:   body,

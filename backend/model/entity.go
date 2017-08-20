@@ -39,6 +39,8 @@ type Heater interface {
 type PlaceableEntity interface {
 	Entity
 
+	Decayed() bool
+	Update(dt float32)
 	HeatRadiation() *HeatRadiator
 	Item() items.Item
 }

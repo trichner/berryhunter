@@ -77,7 +77,7 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 	f := heater.New()
 	g.AddSystem(f)
 
-	pl := NewPlayerSystem()
+	pl := NewUpdateSystem()
 	g.AddSystem(pl)
 
 	s := NewConnectionStateSystem(g)
@@ -88,6 +88,9 @@ func (g *Game) Init(conf *conf.Config, items items.Registry, mobs mobs.Registry)
 
 	chat := chat.New()
 	g.AddSystem(chat)
+
+	d := NewDecaySystem(g)
+	g.AddSystem(d)
 
 }
 
@@ -198,6 +201,10 @@ func (g *Game) addPlaceableEntity(p model.PlaceableEntity) {
 			sys.AddEntity(p)
 		case *NetSystem:
 			sys.AddEntity(p)
+		case *UpdateSystem:
+			sys.AddUpdateable(p)
+		case *DecaySystem:
+			sys.AddDecayable(p)
 		case *heater.HeaterSystem:
 			if p.HeatRadiation() != nil {
 				sys.AddHeater(p)
@@ -253,8 +260,8 @@ func (g *Game) addPlayer(p model.PlayerEntity) {
 			// Create a case for each System you want to use
 		case *PlayerInputSystem:
 			sys.AddPlayer(p)
-		case *PlayerUpdate:
-			sys.AddPlayer(p)
+		case *UpdateSystem:
+			sys.AddUpdateable(p)
 		case *CheatSystem:
 			sys.AddPlayer(p)
 		case *chat.ChatSystem:
@@ -266,14 +273,15 @@ func (g *Game) addPlayer(p model.PlayerEntity) {
 }
 
 const stepMillis = 33.0
-const step = float32(stepMillis / 1000.0)
+
+//const step = float32(stepMillis / 1000.0)
 
 func (g *Game) Update() {
 
 	// fixed 33ms steps
 	beforeMillis := time.Now().UnixNano() / 1000000
 
-	g.World.Update(step)
+	g.World.Update(stepMillis)
 
 	nowMillis := time.Now().UnixNano() / 1000000
 	dtMillis := nowMillis - beforeMillis

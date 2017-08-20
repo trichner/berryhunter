@@ -6,6 +6,8 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"fmt"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
+	"math"
+	"log"
 )
 
 var _ = model.PlaceableEntity(&Placeable{})
@@ -14,7 +16,22 @@ type Placeable struct {
 	model.BaseEntity
 	item items.Item
 
-	radiator *model.HeatRadiator
+	radiator   *model.HeatRadiator
+	millisLeft int
+}
+
+func (p *Placeable) Update(dt float32) {
+	p.millisLeft -= int(dt)
+
+	log.Printf("TIme left: %d", p.millisLeft)
+	// prevent underflow
+	if p.millisLeft < 0 {
+		p.millisLeft = 0
+	}
+}
+
+func (p *Placeable) Decayed() bool {
+	return p.millisLeft <= 0
 }
 
 func (p *Placeable) HeatRadiation() *model.HeatRadiator {
@@ -70,11 +87,18 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		radiator.Body = heaterBody
 	}
 
+	// setup the decay time
+	var timeLeft int = math.MaxInt32
+	if item.Factors.DurationInS != 0 {
+		timeLeft = item.Factors.DurationInS * 1000
+	}
+
 	base := model.NewBaseEntity(body, BerryhunterApi.EntityTypePlaceable)
 	p := &Placeable{
 		BaseEntity: base,
 		item:       item,
 		radiator:   radiator,
+		millisLeft: timeLeft,
 	}
 	p.Body.Shape().UserData = p
 	return p, nil

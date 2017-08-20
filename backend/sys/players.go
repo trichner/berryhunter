@@ -3,40 +3,35 @@ package sys
 import (
 	"engo.io/ecs"
 	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/minions"
 )
 
-type PlayerUpdate struct {
-	players []model.PlayerEntity
+type UpdateSystem struct {
+	updateables []model.Updater
 }
 
-func NewPlayerSystem() *PlayerUpdate {
-	return &PlayerUpdate{}
+func NewUpdateSystem() *UpdateSystem {
+	return &UpdateSystem{}
 }
 
-func (*PlayerUpdate) Priority() int {
+func (*UpdateSystem) Priority() int {
 	return -50
 }
 
-func (p *PlayerUpdate) AddPlayer(player model.PlayerEntity) {
-	p.players = append(p.players, player)
+func (p *UpdateSystem) AddUpdateable(u model.Updater) {
+	p.updateables = append(p.updateables, u)
 }
 
-func (p *PlayerUpdate) Update(dt float32) {
-	for _, player := range p.players {
-		player.Update(dt)
+func (p *UpdateSystem) Update(dt float32) {
+	for _, u := range p.updateables {
+		u.Update(dt)
 	}
 }
 
-func (p *PlayerUpdate) Remove(e ecs.BasicEntity) {
-	var delete int = -1
-	for index, entity := range p.players {
-		if entity.Basic().ID() == e.ID() {
-			delete = index
-			break
-		}
-	}
+func (p *UpdateSystem) Remove(e ecs.BasicEntity) {
+	delete := minions.FindBasic(func(i int) model.BasicEntity { return p.updateables[i] }, len(p.updateables), e)
 	if delete >= 0 {
 		//e := p.players[delete]
-		p.players = append(p.players[:delete], p.players[delete+1:]...)
+		p.updateables = append(p.updateables[:delete], p.updateables[delete+1:]...)
 	}
 }

@@ -1,0 +1,43 @@
+package sys
+
+import (
+	"github.com/trichner/berryhunter/backend/model"
+	"engo.io/ecs"
+	"github.com/trichner/berryhunter/backend/minions"
+	"log"
+)
+
+type DecaySystem struct {
+	decayables []model.Decayer
+
+	g *Game
+}
+
+func NewDecaySystem(g *Game) *DecaySystem {
+	return &DecaySystem{g: g}
+}
+
+func (*DecaySystem) Priority() int {
+	return -60
+}
+
+func (d *DecaySystem) AddDecayable(e model.Decayer) {
+	d.decayables = append(d.decayables, e)
+}
+
+func (d *DecaySystem) Update(dt float32) {
+	for _, e := range d.decayables {
+		log.Printf("Is decayed? %v", e)
+		if e.Decayed() {
+			d.g.RemoveEntity(e.Basic())
+		}
+	}
+}
+
+func (d *DecaySystem) Remove(e ecs.BasicEntity) {
+	delete := minions.FindBasic(func(i int) model.BasicEntity { return d.decayables[i] }, len(d.decayables), e)
+	if delete >= 0 {
+		//e := p.players[delete]
+		d.decayables = append(d.decayables[:delete], d.decayables[delete+1:]...)
+	}
+}
