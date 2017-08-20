@@ -1,5 +1,5 @@
 echo "Building Go bindings."
-rmdir /s /q "./DeathioApi"
+rmdir /s /q "./BerryhunterApi"
 flatc -g common.fbs client.fbs server.fbs
 
 echo "Building JavaScript bindings."
