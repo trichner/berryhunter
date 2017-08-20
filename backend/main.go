@@ -3,11 +3,8 @@ package main
 import (
 	"log"
 	"math/rand"
-	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model"
-	"github.com/trichner/berryhunter/backend/items"
-	"sort"
 	"os"
 	"github.com/trichner/berryhunter/backend/model/mob"
 	"github.com/trichner/berryhunter/backend/gen"
@@ -20,9 +17,9 @@ import (
 
 func main() {
 
-	config := readConf()
-	registry := readItems("../api/items/")
-	mobs := readMobs(registry, "../api/mobs/")
+	config := loadConf()
+	registry := loadItems("../api/items/")
+	mobs := loadMobs(registry, "../api/mobs/")
 
 	g := &sys.Game{}
 	g.Init(config, registry, mobs)
@@ -72,54 +69,6 @@ func bootServer(h http.HandlerFunc, port int, path string, dev bool) {
 	// start server
 	go http.ListenAndServe(addr, nil)
 }
-
-// readMobs parses the mob definitions from the definition files
-func readMobs(r items.Registry, path string) mobs.Registry {
-	registry, err := mobs.RegistryFromPaths(r, path)
-	if err != nil {
-
-		log.Printf("Error: %s", err)
-		os.Exit(1)
-	}
-
-	mobList := registry.Mobs()
-	log.Printf("Loaded %d mob definitions:", len(mobList))
-	sort.Sort(mobs.ByID(mobList))
-	for _, m := range mobList {
-		log.Printf("%3d: %s (%s)", m.ID, m.Name, m.Type)
-	}
-	return registry
-}
-
-// readItems parses the item definitions from the definition files
-func readItems(path string) items.Registry {
-	registry, err := items.RegistryFromPaths(path)
-	if err != nil {
-
-		log.Printf("Error: %s", err)
-		os.Exit(1)
-	}
-
-	itemList := registry.Items()
-	log.Printf("Loaded %d item definitions:", len(itemList))
-	sort.Sort(items.ByID(itemList))
-	for _, i := range itemList {
-		log.Printf("%3d: %s (%d)", i.ID, i.Name, i.Type)
-	}
-	return registry
-}
-
-// readConf parses the config file
-func readConf() *conf.Config {
-
-	configFile := "./conf.json"
-	config, err := conf.ReadConfig(configFile)
-	if err != nil {
-		log.Panicf("Cannot read config '%s':%v", configFile, err)
-	}
-	return config
-}
-
 func newMobEntity(def *mobs.MobDefinition) model.MobEntity {
 	circle := phy.NewCircle(phy.VEC2F_ZERO, 0.5)
 	return mob.NewMob(circle, def)
