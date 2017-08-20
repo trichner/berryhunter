@@ -125,14 +125,6 @@ func (g *Game) Run() {
 	go http.ListenAndServe(addr, nil)
 }
 
-func (g *Game) RemoveEntity(e ecs.BasicEntity) {
-
-	for _, system := range g.Systems() {
-
-		system.Remove(e)
-	}
-}
-
 func (g *Game) AddEntity(e model.BasicEntity) {
 
 	switch v := e.(type) {
