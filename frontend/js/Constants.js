@@ -27,7 +27,12 @@ define([], function () {
 
 		INVENTORY_SLOTS: 8,
 		CRAFTING_RANGE: 70,
-		PLACEMENT_RANGE: 60
+		PLACEMENT_RANGE: 60,
+
+		/**
+		 * Number of milliseconds that a chat message will stay visible
+		 */
+		CHAT_MESSAGE_DURATION: 5000
 	};
 
 	Constants.QUADRANT_SIZE = Constants.GRID_SPACING * Constants.FIELDS_IN_QUADRANT;

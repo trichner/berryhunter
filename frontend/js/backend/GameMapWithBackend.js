@@ -2,6 +2,7 @@
 
 define([
 	'underscore',
+	'Utils',
 	'Game',
 	'develop/DebugCircle',
 	'gameObjects/Border',
@@ -11,7 +12,7 @@ define([
 	'Develop',
 	'items/Equipment',
 	'schema_server'
-], function (_, Game, DebugCircle, Border, Character, Placeable, MapEditor, Develop, Equipment) {
+], function (_, Utils, Game, DebugCircle, Border, Character, Placeable, MapEditor, Develop, Equipment) {
 
 	function GameMapWithBackend() {
 		if (MapEditor.isActive()) {
@@ -26,8 +27,16 @@ define([
 		this.objects = {};
 	}
 
+	/**
+	 * @param entityId
+	 * @return {GameObject}
+	 */
+	GameMapWithBackend.prototype.getObject = function (entityId) {
+		return this.objects[entityId];
+	};
+
 	GameMapWithBackend.prototype.addOrUpdate = function (entity) {
-		let gameObject = this.objects[entity.id];
+		let gameObject = this.getObject(entity.id);
 		if (gameObject) {
 			// FIXME Der Server sollte mir nur Entities liefern, die sich auch geändert haben
 			if (gameObject.isMoveable) {
@@ -43,7 +52,7 @@ define([
 					gameObject = new Character(entity.id, entity.position.x, entity.position.y, entity.name);
 					break;
 				case Placeable:
-					gameObject = new Placeable(entity.item,  entity.position.x, entity.position.y);
+					gameObject = new Placeable(entity.item, entity.position.x, entity.position.y);
 					break;
 				case Border:
 					let startX = entity.aabb.LowerX;
@@ -109,18 +118,20 @@ define([
 			let slotsToHandle = _.clone(Equipment.Slots);
 			delete slotsToHandle.PLACEABLE;
 
-			entity.equipment.forEach((equippedItem) => {
-				let slot = Equipment.Helper.getItemEquipmentSlot(equippedItem);
-				delete slotsToHandle[slot];
-				let currentlyEquippedItem = character.getEquippedItem(slot);
-				if (currentlyEquippedItem === equippedItem) {
-					return;
-				}
-				if (currentlyEquippedItem !== null) {
-					character.unequipItem(slot);
-				}
-				gameObject.equipItem(equippedItem, slot);
-			});
+			if (Utils.isDefined(entity.equipment)) {
+				entity.equipment.forEach((equippedItem) => {
+					let slot = Equipment.Helper.getItemEquipmentSlot(equippedItem);
+					delete slotsToHandle[slot];
+					let currentlyEquippedItem = character.getEquippedItem(slot);
+					if (currentlyEquippedItem === equippedItem) {
+						return;
+					}
+					if (currentlyEquippedItem !== null) {
+						character.unequipItem(slot);
+					}
+					gameObject.equipItem(equippedItem, slot);
+				});
+			}
 
 			// All Slots that are not equipped according to backend are dropped.
 			for (let slot in slotsToHandle) {

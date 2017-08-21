@@ -25,8 +25,9 @@ define([], function () {
 			'GameObject',
 			'items/RecipesHelper',
 			'UserInterface',
-			'StartScreen'
-		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface, StartScreen) {
+			'StartScreen',
+			'Chat'
+		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface, StartScreen, Chat) {
 			/**
 			 * Creating a player starts implicitly the game
 			 */
@@ -178,7 +179,12 @@ define([], function () {
 
 			UserInterface.setup();
 
-			// MiniMap relies on the UI being set up.
+			/*
+			 * Initializing modules that require an initialized UI
+			 */
+
+			Chat.setup();
+
 			/**
 			 * @type MiniMap
 			 */

@@ -145,3 +145,29 @@
 		}
 	}
 }
+
+#chat {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -1.3px * (30 + 16));
+
+	background-color: rgba(0, 0, 0, 0.6);
+
+	padding: (0.1 * @slotSize);
+	border-radius: (0.1 * @slotSize);
+
+	min-height: 1.3em;
+}
+
+#chatInput {
+	display: block;
+	min-width: 1em;
+	color: white;
+	text-align: center;
+
+	&:focus {
+		box-shadow: none;
+		outline: none;
+	}
+}

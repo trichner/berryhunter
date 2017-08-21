@@ -40,6 +40,7 @@ func updatePlayer(p model.PlayerEntity) {
 	if msg == nil {
 		return
 	}
+	log.Printf("New message: %s", string(*msg));
 
 	builder := flatbuffers.NewBuilder(32)
 	entityMessage := codec.EntityMessageFlatbufMarshal(builder, p.Basic().ID(), string(*msg))

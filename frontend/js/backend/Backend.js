@@ -9,11 +9,12 @@ define([
 	'backend/SnapshotFactory',
 	'backend/GameState',
 	'backend/ClientMessage',
+	'Chat',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage) {
+], function (Game, Utils, Constants, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage, Chat) {
 
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
@@ -94,6 +95,10 @@ define([
 			this.send(ClientMessage.fromCommand(commandObj));
 		},
 
+		sendChatMessage: function (chatObj) {
+			this.send(ClientMessage.fromChat(chatObj));
+		},
+
 		receive: function (message) {
 			if (Game.two.playing === false &&
 				Game.started &&
@@ -164,6 +169,20 @@ define([
 					if (Develop.isActive()) {
 						Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Obituary()), 'Obituary', timeSinceLastMessage);
 					}
+					break;
+				case BerryhunterApi.ServerMessageBody.EntityMessage:
+					/**
+					 *
+					 * @type {BerryhunterApi.EntityMessage}
+					 */
+					let entityMessage = serverMessage.body(new BerryhunterApi.EntityMessage());
+
+					if (Develop.isActive()) {
+						Develop.logServerMessage(entityMessage, 'EntityMessage', timeSinceLastMessage);
+					}
+
+					Chat.showMessage(entityMessage.entityId().toFloat64(), entityMessage.message());
+
 					break;
 				case BerryhunterApi.ServerMessageBody.GameState:
 					let gameState = new GameState(serverMessage.body(new BerryhunterApi.GameState()));

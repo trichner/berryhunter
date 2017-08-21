@@ -16,10 +16,6 @@ define([
 
 			this.controls = new Controls(this.character);
 
-			// Has to be registered only when it's the player character as
-			// we don't want to manipulate other players characters that are shown
-			Game.two.bind('update', this.character.update.bind(this.character));
-
 			this.camera = new Camera(this.character);
 			Game.miniMap.add(this.character);
 

@@ -52,6 +52,13 @@ define([
 			this.setRotation(Math.PI / -2);
 
 			this.createName();
+
+			this.messages = [];
+			this.messagesGroup = new Two.Group();
+			this.shape.add(this.messagesGroup);
+			this.messagesGroup.translation.y = -1.3 * (this.size + 16);
+
+			Game.two.bind('update', this.update.bind(this));
 		}
 
 		initShape(x, y, size, rotation) {
@@ -181,7 +188,7 @@ define([
 				return;
 			}
 
-			if (Utils.isDefined(this.nameElement)){
+			if (Utils.isDefined(this.nameElement)) {
 				this.nameElement.value = name;
 				return;
 			}
@@ -240,7 +247,7 @@ define([
 			this.actionAnimationFrame = animationFrame;
 		}
 
-		update() {
+		update(frameCount, timeDelta) {
 			if (this.currentAction) {
 				let hand;
 				switch (this.currentAction) {
@@ -269,6 +276,16 @@ define([
 					this.currentAction = false;
 				}
 			}
+
+			this.messages = this.messages.filter((message) => {
+				message.timeToLife -= timeDelta;
+				if (message.timeToLife <= 0) {
+					// message.visible = false;
+					this.messagesGroup.remove(message);
+					return false;
+				}
+				return true;
+			})
 		}
 
 		isSlotEquipped(equipmentSlot) {
@@ -331,6 +348,25 @@ define([
 
 		getEquippedItem(equipmentSlot) {
 			return this.equippedItems[equipmentSlot];
+		}
+
+		say(message) {
+			let fontSize = 16;
+
+			// Move all currently displayed messages up
+			this.messages.forEach((message) => {
+				message.translation.y -= fontSize * 1.2;
+			});
+
+			let messageShape = new Two.Text(message, 0, 0, {
+				size: fontSize,
+				alignment: 'center',
+				fill: '#e37313'
+			});
+			messageShape.timeToLife = Constants.CHAT_MESSAGE_DURATION;
+			this.messagesGroup.add(messageShape);
+
+			this.messages.push(messageShape);
 		}
 	}
 

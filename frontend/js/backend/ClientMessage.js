@@ -38,6 +38,15 @@ define(['Utils', 'backend/BackendConstants'], function (Utils, BackendConstants)
 		return new ClientMessage(builder, BerryhunterApi.ClientMessageBody.Cheat, BerryhunterApi.Cheat.endCheat(builder));
 	};
 
+	ClientMessage.fromChat = function (chat) {
+		let builder = new flatbuffers.Builder(10);
+		let messageString = builder.createString(chat.message);
+		BerryhunterApi.ChatMessage.startChatMessage(builder);
+		BerryhunterApi.ChatMessage.addMessage(builder, messageString);
+		return new ClientMessage(builder, BerryhunterApi.ClientMessageBody.ChatMessage, BerryhunterApi.ChatMessage.endChatMessage(builder));
+
+	};
+
 	function marshalInput(builder, inputObj) {
 		let action = null;
 		if (Utils.isDefined(inputObj.action)) {

@@ -215,6 +215,16 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		return document.querySelector('#minimap > .wrapper');
 	};
 
+	/**
+	 *
+	 * @return {Element}
+	 */
+	UserInterface.getChat = function () {
+		return document.getElementById('chat');
+	};
+
+
+
 
 	return UserInterface;
 });

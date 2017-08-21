@@ -99,6 +99,8 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'StartScreen',
 					'NameGenerator',
 					'EndScreen',
+					'Console',
+					'Chat',
 
 					// Develop resources
 					'develop/Fps',

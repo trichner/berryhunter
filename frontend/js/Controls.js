@@ -11,10 +11,11 @@ define([
 	'gameObjects/Placeable',
 	'backend/Backend',
 	'Console',
+	'Chat',
 	'Utils',
 	'../vendor/tock',
 	'schema_client'
-], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Utils, Tock) {
+], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock) {
 	const UP_KEYS = [
 		'w'.charCodeAt(0),
 		'W'.charCodeAt(0),
@@ -116,6 +117,16 @@ define([
 				return;
 			}
 			if (Console.isOpen()) {
+				return;
+			}
+
+			if (Chat.isOpen()) {
+				return;
+			}
+
+			if (Chat.KEYS.indexOf(event.which) !== -1) {
+				Chat.show();
+				event.preventDefault();
 				return;
 			}
 
