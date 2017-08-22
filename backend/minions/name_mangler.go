@@ -6,8 +6,14 @@ import (
 )
 
 var numberSuffix = []string{"st", "nd", "rd"}
-var adjectiveSuffix = []string{"ugly", "hard", "dump", "crazy", "tall", "lunatic"}
-var customSuffix = []string{"breaker of stones", "father of rocks", "bundle of sticks"}
+var adjectiveSuffix = []string{"ugly", "hard", "dumb", "crazy", "tall", "lunatic"}
+var customSuffix = []string{
+	"breaker of stones",
+	"father of rocks",
+	"bundle of sticks",
+	"first of his name",
+	"son of crazy dog",
+}
 
 type StringMangler func(s string) (mangled string, next StringMangler)
 
