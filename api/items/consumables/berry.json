@@ -3,6 +3,8 @@
   "name": "Berry",
   "type": "CONSUMABLE",
   "factors": {
-    "food": 0.2
+    "food": 0.2,
+    "replenishProbability": 200,
+    "capacity": 5
   }
 }

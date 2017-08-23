@@ -16,6 +16,8 @@ type Resource struct {
 
 	capacity  int
 	available int
+
+	rand *rand.Rand
 }
 
 func (r *Resource) replenish(i int) {
@@ -40,16 +42,16 @@ func (r *Resource) yield(i int) (yielded int) {
 	return
 }
 
-const probability = 100
-
 func (r *Resource) Update(dt float32) {
-	if rand.Intn(probability) == 0 {
+	if r.resource.Factors.ReplenishProbability <= 0 {
+		return
+	}
+	if r.rand.Intn(r.resource.Factors.ReplenishProbability) == 0 {
 		r.replenish(1)
 	}
 }
 
-
-func NewResource(body *phy.Circle, resource items.Item, entityType model.EntityType) (*Resource, error) {
+func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityType model.EntityType) (*Resource, error) {
 
 	if resource.ItemDefinition == nil {
 		return nil, fmt.Errorf("No resource provided.")
@@ -63,8 +65,9 @@ func NewResource(body *phy.Circle, resource items.Item, entityType model.EntityT
 	r := &Resource{
 		BaseEntity: base,
 		resource:   resource,
-		capacity:   100,
-		available:  20,
+		capacity:   resource.Factors.Capacity,
+		available:  resource.Factors.Capacity / 2,
+		rand:       rand,
 	}
 	r.Body.Shape().UserData = r
 	return r, nil

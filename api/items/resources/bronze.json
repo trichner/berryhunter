@@ -1,5 +1,9 @@
 {
   "id": 4,
   "name": "Bronze",
-  "type": "RESOURCE"
+  "type": "RESOURCE",
+  "factors": {
+    "replenishProbability": 50,
+    "capacity": 100
+  }
 }

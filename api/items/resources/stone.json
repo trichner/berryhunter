@@ -1,5 +1,9 @@
 {
   "id": 3,
   "name": "Stone",
-  "type": "RESOURCE"
+  "type": "RESOURCE",
+  "factors": {
+    "replenishProbability": 50,
+    "capacity": 100
+  }
 }
