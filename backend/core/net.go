@@ -117,41 +117,41 @@ func (n *NetSystem) spectatorSendState(s model.Spectator, gs codec.SpectatorGame
 }
 
 func (n *NetSystem) Remove(b ecs.BasicEntity) {
-	var delete int
+	var d int
 
 	// delete from entitites
-	delete = -1
+	d = -1
 	for index, entity := range n.entities {
 		if entity.Basic().ID() == b.ID() {
-			delete = index
+			d = index
 			break
 		}
 	}
-	if delete >= 0 {
-		n.entities = append(n.entities[:delete], n.entities[delete+1:]...)
+	if d >= 0 {
+		n.entities = append(n.entities[:d], n.entities[d+1:]...)
 	}
 
 	// delete from players
-	delete = -1
+	d = -1
 	for index, entity := range n.players {
 		if entity.Basic().ID() == b.ID() {
-			delete = index
+			d = index
 			break
 		}
 	}
-	if delete >= 0 {
-		n.players = append(n.players[:delete], n.players[delete+1:]...)
+	if d >= 0 {
+		n.players = append(n.players[:d], n.players[d+1:]...)
 	}
 
 	// delete from spectators
-	delete = -1
+	d = -1
 	for index, entity := range n.spectators {
 		if entity.Basic().ID() == b.ID() {
-			delete = index
+			d = index
 			break
 		}
 	}
-	if delete >= 0 {
-		n.spectators = append(n.spectators[:delete], n.spectators[delete+1:]...)
+	if d >= 0 {
+		n.spectators = append(n.spectators[:d], n.spectators[d+1:]...)
 	}
 }

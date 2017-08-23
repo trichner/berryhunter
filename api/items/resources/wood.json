@@ -1,5 +1,9 @@
 {
   "id": 2,
   "name": "Wood",
-  "type": "RESOURCE"
+  "type": "RESOURCE",
+  "factors": {
+    "replenishProbability": 50,
+    "capacity": 100
+  }
 }

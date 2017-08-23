@@ -37,8 +37,13 @@ type Factors struct {
 	Yield           int
 	DurationInS     int
 
+	// Placeable/Heater
 	Warmth float32
 	Radius float32
+
+	// Resource
+	ReplenishProbability int
+	Capacity             int
 }
 
 type Body struct {
@@ -79,6 +84,10 @@ type itemDefinition struct {
 		DurationInS     int     `json:"durationInSeconds"`
 		Warmth          float32 `json:"warmth"`
 		Radius          float32 `json:"radius"`
+
+		ReplenishProbability int `json:"replenishProbability"`
+		Capacity             int `json:"capacity"`
+
 	} `json:"factors"`
 	Slot string `json:"slot"`
 
@@ -164,13 +173,15 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		Name: i.Name,
 		Slot: slot,
 		Factors: Factors{
-			Food:            i.Factors.Food,
-			Damage:          i.Factors.Damage,
-			StructureDamage: i.Factors.StructureDamage,
-			Yield:           i.Factors.Yield,
-			Warmth:          i.Factors.Warmth,
-			Radius:          i.Factors.Radius,
-			DurationInS:     i.Factors.DurationInS,
+			Food:                 i.Factors.Food,
+			Damage:               i.Factors.Damage,
+			StructureDamage:      i.Factors.StructureDamage,
+			Yield:                i.Factors.Yield,
+			Warmth:               i.Factors.Warmth,
+			Radius:               i.Factors.Radius,
+			DurationInS:          i.Factors.DurationInS,
+			ReplenishProbability: i.Factors.ReplenishProbability,
+			Capacity:             i.Factors.Capacity,
 		},
 		Recipe: recipe,
 		Body:   body,

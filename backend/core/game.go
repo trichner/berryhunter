@@ -230,6 +230,8 @@ func (g *game) addResourceEntity(e model.ResourceEntity) {
 			sys.AddStaticBody(e.Basic(), e.Bodies()[0])
 		case *NetSystem:
 			sys.AddEntity(e)
+		case *sys.UpdateSystem:
+			sys.AddUpdateable(e)
 		}
 	}
 }
