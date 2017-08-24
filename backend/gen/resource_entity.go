@@ -33,13 +33,15 @@ func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEnti
 		log.Fatalf("Unknown ressource: %s / %s\n", body.resourceName, err)
 	}
 
-	seed := ( int64(p.X)<<32 ^ int64(p.Y)) ^ rnd.Int63()
-	rand.NewSource(rnd.Int63() ^ rnd.Int63())
-	random := rand.New(rand.NewSource(seed))
-
-	r, err := resource.NewResource(ball, random, resourceItem, body.entityType)
+	r, err := resource.NewResource(ball, splitRandom(rnd, p), resourceItem, body.entityType)
 	if err != nil {
 		panic(err)
 	}
 	return r
+}
+
+// TODO is there a better way?
+func splitRandom(r *rand.Rand, p phy.Vec2f) *rand.Rand {
+	seed := ( int64(p.X) << 32 ) ^ int64(p.Y) ^ r.Int63()
+	return rand.New(rand.NewSource(seed))
 }
