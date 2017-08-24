@@ -8,4 +8,6 @@ const (
 	LayerWeaponCollision    = 0x1 << 2
 	LayerRessourceCollision = 0x1 << 3
 	LayerHeatCollision      = 0x1 << 4
+	LayerBorderCollision    = 0x1 << 5
+	LayerViewportCollision  = 0x1 << 6
 )

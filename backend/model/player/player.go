@@ -26,13 +26,13 @@ func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 	shapeGroup := int(p.ID())
 	p.Body.Shape().UserData = p
 	p.Body.Shape().Group = shapeGroup
-	p.Body.Shape().Layer = model.LayerStaticCollision | model.LayerHeatCollision
+	p.Body.Shape().Layer = model.LayerStaticCollision | model.LayerHeatCollision | model.LayerViewportCollision | model.LayerBorderCollision
 
 	// setup viewport
 	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{model.ViewPortWidth / 2, model.ViewPortHeight / 2})
 
 	p.viewport.Shape().IsSensor = true
-	p.viewport.Shape().Layer = model.LayerAllCollision
+	p.viewport.Shape().Layer = model.LayerViewportCollision
 	p.viewport.Shape().Group = shapeGroup
 
 	//--- initialize inventory

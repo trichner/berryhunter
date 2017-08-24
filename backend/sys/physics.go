@@ -48,7 +48,7 @@ func newDyamicPhysicsEntity(e ecs.BasicEntity, colliders ...phy.DynamicCollider)
 	return physicsEntity{e, nil, dynamics}
 }
 
-func NewPhysicsSystem(x, y int) *PhysicsSystem {
+func NewPhysicsSystem() *PhysicsSystem {
 	return &PhysicsSystem{
 		space: phy.NewSpace(),
 	}

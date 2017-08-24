@@ -4,6 +4,7 @@ type Intersector interface {
 	IntersectWith(i Intersector) bool
 	intersectWithBox(b *Box) bool
 	intersectWithCircle(c *Circle) bool
+	intersectWithInvCircle(c *InvCircle) bool
 }
 
 // IntersectAabb tests if two AABBs intersect
@@ -34,6 +35,19 @@ func IntersectCircles(a *Circle, b *Circle) bool {
 	d := a.Position().Sub(b.Position()).AbsSq()
 	r := a.Radius + b.Radius
 	return d < r*r
+}
+
+// IntersectCircles tests if two circles intersect
+// Note that the circle must have a smaller radius than the
+// inverted circle for this to make any sense
+func IntersectCircleInvCircle(a *Circle, b *InvCircle) bool {
+
+	if a.Radius > b.Radius {
+		return true
+	}
+
+	r := b.Radius - a.Radius
+	return b.Position().Sub(a.Position()).AbsSq() >= r*r
 }
 
 // ArbiterShapes tests if two dynamicShapes can collide based on their

@@ -10,7 +10,7 @@ func NewSpectator(pos phy.Vec2f, client model.Client) model.Spectator {
 
 	viewport := phy.NewBox(pos, phy.Vec2f{model.ViewPortWidth / 2, model.ViewPortHeight / 2})
 	viewport.Shape().IsSensor = true
-	viewport.Shape().Layer = model.LayerAllCollision
+	viewport.Shape().Layer = model.LayerViewportCollision
 
 	return &spectator{
 		BasicEntity: ecs.NewBasic(),

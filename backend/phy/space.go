@@ -37,6 +37,8 @@ type Space struct {
 
 	// grid for static bodies
 	gridStatic colliderGrid
+
+	radius float32
 }
 
 // getAt returns the list of dynamicShapes in a chunk
@@ -90,11 +92,11 @@ func (s *Space) bruteIntersectShapes(statics []Collider, shapes []DynamicCollide
 				continue
 			}
 
-			if !current.IntersectWith(other) {
+			if !ArbiterShapes(current, other) {
 				continue
 			}
 
-			if !ArbiterShapes(current, other) {
+			if !current.IntersectWith(other) {
 				continue
 			}
 
@@ -111,11 +113,11 @@ func (s *Space) bruteIntersectShapes(statics []Collider, shapes []DynamicCollide
 				continue
 			}
 
-			if !current.IntersectWith(other) {
+			if !ArbiterShapes(current, other) {
 				continue
 			}
 
-			if !ArbiterShapes(current, other) {
+			if !current.IntersectWith(other) {
 				continue
 			}
 

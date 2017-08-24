@@ -17,5 +17,5 @@ type CollisionResolver interface {
 	// resolveCollisionWithBox resolves the collision between
 	// itself and a box
 	// returns the reaction force
-	resolveCollisionWithBox(b *Box) Vec2f
+	resolveCollisionWithInvCircle(c *InvCircle) Vec2f
 }

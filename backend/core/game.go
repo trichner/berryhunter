@@ -36,19 +36,17 @@ type game struct {
 // assert game implements its interface
 var _ = model.Game(&game{})
 
-func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry) model.Game {
+func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, radius float32) model.Game {
 	g := &game{
 		conf:         conf,
 		itemRegistry: items,
 		mobRegistry:  mobs,
 	}
 
-	mapSide := 100
-
 	// Prepare welcome message. Its static anyways.
 	msg := &codec.Welcome{
 		"berryhunter.io [Alpha] rza, n1b, gino & co.",
-		mapSide,
+		int(radius),
 	}
 	builder := flatbuffers.NewBuilder(32)
 	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, msg)
@@ -56,8 +54,12 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry) model.
 	g.welcomeMsg = builder.FinishedBytes()
 
 	//---- setup systems
-	p := sys.NewPhysicsSystem(mapSide, mapSide)
+	p := sys.NewPhysicsSystem()
 	g.AddSystem(p)
+
+	wall := phy.NewInvCircle(phy.VEC2F_ZERO, radius)
+	wall.Shape().Layer = model.LayerBorderCollision
+	p.AddStaticBody(ecs.NewBasic(), wall)
 
 	n := NewNetSystem(g)
 	g.AddSystem(n)

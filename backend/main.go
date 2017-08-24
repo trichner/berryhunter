@@ -21,9 +21,11 @@ func main() {
 	registry := loadItems("../api/items/")
 	mobs := loadMobs(registry, "../api/mobs/")
 
-	g := core.NewGame(config, registry, mobs)
+	var radius float32 = 20
+	g := core.NewGame(config, registry, mobs, radius)
 
-	entities := gen.Generate(g.Items(), rand.New(rand.NewSource(0xDEADBEEF)))
+	rnd := rand.New(rand.NewSource(0xDEADBEEF))
+	entities := gen.Generate(g.Items(), rnd, radius)
 	for _, e := range entities {
 		g.AddEntity(e)
 	}
@@ -70,5 +72,6 @@ func bootServer(h http.HandlerFunc, port int, path string, dev bool) {
 }
 func newMobEntity(def *mobs.MobDefinition) model.MobEntity {
 	circle := phy.NewCircle(phy.VEC2F_ZERO, 0.5)
+	circle.Shape().Layer = model.LayerStaticCollision | model.LayerActionCollision | model.LayerBorderCollision | model.LayerViewportCollision
 	return mob.NewMob(circle, def)
 }

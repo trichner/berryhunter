@@ -13,12 +13,17 @@ func (c *Circle) IntersectWith(i Intersector) bool {
 	return i.intersectWithCircle(c)
 }
 
+func (c *Circle) intersectWithCircle(circle *Circle) bool {
+	return IntersectCircles(c, circle)
+}
+
 func (c *Circle) intersectWithBox(b *Box) bool {
+	// too complex for now
 	return true
 }
 
-func (c *Circle) intersectWithCircle(circle *Circle) bool {
-	return IntersectCircles(c, circle)
+func (c *Circle) intersectWithInvCircle(i *InvCircle) bool {
+	return IntersectCircleInvCircle(c, i)
 }
 
 func (c *Circle) resolveCollisions() {
@@ -53,6 +58,35 @@ func (c *Circle) resolveCollsionWith(collider CollisionResolver) Vec2f {
 func (c *Circle) resolveCollisionWithCircle(other *Circle) Vec2f {
 
 	return resolveCircleThomas(c, other)
+}
+
+func (c *Circle) resolveCollisionWithBox(b *Box) Vec2f {
+	panic("implement me")
+}
+
+func (c *Circle) resolveCollisionWithInvCircle(i *InvCircle) Vec2f {
+	return resolveInvCircle(c, i)
+}
+
+func resolveInvCircle(c *Circle, i *InvCircle) Vec2f {
+
+	if i.Radius < c.Radius {
+		return i.Position().Sub(c.Position())
+	}
+
+	r := i.Radius - c.Radius
+	// distance of centers
+	v := i.Position().Sub(c.Position())
+	abs := v.Abs()
+	// diff to allowed distance
+	d := abs - r
+	if d <= 0 {
+		return VEC2F_ZERO
+	}
+
+	// normalize
+	n := v.Div(abs)
+	return n.Mult(d)
 }
 
 func resolveCircleThomas(c *Circle, other *Circle) Vec2f {
@@ -97,10 +131,6 @@ func resolveCircleRaoul(circle *Circle, other *Circle) Vec2f {
 	angle := circle.Position().AngleBetween(other.Position())
 
 	return Vec2f{cos32f(angle), sin32f(angle)}.Mult(-offset)
-}
-
-func (c *Circle) resolveCollisionWithBox(b *Box) Vec2f {
-	panic("implement me")
 }
 
 func NewCircle(pos Vec2f, radius float32) *Circle {

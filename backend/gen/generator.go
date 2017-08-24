@@ -11,9 +11,9 @@ import (
 const gridSize = 100
 const chunkSize = 3
 
-func Generate(items items.Registry, rnd *rand.Rand) []model.ResourceEntity {
+func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.ResourceEntity {
 
-	var steps int64 = gridSize / chunkSize
+	var steps int64 = int64(radius*2) / chunkSize
 	var chunkHalfSize float32 = chunkSize / 2.0
 	var chunkQuarterSize float32 = chunkSize / 4.0
 
@@ -27,9 +27,15 @@ func Generate(items items.Registry, rnd *rand.Rand) []model.ResourceEntity {
 			crnd := chunkRand(x, y, rnd)
 			dx := crnd.Float32()*chunkHalfSize + chunkQuarterSize
 			dy := crnd.Float32()*chunkHalfSize + chunkQuarterSize
-			ex := chunkSize*float32(x) + dx
-			ey := chunkSize*float32(y) + dy
+			ex := chunkSize*float32(x) + dx - radius
+			ey := chunkSize*float32(y) + dy - radius
 			ev := phy.Vec2f{ex, ey}
+
+			// skip out of world entities
+			if ev.AbsSq()-chunkSize > radius*radius {
+				continue
+			}
+
 			e := NewRandomEntityFrom(items, ev, entities, crnd)
 			resourceEntities = append(resourceEntities, e)
 		}
@@ -50,14 +56,14 @@ var trees = []staticEntityBody{
 		BerryhunterApi.EntityTypeRoundTree,
 		100,
 		1,
-		model.LayerStaticCollision | model.LayerRessourceCollision,
+		model.LayerStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		"Wood",
 	},
 	{
 		BerryhunterApi.EntityTypeMarioTree,
 		100,
 		1,
-		model.LayerStaticCollision | model.LayerRessourceCollision,
+		model.LayerStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		"Wood",
 	},
 }
@@ -67,28 +73,28 @@ var resources = []staticEntityBody{
 		BerryhunterApi.EntityTypeBerryBush,
 		100,
 		0.5,
-		model.LayerRessourceCollision,
+		model.LayerRessourceCollision | model.LayerViewportCollision,
 		"Berry",
 	},
 	{
 		BerryhunterApi.EntityTypeStone,
 		100,
 		0.5,
-		model.LayerStaticCollision | model.LayerRessourceCollision,
+		model.LayerStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		"Stone",
 	},
 	{
 		BerryhunterApi.EntityTypeBronze,
 		100,
 		0.5,
-		model.LayerStaticCollision | model.LayerRessourceCollision,
+		model.LayerStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		"Bronze",
 	},
 	{
 		BerryhunterApi.EntityTypeIron,
 		100,
 		0.5,
-		model.LayerStaticCollision | model.LayerRessourceCollision,
+		model.LayerStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		"Iron",
 	},
 }

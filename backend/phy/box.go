@@ -22,6 +22,11 @@ func (b *Box) intersectWithCircle(circle *Circle) bool {
 	return true
 }
 
+func (b *Box) intersectWithInvCircle(circle *InvCircle) bool {
+	//return true
+	panic("Box collisions not implemented")
+}
+
 var _ = DynamicCollider(&Box{})
 
 func (b *Box) resolveCollisions() {
@@ -30,7 +35,7 @@ func (b *Box) resolveCollisions() {
 
 func (b *Box) resolveCollsionWith(c CollisionResolver) Vec2f {
 	// double dispatching
-	return c.resolveCollisionWithBox(b)
+	panic("Box collisions not implemented")
 }
 
 func (b *Box) resolveCollisionWithCircle(circle *Circle) Vec2f {
