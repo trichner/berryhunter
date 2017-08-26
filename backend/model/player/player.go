@@ -6,6 +6,7 @@ import (
 	"github.com/trichner/berryhunter/backend/minions"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
+	"log"
 )
 
 var _ = model.PlayerEntity(&player{})
@@ -74,11 +75,23 @@ type player struct {
 	inventory items.Inventory
 	equipment *items.Equipment
 
-	actionTick uint
-
 	model.PlayerVitalSigns
 
 	ownedEntitites model.BasicEntities
+
+	ongoingAction model.PlayerAction
+}
+
+func (p *player) AddAction(a model.PlayerAction) {
+	if p.ongoingAction != nil {
+		log.Printf("😧 Already action going on.")
+		return
+	}
+
+	done := a.Start()
+	if !done {
+		p.ongoingAction = a
+	}
 }
 
 func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
@@ -189,28 +202,4 @@ func (p *player) updateHand() {
 
 func (p *player) OwnedEntities() model.BasicEntities {
 	return p.ownedEntitites
-}
-
-func (p *player) Craft(i items.Item) bool {
-
-	r := i.Recipe
-	inventory := p.Inventory()
-
-	stacks := r.Materials
-	if !inventory.CanConsumeItems(stacks) {
-		return false
-	}
-
-	// check if there is space in the inventory
-	newItem := items.NewItemStack(i, 1)
-	if !inventory.CanConsume(newItem) && inventory.Cap() == inventory.Count() {
-		return false
-	}
-
-	// ok, we're good to go, remove materials & craft
-	inventory.ConsumeItems(stacks)
-
-	//TODO defer
-	inventory.AddItem(newItem)
-	return true
 }

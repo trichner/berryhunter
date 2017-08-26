@@ -3,6 +3,14 @@ package player
 func (p *player) Update(dt float32) {
 	// update time based tings
 
+	// action
+	if p.ongoingAction != nil {
+		done := p.ongoingAction.Update(dt)
+		if done {
+			p.ongoingAction = nil
+		}
+	}
+
 	vitalSigns := p.VitalSigns()
 
 	// heat

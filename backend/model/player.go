@@ -64,7 +64,6 @@ type PlayerEntity interface {
 	Equipment() *items.Equipment
 	VitalSigns() *PlayerVitalSigns
 	Inventory() *items.Inventory
-	Craft(i items.Item) bool
 	Viewport() phy.DynamicCollider
 	Hand() *Hand
 	Client() Client
@@ -72,6 +71,8 @@ type PlayerEntity interface {
 
 	Update(dt float32)
 	OwnedEntities() BasicEntities
+
+	AddAction(a PlayerAction)
 }
 
 type BasicEntities map[uint64]ecs.BasicEntity

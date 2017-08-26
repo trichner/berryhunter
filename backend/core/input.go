@@ -3,11 +3,10 @@ package core
 import (
 	"engo.io/ecs"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
-	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
-	"github.com/trichner/berryhunter/backend/model/placeable"
 	"github.com/trichner/berryhunter/backend/phy"
 	"log"
+	"github.com/trichner/berryhunter/backend/model/actions"
 )
 
 const inputBuffererCount = 3
@@ -144,88 +143,38 @@ func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Acti
 	}
 
 	log.Printf("✊ Action going on: %s(%s)", BerryhunterApi.EnumNamesActionType[int(action.Type)], item.Name)
-
+	var newAction model.PlayerAction = nil
 	switch action.Type {
 	case BerryhunterApi.ActionTypePrimary:
-		if !hasItem(p, item) {
-			return
-		}
-		p.Hand().Collider.Shape().Layer = -1
-		p.Hand().Item = item
+		newAction = actions.NewPrimary(item, p)
 		break
 	case BerryhunterApi.ActionTypeCraftItem:
-		p.Craft(item)
+		newAction = actions.NewCraft(item, p)
 		break
 
 	case BerryhunterApi.ActionTypeDropItem:
-		if !hasItem(p, item) {
-			return
-		}
-		p.Inventory().DropAll(item)
+		newAction = actions.NewDrop(item, p)
 		break
 
 	case BerryhunterApi.ActionTypeConsumeItem:
-		if !hasItem(p, item) {
-			return
-		}
-		ok := p.Inventory().ConsumeItem(items.NewItemStack(item, 1))
-		if ok {
-			// prevent overflow
-			h := p.VitalSigns().Satiety
-			foodFraction := item.Factors.Food
-			p.VitalSigns().Satiety = h.AddFraction(foodFraction)
-		}
+		newAction = actions.NewConsume(item, p)
 		break
 
 	case BerryhunterApi.ActionTypeEquipItem:
-		if !hasItem(p, item) {
-			return
-		}
-		p.Equipment().Equip(item)
+		newAction = actions.NewEquip(item, p)
 		break
 
 	case BerryhunterApi.ActionTypeUnequipItem:
-		if !hasItem(p, item) {
-			return
-		}
-		p.Equipment().Unequip(item)
+		newAction = actions.NewUnequip(item, p)
 		break
 
 	case BerryhunterApi.ActionTypePlaceItem:
-		if item.Type != items.ItemTypePlaceable {
-
-			log.Printf("😠 Tried to place: %s", item.Name)
-			return
-		}
-
-		hasItem := p.Inventory().ConsumeItem(items.NewItemStack(item, 1))
-		if !hasItem {
-			return
-		}
-
-		log.Printf("🏗 Placing: %s", item.Name)
-		// TODO add collision detection
-
-		e, err := placeable.NewPlaceable(item)
-
-		if err != nil {
-			panic(err)
-		}
-		e.SetPosition(p.Position())
-		i.game.AddEntity(e)
-		p.OwnedEntities().Add(e)
-
+		newAction = actions.NewPlace(item, p, i.game)
 		break
 	}
-}
-
-func hasItem(p model.PlayerEntity, item items.Item) bool {
-	// Action item needs to either be in inventory or it's 'None'
-	if item.ID != 0 && !p.Inventory().CanConsume(items.NewItemStack(item, 1)) {
-		log.Printf("😤 Player tried to use an item he does not own!")
-		return false
+	if newAction != nil {
+		p.AddAction(newAction)
 	}
-	return true
 }
 
 func input2vec(i *model.PlayerInput) phy.Vec2f {
