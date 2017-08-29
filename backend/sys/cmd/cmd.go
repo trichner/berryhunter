@@ -157,7 +157,7 @@ func (c *CommandSystem) Update(dt float32) {
 		}
 		err := action(c.g, player, actionArg)
 		if err != nil {
-			log.Printf("😰 Action '%s' failed.", cmd)
+			log.Printf("😰 Action '%s' failed: %s", cmd, err)
 			continue
 		}
 
