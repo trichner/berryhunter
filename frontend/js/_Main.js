@@ -104,6 +104,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'EndScreen',
 					'Console',
 					'Chat',
+				'NamedGroup',
 
 					// Develop resources
 					'develop/Fps',

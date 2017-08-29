@@ -9,7 +9,7 @@ define([
 	'MapEditor',
 	'items/Equipment',
 	'InjectedSVG',
-	'Preloading'
+	'Preloading',
 ], function (Game, GameObject, Two, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading) {
 	class Character extends GameObject {
 		constructor(id, x, y, name) {
@@ -38,7 +38,7 @@ define([
 			this.equipmentSlotGroups[Equipment.Slots.PLACEABLE] = placeableSlot;
 			placeableSlot.translation.set(
 				Constants.PLACEMENT_RANGE,
-				0
+				0,
 			);
 			placeableSlot.opacity = 0.6;
 
@@ -63,8 +63,9 @@ define([
 
 		initShape(x, y, size, rotation) {
 			let group = new Two.Group();
+			group.translation.set(x, y);
 
-			this.actualShape = super.initShape(x, y, size, rotation);
+			this.actualShape = super.initShape(0, 0, size, rotation);
 			group.add(this.actualShape);
 
 			return group;
@@ -121,66 +122,8 @@ define([
 
 			return {
 				group: group,
-				slot: slotGroup
+				slot: slotGroup,
 			};
-		}
-
-		createShape(x, y) {
-			let group = new Two.Group();
-			group.translation.set(x, y);
-			group.rotation = Math.PI / 2;
-
-			let shape = new Two.Ellipse(0, 0, 30);
-			group.add(shape);
-			shape.fill = 'rgb(128, 98, 64)';
-			shape.stroke = 'rgb(255, 196, 128)';
-			shape.linewidth = 2;
-
-			const smiley = Utils.executeRandomFunction([
-				{
-					weight: 4,
-					func: function () {
-						return ': )';
-					}
-				},
-				{
-					weight: 1,
-					func: function () {
-						return ': (';
-					}
-				},
-				{
-					weight: 2,
-					func: function () {
-						return ': o';
-					}
-				},
-				{
-					weight: 2,
-					func: function () {
-						return ': b';
-					}
-				},
-				{
-					weight: 1,
-					func: function () {
-						return ': (';
-					}
-				},
-				{
-					weight: 1,
-					func: function () {
-						return ': /';
-					}
-				}
-			]);
-
-			group.add(new Two.Text(smiley, 0, 0, {
-				size: 60 * 0.6,
-				fill: 'rgb(255, 196, 128)'
-			}));
-
-			return group;
 		}
 
 		createName() {
@@ -198,7 +141,7 @@ define([
 				// size: 18,
 				alignment: 'center',
 				fill: 'white',
-				weight: '700'
+				weight: '700',
 			});
 			this.shape.add(text);
 			this.nameElement = text;
@@ -361,7 +304,7 @@ define([
 			let messageShape = new Two.Text(message, 0, 0, {
 				size: fontSize,
 				alignment: 'center',
-				fill: '#e37313'
+				fill: '#e37313',
 			});
 			messageShape.timeToLife = Constants.CHAT_MESSAGE_DURATION;
 			this.messagesGroup.add(messageShape);
