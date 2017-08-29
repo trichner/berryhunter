@@ -4,6 +4,7 @@ define([
 	'Game',
 	'Utils',
 	'Constants',
+	'Console',
 	'Develop',
 	'backend/BackendConstants',
 	'backend/SnapshotFactory',
@@ -15,7 +16,7 @@ define([
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage, Welcome, Chat) {
+], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage, Welcome, Chat) {
 
 
 	const States = {
@@ -25,13 +26,20 @@ define([
 		WELCOMED: 'WELCOMED',
 		SPECTATING: 'SPECTATING',
 		PLAYING: 'PLAYING',
-		ERROR: 'ERROR'
+		ERROR: 'ERROR',
 	};
 
 	let state = States.DISCONNECTED;
 
 	function setState(newState) {
 		state = newState;
+		// if (Utils.isDefined(SnapshotFactory.getLastGameState())) {
+		// 	Console.log('Tick ' + SnapshotFactory.getLastGameState().tick + ' > Backend State: ' + state);
+		// } else {
+		// 	Console.log('Pre Ticks > Backend State: ' + state);
+		// }
+		Console.log('Backend State: ' + state);
+
 		if (Develop.isActive()) {
 			switch (state) {
 				case States.DISCONNECTED:
@@ -197,7 +205,11 @@ define([
 						Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Accept()), 'Accept', timeSinceLastMessage);
 					}
 
-					require(['StartScreen', 'EndScreen', 'UserInterface'], function (StartScreen, EndScreen, UserInterface) {
+					require([
+						'StartScreen',
+						'EndScreen',
+						'UserInterface',
+					], function (StartScreen, EndScreen, UserInterface) {
 						StartScreen.hide();
 						EndScreen.hide();
 						UserInterface.show();

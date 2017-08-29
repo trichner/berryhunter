@@ -39,6 +39,8 @@ define(['Preloading', 'Utils', 'backend/Backend'], function (Preloading, Utils, 
 			onCommand(commandInput.value);
 			commandInput.value = '';
 		});
+
+		Console.startTime = Date.now();
 	}
 
 	function onCommand(command) {
@@ -53,10 +55,18 @@ define(['Preloading', 'Utils', 'backend/Backend'], function (Preloading, Utils, 
 		}
 	}
 
+	function milliseconds2string(ms) {
+		return (ms / 1000).toFixed(2);
+	}
+
 	Console.log = function (string) {
+		let prefix = milliseconds2string(Date.now() - Console.startTime);
+		prefix = '[' + prefix + 's] ';
+
 		if (Console.historyElement.innerHTML.length > 0) {
 			Console.historyElement.innerHTML += '<br />';
 		}
+		Console.historyElement.innerHTML += prefix;
 		Console.historyElement.innerHTML += string;
 		Console.historyElement.scrollTop = Console.historyElement.scrollHeight;
 	};
