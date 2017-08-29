@@ -137,8 +137,9 @@ func (c *CommandSystem) Update(dt float32) {
 		}
 
 		if !c.validateToken(cheat.Token) {
-			log.Printf("⛔️ Invalid Command Token: %s", cheat.Token)
-			continue
+			log.Printf("😡 Player '%s' presented invalid token '%s'", player.Name(), cheat.Token)
+			//TODO ENFORCE!
+			//continue
 		}
 
 		argv := strings.SplitN(cheat.Command, " ", 2)
@@ -168,14 +169,12 @@ func (c *CommandSystem) Update(dt float32) {
 
 func (c *CommandSystem) validateToken(token string) bool {
 
-	// TODO authentication!
-	return true
-
 	for _, t := range c.tokens {
 		if t == token {
 			return true
 		}
 	}
+
 	return false
 }
 

@@ -40,7 +40,7 @@ type game struct {
 // assert game implements its interface
 var _ = model.Game(&game{})
 
-func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, radius float32) model.Game {
+func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens []string, radius float32) model.Game {
 	g := &game{
 		conf:         conf,
 		itemRegistry: items,
@@ -84,7 +84,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, radius
 	s := sys.NewConnectionStateSystem(g)
 	g.AddSystem(s)
 
-	c := cmd.NewCommandSystem(g, []string{})
+	c := cmd.NewCommandSystem(g, tokens)
 	g.AddSystem(c)
 
 	chat := chat.New()

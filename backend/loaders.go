@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"sort"
+	"bufio"
 )
 
 // loadMobs parses the mob definitions from the definition files
@@ -54,4 +55,22 @@ func loadConf() *conf.Config {
 		log.Panicf("Cannot read config '%s':%v", configFile, err)
 	}
 	return config
+}
+
+func loadTokens() []string {
+
+	tokenFile := "./tokens.list"
+
+	f, err := os.Open(tokenFile)
+	if err != nil {
+		log.Panicf("Cannot read '%s': %s", tokenFile, err)
+	}
+	s := bufio.NewScanner(f)
+
+	tokens := make([]string, 0, 8)
+	for s.Scan() {
+		tokens = append(tokens, s.Text())
+	}
+
+	return tokens
 }

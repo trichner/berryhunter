@@ -21,8 +21,13 @@ func main() {
 	registry := loadItems("../api/items/")
 	mobs := loadMobs(registry, "../api/mobs/")
 
+	tokens := loadTokens()
+
+	// TODO remove!
+	tokens = append(tokens, "1337")
+
 	var radius float32 = 20
-	g := core.NewGame(config, registry, mobs, radius)
+	g := core.NewGame(config, registry, mobs, tokens, radius)
 
 	rnd := rand.New(rand.NewSource(0xDEADBEEF))
 	entities := gen.Generate(g.Items(), rnd, radius)
