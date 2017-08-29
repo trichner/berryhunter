@@ -8,6 +8,8 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/codec"
 )
 
 var commands = map[string]Command{
@@ -68,6 +70,33 @@ var commands = map[string]Command{
 		}
 
 		target.VitalSigns().Health = 0
+
+		return nil
+	},
+	"WARP": func(g model.Game, p model.PlayerEntity, arg *string) error {
+
+		if arg == nil {
+			return fmt.Errorf("No arguments. Usage: 'WARP <X> <Y>'")
+		}
+
+		argv := strings.Split(*arg, " ")
+		if len(argv) != 2 {
+			return fmt.Errorf("To many or too few arguments, expected 2 and got %d", len(argv))
+		}
+
+		x, err := strconv.ParseInt(argv[0], 10, 64)
+		if err != nil {
+			return fmt.Errorf("Cannot parse argument X: %s", err)
+		}
+
+		y, err := strconv.ParseInt(argv[1], 10, 64)
+		if err != nil {
+			return fmt.Errorf("Cannot parse argument Y: %s", err)
+		}
+
+		xf := float32(x / codec.Points2px)
+		yf := float32(y / codec.Points2px)
+		p.SetPosition(phy.Vec2f{xf, yf})
 
 		return nil
 	},
