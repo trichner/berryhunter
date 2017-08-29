@@ -290,14 +290,14 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				definition: 'walls/stone-wall',
+				definition: 'walls/bronze-wall',
 				type: ItemType.PLACEABLE
 			},
 			BronzeSpikyWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				definition: 'walls/stone-spiky-wall',
+				definition: 'walls/bronze-spiky-wall',
 				type: ItemType.PLACEABLE
 			},
 			IronWall: {
@@ -332,7 +332,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				definition: 'doors/stone-door',
 				type: ItemType.PLACEABLE
 			},
-			BronceDoor: {
+			BronzeDoor: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
