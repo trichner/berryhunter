@@ -18,8 +18,8 @@
  *      type: ItemType,
  *      equipmentSlot: Equipment.Slots},
  */
-define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment', 'underscore'],
-	function (Environment, Utils, Preloading, ItemType, Equipment, _) {
+define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment'],
+	function (Environment, Utils, Preloading, ItemType, Equipment) {
 		const Items = {
 			/***********************************
 			 * TOOLS
@@ -98,7 +98,6 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				equipmentSlot: Equipment.Slots.HAND
 			},
 			IronSword: {
-				// TODO
 				icon: {file: 'swordIronIcon'},
 				graphic: {file: 'swordIron',
 					size: 30,
@@ -151,7 +150,6 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			 * HAMMERS
 			 ***********************************/
 			StoneHammer: {
-				// TODO
 				icon: {file: 'hammerStoneIcon'},
 				graphic: {
 					file: 'hammerStone',
@@ -164,7 +162,6 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				equipmentSlot: Equipment.Slots.HAND
 			},
 			BronzeHammer: {
-				// TODO
 				icon: {file: 'hammerBronzeIcon'},
 				graphic: {
 					file: 'hammerBronze',
@@ -177,7 +174,6 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				equipmentSlot: Equipment.Slots.HAND
 			},
 			IronHammer: {
-				// TODO
 				icon: {file: 'hammerIronIcon'},
 				graphic: {
 					file: 'hammerIron',
@@ -253,8 +249,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 					file: '../berryBush',
 					size: 25
 				},
-				// TODO
-				definition: '',
+				definition: 'placeables/seeds',
 				type: ItemType.PLACEABLE
 			},
 
@@ -274,56 +269,49 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'walls/wood-spiky-wall',
 				type: ItemType.PLACEABLE
 			},
 			StoneWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'walls/stone-wall',
 				type: ItemType.PLACEABLE
 			},
 			StoneSpikyWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'walls/stone-spiky-wall',
 				type: ItemType.PLACEABLE
 			},
 			BronzeWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'walls/stone-wall',
 				type: ItemType.PLACEABLE
 			},
 			BronzeSpikyWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'walls/stone-spiky-wall',
 				type: ItemType.PLACEABLE
 			},
 			IronWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'walls/iron-wall',
 				type: ItemType.PLACEABLE
 			},
 			IronSpikyWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'walls/iron-spiky-wall',
 				type: ItemType.PLACEABLE
 			},
 
@@ -334,32 +322,28 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'doors/wood-door',
 				type: ItemType.PLACEABLE
 			},
 			StoneDoor: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'doors/stone-door',
 				type: ItemType.PLACEABLE
 			},
 			BronceDoor: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'doors/bronze-door',
 				type: ItemType.PLACEABLE
 			},
 			IronDoor: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
-				// TODO
-				definition: '',
+				definition: 'doors/iron-door',
 				type: ItemType.PLACEABLE
 			},
 
@@ -383,7 +367,6 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			},
 			BerryBowl: {
 				icon: {file: 'berryBowlIcon'},
-				// TODO
 				definition: 'consumables/berry-bowl',
 				type: ItemType.CONSUMABLE
 			},
