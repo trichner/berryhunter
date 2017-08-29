@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Preloading', 'Utils', 'backend/Backend'], function (Preloading, Utils, Backend) {
+define(['Preloading', 'Utils'], function (Preloading, Utils) {
 	const Console = {};
 
 	Console.KEYS = [
@@ -15,7 +15,7 @@ define(['Preloading', 'Utils', 'backend/Backend'], function (Preloading, Utils, 
 		'û'.charCodeAt(0),
 		'Â'.charCodeAt(0),
 		'Ô'.charCodeAt(0),
-		'Û'.charCodeAt(0)
+		'Û'.charCodeAt(0),
 	];
 
 	let token = Utils.getUrlParameter('token');
@@ -46,9 +46,11 @@ define(['Preloading', 'Utils', 'backend/Backend'], function (Preloading, Utils, 
 	function onCommand(command) {
 		Console.log(command);
 		if (token) {
-			Backend.sendCommand({
-				command: command,
-				token: token
+			require(['backend/Backend'], function (Backend) {
+				Backend.sendCommand({
+					command: command,
+					token: token,
+				});
 			});
 		} else {
 			Console.log('ERROR: URL parameter "token" is not defined!');
