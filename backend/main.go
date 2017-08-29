@@ -23,9 +23,6 @@ func main() {
 
 	tokens := loadTokens()
 
-	// TODO remove!
-	tokens = append(tokens, "1337")
-
 	var radius float32 = 20
 	g := core.NewGame(config, registry, mobs, tokens, radius)
 
