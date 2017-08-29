@@ -10,6 +10,7 @@ import (
 	"strings"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/codec"
+	"github.com/trichner/berryhunter/backend/minions"
 )
 
 var commands = map[string]Command{
@@ -136,7 +137,7 @@ func (c *CommandSystem) Update(dt float32) {
 		}
 
 		if !c.validateToken(cheat.Token) {
-			log.Printf("⛔️ Invalid Cheat Token: %s", cheat.Token)
+			log.Printf("⛔️ Invalid Command Token: %s", cheat.Token)
 			continue
 		}
 
@@ -161,7 +162,7 @@ func (c *CommandSystem) Update(dt float32) {
 			continue
 		}
 
-		log.Printf("😎 Cheated '%s'.", cmd)
+		log.Printf("😎 Executed '%s'.", cmd)
 	}
 }
 
@@ -179,16 +180,13 @@ func (c *CommandSystem) validateToken(token string) bool {
 }
 
 func (c *CommandSystem) Remove(e ecs.BasicEntity) {
-	var delete int = -1
-	for index, entity := range c.players {
-		if entity.Basic().ID() == e.ID() {
-			delete = index
-			break
-		}
-	}
-	if delete >= 0 {
-		//e := p.players[delete]
-		c.players = append(c.players[:delete], c.players[delete+1:]...)
+le
+	i := minions.FindBasic(func(idx int) model.BasicEntity {
+		return c.players[idx]
+	}, len(c.players), e)
+
+	if i >= 0 {
+		c.players = append(c.players[:i], c.players[i+1:]...)
 	}
 }
 
