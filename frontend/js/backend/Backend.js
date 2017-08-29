@@ -263,7 +263,7 @@ define([
 
 		/**
 		 *
-		 * @param {{tick: number, player: {}, entities: Array}} snapshot
+		 * @param {{tick: number, player: {}, entities: [], inventory: []}} snapshot
 		 */
 		receiveSnapshot: function (snapshot) {
 			Game.map.newSnapshot(snapshot.entities);
@@ -278,11 +278,6 @@ define([
 							Game.player.vitalSigns.setValue(vitalSign, snapshot.player[vitalSign]);
 						}
 					});
-
-					// FIXME Abfrage entfernen, wenn der Server tatsächlich Changesets schickt
-					if (Utils.isDefined(snapshot.inventory)) {
-						Game.player.inventory.updateFromBackend(snapshot.inventory);
-					}
 				} else {
 					Game.createPlayer(
 						snapshot.player.id,
@@ -290,6 +285,11 @@ define([
 						snapshot.player.position.y,
 						snapshot.player.name);
 				}
+
+				if (Utils.isDefined(snapshot.inventory)) {
+					Game.player.inventory.updateFromBackend(snapshot.inventory);
+				}
+
 				if (Develop.isActive()) {
 					Game.player.character.updateAABB(snapshot.player.aabb);
 				}

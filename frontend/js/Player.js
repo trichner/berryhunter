@@ -25,6 +25,10 @@ define([
 
 			this.craftableItems = [];
 		}
+
+		remove() {
+			// TODO
+		}
 	}
 
 	return Player;
