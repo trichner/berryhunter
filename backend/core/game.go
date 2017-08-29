@@ -23,12 +23,16 @@ import (
 	"time"
 )
 
+type entitiesMap map[uint64]model.BasicEntity
+
 type game struct {
 	ecs.World
 	Tick         uint64
 	conf         *conf.Config
 	itemRegistry items.Registry
 	mobRegistry  mobs.Registry
+
+	entities entitiesMap
 
 	welcomeMsg []byte
 }
@@ -41,6 +45,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, radius
 		conf:         conf,
 		itemRegistry: items,
 		mobRegistry:  mobs,
+		entities:     make(entitiesMap),
 	}
 
 	// Prepare welcome message. Its static anyways.
@@ -124,7 +129,23 @@ func (g *game) Loop() {
 	}
 }
 
+func (g *game) GetEntity(id uint64) (model.BasicEntity, error) {
+
+	e, ok := g.entities[id]
+	if !ok {
+		return nil, fmt.Errorf("Entity with id %d not found.", id)
+	}
+	return e, nil
+}
+
+func (g *game) RemoveEntity(e ecs.BasicEntity) {
+	delete(g.entities, e.ID())
+	g.World.RemoveEntity(e)
+}
+
 func (g *game) AddEntity(e model.BasicEntity) {
+
+	g.entities[e.Basic().ID()] = e
 
 	switch v := e.(type) {
 	case model.PlayerEntity:

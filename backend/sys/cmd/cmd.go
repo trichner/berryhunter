@@ -48,6 +48,29 @@ var commands = map[string]Command{
 
 		return nil
 	},
+	"KILL": func(g model.Game, p model.PlayerEntity, arg *string) error {
+
+		target := p
+		if arg != nil && len(*arg) > 0 {
+			id, err := strconv.ParseUint(*arg, 10, 64)
+			if err != nil {
+				return err
+			}
+			other, err := g.GetEntity(id)
+			if err != nil {
+				return err
+			}
+			player, ok := other.(model.PlayerEntity)
+			if !ok {
+				return fmt.Errorf("Entity %d is not a player.", id)
+			}
+			target = player
+		}
+
+		target.VitalSigns().Health = 0
+
+		return nil
+	},
 }
 
 type CommandSystem struct {

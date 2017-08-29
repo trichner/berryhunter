@@ -21,6 +21,9 @@ type Game interface {
 	// RemoveEntity removes an entity from the game
 	RemoveEntity(e ecs.BasicEntity)
 
+	// Finds an entity by its id
+	GetEntity(id uint64) (BasicEntity, error)
+
 	// Items returns the registry with all available item definitions
 	Items() items.Registry
 
