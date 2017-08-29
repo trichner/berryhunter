@@ -3,12 +3,15 @@
 define([], function () {
 	let Game = {};
 
-	// Game.States = {
-	//	SPECTATING: 'SPECTATING',
-	//	PLAYING: 'PLAYING',
-	//};
+	const States = {
+		INITIALIZING: 'INITIALIZING',
+		RENDERING: 'RENDERING',
+		PLAYING: 'PLAYING'
+	};
 
-	Game.started = false;
+	Game.States = States;
+
+	Game.state = States.INITIALIZING;
 
 	Game.setup = function () {
 		require([
@@ -36,8 +39,21 @@ define([], function () {
 				 * @type Player
 				 */
 				Game.player = new Player(id, x, y, name);
+				Game.state = States.PLAYING;
+			};
+
+			/**
+			 *
+			 * @param {{mapWidth: number, mapHeight: number}} gameInformation
+			 */
+			Game.startRendering = function (gameInformation) {
+				Game.map = new GameMapWithBackend(gameInformation.mapWidth, gameInformation.mapHeight);
 				Game.two.play();
-				Game.started = true;
+				Game.state = States.RENDERING;
+				/**
+				 * @type MiniMap
+				 */
+				Game.miniMap = new MiniMap(Game.map.width, Game.map.height);
 			};
 
 			function createBackground() {
@@ -152,7 +168,7 @@ define([], function () {
 			/**
 			 * @type GameMap|GameMapWithBackend
 			 */
-			Game.map = new GameMapWithBackend();
+			Game.map = null;
 
 			let domElement = Game.two.renderer.domElement;
 			Game.domElement = domElement;
@@ -184,11 +200,6 @@ define([], function () {
 			 */
 
 			Chat.setup();
-
-			/**
-			 * @type MiniMap
-			 */
-			Game.miniMap = new MiniMap(Game.map.width, Game.map.height);
 
 			StartScreen.show();
 

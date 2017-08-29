@@ -25,7 +25,7 @@ require(['Environment'], function (Environment) {
 		shim: {
 			'underscore': {
 				exports: '_'
-			}
+			},
 		}
 	});
 
@@ -65,6 +65,9 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					// Game Modules
 					'SvgLoader',
 					'backend/Backend',
+					'backend/BackendConstants',
+					'backend/ClientMessage',
+					'backend/Welcome',
 					'backend/SnapshotFactory',
 					'KeyEvents',
 					'PointerEvents',

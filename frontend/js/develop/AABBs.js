@@ -38,14 +38,14 @@ define([], function () {
 						let x = startX + width / 2;
 						let y = startY + height / 2;
 						this.aabb = new Two.Rectangle(x, y, width, height);
-						Game.layers.gameObjects.add(this.aabb);
+						this.layer.add(this.aabb);
 
 						this.aabb.noFill();
 						this.aabb.stroke = Develop.settings.elementColor;
 						this.aabb.linewidth = Develop.settings.linewidth;
 
 						this.aabbConnector = new Two.Line(this.getX(), this.getY(), x, y);
-						Game.layers.gameObjects.add(this.aabbConnector);
+						this.layer.add(this.aabbConnector);
 						this.aabbConnector.stroke = Develop.settings.elementColor;
 						this.aabbConnector.linewidth = Develop.settings.linewidth;
 					} else {

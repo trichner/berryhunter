@@ -24,13 +24,10 @@ define(['Preloading', 'Game'], function (Preloading, Game) {
 		name = name.substr(0, playerNameMaxLength);
 
 
-		require(['backend/Backend', 'UserInterface'], function (Backend, UserInterface) {
+		require(['backend/Backend'], function (Backend) {
 			Backend.sendJoin({
 				playerName: name
 			});
-
-			EndScreen.hide();
-			UserInterface.show();
 		});
 	}
 

@@ -5,7 +5,7 @@ define(['Utils', 'underscore'], function (Utils, _) {
 
 	let lastGameState;
 
-	SnapshotFactory.newSnapshot = function (gameState) {
+	SnapshotFactory.newSnapshot = function (backendState, gameState) {
 		let snapshot;
 		if (this.hasSnapshot()) {
 			snapshot = {};
@@ -13,12 +13,12 @@ define(['Utils', 'underscore'], function (Utils, _) {
 
 			snapshot.player = _.clone(gameState.player);
 
-			if (!lastGameState.player.isSpectator && !gameState.player.isSpectator) {
-				if (Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
+				if (backendState === 'PLAYING' &&
+					!lastGameState.player.isSpectator &&
+					Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
 					Utils.nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)) {
 					delete snapshot.player.position;
 				}
-			}
 
 			if (isInventoryDifferent(lastGameState.inventory, gameState.inventory)) {
 				snapshot.inventory = gameState.inventory;
