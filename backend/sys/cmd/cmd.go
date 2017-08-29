@@ -180,7 +180,7 @@ func (c *CommandSystem) validateToken(token string) bool {
 }
 
 func (c *CommandSystem) Remove(e ecs.BasicEntity) {
-le
+
 	i := minions.FindBasic(func(idx int) model.BasicEntity {
 		return c.players[idx]
 	}, len(c.players), e)
