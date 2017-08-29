@@ -34,17 +34,16 @@ func (rcv *Welcome) ServerName() []byte {
 	return nil
 }
 
-func (rcv *Welcome) MapSize(obj *Vec2f) *Vec2f {
+func (rcv *Welcome) MapRadius() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		x := o + rcv._tab.Pos
-		if obj == nil {
-			obj = new(Vec2f)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
+}
+
+func (rcv *Welcome) MutateMapRadius(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(6, n)
 }
 
 func WelcomeStart(builder *flatbuffers.Builder) {
@@ -53,8 +52,8 @@ func WelcomeStart(builder *flatbuffers.Builder) {
 func WelcomeAddServerName(builder *flatbuffers.Builder, serverName flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(serverName), 0)
 }
-func WelcomeAddMapSize(builder *flatbuffers.Builder, mapSize flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(1, flatbuffers.UOffsetT(mapSize), 0)
+func WelcomeAddMapRadius(builder *flatbuffers.Builder, mapRadius float32) {
+	builder.PrependFloat32Slot(1, mapRadius, 0.0)
 }
 func WelcomeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

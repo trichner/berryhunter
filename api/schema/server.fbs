@@ -108,7 +108,7 @@ table GameState {
 
 table Welcome {
   server_name:string;
-  map_size:Vec2f;
+  map_radius:float;
 }
 
 table Accept {

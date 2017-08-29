@@ -1323,12 +1323,11 @@ BerryhunterApi.Welcome.prototype.serverName = function(optionalEncoding) {
 };
 
 /**
- * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f|null}
+ * @returns {number}
  */
-BerryhunterApi.Welcome.prototype.mapSize = function(obj) {
+BerryhunterApi.Welcome.prototype.mapRadius = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
 /**
@@ -1348,10 +1347,10 @@ BerryhunterApi.Welcome.addServerName = function(builder, serverNameOffset) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} mapSizeOffset
+ * @param {number} mapRadius
  */
-BerryhunterApi.Welcome.addMapSize = function(builder, mapSizeOffset) {
-  builder.addFieldStruct(1, mapSizeOffset, 0);
+BerryhunterApi.Welcome.addMapRadius = function(builder, mapRadius) {
+  builder.addFieldFloat32(1, mapRadius, 0.0);
 };
 
 /**

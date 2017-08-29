@@ -58,6 +58,8 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 
 		if j != nil {
 			s.game.RemoveEntity(sp.Basic())
+			pos := sp.Position()
+
 			// upgrade to p
 			name := j.PlayerName // resolve collisions!
 			client := sp.Client()
@@ -65,6 +67,7 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			log.Printf("☺️ '%s' joined!", name)
 			sendAcceptMessage(client)
 			p := player.New(s.game.Items(), client, name)
+			p.SetPosition(pos)
 			s.game.AddEntity(p)
 		}
 	}

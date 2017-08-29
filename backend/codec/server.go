@@ -3,7 +3,6 @@ package codec
 import (
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
-	"github.com/trichner/berryhunter/backend/phy"
 )
 
 func ServerMessageWrapFlatbufMarshal(builder *flatbuffers.Builder, body flatbuffers.UOffsetT, bodyType byte) flatbuffers.UOffsetT {
@@ -18,9 +17,7 @@ func WelcomeMessageFlatbufMarshal(builder *flatbuffers.Builder, w *Welcome) flat
 
 	BerryhunterApi.WelcomeStart(builder)
 	BerryhunterApi.WelcomeAddServerName(builder, serverName)
-	sidePx := intToF32Px(w.MapSize)
-	size := Vec2fMarshalFlatbuf(builder, phy.Vec2f{sidePx, sidePx})
-	BerryhunterApi.WelcomeAddMapSize(builder, size)
+	BerryhunterApi.WelcomeAddMapRadius(builder, w.Radius)
 
 	welcome := BerryhunterApi.WelcomeEnd(builder)
 
@@ -29,7 +26,7 @@ func WelcomeMessageFlatbufMarshal(builder *flatbuffers.Builder, w *Welcome) flat
 
 type Welcome struct {
 	ServerName string
-	MapSize    int
+	Radius     float32
 }
 
 func AcceptMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {

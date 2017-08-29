@@ -51,7 +51,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, radius
 	// Prepare welcome message. Its static anyways.
 	msg := &codec.Welcome{
 		"berryhunter.io [Alpha] rza, n1b, gino & co.",
-		int(radius),
+		radius * codec.Points2px,
 	}
 	builder := flatbuffers.NewBuilder(32)
 	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, msg)
