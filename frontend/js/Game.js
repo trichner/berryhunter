@@ -42,6 +42,12 @@ define([], function () {
 				Game.state = States.PLAYING;
 			};
 
+			Game.removePlayer = function () {
+				Game.player.remove();
+				delete Game.Player;
+				Game.state = States.RENDERING;
+			};
+
 			/**
 			 *
 			 * @param {{mapWidth: number, mapHeight: number}} gameInformation

@@ -210,6 +210,7 @@ define([
 						Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Obituary()), 'Obituary', timeSinceLastMessage);
 					}
 
+					Game.removePlayer();
 					require(['EndScreen'], function (EndScreen) {
 						EndScreen.show();
 					});
