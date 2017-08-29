@@ -53,6 +53,11 @@ define([], function () {
 			 * @param {{mapRadius: number}} gameInformation
 			 */
 			Game.startRendering = function (gameInformation) {
+				const baseTexture = new Two.Ellipse(0, 0, gameInformation.mapRadius);
+				Game.layers.terrain.textures.add(baseTexture);
+				baseTexture.fill = 'rgb(0, 96, 48)';
+				baseTexture.noStroke();
+
 				Game.map = new GameMapWithBackend(gameInformation.mapRadius);
 				Game.two.play();
 				Game.state = States.RENDERING;
@@ -65,7 +70,7 @@ define([], function () {
 			function createBackground() {
 				const background = new Two.Rectangle(Game.width / 2, Game.height / 2, Game.width, Game.height);
 				Game.layers.terrain.background.add(background);
-				background.fill = 'rgb(0, 96, 48)';
+				background.fill = '#287aff';
 				background.noStroke();
 			}
 
