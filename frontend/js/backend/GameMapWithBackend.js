@@ -15,9 +15,10 @@ define([
 ], function (_, Utils, Game, DebugCircle, Border, Character, Placeable, MapEditor, Develop, Equipment) {
 
 	class GameMapWithBackend {
-		constructor(width, height) {
-			this.width = width;
-			this.height = height;
+		constructor(radius) {
+			this.radius = radius;
+			this.width = 2 * radius;
+			this.height = 2 * radius;
 
 			this.objects = {};
 		}

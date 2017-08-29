@@ -16,7 +16,6 @@ define([], function () {
 	Game.setup = function () {
 		require([
 			'Two',
-			'NamedGroup',
 			'MapEditor',
 			'backend/Backend',
 			'Develop',
@@ -31,7 +30,7 @@ define([], function () {
 			'UserInterface',
 			'StartScreen',
 			'Chat'
-		], function (Two, NamedGroup, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface, StartScreen, Chat) {
+		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface, StartScreen, Chat) {
 			/**
 			 * Creating a player starts implicitly the game
 			 */
@@ -51,10 +50,10 @@ define([], function () {
 
 			/**
 			 *
-			 * @param {{mapWidth: number, mapHeight: number}} gameInformation
+			 * @param {{mapRadius: number}} gameInformation
 			 */
 			Game.startRendering = function (gameInformation) {
-				Game.map = new GameMapWithBackend(gameInformation.mapWidth, gameInformation.mapHeight);
+				Game.map = new GameMapWithBackend(gameInformation.mapRadius);
 				Game.two.play();
 				Game.state = States.RENDERING;
 				/**
@@ -99,39 +98,37 @@ define([], function () {
 			// TODO: Grids, Borders, AABBs?
 			Game.layers = {
 				terrain: {
-					background: new NamedGroup('background'),
-					textures: new NamedGroup('textures'),
+					background: new Two.Group(),
+					textures: new Two.Group(),
 				},
 				placeables: {
-					campfire: new NamedGroup(''),
-					chest: new NamedGroup('chest'),
-					workbench: new NamedGroup('workbench'),
-					furnace: new NamedGroup('furnace'),
+					campfire: new Two.Group(),
+					chest: new Two.Group(),
+					workbench: new Two.Group(),
+					furnace: new Two.Group(),
 
-					doors: new NamedGroup('doors'),
-					walls: new NamedGroup('walls'),
+					doors: new Two.Group(),
+					walls: new Two.Group(),
 				},
-				characters: new NamedGroup('characters'),
+				characters: new Two.Group(),
 				mobs: {
-					dodo: new NamedGroup('dodo'),
-					saberToothCat: new NamedGroup('saberToothCat'),
-					mammoth: new NamedGroup('mammoth'),
+					dodo: new Two.Group(),
+					saberToothCat: new Two.Group(),
+					mammoth: new Two.Group(),
 				},
 				resources: {
-					berryBush: new NamedGroup('berryBush'),
-					minerals: new NamedGroup('minerals'),
-					trees: new NamedGroup('trees'),
+					berryBush: new Two.Group(),
+					minerals: new Two.Group(),
+					trees: new Two.Group(),
 				}
 				// UI Overlay is the highest layer, but not managed with Two.js
 			};
 
 			// Terrain
-			let terrain = Game.two.makeGroup(
+			Game.two.makeGroup(
 				Game.layers.terrain.background);
-			NamedGroup.nameGroup(terrain, 'terrain');
 
 			Game.cameraGroup = Game.two.makeGroup();
-			NamedGroup.nameGroup(Game.cameraGroup, 'cameraGroup');
 
 			// Terrain Textures moving with the camera
 			Game.cameraGroup.add(

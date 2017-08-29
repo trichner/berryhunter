@@ -9,8 +9,7 @@ define([], function () {
 		 */
 		constructor(welcome){
 			this.serverName = welcome.serverName();
-			this.mapWidth = welcome.mapSize().x();
-			this.mapHeight = welcome.mapSize().y();
+			this.mapRadius = welcome.mapRadius();
 		}
 	}
 
