@@ -1,6 +1,12 @@
 "use strict";
 
-define(['Game', 'Two', 'natureOfCode/arrive/vehicle', 'Develop'], function (Game, Two, Vehicle, Develop) {
+define([
+	'Game',
+	'Two',
+	'natureOfCode/arrive/vehicle',
+	'Develop',
+	'Utils',
+], function (Game, Two, Vehicle, Develop, Utils) {
 	class Camera {
 		/**
 		 *
@@ -43,35 +49,38 @@ define(['Game', 'Two', 'natureOfCode/arrive/vehicle', 'Develop'], function (Game
 		}
 
 		static keepWithinMapBoundaries(vehicle) {
-			if (vehicle.position.x < Game.centerX - Camera.extraBoundary) {
-				vehicle.position.x = Game.centerX - Camera.extraBoundary;
-				vehicle.velocity.x = 0;
-				vehicle.acceleration.x = 0;
-			} else if (vehicle.position.x > Game.map.width - Game.centerX + Camera.extraBoundary) {
-				vehicle.position.x = Game.map.width - Game.centerX + Camera.extraBoundary;
-				vehicle.velocity.x = 0;
-				vehicle.acceleration.x = 0;
+			const xBoundary = 700;
+			const yBoundary = 300;
+			let angle = Utils.TwoDimensional.angleBetween(0, 0, vehicle.position.x, vehicle.position.y);
+			angle += Math.PI / 4;
+			let boundary = Math.abs(Math.sin(angle)) * yBoundary + Math.abs(Math.cos(angle)) * xBoundary;
+			console.log(boundary);
+
+			let r = Game.map.radius - boundary;
+			// distance of centers
+			let v = vehicle.position.clone().negate();
+			let abs = v.length();
+			// diff to allowed distance
+			let d = abs - r;
+			if (d <= 0) {
+				return;
 			}
 
-			if (vehicle.position.y < Game.centerY - Camera.extraBoundary) {
-				vehicle.position.y = Game.centerY - Camera.extraBoundary;
-				vehicle.velocity.y = 0;
-				vehicle.acceleration.y = 0;
-			} else if (vehicle.position.y > Game.map.height - Game.centerY + Camera.extraBoundary) {
-				vehicle.position.y = Game.map.height - Game.centerY + Camera.extraBoundary;
-				vehicle.velocity.y = 0;
-				vehicle.acceleration.y = 0;
-			}
+			// normalize
+			let n = v.divideScalar(abs);
+			vehicle.position.addSelf(n.multiplyScalar(d));
+			// vehicle.velocity.multiplyScalar(0);
+			// vehicle.acceleration.multiplyScalar(0);
 		}
 
 		update() {
 			this.vehicle.arrive(this.character.getPosition());
 			this.vehicle.update();
 
-			if (!Develop.isActive() ||
-				(Develop.isActive() && Develop.settings.cameraBoundaries)) {
-				Camera.keepWithinMapBoundaries(this.vehicle);
-			}
+			// if (!Develop.isActive() ||
+			// 	(Develop.isActive() && Develop.settings.cameraBoundaries)) {
+			// 	Camera.keepWithinMapBoundaries(this.vehicle);
+			// }
 
 			let translation = this.translation.clone();
 			translation.negate();
@@ -84,7 +93,7 @@ define(['Game', 'Two', 'natureOfCode/arrive/vehicle', 'Develop'], function (Game
 		}
 	}
 
-	Camera.extraBoundary = 100;
+	Camera.extraBoundary = 200;
 
 	return Camera;
 });
