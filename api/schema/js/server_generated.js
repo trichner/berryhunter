@@ -335,11 +335,27 @@ BerryhunterApi.Resource.prototype.radius = function() {
 };
 
 /**
+ * @returns {number}
+ */
+BerryhunterApi.Resource.prototype.capacity = function() {
+  var offset = this.bb.__offset(this.bb_pos, 12);
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+BerryhunterApi.Resource.prototype.stock = function() {
+  var offset = this.bb.__offset(this.bb_pos, 14);
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {BerryhunterApi.AABB=} obj
  * @returns {BerryhunterApi.AABB|null}
  */
 BerryhunterApi.Resource.prototype.aabb = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -347,7 +363,7 @@ BerryhunterApi.Resource.prototype.aabb = function(obj) {
  * @param {flatbuffers.Builder} builder
  */
 BerryhunterApi.Resource.startResource = function(builder) {
-  builder.startObject(5);
+  builder.startObject(7);
 };
 
 /**
@@ -384,10 +400,26 @@ BerryhunterApi.Resource.addRadius = function(builder, radius) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {number} capacity
+ */
+BerryhunterApi.Resource.addCapacity = function(builder, capacity) {
+  builder.addFieldInt8(4, capacity, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} stock
+ */
+BerryhunterApi.Resource.addStock = function(builder, stock) {
+  builder.addFieldInt8(5, stock, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} aabbOffset
  */
 BerryhunterApi.Resource.addAabb = function(builder, aabbOffset) {
-  builder.addFieldStruct(4, aabbOffset, 0);
+  builder.addFieldStruct(6, aabbOffset, 0);
 };
 
 /**

@@ -75,8 +75,32 @@ func (rcv *Resource) MutateRadius(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(10, n)
 }
 
-func (rcv *Resource) Aabb(obj *AABB) *AABB {
+func (rcv *Resource) Capacity() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Resource) MutateCapacity(n byte) bool {
+	return rcv._tab.MutateByteSlot(12, n)
+}
+
+func (rcv *Resource) Stock() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Resource) MutateStock(n byte) bool {
+	return rcv._tab.MutateByteSlot(14, n)
+}
+
+func (rcv *Resource) Aabb(obj *AABB) *AABB {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -89,7 +113,7 @@ func (rcv *Resource) Aabb(obj *AABB) *AABB {
 }
 
 func ResourceStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(7)
 }
 func ResourceAddId(builder *flatbuffers.Builder, id uint64) {
 	builder.PrependUint64Slot(0, id, 0)
@@ -103,8 +127,14 @@ func ResourceAddPos(builder *flatbuffers.Builder, pos flatbuffers.UOffsetT) {
 func ResourceAddRadius(builder *flatbuffers.Builder, radius uint16) {
 	builder.PrependUint16Slot(3, radius, 0)
 }
+func ResourceAddCapacity(builder *flatbuffers.Builder, capacity byte) {
+	builder.PrependByteSlot(4, capacity, 0)
+}
+func ResourceAddStock(builder *flatbuffers.Builder, stock byte) {
+	builder.PrependByteSlot(5, stock, 0)
+}
 func ResourceAddAabb(builder *flatbuffers.Builder, aabb flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(4, flatbuffers.UOffsetT(aabb), 0)
+	builder.PrependStructSlot(6, flatbuffers.UOffsetT(aabb), 0)
 }
 func ResourceEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

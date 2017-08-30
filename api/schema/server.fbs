@@ -40,6 +40,9 @@ table Resource {
   pos:Vec2f;
   radius:ushort;
 
+  capacity:ubyte;
+  stock:ubyte;
+
   aabb:AABB;
 }
 
