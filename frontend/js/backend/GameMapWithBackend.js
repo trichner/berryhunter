@@ -8,11 +8,12 @@ define([
 	'gameObjects/Border',
 	'gameObjects/Character',
 	'gameObjects/Placeable',
+	'gameObjects/Resources',
 	'MapEditor',
 	'Develop',
 	'items/Equipment',
 	'schema_server'
-], function (_, Utils, Game, DebugCircle, Border, Character, Placeable, MapEditor, Develop, Equipment) {
+], function (_, Utils, Game, DebugCircle, Border, Character, Placeable, Resources, MapEditor, Develop, Equipment) {
 
 	class GameMapWithBackend {
 		constructor(radius) {
@@ -101,6 +102,11 @@ define([
 				if (Develop.isActive()) {
 					gameObject.updateAABB(entity.aabb);
 				}
+			}
+
+			if (gameObject instanceof Resources.Resource) {
+				gameObject.capacity = entity.capacity;
+				gameObject.stock = entity.stock;
 			}
 
 			/**

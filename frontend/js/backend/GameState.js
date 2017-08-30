@@ -99,6 +99,11 @@ define(['backend/BackendConstants',
 			aabb: unmarshalAABB(entity.aabb()),
 		};
 
+		if (eType === BerryhunterApi.AnyEntity.Resource) {
+			result.capacity = entity.capacity();
+			result.stock = entity.stock();
+		}
+
 		if (eType === BerryhunterApi.AnyEntity.Placeable) {
 			result.item = unmarshalItem(entity.item());
 		}

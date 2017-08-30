@@ -5,7 +5,34 @@ define([
 	'Preloading',
 	'Utils'], function (Game, GameObject, Two, Preloading, Utils) {
 
-	class Tree extends GameObject {
+	class Resource extends GameObject {
+		constructor(gameLayer, x, y, size, rotation) {
+			super(gameLayer, x, y, size, rotation);
+
+			this.capacity = 0;
+			let stock = 0;
+
+			Object.defineProperties(this, {
+				'stock': {
+					get: function () {
+						return stock;
+					},
+					set: (newStock) => {
+						if (stock !== newStock) {
+							this.onStockChange(newStock, stock);
+							stock = newStock;
+						}
+					},
+				},
+			});
+		}
+
+		onStockChange(newStock, oldStock) {
+			// Default NOP
+		}
+	}
+
+	class Tree extends Resource {
 		constructor(x, y, size, rotation) {
 			super(Game.layers.resources.trees, x, y, size, rotation);
 		}
@@ -68,7 +95,7 @@ define([
 	}
 	Preloading.registerGameObjectSVG(MarioTree, 'img/deciduousTree.svg');
 
-	class Stone extends GameObject {
+	class Stone extends Resource {
 		constructor(x, y, size) {
 			super(Game.layers.resources.minerals, x, y,
 				size || Utils.randomInt(30, 90),
@@ -96,7 +123,7 @@ define([
 	}
 	Preloading.registerGameObjectSVG(Stone, 'img/stone.svg');
 
-	class Bronze extends GameObject {
+	class Bronze extends Resource {
 		constructor(x, y, size) {
 			super(Game.layers.resources.minerals, x, y, size || Utils.randomInt(30, 70));
 		}
@@ -126,7 +153,7 @@ define([
 	}
 	Preloading.registerGameObjectSVG(Bronze, 'img/bronze.svg');
 
-	class Iron extends GameObject {
+	class Iron extends Resource {
 		constructor(x, y, size) {
 			super(Game.layers.resources.minerals, x, y,
 				size || Utils.randomInt(20, 60),
@@ -156,10 +183,9 @@ define([
 
 	Preloading.registerGameObjectSVG(Iron, 'img/iron.svg');
 
-	class BerryBush extends GameObject {
+	class BerryBush extends Resource {
 		constructor(x, y, size) {
 			super(Game.layers.resources.berryBush, x, y, size || Utils.randomInt(20, 45));
-
 		}
 
 		createShape(x, y) {
@@ -201,11 +227,31 @@ define([
 
 			return shape;
 		}
+
+		onStockChange(numberOfBerries) {
+			if (Utils.isDefined(this.berries)) {
+				this.berries.remove();
+			}
+
+			this.berries = new Two.Group();
+			this.shape.add(this.berries);
+
+			for (let i = 0; i < numberOfBerries; i++) {
+				let circle = new Two.Ellipse(
+					(Math.cos(Math.PI * 2 / numberOfBerries * i) * this.size * 0.3),
+					(Math.sin(Math.PI * 2 / numberOfBerries * i) * this.size * 0.3),
+					5);
+				this.berries.add(circle);
+				circle.fill = 'purple';
+				circle.noStroke();
+			}
+		}
 	}
 
 	Preloading.registerGameObjectSVG(BerryBush, 'img/berryBush.svg');
 
 	return {
+		Resource: Resource,
 		Tree: Tree,
 		RoundTree: RoundTree,
 		MarioTree: MarioTree,
