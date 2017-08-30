@@ -236,14 +236,18 @@ define([
 			this.berries = new Two.Group();
 			this.shape.add(this.berries);
 
-			for (let i = 0; i < numberOfBerries; i++) {
+			for (let i = 0; i < this.capacity; i++) {
+				if (i >= numberOfBerries) {
+					break;
+				}
 				let circle = new Two.Ellipse(
-					(Math.cos(Math.PI * 2 / numberOfBerries * i) * this.size * 0.3),
-					(Math.sin(Math.PI * 2 / numberOfBerries * i) * this.size * 0.3),
+					(Math.cos(Math.PI * 2 / this.capacity * i) * this.size * 0.3),
+					(Math.sin(Math.PI * 2 / this.capacity * i) * this.size * 0.3),
 					5);
 				this.berries.add(circle);
 				circle.fill = 'purple';
 				circle.noStroke();
+
 			}
 		}
 	}
