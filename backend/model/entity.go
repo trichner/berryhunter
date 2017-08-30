@@ -59,13 +59,19 @@ type PlaceableEntity interface {
 	Item() items.Item
 }
 
+type ResourceStock struct {
+	Item      items.Item
+	Capacity  int
+	Available int
+}
+
 // ResourceEntity is an entity that can be mined/gathered
 type ResourceEntity interface {
 	Entity
 	Interacter
 
 	Update(dt float32)
-	Resource() items.ItemStack
+	Resource() *ResourceStock
 	// count
 }
 

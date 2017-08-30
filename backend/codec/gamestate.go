@@ -175,10 +175,8 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 		case model.ResourceEntity:
 			marshalled = ResourceEntityFlatbufMarshal(v, builder)
 			eType = BerryhunterApi.AnyEntityResource
-		case model.Entity:
-			marshalled = ResourceEntityFlatbufMarshal(v, builder)
-			eType = BerryhunterApi.AnyEntityResource
-			log.Print("Unknown entity!")
+		default:
+			log.Panicf("Unknown entity: %+v", e)
 		}
 		BerryhunterApi.EntityStart(builder)
 		BerryhunterApi.EntityAddE(builder, marshalled)
@@ -195,7 +193,7 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 
 // EntityFlatbufMarshal marshals an Entity interface to its corresponding
 // flatbuffer schema
-func ResourceEntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func ResourceEntityFlatbufMarshal(e model.ResourceEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
 	BerryhunterApi.ResourceStart(builder)
 	BerryhunterApi.ResourceAddId(builder, e.Basic().ID())
@@ -208,6 +206,9 @@ func ResourceEntityFlatbufMarshal(e model.Entity, builder *flatbuffers.Builder) 
 
 	BerryhunterApi.ResourceAddRadius(builder, f32ToU16Px(e.Radius()))
 	BerryhunterApi.ResourceAddEntityType(builder, uint16(e.Type()))
+
+	BerryhunterApi.ResourceAddCapacity(builder, byte(e.Resource().Capacity))
+	BerryhunterApi.ResourceAddStock(builder, byte(e.Resource().Available))
 
 	return BerryhunterApi.ResourceEnd(builder)
 }

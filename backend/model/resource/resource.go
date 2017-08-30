@@ -12,41 +12,41 @@ var _ = model.ResourceEntity(&Resource{})
 
 type Resource struct {
 	model.BaseEntity
-	resource items.Item
-
-	capacity  int
-	available int
+	stock model.ResourceStock
 
 	rand *rand.Rand
 }
 
 func (r *Resource) replenish(i int) {
-	r.available += i
-	if r.available > r.capacity {
-		r.available = r.capacity
+	res := &r.stock
+	res.Available += i
+	if res.Available > res.Capacity {
+		res.Available = res.Capacity
 	}
 }
 
-func (r *Resource) Resource() items.ItemStack {
-	return *items.NewItemStack(r.resource, int(r.capacity))
+func (r *Resource) Resource() *model.ResourceStock {
+	return &r.stock
 }
 
 func (r *Resource) yield(i int) (yielded int) {
-	if r.available < i {
-		yielded = r.available
-		r.available = 0
+	res := &r.stock
+	if res.Available < i {
+		yielded = res.Available
+		res.Available = 0
 	} else {
-		r.available -= i
+		res.Available -= i
 		yielded = i
 	}
 	return
 }
 
 func (r *Resource) Update(dt float32) {
-	if r.resource.Factors.ReplenishProbability <= 0 {
+	res := &r.stock
+	if res.Item.Factors.ReplenishProbability <= 0 {
 		return
 	}
-	if r.rand.Intn(r.resource.Factors.ReplenishProbability) == 0 {
+	if r.rand.Intn(res.Item.Factors.ReplenishProbability) == 0 {
 		r.replenish(1)
 	}
 }
@@ -64,9 +64,11 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 	base := model.NewBaseEntity(body, entityType)
 	r := &Resource{
 		BaseEntity: base,
-		resource:   resource,
-		capacity:   resource.Factors.Capacity,
-		available:  resource.Factors.Capacity / 2,
+		stock: model.ResourceStock{
+			Item:      resource,
+			Capacity:  resource.Factors.Capacity,
+			Available: resource.Factors.Capacity / 2,
+		},
 		rand:       rand,
 	}
 	r.Body.Shape().UserData = r
@@ -76,5 +78,5 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	yield := item.Factors.Yield
 	y := r.yield(yield)
-	p.Inventory().AddItem(items.NewItemStack(r.resource, y))
+	p.Inventory().AddItem(items.NewItemStack(r.stock.Item, y))
 }
