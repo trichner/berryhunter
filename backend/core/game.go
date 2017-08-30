@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"sync/atomic"
 	"time"
+	"sort"
 )
 
 type entitiesMap map[uint64]model.BasicEntity
@@ -96,6 +97,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 	d := sys.NewDecaySystem(g)
 	g.AddSystem(d)
 
+	g.printSystems()
 	return g
 }
 
@@ -322,3 +324,44 @@ func (g *game) update() {
 func (g *game) sendWelcomeMessage(c model.Client) {
 	c.SendMessage(g.welcomeMsg)
 }
+
+func (g *game) printSystems() {
+
+	systems := g.World.Systems()
+	sort.Sort(ByPriority(systems))
+
+	log.Printf("Ordered Systems:")
+	for _, s := range systems {
+		p := 0
+		if prioritizer, ok := s.(ecs.Prioritizer); ok {
+			p = prioritizer.Priority()
+		}
+		log.Printf(" %4d %T", p, s)
+	}
+}
+
+type ByPriority []ecs.System
+
+func (b ByPriority) Len() int {
+	return len(b)
+}
+
+func (b ByPriority) Less(i, j int) bool {
+
+	pi := 0
+	if p, ok := b[i].(ecs.Prioritizer); ok {
+		pi = p.Priority()
+	}
+
+	pj := 0
+	if p, ok := b[i].(ecs.Prioritizer); ok {
+		pj = p.Priority()
+	}
+	return pi < pj
+}
+
+func (b ByPriority) Swap(i, j int) {
+	b[i], b[j] = b[j], b[i]
+}
+
+

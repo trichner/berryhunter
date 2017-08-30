@@ -176,7 +176,7 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 			marshalled = ResourceEntityFlatbufMarshal(v, builder)
 			eType = BerryhunterApi.AnyEntityResource
 		default:
-			log.Panicf("Unknown entity: %+v", e)
+			log.Panicf(" Unknown entity: %+v", e)
 		}
 		BerryhunterApi.EntityStart(builder)
 		BerryhunterApi.EntityAddE(builder, marshalled)
