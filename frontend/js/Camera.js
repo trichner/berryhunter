@@ -5,8 +5,7 @@ define([
 	'Two',
 	'natureOfCode/arrive/vehicle',
 	'Develop',
-	'Utils',
-], function (Game, Two, Vehicle, Develop, Utils) {
+], function (Game, Two, Vehicle, Develop) {
 	class Camera {
 		/**
 		 *
@@ -100,66 +99,6 @@ define([
 		});
 
 		vehicle.position.addSelf(r);
-
-		// let farthestCorner = 0;
-		// for (let i = 1; i < cornerDistances.length; ++i) {
-		// 	if (cornerDistances[i] > cornerDistances[farthestCorner]) {
-		// 		farthestCorner = i;
-		// 	}
-		// }
-		//
-		// let overlap = Math.sqrt(cornerDistances[farthestCorner]) - Game.map.radius - Camera.extraBoundary;
-		// if (overlap > 0) {
-		// 	let corner;
-		// 	switch (farthestCorner) {
-		// 		case 0:
-		// 			corner = topLeftCorner;
-		// 			break;
-		// 		case 1:
-		// 			corner = topRightCorner;
-		// 			break;
-		// 		case 2:
-		// 			corner = bottomRightCorner;
-		// 			break;
-		// 		case 3:
-		// 			corner = bottomLeftCorner;
-		// 			break;
-		// 	}
-		// 	let angle = Math.atan2(corner.y, corner.x);
-		//
-		// 	// vehicle.position.multiplyScalar(1 - Math.sqrt(overlap / vehicle.position.lengthSquared()));
-		// 	// overlap = Math.sqrt(overlap);
-		// 	vehicle.position.subSelf({
-		// 		x: overlap * Math.cos(angle),
-		// 		y: overlap * Math.sin(angle),
-		// 	});
-		// 	console.log("Overlap " + overlap + " in " + (angle * 180 / Math.PI));
-		// } else {
-		// 	console.log("No overlap");
-		// }
-
-		// const xBoundary = 700;
-		// const yBoundary = 300;
-		// let angle = Utils.TwoDimensional.angleBetween(0, 0, vehicle.position.x, vehicle.position.y);
-		// angle += Math.PI / 4;
-		// let boundary = Math.abs(Math.sin(angle)) * yBoundary + Math.abs(Math.cos(angle)) * xBoundary;
-		// console.log(boundary);
-		//
-		// let r = Game.map.radius - boundary;
-		// // distance of centers
-		// let v = vehicle.position.clone().negate();
-		// let abs = v.length();
-		// // diff to allowed distance
-		// let d = abs - r;
-		// if (d <= 0) {
-		// 	return;
-		// }
-		//
-		// // normalize
-		// let n = v.divideScalar(abs);
-		// vehicle.position.addSelf(n.multiplyScalar(d));
-		// // vehicle.velocity.multiplyScalar(0);
-		// // vehicle.acceleration.multiplyScalar(0);
 	}
 
 	return Camera;
