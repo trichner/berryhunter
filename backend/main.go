@@ -21,7 +21,8 @@ func main() {
 	registry := loadItems("../api/items/")
 	mobs := loadMobs(registry, "../api/mobs/")
 
-	tokens := loadTokens()
+	tokens := loadTokens("./tokens.list")
+	log.Printf("👮‍♀️ Read %d tokens.", len(tokens))
 
 	var radius float32 = 20
 	g := core.NewGame(config, registry, mobs, tokens, radius)
@@ -61,7 +62,7 @@ func main() {
 
 func bootServer(h http.HandlerFunc, port int, path string, dev bool) {
 
-	log.Printf("Booting server at :%d%s", port, path)
+	log.Printf("🦄 Booting server at :%d%s", port, path)
 	addr := fmt.Sprintf(":%d", port)
 	http.HandleFunc(path, h)
 

@@ -57,13 +57,13 @@ func loadConf() *conf.Config {
 	return config
 }
 
-func loadTokens() []string {
+func loadTokens(tokenFile string) []string {
 
-	tokenFile := "./tokens.list"
 
 	f, err := os.Open(tokenFile)
 	if err != nil {
-		log.Panicf("Cannot read '%s': %s", tokenFile, err)
+		log.Printf("Cannot read '%s': %s", tokenFile, err)
+		return []string{}
 	}
 	s := bufio.NewScanner(f)
 
