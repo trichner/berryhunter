@@ -36,7 +36,7 @@ define(['backend/BackendConstants',
 				case BerryhunterApi.Player.Character:
 					this.player = unmarshalEntity(
 						gameState.player(new BerryhunterApi.Character()),
-						BerryhunterApi.AnyEntity.Player);
+						BerryhunterApi.AnyEntity.Character);
 					break;
 			}
 
@@ -107,7 +107,7 @@ define(['backend/BackendConstants',
 			result.rotation = entity.rotation();
 		}
 
-		if (eType === BerryhunterApi.AnyEntity.Player) {
+		if (eType === BerryhunterApi.AnyEntity.Character) {
 			result.isSpectator = false;
 
 			result.rotation = entity.rotation();
