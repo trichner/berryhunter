@@ -38,8 +38,8 @@ type Factors struct {
 	DurationInS     int
 
 	// Placeable/Heater
-	Warmth float32
-	Radius float32
+	HeatPerSecond float32
+	Radius        float32
 
 	// Resource
 	ReplenishProbability int
@@ -82,7 +82,7 @@ type itemDefinition struct {
 		StructureDamage float32 `json:"structureDamage"`
 		Yield           int     `json:"yield"`
 		DurationInS     int     `json:"durationInSeconds"`
-		Warmth          float32 `json:"warmth"`
+		HeatPerSecond   float32 `json:"heatPerSecond"`
 		Radius          float32 `json:"radius"`
 
 		ReplenishProbability int `json:"replenishProbability"`
@@ -177,7 +177,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			Damage:               i.Factors.Damage,
 			StructureDamage:      i.Factors.StructureDamage,
 			Yield:                i.Factors.Yield,
-			Warmth:               i.Factors.Warmth,
+			HeatPerSecond:        i.Factors.HeatPerSecond,
 			Radius:               i.Factors.Radius,
 			DurationInS:          i.Factors.DurationInS,
 			ReplenishProbability: i.Factors.ReplenishProbability,

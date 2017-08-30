@@ -29,4 +29,7 @@ type Game interface {
 
 	// Mobs returns the registry with all available mob definitions
 	Mobs() mobs.Registry
+
+	// Ticks returns the number of ticks
+	Ticks() uint64
 }

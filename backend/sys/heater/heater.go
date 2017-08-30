@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+type playerSet map[model.PlayerEntity][]model.Heater
+
 type HeaterSystem struct {
 	heaters []model.Heater
 }
@@ -34,29 +36,47 @@ func (f *HeaterSystem) AddHeater(h model.Heater) {
 func (f *HeaterSystem) Update(dt float32) {
 
 	// apply inputs to player
+	players := make(playerSet)
 	for _, h := range f.heaters {
-		f.UpdateHeater(h)
+		radiator := h.HeatRadiation()
+		if radiator == nil {
+			return
+		}
+
+		collisions := radiator.Body.Collisions()
+		for c := range collisions {
+			d := c.Shape().UserData
+			p, ok := d.(model.PlayerEntity)
+			if !ok {
+				continue
+			}
+			hl := players[p]
+			hl = append(hl, h)
+			players[p] = hl
+		}
+
+	}
+
+	for p, hl := range players {
+		heat := float32(0)
+		for _, h := range hl {
+			r := h.HeatRadiation()
+			d := r.Body.Position().Sub(p.Position())
+			diff := d.Abs() / float32(r.Radius) * r.HeatFraction
+			heat += diff
+		}
+		t := p.VitalSigns().BodyTemperature
+		p.VitalSigns().BodyTemperature = t.AddFraction(heat)
+
+		if heat > 0.05 {
+			//TODO damage player
+		}
 	}
 }
 
 // applies the inputs to a player
 func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 
-	radiator := h.HeatRadiation()
-	if radiator == nil {
-		return
-	}
-
-	collisions := radiator.Body.Collisions()
-	for c := range collisions {
-		d := c.Shape().UserData
-		p, ok := d.(model.PlayerEntity)
-		if !ok {
-			continue
-		}
-		t := p.VitalSigns().BodyTemperature
-		p.VitalSigns().BodyTemperature = t.AddFraction(0.001)
-	}
 }
 
 func (f *HeaterSystem) Remove(b ecs.BasicEntity) {

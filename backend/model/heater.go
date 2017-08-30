@@ -3,7 +3,7 @@ package model
 import "github.com/trichner/berryhunter/backend/phy"
 
 type HeatRadiator struct {
-	Heat   int
-	Radius float32
-	Body   phy.DynamicCollider
+	HeatFraction float32
+	Radius       float32
+	Body         phy.DynamicCollider
 }
