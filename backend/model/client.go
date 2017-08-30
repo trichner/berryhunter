@@ -22,4 +22,7 @@ type Client interface {
 	// SendMessage enqueues a message in the outgoing
 	// messages queue
 	SendMessage([]byte) error
+
+	// Close closes the connection and disconnects the client
+	Close()
 }

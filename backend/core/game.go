@@ -35,6 +35,8 @@ type game struct {
 	entities entitiesMap
 
 	welcomeMsg []byte
+
+	joinQueue chan model.Client
 }
 
 // assert game implements its interface
@@ -46,6 +48,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 		itemRegistry: items,
 		mobRegistry:  mobs,
 		entities:     make(entitiesMap),
+		joinQueue:    make(chan model.Client, 16),
 	}
 
 	// Prepare welcome message. Its static anyways.
@@ -109,9 +112,14 @@ func (g *game) Handler() http.HandlerFunc {
 	return net.NewHandleFunc(func(c *net.Client) {
 		client := client.NewClient(c)
 		g.sendWelcomeMessage(client)
-		s := spectator.NewSpectator(phy.VEC2F_ZERO, client)
 
-		g.AddEntity(s)
+		select {
+		case g.joinQueue <- client:
+		default:
+			log.Printf("😱 Join queue full! Dropping client.")
+			client.Close()
+		}
+
 	})
 }
 
@@ -289,6 +297,14 @@ func (g *game) update() {
 
 	// fixed 33ms steps
 	beforeMillis := time.Now().UnixNano() / 1000000
+
+	// accept at most one player per tick
+	select{
+	case client := <- g.joinQueue:
+		s := spectator.NewSpectator(phy.VEC2F_ZERO, client)
+		g.AddEntity(s)
+	default:
+	}
 
 	g.World.Update(stepMillis)
 

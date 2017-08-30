@@ -49,6 +49,10 @@ type Client struct {
 	onMessageHandler      func(*Client, []byte)
 }
 
+func (c *Client) Close() {
+	c.conn.Close()
+}
+
 func (c *Client) OnMessage(h func(*Client, []byte)) {
 	c.onMessageHandler = h
 }

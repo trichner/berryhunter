@@ -55,6 +55,7 @@ func (c *client) NextChatMessage() *model.ChatMessage {
 }
 
 func (c *client) Close() {
+	c.c.Close()
 	close(c.inputs)
 	close(c.joins)
 	close(c.cheats)
