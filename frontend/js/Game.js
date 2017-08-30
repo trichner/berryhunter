@@ -29,7 +29,7 @@ define([], function () {
 			'items/RecipesHelper',
 			'UserInterface',
 			'StartScreen',
-			'Chat'
+			'Chat',
 		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface, StartScreen, Chat) {
 			/**
 			 * Creating a player starts implicitly the game
@@ -173,6 +173,9 @@ define([], function () {
 
 			createBackground();
 
+			require(['Camera'], function (Camera) {
+				Camera.setup();
+			});
 			GameObject.setup();
 			RecipesHelper.setup();
 

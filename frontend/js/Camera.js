@@ -28,8 +28,6 @@ define([
 			this.translation = this.vehicle.position;
 
 
-			// this.shownGameObjects = [];
-
 			Game.two.bind('update', this.update.bind(this));
 		}
 
@@ -55,7 +53,7 @@ define([
 
 			if (!Develop.isActive() ||
 				(Develop.isActive() && Develop.settings.cameraBoundaries)) {
-				Camera.keepWithinMapBoundaries(this.vehicle);
+				keepWithinMapBoundaries(this.vehicle);
 			}
 
 			let translation = this.translation.clone();
@@ -69,51 +67,76 @@ define([
 		}
 	}
 
-	Camera.extraBoundary = 200;
+	let Corners = [];
+	let extraBoundary;
 
-	let Corners;
+	Camera.setup = function () {
+		extraBoundary = Math.min(Game.width, Game.height) / 2;
 
-	function keepWithinMapBoundaries(vehicle) {
-		if (Utils.isUndefined(Corners)){
-			Corners = {
-				topLeft: {
-					offset: {x: -Game.width/2, y: -Game.height/2}
-				},
-				topRight: {
-					offset: {x: Game.width/2, y: -Game.height/2}
-				},
-				bottomRight: {
-					offset: {x: Game.width/2, y: Game.height/2}
-				},
-				bottomLeft: {
-					offset: {x: -Game.width/2, y: Game.height/2}
-				}
-			};
-			Corners.topLeft.angle = Math.atan2(Corners.topLeft.offset);
-			Corners.topRight.angle = Math.atan2(Corners.topRight.offset);
-			Corners.bottomRight.angle = Math.atan2(Corners.bottomRight.offset);
-			Corners.bottomLeft.angle = Math.atan2(Corners.bottomLeft.offset);
-		}
-
-		let topLeftDistance = vehicle.position.clone().addSelf(Corners.topLeft.offset).lengthSquared();
-		let topRightDistance = vehicle.position.clone().addSelf(Corners.topRight.offset).lengthSquared();
-		let bottomRightDistance = vehicle.position.clone().addSelf(Corners.bottomRight.offset).lengthSquared();
-		let bottomLeftDistance = vehicle.position.clone().addSelf(Corners.bottomLeft.offset).lengthSquared();
-		let cornerDistances = [
-			topLeftDistance, topRightDistance, bottomRightDistance, bottomLeftDistance
-		];
-
-		let farthestCorner = 0;
-		for (let i = 1; i < cornerDistances.length; ++i){
-			if (cornerDistances[i] > cornerDistances[farthestCorner]){
-				farthestCorner = i;
+		for (let x = -1; x <= 1; x += 2) {
+			for (let y = -1; y <= 1; y += 2) {
+				Corners.push({x: x * Game.width / 2, y: y * Game.height / 2});
 			}
 		}
+	};
 
-		let overlap = cornerDistances[farthestCorner] - Math.pow(Game.map.radius + Camera.extraBoundary, 2);
-		if (overlap > 0) {
-			vehicle.position.multiplyScalar(1 - Math.sqrt(overlap / vehicle.position.lengthSquared()));
-		}
+
+	function keepWithinMapBoundaries(vehicle) {
+		let corners = Corners.map(function (corner) {
+			return vehicle.position.clone().addSelf(corner);
+		});
+
+		let r = new Two.Vector();
+		corners.forEach(function (corner) {
+			let length = corner.length();
+			let d = length - extraBoundary - Game.map.radius;
+			if (d < 0) {
+				return;
+			}
+
+			corner.divideScalar(length).multiplyScalar(-d);
+
+			r.addSelf(corner);
+		});
+
+		vehicle.position.addSelf(r);
+
+		// let farthestCorner = 0;
+		// for (let i = 1; i < cornerDistances.length; ++i) {
+		// 	if (cornerDistances[i] > cornerDistances[farthestCorner]) {
+		// 		farthestCorner = i;
+		// 	}
+		// }
+		//
+		// let overlap = Math.sqrt(cornerDistances[farthestCorner]) - Game.map.radius - Camera.extraBoundary;
+		// if (overlap > 0) {
+		// 	let corner;
+		// 	switch (farthestCorner) {
+		// 		case 0:
+		// 			corner = topLeftCorner;
+		// 			break;
+		// 		case 1:
+		// 			corner = topRightCorner;
+		// 			break;
+		// 		case 2:
+		// 			corner = bottomRightCorner;
+		// 			break;
+		// 		case 3:
+		// 			corner = bottomLeftCorner;
+		// 			break;
+		// 	}
+		// 	let angle = Math.atan2(corner.y, corner.x);
+		//
+		// 	// vehicle.position.multiplyScalar(1 - Math.sqrt(overlap / vehicle.position.lengthSquared()));
+		// 	// overlap = Math.sqrt(overlap);
+		// 	vehicle.position.subSelf({
+		// 		x: overlap * Math.cos(angle),
+		// 		y: overlap * Math.sin(angle),
+		// 	});
+		// 	console.log("Overlap " + overlap + " in " + (angle * 180 / Math.PI));
+		// } else {
+		// 	console.log("No overlap");
+		// }
 
 		// const xBoundary = 700;
 		// const yBoundary = 300;
