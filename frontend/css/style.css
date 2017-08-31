@@ -169,6 +169,8 @@ h1 {
   padding: 1em;
   min-width: 16em;
   z-index: 1000;
+  font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
+  font-variant: normal;
 }
 #developPanel > :first-child {
   margin-top: 0;

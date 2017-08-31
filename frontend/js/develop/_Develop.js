@@ -16,8 +16,8 @@ define([
 
 		active: false,
 		settings: {
-			showAABBs: true,
-			cameraBoundaries: false,
+			showAABBs: false,
+			cameraBoundaries: true,
 			elementColor: 'red',
 			linewidth: 2,
 			/**
@@ -220,6 +220,10 @@ define([
 				document.getElementById('serverTickOutput').textContent = JSON.stringify(gameState, this.serverTickReplacer, 2);
 				this.showNextGameState = false;
 			}
+		},
+
+		logTimeOfDay: function (formattedTimeOfDay) {
+			document.getElementById('develop_timeOfDay').textContent = formattedTimeOfDay;
 		},
 
 		serverTickReplacer: function (key, value) {

@@ -12,11 +12,12 @@ define([
 	'backend/ClientMessage',
 	'backend/Welcome',
 	'Chat',
+	'DayCycle',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage, Welcome, Chat) {
+], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage, Welcome, Chat, DayCycle) {
 
 
 	const States = {
@@ -267,6 +268,8 @@ define([
 		 */
 		receiveSnapshot: function (snapshot) {
 			Game.map.newSnapshot(snapshot.entities);
+
+			DayCycle.setTimeByTick(snapshot.tick);
 
 			if (state === States.PLAYING) {
 				if (Game.state === Game.States.PLAYING) {
