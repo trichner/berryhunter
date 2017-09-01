@@ -20,7 +20,7 @@ type Craft struct {
 
 func (c *Craft) Start() bool {
 	def := c.item.ItemDefinition
-	if def.Factors.DurationInS == 0 {
+	if def.Recipe.CraftTicks == 0 {
 		log.Printf("😵 Item '%s' has no crafting time!", def.Name)
 		return true
 	}
@@ -32,7 +32,7 @@ func (c *Craft) Start() bool {
 	// ok, we're good to go, remove materials & craft
 	stacks := c.item.Recipe.Materials
 	c.p.Inventory().ConsumeItems(stacks)
-	c.ticks = def.Factors.DurationInS * model.TicksPerSecond
+	c.ticks = def.Recipe.CraftTicks * model.TicksPerSecond
 
 	return false
 }

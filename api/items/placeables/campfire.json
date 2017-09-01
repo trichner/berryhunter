@@ -9,7 +9,7 @@
     "vulnerability": 0.01
   },
   "recipe": {
-    "craftTimeSec": 5,
+    "craftTicks": 5,
     "materials": [
       {
         "item": "Wood",

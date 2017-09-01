@@ -8,7 +8,7 @@
     "durationInSeconds": 3
   },
   "recipe": {
-    "craftTimeSec": 5,
+    "craftTicks": 5,
     "materials": [
       {
         "item": "Wood",

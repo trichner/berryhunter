@@ -7,7 +7,7 @@
     "capacity": 1
   },
   "recipe": {
-    "craftTimeSec": 10,
+    "craftTicks": 10,
     "materials": [
       {
         "item": "Wood",
