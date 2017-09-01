@@ -7,10 +7,11 @@ define([
 	'Preloading',
 	'Utils',
 	'MapEditor',
+	'Console',
 	'items/ItemType',
 	'Constants',
 	'items/Items',
-], function (Game, AABBs, Fps, Preloading, Utils, MapEditor, ItemType, Constants, Items) {
+], function (Game, AABBs, Fps, Preloading, Utils, MapEditor, Console, ItemType, Constants, Items) {
 
 	const Develop = {
 
@@ -114,11 +115,16 @@ define([
 			document
 				.getElementById('develop_itemAdd')
 				.addEventListener('click', function () {
-					Game.player.inventory.addItem(
-						Items[document.getElementById('develop_itemSelect').value],
-						parseInt(document.getElementById('develop_itemCount').value),
-					);
-					Game.two.update();
+					let item = document.getElementById('develop_itemSelect').value;
+					let count = document.getElementById('develop_itemCount').value;
+					if (MapEditor.isActive()) {
+						Game.player.inventory.addItem(
+							Items[item],
+							parseInt(count),
+						);
+					} else {
+						Console.run('GIVE ' + item + ' ' + count);
+					}
 				});
 		},
 

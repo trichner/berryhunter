@@ -57,6 +57,10 @@ define(['Preloading', 'Utils'], function (Preloading, Utils) {
 		}
 	}
 
+	Console.run = function (command) {
+		onCommand(command);
+	};
+
 	function milliseconds2string(ms) {
 		return (ms / 1000).toFixed(2);
 	}
