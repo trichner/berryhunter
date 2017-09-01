@@ -13,16 +13,15 @@ define(['Utils', 'underscore'], function (Utils, _) {
 
 			snapshot.player = _.clone(gameState.player);
 
-				if (backendState === 'PLAYING' &&
-					!lastGameState.player.isSpectator &&
-					Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
-					Utils.nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)) {
-					delete snapshot.player.position;
-				}
-
-			if (isInventoryDifferent(lastGameState.inventory, gameState.inventory)) {
-				snapshot.inventory = gameState.inventory;
+			if (backendState === 'PLAYING' &&
+				!lastGameState.player.isSpectator &&
+				Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
+				Utils.nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)) {
+				delete snapshot.player.position;
 			}
+
+			// Inventory handles item stacks
+			snapshot.inventory = gameState.inventory;
 
 			// GameMapWithBackend handles entity states
 			snapshot.entities = gameState.entities;
@@ -42,45 +41,6 @@ define(['Utils', 'underscore'], function (Utils, _) {
 	SnapshotFactory.getLastGameState = function () {
 		return lastGameState;
 	};
-
-	/**
-	 *
-	 * @param lastInventory
-	 * @param inventory
-	 */
-	function isInventoryDifferent(lastInventory, inventory) {
-		if (lastInventory.length !== inventory.length) {
-			return true;
-		}
-
-		for (let i = 0; i < inventory.length; i++) {
-			let lastItemStack = lastInventory[i];
-			let itemStack = inventory[i];
-			if (lastItemStack === itemStack) {
-				return false;
-			}
-
-			if (Utils.isUndefined(lastItemStack)) {
-				return true;
-			}
-
-			if (Utils.isUndefined(itemStack)) {
-				return true;
-			}
-
-			if (lastItemStack.item !== itemStack.item) {
-				return true;
-			}
-			if (lastItemStack.count !== itemStack.count) {
-				return true;
-			}
-			if (lastItemStack.slot !== itemStack.slot) {
-				return true;
-			}
-		}
-
-		return false;
-	}
 
 	return SnapshotFactory;
 });

@@ -128,27 +128,18 @@ define([
 		 * @param {[{item: Item, count: number}]} itemStacks
 		 */
 		updateFromBackend(itemStacks) {
-			// FIXME wenn der Server die richtige Inventargröße schickt
-			// if (this.slots.length !== itemStacks.length) {
-			// 	throw 'Client and server inventory to not match in length! ' +
-			// 	'(Client: ' + this.slots.length + ' vs Server: ' + itemStacks.length + ')';
-			// }
-
+			let inventoryChanged = false;
 			for (let i = 0; i < this.slots.length; ++i) {
-				// FIXME wenn der Server die richtige Inventargröße schickt
-				if (i >= itemStacks.length) {
-					this.slots[i].dropItem();
-					continue;
-				}
-
 				if (Utils.isDefined(itemStacks[i])) {
-					this.slots[i].setItem(itemStacks[i].item, itemStacks[i].count);
+					inventoryChanged = inventoryChanged || this.slots[i].setItem(itemStacks[i].item, itemStacks[i].count);
 				} else {
-					this.slots[i].dropItem();
+					inventoryChanged = inventoryChanged || this.slots[i].dropItem();
 				}
 			}
 
-			this.onChange();
+			if (inventoryChanged) {
+				this.onChange();
+			}
 		}
 	}
 

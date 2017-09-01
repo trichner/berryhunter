@@ -54,10 +54,15 @@ define([
 			}.bind(this);
 		}
 
+		/**
+		 * @param item
+		 * @param count
+		 * @return {boolean} whether or not this slot was changed
+		 */
 		setItem(item, count) {
 			if (this.item === item && this.count === count) {
 				// Nothing to do
-				return;
+				return false;
 			}
 
 			count = count || 1;
@@ -65,6 +70,8 @@ define([
 			this.clickableIcon.setIconGraphic(item.icon.path);
 
 			this.setCount(count);
+
+			return true;
 		}
 
 		setCount(count) {
@@ -77,10 +84,13 @@ define([
 			this.setCount(this.count + count);
 		}
 
+		/**
+		 * @return {boolean} whether or not this slot was changed
+		 */
 		dropItem() {
 			if (!this.isFilled()) {
 				// Nothing to do
-				return;
+				return false;
 			}
 
 			this.clickableIcon.removeIconGraphic();
@@ -91,6 +101,8 @@ define([
 			this.item = null;
 			this.setCount(0);
 			this.deactivate();
+
+			return true;
 		}
 
 		activate() {

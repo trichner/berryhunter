@@ -41,14 +41,12 @@ define(['backend/BackendConstants',
 			}
 
 			this.inventory = [];
-
-			this.entities = [];
-
 			for (let i = 0; i < gameState.inventoryLength(); ++i) {
 				let itemStack = unmarshalItemStack(gameState.inventory(i));
 				this.inventory[itemStack.slot] = itemStack;
 			}
 
+			this.entities = [];
 			for (let i = 0; i < gameState.entitiesLength(); ++i) {
 				this.entities.push(unmarshalWrappedEntity(gameState.entities(i)));
 			}
