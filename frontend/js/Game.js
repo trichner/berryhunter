@@ -21,6 +21,7 @@ define([], function () {
 			'Develop',
 			'backend/GameMapWithBackend',
 			'MiniMap',
+			'DayCycle',
 			'SvgLoader',
 			'KeyEvents',
 			'PointerEvents',
@@ -30,7 +31,7 @@ define([], function () {
 			'UserInterface',
 			'StartScreen',
 			'Chat',
-		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface, StartScreen, Chat) {
+		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface, StartScreen, Chat) {
 			/**
 			 * Creating a player starts implicitly the game
 			 */
@@ -186,6 +187,7 @@ define([], function () {
 
 			let domElement = Game.two.renderer.domElement;
 			Game.domElement = domElement;
+			DayCycle.setup(domElement, Game.two.scene);
 			SvgLoader.setup(domElement);
 			KeyEvents.setup(domElement);
 			PointerEvents.setup(domElement);

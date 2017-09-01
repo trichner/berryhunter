@@ -118,6 +118,12 @@ define(['../vendor/XieLongUtils'], function () {
 		return template.content.firstChild;
 	};
 
+	Utils.svgToElement = function (svg) {
+		const template = document.createElementNS('http://www.w3.org/2000/svg', 'template');
+		template.innerHTML = svg;
+		return template.firstChild;
+	};
+
 	/**
 	 *
 	 * @param {{method: String, url: String, [headers]: {}, [params]: String|{}}} opts
