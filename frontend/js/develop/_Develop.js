@@ -128,7 +128,7 @@ define([
 				});
 		},
 
-		onSettingToggle(setting, newValue){
+		onSettingToggle(setting, newValue) {
 			switch (setting) {
 				case 'showAABBs':
 					Object.values(Game.map.objects)
@@ -145,7 +145,7 @@ define([
 			}
 		},
 
-		setupTickSampler(){
+		setupTickSampler() {
 			this.showNextGameState = false;
 			let showServerTick = document.getElementById('develop_showServerTick');
 
@@ -235,16 +235,21 @@ define([
 		serverTickReplacer: function (key, value) {
 			switch (key) {
 				case 'item':
-					return value.name;
 				case 'type':
 					return value.name;
+				case 'equipment':
+					return value.map(entry => {
+						return entry.name;
+					});
 				case 'x':
 				case 'y':
 				case 'LowerX':
 				case 'LowerY':
 				case 'UpperX':
 				case 'UpperY':
-					return Math.round(value * 100) / 100
+					return Math.round(value * 100) / 100;
+				case 'rotation':
+					return Math.round(value * 180 / Math.PI) + 'deg';
 			}
 
 			return value;
@@ -314,8 +319,8 @@ define([
 				} else {
 					document.getElementById('develop_input_action_item').textContent = inputObj.action.item.name;
 				}
-				for (let actionType in BerryhunterApi.ActionType){
-					if (BerryhunterApi.ActionType[actionType] === inputObj.action.actionType){
+				for (let actionType in BerryhunterApi.ActionType) {
+					if (BerryhunterApi.ActionType[actionType] === inputObj.action.actionType) {
 						document.getElementById('develop_input_action_type').textContent = actionType;
 						break;
 					}
