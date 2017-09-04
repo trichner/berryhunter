@@ -65,6 +65,10 @@ define([
 				return false;
 			}
 
+			if (count === 0){
+				return this.dropItem();
+			}
+
 			count = count || 1;
 			this.item = item;
 			this.clickableIcon.setIconGraphic(item.icon.path);
