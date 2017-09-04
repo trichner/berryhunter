@@ -247,6 +247,7 @@ define([
 					let gameState = new GameState(serverMessage.body(new BerryhunterApi.GameState()));
 					if (state === States.WELCOMED) {
 						setState(States.SPECTATING);
+						Game.createSpectator(gameState.player.x, gameState.player.y);
 					}
 					if (Develop.isActive()) {
 						Develop.logServerTick(gameState, timeSinceLastMessage);

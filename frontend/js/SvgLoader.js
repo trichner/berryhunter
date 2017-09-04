@@ -5,6 +5,10 @@
  * and is able to manipulate loaded sprites.
  */
 define(['Utils'], function (Utils) {
+
+	let defContainer = document.createDocumentFragment();
+	let seenSvgs = {};
+
 	const SvgLoader = {
 
 		/**
@@ -12,12 +16,21 @@ define(['Utils'], function (Utils) {
 		 * @param {Element} mainSvgElement
 		 */
 		setup: function (mainSvgElement) {
-			mainSvgElement.getElementsByTagName('defs')[0].appendChild(this.defContainer);
+			mainSvgElement.getElementsByTagName('defs')[0].appendChild(defContainer);
 		},
 
-		load: function (svgMarkup) {
-			let svgElement = Utils.htmlToElement(svgMarkup);
+		load: function (svgPath, svgMarkup) {
+			if (seenSvgs.hasOwnProperty(svgPath)){
+				return seenSvgs[svgPath];
+			}
 
+			let match = /([a-zA-Z]+)\.svg/.exec(svgPath);
+			if (match === null) {
+				throw 'svgPath "' + svgPath + '" does not match the expected pattern!';
+			}
+
+			let svgName = match[1];
+			let svgElement = Utils.svgToElement(svgMarkup);
 			let newIds = {};
 
 			// Collect all defs in the loaded svg ...
@@ -28,7 +41,7 @@ define(['Utils'], function (Utils) {
 					let child = def.children[0];
 					if (child.id) {
 						// Rewrite def ids with a unique namespace
-						let newId = String.fromCharCode(this.defIndex) + '_' + child.id;
+						let newId = svgName + '_' + child.id;
 						newIds[child.id] = '#' + newId;
 						child.id = newId;
 					} else {
@@ -36,13 +49,12 @@ define(['Utils'], function (Utils) {
 					}
 
 					// ... and append them to the global def container
-					this.defContainer.appendChild(child);
+					defContainer.appendChild(child);
 				}
 
 				// Defs is not needed anymore, remove it
 				def.remove();
 			}
-			this.defIndex++;
 
 			// Rewrite def id usages within the SVG
 			let elementsWithStyle = svgElement.querySelectorAll('[style]');
@@ -59,16 +71,12 @@ define(['Utils'], function (Utils) {
 				element.style.cssText = style;
 			}
 
+			seenSvgs[svgPath] = svgElement;
+
 			return svgElement;
 		}
 	};
 
-	/**
-	 * Keeps track of a unique namespace for each loaded SVG.
-	 * @type {Number}
-	 */
-	SvgLoader.defIndex = "a".charCodeAt(0);
-	SvgLoader.defContainer = document.createDocumentFragment();
 
 	return SvgLoader;
 });

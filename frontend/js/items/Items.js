@@ -418,7 +418,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 
 				if (item.icon && item.icon.file) {
 					item.icon.path = 'img/items/' + item.icon.file + '.svg' + cacheBuster;
-					Preloading.registerGameObjectSVG(item.icon, item.icon.path);
+					Preloading.registerSVG(item.icon.path);
 				}
 				if (item.graphic && item.graphic.file) {
 					item.graphic.path = 'img/items/' + item.graphic.file + '.svg' + cacheBuster;

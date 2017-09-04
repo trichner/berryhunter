@@ -26,16 +26,24 @@ define([], function () {
 			'KeyEvents',
 			'PointerEvents',
 			'Player',
+			'Spectator',
 			'GameObject',
 			'items/RecipesHelper',
 			'UserInterface',
 			'StartScreen',
 			'Chat',
-		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, SvgLoader, KeyEvents, PointerEvents, Player, GameObject, RecipesHelper, UserInterface, StartScreen, Chat) {
+			'Utils'
+		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, SvgLoader, KeyEvents,
+		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat, Utils) {
 			/**
 			 * Creating a player starts implicitly the game
 			 */
 			Game.createPlayer = function (id, x, y, name) {
+				if (Utils.isDefined(Game.spectator)) {
+					Game.spectator.remove();
+					delete Game.spectator;
+				}
+
 				/**
 				 * @type Player
 				 */
@@ -44,9 +52,14 @@ define([], function () {
 			};
 
 			Game.removePlayer = function () {
+				Game.createSpectator(Game.player.character.getX(), Game.player.character.getY());
 				Game.player.remove();
 				delete Game.Player;
 				Game.state = States.RENDERING;
+			};
+
+			Game.createSpectator = function (x, y) {
+				Game.spectator = new Spectator(x, y);
 			};
 
 			/**

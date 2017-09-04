@@ -106,6 +106,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'Chat',
 					'NamedGroup',
 					'DayCycle',
+					'Spectator',
 
 					// Develop resources
 					'develop/Fps',

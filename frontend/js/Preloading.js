@@ -13,20 +13,20 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 	};
 
 	Preloading.registerPreload = function (preloadingPromise) {
-		preloadingPromise.then(function () {
+		preloadingPromise.then(function (data) {
 			loadedPromises++;
 			if (Preloading.loadingBar) {
 				Preloading.loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
 				if (loadedPromises >= numberOfPromises) {
 					let loadingScreenElement = document.getElementById('loadingScreen');
-					if (loadingScreenElement === null){
+					if (loadingScreenElement === null) {
 						// Element was already removed
 						return;
 					}
 					loadingScreenElement.classList.add('finished');
 
 					loadingScreenElement.addEventListener('animationend', function () {
-						if (this.parentNode === null){
+						if (this.parentNode === null) {
 							// Element was already removed
 							return;
 						}
@@ -34,22 +34,33 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 					});
 				}
 			}
+
+			return data;
 		});
 		// add promise to list of promises executed before setup()
 		promises.push(preloadingPromise);
 		numberOfPromises++;
+
+		return preloadingPromise;
+	};
+
+	/**
+	 * Create xhr promise to load svg
+	 * @param svgPath
+	 */
+	Preloading.registerSVG = function (svgPath) {
+		return Preloading.registerPreload(Utils.makeRequest({
+			method: 'GET',
+			url: svgPath
+		}));
 	};
 
 	Preloading.registerGameObjectSVG = function (gameObjectClass, svgPath) {
-		// Create xhr promise to load svg
-		Preloading.registerPreload(Utils.makeRequest({
-				method: 'GET',
-				url: svgPath
-			})
-			.then((svgText) => {
-				gameObjectClass.svg = SvgLoader.load(svgText);
+		Preloading.registerSVG(svgPath)
+			.then(svgText => {
+				gameObjectClass.svg = SvgLoader.load(svgPath, svgText);
 				return svgPath;
-			}));
+			});
 	};
 
 	Preloading.registerPartial = function (htmlUrl) {
