@@ -38,10 +38,9 @@ define([
 		}
 
 		createMinimapIcon() {
-			let shape = new Two.Ellipse(0, 0, this.size);
-			shape.stroke = 'green';
-			shape.linewidth = 1;
-			shape.noFill();
+			let shape = new Two.Ellipse(0, 0, this.size * 0.6);
+			shape.noStroke();
+			shape.fill = 'rgba(31, 91, 11, 0.8)';
 
 			return shape;
 		}
@@ -114,9 +113,10 @@ define([
 		}
 
 		createMinimapIcon() {
-			let shape = new Two.Polygon(0, 0, this.size * 2, 6);
-			shape.fill = 'dimgray';
+			let shape = new Two.Polygon(0, 0, this.size, 6);
+			shape.fill = '#737373';
 			shape.noStroke();
+			shape.rotation = this.rotation;
 
 			return shape;
 		}
@@ -144,9 +144,11 @@ define([
 		}
 
 		createMinimapIcon() {
-			let shape = new Two.Polygon(0, 0, this.size * 2, this.sides);
-			shape.fill = 'gold';
+			let shape = new Two.Polygon(0, 0, this.size, 5);
+			shape.fill = '#b57844';
+			// shape.fill = '#d0c8a8';
 			shape.noStroke();
+			shape.rotation = this.rotation;
 
 			return shape;
 		}
@@ -172,10 +174,10 @@ define([
 		}
 
 		createMinimapIcon() {
-			let shape = new Two.Polygon(0, 0, this.size * 2, 6);
-			shape.fill = 'dimgray';
-			// shape.fill = '#a46262';
+			let shape = new Two.Polygon(0, 0, this.size, 6);
+			shape.fill = '#a46262';
 			shape.noStroke();
+			shape.rotation = this.rotation;
 
 			return shape;
 		}
@@ -221,7 +223,7 @@ define([
 		}
 
 		createMinimapIcon() {
-			let shape = new Two.Ellipse(0, 0, this.size * 3);
+			let shape = new Two.Ellipse(0, 0, this.size * 1.2);
 			shape.fill = 'purple';
 			shape.noStroke();
 

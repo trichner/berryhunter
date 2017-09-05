@@ -27,21 +27,31 @@ define(['Game', 'Two', 'UserInterface'], function (Game, Two, UserInterface) {
 				type: Two.Types.svg
 			}).appendTo(container);
 
-			const background = new Two.Rectangle(0, 0, this.width, this.height);
-			this.two.add(background);
-			background.fill = 'Cornsilk';
-			background.stroke = background.fill;
-			background.linewidth = 10;
+			this.iconGroup = this.two.makeGroup();
+			this.iconGroup.translation.set(
+				this.width / 2,
+				this.height / 2
+			);
 
-			this.iconGroup = new Two.Group();
-			this.two.add(this.iconGroup);
+			this.playerGroup = this.two.makeGroup();
+			this.playerGroup.translation.set(
+				this.width / 2,
+				this.height / 2
+			);
 
-			const sizeFactorRelatedToMapSize = 1;
-			this.iconSizeFactor = this.width / this.mapWidth * sizeFactorRelatedToMapSize;
+			const sizeFactorRelatedToMapSize = 2;
+			this.scale = this.width / this.mapWidth;
+			this.iconSizeFactor = this.scale * sizeFactorRelatedToMapSize;
 
 			this.two.bind('update', update.bind(this));
+		}
 
+		start(){
 			this.two.play();
+		}
+
+		stop(){
+			this.two.pause();
 		}
 
 		/**
@@ -49,16 +59,16 @@ define(['Game', 'Two', 'UserInterface'], function (Game, Two, UserInterface) {
 		 * @param gameObject
 		 */
 		add(gameObject) {
-			if (!gameObject.visibleOnMinimap) {
-				return;
-			}
-
 			// Position each icon relative to its position on the real map.
 			const minimapIcon = gameObject.createMinimapIcon();
-			this.iconGroup.add(minimapIcon);
+			if (gameObject.constructor.name === 'Character') {
+				this.playerGroup.add(minimapIcon);
+			} else {
+				this.iconGroup.add(minimapIcon);
+			}
 
-			let x = gameObject.getX() / this.mapWidth * this.width;
-			let y = gameObject.getY() / this.mapHeight * this.height;
+			let x = gameObject.getX() * this.scale;
+			let y = gameObject.getY() * this.scale;
 			minimapIcon.translation.set(x, y);
 			minimapIcon.scale = this.iconSizeFactor;
 
@@ -80,9 +90,9 @@ define(['Game', 'Two', 'UserInterface'], function (Game, Two, UserInterface) {
 	}
 
 	function update() {
-		this.trackedGameObjects.forEach((gameObject) => {
-			gameObject.minimapIcon.translation.x = gameObject.getX() / this.mapWidth * this.width;
-			gameObject.minimapIcon.translation.y = gameObject.getY() / this.mapHeight * this.height;
+		this.trackedGameObjects.forEach(gameObject => {
+			gameObject.minimapIcon.translation.x = gameObject.getX() * this.scale;
+			gameObject.minimapIcon.translation.y = gameObject.getY() * this.scale;
 		});
 	}
 

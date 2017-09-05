@@ -95,7 +95,10 @@ define([
 					default:
 						gameObject = new entity.type(entity.position.x, entity.position.y, entity.radius);
 				}
-				Game.miniMap.add(gameObject);
+
+				if (gameObject.visibleOnMinimap) {
+					Game.miniMap.add(gameObject);
+				}
 
 				this.objects[entity.id] = gameObject;
 				gameObject.id = entity.id;

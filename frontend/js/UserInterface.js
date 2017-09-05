@@ -132,11 +132,15 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		this.rootElement.classList.remove('hidden');
 		require(['Game'], function (Game) {
 			Game.domElement.focus();
+			Game.miniMap.start();
 		});
 	};
 
 	UserInterface.hide = function () {
 		this.rootElement.classList.add('hidden');
+		require(['Game'], function (Game) {
+			Game.miniMap.stop();
+		});
 	};
 
 	function setupCrafting() {

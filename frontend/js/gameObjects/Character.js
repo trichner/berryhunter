@@ -148,7 +148,7 @@ define([
 		}
 
 		createMinimapIcon() {
-			let shape = new Two.Ellipse(0, 0, 30 * 7, 30 * 7);
+			let shape = new Two.Ellipse(0, 0, 30 * 3);
 			shape.fill = 'darkblue';
 			shape.noStroke();
 

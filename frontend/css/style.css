@@ -332,6 +332,10 @@ dl.flatList > dd {
 .finished #loadingBar {
   opacity: 0;
 }
+#gameUI.hidden {
+  display: block;
+  visibility: hidden;
+}
 #gameUI * {
   box-sizing: border-box;
   -webkit-user-select: none;
@@ -343,13 +347,14 @@ dl.flatList > dd {
   background: none;
 }
 #minimap {
-  width: 15%;
-  padding-bottom: 15%;
+  width: 15vw;
+  height: 15vw;
   position: absolute;
   bottom: 0;
   left: 0;
   background-color: Cornsilk;
-  border: 10px solid Cornsilk;
+  border: 0.3vw solid Cornsilk;
+  border-radius: 50%;
 }
 #minimap > .wrapper {
   position: absolute;
