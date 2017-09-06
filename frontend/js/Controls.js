@@ -296,6 +296,11 @@ define([
 
 			return this.character.shape.rotation;
 		}
+
+		destroy() {
+			this.clock.stop();
+			window.removeEventListener('keydown', Controls.handleFunctionKeys);
+		}
 	}
 
 	return Controls;

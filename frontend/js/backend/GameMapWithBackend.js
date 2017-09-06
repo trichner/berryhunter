@@ -161,6 +161,13 @@ define([
 		getObjectsInView() {
 			return Object.values(this.objects);
 		};
+
+		clear() {
+			Object.values(this.objects).forEach(function (gameObject) {
+				gameObject.hide();
+			});
+			this.objects = {};
+		}
 	}
 
 	return GameMapWithBackend;

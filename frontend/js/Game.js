@@ -55,6 +55,9 @@ define([], function () {
 				Game.createSpectator(Game.player.character.getX(), Game.player.character.getY());
 				Game.player.remove();
 				delete Game.Player;
+				Game.miniMap.clear();
+				// Game.miniMap.stop();
+				Game.map.clear();
 				Game.state = States.RENDERING;
 			};
 

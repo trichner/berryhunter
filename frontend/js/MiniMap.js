@@ -46,11 +46,11 @@ define(['Game', 'Two', 'UserInterface'], function (Game, Two, UserInterface) {
 			this.two.bind('update', update.bind(this));
 		}
 
-		start(){
+		start() {
 			this.two.play();
 		}
 
-		stop(){
+		stop() {
 			this.two.pause();
 		}
 
@@ -79,12 +79,10 @@ define(['Game', 'Two', 'UserInterface'], function (Game, Two, UserInterface) {
 			return minimapIcon;
 		}
 
-		remove(gameObject) {
-			// TODO
-		}
-
 		clear() {
-			// TODO
+			this.trackedGameObjects.length = 0;
+			this.playerGroup.remove(_.toArray(this.playerGroup.children));
+			this.iconGroup.remove(_.toArray(this.iconGroup.children));
 		}
 
 	}

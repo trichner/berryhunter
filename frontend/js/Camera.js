@@ -7,6 +7,7 @@ define([
 	'Develop',
 ], function (Game, Two, Vehicle, Develop) {
 	class Camera {
+
 		/**
 		 *
 		 * @param {Character} character the Character to follow
@@ -26,8 +27,8 @@ define([
 			 */
 			this.translation = this.vehicle.position;
 
-
-			Game.two.bind('update', this.update.bind(this));
+			this.updateListener = this.update.bind(this);
+			Game.two.bind('update', this.updateListener);
 		}
 
 		getScreenX(mapX) {
@@ -63,6 +64,10 @@ define([
 			if (typeof this.onUpdate === 'function') {
 				this.onUpdate(translation);
 			}
+		}
+
+		destroy() {
+			Game.two.unbind('update', this.updateListener);
 		}
 	}
 

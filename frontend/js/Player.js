@@ -27,7 +27,9 @@ define([
 		}
 
 		remove() {
-			// TODO
+			this.character.hide();
+			this.controls.destroy();
+			this.camera.destroy();
 		}
 	}
 
