@@ -3,7 +3,7 @@
 define(['Utils', 'Develop'], function (Utils, Develop) {
 	const DayCycle = {};
 
-	const ticksPerDay = 7200;
+	const ticksPerDay = 8 * 60 * 30; // 8 Minutes at 30 tps
 	const hoursPerDay = 24;
 	/**
 	 * First hour that is considered "day" in regards of visuals and temperature
