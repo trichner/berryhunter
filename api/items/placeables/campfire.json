@@ -4,7 +4,7 @@
   "type": "PLACEABLE",
   "factors": {
     "warmth": 0.04,
-    "durationInSeconds": 5,
+    "durationInSeconds": 120,
     "radius": 1.6,
     "vulnerability": 0.01
   },
