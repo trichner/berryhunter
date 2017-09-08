@@ -80,6 +80,9 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		}
 
 		// TODO Display busy animation
+		startProgress(seconds){
+
+		}
 
 		// TODO Display delayed click animation
 	}
@@ -190,7 +193,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 
 			let clickableIcon = new ClickableIcon(craftableItemElement);
 			clickableIcon.onLeftClick = function (event) {
-				onLeftClick.call(ClickableIcon, event, recipe);
+				onLeftClick.call(clickableIcon, event, recipe);
 			};
 			clickableIcon.setIconGraphic(recipe.item.icon.path);
 		}, this);

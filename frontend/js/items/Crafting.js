@@ -32,6 +32,7 @@ define([
 					Game.player.inventory.addItem(recipe.item);
 				} else {
 					Game.player.controls.onInventoryAction(recipe.item, BerryhunterApi.ActionType.CraftItem);
+					this.startProgress(recipe.craftingTime);
 				}
 			}.bind(this));
 
