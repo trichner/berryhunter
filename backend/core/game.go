@@ -289,6 +289,8 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 			sys.AddPlayer(p)
 		case *sys.ConnectionStateSystem:
 			sys.AddPlayer(p)
+		case *heater.HeaterSystem:
+			sys.AddPlayer(p)
 		}
 	}
 }
