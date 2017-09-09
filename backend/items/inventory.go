@@ -83,7 +83,8 @@ func (i *Inventory) AddItem(item *ItemStack) bool {
 	foundAt := -1
 	emptyAt := -1
 	for idx, stack := range i.items {
-		if stack == nil {
+		// did we already find an empty spot?
+		if stack == nil && emptyAt < 0 {
 			emptyAt = idx
 			continue
 		}
