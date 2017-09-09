@@ -13,10 +13,13 @@ func (p *player) Update(dt float32) {
 
 	vitalSigns := p.VitalSigns()
 
-	// heat
-	t := vitalSigns.BodyTemperature
-	temperatureFraction := float32(0.0008)
-	vitalSigns.BodyTemperature = t.SubFraction(temperatureFraction)
+	// are we freezing?
+	if vitalSigns.BodyTemperature <= 0 {
+		h := vitalSigns.Health
+		healthFraction := float32(0.001)
+		h = h.SubFraction(healthFraction)
+		vitalSigns.Health = h
+	}
 
 	// satiety
 	s := vitalSigns.Satiety

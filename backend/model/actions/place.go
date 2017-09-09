@@ -5,6 +5,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"log"
 	"github.com/trichner/berryhunter/backend/model/placeable"
+	"fmt"
 )
 
 func NewPlace(i items.Item, p model.PlayerEntity, g model.Game) *Place {
@@ -38,7 +39,8 @@ func (a *Place) Start() bool {
 	e, err := placeable.NewPlaceable(item)
 
 	if err != nil {
-		panic(err)
+		fmt.Printf("Cannot place %s: %s", item.Name, err)
+		return true
 	}
 	e.SetPosition(a.p.Position())
 	a.game.AddEntity(e)
