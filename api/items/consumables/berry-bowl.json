@@ -6,7 +6,7 @@
     "food": 1.0
   },
   "recipe": {
-    "craftTicks": 10,
+    "craftTimeInSeconds": 10,
     "materials": [
       {
         "item": "Berry",

@@ -7,7 +7,7 @@
     "yield": 2
   },
   "recipe": {
-    "craftTicks": 5,
+    "craftTimeInSeconds": 5,
     "materials": [
       {
         "item": "Wood",

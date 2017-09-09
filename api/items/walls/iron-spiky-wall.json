@@ -7,7 +7,7 @@
     "damagePerSecond": 0.10
   },
   "recipe": {
-    "craftTicks": 10,
+    "craftTimeInSeconds": 10,
     "materials": [
       {
         "item": "Iron",

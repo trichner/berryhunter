@@ -3,7 +3,7 @@
   "id": 41,
   "type": "PLACEABLE",
   "recipe": {
-    "craftTicks": 10,
+    "craftTimeInSeconds": 10,
     "materials": [
       {
         "item": "Berry",

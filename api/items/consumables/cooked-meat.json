@@ -6,7 +6,7 @@
     "food": 0.8
   },
   "recipe": {
-    "craftTicks": 10,
+    "craftTimeInSeconds": 10,
     "materials": [
       {
         "item": "RawMeat",

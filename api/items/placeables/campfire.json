@@ -4,12 +4,12 @@
   "type": "PLACEABLE",
   "factors": {
     "heatPerSecond": 0.04,
-    "durationInSeconds": 5,
+    "durationInSeconds": 120,
     "radius": 1.6,
     "vulnerability": 0.01
   },
   "recipe": {
-    "craftTimeSec": 5,
+    "craftTimeInSeconds": 5,
     "materials": [
       {
         "item": "Wood",

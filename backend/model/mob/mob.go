@@ -9,6 +9,7 @@ import (
 	"log"
 	"math"
 	"math/rand"
+	"github.com/trichner/berryhunter/backend/model/vitals"
 )
 
 var _ = model.MobEntity(&Mob{})
@@ -32,7 +33,7 @@ func NewMob(body *phy.Circle, d *mobs.MobDefinition) *Mob {
 		BaseEntity: base,
 		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
 		velocity:   phy.Vec2f{0.04, 0},
-		health:     model.VitalSignMax,
+		health:     vitals.Max,
 		definition: d,
 	}
 	m.Body.Shape().UserData = m
@@ -44,7 +45,7 @@ type Mob struct {
 
 	definition *mobs.MobDefinition
 
-	health   model.VitalSign
+	health   vitals.VitalSign
 	velocity phy.Vec2f
 	rand     *rand.Rand
 }
@@ -75,7 +76,7 @@ func (m *Mob) Angle() float32 {
 	return phy.Vec2f{1, 0}.AngleBetween(m.velocity)
 }
 
-func (m *Mob) Health() model.VitalSign {
+func (m *Mob) Health() vitals.VitalSign {
 	return m.health
 }
 

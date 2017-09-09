@@ -52,7 +52,7 @@ define([
 				 */
 				if (Utils.isDefined(item.recipe) && item.icon.file) {
 					let recipe = {
-						craftingTime: item.recipe.craftTicks,
+						craftingTime: item.recipe.craftTimeInSeconds,
 						materials: {},
 					};
 

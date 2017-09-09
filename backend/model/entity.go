@@ -5,6 +5,7 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/items/mobs"
 	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/model/vitals"
 )
 
 // EntityType is an enum describing the type of the entity
@@ -81,7 +82,7 @@ type MobEntity interface {
 	Entity
 
 	MobID() mobs.MobID
-	Health() VitalSign
+	Health() vitals.VitalSign
 	//Velocity() phy.Vec2f
 	//SetVelocity(v phy.Vec2f)
 	Update(dt float32) bool

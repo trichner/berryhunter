@@ -2,6 +2,8 @@ package items
 
 import (
 	"encoding/json"
+	"github.com/trichner/berryhunter/backend/model/constant"
+	"github.com/trichner/berryhunter/backend/model/vitals"
 )
 
 type EquipSlot int
@@ -35,11 +37,11 @@ type Factors struct {
 	Damage          float32
 	StructureDamage float32
 	Yield           int
-	DurationInS     int
+	DurationInTicks int
 
 	// Placeable/Heater
-	HeatPerSecond float32
-	Radius        float32
+	HeatPerTick float32
+	Radius      float32
 
 	// Resource
 	ReplenishProbability int
@@ -92,7 +94,7 @@ type itemDefinition struct {
 	Slot string `json:"slot"`
 
 	Recipe *struct {
-		CraftTicks int `json:"craftTicks"`
+		CraftTimeInSeconds int `json:"craftTimeInSeconds"`
 
 		Materials []struct {
 			Item  string `json:"item"`
@@ -159,7 +161,8 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			materials = append(materials, material)
 		}
 
-		recipe = &Recipe{i.Recipe.CraftTicks, materials, tools}
+		craftTicks := i.Recipe.CraftTimeInSeconds * constant.TicksPerSecond
+		recipe = &Recipe{craftTicks, materials, tools}
 	}
 
 	itemType, ok := ItemTypeMap[i.Type]
@@ -177,9 +180,9 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			Damage:               i.Factors.Damage,
 			StructureDamage:      i.Factors.StructureDamage,
 			Yield:                i.Factors.Yield,
-			HeatPerSecond:        i.Factors.HeatPerSecond,
+			HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
 			Radius:               i.Factors.Radius,
-			DurationInS:          i.Factors.DurationInS,
+			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
 			ReplenishProbability: i.Factors.ReplenishProbability,
 			Capacity:             i.Factors.Capacity,
 		},

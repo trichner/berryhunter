@@ -15,21 +15,21 @@ type Placeable struct {
 	model.BaseEntity
 	item items.Item
 
-	radiator   *model.HeatRadiator
-	millisLeft int
+	radiator  *model.HeatRadiator
+	ticksLeft int
 }
 
 func (p *Placeable) Update(dt float32) {
-	p.millisLeft -= int(dt)
+	p.ticksLeft -= 1
 
 	// prevent underflow
-	if p.millisLeft < 0 {
-		p.millisLeft = 0
+	if p.ticksLeft < 0 {
+		p.ticksLeft = 0
 	}
 }
 
 func (p *Placeable) Decayed() bool {
-	return p.millisLeft <= 0
+	return p.ticksLeft <= 0
 }
 
 func (p *Placeable) HeatRadiation() *model.HeatRadiator {
@@ -74,9 +74,9 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 
 	var radiator *model.HeatRadiator = nil
 
-	if item.Factors.HeatPerSecond != 0 {
+	if item.Factors.HeatPerTick != 0 {
 		radiator = &model.HeatRadiator{}
-		radiator.HeatFraction = float32(item.Factors.HeatPerSecond / model.TicksPerSecond * float32(model.VitalSignMax))
+		radiator.HeatPerTick = item.Factors.HeatPerTick
 		radiator.Radius = item.Factors.Radius
 		heaterBody := phy.NewCircle(phy.VEC2F_ZERO, radiator.Radius)
 		heaterBody.Shape().IsSensor = true
@@ -86,9 +86,9 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	}
 
 	// setup the decay time
-	var timeLeft int = math.MaxInt32
-	if item.Factors.DurationInS != 0 {
-		timeLeft = item.Factors.DurationInS * 1000
+	var ticksLeft int = math.MaxInt32
+	if item.Factors.DurationInTicks != 0 {
+		ticksLeft = item.Factors.DurationInTicks
 	}
 
 	base := model.NewBaseEntity(body, BerryhunterApi.EntityTypePlaceable)
@@ -96,7 +96,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		BaseEntity: base,
 		item:       item,
 		radiator:   radiator,
-		millisLeft: timeLeft,
+		ticksLeft:  ticksLeft,
 	}
 	p.Body.Shape().UserData = p
 	return p, nil

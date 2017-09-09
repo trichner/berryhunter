@@ -7,7 +7,7 @@
     "yield": 5
   },
   "recipe": {
-    "craftTicks": 30,
+    "craftTimeInSeconds": 30,
     "materials": [
       {
         "item": "Stone",

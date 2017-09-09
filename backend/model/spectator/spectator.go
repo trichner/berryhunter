@@ -4,11 +4,12 @@ import (
 	"engo.io/ecs"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/model/constant"
 )
 
 func NewSpectator(pos phy.Vec2f, client model.Client) model.Spectator {
 
-	viewport := phy.NewBox(pos, phy.Vec2f{model.ViewPortWidth / 2, model.ViewPortHeight / 2})
+	viewport := phy.NewBox(pos, phy.Vec2f{constant.ViewPortWidth / 2, constant.ViewPortHeight / 2})
 	viewport.Shape().IsSensor = true
 	viewport.Shape().Layer = model.LayerViewportCollision
 

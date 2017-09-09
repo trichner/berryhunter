@@ -7,6 +7,8 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
 	"log"
+	"github.com/trichner/berryhunter/backend/model/constant"
+	"github.com/trichner/berryhunter/backend/model/vitals"
 )
 
 var _ = model.PlayerEntity(&player{})
@@ -30,7 +32,7 @@ func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 	p.Body.Shape().Layer = model.LayerStaticCollision | model.LayerHeatCollision | model.LayerViewportCollision | model.LayerBorderCollision
 
 	// setup viewport
-	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{model.ViewPortWidth / 2, model.ViewPortHeight / 2})
+	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{constant.ViewPortWidth / 2, constant.ViewPortHeight / 2})
 
 	p.viewport.Shape().IsSensor = true
 	p.viewport.Shape().Layer = model.LayerViewportCollision
@@ -44,9 +46,9 @@ func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 	p.inventory = inventory
 
 	//--- setup vital signs
-	p.PlayerVitalSigns.Health = model.VitalSignMax
-	p.PlayerVitalSigns.Satiety = model.VitalSignMax
-	p.PlayerVitalSigns.BodyTemperature = model.VitalSignMax
+	p.PlayerVitalSigns.Health = vitals.Max
+	p.PlayerVitalSigns.Satiety = vitals.Max
+	p.PlayerVitalSigns.BodyTemperature = vitals.Max
 
 	// setup hand sensor
 	hand := phy.NewCircle(e.Body.Position(), 0.25)

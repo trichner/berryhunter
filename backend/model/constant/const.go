@@ -1,4 +1,4 @@
-package model
+package constant
 
 // Hardcoded constants
 const (

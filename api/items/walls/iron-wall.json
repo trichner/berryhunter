@@ -6,7 +6,7 @@
     "vulnerability": 0.01
   },
   "recipe": {
-    "craftTicks": 10,
+    "craftTimeInSeconds": 10,
     "materials": [
       {
         "item": "Iron",

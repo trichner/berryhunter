@@ -5,6 +5,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"log"
 	"github.com/trichner/berryhunter/backend/minions"
+	"github.com/trichner/berryhunter/backend/model/vitals"
 )
 
 type playerMap map[ecs.BasicEntity]*temperatureEntity
@@ -33,8 +34,8 @@ func (*HeaterSystem) Priority() int {
 func (h *HeaterSystem) New(w *ecs.World) {
 
 	log.Println("HeaterSystem nominal")
-	//HARDCODED
-	h.baseTemperature = float32(model.VitalSignMax) * 0.04
+	//FIXME HARDCODED
+	h.baseTemperature = vitals.FractionToAbsPerTick(0.04)
 }
 
 func (f *HeaterSystem) AddPlayer(p model.PlayerEntity) {
@@ -73,7 +74,7 @@ func (f *HeaterSystem) Update(dt float32) {
 
 		// are we grilled?
 		if t.temperature > 2*f.baseTemperature {
-			h := t.player.VitalSigns().Health.SubFraction(0.001)
+			h := t.player.VitalSigns().Health.SubFraction(0.0005)
 			t.player.VitalSigns().Health = h
 		}
 
@@ -104,7 +105,7 @@ func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 			log.Panicf("😱 Player not found in system, not added?")
 		}
 		//TODO Account for radius
-		t.temperature += float32(h.HeatRadiation().HeatFraction)
+		t.temperature += float32(h.HeatRadiation().HeatPerTick)
 	}
 
 }

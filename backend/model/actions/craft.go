@@ -32,7 +32,7 @@ func (c *Craft) Start() bool {
 	// ok, we're good to go, remove materials & craft
 	stacks := c.item.Recipe.Materials
 	c.p.Inventory().ConsumeItems(stacks)
-	c.ticks = def.Recipe.CraftTicks * model.TicksPerSecond
+	c.ticks = def.Recipe.CraftTicks
 
 	return false
 }

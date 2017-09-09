@@ -22,6 +22,7 @@ import (
 	"sync/atomic"
 	"time"
 	"sort"
+	"github.com/trichner/berryhunter/backend/model/constant"
 )
 
 type entitiesMap map[uint64]model.BasicEntity
@@ -97,7 +98,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 	d := sys.NewDecaySystem(g)
 	g.AddSystem(d)
 
-	dayCycle := sys.NewDayCycleSystem(g, model.DayNightCyleTicks)
+	dayCycle := sys.NewDayCycleSystem(g, constant.DayNightCyleTicks)
 	g.AddSystem(dayCycle)
 
 	g.printSystems()

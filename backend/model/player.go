@@ -4,51 +4,13 @@ import (
 	"engo.io/ecs"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/model/vitals"
 )
 
-const VitalSignMax = ^VitalSign(0)
-
-type VitalSign uint32
-
-func (v VitalSign) Fraction() float32 {
-	return float32(float32(v) / float32(VitalSignMax))
-}
-
-func (v VitalSign) AddFraction(n float32) VitalSign {
-	add := uint32(float32(VitalSignMax) * n)
-	return v.Add(add)
-}
-
-func (v VitalSign) SubFraction(n float32) VitalSign {
-	sub := uint32(float32(VitalSignMax) * n)
-	return v.Sub(sub)
-}
-
-func (v VitalSign) Add(n uint32) VitalSign {
-	d := VitalSignMax - v
-	add := VitalSign(n)
-	if d > add {
-		return v + add
-	}
-	return VitalSignMax
-}
-
-func (v VitalSign) Sub(n uint32) VitalSign {
-	sub := VitalSign(n)
-	if v < sub {
-		return 0
-	}
-	return v - sub
-}
-
-func (v VitalSign) UInt32() uint32 {
-	return uint32(v)
-}
-
 type PlayerVitalSigns struct {
-	Satiety         VitalSign
-	BodyTemperature VitalSign
-	Health          VitalSign
+	Satiety         vitals.VitalSign
+	BodyTemperature vitals.VitalSign
+	Health          vitals.VitalSign
 }
 
 type Hand struct {
