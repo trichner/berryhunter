@@ -6,6 +6,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
 	"math/rand"
+	"log"
 )
 
 var _ = model.ResourceEntity(&Resource{})
@@ -77,6 +78,10 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 
 func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	yield := item.Factors.Yield
+	if yield <= 0 {
+		log.Printf("😕 %s has no yield for %s.", item.Name, r.stock.Item.Name)
+		return
+	}
 	y := r.yield(yield)
 	p.Inventory().AddItem(items.NewItemStack(r.stock.Item, y))
 }
