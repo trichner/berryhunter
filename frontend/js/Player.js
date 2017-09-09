@@ -24,6 +24,13 @@ define([
 			this.vitalSigns = new VitalSigns();
 
 			this.craftableItems = [];
+
+			/**
+			 * Either <code>false</code> or number of seconds
+			 * remaining until the current craft is done.
+			 * @type {boolean|number}
+			 */
+			this.remainingCraftDuration = false;
 		}
 
 		remove() {

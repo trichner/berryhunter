@@ -4,8 +4,7 @@
   "type": "EQUIPMENT",
   "factors": {
     "damage": 0.02,
-    "yield": 2,
-    "durationInSeconds": 3
+    "yield": 2
   },
   "recipe": {
     "craftTicks": 5,

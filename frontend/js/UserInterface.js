@@ -3,7 +3,7 @@
 define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Utils) {
 	let UserInterface = {};
 
-	Preloading.registerPartial('partials/gameUI.html')
+	Preloading.registerPartial('partials/userInterface.html')
 		.then(() => {
 			UserInterface.rootElement = document.getElementById('gameUI');
 		});
@@ -51,6 +51,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 			}.bind(this));
 
 			this.imageNode = this.domElement.querySelector('.itemIcon');
+			this.progressOverlay = this.domElement.querySelector('.progressOverlay');
 		}
 
 		setIconGraphic(svgPath) {
@@ -80,8 +81,35 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		}
 
 		// TODO Display busy animation
-		startProgress(seconds){
+		startProgress(seconds) {
+			if (this.progressOverlay === null) {
+				console.warn('Tried to call startProgress on an ClickableIcon without progressOverlay.');
+				return;
+			}
+			let progress = {
+				duration: seconds * 1000,
+				current: 0
+			};
 
+			this.progressOverlay.classList.remove('hidden');
+
+						console.log('Craft start');
+			let self = this;
+			require(['Game'], function (Game) {
+				let updateListener = function (frameCount, timeDelta) {
+					progress.current += timeDelta;
+					if (progress.current >= progress.duration) {
+						self.progressOverlay.style.top = '100%';
+						self.progressOverlay.classList.add('hidden');
+						Game.two.unbind('update', updateListener);
+						console.log('Craft done');
+					} else {
+						let top = 100 - 100 * progress.current / progress.duration;
+						self.progressOverlay.style.top = top.toFixed(3) + '%';
+					}
+				};
+				Game.two.bind('update', updateListener);
+			});
 		}
 
 		// TODO Display delayed click animation
@@ -229,8 +257,6 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 	UserInterface.getChat = function () {
 		return document.getElementById('chat');
 	};
-
-
 
 
 	return UserInterface;

@@ -33,8 +33,9 @@ define([
 				} else {
 					Game.player.controls.onInventoryAction(recipe.item, BerryhunterApi.ActionType.CraftItem);
 					this.startProgress(recipe.craftingTime);
+					Game.player.remainingCraftDuration = recipe.craftingTime;
 				}
-			}.bind(this));
+			});
 
 			this.displayedCrafts = availableCrafts;
 		}

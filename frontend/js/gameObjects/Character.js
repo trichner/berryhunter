@@ -58,6 +58,14 @@ define([
 			this.shape.add(this.messagesGroup);
 			this.messagesGroup.translation.y = -1.3 * (this.size + 16);
 
+			// this.craftingIndicator = new Two.Group();
+			// this.shape.add(this.craftingIndicator);
+			// this.craftingIndicator.translation.y = -1.3 * (this.size + 16) - 10;
+			// this.craftingIndicator.visible = false;
+
+			// this.craftingIndicator.add(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
+			// this.craftingIndicator.add(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
+
 			Game.two.bind('update', this.update.bind(this));
 		}
 
@@ -315,6 +323,9 @@ define([
 
 	Character.hitAnimationFrameDuration = 15;
 	Preloading.registerGameObjectSVG(Character, 'img/character.svg');
+
+	Character.craftingIndicator = {};
+	Preloading.registerGameObjectSVG(Character.craftingIndicator, 'img/crafting.svg');
 
 	return Character;
 });

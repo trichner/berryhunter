@@ -65,6 +65,8 @@ define([
 				return false;
 			}
 
+			console.log("set " + item.name + " = " + count);
+
 			if (count === 0){
 				return this.dropItem();
 			}
