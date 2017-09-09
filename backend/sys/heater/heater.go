@@ -104,7 +104,7 @@ func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 			log.Panicf("😱 Player not found in system, not added?")
 		}
 		//TODO Account for radius
-		t.temperature += float32(h.HeatRadiation().Heat)
+		t.temperature += float32(h.HeatRadiation().HeatFraction)
 	}
 
 }

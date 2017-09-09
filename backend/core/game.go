@@ -54,7 +54,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 
 	// Prepare welcome message. Its static anyways.
 	msg := &codec.Welcome{
-		"berryhunter.io [Alpha] rza, n1b, gino & co.",
+		"berryhunter.io [Alpha] rza, n1b, xyckno & co.",
 		radius * codec.Points2px,
 	}
 	builder := flatbuffers.NewBuilder(32)
@@ -97,8 +97,15 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 	d := sys.NewDecaySystem(g)
 	g.AddSystem(d)
 
+	dayCycle := sys.NewDayCycleSystem(g, model.DayNightCyleTicks)
+	g.AddSystem(dayCycle)
+
 	g.printSystems()
 	return g
+}
+
+func (g *game) Ticks() uint64 {
+	return g.Tick
 }
 
 func (g *game) Items() items.Registry {
@@ -290,6 +297,8 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 		case *sys.ConnectionStateSystem:
 			sys.AddPlayer(p)
 		case *heater.HeaterSystem:
+			sys.AddPlayer(p)
+		case *sys.DayCycleSystem:
 			sys.AddPlayer(p)
 		}
 	}
