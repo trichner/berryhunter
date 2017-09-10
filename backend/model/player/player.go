@@ -29,7 +29,7 @@ func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 	shapeGroup := int(p.ID())
 	p.Body.Shape().UserData = p
 	p.Body.Shape().Group = shapeGroup
-	p.Body.Shape().Layer = model.LayerStaticCollision | model.LayerHeatCollision | model.LayerViewportCollision | model.LayerBorderCollision
+	p.Body.Shape().Layer = model.LayerPlayerStaticCollision | model.LayerHeatCollision | model.LayerViewportCollision | model.LayerBorderCollision
 
 	// setup viewport
 	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{constant.ViewPortWidth / 2, constant.ViewPortHeight / 2})
