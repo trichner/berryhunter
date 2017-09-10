@@ -40,7 +40,7 @@ type Factors struct {
 	DurationInTicks int
 
 	// Placeable/Heater
-	HeatPerTick float32
+	HeatPerTick uint32
 	Radius      float32
 
 	// Resource

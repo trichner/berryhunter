@@ -12,13 +12,13 @@ type playerMap map[ecs.BasicEntity]*temperatureEntity
 
 type temperatureEntity struct {
 	player      model.PlayerEntity
-	temperature float32
+	temperature uint32
 }
 
 type HeaterSystem struct {
 	heaters         []model.Heater
 	players         playerMap
-	baseTemperature float32
+	baseTemperature uint32
 }
 
 func New() *HeaterSystem {
@@ -105,7 +105,7 @@ func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 			log.Panicf("😱 Player not found in system, not added?")
 		}
 		//TODO Account for radius
-		t.temperature += float32(h.HeatRadiation().HeatPerTick)
+		t.temperature += h.HeatRadiation().HeatPerTick
 	}
 
 }

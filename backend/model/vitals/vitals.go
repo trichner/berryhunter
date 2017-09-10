@@ -6,8 +6,8 @@ const Max = ^VitalSign(0)
 
 type VitalSign uint32
 
-func FractionToAbsPerTick(fractionPerS float32) float32 {
-	return float32(fractionPerS / constant.TicksPerSecond * float32(Max))
+func FractionToAbsPerTick(fractionPerS float32) uint32 {
+	return uint32(fractionPerS / constant.TicksPerSecond * float32(Max))
 }
 
 func (v VitalSign) Fraction() float32 {
