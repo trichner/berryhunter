@@ -1,6 +1,8 @@
 package vitals
 
-import "github.com/trichner/berryhunter/backend/model/constant"
+import (
+	"github.com/trichner/berryhunter/backend/model/constant"
+)
 
 const Max = ^VitalSign(0)
 
@@ -15,13 +17,33 @@ func (v VitalSign) Fraction() float32 {
 }
 
 func (v VitalSign) AddFraction(n float32) VitalSign {
-	add := uint32(float32(Max) * n)
-	return v.Add(add)
+	if n == 0 {
+		return v
+	}
+
+	if n > 0 {
+		add := uint32(float32(Max) * n)
+		return v.Add(add)
+	}
+
+	sub := uint32(float32(Max) * -n)
+	return v.Sub(sub)
 }
 
 func (v VitalSign) SubFraction(n float32) VitalSign {
-	sub := uint32(float32(Max) * n)
-	return v.Sub(sub)
+	return v.AddFraction(-n)
+}
+
+func (v VitalSign) AddInt(n int) VitalSign {
+	if n == 0 {
+		return v
+	}
+
+	if n > 0 {
+		return v.Add(uint32(n))
+	}
+
+	return v.Sub(uint32(-n))
 }
 
 func (v VitalSign) Add(n uint32) VitalSign {
