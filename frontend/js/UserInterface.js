@@ -93,7 +93,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 
 			this.progressOverlay.classList.remove('hidden');
 
-						console.log('Craft start');
+			console.log('Craft start');
 			let self = this;
 			require(['Game'], function (Game) {
 				let updateListener = function (frameCount, timeDelta) {

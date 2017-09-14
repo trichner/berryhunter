@@ -11,7 +11,7 @@ define([
 ], function (Game, Character, Controls, Camera, Inventory, VitalSigns) {
 	class Player {
 		constructor(id, x, y, name) {
-			this.character = new Character(id, x, y, name);
+			this.character = new Character(id, x, y, name, true);
 			this.character.visibleOnMinimap = true;
 
 			this.controls = new Controls(this.character);
@@ -30,7 +30,15 @@ define([
 			 * remaining until the current craft is done.
 			 * @type {boolean|number}
 			 */
-			this.remainingCraftDuration = false;
+			this.craftProgress = false;
+		}
+
+		startCraftProgress(craftingTime) {
+			this.craftProgress = {
+				duration: craftingTime * 1000,
+				current: 0
+			};
+			this.character.craftingIndicator.opacity = 1;
 		}
 
 		remove() {

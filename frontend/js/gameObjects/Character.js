@@ -4,18 +4,20 @@ define([
 	'Game',
 	'GameObject',
 	'Two',
+	'NamedGroup',
 	'Constants',
 	'Utils',
 	'MapEditor',
 	'items/Equipment',
 	'InjectedSVG',
 	'Preloading',
-], function (Game, GameObject, Two, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading) {
+], function (Game, GameObject, Two, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading) {
 	class Character extends GameObject {
-		constructor(id, x, y, name) {
+		constructor(id, x, y, name, isPlayerCharacter) {
 			super(Game.layers.characters, x, y, 30, Math.PI / 2);
 			this.id = id;
 			this.name = name;
+			this.isPlayerCharacter = isPlayerCharacter;
 
 			this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
 			this.isMoveable = true;
@@ -58,13 +60,52 @@ define([
 			this.shape.add(this.messagesGroup);
 			this.messagesGroup.translation.y = -1.3 * (this.size + 16);
 
-			// this.craftingIndicator = new Two.Group();
-			// this.shape.add(this.craftingIndicator);
-			// this.craftingIndicator.translation.y = -1.3 * (this.size + 16) - 10;
-			// this.craftingIndicator.visible = false;
+			if (this.isPlayerCharacter) {
+				this.craftingIndicator = new NamedGroup('craftingIndicator');
+				this.shape.add(this.craftingIndicator);
+				this.craftingIndicator.translation.y = -1.3 * (this.size + 16) - 20;
 
-			// this.craftingIndicator.add(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
-			// this.craftingIndicator.add(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
+				this.craftingIndicator.add(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
+
+				let craftingIndicator = this.craftingIndicator;
+				craftingIndicator.opacity = 0;
+
+				let radius = 27;
+				let circle = new Two.Ellipse(0, 0, radius);
+				this.craftingIndicator.add(circle);
+				circle.noFill();
+				circle.stroke = '#c9a741';
+				circle.linewidth = 5;
+				circle.cap = 'square';
+				circle.dashInitialized = false;
+				circle.perimeter = radius * 2 * Math.PI;
+				circle._update = function () {
+					let craftProgress = Game.player.craftProgress;
+					if (craftProgress) {
+						craftProgress.current += Game.two.timeDelta;
+
+						let progress = craftProgress.current / craftProgress.duration;
+						if (progress >= 1) {
+							Game.player.craftProgress = false;
+							progress = 1;
+							craftingIndicator.opacity = 0;
+						}
+
+						if (this._renderer.elem) {
+							if (!this.dashInitialized) {
+								this._renderer.elem.setAttribute('stroke-dasharray', this.perimeter);
+								this.dashInitialized = true;
+							}
+
+							console.log('dashoffset: ' + (this.perimeter * (1 - progress)));
+							this._renderer.elem.setAttribute('stroke-dashoffset', this.perimeter * (1 - progress));
+						}
+					}
+
+					Two.Path.prototype._update.apply(this, arguments);
+				};
+				circle.rotation = Math.PI / -2;
+			}
 
 			Game.two.bind('update', this.update.bind(this));
 		}

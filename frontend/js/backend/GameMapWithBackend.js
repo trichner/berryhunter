@@ -46,7 +46,7 @@ define([
 			} else {
 				switch (entity.type) {
 					case Character:
-						gameObject = new Character(entity.id, entity.position.x, entity.position.y, entity.name);
+						gameObject = new Character(entity.id, entity.position.x, entity.position.y, entity.name, false);
 						break;
 					case Placeable:
 						gameObject = new Placeable(entity.item, entity.position.x, entity.position.y);
