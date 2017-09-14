@@ -45,6 +45,7 @@ define([
 			this.character.hide();
 			this.controls.destroy();
 			this.camera.destroy();
+			this.inventory.clear();
 		}
 	}
 

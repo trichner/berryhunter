@@ -52,7 +52,7 @@ define([
 						let itemEquipmentSlot = Equipment.Helper.getItemEquipmentSlot(slot.item);
 						if (itemEquipmentSlot === equipmentSlot) {
 							slot.deactivate();
-							this.deactivateSlot(itemEquipmentSlot);
+							this.deactivateSlot(itemEquipmentSlot, true);
 						}
 					}
 				}
@@ -66,9 +66,9 @@ define([
 			}
 		}
 
-		deactivateSlot(equipmentSlot) {
+		deactivateSlot(equipmentSlot, byUser) {
 			let unequippedItem = this.character.unequipItem(equipmentSlot);
-			if (equipmentSlot !== Equipment.Slots.PLACEABLE) {
+			if (byUser && equipmentSlot !== Equipment.Slots.PLACEABLE) {
 				Game.player.controls.onInventoryAction(unequippedItem, BerryhunterApi.ActionType.UnequipItem);
 			}
 		}
@@ -140,6 +140,13 @@ define([
 			if (inventoryChanged) {
 				this.onChange();
 			}
+		}
+
+		clear() {
+			this.slots.forEach(slot => {
+				slot.dropItem();
+			});
+			this.onChange();
 		}
 	}
 

@@ -35,7 +35,7 @@ define([
 						let equipmentSlot = Equipment.Helper.getItemEquipmentSlot(this.item);
 						if (this.isActive()) {
 							this.deactivate();
-							this.inventory.deactivateSlot(equipmentSlot);
+							this.inventory.deactivateSlot(equipmentSlot, true);
 						} else {
 							this.inventory.activateSlot(this.index, equipmentSlot);
 						}
@@ -100,7 +100,7 @@ define([
 			this.clickableIcon.removeIconGraphic();
 
 			if (this.isActive()) {
-				this.inventory.deactivateSlot(Equipment.Helper.getItemEquipmentSlot(this.item));
+				this.inventory.deactivateSlot(Equipment.Helper.getItemEquipmentSlot(this.item), false);
 			}
 			this.item = null;
 			this.setCount(0);

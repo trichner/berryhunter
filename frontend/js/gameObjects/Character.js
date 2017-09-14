@@ -97,7 +97,6 @@ define([
 								this.dashInitialized = true;
 							}
 
-							console.log('dashoffset: ' + (this.perimeter * (1 - progress)));
 							this._renderer.elem.setAttribute('stroke-dashoffset', this.perimeter * (1 - progress));
 						}
 					}

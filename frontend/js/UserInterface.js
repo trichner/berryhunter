@@ -93,7 +93,6 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 
 			this.progressOverlay.classList.remove('hidden');
 
-			console.log('Craft start');
 			let self = this;
 			require(['Game'], function (Game) {
 				let updateListener = function (frameCount, timeDelta) {
@@ -102,7 +101,6 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 						self.progressOverlay.style.top = '100%';
 						self.progressOverlay.classList.add('hidden');
 						Game.two.unbind('update', updateListener);
-						console.log('Craft done');
 					} else {
 						let top = 100 - 100 * progress.current / progress.duration;
 						self.progressOverlay.style.top = top.toFixed(3) + '%';
