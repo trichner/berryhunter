@@ -263,56 +263,64 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 					size: 40
 				},
 				definition: 'walls/wood-wall',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 			WoodSpikyWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
 				definition: 'walls/wood-spiky-wall',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 			StoneWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
 				definition: 'walls/stone-wall',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 			StoneSpikyWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
 				definition: 'walls/stone-spiky-wall',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 			BronzeWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
 				definition: 'walls/bronze-wall',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 			BronzeSpikyWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
 				definition: 'walls/bronze-spiky-wall',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 			IronWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
 				definition: 'walls/iron-wall',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 			IronSpikyWall: {
 				// TODO
 				icon: {file: ''},
 				graphic: {file: ''},
 				definition: 'walls/iron-spiky-wall',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 
 			/***********************************
