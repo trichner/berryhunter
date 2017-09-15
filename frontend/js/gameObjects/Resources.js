@@ -3,7 +3,8 @@ define([
 	'GameObject',
 	'Two',
 	'Preloading',
-	'Utils'], function (Game, GameObject, Two, Preloading, Utils) {
+	'Utils',
+	'InjectedSVG'], function (Game, GameObject, Two, Preloading, Utils, InjectedSVG) {
 
 	class Resource extends GameObject {
 		constructor(gameLayer, x, y, size, rotation) {
@@ -35,6 +36,13 @@ define([
 	class Tree extends Resource {
 		constructor(x, y, size, rotation) {
 			super(Game.layers.resources.trees, x, y, size, rotation);
+
+			Game.layers.terrain.textures.add(
+				new InjectedSVG(Tree.groundTexture.svg, x, y, this.size, this.rotation));
+		}
+
+		onStockChange(newStock, oldStock) {
+			this.shape.scale = newStock / this.capacity;
 		}
 
 		createMinimapIcon() {
@@ -45,6 +53,9 @@ define([
 			return shape;
 		}
 	}
+
+	Tree.groundTexture = {};
+	Preloading.registerGameObjectSVG(Tree.groundTexture, 'img/treeSpot.svg');
 
 	class RoundTree extends Tree {
 		constructor(x, y, size) {
@@ -92,11 +103,28 @@ define([
 			return shape;
 		}
 	}
+
 	Preloading.registerGameObjectSVG(MarioTree, 'img/deciduousTree.svg');
 
-	class Stone extends Resource {
+	class Mineral extends Resource {
+		constructor(x, y, size, rotatation) {
+			super(Game.layers.resources.minerals, x, y, size, rotatation);
+
+			Game.layers.terrain.textures.add(
+				new InjectedSVG(Mineral.groundTexture.svg, x, y, this.size, this.rotation));
+		}
+
+		onStockChange(newStock, oldStock) {
+			this.shape.scale = newStock / this.capacity;
+		}
+	}
+
+	Mineral.groundTexture = {};
+	Preloading.registerGameObjectSVG(Mineral.groundTexture, 'img/stoneSpot.svg');
+
+	class Stone extends Mineral {
 		constructor(x, y, size) {
-			super(Game.layers.resources.minerals, x, y,
+			super(x, y,
 				size || Utils.randomInt(30, 90),
 				Utils.random(0, Math.PI * 2)
 			);
@@ -121,11 +149,12 @@ define([
 			return shape;
 		}
 	}
+
 	Preloading.registerGameObjectSVG(Stone, 'img/stone.svg');
 
-	class Bronze extends Resource {
+	class Bronze extends Mineral {
 		constructor(x, y, size) {
-			super(Game.layers.resources.minerals, x, y, size || Utils.randomInt(30, 70));
+			super(x, y, size || Utils.randomInt(30, 70));
 		}
 
 		createShape(x, y) {
@@ -153,11 +182,12 @@ define([
 			return shape;
 		}
 	}
+
 	Preloading.registerGameObjectSVG(Bronze, 'img/bronze.svg');
 
-	class Iron extends Resource {
+	class Iron extends Mineral {
 		constructor(x, y, size) {
-			super(Game.layers.resources.minerals, x, y,
+			super(x, y,
 				size || Utils.randomInt(20, 60),
 				Utils.random(0, Math.PI * 2)
 			);
@@ -261,6 +291,7 @@ define([
 		Tree: Tree,
 		RoundTree: RoundTree,
 		MarioTree: MarioTree,
+		Mineral: Mineral,
 		Stone: Stone,
 		Bronze: Bronze,
 		Iron: Iron,

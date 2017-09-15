@@ -43,6 +43,10 @@ define([
 						gameObject.updateAABB(entity.aabb);
 					}
 				}
+
+				if (gameObject instanceof Resources.Resource) {
+					gameObject.stock = entity.stock;
+				}
 			} else {
 				switch (entity.type) {
 					case Character:

@@ -32,9 +32,11 @@ define([], function () {
 			'UserInterface',
 			'StartScreen',
 			'Chat',
-			'Utils'
+			'Utils',
+			'NamedGroup'
 		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, SvgLoader, KeyEvents,
-		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat, Utils) {
+		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
+		             Utils, NamedGroup) {
 			/**
 			 * Creating a player starts implicitly the game
 			 */
@@ -120,37 +122,38 @@ define([], function () {
 			// TODO: Grids, Borders, AABBs?
 			Game.layers = {
 				terrain: {
-					background: new Two.Group(),
-					textures: new Two.Group(),
+					background: new NamedGroup('background'),
+					textures: new NamedGroup('textures'),
 				},
 				placeables: {
-					campfire: new Two.Group(),
-					chest: new Two.Group(),
-					workbench: new Two.Group(),
-					furnace: new Two.Group(),
+					campfire: new NamedGroup('campfire'),
+					chest: new NamedGroup('chest'),
+					workbench: new NamedGroup('workbench'),
+					furnace: new NamedGroup('furnace'),
 
-					doors: new Two.Group(),
-					walls: new Two.Group(),
+					doors: new NamedGroup('doors'),
+					walls: new NamedGroup('walls'),
 				},
-				characters: new Two.Group(),
+				characters: new NamedGroup('characters'),
 				mobs: {
-					dodo: new Two.Group(),
-					saberToothCat: new Two.Group(),
-					mammoth: new Two.Group(),
+					dodo: new NamedGroup('dodo'),
+					saberToothCat: new NamedGroup('saberToothCat'),
+					mammoth: new NamedGroup('mammoth'),
 				},
 				resources: {
-					berryBush: new Two.Group(),
-					minerals: new Two.Group(),
-					trees: new Two.Group(),
+					berryBush: new NamedGroup('berryBush'),
+					minerals: new NamedGroup('minerals'),
+					trees: new NamedGroup('trees'),
 				}
 				// UI Overlay is the highest layer, but not managed with Two.js
 			};
 
 			// Terrain
-			Game.two.makeGroup(
-				Game.layers.terrain.background);
+			Game.two.add(new NamedGroup('terrain',
+				Game.layers.terrain.background));
 
-			Game.cameraGroup = Game.two.makeGroup();
+			Game.cameraGroup = new NamedGroup('cameraGroup');
+			Game.two.add(Game.cameraGroup);
 
 			// Terrain Textures moving with the camera
 			Game.cameraGroup.add(
