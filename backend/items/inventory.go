@@ -39,6 +39,10 @@ func NewItemStack(item Item, count int) *ItemStack {
 	}
 }
 
+func (is *ItemStack) Copy() *ItemStack {
+	return NewItemStack(is.Item, is.Count)
+}
+
 // Items returns the slice of all items, might contain
 // nil elements (empty slots)
 func (i *Inventory) Items() []*ItemStack {
@@ -100,6 +104,9 @@ func (i *Inventory) AddItem(item *ItemStack) bool {
 		i.items[foundAt].Count += item.Count
 		return true
 	}
+
+	// use a copy to not modify the original drop
+	item = item.Copy()
 
 	// do we have a 'hole'?
 	if emptyAt >= 0 {
