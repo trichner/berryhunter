@@ -83,7 +83,7 @@ func (i *PlayerInputSystem) updateInput(p model.PlayerEntity, next, last *model.
 	resolveHandCollisions(p)
 
 	// reset
-	p.Hand().Collider.Shape().Layer = 0
+	p.Hand().Collider.Shape().Mask = 0
 
 	if next == nil {
 		return

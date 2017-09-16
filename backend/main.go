@@ -76,6 +76,7 @@ func bootServer(h http.HandlerFunc, port int, path string, dev bool) {
 
 func newMobEntity(def *mobs.MobDefinition) model.MobEntity {
 	circle := phy.NewCircle(phy.VEC2F_ZERO, 0.5)
-	circle.Shape().Layer = model.LayerMobStaticCollision | model.LayerActionCollision | model.LayerBorderCollision | model.LayerViewportCollision
+	circle.Shape().Layer = model.LayerViewportCollision | model.LayerActionCollision
+	circle.Shape().Mask = model.LayerMobStaticCollision | model.LayerBorderCollision
 	return mob.NewMob(circle, def)
 }

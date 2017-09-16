@@ -24,7 +24,7 @@ func (a *Primary) Start() bool {
 	if !hasItem(a.p, a.item) {
 		return true
 	}
-	a.p.Hand().Collider.Shape().Layer = -1 //TODO fine grained layers
+	a.p.Hand().Collider.Shape().Mask = -1 //TODO fine grained layers
 	a.p.Hand().Item = a.item
 	return false
 }

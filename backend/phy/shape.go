@@ -5,6 +5,7 @@ import "fmt"
 type ColliderSet map[Collider]struct{}
 
 type Shape struct {
+	Mask     int
 	Layer    int
 	Group    int
 	IsSensor bool

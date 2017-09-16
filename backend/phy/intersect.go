@@ -56,11 +56,11 @@ func ArbiterShapes(a Collider, b Collider) bool {
 
 	as := a.Shape()
 	bs := b.Shape()
-	if as.Group > 0 && as.Group == bs.Group {
+	if as.Group != 0 && as.Group == bs.Group {
 		return false
 	}
 
-	return (as.Layer & bs.Layer) != 0
+	return (as.Mask & bs.Layer) != 0
 }
 
 // taken from https://github.com/pgkelley4/line-segments-intersect/blob/master/js/line-segments-intersect.js

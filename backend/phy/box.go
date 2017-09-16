@@ -1,7 +1,6 @@
 package phy
 
 // Box represents a simple axis-aligned box
-// TODO make it work for non-aligned boxes
 type Box struct {
 	CollisionResolver
 	dynamicColliderShape

@@ -57,6 +57,7 @@ var trees = []staticEntityBody{
 		100,
 		1,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
+		0,
 		"Wood",
 	},
 	{
@@ -64,6 +65,7 @@ var trees = []staticEntityBody{
 		100,
 		1,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
+		0,
 		"Wood",
 	},
 }
@@ -74,6 +76,7 @@ var resources = []staticEntityBody{
 		100,
 		0.5,
 		model.LayerRessourceCollision | model.LayerViewportCollision,
+		0,
 		"Berry",
 	},
 	{
@@ -81,6 +84,7 @@ var resources = []staticEntityBody{
 		100,
 		0.5,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
+		0,
 		"Stone",
 	},
 	{
@@ -88,6 +92,7 @@ var resources = []staticEntityBody{
 		100,
 		0.5,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
+		0,
 		"Bronze",
 	},
 	{
@@ -95,6 +100,7 @@ var resources = []staticEntityBody{
 		100,
 		0.5,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
+		0,
 		"Iron",
 	},
 }
@@ -104,5 +110,6 @@ type staticEntityBody struct {
 	weight         int
 	radius         float32
 	collisionLayer int
+	collisionMask  int
 	resourceName   string
 }

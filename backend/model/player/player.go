@@ -29,13 +29,14 @@ func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 	shapeGroup := int(p.ID())
 	p.Body.Shape().UserData = p
 	p.Body.Shape().Group = shapeGroup
-	p.Body.Shape().Layer = model.LayerPlayerStaticCollision | model.LayerHeatCollision | model.LayerViewportCollision | model.LayerBorderCollision
+	p.Body.Shape().Layer = model.LayerViewportCollision
+	p.Body.Shape().Mask = model.LayerPlayerStaticCollision | model.LayerHeatCollision | model.LayerBorderCollision
 
 	// setup viewport
 	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{constant.ViewPortWidth / 2, constant.ViewPortHeight / 2})
 
 	p.viewport.Shape().IsSensor = true
-	p.viewport.Shape().Layer = model.LayerViewportCollision
+	p.viewport.Shape().Mask = model.LayerViewportCollision
 	p.viewport.Shape().Group = shapeGroup
 
 	//--- initialize inventory
@@ -54,7 +55,6 @@ func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 	hand := phy.NewCircle(e.Body.Position(), 0.25)
 	hand.Shape().IsSensor = true
 	hand.Shape().Group = shapeGroup
-	hand.Shape().Layer = 0 //TODO
 	p.hand = model.Hand{Collider: hand}
 
 	p.updateHand()
@@ -189,7 +189,7 @@ func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
 
 func (p *player) startAction(tool items.Item) {
 	p.hand.Item = tool
-	p.hand.Collider.Shape().Layer = model.LayerRessourceCollision
+	p.hand.Collider.Shape().Mask = model.LayerRessourceCollision | model.LayerActionCollision
 }
 
 var handOffset = phy.Vec2f{0.25, 0}

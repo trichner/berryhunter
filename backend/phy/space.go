@@ -92,7 +92,9 @@ func (s *Space) bruteIntersectShapes(statics []Collider, shapes []DynamicCollide
 				continue
 			}
 
-			if !ArbiterShapes(current, other) {
+			ca := ArbiterShapes(current, other)
+			oa := ArbiterShapes(other, current)
+			if !(ca || oa) {
 				continue
 			}
 
@@ -100,8 +102,12 @@ func (s *Space) bruteIntersectShapes(statics []Collider, shapes []DynamicCollide
 				continue
 			}
 
-			current.addCollision(other)
-			other.addCollision(current)
+			if ca {
+				current.addCollision(other)
+			}
+			if oa {
+				other.addCollision(current)
+			}
 		}
 
 		for j := 0; j < len(statics); j++ {
