@@ -55,7 +55,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	bootServer(g.Handler(), config.Port, config.Path, dev)
+	bootServer(g.Handler(), config.Server.Port, config.Server.Path, dev)
 
 	g.Loop()
 }

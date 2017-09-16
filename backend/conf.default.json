@@ -1,4 +1,10 @@
 {
-  "port": 2000,
-  "path": "/game"
+  "server": {
+    "port": 2000,
+    "path": "/game"
+  },
+  "game": {
+    "coldFractionNightPerSecond": 0.05,
+    "coldFractionRestingPerSecond": 0.05
+  }
 }

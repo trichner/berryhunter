@@ -5,11 +5,15 @@ import (
 	"io/ioutil"
 )
 
-const configFilename = "./conf.json"
-
 type Config struct {
-	Port int    `json:"port"`
-	Path string `json:"path"`
+	Server struct {
+		Port int    `json:"port"`
+		Path string `json:"path"`
+	} `json:"server"`
+	Game struct {
+		ColdFractionNightPerS   float32 `json:"coldFractionNightPerSecond"`
+		ColdFractionRestingPerS float32 `json:"coldFractionRestingPerSecond"`
+	} `json:"game"`
 }
 
 // reads the config from file
