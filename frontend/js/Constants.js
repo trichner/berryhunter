@@ -8,13 +8,14 @@ define([], function () {
 			SERVER_PORT: 'port',
 			DEVELOPMENT: 'develop'
 		},
+		USE_NAMED_GROUPS: true,
+
 		BASE_MOVEMENT_SPEED: 10,
 
 		ALWAYS_VIEW_CURSOR: true,
 		CLEAR_MINIMAP_ON_DEATH: false,
 		GRID_SPACING: 100,
 		FIELDS_IN_QUADRANT: 8,
-		PIXEL_PER_METRE: 60,
 		BACKEND: {
 			LOCAL_URL: 'ws://localhost:2000/game',
 			REMOTE_URL: 'wss://berryhunter.io/game',

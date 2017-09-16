@@ -1,4 +1,8 @@
-define(['Two'], function (Two) {
+define(['Two', 'Constants'], function (Two, Constants) {
+	if (!Constants.USE_NAMED_GROUPS){
+		return Two.Group;
+	}
+
 	class NamedGroup extends Two.Group {
 		constructor(name, children) {
 			super(children || []);
