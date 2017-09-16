@@ -31,6 +31,12 @@ func (r *Resource) Resource() *model.ResourceStock {
 }
 
 func (r *Resource) yield(i int) (yielded int) {
+
+	i -= r.stock.Item.ItemDefinition.Factors.MinYield
+	if i < 1 {
+		return 0
+	}
+
 	res := &r.stock
 	if res.Available < i {
 		yielded = res.Available

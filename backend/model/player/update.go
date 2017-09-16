@@ -24,8 +24,8 @@ func (p *player) Update(dt float32) {
 	satietyFraction := float32(0.0002)
 	vitalSigns.Satiety = s.SubFraction(satietyFraction)
 
-	// heal if satiety is high enough
-	if vitalSigns.Satiety.Fraction() > 0.6 {
+	// heal if satiety and temperature are high enough
+	if vitalSigns.Satiety.Fraction() > 0.6 && vitalSigns.BodyTemperature.Fraction() > 0.2 {
 		healthFraction := float32(0.0006)
 		p.addHealthFraction(healthFraction)
 

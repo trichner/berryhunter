@@ -26,6 +26,7 @@ func (c *Craft) Start() bool {
 	}
 
 	if !c.canCraft() {
+		log.Printf("😪 Not enough ressources to craft %s.", def.Name)
 		return true
 	}
 
@@ -48,7 +49,10 @@ func (c *Craft) Update(dt float32) bool {
 func (c *Craft) done() {
 
 	newItem := items.NewItemStack(c.item, 1)
-	c.p.Inventory().AddItem(newItem)
+	ok := c.p.Inventory().AddItem(newItem)
+	if !ok {
+		log.Printf("😳 No space in inventory for %s ?!", c.item.Name)
+	}
 }
 
 func (c *Craft) canCraft() bool {

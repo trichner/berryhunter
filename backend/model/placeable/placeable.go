@@ -80,7 +80,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		radiator.Radius = item.Factors.Radius
 		heaterBody := phy.NewCircle(phy.VEC2F_ZERO, radiator.Radius)
 		heaterBody.Shape().IsSensor = true
-		heaterBody.Shape().Layer = model.LayerHeatCollision
+		heaterBody.Shape().Mask = model.LayerHeatCollision
 		heaterBody.Shape().Group = -1 // no need to collide with other heat sources
 		radiator.Body = heaterBody
 	}

@@ -37,6 +37,7 @@ type Factors struct {
 	Damage          float32
 	StructureDamage float32
 	Yield           int
+	MinYield        int
 	DurationInTicks int
 
 	// Placeable/Heater
@@ -83,6 +84,7 @@ type itemDefinition struct {
 		Damage          float32 `json:"damage"`
 		StructureDamage float32 `json:"structureDamage"`
 		Yield           int     `json:"yield"`
+		MinYield        int     `json:"minimumYield"`
 		DurationInS     int     `json:"durationInSeconds"`
 		HeatPerSecond   float32 `json:"heatPerSecond"`
 		Radius          float32 `json:"radius"`
@@ -180,6 +182,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			Damage:               i.Factors.Damage,
 			StructureDamage:      i.Factors.StructureDamage,
 			Yield:                i.Factors.Yield,
+			MinYield:             i.Factors.MinYield,
 			HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
 			Radius:               i.Factors.Radius,
 			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,

@@ -4,6 +4,7 @@
   "type": "RESOURCE",
   "factors": {
     "replenishProbability": 50,
+    "minimumYield": 3,
     "capacity": 100
   }
 }
