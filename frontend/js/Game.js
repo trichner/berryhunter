@@ -33,10 +33,11 @@ define([], function () {
 			'StartScreen',
 			'Chat',
 			'Utils',
-			'NamedGroup'
+			'NamedGroup',
+			'Constants'
 		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, SvgLoader, KeyEvents,
 		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
-		             Utils, NamedGroup) {
+		             Utils, NamedGroup, Constants) {
 			/**
 			 * Creating a player starts implicitly the game
 			 */
@@ -57,9 +58,11 @@ define([], function () {
 				Game.createSpectator(Game.player.character.getX(), Game.player.character.getY());
 				Game.player.remove();
 				delete Game.Player;
-				Game.miniMap.clear();
-				// Game.miniMap.stop();
-				Game.map.clear();
+				if (Constants.CLEAR_MINIMAP_ON_DEATH) {
+					Game.miniMap.clear();
+					// Game.miniMap.stop();
+					Game.map.clear();
+				}
 				Game.state = States.RENDERING;
 			};
 

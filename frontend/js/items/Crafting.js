@@ -20,7 +20,7 @@ define([
 				return;
 			}
 
-			UserInterface.displayAvailableCrafts(availableCrafts, function (event, recipe) {
+			let onCraftIconLeftClick = function (event, recipe) {
 				if (MapEditor.isActive()) {
 					for (let material in recipe.materials) {
 						//noinspection JSUnfilteredForInLoop
@@ -35,7 +35,8 @@ define([
 					this.startProgress(recipe.craftingTime);
 					Game.player.startCraftProgress(recipe.craftingTime);
 				}
-			});
+			};
+			UserInterface.displayAvailableCrafts(availableCrafts, onCraftIconLeftClick);
 
 			this.displayedCrafts = availableCrafts;
 		}
