@@ -88,6 +88,11 @@ func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 		log.Printf("😕 %s has no yield for %s.", item.Name, r.stock.Item.Name)
 		return
 	}
+
+	// resistance might be too high
 	y := r.yield(yield)
+	if y <= 0 {
+		return
+	}
 	p.Inventory().AddItem(items.NewItemStack(r.stock.Item, y))
 }

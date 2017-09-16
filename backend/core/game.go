@@ -45,20 +45,32 @@ type game struct {
 // assert game implements its interface
 var _ = model.Game(&game{})
 
-func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens []string, radius float32) model.Game {
+func NewGameWith(conf ...Configuration) (model.Game, error) {
+
+	gc := &gameConfig{
+		radius: 20,
+		tokens: []string{},
+	}
+
+	for _, c := range conf {
+		err := c(gc)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	g := &game{
-		conf:         conf,
-		itemRegistry: items,
-		mobRegistry:  mobs,
 		entities:     make(entitiesMap),
 		joinQueue:    make(chan model.Client, 16),
-		radius:       radius,
+		mobRegistry:  gc.mobRegistry,
+		itemRegistry: gc.itemRegistry,
+		radius:       gc.radius,
 	}
 
 	// Prepare welcome message. Its static anyways.
 	msg := &codec.Welcome{
 		"berryhunter.io [Alpha] rza, n1b, xyckno & co.",
-		radius * codec.Points2px,
+		gc.radius * codec.Points2px,
 	}
 	builder := flatbuffers.NewBuilder(32)
 	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, msg)
@@ -69,7 +81,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 	p := sys.NewPhysicsSystem()
 	g.AddSystem(p)
 
-	wall := phy.NewInvCircle(phy.VEC2F_ZERO, radius)
+	wall := phy.NewInvCircle(phy.VEC2F_ZERO, gc.radius)
 	wall.Shape().Layer = model.LayerBorderCollision
 	p.AddStaticBody(ecs.NewBasic(), wall)
 
@@ -91,7 +103,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 	s := sys.NewConnectionStateSystem(g)
 	g.AddSystem(s)
 
-	c := cmd.NewCommandSystem(g, tokens)
+	c := cmd.NewCommandSystem(g, gc.tokens)
 	g.AddSystem(c)
 
 	chat := chat.New()
@@ -104,7 +116,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 	g.AddSystem(dayCycle)
 
 	g.printSystems()
-	return g
+	return g, nil
 }
 
 func (g *game) Ticks() uint64 {
@@ -319,8 +331,8 @@ func (g *game) update() {
 	beforeMillis := time.Now().UnixNano() / 1000000
 
 	// accept at most one player per tick
-	select{
-	case client := <- g.joinQueue:
+	select {
+	case client := <-g.joinQueue:
 		s := spectator.NewSpectator(phy.VEC2F_ZERO, client)
 		g.AddEntity(s)
 	default:
@@ -381,5 +393,3 @@ func (b ByPriority) Less(i, j int) bool {
 func (b ByPriority) Swap(i, j int) {
 	b[i], b[j] = b[j], b[i]
 }
-
-

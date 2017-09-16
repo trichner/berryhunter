@@ -24,9 +24,20 @@ func main() {
 	tokens := loadTokens("./tokens.list")
 	log.Printf("👮‍♀️ Read %d tokens.", len(tokens))
 
+	// new game
 	var radius float32 = 20
-	g := core.NewGame(config, registry, mobs, tokens, radius)
+	g, err := core.NewGameWith(
+		core.Config(config),
+		core.Items(registry),
+		core.Mobs(mobs),
+		core.Tokens(tokens),
+		core.Radius(radius),
+	)
+	if err != nil {
+		panic(err)
+	}
 
+	// populate game
 	rnd := rand.New(rand.NewSource(0xDEADBEEF))
 	entities := gen.Generate(g.Items(), rnd, radius)
 	for _, e := range entities {
