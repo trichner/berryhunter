@@ -28,8 +28,7 @@ func main() {
 	var radius float32 = 20
 	g, err := core.NewGameWith(
 		core.Config(config),
-		core.Items(registry),
-		core.Mobs(mobs),
+		core.Registries(registry, mobs),
 		core.Tokens(tokens),
 		core.Radius(radius),
 	)

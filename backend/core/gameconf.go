@@ -6,48 +6,45 @@ import (
 	"github.com/trichner/berryhunter/backend/conf"
 )
 
-type gameConfig struct {
+type config struct {
 	tokens       []string
 	radius       float32
 	itemRegistry items.Registry
 	mobRegistry  mobs.Registry
 
-	conf *conf.Config
+	coldFractionNightPerS   float32
+	coldFractionRestingPerS float32
 }
 
-type Configuration func(g *gameConfig) error
+type Configuration func(g *config) error
 
 func Config(conf *conf.Config) Configuration {
-	return func(g *gameConfig) error {
-		g.conf = conf
+	return func(g *config) error {
+		g.coldFractionNightPerS = conf.Game.ColdFractionNightPerS
+		g.coldFractionRestingPerS = conf.Game.ColdFractionRestingPerS
 		return nil
 	}
 }
 
-func Items(r items.Registry) Configuration {
-	return func(g *gameConfig) error {
+func Registries(r items.Registry, m mobs.Registry) Configuration {
+	return func(g *config) error {
 		g.itemRegistry = r
-		return nil
-	}
-}
-
-func Mobs(m mobs.Registry) Configuration {
-	return func(g *gameConfig) error {
 		g.mobRegistry = m
 		return nil
 	}
 }
 
 func Tokens(t []string) Configuration {
-	return func(g *gameConfig) error {
+	return func(g *config) error {
 		g.tokens = t
 		return nil
 	}
 }
 
 func Radius(r float32) Configuration {
-	return func(g *gameConfig) error {
+	return func(g *config) error {
 		g.radius = r
 		return nil
 	}
 }
+

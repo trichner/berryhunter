@@ -47,7 +47,7 @@ var _ = model.Game(&game{})
 
 func NewGameWith(conf ...Configuration) (model.Game, error) {
 
-	gc := &gameConfig{
+	gc := &config{
 		radius: 20,
 		tokens: []string{},
 	}
@@ -112,7 +112,7 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	d := sys.NewDecaySystem(g)
 	g.AddSystem(d)
 
-	dayCycle := sys.NewDayCycleSystem(g, constant.DayNightCyleTicks)
+	dayCycle := sys.NewDayCycleSystem(g, constant.DayNightCyleTicks, gc.coldFractionNightPerS)
 	g.AddSystem(dayCycle)
 
 	g.printSystems()

@@ -7,8 +7,6 @@ import (
 	"github.com/trichner/berryhunter/backend/model/vitals"
 )
 
-const nightCoolPerS = 0.03
-
 type DayCycleSystem struct {
 	players []model.PlayerEntity
 
@@ -17,9 +15,9 @@ type DayCycleSystem struct {
 	nightCoolPerTick uint32
 }
 
-func NewDayCycleSystem(g model.Game, cycleTicks uint64) *DayCycleSystem {
+func NewDayCycleSystem(g model.Game, cycleTicks uint64, coldFractionNightPerS float32) *DayCycleSystem {
 
-	coolPerTick := vitals.FractionToAbsPerTick(nightCoolPerS)
+	coolPerTick := vitals.FractionToAbsPerTick(coldFractionNightPerS)
 	return &DayCycleSystem{g: g, cycleTicks: cycleTicks, nightCoolPerTick: coolPerTick}
 }
 
