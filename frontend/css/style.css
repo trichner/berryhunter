@@ -172,6 +172,27 @@ h1 {
   font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
   font-variant: normal;
 }
+#developPanel > .toolbar {
+  text-align: right;
+  line-height: 1.2;
+}
+#developPanel > .toolbar > a {
+  color: inherit;
+}
+#developPanel .maximize-button {
+  display: none;
+}
+#developPanel:target {
+  overflow: hidden;
+  max-height: 1.2em;
+  padding: 0;
+}
+#developPanel:target .minimize-button {
+  display: none;
+}
+#developPanel:target .maximize-button {
+  display: inline;
+}
 #developPanel > :first-child {
   margin-top: 0;
 }
