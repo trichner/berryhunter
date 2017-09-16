@@ -10,6 +10,34 @@
 	font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
 	font-variant: normal;
 
+	> .toolbar {
+		//background-color: black;
+		//color: white;
+		text-align: right;
+		line-height: 1.2;
+
+		> a {
+			color: inherit;
+		}
+	}
+
+	.maximize-button {
+		display: none;
+	}
+
+	&:target {
+		overflow: hidden;
+		max-height: 1.2em;
+		padding: 0;
+
+		.minimize-button {
+			display: none;
+		}
+		.maximize-button {
+			display: inline;
+		}
+	}
+
 	> :first-child {
 		margin-top: 0;
 	}

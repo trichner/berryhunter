@@ -135,10 +135,14 @@ define([
 						.forEach(function (gameObject) {
 							if (newValue) {
 								gameObject.showAABB();
-								Game.player.character.showAABB();
+								if (Utils.isDefined(Game.player)) {
+									Game.player.character.showAABB();
+								}
 							} else {
 								gameObject.hideAABB();
-								Game.player.character.hideAABB();
+								if (Utils.isDefined(Game.player)) {
+									Game.player.character.hideAABB();
+								}
 							}
 						});
 					Game.two.update();
