@@ -210,8 +210,8 @@ define([
 						case 'PLACING':
 							let placedItem = this.character.getEquippedItem(Equipment.Slots.PLACEABLE);
 
-							if (!placedItem.multiPlacing){
-								this.character.unequipItem(Equipment.Slots.PLACEABLE);
+							if (!placedItem.multiPlacing) {
+								Game.player.inventory.unequipItem(placedItem, Equipment.Slots.PLACEABLE);
 							}
 
 							if (MapEditor.isActive()) {

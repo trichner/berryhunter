@@ -114,6 +114,24 @@ define([
 		}
 
 		/**
+		 * Method that can be used to unequip any item in the inventory.
+		 * The method doesn't care if the item is even in the inventory
+		 * or equipped. But if it is, it is unequipped, both in the
+		 * inventory and on the character.
+		 *
+		 * @param item
+		 * @param equipmentSlot
+		 */
+		unequipItem(item, equipmentSlot){
+			this.slots.forEach(function (slot) {
+				if (slot.item === item){
+					slot.deactivate();
+				}
+			});
+			this.deactivateSlot(equipmentSlot, false);
+		}
+
+		/**
 		 * Gets called everytime the items or item count in this inventory get changed.
 		 */
 		onChange() {
