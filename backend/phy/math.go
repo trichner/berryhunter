@@ -64,6 +64,12 @@ type Vec2f struct {
 	X, Y float32
 }
 
+func NewPolarVec2f(radius float32, angle float32) Vec2f {
+	x := radius * cos32f(angle)
+	y := radius * sin32f(angle)
+	return Vec2f{x, y}
+}
+
 // Abs returns the length of a vector
 func (v Vec2f) Abs() float32 {
 	return sqrt32f(v.X*v.X + v.Y*v.Y)

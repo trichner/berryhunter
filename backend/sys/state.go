@@ -9,6 +9,9 @@ import (
 	"github.com/trichner/berryhunter/backend/model/player"
 	"github.com/trichner/berryhunter/backend/model/spectator"
 	"log"
+	"math/rand"
+	"math"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 type stringSet map[string]struct{}
@@ -50,6 +53,13 @@ func (s *ConnectionStateSystem) AddPlayer(player model.PlayerEntity) {
 	s.names.add(player.Name())
 }
 
+func randomVectorInCirlce(rmax float32) phy.Vec2f {
+
+	r := rand.Float32() * rmax
+	a := rand.Float32() * 2 * math.Pi
+	return phy.NewPolarVec2f(r, a)
+}
+
 func (s *ConnectionStateSystem) Update(dt float32) {
 
 	// upgrade spectators if they want to join
@@ -58,7 +68,6 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 
 		if j != nil {
 			s.game.RemoveEntity(sp.Basic())
-			pos := sp.Position()
 
 			// upgrade to p
 			name := j.PlayerName // resolve collisions!
@@ -67,8 +76,12 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			log.Printf("☺️ '%s' joined!", name)
 			sendAcceptMessage(client)
 			p := player.New(s.game.Items(), client, name)
-			//TODO random position here
+
+			// spawn the player at a random location
+			rmax := s.game.Radius() * 0.8
+			pos := randomVectorInCirlce(rmax)
 			p.SetPosition(pos)
+
 			s.game.AddEntity(p)
 		}
 	}

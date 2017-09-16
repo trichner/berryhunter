@@ -39,6 +39,7 @@ type game struct {
 	welcomeMsg []byte
 
 	joinQueue chan model.Client
+	radius    float32
 }
 
 // assert game implements its interface
@@ -51,6 +52,7 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 		mobRegistry:  mobs,
 		entities:     make(entitiesMap),
 		joinQueue:    make(chan model.Client, 16),
+		radius:       radius,
 	}
 
 	// Prepare welcome message. Its static anyways.
@@ -107,6 +109,10 @@ func NewGame(conf *conf.Config, items items.Registry, mobs mobs.Registry, tokens
 
 func (g *game) Ticks() uint64 {
 	return g.Tick
+}
+
+func (g *game) Radius() float32 {
+	return g.radius
 }
 
 func (g *game) Items() items.Registry {

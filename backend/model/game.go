@@ -32,4 +32,7 @@ type Game interface {
 
 	// Ticks returns the number of ticks
 	Ticks() uint64
+
+	// Radius returns the radius of the map
+	Radius() float32
 }
