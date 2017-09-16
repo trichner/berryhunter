@@ -1,26 +1,45 @@
 "use strict";
 
-define(['Game', 'Two', 'Constants', 'Utils'], function (Game, Two, Constants, Utils) {
-	class InjectedSVG extends Two.Group {
+define(['Two', 'Constants', 'Utils', 'NamedGroup'], function (Two, Constants, Utils, NamedGroup) {
+	class InjectedSVG extends NamedGroup {
 		constructor(svg, x, y, size, rotation) {
-			super();
+			super('InjectedSVG');
 
 			if (Utils.isUndefined(svg) || typeof svg.cloneNode !== 'function') {
 				throw svg + ' is not a valid SVG node';
 			}
 
 			this.translation.set(x, y);
-			// group.translation.set(x-size, y-size);
-			let injectionGroup = new Two.Group();
-			this.add(injectionGroup);
-			injectionGroup.scale = (size / (Constants.GRID_SPACING / 2));
-			// TODO apply rotation
-			// injectionGroup.rotation = rotation;
-			injectionGroup.translation.set(-size, -size);
+			this.rotation = rotation || 0;
 
-			Game.two.once('render', function () {
-				injectionGroup._renderer.elem.appendChild(svg.cloneNode(true));
-			});
+			this.size = size || (Constants.GRID_SPACING / 2);
+			this.baseScale = size / (Constants.GRID_SPACING / 2);
+			this.centerOffsetX = -Constants.GRAPHIC_BASE_SIZE / 2;
+			this.centerOffsetY = -Constants.GRAPHIC_BASE_SIZE / 2;
+
+			this._matrix.manual = true;
+
+			this.injected = false;
+			this.svg = svg;
+		}
+
+		_update() {
+			if (this._flagMatrix) {
+				this._matrix
+					.identity()
+					.translate(this.translation.x, this.translation.y)
+					.scale(this.baseScale)
+					.scale(this.scale)
+					.rotate(this.rotation)
+					.translate(this.centerOffsetX, this.centerOffsetY)
+			}
+
+			if (!this.injected && Utils.isDefined(this._renderer.elem)) {
+				this._renderer.elem.appendChild(this.svg.cloneNode(true));
+				this.injected = true;
+			}
+
+			NamedGroup.prototype._update.apply(this, arguments);
 		}
 	}
 

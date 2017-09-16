@@ -15,6 +15,7 @@ define([], function () {
 		ALWAYS_VIEW_CURSOR: true,
 		CLEAR_MINIMAP_ON_DEATH: false,
 		GRID_SPACING: 100,
+		GRAPHIC_BASE_SIZE: 100,
 		FIELDS_IN_QUADRANT: 8,
 		BACKEND: {
 			LOCAL_URL: 'ws://localhost:2000/game',

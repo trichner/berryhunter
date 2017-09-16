@@ -113,7 +113,8 @@ define([
 			let group = new Two.Group();
 			group.translation.set(x, y);
 
-			this.actualShape = super.initShape(0, 0, size, rotation);
+			this.actualShape = new NamedGroup('actualShape');
+			this.actualShape.add(super.initShape(0, 0, size, rotation));
 			group.add(this.actualShape);
 
 			return group;

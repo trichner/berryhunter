@@ -7,8 +7,8 @@ define([
 	'InjectedSVG'], function (Game, GameObject, Two, Preloading, Utils, InjectedSVG) {
 
 	class Resource extends GameObject {
-		constructor(gameLayer, x, y, size, rotation) {
-			super(gameLayer, x, y, size, rotation);
+		constructor(gameLayer, x, y, size) {
+			super(gameLayer, x, y, size, Utils.random(0, Math.PI * 2));
 
 			this.capacity = 0;
 			let stock = 0;
@@ -34,8 +34,8 @@ define([
 	}
 
 	class Tree extends Resource {
-		constructor(x, y, size, rotation) {
-			super(Game.layers.resources.trees, x, y, size, rotation);
+		constructor(x, y, size) {
+			super(Game.layers.resources.trees, x, y, size);
 
 			Game.layers.terrain.textures.add(
 				new InjectedSVG(Tree.groundTexture.svg, x, y, this.size, this.rotation));
@@ -59,7 +59,7 @@ define([
 
 	class RoundTree extends Tree {
 		constructor(x, y, size) {
-			super(x, y, size || Utils.randomInt(50, 150));
+			super(x, y, size);
 		}
 
 		createShape(x, y) {
@@ -76,7 +76,7 @@ define([
 
 	class MarioTree extends Tree {
 		constructor(x, y, size) {
-			super(x, y, size || Utils.randomInt(50, 150));
+			super(x, y, size);
 		}
 
 		createShape(x, y) {
@@ -107,8 +107,8 @@ define([
 	Preloading.registerGameObjectSVG(MarioTree, 'img/deciduousTree.svg');
 
 	class Mineral extends Resource {
-		constructor(x, y, size, rotatation) {
-			super(Game.layers.resources.minerals, x, y, size, rotatation);
+		constructor(x, y, size) {
+			super(Game.layers.resources.minerals, x, y, size);
 
 			Game.layers.terrain.textures.add(
 				new InjectedSVG(Mineral.groundTexture.svg, x, y, this.size, this.rotation));
@@ -124,10 +124,7 @@ define([
 
 	class Stone extends Mineral {
 		constructor(x, y, size) {
-			super(x, y,
-				size || Utils.randomInt(30, 90),
-				Utils.random(0, Math.PI * 2)
-			);
+			super(x, y, size);
 		}
 
 		createShape(x, y) {
@@ -154,7 +151,7 @@ define([
 
 	class Bronze extends Mineral {
 		constructor(x, y, size) {
-			super(x, y, size || Utils.randomInt(30, 70));
+			super(x, y, size);
 		}
 
 		createShape(x, y) {
@@ -187,10 +184,7 @@ define([
 
 	class Iron extends Mineral {
 		constructor(x, y, size) {
-			super(x, y,
-				size || Utils.randomInt(20, 60),
-				Utils.random(0, Math.PI * 2)
-			);
+			super(x, y, size);
 		}
 
 		createShape(x, y) {
@@ -217,7 +211,17 @@ define([
 
 	class BerryBush extends Resource {
 		constructor(x, y, size) {
-			super(Game.layers.resources.berryBush, x, y, size || Utils.randomInt(20, 45));
+			super(Game.layers.resources.berryBush, x, y, size);
+		}
+
+		initShape(x, y, size, rotation) {
+			let group = new Two.Group();
+			group.translation.set(x, y);
+
+			this.actualShape = super.initShape(0, 0, size, rotation);
+			group.add(this.actualShape);
+
+			return group;
 		}
 
 		createShape(x, y) {
