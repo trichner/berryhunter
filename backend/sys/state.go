@@ -67,6 +67,7 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			log.Printf("☺️ '%s' joined!", name)
 			sendAcceptMessage(client)
 			p := player.New(s.game.Items(), client, name)
+			//TODO random position here
 			p.SetPosition(pos)
 			s.game.AddEntity(p)
 		}

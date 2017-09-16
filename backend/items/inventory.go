@@ -84,34 +84,27 @@ func (i *Inventory) AddItem(item *ItemStack) bool {
 		return false
 	}
 
-	foundAt := -1
-	emptyAt := -1
+	// do we already have it?
 	for idx, stack := range i.items {
-		// did we already find an empty spot?
-		if stack == nil && emptyAt < 0 {
-			emptyAt = idx
-			break
+		if stack == nil {
+			continue
 		}
 
 		if stack.Item == item.Item {
-			foundAt = idx
-			break
+			i.items[idx].Count += item.Count
+			return true
 		}
-	}
-
-	// if we already have the same in the Inventory we simply add it
-	if foundAt >= 0 {
-		i.items[foundAt].Count += item.Count
-		return true
 	}
 
 	// use a copy to not modify the original drop
 	item = item.Copy()
 
-	// do we have a 'hole'?
-	if emptyAt >= 0 {
-		i.items[emptyAt] = item
-		return true
+	// find a 'hole' in the inventory
+	for idx, stack := range i.items {
+		if stack == nil {
+			i.items[idx] = item
+			return true
+		}
 	}
 
 	if i.cap > len(i.items) {
