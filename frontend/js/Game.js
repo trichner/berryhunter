@@ -151,9 +151,8 @@ define([], function () {
 				// UI Overlay is the highest layer, but not managed with Two.js
 			};
 
-			// Terrain
-			Game.two.add(new NamedGroup('terrain',
-				Game.layers.terrain.background));
+			// Terrain Background
+			Game.two.add(Game.layers.terrain.background);
 
 			Game.cameraGroup = new NamedGroup('cameraGroup');
 			Game.two.add(Game.cameraGroup);
