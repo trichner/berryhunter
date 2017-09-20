@@ -37,8 +37,8 @@ define([
 		constructor(x, y, size) {
 			super(Game.layers.resources.trees, x, y, size);
 
-			Game.layers.terrain.textures.add(
-				new InjectedSVG(Tree.groundTexture.svg, x, y, this.size, this.rotation));
+			this.depletionTexture = new InjectedSVG(Tree.groundTexture.svg, x, y, this.size, this.rotation);
+			Game.layers.terrain.textures.add(this.depletionTexture);
 		}
 
 		onStockChange(newStock, oldStock) {
@@ -51,6 +51,11 @@ define([
 			shape.fill = 'rgba(31, 91, 11, 0.8)';
 
 			return shape;
+		}
+
+		hide(){
+			this.depletionTexture.remove();
+			Resource.prototype.hide.apply(this, arguments);
 		}
 	}
 
@@ -110,12 +115,17 @@ define([
 		constructor(x, y, size) {
 			super(Game.layers.resources.minerals, x, y, size);
 
-			Game.layers.terrain.textures.add(
-				new InjectedSVG(Mineral.groundTexture.svg, x, y, this.size, this.rotation));
+			this.depletionTexture = new InjectedSVG(Mineral.groundTexture.svg, x, y, this.size, this.rotation);
+			Game.layers.terrain.textures.add(this.depletionTexture);
 		}
 
 		onStockChange(newStock, oldStock) {
 			this.shape.scale = newStock / this.capacity;
+		}
+
+		hide(){
+			this.depletionTexture.remove();
+			Resource.prototype.hide.apply(this, arguments);
 		}
 	}
 
