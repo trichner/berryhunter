@@ -295,6 +295,9 @@ dl.flatList > dd {
 }
 #loadingScreen {
   background-color: #222;
+  background-image: url('../img/loadingScreen.jpg');
+  background-position: center center;
+  background-size: cover;
   position: fixed;
   top: 0;
   right: 0;
@@ -304,7 +307,7 @@ dl.flatList > dd {
 }
 #loadingScreen > #loadingWrapper {
   position: relative;
-  top: 50%;
+  top: 61%;
   transform: translateY(-50%);
   height: 10vh;
   width: 50vw;
@@ -313,7 +316,7 @@ dl.flatList > dd {
   border-radius: 1vh;
   overflow: hidden;
   transition: all 1s;
-  transition-property: height, width, border-radius;
+  transition-property: top, height, width, border-radius;
 }
 #loadingScreen > #loadingWrapper > h2 {
   line-height: 10vh;
@@ -326,6 +329,7 @@ dl.flatList > dd {
   animation: fade-out 2s 1s forwards;
 }
 #loadingScreen.finished > #loadingWrapper {
+  top: 50%;
   height: 100vh;
   width: 100vw;
   background-color: #006030;

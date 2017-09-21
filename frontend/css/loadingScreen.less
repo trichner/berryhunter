@@ -3,6 +3,10 @@
 
 #loadingScreen {
 	background-color: #222;
+	background-image: url('../img/loadingScreen.jpg');
+	background-position: center center;
+	background-size: cover;
+
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -12,7 +16,7 @@
 
 	> #loadingWrapper {
 		position: relative;
-		top: 50%;
+		top: 61%;
 		transform: translateY(-50%);
 		height: @loadingBarHeight;
 		width: 50vw;
@@ -21,7 +25,7 @@
 		border-radius: @loadingBarHeight * 0.1;
 		overflow: hidden;
 		transition: all @splashScreenAnimation;
-		transition-property: height, width, border-radius;
+		transition-property: top, height, width, border-radius;
 
 		> h2 {
 			line-height: @loadingBarHeight;
@@ -36,6 +40,7 @@
 		animation: fade-out (2 * @splashScreenAnimation) @splashScreenAnimation forwards;
 
 		> #loadingWrapper {
+			top: 50%;
 			height: 100vh;
 			width: 100vw;
 			background-color: rgb(0, 96, 48);
