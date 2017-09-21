@@ -52,6 +52,8 @@ define([
 					this.setupItemAdding();
 
 					this.setupTickSampler();
+
+					this.setupChart();
 				}.bind(this));
 		},
 
@@ -169,6 +171,10 @@ define([
 				let serverTickPopup = document.getElementById('serverTickPopup');
 				serverTickPopup.classList.add('hidden');
 			});
+		},
+
+		setupChart() {
+
 		},
 
 		afterSetup: function (Game) {
