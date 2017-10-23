@@ -560,7 +560,7 @@ dl.flatList > dd {
 }
 #endScreen {
   display: none;
-	background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   position: fixed;
   top: 0;
   right: 0;
