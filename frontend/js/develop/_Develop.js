@@ -192,10 +192,18 @@ define([
 				unit = ' ' + unit;
 			}
 			logArray.push(value);
-			while (logArray.length > Develop.settings.measurementSampleRate) {
+			if (logArray.length > Develop.settings.measurementSampleRate) {
 				let average = 0;
+				let min = 10000;
+				let max = 0;
 				logArray.forEach(function (value) {
 					average += value;
+					if (value > max){
+						max = value;
+					}
+					if (value < min){
+						min = value;
+					}
 				});
 				average /= logArray.length;
 
@@ -205,9 +213,13 @@ define([
 				});
 				abweichung /= logArray.length;
 
-				let output = average.toFixed(1);
-				output += '±';
-				output += abweichung.toFixed(0);
+				let output = min.toFixed(0);
+				output += '/';
+				output += average.toFixed(0);
+				output += '/';
+				output += max.toFixed(0);
+				// output += '±';
+				// output += abweichung.toFixed(0);
 				output += unit;
 				this.logValue(name, output);
 

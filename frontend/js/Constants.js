@@ -26,7 +26,7 @@ define([], function () {
 
 		// Used for interpolation
 		SERVER_TICKRATE: 33,
-		MOVEMENT_INTERPOLATION: true,
+		MOVEMENT_INTERPOLATION: false,
 
 		INVENTORY_SLOTS: 8,
 		CRAFTING_RANGE: 70,
