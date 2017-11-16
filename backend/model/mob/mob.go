@@ -73,6 +73,7 @@ func (m *Mob) Update(dt float32) bool {
 }
 
 func (m *Mob) Angle() float32 {
+	// FIXME the angle has to be set when the position is updated
 	return phy.Vec2f{1, 0}.AngleBetween(m.velocity)
 }
 

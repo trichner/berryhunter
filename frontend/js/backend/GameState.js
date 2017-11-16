@@ -53,6 +53,11 @@ define(['backend/BackendConstants',
 		}
 	}
 
+	// let minRotation = 0;
+	// let maxRotation = 0;
+	// let rotations = [];
+	// let printed = false;
+
 	/**
 	 * @param {BerryhunterApi.Entity} wrappedEntity
 	 */
@@ -108,6 +113,46 @@ define(['backend/BackendConstants',
 
 		if (eType === BerryhunterApi.AnyEntity.Mob) {
 			result.rotation = entity.rotation();
+
+			// let rotation = entity.rotation();
+
+			// if (!printed) {
+			// 	if (rotations.length < 500) {
+			// 		rotations.push(rotation);
+			// 	} else {
+			// 		rotations.sort();
+			// 		console.log(rotations);
+			// 		printed = true;
+			// 	}
+			// }
+
+			/*
+			 Hypothetical remapping of rotations
+			 */
+			// let rotationDiff;
+			// if (rotation > Math.PI / 2) {
+			// 	rotationDiff = rotation - 2 * Math.PI;
+			//
+			// 	rotation = rotationDiff / 0.04 * Math.PI;
+			// 	rotation = 2 * Math.PI + rotation;
+			// } else {
+			// 	rotationDiff = rotation;
+			// 	rotation = rotationDiff / 0.04 * Math.PI;
+			// }
+			// result.rotation = rotation;
+
+			// 	if (rotationDiff < maxRotation){
+			// 		maxRotation = rotationDiff;
+			// 		console.log("maxRotation: " + rotationDiff);
+			// 	}
+			// } else {
+			// 	rotationDiff = rotation;
+			//
+			// 	if (rotationDiff > minRotation){
+			// 		minRotation = rotationDiff;
+			// 		console.log("minRotation: " + rotationDiff);
+			// 	}
+			// }
 		}
 
 		if (eType === BerryhunterApi.AnyEntity.Character) {

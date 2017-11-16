@@ -4,9 +4,19 @@ define(['Game', 'GameObject', 'Two', 'Preloading', 'Utils'], function (Game, Gam
 	class Mob extends GameObject {
 		constructor(gameLayer, x, y, size, rotation) {
 			super(gameLayer, x, y, size, rotation);
-			this.rotateOnPositioning = false;
+			this.rotateOnPositioning = true;
 			this.isMoveable = true;
 			this.visibleOnMinimap = false;
+		}
+
+		// FIXME remove this method once https://trello.com/c/ykYuFHGU/114-animals-bekommen-keine-sinnvolle-rotation-mitgeschickt is implemented in the backend
+		setRotation(rotation){
+			if (Utils.isUndefined(rotation)) {
+				return;
+			}
+
+			// Subtract the default rotation offset of all animal graphics
+			this.shape.rotation = rotation + Math.PI/2;
 		}
 	}
 
