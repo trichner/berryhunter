@@ -3,12 +3,14 @@
 define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, InjectedSVG, Constants, Two, Utils) {
 
 	let movementInterpolatedObjects = new Set();
+	let rotatingObjects = new Set();
 
 	class GameObject {
 		constructor(gameLayer, x, y, size, rotation) {
 			this.layer = gameLayer;
 			this.size = size || Constants.GRID_SPACING / 2;
 			this.rotation = rotation || 0;
+			this.turnRate = Constants.DEFAULT_TURN_RATE;
 
 			this.isMoveable = false;
 			this.rotateOnPositioning = false;
@@ -101,11 +103,23 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 				return;
 			}
 
-			this.shape.rotation = rotation;
+			rotation %= 2 * Math.PI;
+
+			if (Constants.LIMIT_TURN_RATE) {
+				this.desiredRotation = rotation;
+				this.desiredRotationTimestamp = performance.now();
+				rotatingObjects.add(this);
+			} else {
+				this.getRotationShape().rotation = rotation;
+			}
 		}
 
 		getRotation() {
-			return this.shape.rotation;
+			return this.getRotationShape().rotation;
+		}
+
+		getRotationShape() {
+			return this.shape;
 		}
 
 		show() {
@@ -120,6 +134,9 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 	GameObject.setup = function () {
 		if (Constants.MOVEMENT_INTERPOLATION) {
 			Game.two.bind('update', moveInterpolatedObjects);
+		}
+		if (Constants.LIMIT_TURN_RATE) {
+			Game.two.bind('update', applyTurnRate);
 		}
 	};
 
@@ -139,6 +156,43 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 				} else {
 					gameObject.shape.translation.lerp(gameObject.desiredPosition, elapsedTimePortion);
 				}
+			});
+	}
+
+	function applyTurnRate() {
+		let now = performance.now();
+
+		rotatingObjects.forEach(
+			/**
+			 *
+			 * @param {GameObject} gameObject
+			 */
+			function (gameObject) {
+				let elapsedTime = now - gameObject.desiredRotationTimestamp;
+				let rotationDifference = elapsedTime * gameObject.turnRate;
+				let rotationShape = gameObject.getRotationShape();
+				let currentRotation = rotationShape.rotation;
+				let desiredRotation = gameObject.desiredRotation;
+				// Choose direction of turning by applying a sign to rotationDifference
+				if (currentRotation < desiredRotation) {
+					if (Math.abs(currentRotation - desiredRotation) >= Math.PI) {
+						rotationDifference = -rotationDifference;
+					}
+				} else {
+					if (Math.abs(currentRotation - desiredRotation) < Math.PI) {
+						rotationDifference = -rotationDifference;
+					}
+				}
+
+				if ((rotationDifference >= 0 &&  currentRotation + rotationDifference >= desiredRotation) ||
+					(rotationDifference < 0 &&  currentRotation + rotationDifference <= desiredRotation)) {
+					rotationShape.rotation = desiredRotation;
+					rotatingObjects.delete(gameObject);
+				} else {
+					rotationShape.rotation += rotationDifference;
+				}
+
+				gameObject.desiredRotationTimestamp = now;
 			});
 	}
 

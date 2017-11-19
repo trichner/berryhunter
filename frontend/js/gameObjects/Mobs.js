@@ -16,7 +16,7 @@ define(['Game', 'GameObject', 'Two', 'Preloading', 'Utils'], function (Game, Gam
 			}
 
 			// Subtract the default rotation offset of all animal graphics
-			this.shape.rotation = rotation + Math.PI/2;
+			GameObject.prototype.setRotation.call(this, rotation + Math.PI/2);
 		}
 	}
 

@@ -120,16 +120,8 @@ define([
 			return group;
 		}
 
-		setRotation(rotation) {
-			if (Utils.isUndefined(rotation)) {
-				return;
-			}
-
-			this.actualShape.rotation = rotation;
-		}
-
-		getRotation() {
-			return this.actualShape.rotation;
+		getRotationShape(){
+			return this.actualShape;
 		}
 
 		createHands() {
