@@ -105,7 +105,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 
 			rotation %= 2 * Math.PI;
 
-			if (Constants.LIMIT_TURN_RATE) {
+			if (Constants.LIMIT_TURN_RATE && this.turnRate > 0) {
 				this.desiredRotation = rotation;
 				this.desiredRotationTimestamp = performance.now();
 				rotatingObjects.add(this);
@@ -184,8 +184,8 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 					}
 				}
 
-				if ((rotationDifference >= 0 &&  currentRotation + rotationDifference >= desiredRotation) ||
-					(rotationDifference < 0 &&  currentRotation + rotationDifference <= desiredRotation)) {
+				if ((rotationDifference >= 0 && currentRotation + rotationDifference >= desiredRotation) ||
+					(rotationDifference < 0 && currentRotation + rotationDifference <= desiredRotation)) {
 					rotationShape.rotation = desiredRotation;
 					rotatingObjects.delete(gameObject);
 				} else {

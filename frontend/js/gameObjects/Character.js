@@ -22,6 +22,7 @@ define([
 			this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
 			this.isMoveable = true;
 			this.visibleOnMinimap = false;
+			this.turnRate = 0;
 
 			this.currentAction = false;
 
