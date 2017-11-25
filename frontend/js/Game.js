@@ -198,7 +198,6 @@ define([], function () {
 			require(['Camera'], function (Camera) {
 				Camera.setup();
 			});
-			GameObject.setup();
 			RecipesHelper.setup();
 
 			/**
@@ -208,6 +207,7 @@ define([], function () {
 
 			let domElement = Game.two.renderer.domElement;
 			Game.domElement = domElement;
+			GameObject.setup(domElement);
 			DayCycle.setup(domElement, Game.two.scene);
 			SvgLoader.setup(domElement);
 			KeyEvents.setup(domElement);
@@ -248,6 +248,7 @@ define([], function () {
 				MapEditor.afterSetup(Game);
 			}
 
+			// FIXME only for debugging - enables game access in the console
 			window.Game = Game;
 		});
 	};

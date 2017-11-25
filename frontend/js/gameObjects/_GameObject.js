@@ -1,9 +1,12 @@
 "use strict";
 
-define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, InjectedSVG, Constants, Two, Utils) {
+define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], function (Game, InjectedSVG, Constants, Two, Utils, FilterPool) {
 
 	let movementInterpolatedObjects = new Set();
 	let rotatingObjects = new Set();
+	let hitAnimationFilterPool;
+	let hitAnimations = new Set();
+	const HIT_ANIMATION_FLOOD_OPACITY = 1;
 
 	class GameObject {
 		constructor(gameLayer, x, y, size, rotation) {
@@ -15,6 +18,8 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 			this.isMoveable = false;
 			this.rotateOnPositioning = false;
 			this.visibleOnMinimap = true;
+
+			this.hitAnimation = null;
 
 			const args = Array.prototype.splice.call(arguments, 5);
 			this.shape = this.initShape.apply(this, [x, y, size, rotation].concat(args));
@@ -129,15 +134,55 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 		hide() {
 			this.layer.remove(this.shape);
 		}
+
+		playHitAnimation() {
+			if (this.hitAnimation === null) {
+				let now = performance.now();
+				this.hitAnimation = {
+					filter: hitAnimationFilterPool.getFilter(),
+					start: now,
+					end: now + 500
+				};
+				hitAnimations.add(this.hitAnimation);
+			} else {
+				// A hit animation already runs - reset it
+				this.hitAnimation.start = now;
+				this.hitAnimation.end = now + 500;
+			}
+		}
 	}
 
-	GameObject.setup = function () {
+	GameObject.setup = function (mainSvgElement) {
 		if (Constants.MOVEMENT_INTERPOLATION) {
 			Game.two.bind('update', moveInterpolatedObjects);
 		}
 		if (Constants.LIMIT_TURN_RATE) {
 			Game.two.bind('update', applyTurnRate);
 		}
+		Game.two.bind('update', animateHits);
+
+		// Create filter for hit animation
+
+		let defContainer = mainSvgElement.getElementsByTagName('defs')[0];
+
+		let hitAnimationFilter = Utils.svgToElement(
+			'<filter x="0" y="0" width="1" height="1" ' +
+			'color-interpolation-filters="sRGB" id="hitAnimationFilter"></filter>');
+		defContainer.appendChild(hitAnimationFilter);
+
+		hitAnimationFilter.appendChild(Utils.svgToElement('<feFlood ' +
+			'flood-opacity="' + HIT_ANIMATION_FLOOD_OPACITY + '" ' +
+			// Health Bar dark red
+			'flood-color="' + '#840D25' + '" />'));
+
+		hitAnimationFilter.appendChild(Utils.svgToElement('<feBlend ' +
+			'in2="SourceGraphic" ' +
+			'mode="multiply" />'));
+		hitAnimationFilter.appendChild(Utils.svgToElement('<feComposite ' +
+			'in2="SourceGraphic" ' +
+			'operator="in" />'));
+
+		hitAnimationFilterPool = new FilterPool(hitAnimationFilter, 'feFlood');
 	};
 
 	function moveInterpolatedObjects() {
@@ -193,6 +238,27 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils'], function (Game, Inj
 				}
 
 				gameObject.desiredRotationTimestamp = now;
+			});
+	}
+
+	function animateHits() {
+		let now = performance.now();
+
+		hitAnimations.forEach(
+			/**
+			 *
+			 * @param {{filter: {id: string, domElement: Element}, start: number, end: number}} hitAnimation
+			 */
+			function (hitAnimation) {
+				let opacity;
+				if (now >= hitAnimation.end) {
+					opacity = 0;
+					hitAnimationFilterPool.freeFilter(hitAnimation.filter);
+					hitAnimations.delete(hitAnimation);
+				} else {
+					opacity = Utils.map(now, HIT_ANIMATION_FLOOD_OPACITY, 0, hitAnimation.start, hitAnimation.end)
+				}
+				hitAnimation.filter.domElement.setAttribute('flood-opacity', opacity);
 			});
 	}
 

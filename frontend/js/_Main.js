@@ -107,6 +107,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'NamedGroup',
 					'DayCycle',
 					'Spectator',
+					'FilterPool',
 
 					// Develop resources
 					'develop/Fps',
