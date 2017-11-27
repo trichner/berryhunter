@@ -10,7 +10,7 @@ define(['Game'], function (Game) {
 
 		setId(newId){
 			this.id = newId;
-			this.domElement.id = newId;
+			this.filterElement.id = newId;
 		}
 	}
 
@@ -38,8 +38,8 @@ define(['Game'], function (Game) {
 				return this.pool.pop();
 			} else {
 				// The pool is empty. Copy the prototype filter and return that
-				// TODO implement clone()
-				let newFilterElement = this.protoFilter.filterElement.clone();
+				let newFilterElement = this.protoFilter.filterElement.cloneNode(true);
+				Game.domElement.getElementsByTagName('defs')[0].appendChild(newFilterElement);
 				let newFilter = new Filter(this.protoFilter.id, newFilterElement, this.elementSelector);
 				newFilter.setId(this.protoFilter.id + '_' + this.sequence);
 				this.sequence++;

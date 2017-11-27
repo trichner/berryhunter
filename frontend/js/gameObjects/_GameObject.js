@@ -136,19 +136,26 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], funct
 		}
 
 		playHitAnimation() {
+			let now = performance.now();
 			if (this.hitAnimation === null) {
-				let now = performance.now();
 				this.hitAnimation = {
 					filter: hitAnimationFilterPool.getFilter(),
 					start: now,
-					end: now + 500
+					end: now + 500,
+					gameObject: this
 				};
+				this.getRotationShape()._renderer.elem.setAttribute('filter', 'url(#' + this.hitAnimation.filter.id + ')');
 				hitAnimations.add(this.hitAnimation);
 			} else {
 				// A hit animation already runs - reset it
 				this.hitAnimation.start = now;
 				this.hitAnimation.end = now + 500;
 			}
+		}
+
+		removeHitAnimation() {
+			this.getRotationShape()._renderer.elem.removeAttribute('filter');
+			this.hitAnimation = null;
 		}
 	}
 
@@ -173,7 +180,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], funct
 		hitAnimationFilter.appendChild(Utils.svgToElement('<feFlood ' +
 			'flood-opacity="' + HIT_ANIMATION_FLOOD_OPACITY + '" ' +
 			// Health Bar dark red
-			'flood-color="' + '#840D25' + '" />'));
+			'flood-color="' + '#bf153a' + '" />'));
 
 		hitAnimationFilter.appendChild(Utils.svgToElement('<feBlend ' +
 			'in2="SourceGraphic" ' +
@@ -254,9 +261,11 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], funct
 				if (now >= hitAnimation.end) {
 					opacity = 0;
 					hitAnimationFilterPool.freeFilter(hitAnimation.filter);
+					hitAnimation.gameObject.removeHitAnimation();
 					hitAnimations.delete(hitAnimation);
 				} else {
-					opacity = Utils.map(now, HIT_ANIMATION_FLOOD_OPACITY, 0, hitAnimation.start, hitAnimation.end)
+					// opacity = Utils.map(now, HIT_ANIMATION_FLOOD_OPACITY, 0, hitAnimation.start, hitAnimation.end);
+					opacity = Utils.map(now, hitAnimation.start, hitAnimation.end, HIT_ANIMATION_FLOOD_OPACITY, 0);
 				}
 				hitAnimation.filter.domElement.setAttribute('flood-opacity', opacity);
 			});
