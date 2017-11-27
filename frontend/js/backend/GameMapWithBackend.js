@@ -150,6 +150,10 @@ define([
 					gameObject.unequipItem(slot);
 				}
 			}
+
+			if (entity.isHit){
+				gameObject.playHitAnimation();
+			}
 		};
 
 		newSnapshot(entities) {
