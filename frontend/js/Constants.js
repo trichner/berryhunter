@@ -33,7 +33,7 @@ define([], function () {
 		// 1 rotation per half a second
 		DEFAULT_TURN_RATE: 2 * 2 * Math.PI / 1000,
 
-		INVENTORY_SLOTS: 8,
+        INVENTORY_SLOTS: 10,
 		CRAFTING_RANGE: 70,
 		PLACEMENT_RANGE: 60,
 
