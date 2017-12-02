@@ -100,9 +100,8 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			IronSword: {
 				icon: {file: 'swordIronIcon'},
 				graphic: {file: 'swordIron',
-					size: 30,
-					offsetX: 10,
-					offsetY: -2.5
+                    size: 40,
+                    offsetX: 15
 				},
 				definition: 'swords/iron-sword',
 				type: ItemType.EQUIPMENT,
