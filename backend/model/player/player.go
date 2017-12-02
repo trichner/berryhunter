@@ -167,10 +167,10 @@ func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
 
 	// This is the inventory a new player starts with
 	startItems := []startItem{
-		{"IronTool", 1},
-		{"BronzeSword", 1},
-		{"Workbench", 1},
-		{"Campfire", 1},
+		//{"IronTool", 1},
+		//{"BronzeSword", 1},
+		//{"Workbench", 1},
+		//{"Campfire", 1},
 	}
 
 	//--- initialize inventory
