@@ -4,7 +4,7 @@
     "path": "/game"
   },
   "game": {
-    "coldFractionNightPerSecond": 0.05,
-    "coldFractionRestingPerSecond": 0.05
+    "coldFractionNightPerSecond": 0.01,
+    "coldFractionRestingPerSecond": 0.01
   }
 }

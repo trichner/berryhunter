@@ -67,7 +67,7 @@ func (f *HeaterSystem) Update(dt float32) {
 
 		// are we freezing?
 		if t.temperature < f.baseTemperature {
-			bt := t.player.VitalSigns().BodyTemperature.SubFraction(0.001)
+			bt := t.player.VitalSigns().BodyTemperature.SubFraction(0.0005)
 			t.player.VitalSigns().BodyTemperature = bt
 			continue
 		}
@@ -79,7 +79,7 @@ func (f *HeaterSystem) Update(dt float32) {
 		}
 
 		// we are warm, just fine
-		bt := t.player.VitalSigns().BodyTemperature.AddFraction(0.001)
+		bt := t.player.VitalSigns().BodyTemperature.AddFraction(0.005)
 		t.player.VitalSigns().BodyTemperature = bt
 	}
 
