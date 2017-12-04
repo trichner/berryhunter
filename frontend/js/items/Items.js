@@ -193,7 +193,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				icon: {file: 'fireCampIcon'},
 				graphic: {
 					file: 'fireCamp',
-					size: 50
+					size: 100
 				},
 				definition: 'placeables/campfire',
 				type: ItemType.PLACEABLE
@@ -202,7 +202,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				icon: {file: 'fireBigCampIcon'},
 				graphic: {
 					file: 'fireBigCamp',
-					size: 65
+					size: 120
 				},
 				definition: 'placeables/big-campfire',
 				type: ItemType.PLACEABLE
@@ -211,7 +211,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				icon: {file: 'workbench'},
 				graphic: {
 					file: 'workbench',
-					size: 40
+					size: 65
 				},
 				definition: 'placeables/workbench',
 				type: ItemType.PLACEABLE
@@ -238,7 +238,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				icon: {file: 'fireFurnace'},
 				graphic: {
 					file: 'fireFurnace',
-					size: 50
+					size: 80
 				},
 				definition: 'placeables/furnace',
 				type: ItemType.PLACEABLE
