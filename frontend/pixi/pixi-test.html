@@ -12,6 +12,7 @@
 </head>
 <body>
 <script src="pixi.js"></script>
+<script src="../vendor/XieLongUtils.js"></script>
 <script type="text/javascript">
     //Create the renderer
     var renderer = PIXI.autoDetectRenderer(256, 256,
@@ -36,6 +37,7 @@
     //     .add("mammoth.svg")
     //     .load(setup);
     setup();
+    var sprite;
 
     function setup() {
 
@@ -43,27 +45,79 @@
         // PIXI.loader.resources["mammoth.svg"].texture.update();
 
         let texture = PIXI.Texture.fromImage('mammoth.svg', undefined, undefined, 4);
+        console.log("Texture size:", roughSizeOfObject(texture));
         texture.baseTexture.on('loaded', function () {
-            var sprite = new PIXI.Sprite(
-                // PIXI.loader.resources["mammoth.svg"].texture
-                texture
-            );
+            console.log("Texture size:", roughSizeOfObject(texture));
 
-            // sprite.width = 400;
-            // sprite.height = 400;
+            for (var i = 0; i < 500; i++) {
+                sprite = new PIXI.Sprite(
+                        // PIXI.loader.resources["mammoth.svg"].texture
+                        texture,
+                );
 
-            sprite.x = renderer.width / 2 - sprite.width / 2;
-            sprite.y = renderer.height / 2 - sprite.height / 2;
 
-            stage.addChild(sprite);
+                // sprite.width = 400;
+                // sprite.height = 400;
 
-            //Tell the `renderer` to `render` the `stage`
-            renderer.render(stage);
+                sprite.width = randomInt(50, 400);
+                sprite.height = sprite.width;
+
+                sprite.x = Math.random() * renderer.width;
+                sprite.y = Math.random() * renderer.height;
+
+                stage.addChild(sprite);
+            }
+
+
+            //Start the game loop
+            gameLoop();
         });
-
-
     }
 
+    function gameLoop() {
+
+        //Loop this function at 60 frames per second
+        requestAnimationFrame(gameLoop);
+
+        //Move the cat 1 pixel to the right each frame
+        sprite.rotation += 0.01;
+
+        //Render the stage to see the animation
+        renderer.render(stage);
+    }
+
+    function roughSizeOfObject(object) {
+
+        var objectList = [];
+        var stack = [object];
+        var bytes = 0;
+
+        while (stack.length) {
+            var value = stack.pop();
+
+            if (typeof value === 'boolean') {
+                bytes += 4;
+            }
+            else if (typeof value === 'string') {
+                bytes += value.length * 2;
+            }
+            else if (typeof value === 'number') {
+                bytes += 8;
+            }
+            else if
+            (
+                    typeof value === 'object'
+                    && objectList.indexOf(value) === -1
+            ) {
+                objectList.push(value);
+
+                for (var i in value) {
+                    stack.push(value[i]);
+                }
+            }
+        }
+        return bytes;
+    }
 </script>
 </body>
 </html>
