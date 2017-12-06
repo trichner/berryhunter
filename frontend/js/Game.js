@@ -38,6 +38,26 @@ define([], function () {
 		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, SvgLoader, KeyEvents,
 		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
 		             Utils, NamedGroup, Constants) {
+
+			Game.loop = function () {
+				if (Game.paused) {
+					return;
+				}
+
+				requestAnimationFrame(Game.play);
+
+				Game.renderer.render(Game.stage);
+			};
+
+			Game.play = function () {
+				Game.paused = false;
+				Game.loop();
+			};
+
+			Game.pause = function () {
+				Game.paused = true;
+			};
+
 			/**
 			 * Creating a player starts implicitly the game
 			 */
@@ -75,13 +95,13 @@ define([], function () {
 			 * @param {{mapRadius: number}} gameInformation
 			 */
 			Game.startRendering = function (gameInformation) {
-				const baseTexture = new Two.Ellipse(0, 0, gameInformation.mapRadius);
+				const baseTexture = new new PIXI.Graphics();
 				Game.layers.terrain.textures.add(baseTexture);
-				baseTexture.fill = 'rgb(0, 96, 48)';
-				baseTexture.noStroke();
+				baseTexture.beginFill(0x006030);
+				baseTexture.drawCircle(Game.width / 2, Game.height / 2, gameInformation.mapRadius);
 
 				Game.map = new GameMapWithBackend(gameInformation.mapRadius);
-				Game.two.play();
+				Game.play();
 				Game.state = States.RENDERING;
 				/**
 				 * @type MiniMap
@@ -90,31 +110,37 @@ define([], function () {
 			};
 
 			function createBackground() {
-				const background = new Two.Rectangle(Game.width / 2, Game.height / 2, Game.width, Game.height);
-				Game.layers.terrain.background.add(background);
-				background.fill = '#287aff';
-				background.noStroke();
+				const background = new PIXI.Graphics();
+				Game.layers.terrain.background.addChild(background);
+
+				graphics.beginFill(0x287aff);
+				graphics.drawRect(0, 0, Game.width, Game.height);
 			}
 
 			if (MapEditor.isActive()) {
-				/**
-				 * @type Two
-				 */
-				Game.two = MapEditor.setup();
+				Game.renderer = MapEditor.setup();
 			} else {
 				// Setup backend first, as this will take some time to connect.
 				Backend.setup();
-				Game.two = new Two({
-					fullscreen: true,
-					type: Two.Types.svg
-				});
+				let renderer = PIXI.autoDetectRenderer(256, 256);
+				Game.renderer = renderer;
+
+				renderer.backgroundColor = 0x006030;
+
+				// Fullscreen
+				renderer.view.style.position = "absolute";
+				renderer.view.style.display = "block";
+				renderer.autoResize = true;
+				renderer.resize(window.innerWidth, window.innerHeight);
+
+				//Add the canvas to the HTML document
 				document.body.insertBefore(
-					Game.two.renderer.domElement,
+					renderer.view,
 					document.body.firstChild);
 			}
 
-			Game.width = Game.two.width;
-			Game.height = Game.two.height;
+			Game.width = Game.renderer.width;
+			Game.height = Game.renderer.height;
 
 			Game.centerX = Game.width / 2;
 			Game.centerY = Game.height / 2;
@@ -148,14 +174,16 @@ define([], function () {
 					minerals: new NamedGroup('minerals'),
 					trees: new NamedGroup('trees'),
 				}
-				// UI Overlay is the highest layer, but not managed with Two.js
+				// UI Overlay is the highest layer, but not managed with pixi.js
 			};
 
+			Game.stage = new PIXI.Container();
+
 			// Terrain Background
-			Game.two.add(Game.layers.terrain.background);
+			Game.stage.addChild(Game.layers.terrain.background);
 
 			Game.cameraGroup = new NamedGroup('cameraGroup');
-			Game.two.add(Game.cameraGroup);
+			Game.stage.addChild(Game.cameraGroup);
 
 			// Terrain Textures moving with the camera
 			Game.cameraGroup.add(
@@ -205,10 +233,10 @@ define([], function () {
 			 */
 			Game.map = null;
 
-			let domElement = Game.two.renderer.domElement;
+			let domElement = Game.renderer.view;
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
-			DayCycle.setup(domElement, Game.two.scene);
+			DayCycle.setup(domElement, Game.stage);
 			SvgLoader.setup(domElement);
 			KeyEvents.setup(domElement);
 			PointerEvents.setup(domElement);
@@ -221,11 +249,11 @@ define([], function () {
 			});
 			if (MapEditor.isActive()) {
 				domElement.addEventListener('blur', function () {
-					Game.two.pause();
+					Game.pause();
 				});
 				domElement.addEventListener('focus', function () {
 					if (Game.started) {
-						Game.two.play();
+						Game.play();
 					}
 				});
 			}
