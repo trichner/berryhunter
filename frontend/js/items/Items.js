@@ -260,7 +260,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				icon: {file: 'wallWood'},
 				graphic: {
 					file: 'wallWood',
-					size: 40
+					size: 50
 				},
 				definition: 'walls/wood-wall',
 				type: ItemType.PLACEABLE,
@@ -276,8 +276,11 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			},
 			StoneWall: {
 				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'wallStone'},
+				graphic: {
+					file: 'wallStone',
+					size: 50
+				},
 				definition: 'walls/stone-wall',
 				type: ItemType.PLACEABLE,
 				multiPlacing: true
