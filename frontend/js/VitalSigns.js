@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'Two', 'Utils', 'UserInterface', 'EndScreen'], function (Game, Two, Utils, UserInterface, EndScreen) {
+define(['Game', 'Utils', 'UserInterface', 'EndScreen'], function (Game, Utils, UserInterface, EndScreen) {
 	class VitalSigns {
 		constructor() {
 			this.health = VitalSigns.MAXIMUM_VALUES.health;

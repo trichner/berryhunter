@@ -13,7 +13,7 @@ require(['Environment'], function (Environment) {
 			schema_client: Environment.subfolderPath() ?
 				'../../api/schema/js/client_generated' :
 				'schema/client_generated',
-			Two: '../vendor/two/two',
+			PIXI: '../vendor/pixi',
 			'vendor/flatbuffers': '../vendor/flatbuffers',
 			underscore: '../vendor/underscore-min',
 
@@ -47,7 +47,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 			 */
 			require([
 					// Graphics
-					'Two',
+					'PIXI',
 
 					// other libraries
 					'../vendor/tock',
@@ -63,7 +63,6 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'schema_client',
 
 					// Game Modules
-					'SvgLoader',
 					'backend/Backend',
 					'backend/BackendConstants',
 					'backend/ClientMessage',
@@ -108,6 +107,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'DayCycle',
 					'Spectator',
 					'FilterPool',
+					'Vector',
 
 					// Develop resources
 					'develop/Fps',

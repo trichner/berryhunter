@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Two', 'Constants', 'Utils', 'NamedGroup'], function (Two, Constants, Utils, NamedGroup) {
+define(['Constants', 'Utils', 'NamedGroup'], function (Constants, Utils, NamedGroup) {
 	class InjectedSVG extends NamedGroup {
 		constructor(svg, x, y, size, rotation) {
 			super('InjectedSVG');

@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'Two', 'UserInterface'], function (Game, Two, UserInterface) {
+define(['PIXI', 'Game', 'UserInterface'], function (PIXI, Game, UserInterface) {
 	class MiniMap {
 		constructor(mapWidth, mapHeight) {
 			this.mapWidth = mapWidth;
@@ -21,20 +21,20 @@ define(['Game', 'Two', 'UserInterface'], function (Game, Two, UserInterface) {
 			this.width = container.clientWidth;
 			this.height = container.clientHeight;
 
-			this.two = new Two({
-				width: this.width,
-				height: this.height,
-				type: Two.Types.svg
-			}).appendTo(container);
+			this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
+			container.appendChild(container);
+			this.stage = new PIXI.Container();
 
-			this.iconGroup = this.two.makeGroup();
-			this.iconGroup.translation.set(
+			this.iconGroup = new PIXI.Container();
+			this.stage.addChild(this.iconGroup);
+			this.iconGroup.position.set(
 				this.width / 2,
 				this.height / 2
 			);
 
-			this.playerGroup = this.two.makeGroup();
-			this.playerGroup.translation.set(
+			this.playerGroup = new PIXI.Container();
+			this.stage.addChild(this.playerGroup);
+			this.playerGroup.position.set(
 				this.width / 2,
 				this.height / 2
 			);
@@ -43,16 +43,37 @@ define(['Game', 'Two', 'UserInterface'], function (Game, Two, UserInterface) {
 			this.scale = this.width / this.mapWidth;
 			this.iconSizeFactor = this.scale * sizeFactorRelatedToMapSize;
 
-			this.two.bind('update', update.bind(this));
+			this.renderer.on('prerender', update.bind(this));
 		}
 
 		start() {
-			this.two.play();
+			this.play();
 		}
 
 		stop() {
-			this.two.pause();
+			this.pause();
 		}
+
+		loop() {
+			if (this.paused) {
+				return;
+			}
+
+			requestAnimationFrame(this.loop.bind(this));
+
+			this.renderer.render(this.stage);
+		};
+
+		play() {
+			this.playing = true;
+			this.paused = false;
+			this.loop();
+		};
+
+		pause() {
+			this.playing = false;
+			this.paused = true;
+		};
 
 		/**
 		 * Adds the icon of the object to the map.

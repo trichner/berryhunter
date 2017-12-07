@@ -158,10 +158,10 @@ define([
 
 			// Pausing is only available in Develop mode
 			if (Develop.isActive() && anyKeyIsPressed(PAUSE_KEYS)) {
-				if (Game.two.playing) {
-					Game.two.pause();
+				if (Game.playing) {
+					Game.pause();
 				} else {
-					Game.two.play();
+					Game.play();
 				}
 				return;
 			}

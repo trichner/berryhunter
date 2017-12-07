@@ -2,10 +2,9 @@
 
 define([
 	'Game',
-	'Two',
 	'natureOfCode/arrive/vehicle',
 	'Develop',
-], function (Game, Two, Vehicle, Develop) {
+], function (Game, Vehicle, Develop, Vector) {
 	class Camera {
 
 		/**
@@ -15,7 +14,7 @@ define([
 		constructor(character) {
 			this.character = character;
 
-			this.offset = new Two.Vector(Game.centerX, Game.centerY);
+			this.offset = new Vector(Game.centerX, Game.centerY);
 			this.vehicle = new Vehicle(
 				character.getX(),
 				character.getY());
@@ -23,12 +22,12 @@ define([
 			this.vehicle.setMaxSpeed(character.movementSpeed * 2);
 
 			/**
-			 * @type {Two.Vector}
+			 * @type {Vector}
 			 */
 			this.translation = this.vehicle.position;
 
 			this.updateListener = this.update.bind(this);
-			Game.two.bind('update', this.updateListener);
+			Game.renderer.on('prerender', this.updateListener);
 		}
 
 		getScreenX(mapX) {
@@ -67,7 +66,7 @@ define([
 		}
 
 		destroy() {
-			Game.two.unbind('update', this.updateListener);
+			Game.renderer.off('update', this.updateListener);
 		}
 	}
 
@@ -90,7 +89,7 @@ define([
 			return vehicle.position.clone().addSelf(corner);
 		});
 
-		let r = new Two.Vector();
+		let r = new Vector();
 		corners.forEach(function (corner) {
 			let length = corner.length();
 			let d = length - extraBoundary - Game.map.radius;

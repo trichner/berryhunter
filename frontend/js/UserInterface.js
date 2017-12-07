@@ -100,13 +100,13 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 					if (progress.current >= progress.duration) {
 						self.progressOverlay.style.top = '100%';
 						self.progressOverlay.classList.add('hidden');
-						Game.two.unbind('update', updateListener);
+						Game.renderer.off('prerender', updateListener);
 					} else {
 						let top = 100 - 100 * progress.current / progress.duration;
 						self.progressOverlay.style.top = top.toFixed(3) + '%';
 					}
 				};
-				Game.two.bind('update', updateListener);
+				Game.renderer.on('prerender', updateListener);
 			});
 		}
 

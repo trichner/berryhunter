@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
+define(['Utils', 'Constants'], function (Utils, Constants) {
 	let Preloading = {};
 
 	const promises = [];
@@ -56,11 +56,22 @@ define(['Utils', 'SvgLoader'], function (Utils, SvgLoader) {
 	};
 
 	Preloading.registerGameObjectSVG = function (gameObjectClass, svgPath) {
-		Preloading.registerSVG(svgPath)
-			.then(svgText => {
-				gameObjectClass.svg = SvgLoader.load(svgPath, svgText);
-				return svgPath;
-			});
+		return Preloading.registerPreload(
+			new Promise(function (resolve, reject) {
+				let sourceScale = 1;
+				if (Utils.isNumber(gameObjectClass.MAX_SIZE)){
+					// Scale sourceScale according to the maximum required graphic size
+					sourceScale = sourceScale * gameObjectClass.MAX_SIZE / Constants.GRAPHIC_BASE_SIZE;
+				}
+				gameObjectClass.svg = PIXI.Texture.fromImage(svgPath, undefined, undefined, sourceScale);
+				texture.baseTexture.on('loaded', function () {
+					resolve(gameObjectClass.svg);
+				});
+				texture.baseTexture.on('error', function () {
+					reject("Error loading texture '" + svgPath + "'");
+				});
+			})
+		);
 	};
 
 	Preloading.registerPartial = function (htmlUrl) {

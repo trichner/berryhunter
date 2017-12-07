@@ -1,9 +1,9 @@
 "use strict";
 
-define(['Two', 'Camera'], function (Two, Camera) {
+define(['Vector', 'Camera'], function (Vector, Camera) {
 	class Spectator {
 		constructor(x, y) {
-			this.position = new Two.Vector(x, y);
+			this.position = new Vector(x, y);
 			this.camera = new Camera(this);
 			this.movementSpeed = Math.max(Game.width, Game.height);
 		}

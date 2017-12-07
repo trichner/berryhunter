@@ -178,6 +178,10 @@ define(['../vendor/XieLongUtils'], function () {
 		return typeof variable === 'function';
 	};
 
+	Utils.isNumber = function (variable) {
+		return typeof variable === 'number';
+	};
+
 	Utils.arraysEqual = function (a, b) {
 		if (a === b) {
 			return true;

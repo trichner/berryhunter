@@ -19,7 +19,7 @@ define([
 		settings: {
 			showAABBs: false,
 			cameraBoundaries: true,
-			elementColor: 'red',
+			elementColor: 0xFF0000,
 			linewidth: 2,
 			/**
 			 * Aus wievielen Werten wird maximal der Durchschnitt und die
@@ -147,7 +147,7 @@ define([
 								}
 							}
 						});
-					Game.two.update();
+					Game.render();
 			}
 		},
 
@@ -177,8 +177,8 @@ define([
 
 		},
 
-		afterSetup: function (Game) {
-			Fps.setup(Game.two);
+		afterSetup: function () {
+			Fps.setup();
 		},
 
 		logValue: function (name, value) {

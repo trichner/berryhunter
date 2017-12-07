@@ -9,8 +9,8 @@ define([], function () {
 				'GameObject',
 				'Develop',
 				'Utils',
-				'Two'
-			], function (Game, GameObject, Develop, Utils, Two) {
+				'PIXI'
+			], function (Game, GameObject, Develop, Utils, PIXI) {
 
 				/**
 				 *
@@ -43,6 +43,11 @@ define([], function () {
 						this.aabb.noFill();
 						this.aabb.stroke = Develop.settings.elementColor;
 						this.aabb.linewidth = Develop.settings.linewidth;
+
+						// TODO hier weitermachen. Two ELemente nach PIXI.Graphics überführen
+						this.aabb = new PIXI.Graphics();
+						this.aabb.lineColor = Develop.settings.elementColor;
+						this.aabb.lineWidth = Develop.settings.linewidth;
 
 						this.aabbConnector = new Two.Line(this.getX(), this.getY(), x, y);
 						this.layer.add(this.aabbConnector);

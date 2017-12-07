@@ -15,14 +15,13 @@ define([], function () {
 
 	Game.setup = function () {
 		require([
-			'Two',
+			'PIXI',
 			'MapEditor',
 			'backend/Backend',
 			'Develop',
 			'backend/GameMapWithBackend',
 			'MiniMap',
 			'DayCycle',
-			'SvgLoader',
 			'KeyEvents',
 			'PointerEvents',
 			'Player',
@@ -35,7 +34,7 @@ define([], function () {
 			'Utils',
 			'NamedGroup',
 			'Constants'
-		], function (Two, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, SvgLoader, KeyEvents,
+		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, KeyEvents,
 		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
 		             Utils, NamedGroup, Constants) {
 
@@ -44,18 +43,23 @@ define([], function () {
 					return;
 				}
 
-				requestAnimationFrame(Game.play);
-
-				Game.renderer.render(Game.stage);
+				requestAnimationFrame(Game.loop);
+				Game.render();
 			};
 
 			Game.play = function () {
+				Game.playing = true;
 				Game.paused = false;
 				Game.loop();
 			};
 
 			Game.pause = function () {
+				Game.playing = false;
 				Game.paused = true;
+			};
+
+			Game.render = function () {
+				Game.renderer.render(Game.stage);
 			};
 
 			/**
@@ -118,6 +122,9 @@ define([], function () {
 			}
 
 			if (MapEditor.isActive()) {
+				/**
+				 * @type PIXI.WebGLRenderer
+				 */
 				Game.renderer = MapEditor.setup();
 			} else {
 				// Setup backend first, as this will take some time to connect.
@@ -237,7 +244,6 @@ define([], function () {
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
 			DayCycle.setup(domElement, Game.stage);
-			SvgLoader.setup(domElement);
 			KeyEvents.setup(domElement);
 			PointerEvents.setup(domElement);
 

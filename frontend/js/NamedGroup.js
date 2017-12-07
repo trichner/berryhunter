@@ -1,22 +1,14 @@
-define(['Two', 'Constants'], function (Two, Constants) {
+define(['PIXI', 'Constants'], function (PIXI, Constants) {
 	if (!Constants.USE_NAMED_GROUPS){
-		return Two.Group;
+		return PIXI.Container;
 	}
 
-	class NamedGroup extends Two.Group {
-		constructor(name, children) {
-			super(children || []);
+	class NamedGroup extends PIXI.Container {
+		constructor(name) {
+			super();
 
 			NamedGroup.nameGroup(this, name);
 			this.domInitialized = false;
-		}
-
-		_update() {
-			if (!this.domInitialized && this._renderer.elem) {
-				this._renderer.elem.setAttribute('data-name', this['!name']);
-			}
-
-			Two.Group.prototype._update.apply(this, arguments);
 		}
 	}
 

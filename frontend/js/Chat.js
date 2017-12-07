@@ -21,7 +21,7 @@ define(['Utils', 'UserInterface'], function (Utils, UserInterface) {
 					Game.player.character.say(inputElement.textContent);
 					inputElement.textContent = '';
 					Chat.hide();
-					Game.two.renderer.domElement.focus();
+					Game.domElement.focus();
 					event.preventDefault();
 					event.stopPropagation();
 				}
