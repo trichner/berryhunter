@@ -53,7 +53,7 @@ define([
 			return shape;
 		}
 
-		hide(){
+		hide() {
 			this.depletionTexture.remove();
 			Resource.prototype.hide.apply(this, arguments);
 		}
@@ -90,8 +90,8 @@ define([
 			shape.translation.set(x, y);
 			for (let i = 0; i < 5; i++) {
 				let circle = new Two.Ellipse(
-					(Math.cos(Math.PI * 2 / 5 * i) * this.size ),
-					(Math.sin(Math.PI * 2 / 5 * i) * this.size ),
+					(Math.cos(Math.PI * 2 / 5 * i) * this.size),
+					(Math.sin(Math.PI * 2 / 5 * i) * this.size),
 					this.size);
 				shape.add(circle)
 			}
@@ -123,7 +123,7 @@ define([
 			this.shape.scale = newStock / this.capacity;
 		}
 
-		hide(){
+		hide() {
 			this.depletionTexture.remove();
 			Resource.prototype.hide.apply(this, arguments);
 		}
@@ -291,7 +291,7 @@ define([
 					(Math.sin(Math.PI * 2 / this.capacity * i) * this.size * 0.3),
 					5);
 				this.berries.add(circle);
-				circle.fill = 'purple';
+				circle.fill = '#c20071';
 				circle.noStroke();
 
 			}
