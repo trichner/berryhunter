@@ -259,7 +259,7 @@ define([
 					(Math.sin(Math.PI * 2 / numberOfBerries * i) * this.size * 0.3),
 					5);
 				shape.add(circle);
-				circle.fill = 'purple';
+				circle.fill = '#c20071';
 				circle.noStroke();
 			}
 
