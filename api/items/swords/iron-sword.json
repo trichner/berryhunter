@@ -10,7 +10,7 @@
     "craftTimeInSeconds": 40,
     "materials": [
       {
-        "item": "Wood",
+        "item": "Stone",
         "count": 100
       },
       {
