@@ -24,9 +24,9 @@ define(['Utils', 'Develop'], function (Utils, Develop) {
 	const sunsetEnd = sunsetHour + (twilightDuration * 2 / 3);
 
 	const NightVisuals = {
-		SATURATION: 0.2,
+		SATURATION: 0.4,
 		FLOOD_COLOR: 'rgb(107,131,185)',
-		FLOOD_OPACITY: 1,
+		FLOOD_OPACITY: 0.9,
 	};
 
 	let timeOfDay;
