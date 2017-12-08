@@ -54,7 +54,7 @@ define([
 		}
 
 		hide() {
-			this.depletionTexture.remove();
+			this.depletionTexture.parent.removeChild(this.depletionTexture);
 			Resource.prototype.hide.apply(this, arguments);
 		}
 	}
@@ -91,7 +91,7 @@ define([
 		}
 
 		hide() {
-			this.depletionTexture.remove();
+			this.depletionTexture.parent.removeChild(this.depletionTexture);
 			Resource.prototype.hide.apply(this, arguments);
 		}
 	}
@@ -175,7 +175,7 @@ define([
 
 		onStockChange(numberOfBerries) {
 			if (Utils.isDefined(this.berries)) {
-				this.berries.remove();
+				this.berries.parent.removeChild(this.berries);
 			}
 
 			this.berries = new PIXI.Container();

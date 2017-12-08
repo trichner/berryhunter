@@ -102,8 +102,8 @@ define(['PIXI', 'Game', 'UserInterface'], function (PIXI, Game, UserInterface) {
 
 		clear() {
 			this.trackedGameObjects.length = 0;
-			this.playerGroup.remove(_.toArray(this.playerGroup.children));
-			this.iconGroup.remove(_.toArray(this.iconGroup.children));
+			this.playerGroup.removeChildren();
+			this.iconGroup.removeChildren();
 		}
 
 	}

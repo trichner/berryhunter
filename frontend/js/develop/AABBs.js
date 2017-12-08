@@ -73,7 +73,7 @@ define([], function () {
 					super_hide.call(this);
 
 					if (Utils.isDefined(this.aabb)) {
-						this.aabb.remove();
+						this.aabb.parent.removeChild(this.aabb);
 						delete this.aabb;
 					}
 				};

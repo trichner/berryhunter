@@ -49,7 +49,7 @@ define([
 			this.createHands();
 
 			Object.values(this.equipmentSlotGroups).forEach(function (equipmentSlot) {
-				equipmentSlot.originalTranslation = Vecotr.clone(equipmentSlot.position);
+				equipmentSlot.originalTranslation = Vector.clone(equipmentSlot.position);
 			});
 
 			// Rotate the character according the 0-angle in drawing space
@@ -109,7 +109,7 @@ define([
 				// circle.rotation = Math.PI / -2;
 			}
 
-			Game.renderner.on('rerender', this.update.bind(this));
+			Game.renderer.on('rerender', this.update.bind(this));
 		}
 
 		initShape(x, y, size, rotation) {
@@ -181,7 +181,7 @@ define([
 				return;
 			}
 
-			let text = PIXI.Text(this.name, {
+			let text = new PIXI.Text(this.name, {
 				fontFamily: 'stone-age',
 				fontSize: 18,
 				fontWeight: '700',
@@ -270,7 +270,7 @@ define([
 				message.timeToLife -= timeDelta;
 				if (message.timeToLife <= 0) {
 					// message.visible = false;
-					this.messagesGroup.remove(message);
+					this.messagesGroup.removeChild(message);
 					return false;
 				}
 				return true;
@@ -327,7 +327,7 @@ define([
 			if (!this.isSlotEquipped(equipmentSlot)) {
 				return;
 			}
-			slotGroup.children[0].remove();
+			slotGroup.removeChildAt(0);
 
 			let item = this.equippedItems[equipmentSlot];
 			this.equippedItems[equipmentSlot] = null;

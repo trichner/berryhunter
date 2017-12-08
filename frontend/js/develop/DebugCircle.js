@@ -15,8 +15,8 @@ define(['Game', 'GameObject', 'Develop', 'PIXI'], function (Game, GameObject, De
 				if (this.timeToLife < 0) {
 					this.hide();
 					delete Game.map.objects[this.id];
-					this.aabb.remove();
-					this.aabbConnector.remove();
+					this.aabb.parent.removeChild(this.aabb);
+					this.aabbConnector.parent.removeChild(this.aabbConnector);
 				}
 			}, this);
 		}

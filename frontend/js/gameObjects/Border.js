@@ -45,7 +45,7 @@ define(['Game', 'GameObject', 'PIXI'], function (Game, GameObject, PIXI) {
 		}
 
 		hide() {
-			Game.layers.mapBorders.remove(this.shape);
+			Game.layers.mapBorders.removeChild(this.shape);
 		}
 	}
 

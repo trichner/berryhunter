@@ -133,7 +133,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool'], fu
 		}
 
 		hide() {
-			this.layer.remove(this.shape);
+			this.layer.removeChild(this.shape);
 		}
 
 		playHitAnimation() {
