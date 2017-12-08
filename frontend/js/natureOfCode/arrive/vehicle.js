@@ -22,12 +22,12 @@ define(['Vector', 'Utils'], function (Vector, Utils) {
 		// Method to update location
 		this.update = function () {
 			// Update velocity
-			this.velocity.addSelf(this.acceleration);
+			this.velocity.add(this.acceleration);
 			// Limit speed
 			this.velocity.limit(this.maxspeed);
 			// Don't update the position if the velocity is really low
 			if (this.velocity.lengthSquared() >= 0.5) {
-				this.position.addSelf(this.velocity);
+				this.position.add(this.velocity);
 			}
 			// Reset accelerationelertion to 0 each cycle
 			this.acceleration.multiplyScalar(0);
@@ -35,7 +35,7 @@ define(['Vector', 'Utils'], function (Vector, Utils) {
 
 		this.applyForce = function (force) {
 			// We could add mass here if we want A = F / M
-			this.acceleration.addSelf(force);
+			this.acceleration.add(force);
 		};
 
 		// A method that calculates a steering force towards a target

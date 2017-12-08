@@ -67,7 +67,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool'], fu
 			}
 
 			if (Constants.MOVEMENT_INTERPOLATION) {
-				this.desiredPosition = new Vector(x, y); //.subSelf(this.shape.position);
+				this.desiredPosition = new Vector(x, y); //.sub(this.shape.position);
 				this.desireTimestamp = performance.now();
 				movementInterpolatedObjects.add(this);
 			} else {
@@ -92,7 +92,8 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool'], fu
 
 		getPosition() {
 			// Defensive copy
-			return this.shape.position.clone();
+			// FIXME necessary?
+			return Vector.clone(this.shape.position);
 		}
 
 		getX() {
@@ -209,7 +210,11 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool'], fu
 					gameObject.shape.position.copy(gameObject.desiredPosition);
 					movementInterpolatedObjects.delete(gameObject);
 				} else {
-					gameObject.shape.position.lerp(gameObject.desiredPosition, elapsedTimePortion);
+					gameObject.shape.position.copy(
+						Vector.lerp(
+							gameObject.shape.position,
+							gameObject.desiredPosition,
+							elapsedTimePortion));
 				}
 			});
 	}

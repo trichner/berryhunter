@@ -16,7 +16,7 @@ define(['underscore'], function (_) {
 
 	});
 
-	_.extend(Vector.prototype, {
+	let methods = {
 
 		set: function (x, y) {
 			this.x = x;
@@ -40,31 +40,20 @@ define(['underscore'], function (_) {
 			return new Vector(this.x, this.y);
 		},
 
-		add: function (v1, v2) {
-			this.x = v1.x + v2.x;
-			this.y = v1.y + v2.y;
-			return this;
-		},
-
-		addSelf: function (v) {
+		add: function (v) {
 			this.x += v.x;
 			this.y += v.y;
 			return this;
 		},
 
-		sub: function (v1, v2) {
-			this.x = v1.x - v2.x;
-			this.y = v1.y - v2.y;
-			return this;
-		},
 
-		subSelf: function (v) {
+		sub: function (v) {
 			this.x -= v.x;
 			this.y -= v.y;
 			return this;
 		},
 
-		multiplySelf: function (v) {
+		multiply: function (v) {
 			this.x *= v.x;
 			this.y *= v.y;
 			return this;
@@ -153,6 +142,30 @@ define(['underscore'], function (_) {
 			return {x: this.x, y: this.y};
 		}
 
+	};
+	_.extend(Vector.prototype, methods);
+
+	/*
+	 * Create static versions of all Vector methods
+	 */
+
+	Object.keys(methods).forEach(function (methodName) {
+		if (methods.hasOwnProperty(methodName)) {
+			let staticMethod = function (v) {
+				const args = Array.prototype.splice.call(arguments, 1);
+				let vector = new Vector(v.x, v.y);
+				return vector[methodName].apply(vector, args)
+			};
+			// Function name remapping
+			switch (methodName) {
+				case 'length':
+					// Function.length is a readonly property (which represents the number of parameters)
+					Vector['lengthOf'] = staticMethod;
+					break;
+				default:
+					Vector[methodName] = staticMethod
+			}
+		}
 	});
 
 	return Vector;

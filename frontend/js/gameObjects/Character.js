@@ -49,7 +49,7 @@ define([
 			this.createHands();
 
 			Object.values(this.equipmentSlotGroups).forEach(function (equipmentSlot) {
-				equipmentSlot.originalTranslation = equipmentSlot.position.clone();
+				equipmentSlot.originalTranslation = Vecotr.clone(equipmentSlot.position);
 			});
 
 			// Rotate the character according the 0-angle in drawing space
@@ -163,7 +163,7 @@ define([
 			handShape.lineWidth = 0.212 * 0.6; // relative to size
 			handShape.drawCircle(0, 0, this.size * 0.2);
 
-			group.originalTranslation = group.position.clone();
+			group.originalTranslation = Vector.clone(group.position);
 
 			return {
 				group: group,

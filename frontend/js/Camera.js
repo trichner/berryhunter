@@ -56,9 +56,9 @@ define([
 				keepWithinMapBoundaries(this.vehicle);
 			}
 
-			let position = this.position.clone();
+			let position = Vector.clone(this.position);
 			position.negate();
-			position.addSelf(this.offset);
+			position.add(this.offset);
 			Game.cameraGroup.position.copy(position);
 
 			if (typeof this.onUpdate === 'function') {
@@ -87,7 +87,7 @@ define([
 
 	function keepWithinMapBoundaries(vehicle) {
 		let corners = Corners.map(function (corner) {
-			return vehicle.position.clone().addSelf(corner);
+			return vehicle.position.clone().add(corner);
 		});
 
 		let r = new Vector();
@@ -100,10 +100,10 @@ define([
 
 			corner.divideScalar(length).multiplyScalar(-d);
 
-			r.addSelf(corner);
+			r.add(corner);
 		});
 
-		vehicle.position.addSelf(r);
+		vehicle.position.add(r);
 	}
 
 	return Camera;
