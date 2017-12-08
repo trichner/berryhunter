@@ -26,7 +26,7 @@ define([
 				/*
 				 * Create map borders
 				 */
-				Game.layers.mapBorders.add(
+				Game.layers.mapBorders.addChild(
 					new Border(0, 0, 'NORTH', this.width),
 					new Border(this.width, 0, 'EAST', this.height),
 					new Border(0, this.height, 'SOUTH', this.width),

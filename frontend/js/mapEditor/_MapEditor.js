@@ -1,7 +1,10 @@
 "use strict";
 
+/**
+ * FIXME this class hasn't been updated for quite a while
+ */
+
 define([
-	'Two',
 	'Utils',
 	'Constants',
 	'GameMapGenerator',
@@ -13,7 +16,7 @@ define([
 	'gameObjects/Mobs',
 	'gameObjects/Resources',
 	'underscore',
-], function (Two, Utils, Constants, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants, Mobs, Resources, _) {
+], function (Utils, Constants, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants, Mobs, Resources, _) {
 	let MapEditor = {};
 
 	MapEditor.isActive = function () {
@@ -27,11 +30,12 @@ define([
 	};
 
 	MapEditor.setup = function () {
-		let two = new Two({
-			width: Constants.QUADRANT_SIZE,
-			height: Constants.QUADRANT_SIZE,
-			type: Two.Types.svg,
-		}).appendTo(document.getElementById('drawingContainer'));
+		let renderer = PIXI.autoDetectRenderer(
+			Constants.QUADRANT_SIZE,
+			Constants.QUADRANT_SIZE
+		);
+
+		document.getElementById('drawingContainer').appendChild(renderer.view);
 
 		require(['Develop'], function (Develop) {
 			if (Develop.isActive()) {
@@ -51,19 +55,19 @@ define([
 		_.extend(window, Mobs);
 		_.extend(window, Resources);
 
-		return two;
+		return renderer;
 	};
 
 	require(['Game'], function (Game) {
 		MapEditor.afterSetup = function () {
-			Game.two.pause();
+			Game.pause();
 
 			Game.createPlayer(0, Game.width / 2, Game.height / 2, 'Map Architect');
 
 			this.grid = new QuadrantGrid();
 
-			Game.player.camera.onUpdate = function (translation) {
-				this.grid.cameraUpdate(translation);
+			Game.player.camera.onUpdate = function (position) {
+				this.grid.cameraUpdate(position);
 			}.bind(this);
 
 			this.tryRenderQuadrants();
@@ -114,7 +118,7 @@ define([
 
 			MapEditor.grid = new QuadrantGrid(MapEditor.mapWidth, MapEditor.mapHeight);
 
-			Game.two.update();
+			Game.render();
 			jsonStatus.innerHTML = 'Rendered';
 			jsonStatus.classList.add('success');
 		};

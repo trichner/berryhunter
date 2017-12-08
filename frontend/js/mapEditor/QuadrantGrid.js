@@ -1,22 +1,25 @@
 "use strict";
 
-define(['Game', 'Two', 'Constants'], function (Game, Two, Constants) {
+/**
+ * FIXME this class hasn't been updated for quite a while
+ */
+define(['Game', 'PIXI', 'Constants'], function (Game, PIXI, Constants) {
 	class QuadrantGrid {
 		constructor(width, height) {
-			this.gridLines = new Two.Group();
-			Game.layers.mapBorders.add(this.gridLines);
+			this.gridLines = new PIXI.Container();
+			Game.layers.mapBorders.addChild(this.gridLines);
 
-			this.xIndices = new Two.Group();
-			this.yIndices = new Two.Group();
-			Game.layers.overlay.add(this.xIndices, this.yIndices);
+			this.xIndices = new PIXI.Container();
+			this.yIndices = new PIXI.Container();
+			Game.layers.overlay.addChild(this.xIndices, this.yIndices);
 
 			let index = 1;
 			const gridSpacing = Constants.GRID_SPACING;
 			for (let x = gridSpacing; x <= width; x += gridSpacing) {
 				if (x < width) {
-					this.gridLines.add(QuadrantGrid.createGridLine(false, x, 0, x, height));
+					this.gridLines.addChild(QuadrantGrid.createGridLine(false, x, 0, x, height));
 				}
-				this.xIndices.add(QuadrantGrid.createIndex(index, x - gridSpacing / 2, 20));
+				this.xIndices.addChild(QuadrantGrid.createIndex(index, x - gridSpacing / 2, 20));
 				index++;
 				if (index > Constants.FIELDS_IN_QUADRANT) {
 					index = 1;
@@ -26,9 +29,9 @@ define(['Game', 'Two', 'Constants'], function (Game, Two, Constants) {
 			index = 1;
 			for (let y = gridSpacing; y <= height; y += gridSpacing) {
 				if (y < height) {
-					this.gridLines.add(QuadrantGrid.createGridLine(true, 0, y, width, y));
+					this.gridLines.addChild(QuadrantGrid.createGridLine(true, 0, y, width, y));
 				}
-				this.yIndices.add(QuadrantGrid.createIndex(index, 20, y - gridSpacing / 2));
+				this.yIndices.addChild(QuadrantGrid.createIndex(index, 20, y - gridSpacing / 2));
 				index++;
 				if (index > Constants.FIELDS_IN_QUADRANT) {
 					index = 1;
@@ -36,15 +39,15 @@ define(['Game', 'Two', 'Constants'], function (Game, Two, Constants) {
 			}
 		}
 
-		cameraUpdate(translation) {
-			this.xIndices.translation.set(translation.x, 0);
-			if (Game.layers.mapBorders.translation.y > 0) {
-				this.xIndices.translation.y = Game.layers.mapBorders.translation.y;
+		cameraUpdate(position) {
+			this.xIndices.position.set(position.x, 0);
+			if (Game.layers.mapBorders.position.y > 0) {
+				this.xIndices.position.y = Game.layers.mapBorders.position.y;
 			}
 
-			this.yIndices.translation.set(0, translation.y);
-			if (Game.layers.mapBorders.translation.x > 0) {
-				this.yIndices.translation.x = Game.layers.mapBorders.translation.x;
+			this.yIndices.position.set(0, position.y);
+			if (Game.layers.mapBorders.position.x > 0) {
+				this.yIndices.position.x = Game.layers.mapBorders.position.x;
 			}
 		}
 

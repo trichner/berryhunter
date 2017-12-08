@@ -4,6 +4,7 @@ define([
 	'Game',
 	'natureOfCode/arrive/vehicle',
 	'Develop',
+	'Vector'
 ], function (Game, Vehicle, Develop, Vector) {
 	class Camera {
 
@@ -24,7 +25,7 @@ define([
 			/**
 			 * @type {Vector}
 			 */
-			this.translation = this.vehicle.position;
+			this.position = this.vehicle.position;
 
 			this.updateListener = this.update.bind(this);
 			Game.renderer.on('prerender', this.updateListener);
@@ -39,11 +40,11 @@ define([
 		}
 
 		getX() {
-			return this.translation.x;
+			return this.position.x;
 		}
 
 		getY() {
-			return this.translation.y;
+			return this.position.y;
 		}
 
 		update() {
@@ -55,13 +56,13 @@ define([
 				keepWithinMapBoundaries(this.vehicle);
 			}
 
-			let translation = this.translation.clone();
-			translation.negate();
-			translation.addSelf(this.offset);
-			Game.cameraGroup.translation.copy(translation);
+			let position = this.position.clone();
+			position.negate();
+			position.addSelf(this.offset);
+			Game.cameraGroup.position.copy(position);
 
 			if (typeof this.onUpdate === 'function') {
-				this.onUpdate(translation);
+				this.onUpdate(position);
 			}
 		}
 

@@ -3,22 +3,11 @@
 // http://natureofcode.com
 
 // The "Vehicle" class
-define(['Two', 'Utils'], function (Two, Utils) {
-	if (Utils.isUndefined(Two.Vector.prototype.limit)) {
-		Two.Vector.prototype.limit = function (max) {
-			const mSq = this.lengthSquared();
-			if (mSq > max * max) {
-				this.divideScalar(Math.sqrt(mSq)); //normalize it
-				this.multiplyScalar(max);
-			}
-			return this;
-		};
-	}
-
+define(['Vector', 'Utils'], function (Vector, Utils) {
 	function Vehicle(x, y) {
-		this.acceleration = new Two.Vector(0, 0);
-		this.velocity = new Two.Vector(0, -2);
-		this.position = new Two.Vector(x, y);
+		this.acceleration = new Vector(0, 0);
+		this.velocity = new Vector(0, -2);
+		this.position = new Vector(x, y);
 		this.maxspeed = 4;
 		this.maxforce = 0.1;
 		this.distanceBeforeStopping = 100;
@@ -52,7 +41,7 @@ define(['Two', 'Utils'], function (Two, Utils) {
 		// A method that calculates a steering force towards a target
 		// STEER = DESIRED MINUS VELOCITY
 		this.arrive = function (target) {
-			const desired = new Two.Vector().sub(target, this.position);  // A vector pointing from the location to the
+			const desired = new Vector().sub(target, this.position);  // A vector pointing from the location to the
 			                                                              // target
 			const d = desired.length();
 			// Scale with arbitrary damping within 100 pixels
@@ -64,7 +53,7 @@ define(['Two', 'Utils'], function (Two, Utils) {
 			}
 
 			// Steering = Desired minus Velocity
-			const steer = new Two.Vector().sub(desired, this.velocity);
+			const steer = new Vector().sub(desired, this.velocity);
 			steer.limit(this.maxforce);  // Limit to maximum steering force
 			this.applyForce(steer);
 		};

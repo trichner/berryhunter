@@ -2,13 +2,11 @@
 
 define([
 	'Game',
-	'Two',
-	'items/ClickableIcon',
 	'MapEditor',
 	'Utils',
 	'items/Items',
 	'UserInterface'
-], function (Game, Two, ClickableIcon, MapEditor, Utils, Items, UserInterface) {
+], function (Game, MapEditor, Utils, Items, UserInterface) {
 
 	//noinspection UnnecessaryLocalVariableJS
 	const Crafting = {

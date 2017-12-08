@@ -34,6 +34,9 @@ define(['Utils', 'Develop'], function (Utils, Develop) {
 	DayCycle.setup = function (mainSvgElement, scene) {
 		this.scene = scene;
 
+		// FIXME Night Filter
+		return;
+
 		let defContainer = document.createDocumentFragment();
 
 		let nightFilter = Utils.svgToElement(

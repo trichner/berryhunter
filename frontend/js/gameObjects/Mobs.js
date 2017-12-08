@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'GameObject', 'Two', 'Preloading', 'Utils'], function (Game, GameObject, Two, Preloading, Utils) {
+define(['Game', 'GameObject', 'Preloading', 'Utils'], function (Game, GameObject, Preloading, Utils) {
 	class Mob extends GameObject {
 		constructor(gameLayer, x, y, size, rotation) {
 			super(gameLayer, x, y, size, rotation);

@@ -22,7 +22,7 @@ define(['PIXI', 'Game', 'UserInterface'], function (PIXI, Game, UserInterface) {
 			this.height = container.clientHeight;
 
 			this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
-			container.appendChild(container);
+			container.appendChild(this.renderer.view);
 			this.stage = new PIXI.Container();
 
 			this.iconGroup = new PIXI.Container();
@@ -83,14 +83,14 @@ define(['PIXI', 'Game', 'UserInterface'], function (PIXI, Game, UserInterface) {
 			// Position each icon relative to its position on the real map.
 			const minimapIcon = gameObject.createMinimapIcon();
 			if (gameObject.constructor.name === 'Character') {
-				this.playerGroup.add(minimapIcon);
+				this.playerGroup.addChild(minimapIcon);
 			} else {
-				this.iconGroup.add(minimapIcon);
+				this.iconGroup.addChild(minimapIcon);
 			}
 
 			let x = gameObject.getX() * this.scale;
 			let y = gameObject.getY() * this.scale;
-			minimapIcon.translation.set(x, y);
+			minimapIcon.position.set(x, y);
 			minimapIcon.scale = this.iconSizeFactor;
 
 			if (gameObject.isMoveable) {
@@ -110,8 +110,8 @@ define(['PIXI', 'Game', 'UserInterface'], function (PIXI, Game, UserInterface) {
 
 	function update() {
 		this.trackedGameObjects.forEach(gameObject => {
-			gameObject.minimapIcon.translation.x = gameObject.getX() * this.scale;
-			gameObject.minimapIcon.translation.y = gameObject.getY() * this.scale;
+			gameObject.minimapIcon.position.x = gameObject.getX() * this.scale;
+			gameObject.minimapIcon.position.y = gameObject.getY() * this.scale;
 		});
 	}
 

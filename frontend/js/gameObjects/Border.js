@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'GameObject', 'Two'], function (Game, GameObject, Two) {
+define(['Game', 'GameObject', 'PIXI'], function (Game, GameObject, PIXI) {
 	class Border extends GameObject {
 		constructor(x, y, side, length) {
 			super(x, y, side, length);
@@ -33,14 +33,15 @@ define(['Game', 'GameObject', 'Two'], function (Game, GameObject, Two) {
 				y2 = length;
 			}
 
-			let shape = new Two.Line(x, y, x2, y2);
-			shape.noFill();
-			shape.stroke = 'yellow';
+			let shape = new PIXI.Graphics();
+			shape.lineColor = 0xFFFF00;
+			shape.moveTo(x, y);
+			shape.lineTo(x2, y2);
 			return shape;
 		}
 
 		show() {
-			Game.layers.mapBorders.add(this.shape);
+			Game.layers.mapBorders.addChild(this.shape);
 		}
 
 		hide() {

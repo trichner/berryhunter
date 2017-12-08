@@ -2,14 +2,13 @@
 
 define([
 	'Game',
-	'Two',
 	'Utils',
 	'Constants',
 	'items/RecipesHelper',
 	'items/Crafting',
 	'items/Equipment',
 	'items/InventorySlot',
-], function (Game, Two, Utils, Constants, RecipesHelper, Crafting, Equipment, InventorySlot) {
+], function (Game, Utils, Constants, RecipesHelper, Crafting, Equipment, InventorySlot) {
 	class Inventory {
 		constructor(character) {
 			this.character = character;

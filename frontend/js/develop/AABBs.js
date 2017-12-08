@@ -37,24 +37,21 @@ define([], function () {
 						let height = (endY - startY);
 						let x = startX + width / 2;
 						let y = startY + height / 2;
-						this.aabb = new Two.Rectangle(x, y, width, height);
-						this.layer.add(this.aabb);
 
-						this.aabb.noFill();
-						this.aabb.stroke = Develop.settings.elementColor;
-						this.aabb.linewidth = Develop.settings.linewidth;
-
-						// TODO hier weitermachen. Two ELemente nach PIXI.Graphics überführen
 						this.aabb = new PIXI.Graphics();
+						this.layer.addChild(this.aabb);
 						this.aabb.lineColor = Develop.settings.elementColor;
 						this.aabb.lineWidth = Develop.settings.linewidth;
+						this.aabb.drawRect(x, y, width, height);
 
-						this.aabbConnector = new Two.Line(this.getX(), this.getY(), x, y);
-						this.layer.add(this.aabbConnector);
-						this.aabbConnector.stroke = Develop.settings.elementColor;
-						this.aabbConnector.linewidth = Develop.settings.linewidth;
+						this.aabbConnector = new PIXI.Graphics();
+						this.layer.addChild(this.aabbConnector);
+						this.aabbConnector.lineColor = Develop.settings.elementColor;
+						this.aabbConnector.lineWidth = Develop.settings.linewidth;
+						this.aabbConnector.moveTo(this.getX(), this.getY());
+						this.aabbConnector.lineTo(x, y);
 					} else {
-						this.aabb.translation.set((startX + endX) / 2, (startY + endY) / 2);
+						this.aabb.position.set((startX + endX) / 2, (startY + endY) / 2);
 					}
 				};
 

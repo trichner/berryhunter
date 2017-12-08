@@ -2,12 +2,11 @@
 
 define([
 	'Game',
-	'Two',
 	'items/Equipment',
 	'items/ItemType',
 	'UserInterface',
 	'schema_client',
-], function (Game, Two, Equipment, ItemType, UserInterface) {
+], function (Game, Equipment, ItemType, UserInterface) {
 
 	class InventorySlot {
 		/**

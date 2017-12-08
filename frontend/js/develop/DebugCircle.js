@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'GameObject', 'Develop', 'Two'], function (Game, GameObject, Develop, Two) {
+define(['Game', 'GameObject', 'Develop', 'PIXI'], function (Game, GameObject, Develop, PIXI) {
 
 	class DebugCircle extends GameObject {
 		constructor(x, y, radius) {
@@ -9,7 +9,8 @@ define(['Game', 'GameObject', 'Develop', 'Two'], function (Game, GameObject, Dev
 
 			this.timeToLife = 60;
 
-			Game.two.bind('update', (frameCount, timeDelta) => {
+			// FIXME prerender does not provide timeDelta
+			Game.renderer.on('prerender', (frameCount, timeDelta) => {
 				this.timeToLife -= timeDelta;
 				if (this.timeToLife < 0) {
 					this.hide();
@@ -21,10 +22,10 @@ define(['Game', 'GameObject', 'Develop', 'Two'], function (Game, GameObject, Dev
 		}
 
 		createShape(x, y, radius) {
-			let circle = new Two.Ellipse(x, y, radius / 2);
-			circle.noFill();
-			circle.stroke = 'yellow';
-			circle.linewidth = Develop.settings.linewidth;
+			let circle = new PIXI.Graphics();
+			circle.lineColor = 0xFFFF00;
+			circle.lineWidth = Develop.settings.linewidth;
+			circle.drawCircle(x, y, radius / 2);
 			return circle;
 		}
 	}

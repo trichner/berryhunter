@@ -116,6 +116,15 @@ define(['underscore'], function (_) {
 			return dx * dx + dy * dy;
 		},
 
+		limit: function (max) {
+			const mSq = this.lengthSquared();
+			if (mSq > max * max) {
+				this.divideScalar(Math.sqrt(mSq)); //normalize it
+				this.multiplyScalar(max);
+			}
+			return this;
+		},
+
 		setLength: function (l) {
 			return this.normalize().multiplyScalar(l);
 		},

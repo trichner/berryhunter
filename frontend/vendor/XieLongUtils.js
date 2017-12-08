@@ -53,7 +53,28 @@ var TwoDimensional = {
     angleBetween: function (x1, y1, x2, y2) {
         var atan2 = Math.atan2(y1 - y2, x1 - x2);
         return (atan2 < 0 ? Math.PI * 2 + atan2 : atan2);
-    }
+    },
+	/**
+	 *
+	 * @param sides
+	 * @param flat if true, will create an array like [x1, y1, x2, y2, ...], else [{x1, y1}, {x2, y2}, ...]
+	 * @returns {Array}
+	 */
+	makePolygon: function (radius, sides, flat) {
+		var points = [];
+		for (var i = 0; i < sides; i++) {
+			var pct = (i + 0.5) / sides;
+			var theta = 2 * Math.PI * pct + Math.PI / 2;
+			var x = radius * Math.cos(theta);
+			var y = radius * Math.sin(theta);
+			if (flat) {
+				points.push(x, y);
+			} else {
+				points.push({x, y});
+			}
+		}
+		return points;
+	}
 };
 
 function defaultFor(arg, val) {

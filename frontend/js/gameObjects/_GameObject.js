@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], function (Game, InjectedSVG, Constants, Two, Utils, FilterPool) {
+define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool'], function (Game, InjectedSVG, Constants, Vector, Utils, FilterPool) {
 
 	let movementInterpolatedObjects = new Set();
 	let rotatingObjects = new Set();
@@ -67,11 +67,11 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], funct
 			}
 
 			if (Constants.MOVEMENT_INTERPOLATION) {
-				this.desiredPosition = new Two.Vector(x, y); //.subSelf(this.shape.translation);
+				this.desiredPosition = new Vector(x, y); //.subSelf(this.shape.position);
 				this.desireTimestamp = performance.now();
 				movementInterpolatedObjects.add(this);
 			} else {
-				this.shape.translation.set(x, y);
+				this.shape.position.set(x, y);
 			}
 
 			return true;
@@ -92,7 +92,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], funct
 
 		getPosition() {
 			// Defensive copy
-			return this.shape.translation.clone();
+			return this.shape.position.clone();
 		}
 
 		getX() {
@@ -128,7 +128,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], funct
 		}
 
 		show() {
-			this.layer.add(this.shape);
+			this.layer.addChild(this.shape);
 		}
 
 		hide() {
@@ -161,12 +161,15 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], funct
 
 	GameObject.setup = function (mainSvgElement) {
 		if (Constants.MOVEMENT_INTERPOLATION) {
-			Game.two.bind('update', moveInterpolatedObjects);
+			Game.renderer.on('prerender', moveInterpolatedObjects);
 		}
 		if (Constants.LIMIT_TURN_RATE) {
-			Game.two.bind('update', applyTurnRate);
+			Game.renderer.on('prerender', applyTurnRate);
 		}
-		Game.two.bind('update', animateHits);
+
+		//FIXME Hit Animation Filter
+		return;
+		Game.renderer.on('prerender', animateHits);
 
 		// Create filter for hit animation
 
@@ -203,10 +206,10 @@ define(['Game', 'InjectedSVG', 'Constants', 'Two', 'Utils', 'FilterPool'], funct
 			function (gameObject) {
 				let elapsedTimePortion = (now - gameObject.desireTimestamp) / Constants.SERVER_TICKRATE;
 				if (elapsedTimePortion >= 1) {
-					gameObject.shape.translation.copy(gameObject.desiredPosition);
+					gameObject.shape.position.copy(gameObject.desiredPosition);
 					movementInterpolatedObjects.delete(gameObject);
 				} else {
-					gameObject.shape.translation.lerp(gameObject.desiredPosition, elapsedTimePortion);
+					gameObject.shape.position.lerp(gameObject.desiredPosition, elapsedTimePortion);
 				}
 			});
 	}

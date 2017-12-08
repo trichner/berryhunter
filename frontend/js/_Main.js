@@ -1,5 +1,23 @@
 "use strict";
 
+requirejs.config({
+	paths: {
+		PIXI: '../vendor/pixi',
+		'vendor/flatbuffers': '../vendor/flatbuffers',
+		underscore: '../vendor/underscore-min',
+
+		GameObject: 'gameObjects/_GameObject',
+		MapEditor: 'mapEditor/_MapEditor',
+		Develop: 'develop/_Develop'
+	},
+
+	shim: {
+		'underscore': {
+			exports: '_'
+		},
+	}
+});
+
 require(['Environment'], function (Environment) {
 
 	requirejs.config({
@@ -13,19 +31,6 @@ require(['Environment'], function (Environment) {
 			schema_client: Environment.subfolderPath() ?
 				'../../api/schema/js/client_generated' :
 				'schema/client_generated',
-			PIXI: '../vendor/pixi',
-			'vendor/flatbuffers': '../vendor/flatbuffers',
-			underscore: '../vendor/underscore-min',
-
-			GameObject: 'gameObjects/_GameObject',
-			MapEditor: 'mapEditor/_MapEditor',
-			Develop: 'develop/_Develop'
-		},
-
-		shim: {
-			'underscore': {
-				exports: '_'
-			},
 		}
 	});
 
@@ -88,7 +93,6 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'items/Recipes',
 					'items/RecipesHelper',
 					'items/InventorySlot',
-					'items/ClickableIcon',
 					'items/Crafting',
 					'items/Inventory',
 					'VitalSigns',

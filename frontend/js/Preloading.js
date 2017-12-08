@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Utils', 'Constants'], function (Utils, Constants) {
+define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 	let Preloading = {};
 
 	const promises = [];
@@ -59,15 +59,15 @@ define(['Utils', 'Constants'], function (Utils, Constants) {
 		return Preloading.registerPreload(
 			new Promise(function (resolve, reject) {
 				let sourceScale = 1;
-				if (Utils.isNumber(gameObjectClass.MAX_SIZE)){
+				if (Utils.isNumber(gameObjectClass.MAX_SIZE)) {
 					// Scale sourceScale according to the maximum required graphic size
 					sourceScale = sourceScale * gameObjectClass.MAX_SIZE / Constants.GRAPHIC_BASE_SIZE;
 				}
 				gameObjectClass.svg = PIXI.Texture.fromImage(svgPath, undefined, undefined, sourceScale);
-				texture.baseTexture.on('loaded', function () {
+				gameObjectClass.svg.baseTexture.on('loaded', function () {
 					resolve(gameObjectClass.svg);
 				});
-				texture.baseTexture.on('error', function () {
+				gameObjectClass.svg.baseTexture.on('error', function () {
 					reject("Error loading texture '" + svgPath + "'");
 				});
 			})

@@ -3,7 +3,7 @@
 define([
 	'Game',
 	'GameObject',
-	'Two',
+	'PIXI',
 	'NamedGroup',
 	'Constants',
 	'Utils',
@@ -11,7 +11,8 @@ define([
 	'items/Equipment',
 	'InjectedSVG',
 	'Preloading',
-], function (Game, GameObject, Two, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading) {
+	'Vector'
+], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector) {
 	class Character extends GameObject {
 		constructor(id, x, y, name, isPlayerCharacter) {
 			super(Game.layers.characters, x, y, 30, Math.PI / 2);
@@ -36,10 +37,10 @@ define([
 				this.equippedItems[equipmentSlot] = null;
 			}
 
-			let placeableSlot = new Two.Group();
-			this.actualShape.add(placeableSlot);
+			let placeableSlot = new PIXI.Container();
+			this.actualShape.addChild(placeableSlot);
 			this.equipmentSlotGroups[Equipment.Slots.PLACEABLE] = placeableSlot;
-			placeableSlot.translation.set(
+			placeableSlot.position.set(
 				Constants.PLACEMENT_RANGE,
 				0,
 			);
@@ -48,7 +49,7 @@ define([
 			this.createHands();
 
 			Object.values(this.equipmentSlotGroups).forEach(function (equipmentSlot) {
-				equipmentSlot.originalTranslation = equipmentSlot.translation.clone();
+				equipmentSlot.originalTranslation = equipmentSlot.position.clone();
 			});
 
 			// Rotate the character according the 0-angle in drawing space
@@ -57,66 +58,67 @@ define([
 			this.createName();
 
 			this.messages = [];
-			this.messagesGroup = new Two.Group();
-			this.shape.add(this.messagesGroup);
-			this.messagesGroup.translation.y = -1.3 * (this.size + 16);
+			this.messagesGroup = new PIXI.Container();
+			this.shape.addChild(this.messagesGroup);
+			this.messagesGroup.position.y = -1.3 * (this.size + 16);
 
 			if (this.isPlayerCharacter) {
 				this.craftingIndicator = new NamedGroup('craftingIndicator');
-				this.shape.add(this.craftingIndicator);
-				this.craftingIndicator.translation.y = -1.3 * (this.size + 16) - 20;
+				this.shape.addChild(this.craftingIndicator);
+				this.craftingIndicator.position.y = -1.3 * (this.size + 16) - 20;
 
-				this.craftingIndicator.add(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
+				this.craftingIndicator.addChild(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
 
 				let craftingIndicator = this.craftingIndicator;
 				craftingIndicator.opacity = 0;
 
-				let radius = 27;
-				let circle = new Two.Ellipse(0, 0, radius);
-				this.craftingIndicator.add(circle);
-				circle.noFill();
-				circle.stroke = '#c9a741';
-				circle.linewidth = 5;
-				circle.cap = 'square';
-				circle.dashInitialized = false;
-				circle.perimeter = radius * 2 * Math.PI;
-				circle._update = function () {
-					let craftProgress = Game.player.craftProgress;
-					if (craftProgress) {
-						craftProgress.current += Game.two.timeDelta;
-
-						let progress = craftProgress.current / craftProgress.duration;
-						if (progress >= 1) {
-							Game.player.craftProgress = false;
-							progress = 1;
-							craftingIndicator.opacity = 0;
-						}
-
-						if (this._renderer.elem) {
-							if (!this.dashInitialized) {
-								this._renderer.elem.setAttribute('stroke-dasharray', this.perimeter);
-								this.dashInitialized = true;
-							}
-
-							this._renderer.elem.setAttribute('stroke-dashoffset', this.perimeter * (1 - progress));
-						}
-					}
-
-					Two.Path.prototype._update.apply(this, arguments);
-				};
-				circle.rotation = Math.PI / -2;
+				// FIXME implement circular progress
+				// let radius = 27;
+				// let circle = new Two.Ellipse(0, 0, radius);
+				// this.craftingIndicator.add(circle);
+				// circle.noFill();
+				// circle.stroke = '#c9a741';
+				// circle.linewidth = 5;
+				// circle.cap = 'square';
+				// circle.dashInitialized = false;
+				// circle.perimeter = radius * 2 * Math.PI;
+				// circle._update = function () {
+				// 	let craftProgress = Game.player.craftProgress;
+				// 	if (craftProgress) {
+				// 		craftProgress.current += Game.timeDelta;
+				//
+				// 		let progress = craftProgress.current / craftProgress.duration;
+				// 		if (progress >= 1) {
+				// 			Game.player.craftProgress = false;
+				// 			progress = 1;
+				// 			craftingIndicator.opacity = 0;
+				// 		}
+				//
+				// 		if (this._renderer.elem) {
+				// 			if (!this.dashInitialized) {
+				// 				this._renderer.elem.setAttribute('stroke-dasharray', this.perimeter);
+				// 				this.dashInitialized = true;
+				// 			}
+				//
+				// 			this._renderer.elem.setAttribute('stroke-dashoffset', this.perimeter * (1 - progress));
+				// 		}
+				// 	}
+				//
+				// 	Two.Path.prototype._update.apply(this, arguments);
+				// };
+				// circle.rotation = Math.PI / -2;
 			}
 
-			Game.two.bind('update', this.update.bind(this));
+			Game.renderner.on('rerender', this.update.bind(this));
 		}
 
 		initShape(x, y, size, rotation) {
-			let group = new Two.Group();
-			group.translation.set(x, y);
+			let group = new PIXI.Container();
+			group.position.set(x, y);
 
 			this.actualShape = new NamedGroup('actualShape');
-			this.actualShape.add(super.initShape(0, 0, size, rotation));
-			group.add(this.actualShape);
+			this.actualShape.addChild(super.initShape(0, 0, size, rotation));
+			group.addChild(this.actualShape);
 
 			return group;
 		}
@@ -130,37 +132,38 @@ define([
 			const handAngleDistance = 0.4;
 
 			this.leftHand = this.createHand(-handAngleDistance).group;
-			this.actualShape.add(this.leftHand);
+			this.actualShape.addChild(this.leftHand);
 
 
 			let rightHand = this.createHand(handAngleDistance);
 			this.rightHand = rightHand.group;
-			this.actualShape.add(this.rightHand);
+			this.actualShape.addChild(this.rightHand);
 
 			this.equipmentSlotGroups[Equipment.Slots.HAND] = rightHand.slot;
 		}
 
 		createHand(handAngleDistance) {
-			let group = new Two.Group();
+			let group = new PIXI.Container();
 
 			const handAngle = 0;
-			group.translation.set(
+			group.position.set(
 				Math.cos(handAngle + Math.PI * handAngleDistance) * this.size * 0.8,
 				Math.sin(handAngle + Math.PI * handAngleDistance) * this.size * 0.8,
 			);
 
-			let slotGroup = new Two.Group();
-			group.add(slotGroup);
-			slotGroup.translation.set(-this.size * 0.2, 0);
+			let slotGroup = new PIXI.Container();
+			group.addChild(slotGroup);
+			slotGroup.position.set(-this.size * 0.2, 0);
 			slotGroup.rotation = Math.PI / 2;
 
-			let handShape = new Two.Ellipse(0, 0, this.size * 0.2);
-			group.add(handShape);
-			handShape.fill = '#f2a586';
-			handShape.stroke = '#000';
-			handShape.linewidth = 0.212 * 0.6; // relative to size
+			let handShape = new PIXI.Graphics();
+			group.addChild(handShape);
+			handShape.beginFill(0xf2a586);
+			handShape.lineColor = 0x000000;
+			handShape.lineWidth = 0.212 * 0.6; // relative to size
+			handShape.drawCircle(0, 0, this.size * 0.2);
 
-			group.originalTranslation = group.translation.clone();
+			group.originalTranslation = group.position.clone();
 
 			return {
 				group: group,
@@ -178,21 +181,22 @@ define([
 				return;
 			}
 
-			let text = new Two.Text(this.name, 0, -1.3 * this.size, {
-				// family: '"stone-age", serif',
-				// size: 18,
-				alignment: 'center',
-				fill: 'white',
-				weight: '700',
+			let text = PIXI.Text(this.name, {
+				fontFamily: 'stone-age',
+				fontSize: 18,
+				fontWeight: '700',
+				align: 'center',
+				fill: 'white'
 			});
-			this.shape.add(text);
+			this.shape.addChild(text);
+			text.position.set(0, -1.3 * this.size);
 			this.nameElement = text;
 		}
 
 		createMinimapIcon() {
-			let shape = new Two.Ellipse(0, 0, 30 * 3);
-			shape.fill = 'darkblue';
-			shape.noStroke();
+			let shape = new PIXI.Graphics();
+			shape.beginFill(0x00008B);
+			shape.drawCircle(0, 0, 30 * 3);
 
 			return shape;
 		}
@@ -201,7 +205,7 @@ define([
 			if (!MapEditor.isActive()) {
 				return;
 			}
-			let moveVec = new Two.Vector().copy(movement);
+			let moveVec = new Vector().copy(movement);
 
 			moveVec.setLength(this.movementSpeed);
 
@@ -255,7 +259,7 @@ define([
 				} else {
 					offset = this.actionAnimationFrame / (0.6 * Character.hitAnimationFrameDuration) * maxOffset;
 				}
-				hand.translation.x = hand.originalTranslation.x + offset;
+				hand.position.x = hand.originalTranslation.x + offset;
 
 				if (this.actionAnimationFrame <= 1) {
 					this.currentAction = false;
@@ -292,16 +296,16 @@ define([
 			let slotGroup = this.equipmentSlotGroups[equipmentSlot];
 			// Offsets are applied to the slot itself to respect the slot rotation
 			if (Utils.isDefined(item.graphic.offsetX)) {
-				slotGroup.translation.x = slotGroup.originalTranslation.x + item.graphic.offsetX * 2;
+				slotGroup.position.x = slotGroup.originalTranslation.x + item.graphic.offsetX * 2;
 			} else {
-				slotGroup.translation.x = slotGroup.originalTranslation.x;
+				slotGroup.position.x = slotGroup.originalTranslation.x;
 			}
 			if (Utils.isDefined(item.graphic.offsetY)) {
-				slotGroup.translation.y = slotGroup.originalTranslation.y + item.graphic.offsetY * 2;
+				slotGroup.position.y = slotGroup.originalTranslation.y + item.graphic.offsetY * 2;
 			} else {
-				slotGroup.translation.y = slotGroup.originalTranslation.y;
+				slotGroup.position.y = slotGroup.originalTranslation.y;
 			}
-			slotGroup.add(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
+			slotGroup.addChild(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
 
 			this.equippedItems[equipmentSlot] = item;
 
@@ -340,16 +344,16 @@ define([
 
 			// Move all currently displayed messages up
 			this.messages.forEach((message) => {
-				message.translation.y -= fontSize * 1.2;
+				message.position.y -= fontSize * 1.2;
 			});
 
-			let messageShape = new Two.Text(message, 0, 0, {
-				size: fontSize,
-				alignment: 'center',
+			let messageShape = new PIXI.Text(message, {
+				fontSize: fontSize,
+				align: 'center',
 				fill: '#e37313',
 			});
 			messageShape.timeToLife = Constants.CHAT_MESSAGE_DURATION;
-			this.messagesGroup.add(messageShape);
+			this.messagesGroup.addChild(messageShape);
 
 			this.messages.push(messageShape);
 		}

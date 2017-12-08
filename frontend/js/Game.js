@@ -38,18 +38,24 @@ define([], function () {
 		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
 		             Utils, NamedGroup, Constants) {
 
-			Game.loop = function () {
+			Game.loop = function (now) {
 				if (Game.paused) {
 					return;
 				}
 
 				requestAnimationFrame(Game.loop);
+
+				Game.timeDelta = now - Game._lastFrame;
+
 				Game.render();
+
+				Game._lastFrame = now;
 			};
 
 			Game.play = function () {
 				Game.playing = true;
 				Game.paused = false;
+				Game._lastFrame = performance.now();
 				Game.loop();
 			};
 
@@ -99,8 +105,8 @@ define([], function () {
 			 * @param {{mapRadius: number}} gameInformation
 			 */
 			Game.startRendering = function (gameInformation) {
-				const baseTexture = new new PIXI.Graphics();
-				Game.layers.terrain.textures.add(baseTexture);
+				const baseTexture = new PIXI.Graphics();
+				Game.layers.terrain.textures.addChild(baseTexture);
 				baseTexture.beginFill(0x006030);
 				baseTexture.drawCircle(Game.width / 2, Game.height / 2, gameInformation.mapRadius);
 
@@ -117,8 +123,8 @@ define([], function () {
 				const background = new PIXI.Graphics();
 				Game.layers.terrain.background.addChild(background);
 
-				graphics.beginFill(0x287aff);
-				graphics.drawRect(0, 0, Game.width, Game.height);
+				background.beginFill(0x287aff);
+				background.drawRect(0, 0, Game.width, Game.height);
 			}
 
 			if (MapEditor.isActive()) {
@@ -193,12 +199,12 @@ define([], function () {
 			Game.stage.addChild(Game.cameraGroup);
 
 			// Terrain Textures moving with the camera
-			Game.cameraGroup.add(
+			Game.cameraGroup.addChild(
 				Game.layers.terrain.textures
 			);
 
 			// Lower Placeables
-			Game.cameraGroup.add(
+			Game.cameraGroup.addChild(
 				Game.layers.placeables.campfire,
 				Game.layers.placeables.chest,
 				Game.layers.placeables.workbench,
@@ -206,23 +212,23 @@ define([], function () {
 			);
 
 			// Characters
-			Game.cameraGroup.add(Game.layers.characters);
+			Game.cameraGroup.addChild(Game.layers.characters);
 
 			// Mobs
-			Game.cameraGroup.add(
+			Game.cameraGroup.addChild(
 				Game.layers.mobs.dodo,
 				Game.layers.mobs.saberToothCat,
 				Game.layers.mobs.mammoth
 			);
 
 			// Higher Placeables
-			Game.cameraGroup.add(
+			Game.cameraGroup.addChild(
 				Game.layers.placeables.doors,
 				Game.layers.placeables.walls
 			);
 
 			// Resources
-			Game.cameraGroup.add(
+			Game.cameraGroup.addChild(
 				Game.layers.resources.berryBush,
 				Game.layers.resources.minerals,
 				Game.layers.resources.trees
