@@ -21,7 +21,11 @@ define(['PIXI', 'Game', 'UserInterface'], function (PIXI, Game, UserInterface) {
 			this.width = container.clientWidth;
 			this.height = container.clientHeight;
 
-			this.renderer = PIXI.autoDetectRenderer(this.width, this.height);
+			this.renderer = PIXI.autoDetectRenderer({
+				width: this.width,
+				height: this.height,
+				transparent: true
+			});
 			container.appendChild(this.renderer.view);
 			this.stage = new PIXI.Container();
 
