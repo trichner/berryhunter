@@ -433,6 +433,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				if (item.graphic && item.graphic.file) {
 					item.graphic.path = 'img/items/' + item.graphic.file + '.svg' + cacheBuster;
 					Preloading.registerGameObjectSVG(item.graphic, item.graphic.path);
+					item.graphic.size = item.graphic.size || Constants.GRID_SPACING;
 				}
 				if (item.definition) {
 					Preloading.registerPreload(Utils.makeRequest({

@@ -109,7 +109,7 @@ define([
 				// circle.rotation = Math.PI / -2;
 			}
 
-			Game.renderer.on('rerender', this.update.bind(this));
+			Game.renderer.on('prerender', this.update, this);
 		}
 
 		initShape(x, y, size, rotation) {
@@ -305,7 +305,7 @@ define([
 			} else {
 				slotGroup.position.y = slotGroup.originalTranslation.y;
 			}
-			slotGroup.addChild(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size || Constants.GRID_SPACING));
+			slotGroup.addChild(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size));
 
 			this.equippedItems[equipmentSlot] = item;
 
