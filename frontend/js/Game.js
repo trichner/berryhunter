@@ -108,7 +108,7 @@ define([], function () {
 				const baseTexture = new PIXI.Graphics();
 				Game.layers.terrain.textures.addChild(baseTexture);
 				baseTexture.beginFill(0x006030);
-				baseTexture.drawCircle(Game.width / 2, Game.height / 2, gameInformation.mapRadius);
+				baseTexture.drawCircle(0, 0, gameInformation.mapRadius);
 
 				Game.map = new GameMapWithBackend(gameInformation.mapRadius);
 				Game.play();
@@ -250,8 +250,8 @@ define([], function () {
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
 			DayCycle.setup(domElement, Game.stage);
-			KeyEvents.setup(domElement);
-			PointerEvents.setup(domElement);
+			KeyEvents.setup(window);
+			PointerEvents.setup(window);
 
 			// Disable context menu on right click to use the right click ingame
 			document.body.addEventListener('contextmenu', function (event) {

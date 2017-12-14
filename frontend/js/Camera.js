@@ -68,7 +68,7 @@ define([
 		}
 
 		destroy() {
-			Game.renderer.off('update', this.updateListener);
+			Game.renderer.off('prerender', this.updateListener);
 		}
 	}
 

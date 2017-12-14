@@ -26,7 +26,7 @@ define([], function () {
 
 		// Used for interpolation
 		SERVER_TICKRATE: 33,
-		MOVEMENT_INTERPOLATION: false,
+		MOVEMENT_INTERPOLATION: true,
 
 		LIMIT_TURN_RATE: true,
 		// Maximum radians game objects are rotated per millisecond

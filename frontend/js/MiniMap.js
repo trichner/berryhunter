@@ -95,7 +95,7 @@ define(['PIXI', 'Game', 'UserInterface'], function (PIXI, Game, UserInterface) {
 			let x = gameObject.getX() * this.scale;
 			let y = gameObject.getY() * this.scale;
 			minimapIcon.position.set(x, y);
-			minimapIcon.scale = this.iconSizeFactor;
+			minimapIcon.scale.set(this.iconSizeFactor);
 
 			if (gameObject.isMoveable) {
 				gameObject.minimapIcon = minimapIcon;

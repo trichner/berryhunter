@@ -42,7 +42,7 @@ define([
 		}
 
 		onStockChange(newStock, oldStock) {
-			this.shape.scale = newStock / this.capacity;
+			this.shape.scale.set(newStock / this.capacity);
 		}
 
 		createMinimapIcon() {
@@ -87,7 +87,7 @@ define([
 		}
 
 		onStockChange(newStock, oldStock) {
-			this.shape.scale = newStock / this.capacity;
+			this.shape.scale.set(newStock / this.capacity);
 		}
 
 		hide() {

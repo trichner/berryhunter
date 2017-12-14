@@ -5,11 +5,15 @@ define(['Constants', 'Utils', 'NamedGroup'], function (Constants, Utils, NamedGr
 
 	function InjectedSVG(svgTexture, x, y, size, rotation) {
 
+		size = size || (Constants.GRID_SPACING / 2);
+		size *= 2;
+
 		let sprite = new PIXI.Sprite(svgTexture);
+		sprite.anchor.set(0.5, 0.5);
 		sprite.x = x;
 		sprite.y = y;
-		sprite.width = size || (Constants.GRID_SPACING / 2);
-		sprite.height = size || (Constants.GRID_SPACING / 2);
+		sprite.width = size;
+		sprite.height = size;
 		sprite.rotation = rotation;
 
 		return sprite;
