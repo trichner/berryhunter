@@ -1,11 +1,11 @@
 "use strict";
 
-define(['Vector', 'Camera'], function (Vector, Camera) {
+define(['Game', 'Vector', 'Camera'], function (Game, Vector, Camera) {
 	class Spectator {
 		constructor(x, y) {
 			this.position = new Vector(x, y);
-			this.camera = new Camera(this);
 			this.movementSpeed = Math.max(Game.width, Game.height);
+			this.camera = new Camera(this);
 		}
 
 		getPosition() {
@@ -21,7 +21,7 @@ define(['Vector', 'Camera'], function (Vector, Camera) {
 		}
 
 		remove() {
-			// TODO remove camera etc
+			this.camera.destroy();
 		}
 	}
 

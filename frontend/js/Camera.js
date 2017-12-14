@@ -4,8 +4,9 @@ define([
 	'Game',
 	'natureOfCode/arrive/vehicle',
 	'Develop',
-	'Vector'
-], function (Game, Vehicle, Develop, Vector) {
+	'Vector',
+	'Utils',
+], function (Game, Vehicle, Develop, Vector, Utils) {
 	class Camera {
 
 		/**
@@ -61,7 +62,7 @@ define([
 			position.add(this.offset);
 			Game.cameraGroup.position.copy(position);
 
-			if (typeof this.onUpdate === 'function') {
+			if (Utils.isFunction(this.onUpdate)) {
 				this.onUpdate(position);
 			}
 		}

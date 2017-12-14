@@ -282,14 +282,13 @@ define([], function () {
 
 			if (Develop.isActive()) {
 				Develop.afterSetup(Game);
+				// FIXME only for debugging - enables game access in the console
+				window.Game = Game;
 			}
 
 			if (MapEditor.isActive()) {
 				MapEditor.afterSetup(Game);
 			}
-
-			// FIXME only for debugging - enables game access in the console
-			window.Game = Game;
 		});
 	};
 

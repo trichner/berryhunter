@@ -6,7 +6,7 @@
 define(['Vector', 'Utils'], function (Vector, Utils) {
 	function Vehicle(x, y) {
 		this.acceleration = new Vector(0, 0);
-		this.velocity = new Vector(0, -2);
+		this.velocity = new Vector(0, 0);
 		this.position = new Vector(x, y);
 		this.maxspeed = 4;
 		this.maxforce = 0.1;
@@ -41,7 +41,7 @@ define(['Vector', 'Utils'], function (Vector, Utils) {
 		// A method that calculates a steering force towards a target
 		// STEER = DESIRED MINUS VELOCITY
 		this.arrive = function (target) {
-			const desired = new Vector().sub(target, this.position);  // A vector pointing from the location to the
+			const desired = target.clone().sub(this.position);  // A vector pointing from the location to the
 			                                                              // target
 			const d = desired.length();
 			// Scale with arbitrary damping within 100 pixels
@@ -53,7 +53,7 @@ define(['Vector', 'Utils'], function (Vector, Utils) {
 			}
 
 			// Steering = Desired minus Velocity
-			const steer = new Vector().sub(desired, this.velocity);
+			const steer = desired.sub(this.velocity);
 			steer.limit(this.maxforce);  // Limit to maximum steering force
 			this.applyForce(steer);
 		};
