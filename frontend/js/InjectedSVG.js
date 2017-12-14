@@ -14,7 +14,7 @@ define(['Constants', 'Utils', 'NamedGroup'], function (Constants, Utils, NamedGr
 		sprite.y = y;
 		sprite.width = size;
 		sprite.height = size;
-		sprite.rotation = rotation;
+		sprite.rotation = rotation || 0;
 
 		return sprite;
 	}
