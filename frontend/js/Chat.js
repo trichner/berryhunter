@@ -14,6 +14,10 @@ define(['Utils', 'UserInterface'], function (Utils, UserInterface) {
 			Chat.inputElement = inputElement;
 
 			inputElement.addEventListener('keydown', function (event) {
+				// Not perfect, as it captures all shortcuts etc.
+				// but necessary to prevent movement while typing
+				event.stopPropagation();
+
 				if (Chat.KEYS.indexOf(event.which) !== -1) {
 					Backend.sendChatMessage({
 						message: inputElement.textContent
