@@ -80,7 +80,6 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 			return this.clickable;
 		}
 
-		// TODO Display busy animation
 		startProgress(seconds) {
 			if (this.progressOverlay === null) {
 				console.warn('Tried to call startProgress on an ClickableIcon without progressOverlay.');
@@ -95,8 +94,8 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 
 			let self = this;
 			require(['Game'], function (Game) {
-				let updateListener = function (frameCount, timeDelta) {
-					progress.current += timeDelta;
+				let updateListener = function () {
+					progress.current += Game.timeDelta;
 					if (progress.current >= progress.duration) {
 						self.progressOverlay.style.top = '100%';
 						self.progressOverlay.classList.add('hidden');
