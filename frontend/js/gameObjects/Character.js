@@ -212,7 +212,8 @@ define([
 			this.actionAnimationFrame = animationFrame;
 		}
 
-		update(frameCount, timeDelta) {
+		update() {
+			let timeDelta = Game.timeDelta;
 			if (this.currentAction) {
 				let hand;
 				switch (this.currentAction) {
@@ -254,7 +255,7 @@ define([
 
 			let craftProgress = Game.player.craftProgress;
 			if (craftProgress) {
-				craftProgress.current += Game.timeDelta;
+				craftProgress.current += timeDelta;
 
 				let progress = craftProgress.current / craftProgress.duration;
 				if (progress >= 1) {
