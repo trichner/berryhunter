@@ -9,9 +9,8 @@ define(['Game', 'GameObject', 'Develop', 'PIXI'], function (Game, GameObject, De
 
 			this.timeToLife = 60;
 
-			// FIXME prerender does not provide timeDelta
-			Game.renderer.on('prerender', (frameCount, timeDelta) => {
-				this.timeToLife -= timeDelta;
+			Game.renderer.on('prerender', () => {
+				this.timeToLife -= Game.timeDelta;
 				if (this.timeToLife < 0) {
 					this.hide();
 					delete Game.map.objects[this.id];

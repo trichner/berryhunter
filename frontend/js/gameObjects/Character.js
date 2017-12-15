@@ -164,6 +164,7 @@ define([
 				align: 'center',
 				fill: 'white'
 			});
+			text.anchor.set(0.5, 0.5);
 			this.shape.addChild(text);
 			text.position.set(0, -1.3 * this.size);
 			this.nameElement = text;
@@ -339,7 +340,7 @@ define([
 		}
 
 		say(message) {
-			let fontSize = 16;
+			let fontSize = 18;
 
 			// Move all currently displayed messages up
 			this.messages.forEach((message) => {
@@ -347,10 +348,12 @@ define([
 			});
 
 			let messageShape = new PIXI.Text(message, {
+				fontFamily: 'stone-age',
 				fontSize: fontSize,
 				align: 'center',
 				fill: '#e37313',
 			});
+			messageShape.anchor.set(0.5, 0.5);
 			messageShape.timeToLife = Constants.CHAT_MESSAGE_DURATION;
 			this.messagesGroup.addChild(messageShape);
 
