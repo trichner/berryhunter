@@ -63,14 +63,14 @@ define([
 			this.messagesGroup.position.y = -1.3 * (this.size + 16);
 
 			if (this.isPlayerCharacter) {
-				this.craftingIndicator = new NamedGroup('craftingIndicator');
-				this.shape.addChild(this.craftingIndicator);
-				this.craftingIndicator.position.y = -1.3 * (this.size + 16) - 20;
+				let craftingIndicator = new NamedGroup('craftingIndicator');
+				this.craftingIndicator = craftingIndicator;
+				this.shape.addChild(craftingIndicator);
+				craftingIndicator.position.y = -1.3 * (this.size + 16) - 20;
 
-				this.craftingIndicator.addChild(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
+				craftingIndicator.addChild(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
 
-				let craftingIndicator = this.craftingIndicator;
-				craftingIndicator.opacity = 0;
+				craftingIndicator.visible = false;
 
 				// FIXME implement circular progress
 				// let radius = 27;
@@ -82,30 +82,6 @@ define([
 				// circle.cap = 'square';
 				// circle.dashInitialized = false;
 				// circle.perimeter = radius * 2 * Math.PI;
-				// circle._update = function () {
-				// 	let craftProgress = Game.player.craftProgress;
-				// 	if (craftProgress) {
-				// 		craftProgress.current += Game.timeDelta;
-				//
-				// 		let progress = craftProgress.current / craftProgress.duration;
-				// 		if (progress >= 1) {
-				// 			Game.player.craftProgress = false;
-				// 			progress = 1;
-				// 			craftingIndicator.opacity = 0;
-				// 		}
-				//
-				// 		if (this._renderer.elem) {
-				// 			if (!this.dashInitialized) {
-				// 				this._renderer.elem.setAttribute('stroke-dasharray', this.perimeter);
-				// 				this.dashInitialized = true;
-				// 			}
-				//
-				// 			this._renderer.elem.setAttribute('stroke-dashoffset', this.perimeter * (1 - progress));
-				// 		}
-				// 	}
-				//
-				// 	Two.Path.prototype._update.apply(this, arguments);
-				// };
 				// circle.rotation = Math.PI / -2;
 			}
 
@@ -123,7 +99,7 @@ define([
 			return group;
 		}
 
-		getRotationShape(){
+		getRotationShape() {
 			return this.actualShape;
 		}
 
@@ -252,7 +228,7 @@ define([
 				const maxOffset = this.size * 0.4;
 				let offset;
 				if (this.actionAnimationFrame > 0.7 * Character.hitAnimationFrameDuration) {
-					offset = Utils.sq(( Character.hitAnimationFrameDuration + 1 - this.actionAnimationFrame)) /
+					offset = Utils.sq((Character.hitAnimationFrameDuration + 1 - this.actionAnimationFrame)) /
 						Utils.sq(0.3 * Character.hitAnimationFrameDuration) * maxOffset;
 				} else if (this.actionAnimationFrame > 0.6 * Character.hitAnimationFrameDuration) {
 					offset = maxOffset;
@@ -274,7 +250,29 @@ define([
 					return false;
 				}
 				return true;
-			})
+			});
+
+			let craftProgress = Game.player.craftProgress;
+			if (craftProgress) {
+				craftProgress.current += Game.timeDelta;
+
+				let progress = craftProgress.current / craftProgress.duration;
+				if (progress >= 1) {
+					Game.player.craftProgress = false;
+					progress = 1;
+					this.craftingIndicator.visible = false;
+				}
+
+				// FIXME implement circular progress
+				// if (this._renderer.elem) {
+				// 	if (!this.dashInitialized) {
+				// 		this._renderer.elem.setAttribute('stroke-dasharray', this.perimeter);
+				// 		this.dashInitialized = true;
+				// 	}
+				//
+				// 	this._renderer.elem.setAttribute('stroke-dashoffset', this.perimeter * (1 - progress));
+				// }
+			}
 		}
 
 		isSlotEquipped(equipmentSlot) {

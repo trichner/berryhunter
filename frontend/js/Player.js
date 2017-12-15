@@ -38,7 +38,7 @@ define([
 				duration: craftingTime * 1000,
 				current: 0
 			};
-			this.character.craftingIndicator.opacity = 1;
+			this.character.craftingIndicator.visible = true;
 		}
 
 		remove() {
