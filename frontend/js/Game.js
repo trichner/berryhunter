@@ -135,10 +135,11 @@ define([], function () {
 			} else {
 				// Setup backend first, as this will take some time to connect.
 				Backend.setup();
-				let renderer = PIXI.autoDetectRenderer(256, 256);
+				let renderer = PIXI.autoDetectRenderer({
+					antialias: true,
+					backgroundColor: 0x006030
+				});
 				Game.renderer = renderer;
-
-				renderer.backgroundColor = 0x006030;
 
 				// Fullscreen
 				renderer.view.style.position = "absolute";

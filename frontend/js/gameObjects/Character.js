@@ -67,31 +67,14 @@ define([
 				this.craftingIndicator = craftingIndicator;
 				this.shape.addChild(craftingIndicator);
 				craftingIndicator.position.y = -1.3 * (this.size + 16) - 20;
-
 				craftingIndicator.addChild(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
+				craftingIndicator.visible = false;
 
-				// craftingIndicator.visible = false;
-
-				// FIXME implement circular progress
-				// let radius = 27;
-				// let circle = new Two.Ellipse(0, 0, radius);
-				// this.craftingIndicator.add(circle);
-				// circle.noFill();
-				// circle.stroke = '#c9a741';
-				// circle.linewidth = 5;
-				// circle.cap = 'square';
-				// circle.dashInitialized = false;
-				// circle.perimeter = radius * 2 * Math.PI;
-				// circle.rotation = Math.PI / -2;
-
-				let radius = 27;
 				let circle = new PIXI.Graphics();
+				this.craftingIndicator.circle = circle;
 				craftingIndicator.addChild(circle);
-				// circle.lineColor = 0xc9a741;
-				circle.lineColor = 0xff0000;
-				circle.lineWidth = 50;
-				circle.beginFill(0x000000, 0.5);
-				circle.arc(0, 0, radius, 1.5 * Math.PI, (2 / 3 - 1/4) * 2 * Math.PI);
+				// Let the progress start at 12 o'clock
+				circle.rotation = -0.5 * Math.PI;
 			}
 
 			Game.renderer.on('prerender', this.update, this);
@@ -256,7 +239,6 @@ define([
 			this.messages = this.messages.filter((message) => {
 				message.timeToLife -= timeDelta;
 				if (message.timeToLife <= 0) {
-					// message.visible = false;
 					this.messagesGroup.removeChild(message);
 					return false;
 				}
@@ -274,15 +256,9 @@ define([
 					this.craftingIndicator.visible = false;
 				}
 
-				// FIXME implement circular progress
-				// if (this._renderer.elem) {
-				// 	if (!this.dashInitialized) {
-				// 		this._renderer.elem.setAttribute('stroke-dasharray', this.perimeter);
-				// 		this.dashInitialized = true;
-				// 	}
-				//
-				// 	this._renderer.elem.setAttribute('stroke-dashoffset', this.perimeter * (1 - progress));
-				// }
+				this.craftingIndicator.circle.clear();
+				this.craftingIndicator.circle.lineStyle(5, 0xc9a741, 1);
+				this.craftingIndicator.circle.arc(0, 0, 27, 0, progress * 2 * Math.PI);
 			}
 		}
 
