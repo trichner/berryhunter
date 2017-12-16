@@ -70,7 +70,7 @@ define([
 
 				craftingIndicator.addChild(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
 
-				craftingIndicator.visible = false;
+				// craftingIndicator.visible = false;
 
 				// FIXME implement circular progress
 				// let radius = 27;
@@ -83,6 +83,15 @@ define([
 				// circle.dashInitialized = false;
 				// circle.perimeter = radius * 2 * Math.PI;
 				// circle.rotation = Math.PI / -2;
+
+				let radius = 27;
+				let circle = new PIXI.Graphics();
+				craftingIndicator.addChild(circle);
+				// circle.lineColor = 0xc9a741;
+				circle.lineColor = 0xff0000;
+				circle.lineWidth = 50;
+				circle.beginFill(0x000000, 0.5);
+				circle.arc(0, 0, radius, 1.5 * Math.PI, (2 / 3 - 1/4) * 2 * Math.PI);
 			}
 
 			Game.renderer.on('prerender', this.update, this);
