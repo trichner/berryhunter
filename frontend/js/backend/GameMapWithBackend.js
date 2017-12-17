@@ -118,14 +118,15 @@ define([
 				gameObject.stock = entity.stock;
 			}
 
-			/**
-			 * Handle equipment
-			 */
 			if (entity.type === Character) {
 				/**
 				 * @type {Character}
 				 */
 				let character = gameObject;
+
+				/**
+				 * Handle equipment
+				 */
 				let slotsToHandle = _.clone(Equipment.Slots);
 				delete slotsToHandle.PLACEABLE;
 
@@ -148,6 +149,15 @@ define([
 				for (let slot in slotsToHandle) {
 					//noinspection JSUnfilteredForInLoop
 					gameObject.unequipItem(slot);
+				}
+
+				/**
+				 * Handle Actions
+				 */
+				if (entity.actionTick) {
+					console.log("Action Tick by " + entity.name + ": " + entity.actionTick);
+					character.action();
+					character.progressHitAnimation(entity.actionTick);
 				}
 			}
 
