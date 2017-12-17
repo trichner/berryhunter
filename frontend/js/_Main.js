@@ -2,7 +2,7 @@
 
 requirejs.config({
 	paths: {
-		PIXI: '../vendor/pixi',
+		PIXI: '../vendor/pixi.min',
 		'vendor/flatbuffers': '../vendor/flatbuffers',
 		underscore: '../vendor/underscore-min',
 
