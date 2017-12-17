@@ -186,19 +186,20 @@ define([
 					break;
 				}
 
-				let circle = new PIXI.Graphics();
-				this.berries.addChild(circle);
-				circle.beginFill(0xc20071);
-				circle.drawCircle(
+				let berry = new InjectedSVG(
+					BerryBush.berry.svg,
 					(Math.cos(Math.PI * 2 / this.capacity * i) * this.size * 0.3),
 					(Math.sin(Math.PI * 2 / this.capacity * i) * this.size * 0.3),
 					5
 				);
+				this.berries.addChild(berry);
 			}
 		}
 	}
 
 	Preloading.registerGameObjectSVG(BerryBush, 'img/berryBush.svg', 60);
+	BerryBush.berry = {};
+	Preloading.registerGameObjectSVG(BerryBush.berry, 'img/berry.svg', 5);
 
 	return {
 		Resource: Resource,
