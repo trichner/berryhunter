@@ -246,7 +246,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				icon: {file: 'seedIcon'},
 				graphic: {
 					file: '../berryBush',
-					size: 25
+					size: 42
 				},
 				definition: 'placeables/seeds',
 				type: ItemType.PLACEABLE

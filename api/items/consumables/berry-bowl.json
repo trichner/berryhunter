@@ -3,7 +3,7 @@
   "id": 28,
   "type": "CONSUMABLE",
   "factors": {
-    "food": 1.0
+    "food": 0.99
   },
   "recipe": {
     "craftTimeInSeconds": 10,

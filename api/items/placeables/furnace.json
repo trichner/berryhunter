@@ -4,7 +4,6 @@
   "type": "PLACEABLE",
   "factors": {
     "heatPerSecond": 0.06,
-    "durationInSeconds": -1,
     "radius": 2.5,
     "vulnerability": 0.01
   },
@@ -30,6 +29,6 @@
   },
   "body": {
     "layer": 0,
-    "radius": 0.5
+    "radius": 0.667
   }
 }

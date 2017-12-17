@@ -19,5 +19,9 @@
       "BigCampfire",
       "Furnace"
     ]
+  },
+  "body": {
+    "layer": 0,
+    "radius": 0.35
   }
 }
