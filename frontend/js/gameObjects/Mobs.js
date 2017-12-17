@@ -10,36 +10,39 @@ define(['Game', 'GameObject', 'Preloading', 'Utils'], function (Game, GameObject
 		}
 
 		// FIXME remove this method once https://trello.com/c/ykYuFHGU/114-animals-bekommen-keine-sinnvolle-rotation-mitgeschickt is implemented in the backend
-		setRotation(rotation){
+		setRotation(rotation) {
 			if (Utils.isUndefined(rotation)) {
 				return;
 			}
 
 			// Subtract the default rotation offset of all animal graphics
-			GameObject.prototype.setRotation.call(this, rotation + Math.PI/2);
+			GameObject.prototype.setRotation.call(this, rotation + Math.PI / 2);
 		}
 	}
 
 	class Dodo extends Mob {
 		constructor(x, y) {
-			super(Game.layers.mobs.dodo, x, y)
+			super(Game.layers.mobs.dodo, x, y, Utils.randomInt(30, 45))
 		}
 	}
-	Preloading.registerGameObjectSVG(Dodo, 'img/dodo.svg');
+
+	Preloading.registerGameObjectSVG(Dodo, 'img/dodo.svg', 30);
 
 	class SaberToothCat extends Mob {
 		constructor(x, y) {
-			super(Game.layers.mobs.saberToothCat, x, y, Utils.randomInt(30, 50));
+			super(Game.layers.mobs.saberToothCat, x, y, Utils.randomInt(40, 60));
 		}
 	}
-	Preloading.registerGameObjectSVG(SaberToothCat, 'img/saberToothCat.svg');
+
+	Preloading.registerGameObjectSVG(SaberToothCat, 'img/saberToothCat.svg', 60);
 
 	class Mammoth extends Mob {
 		constructor(x, y) {
-			super(Game.layers.mobs.mammoth, x, y, Utils.randomInt(60, 90));
+			super(Game.layers.mobs.mammoth, x, y, Utils.randomInt(70, 100));
 		}
 	}
-	Preloading.registerGameObjectSVG(Mammoth, 'img/mammoth.svg');
+
+	Preloading.registerGameObjectSVG(Mammoth, 'img/mammoth.svg', 100);
 
 	return {
 		Mob: Mob,

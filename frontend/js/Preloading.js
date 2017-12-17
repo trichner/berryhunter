@@ -55,13 +55,13 @@ define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 		}));
 	};
 
-	Preloading.registerGameObjectSVG = function (gameObjectClass, svgPath) {
+	Preloading.registerGameObjectSVG = function (gameObjectClass, svgPath, maxSize) {
 		return Preloading.registerPreload(
 			new Promise(function (resolve, reject) {
 				let sourceScale = 1;
-				if (Utils.isNumber(gameObjectClass.MAX_SIZE)) {
+				if (Utils.isNumber(maxSize)) {
 					// Scale sourceScale according to the maximum required graphic size
-					sourceScale = sourceScale * gameObjectClass.MAX_SIZE / Constants.GRAPHIC_BASE_SIZE;
+					sourceScale = sourceScale * (2 * maxSize) / Constants.GRAPHIC_BASE_SIZE;
 				}
 				gameObjectClass.svg = PIXI.Texture.fromImage(svgPath, undefined, undefined, sourceScale);
 				gameObjectClass.svg.baseTexture.on('loaded', function () {

@@ -347,10 +347,10 @@ define([
 	}
 
 	Character.hitAnimationFrameDuration = 15;
-	Preloading.registerGameObjectSVG(Character, 'img/character.svg');
+	Preloading.registerGameObjectSVG(Character, 'img/character.svg', 30);
 
 	Character.craftingIndicator = {};
-	Preloading.registerGameObjectSVG(Character.craftingIndicator, 'img/crafting.svg');
+	Preloading.registerGameObjectSVG(Character.craftingIndicator, 'img/crafting.svg', 20);
 
 	return Character;
 });

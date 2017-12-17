@@ -60,7 +60,7 @@ define([
 	}
 
 	Tree.groundTexture = {};
-	Preloading.registerGameObjectSVG(Tree.groundTexture, 'img/treeSpot.svg');
+	Preloading.registerGameObjectSVG(Tree.groundTexture, 'img/treeSpot.svg', 120);
 
 	class RoundTree extends Tree {
 		constructor(x, y, size) {
@@ -68,7 +68,7 @@ define([
 		}
 	}
 
-	Preloading.registerGameObjectSVG(RoundTree, 'img/roundTree.svg');
+	Preloading.registerGameObjectSVG(RoundTree, 'img/roundTree.svg', 120);
 
 	class MarioTree extends Tree {
 		constructor(x, y, size) {
@@ -76,7 +76,7 @@ define([
 		}
 	}
 
-	Preloading.registerGameObjectSVG(MarioTree, 'img/deciduousTree.svg');
+	Preloading.registerGameObjectSVG(MarioTree, 'img/deciduousTree.svg', 120);
 
 	class Mineral extends Resource {
 		constructor(x, y, size) {
@@ -97,7 +97,7 @@ define([
 	}
 
 	Mineral.groundTexture = {};
-	Preloading.registerGameObjectSVG(Mineral.groundTexture, 'img/stoneSpot.svg');
+	Preloading.registerGameObjectSVG(Mineral.groundTexture, 'img/stoneSpot.svg', 60);
 
 	class Stone extends Mineral {
 		constructor(x, y, size) {
@@ -114,7 +114,7 @@ define([
 		}
 	}
 
-	Preloading.registerGameObjectSVG(Stone, 'img/stone.svg');
+	Preloading.registerGameObjectSVG(Stone, 'img/stone.svg', 60);
 
 	class Bronze extends Mineral {
 		constructor(x, y, size) {
@@ -131,7 +131,7 @@ define([
 		}
 	}
 
-	Preloading.registerGameObjectSVG(Bronze, 'img/bronze.svg');
+	Preloading.registerGameObjectSVG(Bronze, 'img/bronze.svg', 60);
 
 	class Iron extends Mineral {
 		constructor(x, y, size) {
@@ -148,7 +148,7 @@ define([
 		}
 	}
 
-	Preloading.registerGameObjectSVG(Iron, 'img/iron.svg');
+	Preloading.registerGameObjectSVG(Iron, 'img/iron.svg', 60);
 
 	class BerryBush extends Resource {
 		constructor(x, y, size) {
@@ -198,7 +198,7 @@ define([
 		}
 	}
 
-	Preloading.registerGameObjectSVG(BerryBush, 'img/berryBush.svg');
+	Preloading.registerGameObjectSVG(BerryBush, 'img/berryBush.svg', 60);
 
 	return {
 		Resource: Resource,
