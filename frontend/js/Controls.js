@@ -105,7 +105,10 @@ define([
 		}
 
 		static handleFunctionKeys(event) {
-			// TODO check if in chat mode
+			if (Chat.isOpen()) {
+				return;
+			}
+
 			if (Console.KEYS.indexOf(event.which) !== -1) {
 				if (consoleCooldown > 0) {
 					consoleCooldown--;
@@ -120,9 +123,6 @@ define([
 				return;
 			}
 
-			if (Chat.isOpen()) {
-				return;
-			}
 
 			if (Chat.KEYS.indexOf(event.which) !== -1) {
 				Chat.show();

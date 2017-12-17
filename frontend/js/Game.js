@@ -33,10 +33,11 @@ define([], function () {
 			'Chat',
 			'Utils',
 			'NamedGroup',
-			'Constants'
+			'Constants',
+			'ColorMatrixFilterExtension'
 		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, KeyEvents,
 		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
-		             Utils, NamedGroup, Constants) {
+		             Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
 
 			Game.loop = function (now) {
 				if (Game.paused) {
@@ -283,8 +284,6 @@ define([], function () {
 
 			if (Develop.isActive()) {
 				Develop.afterSetup(Game);
-				// FIXME only for debugging - enables game access in the console
-				window.Game = Game;
 			}
 
 			if (MapEditor.isActive()) {

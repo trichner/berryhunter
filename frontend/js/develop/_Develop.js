@@ -179,6 +179,9 @@ define([
 
 		afterSetup: function () {
 			Fps.setup();
+
+			// Make the Game object available in console
+			window.Game = Game;
 		},
 
 		logValue: function (name, value) {

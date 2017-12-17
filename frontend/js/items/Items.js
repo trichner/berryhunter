@@ -274,7 +274,6 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				multiPlacing: true
 			},
 			StoneWall: {
-				// TODO
 				icon: {file: 'wallStone'},
 				graphic: {
 					file: 'wallStone',

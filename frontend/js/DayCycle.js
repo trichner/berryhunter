@@ -25,51 +25,21 @@ define(['Utils', 'Develop'], function (Utils, Develop) {
 
 	const NightVisuals = {
 		SATURATION: 0.4,
-		FLOOD_COLOR: 'rgb(107,131,185)',
+		FLOOD_COLOR: {
+			red: 107,
+			green: 131,
+			blue: 185
+		},
 		FLOOD_OPACITY: 0.9,
 	};
 
 	let timeOfDay;
 
-	DayCycle.setup = function (mainSvgElement, scene) {
-		this.scene = scene;
+	DayCycle.setup = function (mainSvgElement, stage) {
+		this.stage = stage;
 
-		// FIXME Night Filter
-		return;
-
-		let defContainer = document.createDocumentFragment();
-
-		let nightFilter = Utils.svgToElement(
-			'<filter x="0" y="0" width="1" height="1" ' +
-			'color-interpolation-filters="sRGB" id="nightFilter"></filter>');
-		defContainer.appendChild(nightFilter);
-
-		this.feColorMatrix = Utils.svgToElement('<feColorMatrix ' +
-			'id="feColorMatrix3996" ' +
-			'result="result1" ' +
-			'values="' + NightVisuals.SATURATION + '" ' +
-			'type="saturate" />');
-		nightFilter.appendChild(this.feColorMatrix);
-
-		this.feFlood = Utils.svgToElement('<feFlood ' +
-			'flood-opacity="' + NightVisuals.FLOOD_OPACITY + '" ' +
-			'id="feFlood3998" ' +
-			'flood-color="' + NightVisuals.FLOOD_COLOR + '" />');
-		nightFilter.appendChild(this.feFlood);
-
-		nightFilter.appendChild(Utils.svgToElement('<feBlend ' +
-			'in2="result1" ' +
-			'mode="multiply" ' +
-			'result="result2" ' +
-			'id="feBlend4000" />'));
-		nightFilter.appendChild(Utils.svgToElement('<feComposite ' +
-			'in2="SourceGraphic" ' +
-			'operator="in" ' +
-			'in="result2" ' +
-			'result="result3" ' +
-			'id="feComposite4002" />'));
-
-		mainSvgElement.getElementsByTagName('defs')[0].appendChild(defContainer);
+		this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
+		this.filters = [this.colorMatrix];
 	};
 
 	DayCycle.getTime = function () {
@@ -129,29 +99,27 @@ define(['Utils', 'Develop'], function (Utils, Develop) {
 			Develop.logTimeOfDay(this.getFormattedTime());
 		}
 
-		if (Utils.isUndefined(this.scene._renderer) ||
-			Utils.isUndefined(this.scene._renderer.elem)) {
-			return;
-		}
-
 		let opacity = getNightFilterOpacity();
 		if (opacity !== lastOpacity) {
 			lastOpacity = opacity;
 
 			if (opacity === 0) {
-				this.scene._renderer.elem.removeAttribute('filter');
+				this.stage.filters = null;
 			} else {
-				// if (lastOpacity === 0) {
-				this.scene._renderer.elem.setAttribute('filter', 'url(#nightFilter)');
-				// }
+				this.stage.filters = this.filters;
 				/**
 				 * Opacity: Saturation
 				 * 0    : 1
 				 * 0.5  : 0.65
 				 * 1    : 0.3
 				 */
-				this.feColorMatrix.setAttribute('values', 1 - opacity + opacity * NightVisuals.SATURATION);
-				this.feFlood.setAttribute('flood-opacity', opacity * NightVisuals.FLOOD_OPACITY);
+				this.colorMatrix.flood(
+					NightVisuals.FLOOD_COLOR.red,
+					NightVisuals.FLOOD_COLOR.green,
+					NightVisuals.FLOOD_COLOR.blue,
+					opacity * NightVisuals.FLOOD_OPACITY
+				);
+				this.colorMatrix.lumaGreyscale(opacity * (1 - NightVisuals.SATURATION), true);
 			}
 		}
 	};

@@ -112,6 +112,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'Spectator',
 					'FilterPool',
 					'Vector',
+				'ColorMatrixFilterExtension',
 
 					// Develop resources
 					'develop/Fps',
