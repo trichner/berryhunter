@@ -8,14 +8,14 @@ requirejs.config({
 
 		GameObject: 'gameObjects/_GameObject',
 		MapEditor: 'mapEditor/_MapEditor',
-		Develop: 'develop/_Develop'
+		Develop: 'develop/_Develop',
 	},
 
 	shim: {
 		'underscore': {
-			exports: '_'
+			exports: '_',
 		},
-	}
+	},
 });
 
 require(['Environment'], function (Environment) {
@@ -31,13 +31,13 @@ require(['Environment'], function (Environment) {
 			schema_client: Environment.subfolderPath() ?
 				'../../api/schema/js/client_generated' :
 				'schema/client_generated',
-		}
+		},
 	});
 
 // Disable caching
 	if (Environment.cachingEnabled()) {
 		requirejs.config({
-			urlArgs: '' + (new Date()).getTime()
+			urlArgs: '' + (new Date()).getTime(),
 		})
 	}
 });
@@ -112,7 +112,8 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'Spectator',
 					'FilterPool',
 					'Vector',
-				'ColorMatrixFilterExtension',
+					'ColorMatrixFilterExtension',
+					'PlayerName',
 
 					// Develop resources
 					'develop/Fps',
@@ -125,7 +126,8 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 
 					// The Game
 					// (you just lost it)
-					'Game'], function () {
+					'Game',
+				], function () {
 					/*
 					 * All modules had a chance to register preloads - now setup waits for those reloads to resolve.
 					 */
@@ -134,7 +136,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 							Game.setup();
 						});
 					});
-				}
+				},
 			);
 		});
 

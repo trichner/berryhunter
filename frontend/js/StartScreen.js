@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Preloading', 'NameGenerator'], function (Preloading, NameGenerator) {
+define(['Preloading', 'PlayerName'], function (Preloading, PlayerName) {
 	const StartScreen = {};
 
 	const playerNameMaxLength = 20;
@@ -9,7 +9,13 @@ define(['Preloading', 'NameGenerator'], function (Preloading, NameGenerator) {
 		StartScreen.rootElement = document.getElementById('startScreen');
 		StartScreen.playerNameInput = StartScreen.rootElement
 			.getElementsByClassName('playerNameInput').item(0);
-		StartScreen.playerNameInput.setAttribute('placeholder', NameGenerator.generate());
+
+		let playerName = PlayerName.get();
+		StartScreen.playerNameInput.setAttribute('placeholder', playerName.suggestion);
+		if (playerName.fromStorage) {
+			StartScreen.playerNameInput.setAttribute('value', playerName.name);
+		}
+
 		StartScreen.playerNameInput.setAttribute('maxlength', playerNameMaxLength);
 		StartScreen.playerNameInput.focus();
 
@@ -24,6 +30,8 @@ define(['Preloading', 'NameGenerator'], function (Preloading, NameGenerator) {
 			name = StartScreen.playerNameInput.getAttribute('placeholder');
 		}
 		name = name.substr(0, playerNameMaxLength);
+
+		PlayerName.set(name);
 
 		require(['backend/Backend'], function (Backend) {
 			Backend.sendJoin({
