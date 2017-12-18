@@ -15,7 +15,7 @@ define([
 ], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector) {
 	class Character extends GameObject {
 		constructor(id, x, y, name, isPlayerCharacter) {
-			super(Game.layers.characters, x, y, 30, Math.PI / 2);
+			super(Game.layers.characters, x, y, Constants.CHARACTER_SIZE, Math.PI / 2);
 			this.id = id;
 			this.name = name;
 			this.isPlayerCharacter = isPlayerCharacter;

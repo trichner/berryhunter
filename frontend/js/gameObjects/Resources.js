@@ -1,10 +1,5 @@
-define([
-	'Game',
-	'GameObject',
-	'PIXI',
-	'Preloading',
-	'Utils',
-	'InjectedSVG'], function (Game, GameObject, PIXI, Preloading, Utils, InjectedSVG) {
+define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Constants'],
+	function (Game, GameObject, PIXI, Preloading, Utils, InjectedSVG, Constants) {
 
 	class Resource extends GameObject {
 		constructor(gameLayer, x, y, size) {
@@ -26,23 +21,22 @@ define([
 					},
 				},
 			});
+
+			this.baseScale = this.shape.scale.x;
 		}
 
 		onStockChange(newStock, oldStock) {
-			// Default NOP
+			let scale = newStock / this.capacity;
+			this.shape.scale.set(this.baseScale * scale);
 		}
 	}
 
 	class Tree extends Resource {
 		constructor(x, y, size) {
-			super(Game.layers.resources.trees, x, y, size);
+			super(Game.layers.resources.trees, x, y, size + Constants.CHARACTER_SIZE);
 
 			this.depletionTexture = new InjectedSVG(Tree.groundTexture.svg, x, y, this.size, this.rotation);
 			Game.layers.terrain.textures.addChild(this.depletionTexture);
-		}
-
-		onStockChange(newStock, oldStock) {
-			this.shape.scale.set(newStock / this.capacity);
 		}
 
 		createMinimapIcon() {
@@ -84,10 +78,6 @@ define([
 
 			this.depletionTexture = new InjectedSVG(Mineral.groundTexture.svg, x, y, this.size, this.rotation);
 			Game.layers.terrain.textures.addChild(this.depletionTexture);
-		}
-
-		onStockChange(newStock, oldStock) {
-			this.shape.scale.set(newStock / this.capacity);
 		}
 
 		hide() {
