@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Preloading', 'Game'], function (Preloading, Game) {
+define(['Preloading', 'Game', 'NameGenerator'], function (Preloading, Game, NameGenerator) {
 	const EndScreen = {};
 
 	const playerNameMaxLength = 20;
@@ -37,7 +37,7 @@ define(['Preloading', 'Game'], function (Preloading, Game) {
 		});
 
 	EndScreen.show = function () {
-		EndScreen.playerNameInput.setAttribute('placeholder', Game.player.character.name);
+		EndScreen.playerNameInput.setAttribute('placeholder', NameGenerator.generate());
 		EndScreen.playerNameInput.value = Game.player.character.name;
 		this.rootElement.classList.add('showing');
 	};
