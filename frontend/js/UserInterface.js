@@ -16,6 +16,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		constructor(node) {
 			this.clickable = false;
 			this.domElement = node;
+			this.inProgress = false;
 
 			this.domElement.addEventListener('pointerup', function (event) {
 				event.stopPropagation();
@@ -52,6 +53,10 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 
 			this.imageNode = this.domElement.querySelector('.itemIcon');
 			this.progressOverlay = this.domElement.querySelector('.progressOverlay');
+		}
+
+		appendTo(element){
+			element.appendChild(this.domElement);
 		}
 
 		setIconGraphic(svgPath) {
@@ -91,6 +96,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 			};
 
 			this.progressOverlay.classList.remove('hidden');
+			this.inProgress = true;
 
 			let self = this;
 			require(['Game'], function (Game) {
@@ -100,6 +106,9 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 						self.progressOverlay.style.top = '100%';
 						self.progressOverlay.classList.add('hidden');
 						Game.renderer.off('prerender', updateListener);
+						self.inProgress = false;
+						// A little hacky - would be nice with events
+						Game.player.inventory.onChange();
 					} else {
 						let top = 100 - 100 * progress.current / progress.duration;
 						self.progressOverlay.style.top = top.toFixed(3) + '%';
@@ -209,18 +218,24 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		let craftsPerRow = Math.ceil(availableCrafts.length / craftsPerColumn);
 
 		availableCrafts.forEach(function (recipe, index) {
-			let craftableItemElement = this.craftableItemTemplate.cloneNode(true);
-			this.craftingElement.appendChild(craftableItemElement);
+			if (Utils.isUndefined(recipe.clickableIcon)) {
+				console.log('Create clickableIcon for ' + recipe.name);
 
-			if (index % craftsPerRow === 0) {
-				craftableItemElement.classList.add('newLine');
+				let craftableItemElement = this.craftableItemTemplate.cloneNode(true);
+
+				if (index % craftsPerRow === 0) {
+					craftableItemElement.classList.add('newLine');
+				}
+
+				let clickableIcon = new ClickableIcon(craftableItemElement);
+				clickableIcon.onLeftClick = function (event) {
+					onLeftClick.call(clickableIcon, event, recipe);
+				};
+				clickableIcon.setIconGraphic(recipe.item.icon.path);
+
+				recipe.clickableIcon = clickableIcon;
 			}
-
-			let clickableIcon = new ClickableIcon(craftableItemElement);
-			clickableIcon.onLeftClick = function (event) {
-				onLeftClick.call(clickableIcon, event, recipe);
-			};
-			clickableIcon.setIconGraphic(recipe.item.icon.path);
+			recipe.clickableIcon.appendTo(this.craftingElement);
 		}, this);
 
 		this.craftingElement.className = '';
