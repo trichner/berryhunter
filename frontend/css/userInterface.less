@@ -47,6 +47,19 @@
 	bottom: 0;
 	left: 50%;
 	transform: translateX(-50%);
+
+	&.overfilled {
+		> .inventorySlot {
+			animation: red-flash 700ms cubic-bezier(0, 1, 1, 0);
+		}
+	}
+}
+
+@keyframes red-flash {
+
+	50% {
+		background-color: red;
+	}
 }
 
 .clickableItem {
