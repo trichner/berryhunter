@@ -21,11 +21,11 @@ define([
 			// Add to the list of available (=rendered) crafts the currently displayed crafts that are in progress
 			// https://trello.com/c/oT8FLSHZ
 			availableCrafts = availableCrafts.concat(this.displayedCrafts.filter(function (recipe) {
-				if (Utils.isUndefined(recipe.clickableIcon)){
+				if (Utils.isUndefined(recipe.clickableIcon)) {
 					return false;
 				}
 
-				if (!recipe.clickableIcon.inProgress){
+				if (!recipe.clickableIcon.inProgress) {
 					return false;
 				}
 
@@ -44,9 +44,14 @@ define([
 					}
 					Game.player.inventory.addItem(recipe.item);
 				} else {
-					Game.player.controls.onInventoryAction(recipe.item, BerryhunterApi.ActionType.CraftItem);
-					this.startProgress(recipe.craftingTime);
-					Game.player.startCraftProgress(recipe.craftingTime);
+					let actionAllowed = Game.player.controls
+						.onInventoryAction(
+							recipe.item,
+							BerryhunterApi.ActionType.CraftItem);
+					if (actionAllowed) {
+						this.startProgress(recipe.craftingTime);
+						Game.player.startCraftProgress(recipe.craftingTime);
+					}
 				}
 			};
 			UserInterface.displayAvailableCrafts(availableCrafts, onCraftIconLeftClick);

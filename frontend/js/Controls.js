@@ -82,7 +82,8 @@ define([
 		 *
 		 * @param {Character} character
 		 */
-		constructor(character) {
+		constructor(character, craftInProgress) {
+			this.craftInProgress = craftInProgress;
 			this.character = character;
 			this.playerId = character.id;
 
@@ -136,11 +137,19 @@ define([
 			}
 		}
 
+		/**
+		 * @return {boolean} whether or not the action was allowed. Visuals have to be aligned to this return value
+		 */
 		onInventoryAction(item, actionType) {
+			if (this.craftInProgress()) {
+				return false;
+			}
+
 			this.inventoryAction = {
 				item: item,
 				actionType: actionType,
 			};
+			return true;
 		}
 
 		update() {
@@ -197,46 +206,50 @@ define([
 				if (Utils.isDefined(this.inventoryAction)) {
 					action = this.inventoryAction;
 					delete this.inventoryAction;
-				} else if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
-					this.hitAnimationTick = this.character.action();
-					this.character.progressHitAnimation(this.hitAnimationTick);
-					switch (this.character.currentAction) {
-						case 'MAIN':
-							action = {
-								item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
-								actionType: BerryhunterApi.ActionType.Primary
-							};
-							break;
-						case 'PLACING':
-							let placedItem = this.character.getEquippedItem(Equipment.Slots.PLACEABLE);
-
-							if (!placedItem.multiPlacing) {
-								Game.player.inventory.unequipItem(placedItem, Equipment.Slots.PLACEABLE);
-							}
-
-							if (MapEditor.isActive()) {
-								let placeableGameobject = new Placeable(
-									placedItem,
-									this.character.getX() + Math.cos(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
-									this.character.getY() + Math.sin(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
-								);
-								Game.map.objects.push(placeableGameobject);
-								Game.player.inventory.removeItem(placedItem, 1);
-							} else {
+				} else {
+					if (this.craftInProgress()){
+						// Don't check for actions
+					} else if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
+						this.hitAnimationTick = this.character.action();
+						this.character.progressHitAnimation(this.hitAnimationTick);
+						switch (this.character.currentAction) {
+							case 'MAIN':
 								action = {
-									item: placedItem,
-									actionType: BerryhunterApi.ActionType.PlaceItem
+									item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
+									actionType: BerryhunterApi.ActionType.Primary
+								};
+								break;
+							case 'PLACING':
+								let placedItem = this.character.getEquippedItem(Equipment.Slots.PLACEABLE);
+
+								if (!placedItem.multiPlacing) {
+									Game.player.inventory.unequipItem(placedItem, Equipment.Slots.PLACEABLE);
 								}
-							}
-							break;
+
+								if (MapEditor.isActive()) {
+									let placeableGameobject = new Placeable(
+										placedItem,
+										this.character.getX() + Math.cos(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
+										this.character.getY() + Math.sin(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
+									);
+									Game.map.objects.push(placeableGameobject);
+									Game.player.inventory.removeItem(placedItem, 1);
+								} else {
+									action = {
+										item: placedItem,
+										actionType: BerryhunterApi.ActionType.PlaceItem
+									}
+								}
+								break;
+						}
+					} else if (anyKeyIsPressed(ALT_ACTION_KEYS) || PointerEvents.pointerDown === ALT_ACTION_BUTTON) {
+						this.hitAnimationTick = this.character.altAction();
+						this.character.progressHitAnimation(this.hitAnimationTick);
+						action = {
+							item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
+							actionType: BerryhunterApi.ActionType.Primary
+						};
 					}
-				} else if (anyKeyIsPressed(ALT_ACTION_KEYS) || PointerEvents.pointerDown === ALT_ACTION_BUTTON) {
-					this.hitAnimationTick = this.character.altAction();
-					this.character.progressHitAnimation(this.hitAnimationTick);
-					action = {
-						item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
-						actionType: BerryhunterApi.ActionType.Primary
-					};
 				}
 			}
 

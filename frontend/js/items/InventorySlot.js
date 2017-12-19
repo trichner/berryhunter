@@ -28,6 +28,11 @@ define([
 				if (!this.isFilled()) {
 					return;
 				}
+
+				if (this.inventory.craftInProgress()){
+					return;
+				}
+
 				switch (this.item.type) {
 					case ItemType.EQUIPMENT:
 					case ItemType.PLACEABLE:
@@ -47,6 +52,10 @@ define([
 			}.bind(this);
 
 			this.clickableIcon.onRightClick = function () {
+				if (this.inventory.craftInProgress()){
+					return;
+				}
+
 				if (this.isFilled()) {
 					Game.player.controls.onInventoryAction(this.item, BerryhunterApi.ActionType.DropItem);
 				}

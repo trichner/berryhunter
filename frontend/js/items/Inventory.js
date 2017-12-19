@@ -10,8 +10,9 @@ define([
 	'items/InventorySlot',
 ], function (Game, Utils, Constants, RecipesHelper, Crafting, Equipment, InventorySlot) {
 	class Inventory {
-		constructor(character) {
+		constructor(character, craftInProgress) {
 			this.character = character;
+			this.craftInProgress = craftInProgress;
 			this.craftableRecipes = [];
 			this.availableCrafts = [];
 
@@ -121,9 +122,9 @@ define([
 		 * @param item
 		 * @param equipmentSlot
 		 */
-		unequipItem(item, equipmentSlot){
+		unequipItem(item, equipmentSlot) {
 			this.slots.forEach(function (slot) {
-				if (slot.item === item){
+				if (slot.item === item) {
 					slot.deactivate();
 				}
 			});
