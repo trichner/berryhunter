@@ -22,7 +22,9 @@
       }
     ],
     "tools": [
-      "CampFire"
+      "Campfire",
+      "BigCampfire",
+      "Furnace"
     ]
   }
 }
