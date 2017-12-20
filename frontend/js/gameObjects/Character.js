@@ -57,15 +57,26 @@ define([
 
 			this.createName();
 
+			// Contains PIXI.Containers that will mirror this characters position
+			this.followGroups = [];
+
+			let messagesFollowGroup = new PIXI.Container();
+			Game.layers.characterAdditions.chatMessages.addChild(messagesFollowGroup);
+			this.followGroups.push(messagesFollowGroup);
+
 			this.messages = [];
 			this.messagesGroup = new PIXI.Container();
-			this.shape.addChild(this.messagesGroup);
+			messagesFollowGroup.addChild(this.messagesGroup);
 			this.messagesGroup.position.y = -1.3 * (this.size + 16);
 
 			if (this.isPlayerCharacter) {
+				let craftProgressFollowGroup = new PIXI.Container();
+				Game.layers.characterAdditions.craftProgress.addChild(craftProgressFollowGroup);
+				this.followGroups.push(craftProgressFollowGroup);
+
 				let craftingIndicator = new NamedGroup('craftingIndicator');
 				this.craftingIndicator = craftingIndicator;
-				this.shape.addChild(craftingIndicator);
+				craftProgressFollowGroup.addChild(craftingIndicator);
 				craftingIndicator.position.y = -1.3 * (this.size + 16) - 20;
 				craftingIndicator.addChild(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
 				craftingIndicator.visible = false;
@@ -76,6 +87,10 @@ define([
 				// Let the progress start at 12 o'clock
 				circle.rotation = -0.5 * Math.PI;
 			}
+
+			this.followGroups.forEach(function (group) {
+				group.position.copy(this.shape.position);
+			}, this);
 
 			Game.renderer.on('prerender', this.update, this);
 		}
@@ -260,6 +275,10 @@ define([
 				this.craftingIndicator.circle.lineStyle(5, 0xc9a741, 1);
 				this.craftingIndicator.circle.arc(0, 0, 27, 0, progress * 2 * Math.PI);
 			}
+
+			this.followGroups.forEach(function (group) {
+				group.position.copy(this.shape.position);
+			}, this);
 		}
 
 		isSlotEquipped(equipmentSlot) {

@@ -188,6 +188,10 @@ define([], function () {
 					berryBush: new NamedGroup('berryBush'),
 					minerals: new NamedGroup('minerals'),
 					trees: new NamedGroup('trees'),
+				},
+				characterAdditions: {
+					craftProgress: new NamedGroup('craftProgress'),
+					chatMessages: new NamedGroup('chatMessages'),
 				}
 				// UI Overlay is the highest layer, but not managed with pixi.js
 			};
@@ -234,6 +238,12 @@ define([], function () {
 				Game.layers.resources.berryBush,
 				Game.layers.resources.minerals,
 				Game.layers.resources.trees
+			);
+
+			// Character Additions
+			Game.cameraGroup.addChild(
+				Game.layers.characterAdditions.craftProgress,
+				Game.layers.characterAdditions.chatMessages,
 			);
 
 			createBackground();
