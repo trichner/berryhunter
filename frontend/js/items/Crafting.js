@@ -33,32 +33,38 @@ define([
 				return availableCrafts.indexOf(recipe) === -1;
 			}));
 
-			let onCraftIconLeftClick = function (event, recipe) {
-				if (MapEditor.isActive()) {
-					for (let material in recipe.materials) {
-						//noinspection JSUnfilteredForInLoop
-						Game.player.inventory.removeItem(
-							Items[material],
-							recipe.materials[material],
-						);
-					}
-					Game.player.inventory.addItem(recipe.item);
-				} else {
-					let actionAllowed = Game.player.controls
-						.onInventoryAction(
-							recipe.item,
-							BerryhunterApi.ActionType.CraftItem);
-					if (actionAllowed) {
-						this.startProgress(recipe.craftingTime);
-						Game.player.startCraftProgress(recipe.craftingTime);
-					}
-				}
-			};
 			UserInterface.displayAvailableCrafts(availableCrafts, onCraftIconLeftClick);
 
 			this.displayedCrafts = availableCrafts;
 		}
 	};
+
+	function onCraftIconLeftClick(event, recipe) {
+		if (!Game.player.inventory.canFitCraft(recipe.materials)) {
+			UserInterface.flashInventory();
+			return;
+		}
+
+		if (MapEditor.isActive()) {
+			for (let material in recipe.materials) {
+				//noinspection JSUnfilteredForInLoop
+				Game.player.inventory.removeItem(
+					Items[material],
+					recipe.materials[material],
+				);
+			}
+			Game.player.inventory.addItem(recipe.item);
+		} else {
+			let actionAllowed = Game.player.controls
+				.onInventoryAction(
+					recipe.item,
+					BerryhunterApi.ActionType.CraftItem);
+			if (actionAllowed) {
+				this.startProgress(recipe.craftingTime);
+				Game.player.startCraftProgress(recipe.craftingTime);
+			}
+		}
+	}
 
 	return Crafting;
 });

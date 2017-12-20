@@ -395,11 +395,12 @@ dl.flatList > dd {
   transform: translateX(-50%);
 }
 #inventory.overfilled > .inventorySlot {
-  animation: red-flash 700ms cubic-bezier(0, 1, 1, 0);
+  animation: red-flash 700ms ease-in-out;
 }
 @keyframes red-flash {
-  50% {
-    background-color: red;
+  40%,
+  60% {
+    background-color: crimson;
   }
 }
 .clickableItem {

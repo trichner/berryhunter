@@ -166,6 +166,34 @@ define([
 			});
 			this.onChange();
 		}
+
+		/**
+		 * Checks if the inventory has enough slots available for a craft with the provided materials.
+		 * When the inventory is full, it will also check if a slot gets freed with the craft and thus enough space will
+		 * be available.
+		 * @param recipeMaterials
+		 * @return {boolean}
+		 */
+		canFitCraft(recipeMaterials) {
+			return this.slots.some(function (slot) {
+				if (!slot.isFilled()) {
+					return true;
+				}
+
+				let requiredMaterialCount = recipeMaterials[slot.item.name];
+				if (Utils.isUndefined(requiredMaterialCount)) {
+					return false;
+				}
+
+				if (slot.count < requiredMaterialCount) {
+					console.error('Invalid state: ' + requiredMaterialCount + ' ' + slot.item.name +
+						' are required for the craft, but only ' + slot.count + ' are in the inventory.');
+					// technically, the slot would be free, if the backend for some reason accepts this craft
+					return true;
+				}
+				return requiredMaterialCount === slot.count;
+			})
+		}
 	}
 
 	return Inventory;
