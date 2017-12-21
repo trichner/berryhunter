@@ -27,7 +27,7 @@ define([], function () {
 			'Player',
 			'Spectator',
 			'GameObject',
-			'items/RecipesHelper',
+			'items/Recipes',
 			'UserInterface',
 			'StartScreen',
 			'Chat',
@@ -36,7 +36,7 @@ define([], function () {
 			'Constants',
 			'ColorMatrixFilterExtension'
 		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, KeyEvents,
-		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
+		             PointerEvents, Player, Spectator, GameObject, Recipes, UserInterface, StartScreen, Chat,
 		             Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
 
 			Game.loop = function (now) {
@@ -264,7 +264,7 @@ define([], function () {
 			require(['Camera'], function (Camera) {
 				Camera.setup();
 			});
-			RecipesHelper.setup();
+			Recipes.setup();
 			require(['VitalSigns'], function (VitalSigns) {
 				VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
 			});

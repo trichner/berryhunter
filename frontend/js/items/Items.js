@@ -440,7 +440,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 					Preloading.registerPreload(Utils.makeRequest({
 						method: 'GET',
 						url: definitionPath + item.definition + '.json' + cacheBuster
-					}).then((itemDefinition) => {
+					}).then(itemDefinition => {
 						itemDefinition = JSON.parse(itemDefinition);
 						if (item.name !== itemDefinition.name) {
 							throw 'Loaded "' + item.definition + '.json" for item "' + item.name + '" but got "' + itemDefinition.name + '".';

@@ -91,7 +91,6 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'items/Items',
 					'items/ItemType',
 					'items/Recipes',
-					'items/RecipesHelper',
 					'items/InventorySlot',
 					'items/Crafting',
 					'items/Inventory',

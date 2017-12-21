@@ -4,11 +4,11 @@ define([
 	'Game',
 	'Utils',
 	'Constants',
-	'items/RecipesHelper',
+	'items/Recipes',
 	'items/Crafting',
 	'items/Equipment',
 	'items/InventorySlot',
-], function (Game, Utils, Constants, RecipesHelper, Crafting, Equipment, InventorySlot) {
+], function (Game, Utils, Constants, Recipes, Crafting, Equipment, InventorySlot) {
 	class Inventory {
 		constructor(character, craftInProgress) {
 			this.character = character;
@@ -35,7 +35,7 @@ define([
 				}
 
 				if (self.craftableRecipes.length > 0) {
-					self.availableCrafts = RecipesHelper.checkNearbys(self.craftableRecipes);
+					self.availableCrafts = Recipes.checkNearbys(self.craftableRecipes);
 					Crafting.displayAvailableCrafts(self.availableCrafts);
 				}
 
@@ -135,8 +135,8 @@ define([
 		 * Gets called everytime the items or item count in this inventory get changed.
 		 */
 		onChange() {
-			this.craftableRecipes = RecipesHelper.getCraftableRecipes(this);
-			this.availableCrafts = RecipesHelper.checkNearbys(this.craftableRecipes);
+			this.craftableRecipes = Recipes.getCraftableRecipes(this);
+			this.availableCrafts = Recipes.checkNearbys(this.craftableRecipes);
 			Crafting.displayAvailableCrafts(this.availableCrafts);
 		}
 

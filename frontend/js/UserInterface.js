@@ -85,6 +85,14 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 			return this.clickable;
 		}
 
+		setHinted(flag){
+			if (flag){
+				this.domElement.classList.add('hinted');
+			} else {
+				this.domElement.classList.remove('hinted');
+			}
+		}
+
 		startProgress(seconds) {
 			if (this.progressOverlay === null) {
 				console.warn('Tried to call startProgress on an ClickableIcon without progressOverlay.');
@@ -252,6 +260,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 
 				recipe.clickableIcon = clickableIcon;
 			}
+			recipe.clickableIcon.setHinted(!recipe.isCraftable);
 			recipe.clickableIcon.appendTo(this.craftingElement);
 			if (newLines.indexOf(index) === -1){
 				recipe.clickableIcon.domElement.classList.remove('newLine');
