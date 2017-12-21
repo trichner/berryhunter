@@ -46,7 +46,7 @@ define(['../vendor/XieLongUtils'], function () {
 			if (errorCallback) {
 				errorCallback(resp);
 			} else {
-				console.log(resp.responseText);
+				console.error(resp.responseText);
 			}
 		});
 
@@ -68,7 +68,7 @@ define(['../vendor/XieLongUtils'], function () {
 					if (errorCallback) {
 						errorCallback(req);
 					} else {
-						console.log(req.statusText);
+						console.error(req.statusText);
 					}
 					//p5._friendlyFileLoadError(3, path);
 				}

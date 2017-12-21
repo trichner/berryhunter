@@ -155,7 +155,6 @@ define([
 				 * Handle Actions
 				 */
 				if (entity.actionTick) {
-					console.log("Action Tick by " + entity.name + ": " + entity.actionTick);
 					character.action();
 					character.progressHitAnimation(entity.actionTick);
 				}

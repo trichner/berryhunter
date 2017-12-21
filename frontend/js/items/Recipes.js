@@ -53,9 +53,6 @@ define([
 			let item = Items[itemName];
 
 			item.isCrafted = Utils.isDefined(item.recipe);
-			if (!item.isCrafted) {
-				console.log('Uncrafted: ' + itemName);
-			}
 
 			/* Only list recipes for items that
 			 *	a) have a recipe and
@@ -116,9 +113,8 @@ define([
 						// Missing non-crafted materials: show as hinted craft
 						recipe.isCraftable = false;
 					}
-				} else
 					// Is material amount insufficient?
-					if (availableItems[material] < recipe.materials[material]) {
+				} else if (availableItems[material] < recipe.materials[material]) {
 					// Insufficient materials: show as hinted craft
 					recipe.isCraftable = false;
 				}
