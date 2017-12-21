@@ -309,7 +309,12 @@ define([
 			} else {
 				slotGroup.position.y = slotGroup.originalTranslation.y;
 			}
-			slotGroup.addChild(new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size));
+			let equipmentGraphic = new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size);
+			slotGroup.addChild(equipmentGraphic);
+
+			if (equipmentSlot === Equipment.Slots.PLACEABLE){
+				equipmentGraphic.rotation = Math.PI / -2;
+			}
 
 			this.equippedItems[equipmentSlot] = item;
 
