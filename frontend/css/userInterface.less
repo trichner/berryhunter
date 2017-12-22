@@ -25,8 +25,12 @@
 	bottom: 0;
 	left: 0;
 
-	background-color: Cornsilk;
-	border: 0.3vw solid Cornsilk;
+	background-color: fade(Cornsilk, 50%);
+	border: 0.3vw solid fade(Cornsilk, 50%);
+	background-clip: content-box; // don't let the background mix with the border
+
+	margin-bottom: 0.3vw;
+	margin-left: 0.3vw;
 
 	border-radius: 50%;
 
