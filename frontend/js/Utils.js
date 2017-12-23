@@ -182,7 +182,7 @@ define(['../vendor/XieLongUtils'], function () {
 		return typeof variable === 'number';
 	};
 
-	Utils.arraysEqual = function (a, b) {
+	Utils.arraysEqual = function (a, b, compareFn) {
 		if (a === b) {
 			return true;
 		}
@@ -193,8 +193,12 @@ define(['../vendor/XieLongUtils'], function () {
 			return false;
 		}
 
+		compareFn = compareFn || function (a, b) {
+			return a === b;
+		};
+
 		for (let i = 0; i < a.length; ++i) {
-			if (a[i] !== b[i]) {
+			if (!compareFn(a[i], b[i])) {
 				return false;
 			}
 		}

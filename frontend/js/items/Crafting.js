@@ -13,7 +13,9 @@ define([
 		displayedCrafts: [],
 
 		displayAvailableCrafts: function (availableCrafts) {
-			if (Utils.arraysEqual(this.displayedCrafts, availableCrafts)) {
+			if (Utils.arraysEqual(this.displayedCrafts, availableCrafts, function (a, b) {
+					return a.id === b.id && a.isCraftable === b.isCraftable;
+				})) {
 				// Nothing to do here
 				return;
 			}
@@ -33,9 +35,14 @@ define([
 				return availableCrafts.indexOf(recipe) === -1;
 			}));
 
-			UserInterface.displayAvailableCrafts(availableCrafts, onCraftIconLeftClick);
+			this.displayedCrafts = availableCrafts.map(function (recipe) {
+				return {
+					id: recipe.item.id,
+					isCraftable: recipe.isCraftable
+				}
+			});
 
-			this.displayedCrafts = availableCrafts;
+			UserInterface.displayAvailableCrafts(availableCrafts, onCraftIconLeftClick);
 		}
 	};
 
