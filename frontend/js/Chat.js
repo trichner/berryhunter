@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Utils', 'UserInterface'], function (Utils, UserInterface) {
+define(['Utils', 'userInterface/UserInterface'], function (Utils, UserInterface) {
 	const Chat = {};
 
 	Chat.KEYS = [

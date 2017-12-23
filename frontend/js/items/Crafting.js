@@ -5,7 +5,7 @@ define([
 	'MapEditor',
 	'Utils',
 	'items/Items',
-	'UserInterface'
+	'userInterface/UserInterface'
 ], function (Game, MapEditor, Utils, Items, UserInterface) {
 
 	//noinspection UnnecessaryLocalVariableJS

@@ -100,7 +100,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'MiniMap',
 					'Camera',
 					'Quadrants',
-					'UserInterface',
+				'userInterface/UserInterface',
 					'StartScreen',
 					'NameGenerator',
 					'EndScreen',

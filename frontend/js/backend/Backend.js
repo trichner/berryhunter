@@ -209,7 +209,7 @@ define([
 					require([
 						'StartScreen',
 						'EndScreen',
-						'UserInterface',
+						'userInterface/UserInterface',
 					], function (StartScreen, EndScreen, UserInterface) {
 						StartScreen.hide();
 						EndScreen.hide();

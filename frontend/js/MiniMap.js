@@ -1,6 +1,6 @@
 "use strict";
 
-define(['PIXI', 'Game', 'UserInterface'], function (PIXI, Game, UserInterface) {
+define(['PIXI', 'Game', 'userInterface/UserInterface'], function (PIXI, Game, UserInterface) {
 	class MiniMap {
 		constructor(mapWidth, mapHeight) {
 			this.mapWidth = mapWidth;

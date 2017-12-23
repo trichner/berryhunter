@@ -1,0 +1,139 @@
+"use strict";
+
+define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCountableIcon', './VitalSignBar'],
+	function (Preloading, Constants, Utils, ClickableIcon, ClickableCountableIcon, VitalSignBar) {
+		const UserInterface = {};
+
+		Preloading.registerPartial('partials/userInterface.html')
+			.then(() => {
+				UserInterface.rootElement = document.getElementById('gameUI');
+			});
+
+		UserInterface.setup = function () {
+			// this.rootElement.addEventListener('contextmenu', function (event) {
+			// 	event.preventDefault();
+			// });
+
+			setupCrafting.call(this);
+
+			setupInventory.call(this);
+
+			setupVitalSigns.call(this);
+		};
+
+		function setupCrafting() {
+			this.craftingElement = document.getElementById('crafting');
+			this.craftableItemTemplate = this.craftingElement.removeChild(this.craftingElement.querySelector('.craftableItem'));
+		}
+
+		function setupInventory() {
+			let inventoryElement = document.getElementById('inventory');
+			let inventorySlot = document.querySelector('#inventory > .inventorySlot');
+
+			this.inventorySlots = new Array(Constants.INVENTORY_SLOTS);
+			this.inventorySlots[0] = new ClickableCountableIcon(inventorySlot);
+
+			for (let i = 1; i < Constants.INVENTORY_SLOTS; ++i) {
+				let inventorySlotCopy = inventorySlot.cloneNode(true);
+				inventoryElement.appendChild(inventorySlotCopy);
+				this.inventorySlots[i] = new ClickableCountableIcon(inventorySlotCopy);
+			}
+		}
+
+		function setupVitalSigns() {
+			this.vitalSignsBars = {
+				health: new VitalSignBar(document.getElementById('healthBar')),
+				satiety: new VitalSignBar(document.getElementById('satietyBar')),
+				bodyHeat: new VitalSignBar(document.getElementById('bodyHeatBar'))
+			};
+		}
+
+		UserInterface.show = function () {
+			this.rootElement.classList.remove('hidden');
+			require(['Game'], function (Game) {
+				Game.domElement.focus();
+				Game.miniMap.start();
+			});
+		};
+
+		UserInterface.hide = function () {
+			this.rootElement.classList.add('hidden');
+			require(['Game'], function (Game) {
+				Game.miniMap.stop();
+			});
+		};
+
+		UserInterface.displayAvailableCrafts = function (availableCrafts, onLeftClick) {
+			Utils.clearNode(this.craftingElement);
+
+			if (availableCrafts.length === 0) {
+				return;
+			}
+
+			let craftsPerColumn = Math.round(Math.sqrt(availableCrafts.length));
+			let craftsPerRow = Math.ceil(availableCrafts.length / craftsPerColumn);
+
+			availableCrafts.forEach(function (recipe, index) {
+				if (Utils.isUndefined(recipe.clickableIcon)) {
+					let craftableItemElement = this.craftableItemTemplate.cloneNode(true);
+
+					if (index % craftsPerRow === 0) {
+						craftableItemElement.classList.add('newLine');
+					}
+
+					let clickableIcon = new ClickableIcon(craftableItemElement);
+					clickableIcon.onLeftClick = function (event) {
+						onLeftClick.call(clickableIcon, event, recipe);
+					};
+					clickableIcon.setIconGraphic(recipe.item.icon.path);
+
+					recipe.clickableIcon = clickableIcon;
+				}
+				recipe.clickableIcon.setHinted(!recipe.isCraftable);
+				recipe.clickableIcon.appendTo(this.craftingElement);
+			}, this);
+
+			this.craftingElement.className = '';
+			this.craftingElement.classList.add('columns-' + craftsPerRow);
+		};
+
+		UserInterface.flashInventory = function () {
+			let inventoryElement = document.getElementById('inventory');
+			inventoryElement.classList.remove('overfilled');
+			// Use 1 render cycle delay to ensure the animation is restarted
+			requestAnimationFrame(function () {
+				inventoryElement.classList.add('overfilled')
+			});
+		};
+
+		/**
+		 * @param {Number} slotIndex
+		 * @return {ClickableCountableIcon}
+		 */
+		UserInterface.getInventorySlot = function (slotIndex) {
+			return this.inventorySlots[slotIndex];
+		};
+
+		UserInterface.getVitalSignBar = function (vitalSign) {
+			return this.vitalSignsBars[vitalSign];
+		};
+
+		/**
+		 *
+		 * @return {Element}
+		 */
+		UserInterface.getMinimapContainer = function () {
+			return document.querySelector('#minimap > .wrapper');
+		};
+
+		/**
+		 *
+		 * @return {Element}
+		 */
+		UserInterface.getChat = function () {
+			return document.getElementById('chat');
+		};
+
+
+		return UserInterface;
+	});

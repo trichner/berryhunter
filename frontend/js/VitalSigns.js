@@ -1,6 +1,6 @@
 "use strict";
 
-define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function (Preloading, Game, Utils, UserInterface, InjectedSVG) {
+define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedSVG'], function (Preloading, Game, Utils, UserInterface, InjectedSVG) {
 	class VitalSigns {
 		constructor() {
 			this.health = VitalSigns.MAXIMUM_VALUES.health;

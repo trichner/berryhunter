@@ -28,7 +28,7 @@ define([], function () {
 			'Spectator',
 			'GameObject',
 			'items/Recipes',
-			'UserInterface',
+			'userInterface/UserInterface',
 			'StartScreen',
 			'Chat',
 			'Utils',

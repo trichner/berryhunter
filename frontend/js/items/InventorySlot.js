@@ -4,7 +4,7 @@ define([
 	'Game',
 	'items/Equipment',
 	'items/ItemType',
-	'UserInterface',
+	'userInterface/UserInterface',
 	'schema_client',
 ], function (Game, Equipment, ItemType, UserInterface) {
 
