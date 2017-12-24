@@ -38,7 +38,10 @@ func characterCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerE
 	BerryhunterApi.CharacterStart(builder)
 	BerryhunterApi.CharacterAddId(builder, p.Basic().ID())
 	BerryhunterApi.CharacterAddName(builder, name)
-	BerryhunterApi.CharacterAddActionTick(builder, uint16(p.CurrentAction().TicksRemaining()))
+	ca := p.CurrentAction()
+	if ca != nil {
+		BerryhunterApi.CharacterAddActionTick(builder, uint16(ca.TicksRemaining()))
+	}
 
 	pos := Vec2fMarshalFlatbuf(builder, p.Position())
 	BerryhunterApi.CharacterAddPos(builder, pos)
