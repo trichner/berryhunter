@@ -60,7 +60,7 @@ func (m *Mob) Update(dt float32) bool {
 	alpha := (m.rand.Float32() * 2) - 1
 
 	// can tweak this for more erratic movements
-	alpha *= math.Pi / 8
+	alpha *= math.Pi / 32
 
 	rot := phy.NewRotMat2f(alpha)
 	m.velocity = rot.Mult(m.velocity)
@@ -74,6 +74,7 @@ func (m *Mob) Update(dt float32) bool {
 
 func (m *Mob) Angle() float32 {
 	// FIXME the angle has to be set when the position is updated
+	// => That's where you're wrong kiddo. Vector arithmetic ftw!
 	return phy.Vec2f{1, 0}.AngleBetween(m.velocity)
 }
 
