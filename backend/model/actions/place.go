@@ -5,6 +5,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"log"
 	"github.com/trichner/berryhunter/backend/model/placeable"
+	"github.com/trichner/berryhunter/backend/phy"
 )
 
 func NewPlace(i items.Item, p model.PlayerEntity, g model.Game) *Place {
@@ -41,7 +42,11 @@ func (a *Place) Start() bool {
 		log.Printf("Cannot place %s: %s", item.Name, err)
 		return true
 	}
-	e.SetPosition(a.p.Position())
+
+	pp := a.p.Position()
+	pos := pp.Add(phy.NewPolarVec2f(0.5, a.p.Angle()))
+
+	e.SetPosition(pos)
 	a.game.AddEntity(e)
 	a.p.OwnedEntities().Add(e)
 
