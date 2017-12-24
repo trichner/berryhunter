@@ -81,6 +81,37 @@ svg .clickable text {
 	flex: 1;
 }
 
+.flex-mixin(@percentage) {
+	.flex-@{percentage} {
+		-webkit-box-flex: 1;
+		-webkit-flex: 1 1 unit(@percentage, %);
+		flex: 1 1 100%;
+		box-sizing: border-box;
+	}
+}
+
+.flex-loop(@percentage) when (@percentage > 0) {
+	.flex-loop((@percentage - 5));
+
+	.flex-mixin(@percentage);
+}
+
+.flex-loop(100);
+
+.flex-33 {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1 1 33.333%;
+	flex: 1 1 100%;
+	box-sizing: border-box;
+}
+
+.flex-66 {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1 1 66.666%;
+	flex: 1 1 100%;
+	box-sizing: border-box;
+}
+
 .hidden {
 	display: none;
 }

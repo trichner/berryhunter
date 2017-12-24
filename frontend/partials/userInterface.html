@@ -1,42 +1,62 @@
 <div id="gameUI" class="hidden">
-	<div id="crafting">
-		<a class="clickableItem craftableItem empty">
-			<img src="" class="itemIcon"/>
-			<span class="count"></span>
-			<div class="progressOverlay hidden"></div>
-		</a>
-	</div>
+    <div id="crafting">
+        <a class="craftableItem empty">
+            <div class="iconBackground">
+                <img src="" class="itemIcon"/>
+            </div>
 
-	<div id="minimap">
-		<div class="wrapper">
-			<!-- pixi.js instance here, to display minimap icons -->
-		</div>
-	</div>
+            <div class="subIcon primary">
+                <img src="img/items/clubWoodIcon.svg" class="itemIcon"/>
+            </div>
+            <div class="subIconRow layout-row">
+                <div class="subIcon layout-column flex-33">
+                    <img src="img/items/stoneIcon.svg" class="itemIcon flex-50"/>
+                    <span class="count flex-50">120</span>
+                </div>
+                <div class="subIcon layout-column flex-33">
+                    <img src="img/items/bronzeIcon.svg" class="itemIcon flex-50"/>
+                    <span class="count flex-50">70</span>
+                </div>
+                <div class="subIcon layout-column flex-33">
+                    <img src="img/items/ironIcon.svg" class="itemIcon flex-50"/>
+                    <span class="count flex-50">30</span>
+                </div>
+            </div>
 
-	<div id="vitalSigns" class="layout-column">
-		<div id="healthBar" class="bar flex">
-			<div class="indicator"></div>
-		</div>
-		<div id="satietyBar" class="bar flex">
-			<div class="indicator"></div>
-		</div>
-		<div id="bodyHeatBar" class="bar flex">
-			<div class="indicator"></div>
-		</div>
-	</div>
+            <div class="progressOverlay hidden"></div>
+        </a>
+    </div>
 
-	<div id="inventory" class="layout-row">
-		<!-- States are:
-				- empty
-				- filled
-				- filled active -->
-		<a class="clickableItem inventorySlot empty">
-			<img src="" class="itemIcon"/>
-			<span class="count"></span>
-		</a>
-	</div>
+    <div id="minimap">
+        <div class="wrapper">
+            <!-- pixi.js instance here, to display minimap icons -->
+        </div>
+    </div>
 
-	<div id="chat" class="hidden">
-		<span id="chatInput" contenteditable="true"></span>
-	</div>
+    <div id="vitalSigns" class="layout-column">
+        <div id="healthBar" class="bar flex">
+            <div class="indicator"></div>
+        </div>
+        <div id="satietyBar" class="bar flex">
+            <div class="indicator"></div>
+        </div>
+        <div id="bodyHeatBar" class="bar flex">
+            <div class="indicator"></div>
+        </div>
+    </div>
+
+    <div id="inventory" class="layout-row">
+        <!-- States are:
+                - empty
+                - filled
+                - filled active -->
+        <a class="clickableItem inventorySlot empty">
+            <img src="" class="itemIcon"/>
+            <span class="count"></span>
+        </a>
+    </div>
+
+    <div id="chat" class="hidden">
+        <span id="chatInput" contenteditable="true"></span>
+    </div>
 </div>
