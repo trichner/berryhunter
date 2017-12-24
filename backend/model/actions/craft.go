@@ -65,14 +65,14 @@ func (c *Craft) canCraft() bool {
 	r := i.Recipe
 	inventory := c.p.Inventory()
 
-	stacks := r.Materials
-	if !inventory.CanConsumeItems(stacks) {
+	materials := r.Materials
+	if !inventory.CanConsumeItems(materials) {
 		return false
 	}
 
 	// check if there is space in the inventory
 	newItem := items.NewSingleItemStack(i)
-	if !inventory.CanConsume(newItem) && inventory.Cap() == inventory.Count() {
+	if (!inventory.CanConsume(newItem)) && inventory.Cap() == inventory.Count() {
 		return false
 	}
 
