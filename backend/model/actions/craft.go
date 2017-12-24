@@ -65,16 +65,35 @@ func (c *Craft) canCraft() bool {
 	r := i.Recipe
 	inventory := c.p.Inventory()
 
+	// do we have the materials?
 	materials := r.Materials
 	if !inventory.CanConsumeItems(materials) {
 		return false
 	}
 
-	// check if there is space in the inventory
+	// is there any space for the new item?
 	newItem := items.NewSingleItemStack(i)
-	if (!inventory.CanConsume(newItem)) && inventory.Cap() == inventory.Count() {
+
+	// can we stack it?
+	if inventory.CanConsume(newItem) {
+		return true
+	}
+
+	// is there an empty slot?
+	if inventory.Cap() > inventory.Count() {
+		return true
+	}
+
+	// is there gonna be an empty slot after crafting?
+	inventory = inventory.Copy()
+	ok := inventory.ConsumeItems(materials)
+	if !ok {
 		return false
 	}
 
-	return true
+	if inventory.Cap() > inventory.Count() {
+		return true
+	}
+
+	return false
 }

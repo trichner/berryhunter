@@ -206,3 +206,14 @@ func (i *Inventory) iterateItems(itemType Item, p itemStackPredicate) {
 		}
 	}
 }
+
+// Copy returns a semi-deep copy. It copies the Inventory as well
+// as the items entries but not the item definitions
+func (i *Inventory) Copy() *Inventory {
+	j := NewInventory()
+	j.cap = i.cap
+	for _, s := range i.items {
+		j.items = append(j.items, s.Copy())
+	}
+	return &j
+}
