@@ -96,6 +96,10 @@ func (p *player) AddAction(a model.PlayerAction) {
 	}
 }
 
+func (p *player) CurrentAction() model.PlayerAction {
+	return p.ongoingAction
+}
+
 func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	h := p.PlayerVitalSigns.Health
 

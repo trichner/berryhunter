@@ -25,6 +25,3 @@ func (a *Drop) Start() bool {
 	return true
 }
 
-func (a *Drop) Update(dt float32) bool {
-	panic("WTF?! How did we end up here?")
-}

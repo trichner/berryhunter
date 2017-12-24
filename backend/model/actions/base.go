@@ -10,6 +10,10 @@ type baseAction struct {
 	p    model.PlayerEntity
 }
 
-func (a *baseAction) Update(dt float32) bool {
+func (*baseAction) TicksRemaining() int {
+	return 1 /* basic actions take exactly one tick */
+}
+
+func (*baseAction) Update(dt float32) bool {
 	panic("WTF?! How did we end up here?")
 }

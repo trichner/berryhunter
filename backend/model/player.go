@@ -35,6 +35,7 @@ type PlayerEntity interface {
 	OwnedEntities() BasicEntities
 
 	AddAction(a PlayerAction)
+	CurrentAction() PlayerAction
 }
 
 type BasicEntities map[uint64]ecs.BasicEntity

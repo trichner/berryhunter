@@ -19,17 +19,21 @@ type Primary struct {
 	ticks int
 }
 
-func (a *Primary) Start() bool {
+func (p *Primary) TicksRemaining() int {
+	return p.ticks
+}
 
-	if !hasItem(a.p, a.item) {
+func (p *Primary) Start() bool {
+
+	if !hasItem(p.p, p.item) {
 		return true
 	}
-	a.p.Hand().Collider.Shape().Mask = -1 //TODO fine grained layers
-	a.p.Hand().Item = a.item
+	p.p.Hand().Collider.Shape().Mask = -1 //TODO fine grained layers
+	p.p.Hand().Item = p.item
 	return false
 }
 
-func (a *Primary) Update(dt float32) bool {
-	a.ticks -= 1
-	return a.ticks <= 0
+func (p *Primary) Update(dt float32) bool {
+	p.ticks -= 1
+	return p.ticks <= 0
 }

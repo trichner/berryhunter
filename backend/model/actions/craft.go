@@ -18,6 +18,10 @@ type Craft struct {
 	ticks int
 }
 
+func (c *Craft) Ticks() int {
+	return c.ticks
+}
+
 func (c *Craft) Start() bool {
 	def := c.item.ItemDefinition
 	if def.Recipe.CraftTicks == 0 {
@@ -48,7 +52,7 @@ func (c *Craft) Update(dt float32) bool {
 
 func (c *Craft) done() {
 
-	newItem := items.NewItemStack(c.item, 1)
+	newItem := items.NewSingleItemStack(c.item)
 	ok := c.p.Inventory().AddItem(newItem)
 	if !ok {
 		log.Printf("😳 No space in inventory for %s ?!", c.item.Name)
@@ -67,7 +71,7 @@ func (c *Craft) canCraft() bool {
 	}
 
 	// check if there is space in the inventory
-	newItem := items.NewItemStack(i, 1)
+	newItem := items.NewSingleItemStack(i)
 	if !inventory.CanConsume(newItem) && inventory.Cap() == inventory.Count() {
 		return false
 	}

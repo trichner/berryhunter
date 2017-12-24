@@ -47,7 +47,3 @@ func (a *Place) Start() bool {
 
 	return true
 }
-
-func (a *Place) Update(dt float32) bool {
-	panic("WTF?! How did we end up here?")
-}

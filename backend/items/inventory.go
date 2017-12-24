@@ -39,6 +39,13 @@ func NewItemStack(item Item, count int) *ItemStack {
 	}
 }
 
+func NewSingleItemStack(item Item) *ItemStack {
+	return &ItemStack{
+		Item:  item,
+		Count: 1,
+	}
+}
+
 func (is *ItemStack) Copy() *ItemStack {
 	return NewItemStack(is.Item, is.Count)
 }

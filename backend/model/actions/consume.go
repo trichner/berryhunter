@@ -31,6 +31,3 @@ func (a *Consume) Start() bool {
 	return true
 }
 
-func (a *Consume) Update(dt float32) bool {
-	panic("WTF?! How did we end up here?")
-}
