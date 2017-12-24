@@ -1,44 +1,24 @@
 "use strict";
 
-define(['Preloading', 'Game', 'NameGenerator'], function (Preloading, Game, NameGenerator) {
+define(['Preloading', 'PlayerName'], function (Preloading, PlayerName) {
 	const EndScreen = {};
 
-	const playerNameMaxLength = 20;
-
 	function onDomReady() {
-		EndScreen.rootElement = document.getElementById('endScreen');
-		EndScreen.playerNameInput = EndScreen.rootElement
+		this.rootElement = document.getElementById('endScreen');
+		this.playerNameInput = this.rootElement
 			.getElementsByClassName('playerNameInput').item(0);
-		EndScreen.playerNameInput.setAttribute('maxlength', playerNameMaxLength);
 
-		document.getElementById('endForm').addEventListener('submit', onSubmit);
-	}
-
-	function onSubmit(event) {
-		event.preventDefault();
-
-		let name = EndScreen.playerNameInput.value;
-		if (!name) {
-			name = EndScreen.playerNameInput.getAttribute('placeholder');
-		}
-		name = name.substr(0, playerNameMaxLength);
-
-
-		require(['backend/Backend'], function (Backend) {
-			Backend.sendJoin({
-				playerName: name
-			});
-		});
+		PlayerName.prepareForm(document.getElementById('endForm'), this.playerNameInput);
 	}
 
 	Preloading.registerPartial('partials/endScreen.html')
 		.then(() => {
-			onDomReady();
+			onDomReady.call(EndScreen);
 		});
 
 	EndScreen.show = function () {
-		EndScreen.playerNameInput.setAttribute('placeholder', NameGenerator.generate());
-		EndScreen.playerNameInput.value = Game.player.character.name;
+		PlayerName.fillInput(this.playerNameInput);
+
 		this.rootElement.classList.add('showing');
 	};
 
