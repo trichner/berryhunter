@@ -804,9 +804,6 @@ code {
 .clickableItem.active {
   background-color: rgba(255, 255, 255, 0.6);
 }
-.clickableItem.hinted > .itemIcon {
-  opacity: 0.5;
-}
 .clickableItem > .count {
   position: absolute;
   bottom: 0;
@@ -916,6 +913,7 @@ code {
 }
 .craftableItem > .subIconRow > .subIcon > .count {
   overflow: hidden;
+  z-index: 1;
 }
 .craftableItem > .progressOverlay {
   position: absolute;
