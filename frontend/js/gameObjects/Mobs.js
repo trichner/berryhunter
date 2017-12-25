@@ -4,7 +4,6 @@ define(['Game', 'GameObject', 'Preloading', 'Utils'], function (Game, GameObject
 	class Mob extends GameObject {
 		constructor(gameLayer, x, y, size, rotation) {
 			super(gameLayer, x, y, size, rotation);
-			this.rotateOnPositioning = true;
 			this.isMoveable = true;
 			this.visibleOnMinimap = false;
 		}
