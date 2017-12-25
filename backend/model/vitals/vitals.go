@@ -21,9 +21,17 @@ func (v VitalSign) AddFraction(n float32) VitalSign {
 		return v
 	}
 
+	if n >= 1 {
+		return v.Add(uint32(Max))
+	}
+
 	if n > 0 {
 		add := uint32(float32(Max) * n)
 		return v.Add(add)
+	}
+
+	if n <= -1 {
+		return v.Sub(uint32(Max))
 	}
 
 	sub := uint32(float32(Max) * -n)
