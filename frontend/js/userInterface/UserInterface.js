@@ -86,6 +86,7 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 						onLeftClick.call(clickableIcon, event, recipe);
 					};
 					clickableIcon.setIconGraphic(recipe.item.icon.path);
+					clickableIcon.addSubIcons(recipe.materials);
 
 					recipe.clickableIcon = clickableIcon;
 				}

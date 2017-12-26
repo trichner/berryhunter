@@ -1,4 +1,4 @@
-define(['Utils'], function (Utils) {
+define(['Utils', 'items/Items', './SubIcon', 'Game'], function (Utils, Items, SubIcon, Game) {
 	class ClickableIcon {
 		/**
 		 * @param {Element} node
@@ -66,6 +66,28 @@ define(['Utils'], function (Utils) {
 			this.domElement.classList.add('empty');
 			this.domElement.classList.remove('filled');
 			this.clickable = false;
+		}
+
+		addSubIcons(materials) {
+			this.subIcons = [];
+			let hasPrimary = false;
+			let iconIndex = 0;
+			Object.entries(materials).forEach(function (material) {
+				let itemName = material[0];
+				let count = material[1];
+				let iconPath = Items[itemName].icon.path;
+
+				let domElement;
+				if (!hasPrimary && count === 1) {
+					domElement = this.domElement.querySelector('.subIcon.primary');
+					hasPrimary = true;
+				} else {
+					domElement = this.domElement.querySelectorAll('.subIconRow > .subIcon').item(iconIndex);
+					iconIndex++;
+				}
+
+				this.subIcons.push(new SubIcon(domElement, itemName, iconPath, count, Game.player.inventory.getItemCount(itemName)));
+			}, this);
 		}
 
 		activate() {

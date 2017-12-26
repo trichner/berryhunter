@@ -194,6 +194,16 @@ define([
 				return requiredMaterialCount === slot.count;
 			})
 		}
+
+		getItemCount(itemName) {
+			for (let i = 0; i < this.slots.length; i++) {
+				if (this.slots[i].isFilled() && this.slots[i].item.name === itemName) {
+					return this.slots[i].count;
+				}
+			}
+
+			return 0;
+		}
 	}
 
 	return Inventory;

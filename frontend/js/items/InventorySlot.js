@@ -5,8 +5,9 @@ define([
 	'items/Equipment',
 	'items/ItemType',
 	'userInterface/UserInterface',
+	'./InventoryListeners',
 	'schema_client',
-], function (Game, Equipment, ItemType, UserInterface) {
+], function (Game, Equipment, ItemType, UserInterface, InventoryListeners) {
 
 	class InventorySlot {
 		/**
@@ -87,8 +88,11 @@ define([
 		}
 
 		setCount(count) {
-			this.count = count;
-			this.clickableIcon.setCount(count);
+			if (this.count !== count) {
+				this.count = count;
+				this.clickableIcon.setCount(count);
+				InventoryListeners.notify(this.item.name, count);
+			}
 		}
 
 		addCount(count) {
@@ -110,8 +114,8 @@ define([
 			if (this.isActive()) {
 				this.inventory.deactivateSlot(Equipment.Helper.getItemEquipmentSlot(this.item), false);
 			}
-			this.item = null;
 			this.setCount(0);
+			this.item = null;
 			this.deactivate();
 
 			return true;
