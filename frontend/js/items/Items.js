@@ -147,43 +147,45 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 
 			/***********************************
 			 * HAMMERS
+			 * Deactivated, as placeables are not
+			 * yet attackable.
 			 ***********************************/
-			StoneHammer: {
-				icon: {file: 'hammerStoneIcon'},
-				graphic: {
-					file: 'hammerStone',
-					size: 30,
-					offsetX: 10,
-					offsetY: -2.5
-				},
-				definition: 'hammers/stone-hammer',
-				type: ItemType.EQUIPMENT,
-				equipmentSlot: Equipment.Slots.HAND
-			},
-			BronzeHammer: {
-				icon: {file: 'hammerBronzeIcon'},
-				graphic: {
-					file: 'hammerBronze',
-					size: 30,
-					offsetX: 10,
-					offsetY: -2.5
-				},
-				definition: 'hammers/bronze-hammer',
-				type: ItemType.EQUIPMENT,
-				equipmentSlot: Equipment.Slots.HAND
-			},
-			IronHammer: {
-				icon: {file: 'hammerIronIcon'},
-				graphic: {
-					file: 'hammerIron',
-					size: 50,
-					offsetX: 10,
-					offsetY: -2.5
-				},
-				definition: 'hammers/iron-hammer',
-				type: ItemType.EQUIPMENT,
-				equipmentSlot: Equipment.Slots.HAND
-			},
+			// StoneHammer: {
+			// 	icon: {file: 'hammerStoneIcon'},
+			// 	graphic: {
+			// 		file: 'hammerStone',
+			// 		size: 30,
+			// 		offsetX: 10,
+			// 		offsetY: -2.5
+			// 	},
+			// 	definition: 'hammers/stone-hammer',
+			// 	type: ItemType.EQUIPMENT,
+			// 	equipmentSlot: Equipment.Slots.HAND
+			// },
+			// BronzeHammer: {
+			// 	icon: {file: 'hammerBronzeIcon'},
+			// 	graphic: {
+			// 		file: 'hammerBronze',
+			// 		size: 30,
+			// 		offsetX: 10,
+			// 		offsetY: -2.5
+			// 	},
+			// 	definition: 'hammers/bronze-hammer',
+			// 	type: ItemType.EQUIPMENT,
+			// 	equipmentSlot: Equipment.Slots.HAND
+			// },
+			// IronHammer: {
+			// 	icon: {file: 'hammerIronIcon'},
+			// 	graphic: {
+			// 		file: 'hammerIron',
+			// 		size: 50,
+			// 		offsetX: 10,
+			// 		offsetY: -2.5
+			// 	},
+			// 	definition: 'hammers/iron-hammer',
+			// 	type: ItemType.EQUIPMENT,
+			// 	equipmentSlot: Equipment.Slots.HAND
+			// },
 
 			/***********************************
 			 * PLACEABLES
