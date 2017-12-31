@@ -1,1 +1,89 @@
-<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;"><circle cx="50" cy="50" r="50" style="fill:#e2a850;fill-opacity:0.368627;"/><circle cx="50" cy="50" r="44.371" style="fill:#e6b053;fill-opacity:0.627451;"/><g><path d="M65.973,36.282c1.381,-1.751 1.082,-4.294 -0.669,-5.676c-1.751,-1.382 -4.295,-1.082 -5.677,0.669l-25.6,32.443c-1.382,1.751 -1.082,4.294 0.669,5.676c1.751,1.382 4.295,1.082 5.677,-0.669l25.6,-32.443Z" style="fill:#4e1700;stroke:#230b00;stroke-width:0.48px;"/><path d="M70.855,47.108c2.11,-0.725 3.234,-3.026 2.509,-5.135c-0.725,-2.11 -3.026,-3.234 -5.135,-2.509l-39.084,13.428c-2.11,0.725 -3.234,3.026 -2.509,5.135c0.725,2.11 3.026,3.234 5.135,2.509l39.084,-13.428Z" style="fill:#4e1700;stroke:#230b00;stroke-width:0.48px;"/><path d="M68.83,59.419c2.15,0.596 4.379,-0.664 4.975,-2.814c0.597,-2.149 -0.664,-4.378 -2.814,-4.975l-39.821,-11.049c-2.15,-0.596 -4.379,0.664 -4.975,2.814c-0.597,2.149 0.664,4.378 2.813,4.975l39.822,11.049Z" style="fill:#4e1700;stroke:#230b00;stroke-width:0.48px;"/><circle cx="50" cy="50" r="18.749" style="fill:#a25e06;fill-opacity:0.427451;"/><circle cx="50" cy="50" r="15.49" style="fill:#a25e06;fill-opacity:0.427451;"/><circle cx="50" cy="50" r="11.49" style="fill:#b96b06;"/><circle cx="50" cy="50" r="7.075" style="fill:#ca7505;"/></g></svg>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;">
+
+	<circle cx="50" cy="50" r="50" style="fill:#e2a850;fill-opacity:0.368627;" >
+		<animate 
+			attributeName="r" 
+			begin="0s" 
+			dur="2s"
+			from="45%" 
+			to="50%"
+    		values="45%; 50%; 45%"
+    		keyTimes="0; 0.5; 1"
+			repeatCount="indefinite" 
+				/>
+    </circle>
+
+	<circle cx="50" cy="50" r="44.371" style="fill:#e6b053;fill-opacity:0.627451;" >
+		<animate 
+			attributeName="r" 
+			begin="0s" 
+			dur="2s"
+			from="41%" 
+			to="46%"
+    		values="41%; 46%; 41%"
+    		keyTimes="0; 0.5; 1"
+			repeatCount="indefinite" 
+				/>
+	</circle>
+
+	<g>
+		<path d="M65.973,36.282c1.381,-1.751 1.082,-4.294 -0.669,-5.676c-1.751,-1.382 -4.295,-1.082 -5.677,0.669l-25.6,32.443c-1.382,1.751 -1.082,4.294 0.669,5.676c1.751,1.382 4.295,1.082 5.677,-0.669l25.6,-32.443Z" style="fill:#4e1700;stroke:#230b00;stroke-width:0.48px;"/>
+
+		<path d="M70.855,47.108c2.11,-0.725 3.234,-3.026 2.509,-5.135c-0.725,-2.11 -3.026,-3.234 -5.135,-2.509l-39.084,13.428c-2.11,0.725 -3.234,3.026 -2.509,5.135c0.725,2.11 3.026,3.234 5.135,2.509l39.084,-13.428Z" style="fill:#4e1700;stroke:#230b00;stroke-width:0.48px;"/>
+
+		<path d="M68.83,59.419c2.15,0.596 4.379,-0.664 4.975,-2.814c0.597,-2.149 -0.664,-4.378 -2.814,-4.975l-39.821,-11.049c-2.15,-0.596 -4.379,0.664 -4.975,2.814c-0.597,2.149 0.664,4.378 2.813,4.975l39.822,11.049Z" style="fill:#4e1700;stroke:#230b00;stroke-width:0.48px;"/>
+
+		<circle cx="50" cy="50" r="18.749" style="fill:#a25e06;fill-opacity:0.427451;" >
+		<animate 
+			attributeName="r" 
+			begin="0s" 
+			dur="1s"
+			from="10%" 
+			to="14%"
+    		values="10%; 14%; 10%"
+    		keyTimes="0; 0.5; 1"
+			repeatCount="indefinite" 
+				/>
+	</circle>
+
+		<circle cx="50" cy="50" r="15.49" style="fill:#a25e06;fill-opacity:0.427451;" >
+		<animate 
+			attributeName="r" 
+			begin="0s" 
+			dur="1s"
+			from="8%" 
+			to="12%"
+    		values="8%; 12%; 8%"
+    		keyTimes="0; 0.5; 1"
+			repeatCount="indefinite" 
+				/>
+	</circle>
+
+		<circle cx="50" cy="50" r="11.49" style="fill:#b96b06;" >
+		<animate 
+			attributeName="r" 
+			begin="0s" 
+			dur="1s"
+			from="6%" 
+			to="10%"
+    		values="6%; 10%; 6%"
+    		keyTimes="0; 0.5; 1"
+			repeatCount="indefinite" 
+				/>
+	</circle>
+
+		<circle cx="50" cy="50" r="7.075" style="fill:#ca7505;" >
+		<animate 
+			attributeName="r" 
+			begin="0s" 
+			dur="1s"
+			from="4%" 
+			to="8%"
+    		values="4%; 8%; 4%"
+    		keyTimes="0; 0.5; 1"
+			repeatCount="indefinite" 
+				/>
+	</circle>
+
+	</g>
+</svg>
