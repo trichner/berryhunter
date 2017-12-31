@@ -78,8 +78,8 @@
 			begin="0s" 
 			dur="1s"
 			from="4%" 
-			to="8%"
-    		values="4%; 8%; 4%"
+			to="6%"
+    		values="4%; 6%; 4%"
     		keyTimes="0; 0.5; 1"
 			repeatCount="indefinite" 
 				/>
