@@ -368,6 +368,11 @@ define([
 
 			this.messages.push(messageShape);
 		}
+
+		remove(){
+			this.hide();
+			Game.renderer.off('prerender', this.update, this);
+		}
 	}
 
 	Character.hitAnimationFrameDuration = 15;

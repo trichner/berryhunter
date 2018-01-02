@@ -46,7 +46,7 @@ define([
 		}
 
 		remove() {
-			this.character.hide();
+			this.character.remove();
 			this.controls.destroy();
 			this.camera.destroy();
 			this.inventory.clear();
