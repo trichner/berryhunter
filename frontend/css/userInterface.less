@@ -166,16 +166,6 @@
 	top: 0;
 	left: 0;
 
-	.columnsLoop(@counter) when (@counter > 0) {
-		.columnsLoop((@counter - 1));
-
-		&.columns-@{counter} {
-			width: (@counter * @slotSize);
-		}
-	}
-
-	.columnsLoop(7);
-
 	> .clickableItem {
 		float: left;
 

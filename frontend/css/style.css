@@ -486,27 +486,6 @@ dl.flatList > dd {
   top: 0;
   left: 0;
 }
-#crafting.columns-1 {
-  width: 7vh;
-}
-#crafting.columns-2 {
-  width: 14vh;
-}
-#crafting.columns-3 {
-  width: 21vh;
-}
-#crafting.columns-4 {
-  width: 28vh;
-}
-#crafting.columns-5 {
-  width: 35vh;
-}
-#crafting.columns-6 {
-  width: 42vh;
-}
-#crafting.columns-7 {
-  width: 49vh;
-}
 #crafting > .clickableItem {
   float: left;
 }
