@@ -377,11 +377,11 @@ dl.flatList > dd {
   position: absolute;
   bottom: 0;
   left: 0;
-    background-color: rgba(255, 248, 220, 0.5);
-    border: 0.3vw solid rgba(255, 248, 220, 0.5);
-    background-clip: content-box;
-    margin-bottom: 0.3vw;
-    margin-left: 0.3vw;
+  background-color: rgba(255, 248, 220, 0.5);
+  border: 0.3vw solid rgba(255, 248, 220, 0.5);
+  background-clip: content-box;
+  margin-bottom: 0.3vw;
+  margin-left: 0.3vw;
   border-radius: 50%;
 }
 #minimap > .wrapper {
