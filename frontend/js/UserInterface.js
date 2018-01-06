@@ -219,8 +219,6 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 
 		availableCrafts.forEach(function (recipe, index) {
 			if (Utils.isUndefined(recipe.clickableIcon)) {
-				console.log('Create clickableIcon for ' + recipe.name);
-
 				let craftableItemElement = this.craftableItemTemplate.cloneNode(true);
 
 				if (index % craftsPerRow === 0) {

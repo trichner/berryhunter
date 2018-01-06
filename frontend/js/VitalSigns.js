@@ -39,7 +39,6 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 					// FIXME: will be later replaced with a system to use hits reported by the backend (that are also used for hit animations)
 					if ((this.health - value) > (0.009 * VitalSigns.MAXIMUM_VALUES.health)) {
 						this.onDamageTaken();
-						console.log(((this.health - value) / VitalSigns.MAXIMUM_VALUES.health).toFixed(1) + "% damage taken!");
 					}
 					break;
 			}
@@ -57,7 +56,6 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 			if (this.damageIndicatorDuration > 0) {
 				// Show damage frame
 				this.damageIndicatorDuration -= Game.timeDelta;
-				console.log("Damage duration: " + this.damageIndicatorDuration.toFixed(2) + "ms");
 				if (this.damageIndicatorDuration < 0) {
 					this.hideIndicator('damage');
 				} else {
@@ -102,10 +100,6 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 				this.indicators[indicatorName].visible = true;
 			}
 
-			if (indicatorName === 'damage') {
-				console.log("Opacity: " + opacity);
-			}
-
 			this.indicators[indicatorName].alpha = opacity;
 		}
 
@@ -120,9 +114,9 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 	}
 
 	/**
-	 * 500 - 380ms --> fadeIn
-	 * 380 - 230ms --> show
-	 * 230 -   0ms --> fadeOut
+	 * 500 - 420ms --> fadeIn
+	 * 420 - 280ms --> show
+	 * 280 -   0ms --> fadeOut
 	 * @param time
 	 */
 	function getDamageOpacity(time) {
