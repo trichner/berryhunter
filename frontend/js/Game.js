@@ -46,11 +46,15 @@ define([], function () {
 
 				requestAnimationFrame(Game.loop);
 
-				Game.timeDelta = now - Game._lastFrame;
+				Game.timeDelta = Game.timeSinceLastFrame(now);
 
 				Game.render();
 
 				Game._lastFrame = now;
+			};
+
+			Game.timeSinceLastFrame = function (now) {
+				return now - Game._lastFrame;
 			};
 
 			Game.play = function () {
@@ -192,17 +196,22 @@ define([], function () {
 				characterAdditions: {
 					craftProgress: new NamedGroup('craftProgress'),
 					chatMessages: new NamedGroup('chatMessages'),
+				},
+				overlays: {
+					vitalSignIndicators: new NamedGroup('vitalSignIndicators')
 				}
 				// UI Overlay is the highest layer, but not managed with pixi.js
 			};
 
 			Game.stage = new PIXI.Container();
+			Game.nightFilterContainer = new NamedGroup('nightFilterContainer');
+			Game.stage.addChild(Game.nightFilterContainer);
 
 			// Terrain Background
-			Game.stage.addChild(Game.layers.terrain.background);
+			Game.nightFilterContainer.addChild(Game.layers.terrain.background);
 
 			Game.cameraGroup = new NamedGroup('cameraGroup');
-			Game.stage.addChild(Game.cameraGroup);
+			Game.nightFilterContainer.addChild(Game.cameraGroup);
 
 			// Terrain Textures moving with the camera
 			Game.cameraGroup.addChild(
@@ -246,12 +255,19 @@ define([], function () {
 				Game.layers.characterAdditions.chatMessages,
 			);
 
+			// Vital Sign Indicators on top of everything
+			// And not part of the night filter container
+			Game.stage.addChild(Game.layers.overlays.vitalSignIndicators);
+
 			createBackground();
 
 			require(['Camera'], function (Camera) {
 				Camera.setup();
 			});
 			RecipesHelper.setup();
+			require(['VitalSigns'], function (VitalSigns) {
+				VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
+			});
 
 			/**
 			 * @type GameMap|GameMapWithBackend
@@ -261,7 +277,7 @@ define([], function () {
 			let domElement = Game.renderer.view;
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
-			DayCycle.setup(domElement, Game.stage);
+			DayCycle.setup(domElement, Game.nightFilterContainer);
 			KeyEvents.setup(window);
 			PointerEvents.setup(window);
 
