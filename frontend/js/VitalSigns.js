@@ -18,10 +18,6 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 			this.damageIndicatorDuration = 0;
 
 			Game.renderer.on('prerender', this.update, this);
-
-			this.setHealth(Utils.randomInt(VitalSigns.MAXIMUM_VALUES.health * 0.25, VitalSigns.MAXIMUM_VALUES.health));
-			this.setSatiety(Utils.randomInt(VitalSigns.MAXIMUM_VALUES.satiety * 0.25, VitalSigns.MAXIMUM_VALUES.satiety));
-			this.setBodyHeat(Utils.randomInt(VitalSigns.MAXIMUM_VALUES.bodyHeat * 0.25, VitalSigns.MAXIMUM_VALUES.bodyHeat));
 		}
 
 		setHealth(health) {
@@ -41,8 +37,9 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 				case 'health':
 					// Hand should deal 1% damage. Anything below is damage over time.
 					// FIXME: will be later replaced with a system to use hits reported by the backend (that are also used for hit animations)
-					if ((this.health - value) > 0.009) {
+					if ((this.health - value) > (0.009 * VitalSigns.MAXIMUM_VALUES.health)) {
 						this.onDamageTaken();
+						console.log(((this.health - value) / VitalSigns.MAXIMUM_VALUES.health).toFixed(1) + "% damage taken!");
 					}
 					break;
 			}
@@ -52,20 +49,92 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 
 		onDamageTaken() {
 			// 300ms shows the damage indicator
-			this.damageIndicatorDuration = 0.3;
-			// take time since the last frame into consideration as updates are based on frame per frame time
-			this.damageIndicatorDuration += Game.timeSinceLastFrame(performance.now());
+			this.damageIndicatorDuration = 500;
+			this.showIndicator('damage', 0);
 		}
 
 		update() {
 			if (this.damageIndicatorDuration > 0) {
 				// Show damage frame
-
+				this.damageIndicatorDuration -= Game.timeDelta;
+				console.log("Damage duration: " + this.damageIndicatorDuration.toFixed(2) + "ms");
+				if (this.damageIndicatorDuration < 0) {
+					this.hideIndicator('damage');
+				} else {
+					this.showIndicator('damage', getDamageOpacity(this.damageIndicatorDuration));
+				}
 			} else {
-				//
+				let indicatorToShow = null;
+				let opacity;
+				if (this.satiety < (VitalSigns.MAXIMUM_VALUES.satiety / 2)) {
+					indicatorToShow = 'hunger';
+					opacity = 1 - (2 * this.satiety / VitalSigns.MAXIMUM_VALUES.satiety);
+				} else {
+					this.hideIndicator('hunger');
+				}
+
+				if (this.bodyHeat < (VitalSigns.MAXIMUM_VALUES.satiety / 2)) {
+					if (indicatorToShow === 'hunger') {
+						if (this.bodyHeat < this.satiety) {
+							opacity = 1 - (2 * this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat);
+							indicatorToShow = 'coldness';
+						}
+					} else {
+						opacity = 1 - (2 * this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat);
+						indicatorToShow = 'coldness';
+					}
+				} else {
+					this.hideIndicator('coldness');
+				}
+
+				if (indicatorToShow !== null) {
+					this.showIndicator(indicatorToShow, opacity);
+				}
 			}
 		}
+
+		showIndicator(indicatorName, opacity) {
+			if (this.currentIndicator !== indicatorName) {
+				this.currentIndicator = indicatorName;
+				Object.values(this.indicators).forEach(function (indicator) {
+					indicator.visible = false;
+				});
+				this.indicators[indicatorName].visible = true;
+			}
+
+			if (indicatorName === 'damage') {
+				console.log("Opacity: " + opacity);
+			}
+
+			this.indicators[indicatorName].alpha = opacity;
+		}
+
+		hideIndicator(indicatorName) {
+			if (this.currentIndicator !== indicatorName) {
+				return;
+			}
+
+			this.currentIndicator = undefined;
+			this.indicators[indicatorName].visible = false;
+		}
 	}
+
+	/**
+	 * 500 - 380ms --> fadeIn
+	 * 380 - 230ms --> show
+	 * 230 -   0ms --> fadeOut
+	 * @param time
+	 */
+	function getDamageOpacity(time) {
+		if (time > 420) {
+			return Utils.map(time, 500, 420, 0, 1);
+		} else if (time >= 280) {
+			return 1;
+		} else {
+			return Utils.map(time, 280, 0, 1, 0);
+		}
+	}
+
 
 	/**
 	 * All values are 32bit.
@@ -79,7 +148,7 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 	};
 
 	function createIndicator(svgGraphic) {
-		let indicatorSprite = new InjectedSVG(VitalSigns.damageIndicator.svg, 0, 0, indicatorSize / 2);
+		let indicatorSprite = new InjectedSVG(svgGraphic, 0, 0, indicatorSize / 2);
 		indicatorSprite.width = window.innerWidth;
 		indicatorSprite.height = window.innerHeight;
 		indicatorSprite.visible = false;
@@ -90,8 +159,10 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 	VitalSigns.setup = function (group) {
 		let indicators = {};
 		indicators.damage = createIndicator(VitalSigns.damageIndicator.svg);
+		// indicators.damage.visible = true;
 		indicators.hunger = createIndicator(VitalSigns.hungerIndicator.svg);
 		indicators.coldness = createIndicator(VitalSigns.coldnessIndicator.svg);
+		VitalSigns.indicators = indicators;
 
 		group.addChild(
 			indicators.damage,

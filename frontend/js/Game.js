@@ -204,12 +204,14 @@ define([], function () {
 			};
 
 			Game.stage = new PIXI.Container();
+			Game.nightFilterContainer = new NamedGroup('nightFilterContainer');
+			Game.stage.addChild(Game.nightFilterContainer);
 
 			// Terrain Background
-			Game.stage.addChild(Game.layers.terrain.background);
+			Game.nightFilterContainer.addChild(Game.layers.terrain.background);
 
 			Game.cameraGroup = new NamedGroup('cameraGroup');
-			Game.stage.addChild(Game.cameraGroup);
+			Game.nightFilterContainer.addChild(Game.cameraGroup);
 
 			// Terrain Textures moving with the camera
 			Game.cameraGroup.addChild(
@@ -254,6 +256,7 @@ define([], function () {
 			);
 
 			// Vital Sign Indicators on top of everything
+			// And not part of the night filter container
 			Game.stage.addChild(Game.layers.overlays.vitalSignIndicators);
 
 			createBackground();
@@ -274,7 +277,7 @@ define([], function () {
 			let domElement = Game.renderer.view;
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
-			DayCycle.setup(domElement, Game.stage);
+			DayCycle.setup(domElement, Game.nightFilterContainer);
 			KeyEvents.setup(window);
 			PointerEvents.setup(window);
 
