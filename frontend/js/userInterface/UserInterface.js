@@ -10,10 +10,6 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 			});
 
 		UserInterface.setup = function () {
-			// this.rootElement.addEventListener('contextmenu', function (event) {
-			// 	event.preventDefault();
-			// });
-
 			setupCrafting.call(this);
 
 			setupInventory.call(this);
@@ -70,16 +66,11 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 				return;
 			}
 
-			let craftsPerColumn = Math.round(Math.sqrt(availableCrafts.length));
-			let craftsPerRow = Math.ceil(availableCrafts.length / craftsPerColumn);
+			let newLines = CRAFTABLES_NEW_LINES[availableCrafts.length - 1];
 
 			availableCrafts.forEach(function (recipe, index) {
 				if (Utils.isUndefined(recipe.clickableIcon)) {
 					let craftableItemElement = this.craftableItemTemplate.cloneNode(true);
-
-					if (index % craftsPerRow === 0) {
-						craftableItemElement.classList.add('newLine');
-					}
 
 					let clickableIcon = new ClickableIcon(craftableItemElement);
 					clickableIcon.onLeftClick = function (event) {
@@ -92,10 +83,12 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 				}
 				recipe.clickableIcon.setHinted(!recipe.isCraftable);
 				recipe.clickableIcon.appendTo(this.craftingElement);
+				if (newLines.indexOf(index) === -1){
+					recipe.clickableIcon.domElement.classList.remove('newLine');
+				} else {
+					recipe.clickableIcon.domElement.classList.add('newLine');
+				}
 			}, this);
-
-			this.craftingElement.className = '';
-			this.craftingElement.classList.add('columns-' + craftsPerRow);
 		};
 
 		UserInterface.flashInventory = function () {
