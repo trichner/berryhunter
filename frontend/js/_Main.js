@@ -114,6 +114,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'Vector',
 					'ColorMatrixFilterExtension',
 					'PlayerName',
+				'Text',
 
 					// Develop resources
 					'develop/Fps',

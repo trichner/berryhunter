@@ -11,8 +11,9 @@ define([
 	'items/Equipment',
 	'InjectedSVG',
 	'Preloading',
-	'Vector'
-], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector) {
+	'Vector',
+	'Text',
+], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text) {
 	class Character extends GameObject {
 		constructor(id, x, y, name, isPlayerCharacter) {
 			super(Game.layers.characters, x, y, Constants.CHARACTER_SIZE, Math.PI / 2);
@@ -67,7 +68,7 @@ define([
 			this.messages = [];
 			this.messagesGroup = new PIXI.Container();
 			messagesFollowGroup.addChild(this.messagesGroup);
-			this.messagesGroup.position.y = -1.3 * (this.size + 16);
+			this.messagesGroup.position.y = -1.2 * (this.size + 24);
 
 			if (this.isPlayerCharacter) {
 				let craftProgressFollowGroup = new PIXI.Container();
@@ -77,7 +78,7 @@ define([
 				let craftingIndicator = new NamedGroup('craftingIndicator');
 				this.craftingIndicator = craftingIndicator;
 				craftProgressFollowGroup.addChild(craftingIndicator);
-				craftingIndicator.position.y = -1.3 * (this.size + 16) - 20;
+				craftingIndicator.position.y = -1.2 * (this.size + 24) - 20;
 				craftingIndicator.addChild(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
 				craftingIndicator.visible = false;
 
@@ -164,13 +165,7 @@ define([
 				return;
 			}
 
-			let text = new PIXI.Text(this.name, {
-				fontFamily: 'stone-age',
-				fontSize: 18,
-				fontWeight: '700',
-				align: 'center',
-				fill: 'white'
-			});
+			let text = new PIXI.Text(this.name, Text.style({fill: 'white'}));
 			text.anchor.set(0.5, 0.5);
 			this.shape.addChild(text);
 			text.position.set(0, -1.3 * this.size);
@@ -349,19 +344,15 @@ define([
 		}
 
 		say(message) {
-			let fontSize = 18;
+			let textStyle = Text.style({fill: '#e37313'});
+			let fontSize = textStyle.fontSize;
 
 			// Move all currently displayed messages up
 			this.messages.forEach((message) => {
-				message.position.y -= fontSize * 1.2;
+				message.position.y -= fontSize * 1.1;
 			});
 
-			let messageShape = new PIXI.Text(message, {
-				fontFamily: 'stone-age',
-				fontSize: fontSize,
-				align: 'center',
-				fill: '#e37313',
-			});
+			let messageShape = new PIXI.Text(message, textStyle);
 			messageShape.anchor.set(0.5, 0.5);
 			messageShape.timeToLife = Constants.CHAT_MESSAGE_DURATION;
 			this.messagesGroup.addChild(messageShape);
