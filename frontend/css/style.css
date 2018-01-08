@@ -679,6 +679,11 @@ dl.flatList > dd {
   width: 100%;
   display: block;
 }
+#crafting {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 .craftableItem {
   border-radius: 10%;
   width: 7vh;
@@ -688,7 +693,11 @@ dl.flatList > dd {
   margin: 0.7vh;
   text-decoration: none;
   display: block;
+  float: left;
   position: relative;
+}
+.craftableItem.newLine {
+  clear: left;
 }
 .craftableItem > .iconBackground {
   padding: 0.7vh;
@@ -816,17 +825,6 @@ dl.flatList > dd {
 }
 #bodyHeatBar > .indicator {
   background-color: dodgerblue;
-}
-#crafting {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-#crafting > .clickableItem {
-  float: left;
-}
-#crafting > .clickableItem.newLine {
-  clear: left;
 }
 #chat {
   position: absolute;

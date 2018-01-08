@@ -108,6 +108,12 @@
 	}
 }
 
+#crafting {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
 .craftableItem {
 	border-radius: 10%;
 	width: @slotSize;
@@ -117,6 +123,11 @@
 	margin: (0.1 * @slotSize);
 	text-decoration: none;
 	display: block;
+	float: left;
+
+	&.newLine {
+		clear: left;
+	}
 
 	> .iconBackground {
 		padding: (0.1 * @slotSize);
@@ -323,20 +334,6 @@
 
 	> .indicator {
 		background-color: dodgerblue;
-	}
-}
-
-#crafting {
-	position: absolute;
-	top: 0;
-	left: 0;
-
-	> .clickableItem {
-		float: left;
-
-		&.newLine {
-			clear: left;
-		}
 	}
 }
 
