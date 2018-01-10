@@ -24,8 +24,6 @@ define([], function () {
 			'backend/GameMapWithBackend',
 			'MiniMap',
 			'DayCycle',
-			'KeyEvents',
-			'PointerEvents',
 			'Player',
 			'Spectator',
 			'GameObject',
@@ -37,8 +35,8 @@ define([], function () {
 			'NamedGroup',
 			'Constants',
 			'ColorMatrixFilterExtension'
-		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, KeyEvents,
-		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
+		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle,
+		             Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
 		             Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
 
 			Game.loop = function (now) {
@@ -283,8 +281,9 @@ define([], function () {
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
 			DayCycle.setup(domElement, Game.nightFilterContainer);
-			KeyEvents.setup(window);
-			PointerEvents.setup(window);
+			require(['Inputs'], function (Inputs) {
+				Inputs.setup();
+			});
 
 			// Disable context menu on right click to use the right click ingame
 			document.body.addEventListener('contextmenu', function (event) {

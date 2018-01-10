@@ -77,8 +77,6 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'backend/ClientMessage',
 					'backend/Welcome',
 					'backend/SnapshotFactory',
-					'KeyEvents',
-					'PointerEvents',
 					'Controls',
 					'Constants',
 					'InjectedSVG',
@@ -122,6 +120,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 				'groundTextures/GroundTexture',
 				'groundTextures/GroundTextureTypes',
 				'groundTextures/GroundTextureManager',
+					'Inputs',
 
 					// Develop resources
 					'develop/Fps',
