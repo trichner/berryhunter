@@ -75,6 +75,8 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 	class Mineral extends Resource {
 		constructor(x, y, size) {
 			super(Game.layers.resources.minerals, x, y, size);
+			// Due to the shadow in the mineral graphics, those should not be randomly rotated
+			this.setRotation(0);
 
 			this.depletionTexture = new InjectedSVG(Mineral.groundTexture.svg, x, y, this.size, this.rotation);
 			Game.layers.terrain.textures.addChild(this.depletionTexture);
