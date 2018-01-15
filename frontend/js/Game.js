@@ -281,8 +281,13 @@ define([], function () {
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
 			DayCycle.setup(domElement, Game.nightFilterContainer);
-			require(['Inputs'], function (Inputs) {
-				Inputs.setup();
+			// require(['input/Inputs'], function (Inputs) {
+			// 	Inputs.setup();
+			// });
+
+			require(['input/strategies/phaser/KeyboardManager'], function (KeyboardManager) {
+				Game.keyboardManager = new KeyboardManager();
+				Game.keyboardManager.boot();
 			});
 
 			// Disable context menu on right click to use the right click ingame

@@ -2,7 +2,7 @@
 
 define([
 	'Game',
-	'Inputs',
+	'input/Inputs',
 	'Constants',
 	'Develop',
 	'MapEditor',
@@ -13,8 +13,9 @@ define([
 	'Chat',
 	'Utils',
 	'../vendor/tock',
+	'input/strategies/phaser/keys/KeyCodes',
 	'schema_client'
-], function (Game, Inputs, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock) {
+], function (Game, Inputs, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock, KeyCodes) {
 	const UP_KEYS = [
 		'w'.charCodeAt(0),
 		'W'.charCodeAt(0),
@@ -70,6 +71,24 @@ define([
 
 	let consoleCooldown = 0;
 
+	class Keys {
+		constructor() {
+			this.keys = [];
+			for (let i = 0; i < arguments.length; i++) {
+				this.keys.push(Game.keyboardManager.addKey(arguments[i]));
+			}
+
+			let self = this;
+			Object.defineProperty(this, 'isDown', {
+				get: function () {
+					return self.keys.some(function (key) {
+						return key.isDown;
+					});
+				}
+			});
+		}
+	}
+
 	class Controls {
 
 		/**
@@ -85,8 +104,15 @@ define([
 				this.lastY = character.getY();
 			}
 
-			Inputs.drop();
-			Inputs.flush();
+			// Inputs.drop();
+			// Inputs.flush();
+			this.upKeys = new Keys(KeyCodes.W, KeyCodes.UP);
+			this.downKeys = new Keys(KeyCodes.S, KeyCodes.DOWN);
+			this.leftKeys = new Keys(KeyCodes.A, KeyCodes.LEFT);
+			this.rightKeys = new Keys(KeyCodes.D, KeyCodes.RIGHT);
+			this.actionKeys = new Keys(KeyCodes.E, KeyCodes.SPACE);
+			this.altActionKeys = new Keys(KeyCodes.Q, KeyCodes.SHIFT);
+			this.pauseKeys = new Keys(KeyCodes.P);
 
 			this.hitAnimationTick = false;
 
@@ -149,6 +175,8 @@ define([
 		}
 
 		update() {
+			Game.keyboardManager.update();
+
 			if (Develop.isActive()) {
 				if (Utils.isUndefined(this.updateTime)) {
 					this.updateTime = this.clock.lap();
@@ -161,7 +189,7 @@ define([
 				}
 
 				// Pausing is only available in Develop mode
-				if (Inputs.isAnyKeyPressed(PAUSE_KEYS)){
+				if (this.pauseKeys.isDown) {
 					if (Game.playing) {
 						Game.pause();
 					} else {
@@ -180,16 +208,16 @@ define([
 				y: 0,
 			};
 
-			if (Inputs.isAnyKeyPressed(UP_KEYS)) {
+			if (this.upKeys.isDown) {
 				movement.y -= 1;
 			}
-			if (Inputs.isAnyKeyPressed(DOWN_KEYS)) {
+			if (this.downKeys.isDown) {
 				movement.y += 1;
 			}
-			if (Inputs.isAnyKeyPressed(LEFT_KEYS)) {
+			if (this.leftKeys.isDown) {
 				movement.x -= 1;
 			}
-			if (Inputs.isAnyKeyPressed(RIGHT_KEYS)) {
+			if (this.rightKeys.isDown) {
 				movement.x += 1;
 			}
 
@@ -205,7 +233,7 @@ define([
 				} else {
 					if (this.isCraftInProgress()) {
 						// Don't check for actions
-					} else if (Inputs.isAnyKeyPressed(ACTION_KEYS) || Inputs.isButtonPressed(ACTION_BUTTON)) {
+					} else if (this.actionKeys.isDown || Inputs.isButtonPressed(ACTION_BUTTON)) {
 						this.hitAnimationTick = this.character.action();
 						this.character.progressHitAnimation(this.hitAnimationTick);
 						switch (this.character.currentAction) {
@@ -238,7 +266,7 @@ define([
 								}
 								break;
 						}
-					} else if (Inputs.isAnyKeyPressed(ALT_ACTION_KEYS) || Inputs.isButtonPressed(ALT_ACTION_BUTTON)) {
+					} else if (this.altActionKeys.isDown || Inputs.isButtonPressed(ALT_ACTION_BUTTON)) {
 						this.hitAnimationTick = this.character.altAction();
 						this.character.progressHitAnimation(this.hitAnimationTick);
 						action = {
