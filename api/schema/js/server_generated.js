@@ -211,7 +211,7 @@ BerryhunterApi.OngoingAction.prototype.__init = function(i, bb) {
 /**
  * @returns {number}
  */
-BerryhunterApi.OngoingAction.prototype.ticksLeft = function() {
+BerryhunterApi.OngoingAction.prototype.ticksRemaining = function() {
   return this.bb.readUint16(this.bb_pos);
 };
 
@@ -224,15 +224,15 @@ BerryhunterApi.OngoingAction.prototype.actionType = function() {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} ticks_left
+ * @param {number} ticks_remaining
  * @param {BerryhunterApi.ActionType} action_type
  * @returns {flatbuffers.Offset}
  */
-BerryhunterApi.OngoingAction.createOngoingAction = function(builder, ticks_left, action_type) {
+BerryhunterApi.OngoingAction.createOngoingAction = function(builder, ticks_remaining, action_type) {
   builder.prep(2, 4);
   builder.pad(1);
   builder.writeInt8(action_type);
-  builder.writeInt16(ticks_left);
+  builder.writeInt16(ticks_remaining);
   return builder.offset();
 };
 

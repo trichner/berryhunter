@@ -30,7 +30,7 @@ struct ItemStack {
 }
 
 struct OngoingAction {
-    ticks_left:ushort;
+    ticks_remaining:ushort;
     action_type:ActionType;
 }
 

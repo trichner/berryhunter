@@ -41,6 +41,7 @@ func characterCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerE
 	ca := p.CurrentAction()
 	if ca != nil {
 		BerryhunterApi.CharacterAddActionTick(builder, uint16(ca.TicksRemaining()))
+		BerryhunterApi.CharacterAddCurrentAction()
 	}
 
 	pos := Vec2fMarshalFlatbuf(builder, p.Position())
@@ -54,6 +55,10 @@ func characterCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerE
 	BerryhunterApi.CharacterAddEntityType(builder, uint16(p.Type()))
 
 	BerryhunterApi.CharacterAddEquipment(builder, equipment)
+}
+
+func ongoingActionMarshalFlatbuf(builder *flatbuffers.Builder, action model.PlayerAction) flatbuffers.UOffsetT{
+	return BerryhunterApi.CreateOngoingAction(builder, action.TicksRemaining())
 }
 
 // general player as seen by other players
