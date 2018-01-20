@@ -63,7 +63,9 @@ func playerActionTypeMarshal(action model.PlayerActionType) byte {
 func ongoingActionMarshalFlatbuf(builder *flatbuffers.Builder, action model.PlayerAction) flatbuffers.UOffsetT{
 
 	tr := uint16(action.TicksRemaining())
-	return BerryhunterApi.CreateOngoingAction(builder, tr, playerActionTypeMarshal(action.Type()))
+	item := action.Item()
+	itemId := byte(item.ItemDefinition.ID)
+	return BerryhunterApi.CreateOngoingAction(builder, tr, playerActionTypeMarshal(action.Type()), itemId)
 }
 
 // general player as seen by other players

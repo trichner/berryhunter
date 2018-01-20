@@ -223,14 +223,22 @@ BerryhunterApi.OngoingAction.prototype.actionType = function() {
 };
 
 /**
+ * @returns {number}
+ */
+BerryhunterApi.OngoingAction.prototype.item = function() {
+  return this.bb.readUint8(this.bb_pos + 3);
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  * @param {number} ticks_remaining
  * @param {BerryhunterApi.ActionType} action_type
+ * @param {number} item
  * @returns {flatbuffers.Offset}
  */
-BerryhunterApi.OngoingAction.createOngoingAction = function(builder, ticks_remaining, action_type) {
+BerryhunterApi.OngoingAction.createOngoingAction = function(builder, ticks_remaining, action_type, item) {
   builder.prep(2, 4);
-  builder.pad(1);
+  builder.writeInt8(item);
   builder.writeInt8(action_type);
   builder.writeInt16(ticks_remaining);
   return builder.offset();

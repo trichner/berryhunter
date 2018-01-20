@@ -1,5 +1,9 @@
 package model
 
+import (
+	"github.com/trichner/berryhunter/backend/items"
+)
+
 type PlayerActionType int
 
 const (
@@ -30,4 +34,7 @@ type PlayerAction interface {
 
 	/* Type returns the type of action */
 	Type() PlayerActionType
+
+	// Item returns the item associated with the action or nil
+	Item() items.Item
 }

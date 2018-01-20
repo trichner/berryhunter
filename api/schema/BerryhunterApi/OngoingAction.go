@@ -33,9 +33,16 @@ func (rcv *OngoingAction) MutateActionType(n byte) bool {
 	return rcv._tab.MutateByte(rcv._tab.Pos+flatbuffers.UOffsetT(2), n)
 }
 
-func CreateOngoingAction(builder *flatbuffers.Builder, ticksRemaining uint16, actionType byte) flatbuffers.UOffsetT {
+func (rcv *OngoingAction) Item() byte {
+	return rcv._tab.GetByte(rcv._tab.Pos + flatbuffers.UOffsetT(3))
+}
+func (rcv *OngoingAction) MutateItem(n byte) bool {
+	return rcv._tab.MutateByte(rcv._tab.Pos+flatbuffers.UOffsetT(3), n)
+}
+
+func CreateOngoingAction(builder *flatbuffers.Builder, ticksRemaining uint16, actionType byte, item byte) flatbuffers.UOffsetT {
 	builder.Prep(2, 4)
-	builder.Pad(1)
+	builder.PrependByte(item)
 	builder.PrependByte(actionType)
 	builder.PrependUint16(ticksRemaining)
 	return builder.Offset()

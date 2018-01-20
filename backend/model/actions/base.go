@@ -23,6 +23,10 @@ func (*baseAction) Start() {
 	panic("Method not implemented.")
 }
 
+func (b *baseAction) Item() items.Item {
+	return b.item
+}
+
 func (*baseAction) Type() model.PlayerActionType {
 	panic("WTF?! How did we end up here?")
 }
