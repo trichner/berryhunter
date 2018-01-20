@@ -95,6 +95,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 				current: 0
 			};
 
+			this.domElement.classList.add('inProgress');
 			this.progressOverlay.classList.remove('hidden');
 			this.inProgress = true;
 
@@ -104,6 +105,7 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 					progress.current += Game.timeDelta;
 					if (progress.current >= progress.duration) {
 						self.progressOverlay.style.top = '100%';
+						self.domElement.classList.remove('inProgress');
 						self.progressOverlay.classList.add('hidden');
 						Game.renderer.off('prerender', updateListener);
 						self.inProgress = false;
