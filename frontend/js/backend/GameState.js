@@ -115,7 +115,7 @@ define(['backend/BackendConstants',
 
 			result.rotation = entity.rotation();
 			result.isHit = entity.isHit();
-			let currentAction = entity.actionTick();
+			let currentAction = entity.currentAction();
 			if (currentAction) {
 				result.currentAction = {
 					ticksRemaining: currentAction.ticksRemaining(),
