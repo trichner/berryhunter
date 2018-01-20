@@ -257,9 +257,8 @@ define([
 
 			let craftProgress = Game.player.craftProgress;
 			if (craftProgress) {
-				craftProgress.current += timeDelta;
 
-				let progress = craftProgress.current / craftProgress.duration;
+				let progress = 1 - (craftProgress.remainingTicks / craftProgress.requiredTicks);
 				if (progress >= 1) {
 					Game.player.craftProgress = null;
 					progress = 1;

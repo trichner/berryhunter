@@ -7,8 +7,9 @@ define([
 	'Camera',
 	'items/Inventory',
 	'VitalSigns',
-	'StartScreen'
-], function (Game, Character, Controls, Camera, Inventory, VitalSigns) {
+	'Utils',
+	'Constants'
+], function (Game, Character, Controls, Camera, Inventory, VitalSigns, Utils, Constants) {
 	class Player {
 		constructor(id, x, y, name) {
 			/**
@@ -39,10 +40,55 @@ define([
 
 		startCraftProgress(craftingTime) {
 			this.craftProgress = {
-				duration: craftingTime * 1000,
-				current: 0
+				requiredTicks: craftingTime * 1000 / Constants.SERVER_TICKRATE
 			};
+			this.craftProgress.remainingTicks = this.craftProgress.requiredTicks;
 			this.character.craftingIndicator.visible = true;
+		}
+
+		updateFromBackend(entity) {
+			if (Utils.isDefined(entity.position)) {
+				this.character.setPosition(entity.position.x, entity.position.y);
+			}
+			['health', 'satiety', 'bodyHeat'].forEach((vitalSign) => {
+				if (Utils.isDefined(entity[vitalSign])) {
+					this.vitalSigns.setValue(vitalSign, entity[vitalSign]);
+				}
+			});
+
+			/**
+			 * Handle Actions
+			 */
+			if (entity.currentAction) {
+				switch (entity.currentAction.actionType) {
+					case BerryhunterApi.ActionType.Primary:
+						console.log("Action by " + entity.name + ": " + "Primary" + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+						break;
+					case BerryhunterApi.ActionType.CraftItem:
+						if (!this.isCraftInProgress()) {
+							console.error("Invalid State: Received craftItem action, but no crafting is in progress.");
+							break;
+						}
+						console.log("Action by " + entity.name + ": " + "Craft Item" + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+						this.craftProgress.remainingTicks = entity.currentAction.ticksRemaining;
+						break;
+					default:
+						let actionTypeKnown = false;
+						for (let actionType in BerryhunterApi.ActionType) {
+							if (BerryhunterApi.ActionType.hasOwnProperty(actionType)) {
+								if (entity.currentAction.actionType === BerryhunterApi.ActionType[actionType]) {
+									console.log("Action by " + entity.name + ": " + actionType + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+									actionTypeKnown = true;
+									break;
+								}
+							}
+						}
+						if (!actionTypeKnown) {
+							console.warn("Unknown Action by " + entity.name + ": " + entity.currentAction.actionType + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+						}
+						break;
+				}
+			}
 		}
 
 		remove() {
