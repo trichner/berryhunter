@@ -22,7 +22,7 @@ func (a *Drop) Start() {
 	}
 
 	a.p.Inventory().DropAll(a.item)
-	return
+	a.ticks = 1
 }
 
 func (*Drop) Type() model.PlayerActionType {

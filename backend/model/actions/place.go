@@ -50,7 +50,7 @@ func (a *Place) Start() {
 	a.game.AddEntity(e)
 	a.p.OwnedEntities().Add(e)
 
-	return
+	a.ticks = 1
 }
 
 func (*Place) Type() model.PlayerActionType {

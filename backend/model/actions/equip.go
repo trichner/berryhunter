@@ -21,7 +21,7 @@ func (a *Equip) Start() {
 		return
 	}
 	a.p.Equipment().Equip(a.item)
-	return
+	a.ticks = 1
 }
 
 func (*Equip) Type() model.PlayerActionType {

@@ -20,6 +20,7 @@ func (a *Unequip) Start() {
 		return
 	}
 	a.p.Equipment().Unequip(a.item)
+	a.ticks = 1
 }
 
 func (*Unequip) Type() model.PlayerActionType {
