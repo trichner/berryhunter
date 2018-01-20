@@ -16,11 +16,6 @@ var _ = model.PlayerAction(&Primary{})
 
 type Primary struct {
 	baseAction
-	ticks int
-}
-
-func (p *Primary) TicksRemaining() int {
-	return p.ticks
 }
 
 func (p *Primary) Start() {
