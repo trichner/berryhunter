@@ -5,8 +5,9 @@ func (p *player) Update(dt float32) {
 
 	// action
 	if p.ongoingAction != nil {
-		done := p.ongoingAction.Update(dt)
-		if done {
+		a := p.ongoingAction
+		a.Update(dt)
+		if a.TicksRemaining() < 0 {
 			p.ongoingAction = nil
 		}
 	}

@@ -15,39 +15,31 @@ var _ = model.PlayerAction(&Craft{})
 
 type Craft struct {
 	baseAction
-	ticks int
 }
 
-func (c *Craft) TicksRemaining() int {
-	return c.ticks
-}
-
-func (c *Craft) Start() bool {
+func (c *Craft) Start() {
 	def := c.item.ItemDefinition
 	if def.Recipe.CraftTicks == 0 {
 		log.Printf("😵 Item '%s' has no crafting time!", def.Name)
-		return true
+		return
 	}
 
 	if !c.canCraft() {
 		log.Printf("😪 Not enough ressources to craft %s.", def.Name)
-		return true
+		return
 	}
 
 	// ok, we're good to go, remove materials & craft
 	stacks := c.item.Recipe.Materials
 	c.p.Inventory().ConsumeItems(stacks)
 	c.ticks = def.Recipe.CraftTicks
-
-	return false
 }
 
-func (c *Craft) Update(dt float32) bool {
+func (c *Craft) Update(dt float32) {
 	c.ticks -= 1
 	if c.ticks == 0 {
 		c.done()
 	}
-	return c.ticks <= 0
 }
 
 func (c *Craft) done() {

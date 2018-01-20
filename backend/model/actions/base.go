@@ -6,16 +6,21 @@ import (
 )
 
 type baseAction struct {
-	item items.Item
-	p    model.PlayerEntity
+	item  items.Item
+	p     model.PlayerEntity
+	ticks int
 }
 
-func (*baseAction) TicksRemaining() int {
-	return 1 /* basic actions take exactly one tick */
+func (b *baseAction) TicksRemaining() int {
+	return b.ticks
 }
 
-func (*baseAction) Update(dt float32) bool {
-	return true
+func (b *baseAction) Update(dt float32) {
+	b.ticks -= 1
+}
+
+func (*baseAction) Start() {
+	panic("Method not implemented.")
 }
 
 func (*baseAction) Type() model.PlayerActionType {

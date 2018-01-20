@@ -85,7 +85,8 @@ type player struct {
 }
 
 func (p *player) AddAction(a model.PlayerAction) {
-	if p.ongoingAction != nil {
+	if p.ongoingAction != nil && p.ongoingAction.TicksRemaining() > 0 {
+
 		log.Printf("😧 Already action going on.")
 		return
 	}

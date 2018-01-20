@@ -15,12 +15,13 @@ type Consume struct {
 	baseAction
 }
 
-func (a *Consume) Start() bool {
+func (a *Consume) Start() {
 
 	p := a.p
 	if !hasItem(p, a.item) {
-		return true
+		return
 	}
+
 	ok := p.Inventory().ConsumeItem(items.NewItemStack(a.item, 1))
 	if ok {
 		// prevent overflow
@@ -28,7 +29,6 @@ func (a *Consume) Start() bool {
 		foodFraction := a.item.Factors.Food
 		p.VitalSigns().Satiety = h.AddFraction(foodFraction)
 	}
-	return true
 }
 
 func (*Consume) Type() model.PlayerActionType {
