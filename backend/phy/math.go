@@ -133,9 +133,9 @@ func (v Vec2f) DistanceToSquared(w Vec2f) float32 {
 }
 
 func (v Vec2f) AngleBetween(w Vec2f) float32 {
-	atan2 := atan232f(-w.Y, w.X) - atan232f(-v.Y, v.X)
+	atan2 := atan232f(w.Y, w.X) - atan232f(v.Y, v.X)
 	if atan2 < 0 {
-		return float32(math.Pi)*2 + atan2
+		atan2 += float32(math.Pi) * 2
 	}
 	return atan2
 }
