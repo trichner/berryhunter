@@ -18,7 +18,7 @@ type Craft struct {
 	ticks int
 }
 
-func (c *Craft) Ticks() int {
+func (c *Craft) TicksRemaining() int {
 	return c.ticks
 }
 
