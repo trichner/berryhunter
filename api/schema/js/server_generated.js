@@ -185,6 +185,60 @@ BerryhunterApi.ItemStack.createItemStack = function(builder, item, count, slot) 
 /**
  * @constructor
  */
+BerryhunterApi.OngoingAction = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.OngoingAction}
+ */
+BerryhunterApi.OngoingAction.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns {number}
+ */
+BerryhunterApi.OngoingAction.prototype.ticksLeft = function() {
+  return this.bb.readUint16(this.bb_pos);
+};
+
+/**
+ * @returns {BerryhunterApi.ActionType}
+ */
+BerryhunterApi.OngoingAction.prototype.actionType = function() {
+  return /** @type {BerryhunterApi.ActionType} */ (this.bb.readUint8(this.bb_pos + 2));
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} ticks_left
+ * @param {BerryhunterApi.ActionType} action_type
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.OngoingAction.createOngoingAction = function(builder, ticks_left, action_type) {
+  builder.prep(2, 4);
+  builder.pad(1);
+  builder.writeInt8(action_type);
+  builder.writeInt16(ticks_left);
+  return builder.offset();
+};
+
+/**
+ * @constructor
+ */
 BerryhunterApi.Entity = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
@@ -830,11 +884,12 @@ BerryhunterApi.Character.prototype.isHit = function() {
 };
 
 /**
- * @returns {number}
+ * @param {BerryhunterApi.OngoingAction=} obj
+ * @returns {BerryhunterApi.OngoingAction|null}
  */
-BerryhunterApi.Character.prototype.actionTick = function() {
+BerryhunterApi.Character.prototype.currentAction = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 16);
-  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+  return offset ? (obj || new BerryhunterApi.OngoingAction).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
@@ -961,10 +1016,10 @@ BerryhunterApi.Character.addIsHit = function(builder, isHit) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} actionTick
+ * @param {flatbuffers.Offset} currentActionOffset
  */
-BerryhunterApi.Character.addActionTick = function(builder, actionTick) {
-  builder.addFieldInt16(6, actionTick, 0);
+BerryhunterApi.Character.addCurrentAction = function(builder, currentActionOffset) {
+  builder.addFieldStruct(6, currentActionOffset, 0);
 };
 
 /**

@@ -7,6 +7,19 @@
 var BerryhunterApi = BerryhunterApi || {};
 
 /**
+ * @enum
+ */
+BerryhunterApi.ActionType = {
+  Primary: 0,
+  CraftItem: 1,
+  EquipItem: 2,
+  UnequipItem: 3,
+  DropItem: 4,
+  PlaceItem: 5,
+  ConsumeItem: 6
+};
+
+/**
  * @constructor
  */
 BerryhunterApi.Vec3f = function() {

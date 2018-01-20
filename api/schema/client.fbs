@@ -2,16 +2,6 @@ include "common.fbs";
 
 namespace BerryhunterApi;
 
-enum ActionType: ubyte {
-    Primary = 0,
-    CraftItem,
-    EquipItem,
-    UnequipItem,
-    DropItem,
-    PlaceItem,
-    ConsumeItem
-}
-
 table Action {
 	item:ubyte;
 	actionType:ActionType = Primary;
