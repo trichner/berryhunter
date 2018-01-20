@@ -115,7 +115,14 @@ define(['backend/BackendConstants',
 
 			result.rotation = entity.rotation();
 			result.isHit = entity.isHit();
-			result.actionTick = entity.actionTick();
+			let currentAction = entity.actionTick();
+			if (currentAction) {
+				result.currentAction = {
+					ticksRemaining: currentAction.ticksRemaining(),
+					actionType: currentAction.actionType(),
+				};
+			}
+
 			result.name = entity.name();
 			result.equipment = [];
 

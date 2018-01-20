@@ -154,14 +154,33 @@ define([
 				/**
 				 * Handle Actions
 				 */
-				if (entity.actionTick) {
-					console.log("Action Tick by " + entity.name + ": " + entity.actionTick);
-					character.action();
-					character.progressHitAnimation(entity.actionTick);
+				if (entity.currentAction) {
+					switch (entity.currentAction.actionType) {
+						case BerryhunterApi.ActionType.Primary:
+							console.log("Action by " + entity.name + ": " + "Primary" + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+							character.action();
+							character.progressHitAnimation(entity.currentAction.ticksRemaining);
+							break;
+						default:
+							let actionTypeKnown = false;
+							for (let actionType in BerryhunterApi.ActionType) {
+								if (BerryhunterApi.ActionType.hasOwnProperty(actionType)) {
+									if (entity.currentAction.actionType === BerryhunterApi.ActionType[actionType]) {
+										console.log("Action by " + entity.name + ": " + actionType + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+										actionTypeKnown = true;
+										break;
+									}
+								}
+							}
+							if (!actionTypeKnown) {
+								console.warn("Unknown Action by " + entity.name + ": " + entity.currentAction.actionType + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+							}
+							break;
+					}
 				}
 			}
 
-			if (entity.isHit){
+			if (entity.isHit) {
 				gameObject.playHitAnimation();
 			}
 		};
