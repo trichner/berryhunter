@@ -120,6 +120,7 @@ define(['backend/BackendConstants',
 				result.currentAction = {
 					ticksRemaining: currentAction.ticksRemaining(),
 					actionType: currentAction.actionType(),
+					item: unmarshalItem(currentAction.item()),
 				};
 			}
 
