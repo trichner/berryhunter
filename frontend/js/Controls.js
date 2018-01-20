@@ -78,12 +78,13 @@ define([
 	let consoleCooldown = 0;
 
 	class Controls {
+
 		/**
-		 *
 		 * @param {Character} character
+		 * @param {function} isCraftInProgress
 		 */
-		constructor(character, craftInProgress) {
-			this.craftInProgress = craftInProgress;
+		constructor(character, isCraftInProgress) {
+			this.isCraftInProgress = isCraftInProgress;
 			this.character = character;
 			this.playerId = character.id;
 
@@ -141,7 +142,7 @@ define([
 		 * @return {boolean} whether or not the action was allowed. Visuals have to be aligned to this return value
 		 */
 		onInventoryAction(item, actionType) {
-			if (this.craftInProgress()) {
+			if (this.isCraftInProgress()) {
 				return false;
 			}
 
@@ -207,7 +208,7 @@ define([
 					action = this.inventoryAction;
 					delete this.inventoryAction;
 				} else {
-					if (this.craftInProgress()){
+					if (this.isCraftInProgress()) {
 						// Don't check for actions
 					} else if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
 						this.hitAnimationTick = this.character.action();

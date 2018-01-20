@@ -261,7 +261,7 @@ define([
 
 				let progress = craftProgress.current / craftProgress.duration;
 				if (progress >= 1) {
-					Game.player.craftProgress = false;
+					Game.player.craftProgress = null;
 					progress = 1;
 					this.craftingIndicator.visible = false;
 				}

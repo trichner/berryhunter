@@ -442,9 +442,8 @@ dl.flatList > dd {
 .craftableItem {
   overflow: hidden;
 }
-
 .craftableItem.inProgress {
-    cursor: default;
+  cursor: default;
 }
 .craftableItem > .progressOverlay {
   position: absolute;
