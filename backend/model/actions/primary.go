@@ -37,3 +37,7 @@ func (p *Primary) Update(dt float32) bool {
 	p.ticks -= 1
 	return p.ticks <= 0
 }
+
+func (*Primary) Type() model.PlayerActionType {
+	return model.PlayerActionPrimary
+}

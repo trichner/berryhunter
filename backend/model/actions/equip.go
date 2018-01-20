@@ -24,3 +24,6 @@ func (a *Equip) Start() bool {
 	return true
 }
 
+func (*Equip) Type() model.PlayerActionType {
+	return model.PlayerActionEquipItem
+}

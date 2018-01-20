@@ -26,3 +26,7 @@ func (a *Unequip) Start() bool {
 func (a *Unequip) Update(dt float32) bool {
 	panic("WTF?! How did we end up here?")
 }
+
+func (*Unequip) Type() model.PlayerActionType {
+	return model.PlayerActionUnequipItem
+}

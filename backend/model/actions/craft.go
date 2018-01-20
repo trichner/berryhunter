@@ -97,3 +97,7 @@ func (c *Craft) canCraft() bool {
 
 	return false
 }
+
+func (*Craft) Type() model.PlayerActionType {
+	return model.PlayerActionCraftItem
+}

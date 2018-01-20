@@ -52,3 +52,7 @@ func (a *Place) Start() bool {
 
 	return true
 }
+
+func (*Place) Type() model.PlayerActionType {
+	return model.PlayerActionPlaceItem
+}

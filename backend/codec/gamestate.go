@@ -40,8 +40,7 @@ func characterCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerE
 	BerryhunterApi.CharacterAddName(builder, name)
 	ca := p.CurrentAction()
 	if ca != nil {
-		BerryhunterApi.CharacterAddActionTick(builder, uint16(ca.TicksRemaining()))
-		BerryhunterApi.CharacterAddCurrentAction()
+		BerryhunterApi.CharacterAddCurrentAction(builder, ongoingActionMarshalFlatbuf(builder, ca))
 	}
 
 	pos := Vec2fMarshalFlatbuf(builder, p.Position())
@@ -57,8 +56,14 @@ func characterCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerE
 	BerryhunterApi.CharacterAddEquipment(builder, equipment)
 }
 
+func playerActionTypeMarshal(action model.PlayerActionType) byte {
+	return byte(action) // for now the enums ordinals match exactly
+}
+
 func ongoingActionMarshalFlatbuf(builder *flatbuffers.Builder, action model.PlayerAction) flatbuffers.UOffsetT{
-	return BerryhunterApi.CreateOngoingAction(builder, action.TicksRemaining())
+
+	tr := uint16(action.TicksRemaining())
+	return BerryhunterApi.CreateOngoingAction(builder, tr, playerActionTypeMarshal(action.Type()))
 }
 
 // general player as seen by other players

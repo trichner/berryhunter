@@ -17,3 +17,7 @@ func (*baseAction) TicksRemaining() int {
 func (*baseAction) Update(dt float32) bool {
 	panic("WTF?! How did we end up here?")
 }
+
+func (*baseAction) Type() model.PlayerActionType {
+	panic("WTF?! How did we end up here?")
+}

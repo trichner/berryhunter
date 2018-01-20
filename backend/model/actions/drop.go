@@ -25,3 +25,6 @@ func (a *Drop) Start() bool {
 	return true
 }
 
+func (*Drop) Type() model.PlayerActionType {
+	return model.PlayerActionDropItem
+}

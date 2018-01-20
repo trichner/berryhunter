@@ -31,3 +31,7 @@ func (a *Consume) Start() bool {
 	return true
 }
 
+func (*Consume) Type() model.PlayerActionType {
+	return model.PlayerActionConsumeItem
+}
+
