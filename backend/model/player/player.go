@@ -90,10 +90,8 @@ func (p *player) AddAction(a model.PlayerAction) {
 		return
 	}
 
-	done := a.Start()
-	if !done {
-		p.ongoingAction = a
-	}
+	a.Start()
+	p.ongoingAction = a
 }
 
 func (p *player) CurrentAction() model.PlayerAction {
