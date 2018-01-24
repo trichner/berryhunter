@@ -6,7 +6,8 @@ define([], function () {
 			MAP_EDITOR: 'map-editor',
 			LOCAL_SERVER: 'local',
 			SERVER_PORT: 'port',
-			DEVELOPMENT: 'develop'
+			DEVELOPMENT: 'develop',
+			GROUND_TEXTURE_EDITOR: 'textures'
 		},
 		USE_NAMED_GROUPS: true,
 

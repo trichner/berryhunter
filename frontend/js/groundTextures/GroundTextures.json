@@ -1,0 +1,12 @@
+[
+  {
+    "type": "darkGreenGrass",
+    "size": 200,
+    "rotation": 190,
+    "flipped": "horizontal"
+    |
+    "vertical"
+    |
+    "none"
+  }
+]
