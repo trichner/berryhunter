@@ -248,5 +248,9 @@ define(['../vendor/XieLongUtils'], function () {
 		});
 	};
 
+	Utils.roundToNearest = function (value, nearest) {
+		return Math.round(value / nearest) * nearest;
+	};
+
 	return Utils;
 });

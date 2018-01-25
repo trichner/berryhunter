@@ -31,6 +31,9 @@ define([
 		this.yLabel = document.getElementById('groundTexture_y');
 		this.minSizeLabel = document.getElementById('groundTexture_minSize');
 		this.maxSizeLabel = document.getElementById('groundTexture_maxSize');
+		this.sizeInput = document.getElementById('groundTexture_size');
+		this.rotationInput = document.getElementById('groundTexture_rotation');
+		this.flippedRadios = document.getElementsByName('groundTexture_flipped');
 
 		let typeSelect = document.getElementById('groundTexture_type');
 		let types = Object.keys(GroundTextureTypes);
@@ -42,9 +45,16 @@ define([
 		});
 		typeSelect.addEventListener('change', function () {
 			let groundTextureType = GroundTextureTypes[typeSelect.value];
-			this.minSizeLabel.textContent = groundTextureType.minSize || 'none';
-			this.maxSizeLabel.textContent = groundTextureType.maxSize || 'none';
-		}.bind(this))
+			this.minSizeLabel.textContent = groundTextureType.minSize;
+			this.maxSizeLabel.textContent = groundTextureType.maxSize;
+			this.sizeInput.value = Utils.roundToNearest(
+				Utils.randomInt(groundTextureType.minSize, groundTextureType.maxSize),
+				5);
+			this.rotationInput.value = Utils.randomInt(0, 359);
+			this.flippedRadios.item(Utils.randomInt(0, 2)).checked = true;
+		}.bind(this));
+
+		// TODO on change listener für inputs
 	}
 
 	function setupToggleButtons() {
