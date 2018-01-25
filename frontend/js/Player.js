@@ -62,31 +62,31 @@ define([
 			if (entity.currentAction) {
 				switch (entity.currentAction.actionType) {
 					case BerryhunterApi.ActionType.Primary:
-						console.log("Action by " + entity.name + ": " + "Primary with " + entity.currentAction.item.name + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+						// console.log("Action by " + entity.name + ": " + "Primary with " + entity.currentAction.item.name + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
 						break;
 					case BerryhunterApi.ActionType.CraftItem:
 						if (!this.isCraftInProgress()) {
 							console.error("Invalid State: Received craftItem action, but no crafting is in progress.");
 							break;
 						}
-						console.log("Action by " + entity.name + ": " + "Craft " + entity.currentAction.item.name + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+						// console.log("Action by " + entity.name + ": " + "Craft " + entity.currentAction.item.name + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
 						this.craftProgress.remainingTicks = entity.currentAction.ticksRemaining;
 						break;
-					default:
-						let actionTypeKnown = false;
-						for (let actionType in BerryhunterApi.ActionType) {
-							if (BerryhunterApi.ActionType.hasOwnProperty(actionType)) {
-								if (entity.currentAction.actionType === BerryhunterApi.ActionType[actionType]) {
-									console.log("Action by " + entity.name + ": " + actionType + " " + entity.currentAction.item.name + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
-									actionTypeKnown = true;
-									break;
-								}
-							}
-						}
-						if (!actionTypeKnown) {
-							console.warn("Unknown Action by " + entity.name + ": " + entity.currentAction.actionType + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
-						}
-						break;
+					// default:
+					// 	let actionTypeKnown = false;
+					// 	for (let actionType in BerryhunterApi.ActionType) {
+					// 		if (BerryhunterApi.ActionType.hasOwnProperty(actionType)) {
+					// 			if (entity.currentAction.actionType === BerryhunterApi.ActionType[actionType]) {
+					// 				console.log("Action by " + entity.name + ": " + actionType + " " + entity.currentAction.item.name + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+					// 				actionTypeKnown = true;
+					// 				break;
+					// 			}
+					// 		}
+					// 	}
+					// 	if (!actionTypeKnown) {
+					// 		console.warn("Unknown Action by " + entity.name + ": " + entity.currentAction.actionType + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
+					// 	}
+					// 	break;
 				}
 			}
 		}

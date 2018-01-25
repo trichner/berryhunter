@@ -233,5 +233,20 @@ define(['../vendor/XieLongUtils'], function () {
 		return Math.abs(a - b) < epsilon;
 	};
 
+	Utils.sortStrings = function (array, key) {
+		return array.sort(function (a, b) {
+			let valueA;
+			let valueB;
+			if (key) {
+				valueA = a[key];
+				valueB = b[key];
+			} else {
+				valueA = a;
+				valueB = b;
+			}
+			return valueA.localeCompare(valueB, undefined, {sensitivity: 'base'});
+		});
+	};
+
 	return Utils;
 });

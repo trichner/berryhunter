@@ -305,6 +305,9 @@ define([], function () {
 			 */
 
 			Chat.setup();
+			require(['groundTextures/_Panel'], function (GroundTexturePanel) {
+				GroundTexturePanel.setup();
+			});
 
 			StartScreen.show();
 

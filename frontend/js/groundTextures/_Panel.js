@@ -2,16 +2,11 @@
 
 define([
 	'Game',
-	'develop/AABBs',
-	'develop/Fps',
 	'Preloading',
 	'Utils',
-	'MapEditor',
-	'Console',
-	'items/ItemType',
 	'Constants',
-	'items/Items',
-], function (Game, AABBs, Fps, Preloading, Utils, MapEditor, Console, ItemType, Constants, Items) {
+	'./GroundTextureTypes'
+], function (Game, Preloading, Utils, Constants, GroundTextureTypes) {
 
 	let active = false;
 
@@ -22,27 +17,34 @@ define([
 	};
 
 	GroundTexturePanel.setup = function () {
-		active = true;
-
-		setupPanel();
-		this.logs = {
-			fps: [],
-			serverTickRate: [],
-			clientTickRate: [],
-		}
+		Game.renderer.on('prerender', function () {
+			if (Game.state === Game.States.PLAYING) {
+				let position = Game.player.character.getPosition();
+				this.xLabel.textContent = position.x.toFixed(0);
+				this.yLabel.textContent = position.y.toFixed(0);
+			}
+		}, this);
 	};
 
 	function setupPanel() {
-		Preloading.registerPartial('partials/developPanel.html')
-			.then(function () {
-				setupToggleButtons();
+		this.xLabel = document.getElementById('groundTexture_x');
+		this.yLabel = document.getElementById('groundTexture_y');
+		this.minSizeLabel = document.getElementById('groundTexture_minSize');
+		this.maxSizeLabel = document.getElementById('groundTexture_maxSize');
 
-				setupItemAdding();
-
-				setupTickSampler();
-
-				setupChart();
-			}.bind(this));
+		let typeSelect = document.getElementById('groundTexture_type');
+		let types = Object.keys(GroundTextureTypes);
+		Utils.sortStrings(types);
+		types.map(function (type) {
+			return Utils.htmlToElement('<option value="' + type + '">' + type + '</option>');
+		}).forEach(function (option) {
+			typeSelect.appendChild(option);
+		});
+		typeSelect.addEventListener('change', function () {
+			let groundTextureType = GroundTextureTypes[typeSelect.value];
+			this.minSizeLabel.textContent = groundTextureType.minSize || 'none';
+			this.maxSizeLabel.textContent = groundTextureType.maxSize || 'none';
+		}.bind(this))
 	}
 
 	function setupToggleButtons() {
@@ -124,7 +126,10 @@ define([
 
 
 	if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
-		GroundTexturePanel.setup();
+		active = true;
+
+		Preloading.registerPartial('partials/groundTexturePanel.html')
+			.then(setupPanel.bind(GroundTexturePanel));
 	}
 
 	return GroundTexturePanel;

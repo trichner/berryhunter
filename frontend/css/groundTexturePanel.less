@@ -1,0 +1,139 @@
+// TODO use classes here and in developPanel
+
+#groundTexturePanel {
+	position: fixed;
+	top: 0;
+	right: 0;
+	background-color: rgba(255, 255, 255, 0.8);
+	padding: 1em;
+	min-width: 16em;
+	z-index: 1000;
+
+	font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
+	font-variant: normal;
+
+	> .toolbar {
+		//background-color: black;
+		//color: white;
+		text-align: right;
+		line-height: 1.2;
+
+		> a {
+			color: inherit;
+		}
+	}
+
+	.maximize-button {
+		display: none;
+	}
+
+	&:target {
+		overflow: hidden;
+		max-height: 1.2em;
+		padding: 0;
+
+		.minimize-button {
+			display: none;
+		}
+		.maximize-button {
+			display: inline;
+		}
+	}
+
+	> :first-child {
+		margin-top: 0;
+	}
+
+	> h2 {
+		font-size: 1.2em;
+	}
+
+	> table {
+		td, th {
+			padding: 0.15em 0.25em;
+		}
+
+		> tbody {
+			th {
+				text-align: right;
+				padding-right: 0.5em;
+			}
+
+			> tr.separatorRow > th {
+				text-align: center;
+				padding-right: 0.25em;
+			}
+
+			td {
+				min-width: 6.35em;
+
+				> h3 {
+					font-size: inherit;
+					text-align: center;
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+
+	.good {
+		color: #4CAF50;
+	}
+
+	.neutral {
+		color: #03A9F4;
+	}
+
+	.bad {
+		color: #F44336;
+	}
+}
+
+
+#groundTexturePopup {
+	position: fixed;
+	z-index: 2000;
+	top: 50%;
+	left: 25%;
+	transform: translate(-50%, -50%);
+	max-height: 95vh;
+	max-width: 40em;
+
+	background-color: white;
+
+	h2 {
+		margin: 0;
+	}
+
+	> pre {
+		white-space: pre-wrap;
+		overflow-y: auto;
+		padding: 0.7em;
+		margin: 0;
+	}
+
+	> header, footer {
+		padding: 0.7em;
+	}
+}
+
+#groundTexture_closePopup {
+	float: right;
+}
+
+#groundTexturePanel {
+	font-size: 14px;
+	min-width: 0;
+
+	.group {
+		margin-top: 1em;
+	}
+
+	label {
+		display: block;
+	}
+
+	//.radioGroup > label {
+	//	display: inline-block;
+	//}
+}

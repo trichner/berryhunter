@@ -114,7 +114,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'Vector',
 					'ColorMatrixFilterExtension',
 					'PlayerName',
-				'Text',
+					'Text',
 
 					// Develop resources
 					'develop/Fps',
@@ -124,6 +124,9 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					// Map Editor
 					'mapEditor/QuadrantGrid',
 					'MapEditor',
+
+					// Ground Texture Panel
+					'groundTextures/_Panel',
 
 					// The Game
 					// (you just lost it)
