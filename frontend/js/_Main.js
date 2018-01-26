@@ -115,6 +115,9 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'ColorMatrixFilterExtension',
 					'PlayerName',
 					'Text',
+				'groundTextures/GroundTexture',
+				'groundTextures/GroundTextureTypes',
+				'groundTextures/GroundTextureManager',
 
 					// Develop resources
 					'develop/Fps',

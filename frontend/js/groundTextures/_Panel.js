@@ -5,8 +5,9 @@ define([
 	'Preloading',
 	'Utils',
 	'Constants',
-	'./GroundTextureTypes'
-], function (Game, Preloading, Utils, Constants, GroundTextureTypes) {
+	'./GroundTextureTypes',
+	'./GroundTextureManager'
+], function (Game, Preloading, Utils, Constants, GroundTextureTypes, GroundTextureManager) {
 
 	let active = false;
 
@@ -29,6 +30,7 @@ define([
 	function setupPanel() {
 		this.xLabel = document.getElementById('groundTexture_x');
 		this.yLabel = document.getElementById('groundTexture_y');
+		this.controlsContainer = document.getElementById('groundTexture_controls');
 		this.minSizeLabel = document.getElementById('groundTexture_minSize');
 		this.maxSizeLabel = document.getElementById('groundTexture_maxSize');
 		this.sizeInput = document.getElementById('groundTexture_size');
@@ -44,96 +46,59 @@ define([
 			typeSelect.appendChild(option);
 		});
 		typeSelect.addEventListener('change', function () {
-			let groundTextureType = GroundTextureTypes[typeSelect.value];
-			this.minSizeLabel.textContent = groundTextureType.minSize;
-			this.maxSizeLabel.textContent = groundTextureType.maxSize;
-			this.sizeInput.value = Utils.roundToNearest(
-				Utils.randomInt(groundTextureType.minSize, groundTextureType.maxSize),
-				5);
-			this.rotationInput.value = Utils.randomInt(0, 359);
-			this.flippedRadios.item(Utils.randomInt(0, 2)).checked = true;
+			this.groundTextureType = GroundTextureTypes[typeSelect.value];
+
+			randomizeInputs.call(this);
+
+			this.controlsContainer.classList.remove('hidden');
 		}.bind(this));
 
-		// TODO on change listener für inputs
-	}
-
-	function setupToggleButtons() {
-		let buttons = document.querySelectorAll('#developPanel .toggleButton');
-
-		/**
-		 *
-		 * @param {Element} button
-		 * @param {boolean} state
-		 */
-		function setButtonState(button, state) {
-
-			if (state) {
-				button.querySelector('span.state').textContent = 'On';
-				button.classList.add('on');
-				button.classList.remove('off');
-			} else {
-				button.querySelector('span.state').textContent = 'Off';
-				button.classList.add('off');
-				button.classList.remove('on');
+		this.rotationInput.addEventListener('input', function () {
+			let value = parseInt(this.value);
+			if (value < 0) {
+				this.value = 360 + (value % 360)
+			} else if (value >= 360) {
+				this.value = value % 360;
 			}
-		}
+		});
 
-		for (let i = 0; i < buttons.length; i++) {
-			let button = buttons[i];
-			setButtonState(button, Develop.settings[button.getAttribute('data-setting')]);
-			button.addEventListener('click', function () {
-				let setting = button.getAttribute('data-setting');
-				let newValue = !Develop.settings[setting];
-				Develop.settings[setting] = newValue;
-				setButtonState(button, newValue);
-				Develop.onSettingToggle(setting, newValue);
+		document.getElementById('groundTexture_placeButton').addEventListener('click', function (event) {
+			event.preventDefault();
+
+			if (Game.state !== Game.States.PLAYING) {
+				return;
+			}
+
+			let position = Game.player.character.getPosition();
+			GroundTextureManager.placeTexture({
+				x: position.x,
+				y: position.y,
+				size: parseInt(this.sizeInput.value),
+				rotation: Utils.deg2rad(this.rotationInput.value)
 			});
-		}
+
+			if (Utils.isDefined(this.groundTextureType)) {
+				randomizeInputs.call(this);
+			}
+		}.bind(this));
+
+		// TODO bind show popup link
+		// TODO Populate popup with all placed textures
 	}
 
-	function setupItemAdding() {
-		let select = document.getElementById('develop_itemSelect');
+	function randomizeInputs() {
+		let groundTextureType = this.groundTextureType;
 
-		let optionGroups = {};
-		for (let itemType in ItemType) {
-			optionGroups[itemType] = Utils.htmlToElement('<optgroup label="' + itemType + '"></optgroup>');
-			select.appendChild(optionGroups[itemType]);
-		}
-
-		for (let item in Items) {
-			if (!Items.hasOwnProperty(item)) {
-				continue;
-			}
-			if (!Items[item].icon.file) {
-				continue;
-			}
-			if (Items[item].graphic && !Items[item].graphic.file) {
-				continue;
-			}
-
-			optionGroups[Items[item].type].appendChild(Utils.htmlToElement('<option value="' + item + '">' + item + '</option>'));
-		}
-
-		document
-			.getElementById('develop_itemAdd')
-			.addEventListener('click', function () {
-				let item = document.getElementById('develop_itemSelect').value;
-				let count = document.getElementById('develop_itemCount').value;
-				if (MapEditor.isActive()) {
-					Game.player.inventory.addItem(
-						Items[item],
-						parseInt(count),
-					);
-				} else {
-					Console.run('GIVE ' + item + ' ' + count);
-				}
-			});
+		this.minSizeLabel.textContent = groundTextureType.minSize;
+		this.maxSizeLabel.textContent = groundTextureType.maxSize;
+		this.sizeInput.value = Utils.roundToNearest(
+			Utils.randomInt(groundTextureType.minSize, groundTextureType.maxSize + 1),
+			5);
+		this.sizeInput.setAttribute('min', groundTextureType.minSize);
+		this.sizeInput.setAttribute('max', groundTextureType.maxSize);
+		this.rotationInput.value = Utils.randomInt(0, 360);
+		this.flippedRadios.item(Utils.randomInt(0, 3)).checked = true;
 	}
-
-
-	GroundTexturePanel.afterSetup = function () {
-	};
-
 
 	if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
 		active = true;

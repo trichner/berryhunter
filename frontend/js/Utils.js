@@ -252,5 +252,13 @@ define(['../vendor/XieLongUtils'], function () {
 		return Math.round(value / nearest) * nearest;
 	};
 
+	Utils.rad2deg = function (radians) {
+		return radians * 180 / Math.PI;
+	};
+
+	Utils.deg2rad = function (degrees) {
+		return degrees * Math.PI / 180;
+	};
+
 	return Utils;
 });

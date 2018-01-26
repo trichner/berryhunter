@@ -274,7 +274,7 @@ define([
 				case 'UpperY':
 					return Math.round(value * 100) / 100;
 				case 'rotation':
-					return Math.round(value * 180 / Math.PI) + 'deg';
+					return Utils.rad2deg(value) + 'deg';
 			}
 
 			return value;
