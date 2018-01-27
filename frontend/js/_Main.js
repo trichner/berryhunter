@@ -5,6 +5,7 @@ requirejs.config({
 		PIXI: '../vendor/pixi.min',
 		'vendor/flatbuffers': '../vendor/flatbuffers',
 		underscore: '../vendor/underscore-min',
+		saveAs: '../vendor/FileSaver.min',
 
 		GameObject: 'gameObjects/_GameObject',
 		MapEditor: 'mapEditor/_MapEditor',
@@ -15,6 +16,9 @@ requirejs.config({
 		'underscore': {
 			exports: '_',
 		},
+		saveAs: {
+			exports: 'saveAs',
+		}
 	},
 });
 

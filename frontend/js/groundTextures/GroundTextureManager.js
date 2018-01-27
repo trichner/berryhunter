@@ -1,4 +1,5 @@
-define(['Environment', 'Preloading', 'Utils', './GroundTexture'], function (Environment, Preloading, Utils, GroundTexture) {
+define(['Environment', 'Preloading', 'Utils', './GroundTexture', './GroundTextureTypes'],
+	function (Environment, Preloading, Utils, GroundTexture, GroundTextureTypes) {
 	const GroundTextureManager = {};
 
 	const textures = [];
@@ -29,10 +30,10 @@ define(['Environment', 'Preloading', 'Utils', './GroundTexture'], function (Envi
 				x: params.x,
 				y: params.y,
 				size: params.size,
-				rotation: params.rotation.toFixed(3),
+				rotation: Math.round(params.rotation * 1000) / 1000, // Round to 3 digits
 				flipped: params.flipped,
 			}
-		}), null, 4);
+		}), null, 2);
 	};
 
 	GroundTextureManager.getTextureCount = function () {
@@ -42,8 +43,13 @@ define(['Environment', 'Preloading', 'Utils', './GroundTexture'], function (Envi
 	Preloading.registerPreload(Utils.makeRequest({
 		method: 'GET',
 		url: 'js/groundTextures/groundTextures.json' + Environment.getCacheBuster()
-	}).then(groundTextures => {
+	}).then(function (groundTextures) {
 		groundTextures = JSON.parse(groundTextures);
+
+		groundTextures.forEach(function (groundTexture) {
+			groundTexture.type = GroundTextureTypes[groundTexture.type];
+			GroundTextureManager.placeTexture(groundTexture);
+		});
 
 		console.info(groundTextures);
 	}));

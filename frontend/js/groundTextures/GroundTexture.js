@@ -9,6 +9,15 @@ define(['InjectedSVG'], function (InjectedSVG) {
 				parameters.size,
 				parameters.rotation);
 
+			switch (parameters.flipped.toLowerCase()) {
+				case 'horizontal':
+					this.graphic.scale.x *= -1;
+					break;
+				case 'vertical':
+					this.graphic.scale.y *= -1;
+					break;
+			}
+
 			this.parameters = parameters;
 		}
 

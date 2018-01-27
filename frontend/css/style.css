@@ -71,6 +71,18 @@ svg .clickable text {
 .hidden {
   display: none;
 }
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.center {
+    margin: 0 auto;
+}
 .playerForm {
   position: relative;
   top: 35%;
@@ -395,6 +407,10 @@ dl.flatList > dd {
 }
 #groundTexturePanel label {
   display: block;
+}
+
+#groundTexturePopup {
+    left: 50%;
 }
 code {
   font-variant: normal;

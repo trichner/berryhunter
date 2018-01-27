@@ -6,8 +6,9 @@ define([
 	'Utils',
 	'Constants',
 	'./GroundTextureTypes',
-	'./GroundTextureManager'
-], function (Game, Preloading, Utils, Constants, GroundTextureTypes, GroundTextureManager) {
+	'./GroundTextureManager',
+	'saveAs'
+], function (Game, Preloading, Utils, Constants, GroundTextureTypes, GroundTextureManager, saveAs) {
 
 	let active = false;
 
@@ -18,6 +19,10 @@ define([
 	};
 
 	GroundTexturePanel.setup = function () {
+		if (!active) {
+			return;
+		}
+
 		Game.renderer.on('prerender', function () {
 			if (Game.state === Game.States.PLAYING) {
 				let position = Game.player.character.getPosition();
@@ -38,9 +43,12 @@ define([
 		this.flippedRadios = document.getElementsByName('groundTexture_flipped');
 		this.textureCount = document.getElementById('groundTexture_textureCount');
 		this.textureCount.textContent = GroundTextureManager.getTextureCount();
+		this.randomizeNextToggle = document.getElementById('groundTexture_randomizeNext');
 
 		let typeSelect = document.getElementById('groundTexture_type');
+		this.typeSelect = typeSelect;
 		let types = Object.keys(GroundTextureTypes);
+		this.types = types;
 		Utils.sortStrings(types);
 		types.map(function (type) {
 			return Utils.htmlToElement('<option value="' + type + '">' + type + '</option>');
@@ -113,10 +121,24 @@ define([
 
 			popup.classList.add('hidden');
 		});
+
+		document.getElementById('groundTexture_download').addEventListener('click', function (event) {
+			event.preventDefault();
+
+			let blob = new Blob([GroundTextureManager.getTexturesAsJSON()], {type: 'application/json;charset=utf-8'});
+			saveAs(blob, 'groundTextures.json');
+		});
 	}
 
 	function randomizeInputs() {
-		let groundTextureType = this.groundTextureType;
+		let groundTextureType;
+		if (this.randomizeNextToggle.checked) {
+			let type = Utils.random(this.types);
+			this.typeSelect.value = type;
+			this.groundTextureType = GroundTextureTypes[type];
+		}
+
+		groundTextureType = this.groundTextureType;
 
 		this.minSizeLabel.textContent = groundTextureType.minSize;
 		this.maxSizeLabel.textContent = groundTextureType.maxSize;
