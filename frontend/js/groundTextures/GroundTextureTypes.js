@@ -1,22 +1,22 @@
-define([], function () {
+define(['Environment', 'Preloading'], function (Environment, Preloading) {
 	/**
 	 * Contains informations about types of ground textures that are available for placing.
 	 */
 	const GroundTextureTypes = {
 		'Grass, dark green': {
 			file: 'darkGreenGrass',
-			minSize: 200,
-			maxSize: 500,
+			minSize: 80,
+			maxSize: 300,
 		},
 		'Grass, light green': {
 			file: 'lightGreenGrass',
-			minSize: 200,
-			maxSize: 500,
+			minSize: 80,
+			maxSize: 300,
 		},
 		'Flowers': {
 			file: 'flowers',
-			minSize: 200,
-			maxSize: 250,
+			minSize: 50,
+			maxSize: 100,
 		},
 		'Stone Patch': {
 			file: 'stonePatch',
@@ -29,6 +29,8 @@ define([], function () {
 	let hasError = false;
 	for (let type in GroundTextureTypes) {
 		let groundTextureType = GroundTextureTypes[type];
+		groundTextureType.name = type;
+
 		if (!groundTextureType.hasOwnProperty('file')) {
 			console.error("GroundTextureType '" + type +
 				"' needs field 'file' with the file name " +
@@ -47,6 +49,18 @@ define([], function () {
 				"the minimal random size in the panel.");
 			hasError = true;
 		}
+
+		/*
+		 * Type is valid - preload the texture graphic
+		 */
+		if (!hasError){
+			groundTextureType.path = 'img/groundTextures/' + groundTextureType.file + '.svg' + Environment.getCacheBuster();
+			Preloading.registerGameObjectSVG(groundTextureType, groundTextureType.path, groundTextureType.maxSize);
+		}
+	}
+
+	if (hasError){
+		throw "There are erroneous GroundTextureType(s).";
 	}
 
 	return GroundTextureTypes;

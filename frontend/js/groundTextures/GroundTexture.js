@@ -1,11 +1,22 @@
-define([], function () {
+define(['InjectedSVG'], function (InjectedSVG) {
 	class GroundTexture {
-		constructor() {
-			// TODO Create and return texture. Probably this is just a fuction, not a class
-			// this.type = "darkGreenGrass",
-			// 	this.size = 200,
-			// 	this.rotation = deg2rad(190),
-			// 	this.flipped = "horizontal" | "vertical" | "none"
+		constructor(parameters) {
+
+			this.graphic = new InjectedSVG(
+				parameters.type.svg,
+				parameters.x,
+				parameters.y,
+				parameters.size,
+				parameters.rotation);
+
+			this.parameters = parameters;
+		}
+
+		addToMap(){
+			let self = this;
+			require(['Game'], function (Game) {
+				Game.layers.terrain.textures.addChild(self.graphic);
+			});
 		}
 	}
 

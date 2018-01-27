@@ -36,6 +36,8 @@ define([
 		this.sizeInput = document.getElementById('groundTexture_size');
 		this.rotationInput = document.getElementById('groundTexture_rotation');
 		this.flippedRadios = document.getElementsByName('groundTexture_flipped');
+		this.textureCount = document.getElementById('groundTexture_textureCount');
+		this.textureCount.textContent = GroundTextureManager.getTextureCount();
 
 		let typeSelect = document.getElementById('groundTexture_type');
 		let types = Object.keys(GroundTextureTypes);
@@ -65,25 +67,52 @@ define([
 		document.getElementById('groundTexture_placeButton').addEventListener('click', function (event) {
 			event.preventDefault();
 
+			if (Utils.isUndefined(this.groundTextureType)) {
+				console.warn('No ground texture type selected');
+				return;
+			}
+
 			if (Game.state !== Game.States.PLAYING) {
+				console.warn('Ground textures can only be placed while being ingame.');
 				return;
 			}
 
 			let position = Game.player.character.getPosition();
+			let flipped = 'none';
+			this.flippedRadios.forEach(function (element) {
+				if (element.checked) {
+					flipped = element.value;
+				}
+			});
 			GroundTextureManager.placeTexture({
-				x: position.x,
-				y: position.y,
+				type: this.groundTextureType,
+				x: Math.round(position.x),
+				y: Math.round(position.y),
 				size: parseInt(this.sizeInput.value),
-				rotation: Utils.deg2rad(this.rotationInput.value)
+				rotation: Utils.deg2rad(this.rotationInput.value),
+				flipped: flipped,
 			});
 
-			if (Utils.isDefined(this.groundTextureType)) {
-				randomizeInputs.call(this);
-			}
+			this.textureCount.textContent = GroundTextureManager.getTextureCount();
+
+			randomizeInputs.call(this);
 		}.bind(this));
 
-		// TODO bind show popup link
-		// TODO Populate popup with all placed textures
+		let popup = document.getElementById('groundTexturePopup');
+		let output = document.getElementById('groundTextureOutput');
+		document.getElementById('groundTexture_showPopup').addEventListener('click', function (event) {
+			event.preventDefault();
+
+			popup.classList.remove('hidden');
+
+			output.textContent = GroundTextureManager.getTexturesAsJSON();
+		});
+
+		document.getElementById('groundTexture_closePopup').addEventListener('click', function (event) {
+			event.preventDefault();
+
+			popup.classList.add('hidden');
+		});
 	}
 
 	function randomizeInputs() {

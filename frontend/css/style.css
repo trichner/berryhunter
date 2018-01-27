@@ -396,6 +396,9 @@ dl.flatList > dd {
 #groundTexturePanel label {
   display: block;
 }
+code {
+  font-variant: normal;
+}
 #loadingScreen {
   background-color: #222;
   background-image: url('../img/loadingScreen.jpg');

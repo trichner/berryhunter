@@ -5,24 +5,43 @@ define(['Environment', 'Preloading', 'Utils', './GroundTexture'], function (Envi
 	let renderingStarted = false;
 
 	GroundTextureManager.setup = function () {
-		// TODO add all elements of textures to correct layer
+		textures.forEach(function (texture) {
+			texture.addToMap();
+		});
+
 		renderingStarted = true;
 	};
 
 	GroundTextureManager.placeTexture = function (parameters) {
 		let newTexture = new GroundTexture(parameters);
-		textures.push(newTexture)
-		// TODO add to correct layer
+		textures.push(newTexture);
+
+		if (renderingStarted) {
+			newTexture.addToMap();
+		}
 	};
 
-	// Disable caching
-	let cacheBuster = '';
-	if (Environment.cachingEnabled()) {
-		cacheBuster = '?' + (new Date()).getTime();
-	}
+	GroundTextureManager.getTexturesAsJSON = function () {
+		return JSON.stringify(textures.map(function (texture) {
+			let params = texture.parameters;
+			return {
+				type: params.type.name,
+				x: params.x,
+				y: params.y,
+				size: params.size,
+				rotation: params.rotation.toFixed(3),
+				flipped: params.flipped,
+			}
+		}), null, 4);
+	};
+
+	GroundTextureManager.getTextureCount = function () {
+		return textures.length;
+	};
+
 	Preloading.registerPreload(Utils.makeRequest({
 		method: 'GET',
-		url: 'js/groundTextures/groundTextures.json' + cacheBuster
+		url: 'js/groundTextures/groundTextures.json' + Environment.getCacheBuster()
 	}).then(groundTextures => {
 		groundTextures = JSON.parse(groundTextures);
 

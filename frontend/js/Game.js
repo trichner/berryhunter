@@ -268,6 +268,9 @@ define([], function () {
 			require(['VitalSigns'], function (VitalSigns) {
 				VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
 			});
+			require(['groundTextures/GroundTextureManager'], function (GroundTextureManager) {
+				GroundTextureManager.setup();
+			});
 
 			/**
 			 * @type GameMap|GameMapWithBackend
