@@ -14,9 +14,11 @@ define(['backend/BackendConstants',
 		 * @param {BerryhunterApi.Spectator} spectator
 		 */
 		constructor(spectator) {
-			this.id = spectator.id();
-			this.x = spectator.pos().x();
-			this.y = spectator.pos().y();
+			this.id = spectator.id().toFloat64();
+			this.position = {
+				x: spectator.pos().x(),
+				y: spectator.pos().y(),
+			};
 			this.isSpectator = true;
 		}
 	}

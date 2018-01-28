@@ -23,6 +23,8 @@ define([
 			return;
 		}
 
+		Game.godMode = true;
+
 		Game.renderer.on('prerender', function () {
 			if (Game.state === Game.States.PLAYING) {
 				let position = Game.player.character.getPosition();

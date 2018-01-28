@@ -218,6 +218,26 @@ define([
 
 					break;
 				case BerryhunterApi.ServerMessageBody.Obituary:
+					if (Game.godMode) {
+						console.info('Auto rejoin');
+						Backend.sendJoin({
+							playerName: Game.player.character.name
+						});
+
+						let position = Game.player.character.getPosition();
+						Backend.sendCommand({
+							command: ['Warp ',
+								position.x.toFixed(0),
+								' ',
+								position.y.toFixed(0)].join(''),
+							token: Utils.getUrlParameter('token') || 'plz',
+						});
+
+						Game.player.character.say('GOD MODE - Respawn');
+
+						break;
+					}
+
 					setState(States.SPECTATING);
 					if (Develop.isActive()) {
 						Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Obituary()), 'Obituary', timeSinceLastMessage);

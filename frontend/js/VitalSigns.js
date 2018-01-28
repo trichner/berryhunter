@@ -33,6 +33,10 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 		}
 
 		setValue(valueIndex, value) {
+			if (Game.godMode) {
+				return;
+			}
+
 			switch (valueIndex) {
 				case 'health':
 					// Hand should deal 1% damage. Anything below is damage over time.
