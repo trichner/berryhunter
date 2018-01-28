@@ -47,6 +47,15 @@ define([
 		setupDevelopPanel: function () {
 			Preloading.registerPartial('partials/developPanel.html')
 				.then(function () {
+					let developPanel = document.getElementById('developPanel');
+					// Capture inputs to prevent game actions while acting in develop panel
+					['click', 'pointerup', 'pointerdown', 'mouseup', 'mousedown', 'keyup', 'keydown']
+						.forEach(function (eventName) {
+							developPanel.addEventListener(eventName, function (event) {
+								event.stopPropagation();
+							})
+						});
+
 					this.setupToggleButtons();
 
 					this.setupItemAdding();
@@ -114,20 +123,36 @@ define([
 				optionGroups[Items[item].type].appendChild(Utils.htmlToElement('<option value="' + item + '">' + item + '</option>'));
 			}
 
-			document
-				.getElementById('develop_itemAdd')
-				.addEventListener('click', function () {
-					let item = document.getElementById('develop_itemSelect').value;
-					let count = document.getElementById('develop_itemCount').value;
-					if (MapEditor.isActive()) {
-						Game.player.inventory.addItem(
-							Items[item],
-							parseInt(count),
-						);
-					} else {
-						Console.run('GIVE ' + item + ' ' + count);
-					}
-				});
+			let itemAdd = document.getElementById('develop_itemAdd');
+			let itemCount = document.getElementById('develop_itemCount');
+			itemCount.addEventListener('input', function () {
+				itemCount.style.width = Math.max(1.6, (1 + (itemCount.value.length * 0.6))) + 'em';
+				let step;
+				if (itemCount.value < 10) {
+					step = 1;
+				} else {
+					step = Math.pow(10, itemCount.value.length - 2) * 5;
+				}
+				itemCount.setAttribute('step', step);
+				itemCount.setAttribute('min', step); // otherwise steps will be 11, 16, ...
+
+				itemAdd.classList.toggle('plural', itemCount.value !== '1');
+			});
+			itemCount.style.width = (1 + (itemCount.value.length * 0.6)) + 'em';
+
+
+			itemAdd.addEventListener('click', function () {
+				let item = document.getElementById('develop_itemSelect').value;
+				let count = itemCount.value;
+				if (MapEditor.isActive()) {
+					Game.player.inventory.addItem(
+						Items[item],
+						parseInt(count),
+					);
+				} else {
+					Console.run('GIVE ' + item + ' ' + count);
+				}
+			});
 		},
 
 		onSettingToggle(setting, newValue) {
@@ -201,10 +226,10 @@ define([
 				let max = 0;
 				logArray.forEach(function (value) {
 					average += value;
-					if (value > max){
+					if (value > max) {
 						max = value;
 					}
-					if (value < min){
+					if (value < min) {
 						min = value;
 					}
 				});
@@ -344,12 +369,35 @@ define([
 				} else {
 					document.getElementById('develop_input_action_item').textContent = inputObj.action.item.name;
 				}
-				for (let actionType in BerryhunterApi.ActionType) {
-					if (BerryhunterApi.ActionType[actionType] === inputObj.action.actionType) {
-						document.getElementById('develop_input_action_type').textContent = actionType;
+				let actionType;
+				let actionTypeId = ' [' + inputObj.action.actionType + ']';
+				switch (inputObj.action.actionType) {
+					case BerryhunterApi.ActionType.Primary:
+						actionType = 'Primary' + actionTypeId + ' with';
 						break;
-					}
+					case BerryhunterApi.ActionType.CraftItem:
+						actionType = 'Craft' + actionTypeId;
+						break;
+					case BerryhunterApi.ActionType.EquipItem:
+						actionType = 'Equip' + actionTypeId;
+						break;
+					case BerryhunterApi.ActionType.UnequipItem:
+						actionType = 'Unequip' + actionTypeId;
+						break;
+					case BerryhunterApi.ActionType.DropItem:
+						actionType = 'Drop' + actionTypeId;
+						break;
+					case BerryhunterApi.ActionType.PlaceItem:
+						actionType = 'Place' + actionTypeId;
+						break;
+					case BerryhunterApi.ActionType.ConsumeItem:
+						actionType = 'Consume' + actionTypeId;
+						break;
+					default:
+						actionType = 'Unmapped' + actionTypeId;
+						break;
 				}
+				document.getElementById('develop_input_action_type').textContent = actionType;
 			} else {
 				document.getElementById('develop_input_action_item').textContent = '';
 				document.getElementById('develop_input_action_type').textContent = '';

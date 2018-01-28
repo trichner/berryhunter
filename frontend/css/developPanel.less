@@ -7,6 +7,7 @@
 	min-width: 16em;
 	z-index: 1000;
 
+	font-size: 14px;
 	font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
 	font-variant: normal;
 
@@ -49,6 +50,7 @@
 	> table {
 		td, th {
 			padding: 0.15em 0.25em;
+			vertical-align: top;
 		}
 
 		> tbody {
@@ -65,10 +67,15 @@
 			td {
 				min-width: 6.35em;
 
+				&:nth-of-type(2) {
+					min-width: 8.35em;
+					max-width: 8.35em;
+				}
+
 				> h3 {
 					font-size: inherit;
 					text-align: center;
-					margin-bottom: 0;
+					margin: 0;
 				}
 			}
 		}
