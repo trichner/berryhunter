@@ -12,6 +12,13 @@ func (p *player) Update(dt float32) {
 		}
 	}
 
+	if !p.isGod {
+		p.updateVitalSigns(dt)
+	}
+}
+
+func (p *player) updateVitalSigns(dt float32) {
+
 	vitalSigns := p.VitalSigns()
 
 	// are we freezing?
@@ -38,7 +45,6 @@ func (p *player) Update(dt float32) {
 		healthFraction := float32(0.001)
 		p.addHealthFraction(-healthFraction)
 	}
-
 }
 
 func (p *player) addHealthFraction(fraction float32) {

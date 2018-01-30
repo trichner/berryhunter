@@ -82,6 +82,8 @@ type player struct {
 	ownedEntitites model.BasicEntities
 
 	ongoingAction model.PlayerAction
+
+	isGod bool
 }
 
 func (p *player) AddAction(a model.PlayerAction) {
@@ -207,4 +209,8 @@ func (p *player) updateHand() {
 
 func (p *player) OwnedEntities() model.BasicEntities {
 	return p.ownedEntitites
+}
+
+func (p *player) SetGodmode(on bool) {
+	p.isGod = on
 }

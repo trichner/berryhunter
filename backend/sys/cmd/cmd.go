@@ -18,7 +18,7 @@ var commands = map[string]Command{
 		argv := strings.Split(*arg, " ")
 		args := len(argv)
 		if args < 1 {
-			return fmt.Errorf("No arguments provided.")
+			return fmt.Errorf("no arguments provided")
 		}
 
 		var err error
@@ -65,7 +65,7 @@ var commands = map[string]Command{
 			}
 			player, ok := other.(model.PlayerEntity)
 			if !ok {
-				return fmt.Errorf("Entity %d is not a player.", id)
+				return fmt.Errorf("entity %d is not a player", id)
 			}
 			target = player
 		}
@@ -77,17 +77,17 @@ var commands = map[string]Command{
 	"WARP": func(g model.Game, p model.PlayerEntity, arg *string) error {
 
 		if arg == nil {
-			return fmt.Errorf("No arguments. Usage: 'WARP <X> <Y>'")
+			return fmt.Errorf("no arguments, usage: 'WARP <X> <Y>'")
 		}
 
 		argv := strings.Split(*arg, " ")
 		if len(argv) != 2 {
-			return fmt.Errorf("To many or too few arguments, expected 2 and got %d", len(argv))
+			return fmt.Errorf("to many or too few arguments, expected 2 and got %d", len(argv))
 		}
 
 		x, err := strconv.ParseInt(argv[0], 10, 64)
 		if err != nil {
-			return fmt.Errorf("Cannot parse argument X: %s", err)
+			return fmt.Errorf("cannot parse argument X: %s", err)
 		}
 
 		y, err := strconv.ParseInt(argv[1], 10, 64)
@@ -98,6 +98,16 @@ var commands = map[string]Command{
 		xf := float32(x / codec.Points2px)
 		yf := float32(y / codec.Points2px)
 		p.SetPosition(phy.Vec2f{xf, yf})
+
+		return nil
+	},
+	"GOD": func(g model.Game, p model.PlayerEntity, arg *string) error {
+
+		if arg != nil && *arg == "off" {
+			p.SetGodmode(false)
+		}else{
+			p.SetGodmode(true)
+		}
 
 		return nil
 	},
@@ -138,8 +148,7 @@ func (c *CommandSystem) Update(dt float32) {
 
 		if !c.validateToken(cheat.Token) {
 			log.Printf("😡 Player '%s' presented invalid token '%s'", player.Name(), cheat.Token)
-			//TODO ENFORCE!
-			//continue
+			continue
 		}
 
 		argv := strings.SplitN(cheat.Command, " ", 2)
