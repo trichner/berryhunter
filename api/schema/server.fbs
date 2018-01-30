@@ -135,7 +135,7 @@ table EntityMessage {
     message:string;
 }
 
-struct ScoreboardPlayer {
+table ScoreboardPlayer {
     name:string;
     score:ulong;
 }

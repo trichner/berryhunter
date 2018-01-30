@@ -115,6 +115,9 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	dayCycle := sys.NewDayCycleSystem(g, constant.DayNightCyleTicks, gc.coldFractionNightPerS)
 	g.AddSystem(dayCycle)
 
+	sb := sys.NewScoreboardSystem(g)
+	g.AddSystem(sb)
+
 	g.printSystems()
 	return g, nil
 }
@@ -318,6 +321,8 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 		case *heater.HeaterSystem:
 			sys.AddPlayer(p)
 		case *sys.DayCycleSystem:
+			sys.AddPlayer(p)
+		case *sys.ScoreboardSystem:
 			sys.AddPlayer(p)
 		}
 	}
