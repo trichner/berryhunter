@@ -145,7 +145,7 @@ BerryhunterApi.Input.prototype.tick = function() {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f|null}
+ * @returns {BerryhunterApi.Vec2f}
  */
 BerryhunterApi.Input.prototype.movement = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -162,7 +162,7 @@ BerryhunterApi.Input.prototype.rotation = function() {
 
 /**
  * @param {BerryhunterApi.Action=} obj
- * @returns {BerryhunterApi.Action|null}
+ * @returns {BerryhunterApi.Action}
  */
 BerryhunterApi.Input.prototype.action = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 10);
@@ -254,7 +254,7 @@ BerryhunterApi.Join.getRootAsJoin = function(bb, obj) {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
+ * @returns {string|Uint8Array}
  */
 BerryhunterApi.Join.prototype.playerName = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 4);
@@ -322,7 +322,7 @@ BerryhunterApi.Cheat.getRootAsCheat = function(bb, obj) {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
+ * @returns {string|Uint8Array}
  */
 BerryhunterApi.Cheat.prototype.token = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 4);
@@ -331,7 +331,7 @@ BerryhunterApi.Cheat.prototype.token = function(optionalEncoding) {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
+ * @returns {string|Uint8Array}
  */
 BerryhunterApi.Cheat.prototype.command = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -407,7 +407,7 @@ BerryhunterApi.ChatMessage.getRootAsChatMessage = function(bb, obj) {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
+ * @returns {string|Uint8Array}
  */
 BerryhunterApi.ChatMessage.prototype.message = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 4);

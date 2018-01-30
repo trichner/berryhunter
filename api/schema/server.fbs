@@ -135,7 +135,16 @@ table EntityMessage {
     message:string;
 }
 
-union ServerMessageBody { Welcome, GameState, Accept, Obituary, EntityMessage }
+struct ScoreboardPlayer {
+    name:string;
+    score:ulong;
+}
+
+table Scoreboard {
+  players:[ScoreboardPlayer];
+}
+
+union ServerMessageBody { Welcome, GameState, Accept, Obituary, EntityMessage, Scoreboard }
 table ServerMessage { body:ServerMessageBody; }
 
 root_type ServerMessage;
