@@ -80,7 +80,6 @@ svg .clickable text {
 .center {
     margin: 0 auto;
 }
-
 :not(.plural) > .plural-only {
     display: none;
 }
@@ -229,7 +228,6 @@ h1 {
 #developPanel > table > tbody td {
   min-width: 6.35em;
 }
-
 #developPanel > table > tbody td:nth-of-type(2) {
     min-width: 8.35em;
     max-width: 8.35em;
@@ -645,6 +643,19 @@ code {
 #chatInput:focus {
   box-shadow: none;
   outline: none;
+}
+
+#scoreboard {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    margin: 0.7vh;
+    padding: 0.7vh;
+    border-radius: 0.7vh;
+    color: white;
+    font-size: 0.7em;
+    line-height: 1.4;
 }
 #startScreen {
   position: fixed;

@@ -13,13 +13,14 @@ define([
 	'backend/Welcome',
 	'backend/ScoreboardMessage',
 	'Chat',
+    'Scoreboard',
 	'DayCycle',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage, Welcome, ScoreboardMessage, Chat, DayCycle) {
-
+], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState,
+             ClientMessage, Welcome, ScoreboardMessage, Chat, Scoreboard, DayCycle) {
 
 	const States = {
 		DISCONNECTED: 'DISCONNECTED',
@@ -277,7 +278,7 @@ define([
 					break;
 				case BerryhunterApi.ServerMessageBody.Scoreboard:
 					let scoreboardMessage = new ScoreboardMessage(serverMessage.body(new BerryhunterApi.Scoreboard()));
-					console.log('Scoreboard', scoreboardMessage);
+                    Scoreboard.updateFromBackend(scoreboardMessage);
 					break;
 				default:
 					if (Develop.isActive()) {

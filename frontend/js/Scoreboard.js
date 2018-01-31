@@ -12,6 +12,7 @@ define(['UserInterface', 'Utils'], function (UserInterface, Utils) {
 	};
 
 	Scoreboard.updateFromBackend = function (scoreboardMessage) {
+        this.domElement.classList.remove('hidden');
 		let players = scoreboardMessage.players;
 		if (this.rows.length !== players.length) {
 			Utils.clearNode(this.rowContainer);
@@ -28,11 +29,13 @@ define(['UserInterface', 'Utils'], function (UserInterface, Utils) {
 			}
 		}
 
-		for (let i = 0; i < players.length) {
+        for (let i = 0; i < players.length; i++) {
 			this.rows[i].name.textContent = players[i].name;
 			if (players[i].score !== 0){
 				this.rows[i].score.textContent = players[i].score;
 			}
 		}
 	};
+
+    return Scoreboard;
 });
