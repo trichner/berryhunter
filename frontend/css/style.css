@@ -72,17 +72,16 @@ svg .clickable text {
   display: none;
 }
 .left {
-    float: left;
+  float: left;
 }
 .right {
-    float: right;
+  float: right;
 }
 .center {
-    margin: 0 auto;
+  margin: 0 auto;
 }
-
 :not(.plural) > .plural-only {
-    display: none;
+  display: none;
 }
 .playerForm {
   position: relative;
@@ -182,7 +181,7 @@ h1 {
   padding: 1em;
   min-width: 16em;
   z-index: 1000;
-    font-size: 14px;
+  font-size: 14px;
   font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
   font-variant: normal;
 }
@@ -216,7 +215,7 @@ h1 {
 #developPanel > table td,
 #developPanel > table th {
   padding: 0.15em 0.25em;
-    vertical-align: top;
+  vertical-align: top;
 }
 #developPanel > table > tbody th {
   text-align: right;
@@ -229,15 +228,14 @@ h1 {
 #developPanel > table > tbody td {
   min-width: 6.35em;
 }
-
 #developPanel > table > tbody td:nth-of-type(2) {
-    min-width: 8.35em;
-    max-width: 8.35em;
+  min-width: 8.35em;
+  max-width: 8.35em;
 }
 #developPanel > table > tbody td > h3 {
   font-size: inherit;
   text-align: center;
-    margin: 0;
+  margin: 0;
 }
 #developPanel .good {
   color: #4CAF50;
@@ -321,7 +319,7 @@ dl.flatList > dd {
   padding: 1em;
   min-width: 16em;
   z-index: 1000;
-    font-size: 14px;
+  font-size: 14px;
   font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
   font-variant: normal;
 }
@@ -417,11 +415,11 @@ dl.flatList > dd {
   display: block;
 }
 #groundTexturePopup {
-    left: 50%;
+  left: 50%;
 }
 code {
-    font-size: 14px;
-    font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
+  font-size: 14px;
+  font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
   font-variant: normal;
 }
 #loadingScreen {
