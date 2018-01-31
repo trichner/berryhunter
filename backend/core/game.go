@@ -217,6 +217,8 @@ func (g *game) addSpectator(e model.Spectator) {
 			sys.AddSpectator(e)
 		case *sys.ConnectionStateSystem:
 			sys.AddSpectator(e)
+		case *sys.ScoreboardSystem:
+			sys.AddSpectator(e)
 		}
 	}
 }
