@@ -644,18 +644,17 @@ code {
   box-shadow: none;
   outline: none;
 }
-
 #scoreboard {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    margin: 0.7vh;
-    padding: 0.7vh;
-    border-radius: 0.7vh;
-    color: white;
-    font-size: 0.7em;
-    line-height: 1.4;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  margin: 0.7vh;
+  padding: 0.7vh;
+  border-radius: 0.7vh;
+  color: white;
+  font-size: 0.7em;
+  line-height: 1.4;
 }
 #startScreen {
   position: fixed;
