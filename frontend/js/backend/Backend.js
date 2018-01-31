@@ -11,13 +11,14 @@ define([
 	'backend/GameState',
 	'backend/ClientMessage',
 	'backend/Welcome',
+	'backend/ScoreboardMessage',
 	'Chat',
 	'DayCycle',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage, Welcome, Chat, DayCycle) {
+], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage, Welcome, ScoreboardMessage, Chat, DayCycle) {
 
 
 	const States = {
@@ -273,6 +274,10 @@ define([
 						Develop.logServerTick(gameState, timeSinceLastMessage);
 					}
 					this.receiveSnapshot(SnapshotFactory.newSnapshot(state, gameState));
+					break;
+				case BerryhunterApi.ServerMessageBody.Scoreboard:
+					let scoreboardMessage = new ScoreboardMessage(serverMessage.body(new BerryhunterApi.Scoreboard()));
+					console.log('Scoreboard', scoreboardMessage);
 					break;
 				default:
 					if (Develop.isActive()) {

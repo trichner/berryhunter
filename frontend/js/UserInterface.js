@@ -300,6 +300,10 @@ define(['Preloading', 'Constants', 'Utils'], function (Preloading, Constants, Ut
 		return document.getElementById('chat');
 	};
 
+	UserInterface.getScoreboard = function () {
+		return document.getElementById('scoreboard');
+	};
+
 
 	return UserInterface;
 });
