@@ -29,7 +29,6 @@ define([], function () {
 			'Player',
 			'Spectator',
 			'GameObject',
-			'items/RecipesHelper',
 			'UserInterface',
 			'StartScreen',
 			'Chat',
@@ -38,8 +37,8 @@ define([], function () {
 			'Constants',
 			'ColorMatrixFilterExtension'
 		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, KeyEvents,
-		             PointerEvents, Player, Spectator, GameObject, RecipesHelper, UserInterface, StartScreen, Chat,
-		             Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
+                     PointerEvents, Player, Spectator, GameObject, UserInterface, StartScreen,
+                     Chat, Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
 
 			Game.loop = function (now) {
 				if (Game.paused) {
@@ -263,16 +262,20 @@ define([], function () {
 
 			createBackground();
 
-			require(['Camera'], function (Camera) {
-				Camera.setup();
-			});
-			RecipesHelper.setup();
-			require(['VitalSigns'], function (VitalSigns) {
-				VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
-			});
-			require(['groundTextures/GroundTextureManager'], function (GroundTextureManager) {
-				GroundTextureManager.setup();
-			});
+            require([
+                    'Camera',
+                    'VitalSigns',
+                    'items/RecipesHelper',
+                    'Scoreboard',
+                    'groundTextures/GroundTextureManager',
+                ],
+                function (Camera, VitalSigns, RecipesHelper, Scoreboard, GroundTextureManager) {
+                    Camera.setup();
+                    VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
+                    RecipesHelper.setup();
+                    Scoreboard.setup();
+                    GroundTextureManager.setup();
+                });
 
 			/**
 			 * @type GameMap|GameMapWithBackend

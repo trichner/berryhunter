@@ -75,6 +75,7 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'backend/Backend',
 					'backend/BackendConstants',
 					'backend/ClientMessage',
+					'backend/ScoreboardMessage',
 					'backend/Welcome',
 					'backend/SnapshotFactory',
 					'KeyEvents',
@@ -119,9 +120,9 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'ColorMatrixFilterExtension',
 					'PlayerName',
 					'Text',
-				'groundTextures/GroundTexture',
-				'groundTextures/GroundTextureTypes',
-				'groundTextures/GroundTextureManager',
+					'groundTextures/GroundTexture',
+					'groundTextures/GroundTextureTypes',
+					'groundTextures/GroundTextureManager',
 
 					// Develop resources
 					'develop/Fps',
