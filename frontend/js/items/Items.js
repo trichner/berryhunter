@@ -197,7 +197,8 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 					size: 100
 				},
 				definition: 'placeables/campfire',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 			BigCampfire: {
 				icon: {file: 'fireBigCampIcon'},
