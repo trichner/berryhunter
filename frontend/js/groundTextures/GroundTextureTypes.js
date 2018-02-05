@@ -4,24 +4,64 @@ define(['Environment', 'Preloading'], function (Environment, Preloading) {
 	 */
 	const GroundTextureTypes = {
 		'Grass, dark green': {
-			file: 'darkGreenGrass',
+			file: 'darkGreenGrass1',
 			minSize: 80,
 			maxSize: 300,
 		},
 		'Grass, light green': {
-			file: 'lightGreenGrass',
+			file: 'lightGreenGrass1',
 			minSize: 80,
 			maxSize: 300,
 		},
 		'Flowers': {
-			file: 'flowers',
+			file: 'flowers1',
+			minSize: 50,
+			maxSize: 100,
+		},
+		'Flowers': {
+			file: 'flowers2',
 			minSize: 50,
 			maxSize: 100,
 		},
 		'Stone Patch': {
-			file: 'stonePatch',
+			file: 'stonePatch1',
 			minSize: 100,
 			maxSize: 300,
+		},
+		'Grass, blade of grass': {
+			file: 'grass1',
+			minSize: 30,
+			maxSize: 70,
+		},
+		'Leaves, green': {
+			file: 'leaves1',
+			minSize: 30,
+			maxSize: 100,
+		},
+		'Mushrooms': {
+			file: 'mushrooms1',
+			minSize: 30,
+			maxSize: 100,
+		},
+		'Pebble': {
+			file: 'pebble1',
+			minSize: 30,
+			maxSize: 100,
+		},
+		'Pebble': {
+			file: 'pebble2',
+			minSize: 30,
+			maxSize: 100,
+		},
+		'Puddle': {
+			file: 'puddle1',
+			minSize: 30,
+			maxSize: 100,
+		},
+		'Rubble': {
+			file: 'Rubble1',
+			minSize: 30,
+			maxSize: 100,
 		},
 	};
 
