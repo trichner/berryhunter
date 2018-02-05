@@ -227,15 +227,21 @@ define([
 						});
 
 						let position = Game.player.character.getPosition();
-						Backend.sendCommand({
-							command: ['Warp ',
-								position.x.toFixed(0),
-								' ',
-								position.y.toFixed(0)].join(''),
-							token: Utils.getUrlParameter('token') || 'plz',
-						});
+						if (Utils.getUrlParameter('token')) {
+							Backend.sendCommand({
+								command: ['Warp ',
+									position.x.toFixed(0),
+									' ',
+									position.y.toFixed(0)].join(''),
+								token: Utils.getUrlParameter('token'),
+							});
 
-						Game.player.character.say('GOD MODE - Respawn');
+							Game.player.character.say('GOD MODE - Respawn');
+
+						} else {
+							Game.player.character.say('GOD MODE - Respawn.');
+							Game.player.character.say('WARNING: Missing token, can\'t reset old position.');
+						}
 
 						break;
 					}
