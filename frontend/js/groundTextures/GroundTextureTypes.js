@@ -13,12 +13,12 @@ define(['Environment', 'Preloading'], function (Environment, Preloading) {
 			minSize: 80,
 			maxSize: 300,
 		},
-		'Flowers': {
+		'Flowers1': {
 			file: 'flowers1',
 			minSize: 50,
 			maxSize: 100,
 		},
-		'Flowers': {
+		'Flowers2': {
 			file: 'flowers2',
 			minSize: 50,
 			maxSize: 100,
@@ -43,12 +43,12 @@ define(['Environment', 'Preloading'], function (Environment, Preloading) {
 			minSize: 30,
 			maxSize: 100,
 		},
-		'Pebble': {
+		'Pebble1': {
 			file: 'pebble1',
 			minSize: 30,
 			maxSize: 100,
 		},
-		'Pebble': {
+		'Pebble2': {
 			file: 'pebble2',
 			minSize: 30,
 			maxSize: 100,
