@@ -59,7 +59,7 @@ define(['Environment', 'Preloading'], function (Environment, Preloading) {
 			maxSize: 100,
 		},
 		'Rubble': {
-			file: 'Rubble1',
+			file: 'rubble1',
 			minSize: 30,
 			maxSize: 100,
 		},
