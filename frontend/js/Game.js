@@ -285,9 +285,22 @@ define([], function () {
 			// 	Inputs.setup();
 			// });
 
-			require(['input/strategies/phaser/KeyboardManager'], function (KeyboardManager) {
-				Game.keyboardManager = new KeyboardManager();
-				Game.keyboardManager.boot();
+			require(['input/strategies/phaser/InputManager'], function (InputManager) {
+				Game.input = new InputManager(Game, {
+					inputKeyboard: true,
+					inputKeyboardEventTarget: window,
+
+					inputMouse: true,
+					inputMouseEventTarget: document.documentElement,
+					inputMouseCapture: true,
+
+					inputTouch: true,
+					inputTouchEventTarget: document.documentElement,
+					inputTouchCapture: true,
+
+					inputGamepad: false,
+				});
+				Game.input.boot();
 			});
 
 			// Disable context menu on right click to use the right click ingame

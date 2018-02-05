@@ -2,7 +2,6 @@
 
 define([
 	'Game',
-	'input/Inputs',
 	'Constants',
 	'Develop',
 	'MapEditor',
@@ -13,9 +12,9 @@ define([
 	'Chat',
 	'Utils',
 	'../vendor/tock',
-	'input/strategies/phaser/keys/KeyCodes',
+	'input/strategies/phaser/keyboard/keys/KeyCodes',
 	'schema_client'
-], function (Game, Inputs, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock, KeyCodes) {
+], function (Game, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock, KeyCodes) {
 	const UP_KEYS = [
 		'w'.charCodeAt(0),
 		'W'.charCodeAt(0),
@@ -75,7 +74,7 @@ define([
 		constructor() {
 			this.keys = [];
 			for (let i = 0; i < arguments.length; i++) {
-				this.keys.push(Game.keyboardManager.addKey(arguments[i]));
+				this.keys.push(Game.input.keyboard.addKey(arguments[i]));
 			}
 
 			let self = this;
@@ -175,7 +174,7 @@ define([
 		}
 
 		update() {
-			Game.keyboardManager.update();
+			Game.input.update(this.clock.lap());
 
 			if (Develop.isActive()) {
 				if (Utils.isUndefined(this.updateTime)) {
