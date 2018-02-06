@@ -50,8 +50,6 @@ define(['Environment', 'Preloading', 'Utils', './GroundTexture', './GroundTextur
 			groundTexture.type = GroundTextureTypes[groundTexture.type];
 			GroundTextureManager.placeTexture(groundTexture);
 		});
-
-		console.info(groundTextures);
 	}));
 
 	return GroundTextureManager;

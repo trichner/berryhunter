@@ -2,7 +2,7 @@
 
 requirejs.config({
 	paths: {
-		PIXI: '../vendor/pixi.min',
+		PIXI: '../vendor/pixi',
 		'vendor/flatbuffers': '../vendor/flatbuffers',
 		underscore: '../vendor/underscore-min',
 		saveAs: '../vendor/FileSaver.min',
@@ -120,7 +120,6 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'groundTextures/GroundTexture',
 					'groundTextures/GroundTextureTypes',
 					'groundTextures/GroundTextureManager',
-					'input/Inputs',
 
 					// Develop resources
 					'develop/Fps',

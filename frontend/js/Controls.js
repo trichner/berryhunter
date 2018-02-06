@@ -15,58 +15,6 @@ define([
 	'input/strategies/phaser/keyboard/keys/KeyCodes',
 	'schema_client'
 ], function (Game, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock, KeyCodes) {
-	const UP_KEYS = [
-		'w'.charCodeAt(0),
-		'W'.charCodeAt(0),
-		38 // Up Arrow
-	];
-
-	const DOWN_KEYS = [
-		's'.charCodeAt(0),
-		'S'.charCodeAt(0),
-		40 // Down Arrow
-	];
-
-	const LEFT_KEYS = [
-		'a'.charCodeAt(0),
-		'A'.charCodeAt(0),
-		37 // Left Arrow
-	];
-
-	const RIGHT_KEYS = [
-		'd'.charCodeAt(0),
-		'D'.charCodeAt(0),
-		39 // Right Arrow
-	];
-
-	const ACTION_KEYS = [
-		'e'.charCodeAt(0),
-		'E'.charCodeAt(0),
-		' '.charCodeAt(0) // Space
-	];
-
-	const ACTION_BUTTON = Inputs.Buttons.LEFT;
-
-	const ALT_ACTION_KEYS = [
-		'q'.charCodeAt(0),
-		'Q'.charCodeAt(0),
-		16 // Shift
-	];
-
-	const ALT_ACTION_BUTTON = Inputs.Buttons.RIGHT;
-
-	const PAUSE_KEYS = [
-		'p'.charCodeAt(0),
-		'P'.charCodeAt(0),
-	];
-
-	/**
-	 * List of key codes that are browser shortcuts that have to be prevented in normal game flow.
-	 * @type {Array}
-	 */
-	const FUNCTION_KEYS = [
-		' '.charCodeAt(0) // Space. Browser: Scrolls the window. Game: Action Key
-	];
 
 	let consoleCooldown = 0;
 
@@ -103,8 +51,6 @@ define([
 				this.lastY = character.getY();
 			}
 
-			// Inputs.drop();
-			// Inputs.flush();
 			this.upKeys = new Keys(KeyCodes.W, KeyCodes.UP);
 			this.downKeys = new Keys(KeyCodes.S, KeyCodes.DOWN);
 			this.leftKeys = new Keys(KeyCodes.A, KeyCodes.LEFT);
@@ -151,11 +97,6 @@ define([
 				event.preventDefault();
 				return;
 			}
-
-			let isFunctionKey = FUNCTION_KEYS.indexOf(event.keyCode) !== -1;
-			if (isFunctionKey) {
-				event.preventDefault();
-			}
 		}
 
 		/**
@@ -174,7 +115,12 @@ define([
 		}
 
 		update() {
-			Game.input.update(this.clock.lap());
+			let inputManager = Game.input;
+			inputManager.update(Date.now());
+
+			if (Game.state !== Game.States.PLAYING) {
+				return;
+			}
 
 			if (Develop.isActive()) {
 				if (Utils.isUndefined(this.updateTime)) {
@@ -232,7 +178,7 @@ define([
 				} else {
 					if (this.isCraftInProgress()) {
 						// Don't check for actions
-					} else if (this.actionKeys.isDown || Inputs.isButtonPressed(ACTION_BUTTON)) {
+					} else if (this.actionKeys.isDown || inputManager.activePointer.leftButtonDown()) {
 						this.hitAnimationTick = this.character.action();
 						this.character.progressHitAnimation(this.hitAnimationTick);
 						switch (this.character.currentAction) {
@@ -265,7 +211,7 @@ define([
 								}
 								break;
 						}
-					} else if (this.altActionKeys.isDown || Inputs.isButtonPressed(ALT_ACTION_BUTTON)) {
+					} else if (this.altActionKeys.isDown || inputManager.activePointer.rightButtonDown()) {
 						this.hitAnimationTick = this.character.altAction();
 						this.character.progressHitAnimation(this.hitAnimationTick);
 						action = {
@@ -280,7 +226,7 @@ define([
 			let hasInput = false;
 
 			if (Constants.ALWAYS_VIEW_CURSOR) {
-				if (Inputs.mouseMoved ||
+				if (inputManager.activePointer.justMoved ||
 					this.lastX !== this.character.getX() ||
 					this.lastY !== this.character.getY()) {
 
@@ -289,7 +235,7 @@ define([
 					this.lastX = this.character.getX();
 					this.lastY = this.character.getY();
 				}
-			} else if (Input.mouseMoved) {
+			} else if (inputManager.activePointer.justMoved) {
 				input.rotation = this.adjustCharacterRotation();
 				hasInput = true;
 			}
@@ -313,18 +259,18 @@ define([
 
 				Backend.sendInputTick(input);
 			}
-
-			Inputs.flush();
 		}
 
 		adjustCharacterRotation() {
+			let pointer = Game.input.activePointer;
+
 			if (Utils.isDefined(Game.player)) {
 				let characterX = Game.player.camera.getScreenX(this.character.getX());
 				let characterY = Game.player.camera.getScreenY(this.character.getY());
 
 				let rotation = Utils.TwoDimensional.angleBetween(
-					Inputs.mouseX,
-					Inputs.mouseY,
+					pointer.x,
+					pointer.y,
 					characterX,
 					characterY,
 				);

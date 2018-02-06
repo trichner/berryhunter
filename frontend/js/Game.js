@@ -281,9 +281,6 @@ define([], function () {
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
 			DayCycle.setup(domElement, Game.nightFilterContainer);
-			// require(['input/Inputs'], function (Inputs) {
-			// 	Inputs.setup();
-			// });
 
 			require(['input/strategies/phaser/InputManager'], function (InputManager) {
 				Game.input = new InputManager(Game, {

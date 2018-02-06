@@ -348,9 +348,9 @@ define(['Vector'], function (Vector2) {
 		 * @param {[type]} time - [description]
 		 */
 		down(event, time) {
-			if (event.buttons) {
+			// if (event.buttons) {
 				this.buttons = event.buttons;
-			}
+			// }
 
 			this.event = event;
 
@@ -413,9 +413,9 @@ define(['Vector'], function (Vector2) {
 		 * @param {[type]} time - [description]
 		 */
 		up(event, time) {
-			if (event.buttons) {
+			// if (event.buttons) {
 				this.buttons = event.buttons;
-			}
+			// }
 
 			this.event = event;
 
