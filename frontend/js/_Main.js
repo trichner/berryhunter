@@ -2,7 +2,7 @@
 
 requirejs.config({
 	paths: {
-		PIXI: '../vendor/pixi.min',
+		PIXI: '../vendor/pixi',
 		'vendor/flatbuffers': '../vendor/flatbuffers',
 		underscore: '../vendor/underscore-min',
 		saveAs: '../vendor/FileSaver.min',
@@ -78,8 +78,6 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'backend/ScoreboardMessage',
 					'backend/Welcome',
 					'backend/SnapshotFactory',
-					'KeyEvents',
-					'PointerEvents',
 					'Controls',
 					'Constants',
 					'InjectedSVG',
