@@ -34,7 +34,21 @@ define([
 		}, this);
 	};
 
+	function stopPropagation(event) {
+		event.stopPropagation();
+		// event.preventDefault();
+	}
+
 	function setupPanel() {
+		let groundTexturePanel = document.getElementById('groundTexturePanel');
+		let groundTexturePopup = document.getElementById('groundTexturePopup');
+		// Capture inputs to prevent game actions while acting in develop panel
+		['pointerup', 'pointerdown', 'mouseup', 'mousedown', 'keyup', 'keydown']
+			.forEach(function (eventName) {
+				groundTexturePanel.addEventListener(eventName, stopPropagation);
+				groundTexturePopup.addEventListener(eventName, stopPropagation);
+			});
+
 		this.xLabel = document.getElementById('groundTexture_x');
 		this.yLabel = document.getElementById('groundTexture_y');
 		this.controlsContainer = document.getElementById('groundTexture_controls');

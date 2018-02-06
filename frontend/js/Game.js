@@ -35,8 +35,8 @@ define([], function () {
 			'Constants',
 			'ColorMatrixFilterExtension'
 		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle,
-		              Player, Spectator, GameObject,  UserInterface, StartScreen,
-		            Chat, Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
+		             Player, Spectator, GameObject, UserInterface, StartScreen,
+		             Chat, Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
 
 			Game.loop = function (now) {
 				if (Game.paused) {
@@ -171,6 +171,7 @@ define([], function () {
 				terrain: {
 					background: new NamedGroup('background'),
 					textures: new NamedGroup('textures'),
+					resourceSpots: new NamedGroup('resourceSpots'),
 				},
 				placeables: {
 					campfire: new NamedGroup('campfire'),
@@ -214,7 +215,8 @@ define([], function () {
 
 			// Terrain Textures moving with the camera
 			Game.cameraGroup.addChild(
-				Game.layers.terrain.textures
+				Game.layers.terrain.textures,
+				Game.layers.terrain.resourceSpots
 			);
 
 			// Lower Placeables
@@ -260,20 +262,20 @@ define([], function () {
 
 			createBackground();
 
-            require([
-                    'Camera',
-                    'VitalSigns',
-                    'items/RecipesHelper',
-                    'Scoreboard',
-                    'groundTextures/GroundTextureManager',
-                ],
-                function (Camera, VitalSigns, RecipesHelper, Scoreboard, GroundTextureManager) {
-                    Camera.setup();
-                    VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
-                    RecipesHelper.setup();
-                    Scoreboard.setup();
-                    GroundTextureManager.setup();
-                });
+			require([
+					'Camera',
+					'VitalSigns',
+					'items/RecipesHelper',
+					'Scoreboard',
+					'groundTextures/GroundTextureManager',
+				],
+				function (Camera, VitalSigns, RecipesHelper, Scoreboard, GroundTextureManager) {
+					Camera.setup();
+					VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
+					RecipesHelper.setup();
+					Scoreboard.setup();
+					GroundTextureManager.setup();
+				});
 
 			/**
 			 * @type GameMap|GameMapWithBackend

@@ -35,8 +35,8 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 		constructor(x, y, size) {
 			super(Game.layers.resources.trees, x, y, size + Constants.CHARACTER_SIZE);
 
-			this.depletionTexture = new InjectedSVG(Tree.groundTexture.svg, x, y, this.size, this.rotation);
-			Game.layers.terrain.textures.addChild(this.depletionTexture);
+			this.resourceSpotTexture = new InjectedSVG(Tree.resourceSpot.svg, x, y, this.size, this.rotation);
+			Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
 		}
 
 		createMinimapIcon() {
@@ -48,13 +48,13 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 		}
 
 		hide() {
-			this.depletionTexture.parent.removeChild(this.depletionTexture);
+			this.resourceSpotTexture.parent.removeChild(this.resourceSpotTexture);
 			Resource.prototype.hide.apply(this, arguments);
 		}
 	}
 
-	Tree.groundTexture = {};
-	Preloading.registerGameObjectSVG(Tree.groundTexture, 'img/treeSpot.svg', 120);
+		Tree.resourceSpot = {};
+		Preloading.registerGameObjectSVG(Tree.resourceSpot, 'img/treeSpot.svg', 120);
 
 	class RoundTree extends Tree {
 		constructor(x, y, size) {
@@ -78,18 +78,18 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 			// Due to the shadow in the mineral graphics, those should not be randomly rotated
 			this.setRotation(0);
 
-			this.depletionTexture = new InjectedSVG(Mineral.groundTexture.svg, x, y, this.size, this.rotation);
-			Game.layers.terrain.textures.addChild(this.depletionTexture);
+			this.resourceSpotTexture = new InjectedSVG(Mineral.resourceSpot.svg, x, y, this.size, this.rotation);
+			Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
 		}
 
 		hide() {
-			this.depletionTexture.parent.removeChild(this.depletionTexture);
+			this.resourceSpotTexture.parent.removeChild(this.resourceSpotTexture);
 			Resource.prototype.hide.apply(this, arguments);
 		}
 	}
 
-	Mineral.groundTexture = {};
-	Preloading.registerGameObjectSVG(Mineral.groundTexture, 'img/stoneSpot.svg', 60);
+		Mineral.resourceSpot = {};
+		Preloading.registerGameObjectSVG(Mineral.resourceSpot, 'img/stoneSpot.svg', 60);
 
 	class Stone extends Mineral {
 		constructor(x, y, size) {
