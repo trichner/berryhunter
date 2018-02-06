@@ -15,6 +15,11 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 
 			this.indicators = VitalSigns.indicators;
 
+			// hide all indicators
+			Object.values(this.indicators).forEach(function (indicator) {
+				indicator.visible = false;
+			});
+
 			this.damageIndicatorDuration = 0;
 
 			Game.renderer.on('prerender', this.update, this);
@@ -114,6 +119,10 @@ define(['Preloading', 'Game', 'Utils', 'UserInterface', 'InjectedSVG'], function
 
 			this.currentIndicator = undefined;
 			this.indicators[indicatorName].visible = false;
+		}
+
+		destroy(){
+			Game.renderer.off('prerender', this.update, this);
 		}
 	}
 

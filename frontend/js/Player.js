@@ -96,6 +96,7 @@ define([
 			this.controls.destroy();
 			this.camera.destroy();
 			this.inventory.clear();
+			this.vitalSigns.destroy();
 		}
 	}
 
