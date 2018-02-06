@@ -224,7 +224,8 @@ define([], function () {
 				Game.layers.placeables.campfire,
 				Game.layers.placeables.chest,
 				Game.layers.placeables.workbench,
-				Game.layers.placeables.furnace
+				Game.layers.placeables.furnace,
+				Game.layers.resources.berryBush
 			);
 
 			// Characters
@@ -245,7 +246,6 @@ define([], function () {
 
 			// Resources
 			Game.cameraGroup.addChild(
-				Game.layers.resources.berryBush,
 				Game.layers.resources.minerals,
 				Game.layers.resources.trees
 			);
