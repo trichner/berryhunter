@@ -12,7 +12,7 @@ define([
 	'Chat',
 	'Utils',
 	'../vendor/tock',
-	'input/strategies/phaser/keyboard/keys/KeyCodes',
+	'input/keyboard/keys/KeyCodes',
 	'schema_client'
 ], function (Game, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock, KeyCodes) {
 

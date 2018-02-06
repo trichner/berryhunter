@@ -285,7 +285,7 @@ define([], function () {
 			GameObject.setup(domElement);
 			DayCycle.setup(domElement, Game.nightFilterContainer);
 
-			require(['input/strategies/phaser/InputManager'], function (InputManager) {
+			require(['input/InputManager'], function (InputManager) {
 				Game.input = new InputManager(Game, {
 					inputKeyboard: true,
 					inputKeyboardEventTarget: window,
