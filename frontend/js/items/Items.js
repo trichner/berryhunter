@@ -245,15 +245,15 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				definition: 'placeables/furnace',
 				type: ItemType.PLACEABLE
 			},
-			Seeds: {
-				icon: {file: 'seedIcon'},
-				graphic: {
-					file: '../berryBush',
-					size: 42
-				},
-				definition: 'placeables/seeds',
-				type: ItemType.PLACEABLE
-			},
+            // Seeds: {
+            // 	icon: {file: 'seedIcon'},
+            // 	graphic: {
+            // 		file: '../berryBush',
+            // 		size: 42
+            // 	},
+            // 	definition: 'placeables/seeds',
+            // 	type: ItemType.PLACEABLE
+            // },
 
 			/***********************************
 			 * WALLS
