@@ -40,7 +40,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				graphic: {
 					file: 'toolStone',
 					size: 30,
-					offsetX: 10,
+					offsetX: 15,
 					offsetY: -2.5
 				},
 				definition: 'tools/stone-tool',
@@ -52,8 +52,8 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				graphic: {
 					file: 'toolBronze',
 					size: 30,
-					offsetX: 25,
-					offsetY: -2.5
+					offsetX: 35,
+					offsetY: -5
 				},
 				definition: 'tools/bronze-tool',
 				type: ItemType.EQUIPMENT,
@@ -64,8 +64,8 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				graphic: {
 					file: 'toolIron',
 					size: 30,
-					offsetX: 25,
-					offsetY: -2.5
+					offsetX: 35,
+					offsetY: -5
 				},
 				definition: 'tools/iron-tool',
 				type: ItemType.EQUIPMENT,
