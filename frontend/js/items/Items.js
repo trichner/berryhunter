@@ -52,7 +52,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				graphic: {
 					file: 'toolBronze',
 					size: 30,
-					offsetX: 10,
+					offsetX: 25,
 					offsetY: -2.5
 				},
 				definition: 'tools/bronze-tool',
@@ -64,7 +64,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				graphic: {
 					file: 'toolIron',
 					size: 30,
-					offsetX: 15,
+					offsetX: 25,
 					offsetY: -2.5
 				},
 				definition: 'tools/iron-tool',
