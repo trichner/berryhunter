@@ -64,7 +64,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				graphic: {
 					file: 'toolIron',
 					size: 30,
-					offsetX: 10,
+					offsetX: 15,
 					offsetY: -2.5
 				},
 				definition: 'tools/iron-tool',
