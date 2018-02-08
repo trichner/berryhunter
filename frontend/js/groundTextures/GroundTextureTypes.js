@@ -32,6 +32,8 @@ define(['Environment', 'Preloading'], function (Environment, Preloading) {
 			file: 'grass1',
 			minSize: 30,
 			maxSize: 70,
+			rotation: false,
+			flipVertical: false,
 		},
 		'Leaves, green': {
 			file: 'leaves1',
@@ -42,6 +44,8 @@ define(['Environment', 'Preloading'], function (Environment, Preloading) {
 			file: 'mushrooms1',
 			minSize: 30,
 			maxSize: 100,
+			rotation: false,
+			flipVertical: false,
 		},
 		'Pebble1': {
 			file: 'pebble1',
@@ -57,6 +61,8 @@ define(['Environment', 'Preloading'], function (Environment, Preloading) {
 			file: 'puddle1',
 			minSize: 30,
 			maxSize: 100,
+			rotation: false,
+			flipVertical: false,
 		},
 		'Rubble': {
 			file: 'rubble1',

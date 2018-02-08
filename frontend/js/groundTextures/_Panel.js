@@ -163,8 +163,28 @@ define([
 			5);
 		this.sizeInput.setAttribute('min', groundTextureType.minSize);
 		this.sizeInput.setAttribute('max', groundTextureType.maxSize);
-		this.rotationInput.value = Utils.randomInt(0, 360);
-		this.flippedRadios.item(Utils.randomInt(0, 3)).checked = true;
+
+		if (groundTextureType.hasOwnProperty('rotation')) {
+			this.rotationInput.value = groundTextureType.rotation || 0;
+		} else {
+			this.rotationInput.value = Utils.randomInt(0, 360);
+		}
+
+		if (groundTextureType.hasOwnProperty('flipVertical') && !groundTextureType.flipVertical){
+			if (groundTextureType.hasOwnProperty('flipHorizontal') && !groundTextureType.flipHorizontal){
+				this.flippedRadios.item(0).checked = true;
+			} else {
+				this.flippedRadios.item(Utils.randomInt(0, 2)).checked = true;
+			}
+		} else if (groundTextureType.hasOwnProperty('flipHorizontal') && !groundTextureType.flipHorizontal){
+			let random = Utils.randomInt(0, 2);
+			if (random === 1){
+				random = 2;
+			}
+			this.flippedRadios.item(random).checked = true;
+		} else {
+			this.flippedRadios.item(Utils.randomInt(0, 3)).checked = true;
+		}
 	}
 
 	if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
