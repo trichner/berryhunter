@@ -270,8 +270,8 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			},
 			WoodSpikyWall: {
 				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'wallSpikedWood'},
+				graphic: {file: 'wallSpikedWood'},
 				definition: 'walls/wood-spiky-wall',
 				type: ItemType.PLACEABLE,
 				multiPlacing: true
@@ -280,7 +280,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				icon: {file: 'wallStone'},
 				graphic: {
 					file: 'wallStone',
-					size: 50
+					size: 70
 				},
 				definition: 'walls/stone-wall',
 				type: ItemType.PLACEABLE,
@@ -288,8 +288,8 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			},
 			StoneSpikyWall: {
 				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'wallSpikedStone'},
+				graphic: {file: 'wallSpikedStone'},
 				definition: 'walls/stone-spiky-wall',
 				type: ItemType.PLACEABLE,
 				multiPlacing: true
