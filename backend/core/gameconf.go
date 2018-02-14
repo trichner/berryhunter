@@ -1,9 +1,10 @@
 package core
 
 import (
+	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/items/mobs"
-	"github.com/trichner/berryhunter/backend/conf"
+	"github.com/trichner/berryhunter/backend/model"
 )
 
 type config struct {
@@ -24,7 +25,15 @@ func Config(conf *conf.Config) Configuration {
 	return func(g *config) error {
 		g.coldFractionNightPerS = conf.Game.ColdFractionNightPerS
 		g.coldFractionRestingPerS = conf.Game.ColdFractionRestingPerS
-		//TODO set player config
+
+		g.playerConfig.FreezingDamageTickFraction = conf.Game.Player.FreezingDamageTickFraction
+		g.playerConfig.HealthGainSatietyLossTickFraction = conf.Game.Player.HealthGainSatietyLossTickFraction
+		g.playerConfig.HealthGainSatietyThreshold = conf.Game.Player.HealthGainSatietyThreshold
+		g.playerConfig.HealthGainTemperatureThreshold = conf.Game.Player.HealthGainTemperatureThreshold
+		g.playerConfig.HealthGainTick = conf.Game.Player.HealthGainTick
+		g.playerConfig.SatietyLossTickFraction = conf.Game.Player.SatietyLossTickFraction
+		g.playerConfig.StarveDamageTickFraction = conf.Game.Player.StarveDamageTickFraction
+
 		return nil
 	}
 }

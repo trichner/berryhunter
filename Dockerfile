@@ -23,7 +23,7 @@ COPY api/mobs/ api/mobs/
 
 # copy frontend files together
 COPY frontend/ frontend/
-COPY api/items/ frontend/item-definitions/
+COPY api/items/ frontend/js/item-definitions/
 COPY api/schema/js/ frontend/js/schema/
 
 # copy backend together
