@@ -13,6 +13,17 @@ type Config struct {
 	Game struct {
 		ColdFractionNightPerS   float32 `json:"coldFractionNightPerSecond"`
 		ColdFractionRestingPerS float32 `json:"coldFractionRestingPerSecond"`
+		Player struct {
+			FreezingDamageTickFraction float32 `json:"freezingDamageTickFraction"`
+			StarveDamageTickFraction   float32 `json:"starveDamageTickFraction"`
+			SatietyLossTickFraction    float32 `json:"satietyLossTickFraction"`
+
+			// constants for gaining health
+			HealthGainTick                    float32 `json:"healthGainTick"`
+			HealthGainSatietyThreshold        float32 `json:"healthGainSatietyThreshold"`
+			HealthGainTemperatureThreshold    float32 `json:"healthGainTemperatureThreshold"`
+			HealthGainSatietyLossTickFraction float32 `json:"healthGainSatietyLossTickFraction"`
+		} `json:"player"`
 	} `json:"game"`
 }
 

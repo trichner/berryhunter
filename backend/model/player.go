@@ -7,6 +7,19 @@ import (
 	"github.com/trichner/berryhunter/backend/model/vitals"
 )
 
+type PlayerConfig struct {
+	// tickwise loss
+	FreezingDamageTickFraction float32
+	StarveDamageTickFraction   float32
+	SatietyLossTickFraction    float32
+
+	// constants for gaining health
+	HealthGainTick                    float32
+	HealthGainSatietyThreshold        float32
+	HealthGainTemperatureThreshold    float32
+	HealthGainSatietyLossTickFraction float32
+}
+
 type PlayerVitalSigns struct {
 	Satiety         vitals.VitalSign
 	BodyTemperature vitals.VitalSign

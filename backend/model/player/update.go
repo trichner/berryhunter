@@ -21,28 +21,30 @@ func (p *player) updateVitalSigns(dt float32) {
 
 	vitalSigns := p.VitalSigns()
 
+	c := p.config
+
 	// are we freezing?
 	if vitalSigns.BodyTemperature <= 0 {
-		healthFraction := float32(0.001)
+		healthFraction := c.FreezingDamageTickFraction
 		p.addHealthFraction(-healthFraction)
 	}
 
 	// satiety
 	s := vitalSigns.Satiety
-	satietyFraction := float32(0.0002)
+	satietyFraction := c.SatietyLossTickFraction
 	vitalSigns.Satiety = s.SubFraction(satietyFraction)
 
 	// heal if satiety and temperature are high enough
-	if vitalSigns.Satiety.Fraction() > 0.6 && vitalSigns.BodyTemperature.Fraction() > 0.2 {
-		healthFraction := float32(0.0006)
+	if vitalSigns.Satiety.Fraction() > c.HealthGainSatietyThreshold && vitalSigns.BodyTemperature.Fraction() > c.HealthGainTemperatureThreshold {
+		healthFraction := c.HealthGainTick
 		p.addHealthFraction(healthFraction)
 
 		s := vitalSigns.Satiety
-		satietyFraction := float32(0.0004)
+		satietyFraction := c.HealthGainSatietyLossTickFraction
 		vitalSigns.Satiety = s.SubFraction(satietyFraction)
 	} else if vitalSigns.Satiety.Fraction() <= 0 {
 		// are we starving?
-		healthFraction := float32(0.001)
+		healthFraction := c.StarveDamageTickFraction
 		p.addHealthFraction(-healthFraction)
 	}
 }

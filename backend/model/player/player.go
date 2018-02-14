@@ -13,7 +13,7 @@ import (
 
 var _ = model.PlayerEntity(&player{})
 
-func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
+func New(r items.Registry, config *model.PlayerConfig, c model.Client, name string) model.PlayerEntity {
 
 	e := minions.NewCircleEntity(0.25)
 
@@ -23,6 +23,7 @@ func New(r items.Registry, c model.Client, name string) model.PlayerEntity {
 		equipment:      items.NewEquipment(),
 		name:           name,
 		ownedEntitites: model.NewBasicEntities(),
+		config: config,
 	}
 
 	// setup body
@@ -78,6 +79,8 @@ type player struct {
 	equipment *items.Equipment
 
 	model.PlayerVitalSigns
+
+	config *model.PlayerConfig
 
 	ownedEntitites model.BasicEntities
 

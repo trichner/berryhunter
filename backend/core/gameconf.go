@@ -14,6 +14,8 @@ type config struct {
 
 	coldFractionNightPerS   float32
 	coldFractionRestingPerS float32
+
+	playerConfig model.PlayerConfig
 }
 
 type Configuration func(g *config) error
@@ -22,6 +24,7 @@ func Config(conf *conf.Config) Configuration {
 	return func(g *config) error {
 		g.coldFractionNightPerS = conf.Game.ColdFractionNightPerS
 		g.coldFractionRestingPerS = conf.Game.ColdFractionRestingPerS
+		//TODO set player config
 		return nil
 	}
 }
@@ -47,4 +50,3 @@ func Radius(r float32) Configuration {
 		return nil
 	}
 }
-
