@@ -21,5 +21,9 @@
     "tools": [
       "Workbench"
     ]
+  },
+  "body": {
+    "layer": 0,
+    "radius": 0.417
   }
 }
