@@ -265,14 +265,14 @@ define([], function () {
 			require([
 					'Camera',
 					'VitalSigns',
-					'items/RecipesHelper',
+					'items/Recipes',
 					'Scoreboard',
 					'groundTextures/GroundTextureManager',
 				],
-				function (Camera, VitalSigns, RecipesHelper, Scoreboard, GroundTextureManager) {
+				function (Camera, VitalSigns, Recipes, Scoreboard, GroundTextureManager) {
 					Camera.setup();
 					VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
-					RecipesHelper.setup();
+					Recipes.setup();
 					Scoreboard.setup();
 					GroundTextureManager.setup();
 				});

@@ -773,17 +773,22 @@ code {
     background-color: crimson;
   }
 }
-.clickableItem {
+.clickableItem,
+.craftableItem {
   border-radius: 10%;
   width: 7vh;
   height: 7vh;
   color: white;
   font-size: 1.75vh;
-  padding: 0.7vh;
   margin: 0.7vh;
   text-decoration: none;
   display: block;
+  overflow: hidden;
+  z-index: 1;
   position: relative;
+}
+.clickableItem {
+  padding: 0.7vh;
 }
 .clickableItem.empty {
   background-color: rgba(0, 0, 0, 0.6);
@@ -814,16 +819,7 @@ code {
   left: 0;
 }
 .craftableItem {
-  border-radius: 10%;
-  width: 7vh;
-  height: 7vh;
-  color: white;
-  font-size: 1.75vh;
-  margin: 0.7vh;
-  text-decoration: none;
-  display: block;
   float: left;
-  position: relative;
 }
 .craftableItem.newLine {
   clear: left;
@@ -848,6 +844,16 @@ code {
 .craftableItem.active > .iconBackground {
   background-color: rgba(255, 255, 255, 0.6);
 }
+.craftableItem > .subIcon.primary,
+.craftableItem > .subIconRow {
+  display: none;
+}
+.craftableItem.hinted .upgrade > .subIcon.primary {
+  display: block;
+}
+.craftableItem.hinted .with-ingredients > .subIconRow {
+  display: block;
+}
 .craftableItem.hinted > .iconBackground {
   -webkit-mask-image: url('../img/hintedCraftMask2.svg');
   mask-image: url('../img/hintedCraftMask2.svg');
@@ -863,23 +869,8 @@ code {
 .craftableItem .itemIcon {
   width: 100%;
 }
-.craftableItem {
-  overflow: hidden;
-  z-index: 1;
-}
 .craftableItem.inProgress {
   cursor: default;
-}
-.craftableItem > .progressOverlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(255, 255, 0, 0.5);
-}
-.craftableItem:not(.hinted) > .subIcon.primary,
-.craftableItem:not(.hinted) > .subIconRow {
-  display: none;
 }
 .craftableItem > .subIcon.primary {
   position: absolute;
@@ -922,6 +913,13 @@ code {
 }
 .craftableItem > .subIconRow > .subIcon > .count {
   overflow: hidden;
+}
+.craftableItem > .progressOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 0, 0.5);
 }
 .subIcon.hidden {
   display: block;

@@ -65,16 +65,26 @@
 	}
 }
 
-.clickableItem {
+.clickableItem,
+.craftableItem {
 	border-radius: 10%;
 	width: @slotSize;
 	height: @slotSize;
 	color: white;
 	font-size: (0.25 * @slotSize);
-	padding: (0.1 * @slotSize);
 	margin: (0.1 * @slotSize);
 	text-decoration: none;
 	display: block;
+
+	overflow: hidden;
+	z-index: 1; // Fixes the ignored overflow:hidden of the children
+
+	// Contain absolutely positioned elements like counts and progress bars
+	position: relative;
+}
+
+.clickableItem {
+	padding: (0.1 * @slotSize);
 
 	&.empty {
 		background-color: rgba(0, 0, 0, 0.6);
@@ -93,8 +103,6 @@
 	&.active {
 		background-color: rgba(255, 255, 255, 0.6);
 	}
-
-	position: relative;
 
 	> .count {
 		position: absolute;
@@ -115,14 +123,6 @@
 }
 
 .craftableItem {
-	border-radius: 10%;
-	width: @slotSize;
-	height: @slotSize;
-	color: white;
-	font-size: (0.25 * @slotSize);
-	margin: (0.1 * @slotSize);
-	text-decoration: none;
-	display: block;
 	float: left;
 
 	&.newLine {
@@ -158,7 +158,27 @@
 		}
 	}
 
+	> .subIcon.primary,
+	> .subIconRow {
+		display: none;
+	}
+
 	&.hinted {
+
+		// there's an icon in the top left corner
+		.upgrade {
+			> .subIcon.primary {
+				display: block;
+			}
+		}
+
+		// there are icons in bottom row
+		.with-ingredients {
+			> .subIconRow {
+				display: block;
+			}
+		}
+
 		> .iconBackground {
 			//background-color: rgba(255, 255, 255, 0.6);
 
@@ -186,35 +206,12 @@
 		}
 	}
 
-	position: relative;
-
 	.itemIcon {
 		width: 100%;
 	}
-}
-
-.craftableItem {
-	overflow: hidden;
-	z-index: 1; // Fixes the ignored overflow:hidden of the children
 
 	&.inProgress {
 		cursor: default;
-	}
-
-	> .progressOverlay {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-
-		background-color: rgba(255, 255, 0, 0.5);
-	}
-
-	&:not(.hinted) {
-		> .subIcon.primary,
-		> .subIconRow {
-			display: none;
-		}
 	}
 
 	> .subIcon.primary {
@@ -291,6 +288,15 @@
 				//max-width: 50%;
 			}
 		}
+	}
+
+	> .progressOverlay {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+
+		background-color: rgba(255, 255, 0, 0.5);
 	}
 }
 
