@@ -15,14 +15,14 @@ type Unequip struct {
 	baseAction
 }
 
-func (a *Unequip) Start() bool {
+func (a *Unequip) Start() {
 	if !hasItem(a.p, a.item) {
-		return true
+		return
 	}
 	a.p.Equipment().Unequip(a.item)
-	return true
+	a.ticks = 1
 }
 
-func (a *Unequip) Update(dt float32) bool {
-	panic("WTF?! How did we end up here?")
+func (*Unequip) Type() model.PlayerActionType {
+	return model.PlayerActionUnequipItem
 }

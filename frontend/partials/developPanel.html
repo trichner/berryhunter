@@ -37,10 +37,10 @@
 				<td id="develop_clientTickRate"></td>
 			</tr>
 			<tr>
-				<th><!-- Actions --></th>
+				<th>Messages</th>
 				<td>
 					<button id="develop_showServerTick" class="actionButton">
-						Show next GameState
+						Show next<br/>GameState
 					</button>
 				</td>
 				<td>
@@ -51,27 +51,32 @@
 						<dt>Rotation</dt>
 						<dd id="develop_input_rotation"></dd>
 						<dt>Action</dt>
+						<dd id="develop_input_action_type"
+							style="clear: left; /* Force new line for actions */"></dd>
 						<dd id="develop_input_action_item"></dd>
-						<dd id="develop_input_action_type"></dd>
 					</dl>
+				</td>
+			</tr>
+			<tr>
+				<th>Settings</th>
+				<td colspan="2">
+					<button class="toggleButton" data-setting="cameraBoundaries">
+						<span class="label">Cam Boundaries</span>
+						<span class="state"></span>
+					</button>
+					<!-- FIXME AABBs don't work with pixi.js yet -->
+					<!--<button class="toggleButton" data-setting="showAABBs">
+						<span class="label">AABBs</span>
+						<span class="state"></span>
+					</button>-->
 				</td>
 			</tr>
 			</tbody>
 		</table>
 		<div>
-			<button class="toggleButton" data-setting="cameraBoundaries">
-				<span class="label">Cam Boundaries</span>
-				<span class="state"></span>
-			</button>
-			<button class="toggleButton" data-setting="showAABBs">
-				<span class="label">AABBs</span>
-				<span class="state"></span>
-			</button>
-		</div>
-		<div>
 			<select id="develop_itemSelect"></select>
-			<input id="develop_itemCount" type="number" step="1" value="1"/>
-			<button id="develop_itemAdd">Add</button>
+			<input id="develop_itemCount" type="number" step="1" value="1" min="1"/>
+			<button id="develop_itemAdd" class="actionButton">Add Item<span class="plural-only">s</span></button>
 		</div>
 	</div>
 

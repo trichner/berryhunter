@@ -197,6 +197,10 @@
 	overflow: hidden;
 	z-index: 1; // Fixes the ignored overflow:hidden of the children
 
+	&.inProgress {
+		cursor: default;
+	}
+
 	> .progressOverlay {
 		position: absolute;
 		bottom: 0;
@@ -343,7 +347,7 @@
 	left: 50%;
 	transform: translate(-50%, -1.3px * (30 + 16));
 
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: @backgroundColor;
 
 	padding: (0.1 * @slotSize);
 	border-radius: (0.1 * @slotSize);
@@ -361,4 +365,18 @@
 		box-shadow: none;
 		outline: none;
 	}
+}
+
+#scoreboard {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: @backgroundColor;
+	margin: (0.1 * @uiElementHeight);
+	padding: (0.1 * @uiElementHeight);
+	border-radius: (0.1 * @uiElementHeight);
+
+	color: white;
+	font-size: 0.7em;
+	line-height: 1.4;
 }

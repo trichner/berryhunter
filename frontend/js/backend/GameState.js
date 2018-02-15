@@ -14,9 +14,11 @@ define(['backend/BackendConstants',
 		 * @param {BerryhunterApi.Spectator} spectator
 		 */
 		constructor(spectator) {
-			this.id = spectator.id();
-			this.x = spectator.pos().x();
-			this.y = spectator.pos().y();
+			this.id = spectator.id().toFloat64();
+			this.position = {
+				x: spectator.pos().x(),
+				y: spectator.pos().y(),
+			};
 			this.isSpectator = true;
 		}
 	}
@@ -115,7 +117,15 @@ define(['backend/BackendConstants',
 
 			result.rotation = entity.rotation();
 			result.isHit = entity.isHit();
-			result.actionTick = entity.actionTick();
+			let currentAction = entity.currentAction();
+			if (currentAction) {
+				result.currentAction = {
+					ticksRemaining: currentAction.ticksRemaining(),
+					actionType: currentAction.actionType(),
+					item: unmarshalItem(currentAction.item()),
+				};
+			}
+
 			result.name = entity.name();
 			result.equipment = [];
 

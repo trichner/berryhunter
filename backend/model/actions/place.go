@@ -19,18 +19,18 @@ type Place struct {
 	game model.Game
 }
 
-func (a *Place) Start() bool {
+func (a *Place) Start() {
 
 	item := a.item
 	if item.Type != items.ItemTypePlaceable {
 
 		log.Printf("😠 Tried to place: %s", item.Name)
-		return true
+		return
 	}
 
 	hasItem := a.p.Inventory().ConsumeItem(items.NewItemStack(item, 1))
 	if !hasItem {
-		return true
+		return
 	}
 
 	log.Printf("🏗 Placing: %s", item.Name)
@@ -40,7 +40,7 @@ func (a *Place) Start() bool {
 
 	if err != nil {
 		log.Printf("Cannot place %s: %s", item.Name, err)
-		return true
+		return
 	}
 
 	pp := a.p.Position()
@@ -50,5 +50,9 @@ func (a *Place) Start() bool {
 	a.game.AddEntity(e)
 	a.p.OwnedEntities().Add(e)
 
-	return true
+	a.ticks = 1
+}
+
+func (*Place) Type() model.PlayerActionType {
+	return model.PlayerActionPlaceItem
 }

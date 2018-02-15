@@ -22,7 +22,7 @@ func abs32f(f float32) float32 {
 	return float32(math.Abs(float64(f)))
 }
 
-// min32f calculates the 2-norm of a float32
+// min32f calculates the minimum of two float32 values
 func min32f(a, b float32) float32 {
 	return float32(math.Min(float64(a), float64(b)))
 }
@@ -115,7 +115,8 @@ func (v Vec2f) Rot90() Vec2f {
 	return Vec2f{-v.Y, v.X}
 }
 
-// Dot calculates the dot product between two vectors
+// Normalize norms the vector such that it has a length of 1 while
+// keeping the direction.
 func (v Vec2f) Normalize() Vec2f {
 	a := v.Abs()
 	x := v.X / a
@@ -134,7 +135,7 @@ func (v Vec2f) DistanceToSquared(w Vec2f) float32 {
 func (v Vec2f) AngleBetween(w Vec2f) float32 {
 	atan2 := atan232f(w.Y, w.X) - atan232f(v.Y, v.X)
 	if atan2 < 0 {
-		return float32(math.Pi)*2 + atan2
+		atan2 += float32(math.Pi) * 2
 	}
 	return atan2
 }

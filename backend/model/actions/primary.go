@@ -16,24 +16,17 @@ var _ = model.PlayerAction(&Primary{})
 
 type Primary struct {
 	baseAction
-	ticks int
 }
 
-func (p *Primary) TicksRemaining() int {
-	return p.ticks
-}
-
-func (p *Primary) Start() bool {
+func (p *Primary) Start() {
 
 	if !hasItem(p.p, p.item) {
-		return true
+		return
 	}
 	p.p.Hand().Collider.Shape().Mask = -1 //TODO fine grained layers
 	p.p.Hand().Item = p.item
-	return false
 }
 
-func (p *Primary) Update(dt float32) bool {
-	p.ticks -= 1
-	return p.ticks <= 0
+func (*Primary) Type() model.PlayerActionType {
+	return model.PlayerActionPrimary
 }

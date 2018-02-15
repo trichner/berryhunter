@@ -29,6 +29,12 @@ struct ItemStack {
   slot:ubyte;
 }
 
+struct OngoingAction {
+    ticks_remaining:ushort;
+    action_type:ActionType;
+    item:ubyte;
+}
+
 // Workaround to make vector of union possible
 union AnyEntity { Character, Mob, Resource, Placeable }
 table Entity { e:AnyEntity; }
@@ -79,7 +85,8 @@ table Character {
   rotation:float;
   is_hit:bool = false;
 
-  action_tick:ushort;
+  current_action:OngoingAction;
+
   name:string;
 
   equipment:[ubyte];
@@ -128,7 +135,16 @@ table EntityMessage {
     message:string;
 }
 
-union ServerMessageBody { Welcome, GameState, Accept, Obituary, EntityMessage }
+table ScoreboardPlayer {
+    name:string;
+    score:ulong;
+}
+
+table Scoreboard {
+  players:[ScoreboardPlayer];
+}
+
+union ServerMessageBody { Welcome, GameState, Accept, Obituary, EntityMessage, Scoreboard }
 table ServerMessage { body:ServerMessageBody; }
 
 root_type ServerMessage;

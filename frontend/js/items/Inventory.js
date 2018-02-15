@@ -10,9 +10,14 @@ define([
 	'items/InventorySlot',
 ], function (Game, Utils, Constants, Recipes, Crafting, Equipment, InventorySlot) {
 	class Inventory {
-		constructor(character, craftInProgress) {
+
+		/**
+		 * @param {Character} character
+		 * @param {function} isCraftInProgress
+		 */
+		constructor(character, isCraftInProgress) {
 			this.character = character;
-			this.craftInProgress = craftInProgress;
+			this.isCraftInProgress = isCraftInProgress;
 			this.craftableRecipes = [];
 			this.availableCrafts = [];
 

@@ -15,13 +15,16 @@ type Drop struct {
 	baseAction
 }
 
-func (a *Drop) Start() bool {
+func (a *Drop) Start() {
 
 	if !hasItem(a.p, a.item) {
-		return true
+		return
 	}
 
 	a.p.Inventory().DropAll(a.item)
-	return true
+	a.ticks = 1
 }
 
+func (*Drop) Type() model.PlayerActionType {
+	return model.PlayerActionDropItem
+}

@@ -2,8 +2,6 @@
 
 define([
 	'Game',
-	'PointerEvents',
-	'KeyEvents',
 	'Constants',
 	'Develop',
 	'MapEditor',
@@ -14,83 +12,52 @@ define([
 	'Chat',
 	'Utils',
 	'../vendor/tock',
+	'input/keyboard/keys/KeyCodes',
 	'schema_client'
-], function (Game, PointerEvents, KeyEvents, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock) {
-	const UP_KEYS = [
-		'w'.charCodeAt(0),
-		'W'.charCodeAt(0),
-		38 // Up Arrow
-	];
-
-	const DOWN_KEYS = [
-		's'.charCodeAt(0),
-		'S'.charCodeAt(0),
-		40 // Down Arrow
-	];
-
-	const LEFT_KEYS = [
-		'a'.charCodeAt(0),
-		'A'.charCodeAt(0),
-		37 // Left Arrow
-	];
-
-	const RIGHT_KEYS = [
-		'd'.charCodeAt(0),
-		'D'.charCodeAt(0),
-		39 // Right Arrow
-	];
-
-	const ACTION_KEYS = [
-		'e'.charCodeAt(0),
-		'E'.charCodeAt(0),
-		' '.charCodeAt(0) // Space
-	];
-
-	const ACTION_BUTTON = PointerEvents.PointerType.LEFT;
-
-	const ALT_ACTION_KEYS = [
-		'q'.charCodeAt(0),
-		'Q'.charCodeAt(0),
-		16 // Shift
-	];
-
-	const ALT_ACTION_BUTTON = PointerEvents.PointerType.RIGHT;
-
-	const PAUSE_KEYS = [
-		'p'.charCodeAt(0),
-		'P'.charCodeAt(0),
-	];
-
-	/**
-	 * List of key codes that are browser shortcuts that have to be prevented in normal game flow.
-	 * @type {Array}
-	 */
-	const FUNCTION_KEYS = [
-		' '.charCodeAt(0) // Space. Browser: Scrolls the window. Game: Action Key
-	];
-
-	function anyKeyIsPressed(keyList) {
-		return keyList.some(function (keyCode) {
-			return KeyEvents.keyIsDown(keyCode);
-		});
-	}
+], function (Game, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock, KeyCodes) {
 
 	let consoleCooldown = 0;
 
+	class Keys {
+		constructor() {
+			this.keys = [];
+			for (let i = 0; i < arguments.length; i++) {
+				this.keys.push(Game.input.keyboard.addKey(arguments[i]));
+			}
+
+			let self = this;
+			Object.defineProperty(this, 'isDown', {
+				get: function () {
+					return self.keys.some(function (key) {
+						return key.isDown;
+					});
+				}
+			});
+		}
+	}
+
 	class Controls {
+
 		/**
-		 *
 		 * @param {Character} character
+		 * @param {function} isCraftInProgress Model function. Can be called to determine if a craft is in progress.
 		 */
-		constructor(character, craftInProgress) {
-			this.craftInProgress = craftInProgress;
+		constructor(character, isCraftInProgress) {
+			this.isCraftInProgress = isCraftInProgress;
 			this.character = character;
-			this.playerId = character.id;
 
 			if (Constants.ALWAYS_VIEW_CURSOR) {
 				this.lastX = character.getX();
 				this.lastY = character.getY();
 			}
+
+			this.upKeys = new Keys(KeyCodes.W, KeyCodes.UP);
+			this.downKeys = new Keys(KeyCodes.S, KeyCodes.DOWN);
+			this.leftKeys = new Keys(KeyCodes.A, KeyCodes.LEFT);
+			this.rightKeys = new Keys(KeyCodes.D, KeyCodes.RIGHT);
+			this.actionKeys = new Keys(KeyCodes.E, KeyCodes.SPACE);
+			this.altActionKeys = new Keys(KeyCodes.Q, KeyCodes.SHIFT);
+			this.pauseKeys = new Keys(KeyCodes.P);
 
 			this.hitAnimationTick = false;
 
@@ -101,7 +68,7 @@ define([
 
 			this.clock.start();
 
-			// Not part of KeyEvents as its way more complicated to implement desired behavior there.
+			// Not part of Inputs as its way more complicated to implement desired behavior there.
 			window.addEventListener('keydown', Controls.handleFunctionKeys);
 		}
 
@@ -130,18 +97,13 @@ define([
 				event.preventDefault();
 				return;
 			}
-
-			let isFunctionKey = FUNCTION_KEYS.indexOf(event.keyCode) !== -1;
-			if (isFunctionKey) {
-				event.preventDefault();
-			}
 		}
 
 		/**
 		 * @return {boolean} whether or not the action was allowed. Visuals have to be aligned to this return value
 		 */
 		onInventoryAction(item, actionType) {
-			if (this.craftInProgress()) {
+			if (this.isCraftInProgress()) {
 				return false;
 			}
 
@@ -153,8 +115,15 @@ define([
 		}
 
 		update() {
+			let inputManager = Game.input;
+			inputManager.update(Date.now());
+
+			if (Game.state !== Game.States.PLAYING) {
+				return;
+			}
+
 			if (Develop.isActive()) {
-				if (typeof this.updateTime === 'undefined') {
+				if (Utils.isUndefined(this.updateTime)) {
 					this.updateTime = this.clock.lap();
 					Develop.logClientTickRate(this.updateTime);
 				} else {
@@ -163,16 +132,16 @@ define([
 					this.updateTime = currentTime;
 					Develop.logClientTickRate(timeSinceUpdate);
 				}
-			}
 
-			// Pausing is only available in Develop mode
-			if (Develop.isActive() && anyKeyIsPressed(PAUSE_KEYS)) {
-				if (Game.playing) {
-					Game.pause();
-				} else {
-					Game.play();
+				// Pausing is only available in Develop mode
+				if (this.pauseKeys.isDown) {
+					if (Game.playing) {
+						Game.pause();
+					} else {
+						Game.play();
+					}
+					return;
 				}
-				return;
 			}
 
 			if (consoleCooldown > 0) {
@@ -184,16 +153,16 @@ define([
 				y: 0,
 			};
 
-			if (anyKeyIsPressed(UP_KEYS)) {
+			if (this.upKeys.isDown) {
 				movement.y -= 1;
 			}
-			if (anyKeyIsPressed(DOWN_KEYS)) {
+			if (this.downKeys.isDown) {
 				movement.y += 1;
 			}
-			if (anyKeyIsPressed(LEFT_KEYS)) {
+			if (this.leftKeys.isDown) {
 				movement.x -= 1;
 			}
-			if (anyKeyIsPressed(RIGHT_KEYS)) {
+			if (this.rightKeys.isDown) {
 				movement.x += 1;
 			}
 
@@ -207,9 +176,9 @@ define([
 					action = this.inventoryAction;
 					delete this.inventoryAction;
 				} else {
-					if (this.craftInProgress()){
+					if (this.isCraftInProgress()) {
 						// Don't check for actions
-					} else if (anyKeyIsPressed(ACTION_KEYS) || PointerEvents.pointerDown === ACTION_BUTTON) {
+					} else if (this.actionKeys.isDown || inputManager.activePointer.leftButtonDown()) {
 						this.hitAnimationTick = this.character.action();
 						this.character.progressHitAnimation(this.hitAnimationTick);
 						switch (this.character.currentAction) {
@@ -242,7 +211,7 @@ define([
 								}
 								break;
 						}
-					} else if (anyKeyIsPressed(ALT_ACTION_KEYS) || PointerEvents.pointerDown === ALT_ACTION_BUTTON) {
+					} else if (this.altActionKeys.isDown || inputManager.activePointer.rightButtonDown()) {
 						this.hitAnimationTick = this.character.altAction();
 						this.character.progressHitAnimation(this.hitAnimationTick);
 						action = {
@@ -257,7 +226,7 @@ define([
 			let hasInput = false;
 
 			if (Constants.ALWAYS_VIEW_CURSOR) {
-				if (PointerEvents.moved ||
+				if (inputManager.activePointer.justMoved ||
 					this.lastX !== this.character.getX() ||
 					this.lastY !== this.character.getY()) {
 
@@ -266,7 +235,7 @@ define([
 					this.lastX = this.character.getX();
 					this.lastY = this.character.getY();
 				}
-			} else if (PointerEvents.moved) {
+			} else if (inputManager.activePointer.justMoved) {
 				input.rotation = this.adjustCharacterRotation();
 				hasInput = true;
 			}
@@ -293,20 +262,20 @@ define([
 		}
 
 		adjustCharacterRotation() {
+			let pointer = Game.input.activePointer;
+
 			if (Utils.isDefined(Game.player)) {
 				let characterX = Game.player.camera.getScreenX(this.character.getX());
 				let characterY = Game.player.camera.getScreenY(this.character.getY());
 
 				let rotation = Utils.TwoDimensional.angleBetween(
-					PointerEvents.x,
-					PointerEvents.y,
+					pointer.x,
+					pointer.y,
 					characterX,
 					characterY,
 				);
 
 				this.character.setRotation(rotation);
-
-				PointerEvents.moved = false;
 
 				return rotation;
 			}

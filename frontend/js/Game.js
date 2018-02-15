@@ -13,6 +13,8 @@ define([], function () {
 
 	Game.state = States.INITIALIZING;
 
+	Game.godMode = false;
+
 	Game.setup = function () {
 		require([
 			'PIXI',
@@ -22,12 +24,9 @@ define([], function () {
 			'backend/GameMapWithBackend',
 			'MiniMap',
 			'DayCycle',
-			'KeyEvents',
-			'PointerEvents',
 			'Player',
 			'Spectator',
 			'GameObject',
-			'items/Recipes',
 			'userInterface/UserInterface',
 			'StartScreen',
 			'Chat',
@@ -35,9 +34,9 @@ define([], function () {
 			'NamedGroup',
 			'Constants',
 			'ColorMatrixFilterExtension'
-		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle, KeyEvents,
-		             PointerEvents, Player, Spectator, GameObject, Recipes, UserInterface, StartScreen, Chat,
-		             Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
+		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle,
+		             Player, Spectator, GameObject, UserInterface, StartScreen,
+		             Chat, Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
 
 			Game.loop = function (now) {
 				if (Game.paused) {
@@ -172,6 +171,7 @@ define([], function () {
 				terrain: {
 					background: new NamedGroup('background'),
 					textures: new NamedGroup('textures'),
+					resourceSpots: new NamedGroup('resourceSpots'),
 				},
 				placeables: {
 					campfire: new NamedGroup('campfire'),
@@ -215,7 +215,8 @@ define([], function () {
 
 			// Terrain Textures moving with the camera
 			Game.cameraGroup.addChild(
-				Game.layers.terrain.textures
+				Game.layers.terrain.textures,
+				Game.layers.terrain.resourceSpots
 			);
 
 			// Lower Placeables
@@ -223,7 +224,8 @@ define([], function () {
 				Game.layers.placeables.campfire,
 				Game.layers.placeables.chest,
 				Game.layers.placeables.workbench,
-				Game.layers.placeables.furnace
+				Game.layers.placeables.furnace,
+				Game.layers.resources.berryBush
 			);
 
 			// Characters
@@ -244,7 +246,6 @@ define([], function () {
 
 			// Resources
 			Game.cameraGroup.addChild(
-				Game.layers.resources.berryBush,
 				Game.layers.resources.minerals,
 				Game.layers.resources.trees
 			);
@@ -261,13 +262,20 @@ define([], function () {
 
 			createBackground();
 
-			require(['Camera'], function (Camera) {
-				Camera.setup();
-			});
-			Recipes.setup();
-			require(['VitalSigns'], function (VitalSigns) {
-				VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
-			});
+			require([
+					'Camera',
+					'VitalSigns',
+					'items/RecipesHelper',
+					'Scoreboard',
+					'groundTextures/GroundTextureManager',
+				],
+				function (Camera, VitalSigns, RecipesHelper, Scoreboard, GroundTextureManager) {
+					Camera.setup();
+					VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
+					RecipesHelper.setup();
+					Scoreboard.setup();
+					GroundTextureManager.setup();
+				});
 
 			/**
 			 * @type GameMap|GameMapWithBackend
@@ -278,8 +286,24 @@ define([], function () {
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
 			DayCycle.setup(domElement, Game.nightFilterContainer);
-			KeyEvents.setup(window);
-			PointerEvents.setup(window);
+
+			require(['input/InputManager'], function (InputManager) {
+				Game.input = new InputManager(Game, {
+					inputKeyboard: true,
+					inputKeyboardEventTarget: window,
+
+					inputMouse: true,
+					inputMouseEventTarget: document.documentElement,
+					inputMouseCapture: true,
+
+					inputTouch: true,
+					inputTouchEventTarget: document.documentElement,
+					inputTouchCapture: true,
+
+					inputGamepad: false,
+				});
+				Game.input.boot();
+			});
 
 			// Disable context menu on right click to use the right click ingame
 			document.body.addEventListener('contextmenu', function (event) {
@@ -305,6 +329,9 @@ define([], function () {
 			 */
 
 			Chat.setup();
+			require(['groundTextures/_Panel'], function (GroundTexturePanel) {
+				GroundTexturePanel.setup();
+			});
 
 			StartScreen.show();
 

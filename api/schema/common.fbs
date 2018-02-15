@@ -10,3 +10,13 @@ struct Vec2f {
   x:float;
   y:float;
 }
+
+enum ActionType: ubyte {
+    Primary = 0,
+    CraftItem,
+    EquipItem,
+    UnequipItem,
+    DropItem,
+    PlaceItem,
+    ConsumeItem
+}

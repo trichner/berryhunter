@@ -75,7 +75,8 @@ func (m *Mob) Update(dt float32) bool {
 func (m *Mob) Angle() float32 {
 	// FIXME the angle has to be set when the position is updated
 	// => That's where you're wrong kiddo. Vector arithmetic ftw!
-	return phy.Vec2f{1, 0}.AngleBetween(m.velocity)
+	//return m.velocity.AngleBetween(m.velocity)
+	return phy.Vec2f{-1, 0}.AngleBetween(m.velocity)
 }
 
 func (m *Mob) Health() vitals.VitalSign {

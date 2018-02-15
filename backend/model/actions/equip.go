@@ -15,12 +15,15 @@ type Equip struct {
 	baseAction
 }
 
-func (a *Equip) Start() bool {
+func (a *Equip) Start() {
 
 	if !hasItem(a.p, a.item) {
-		return true
+		return
 	}
 	a.p.Equipment().Equip(a.item)
-	return true
+	a.ticks = 1
 }
 
+func (*Equip) Type() model.PlayerActionType {
+	return model.PlayerActionEquipItem
+}

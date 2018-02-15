@@ -41,7 +41,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 					file: 'toolStone',
 					size: 30,
 					offsetX: 10,
-					offsetY: -2.5
+					offsetY: 0
 				},
 				definition: 'tools/stone-tool',
 				type: ItemType.EQUIPMENT,
@@ -53,7 +53,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 					file: 'toolBronze',
 					size: 30,
 					offsetX: 10,
-					offsetY: -2.5
+					offsetY: 2.5
 				},
 				definition: 'tools/bronze-tool',
 				type: ItemType.EQUIPMENT,
@@ -65,7 +65,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 					file: 'toolIron',
 					size: 30,
 					offsetX: 10,
-					offsetY: -2.5
+					offsetY: 2.5
 				},
 				definition: 'tools/iron-tool',
 				type: ItemType.EQUIPMENT,
@@ -197,7 +197,8 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 					size: 100
 				},
 				definition: 'placeables/campfire',
-				type: ItemType.PLACEABLE
+				type: ItemType.PLACEABLE,
+				multiPlacing: true
 			},
 			BigCampfire: {
 				icon: {file: 'fireBigCampIcon'},
@@ -244,15 +245,15 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				definition: 'placeables/furnace',
 				type: ItemType.PLACEABLE
 			},
-			Seeds: {
-				icon: {file: 'seedIcon'},
-				graphic: {
-					file: '../berryBush',
-					size: 42
-				},
-				definition: 'placeables/seeds',
-				type: ItemType.PLACEABLE
-			},
+            // Seeds: {
+            // 	icon: {file: 'seedIcon'},
+            // 	graphic: {
+            // 		file: '../berryBush',
+            // 		size: 42
+            // 	},
+            // 	definition: 'placeables/seeds',
+            // 	type: ItemType.PLACEABLE
+            // },
 
 			/***********************************
 			 * WALLS
@@ -269,8 +270,11 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			},
 			WoodSpikyWall: {
 				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'wallSpikedWood'},
+				graphic: {
+					file: 'wallSpikedWood',
+					size: 70
+				},
 				definition: 'walls/wood-spiky-wall',
 				type: ItemType.PLACEABLE,
 				multiPlacing: true
@@ -287,8 +291,11 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 			},
 			StoneSpikyWall: {
 				// TODO
-				icon: {file: ''},
-				graphic: {file: ''},
+				icon: {file: 'wallSpikedStone'},
+				graphic: {
+					file: 'wallSpikedStone',
+					size: 70
+			},
 				definition: 'walls/stone-spiky-wall',
 				type: ItemType.PLACEABLE,
 				multiPlacing: true
@@ -449,7 +456,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 						item.id = itemDefinition.id;
 						item.type = ItemType[itemDefinition.type];
 						item.recipe = itemDefinition.recipe;
-					}))
+					}));
 				}
 			}
 		})();

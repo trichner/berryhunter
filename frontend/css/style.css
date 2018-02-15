@@ -309,6 +309,18 @@ svg .clickable text {
 .hidden {
   display: none;
 }
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+.center {
+  margin: 0 auto;
+}
+:not(.plural) > .plural-only {
+  display: none;
+}
 .playerForm {
   position: relative;
   top: 35%;
@@ -407,6 +419,7 @@ h1 {
   padding: 1em;
   min-width: 16em;
   z-index: 1000;
+  font-size: 14px;
   font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
   font-variant: normal;
 }
@@ -440,6 +453,7 @@ h1 {
 #developPanel > table td,
 #developPanel > table th {
   padding: 0.15em 0.25em;
+  vertical-align: top;
 }
 #developPanel > table > tbody th {
   text-align: right;
@@ -452,10 +466,14 @@ h1 {
 #developPanel > table > tbody td {
   min-width: 6.35em;
 }
+#developPanel > table > tbody td:nth-of-type(2) {
+  min-width: 8.35em;
+  max-width: 8.35em;
+}
 #developPanel > table > tbody td > h3 {
   font-size: inherit;
   text-align: center;
-  margin-bottom: 0;
+  margin: 0;
 }
 #developPanel .good {
   color: #4CAF50;
@@ -530,6 +548,117 @@ dl.flatList > dd {
 }
 #develop_closeServerTickPopup {
   float: right;
+}
+#groundTexturePanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 1em;
+  min-width: 16em;
+  z-index: 1000;
+  font-size: 14px;
+  font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
+  font-variant: normal;
+}
+#groundTexturePanel > .toolbar {
+  text-align: right;
+  line-height: 1.2;
+}
+#groundTexturePanel > .toolbar > a {
+  color: inherit;
+}
+#groundTexturePanel .maximize-button {
+  display: none;
+}
+#groundTexturePanel:target {
+  overflow: hidden;
+  max-height: 1.2em;
+  padding: 0;
+}
+#groundTexturePanel:target .minimize-button {
+  display: none;
+}
+#groundTexturePanel:target .maximize-button {
+  display: inline;
+}
+#groundTexturePanel > :first-child {
+  margin-top: 0;
+}
+#groundTexturePanel > h2 {
+  font-size: 1.2em;
+}
+#groundTexturePanel > table td,
+#groundTexturePanel > table th {
+  padding: 0.15em 0.25em;
+}
+#groundTexturePanel > table > tbody th {
+  text-align: right;
+  padding-right: 0.5em;
+}
+#groundTexturePanel > table > tbody > tr.separatorRow > th {
+  text-align: center;
+  padding-right: 0.25em;
+}
+#groundTexturePanel > table > tbody td {
+  min-width: 6.35em;
+}
+#groundTexturePanel > table > tbody td > h3 {
+  font-size: inherit;
+  text-align: center;
+  margin-bottom: 0;
+}
+#groundTexturePanel .good {
+  color: #4CAF50;
+}
+#groundTexturePanel .neutral {
+  color: #03A9F4;
+}
+#groundTexturePanel .bad {
+  color: #F44336;
+}
+#groundTexturePopup {
+  position: fixed;
+  z-index: 2000;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  max-height: 95vh;
+  max-width: 40em;
+  background-color: white;
+}
+#groundTexturePopup h2 {
+  margin: 0;
+}
+#groundTexturePopup > pre {
+  white-space: pre-wrap;
+  overflow-y: auto;
+  padding: 0.7em;
+  margin: 0;
+}
+#groundTexturePopup > header,
+#groundTexturePopup footer {
+  padding: 0.7em;
+}
+#groundTexture_closePopup {
+  float: right;
+}
+#groundTexturePanel {
+  min-width: 0;
+}
+#groundTexturePanel .group {
+  margin-top: 1em;
+}
+#groundTexturePanel label {
+  display: block;
+}
+#groundTexturePopup {
+  left: 50%;
+}
+code {
+  font-size: 14px;
+  font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
+  font-variant: normal;
 }
 #loadingScreen {
   background-color: #222;
@@ -738,6 +867,9 @@ dl.flatList > dd {
   overflow: hidden;
   z-index: 1;
 }
+.craftableItem.inProgress {
+  cursor: default;
+}
 .craftableItem > .progressOverlay {
   position: absolute;
   bottom: 0;
@@ -845,6 +977,18 @@ dl.flatList > dd {
 #chatInput:focus {
   box-shadow: none;
   outline: none;
+}
+#scoreboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  margin: 0.7vh;
+  padding: 0.7vh;
+  border-radius: 0.7vh;
+  color: white;
+  font-size: 0.7em;
+  line-height: 1.4;
 }
 #startScreen {
   position: fixed;

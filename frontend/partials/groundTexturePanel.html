@@ -1,0 +1,87 @@
+<section>
+    <div id="groundTexturePanel">
+        <div class="toolbar">
+            <a href="#groundTexturePanel" class="minimize-button">Minimize</a>
+            <a href="#" class="maximize-button">Maximize</a>
+        </div>
+
+        <div class="group">Texture will placed<br/>at current position:</div>
+        <div><code>X: <span id="groundTexture_x"></span> / Y: <span id="groundTexture_y"></span></code></div>
+
+        <div class="group">
+            <label for="groundTexture_type">Ground Texture Type</label>
+            <select id="groundTexture_type">
+                <option value="" selected disabled>Choose one</option>
+            </select>
+        </div>
+
+        <div id="groundTexture_controls" class="hidden">
+            <div class="group">
+                <label for="groundTexture_size">Size
+                    (min: <span id="groundTexture_minSize"></span>,
+                    max: <span id="groundTexture_maxSize"></span>)
+                </label>
+                <input type="number" id="groundTexture_size" step="5"/> <!-- min, max get set in js -->
+            </div>
+
+            <div class="group">
+                <label for="groundTexture_rotation">Rotation</label>
+                <input type="number" id="groundTexture_rotation" step="1"/>
+                <!-- value is % 360 in js. If <0, 360 + mod -->
+            </div>
+
+            <div class="group">
+                <label>Flipped</label>
+                <div class="radioGroup">
+                    <label>
+                        <input type="radio" name="groundTexture_flipped" value="none">
+                        No
+                    </label>
+                    <label>
+                        <input type="radio" name="groundTexture_flipped" value="horizontal">
+                        Horizontal
+                    </label>
+                    <label>
+                        <input type="radio" name="groundTexture_flipped" value="vertical">
+                        Vertical
+                    </label>
+                </div>
+            </div>
+
+            <div class="group">
+                <label>
+                    <input type="checkbox" id="groundTexture_randomizeNext"/>
+                    Select random next <br/>
+                    texture type after <br/>
+                    placing
+                </label>
+            </div>
+
+            <div class="group">
+                <button id="groundTexture_placeButton" class="actionButton">Place Texture</button>
+            </div>
+        </div>
+
+        <div class="group">
+            <a href="#" id="groundTexture_showPopup">
+                <span id="groundTexture_textureCount"></span>
+                Textures on the Map
+            </a>
+        </div>
+    </div>
+
+    <div id="groundTexturePopup" class="hidden layout-column">
+        <header>
+            <h2>Placed Ground Textures</h2>
+        </header>
+        <pre class="flex"><code id="groundTextureOutput"></code></pre>
+        <footer>
+            <button id="groundTexture_download" class="actionButton right">
+                Download
+            </button>
+            <button id="groundTexture_closePopup" class="right">
+                Close
+            </button>
+        </footer>
+    </div>
+</section>

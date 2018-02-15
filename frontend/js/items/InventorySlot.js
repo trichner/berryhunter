@@ -30,7 +30,7 @@ define([
 					return;
 				}
 
-				if (this.inventory.craftInProgress()){
+				if (this.inventory.isCraftInProgress()) {
 					return;
 				}
 
@@ -53,7 +53,7 @@ define([
 			}.bind(this);
 
 			this.clickableIcon.onRightClick = function () {
-				if (this.inventory.craftInProgress()){
+				if (this.inventory.isCraftInProgress()) {
 					return;
 				}
 

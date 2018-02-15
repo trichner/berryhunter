@@ -54,7 +54,8 @@ BerryhunterApi.ServerMessageBody = {
   GameState: 2,
   Accept: 3,
   Obituary: 4,
-  EntityMessage: 5
+  EntityMessage: 5,
+  Scoreboard: 6
 };
 
 /**
@@ -85,7 +86,7 @@ BerryhunterApi.AABB.prototype.__init = function(i, bb) {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f|null}
+ * @returns {BerryhunterApi.Vec2f}
  */
 BerryhunterApi.AABB.prototype.lower = function(obj) {
   return (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos, this.bb);
@@ -93,7 +94,7 @@ BerryhunterApi.AABB.prototype.lower = function(obj) {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f|null}
+ * @returns {BerryhunterApi.Vec2f}
  */
 BerryhunterApi.AABB.prototype.upper = function(obj) {
   return (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + 8, this.bb);
@@ -179,6 +180,68 @@ BerryhunterApi.ItemStack.createItemStack = function(builder, item, count, slot) 
   builder.writeInt32(count);
   builder.pad(3);
   builder.writeInt8(item);
+  return builder.offset();
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.OngoingAction = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.OngoingAction}
+ */
+BerryhunterApi.OngoingAction.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns {number}
+ */
+BerryhunterApi.OngoingAction.prototype.ticksRemaining = function() {
+  return this.bb.readUint16(this.bb_pos);
+};
+
+/**
+ * @returns {BerryhunterApi.ActionType}
+ */
+BerryhunterApi.OngoingAction.prototype.actionType = function() {
+  return /** @type {BerryhunterApi.ActionType} */ (this.bb.readUint8(this.bb_pos + 2));
+};
+
+/**
+ * @returns {number}
+ */
+BerryhunterApi.OngoingAction.prototype.item = function() {
+  return this.bb.readUint8(this.bb_pos + 3);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} ticks_remaining
+ * @param {BerryhunterApi.ActionType} action_type
+ * @param {number} item
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.OngoingAction.createOngoingAction = function(builder, ticks_remaining, action_type, item) {
+  builder.prep(2, 4);
+  builder.writeInt8(item);
+  builder.writeInt8(action_type);
+  builder.writeInt16(ticks_remaining);
   return builder.offset();
 };
 
@@ -319,7 +382,7 @@ BerryhunterApi.Resource.prototype.entityType = function() {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f|null}
+ * @returns {BerryhunterApi.Vec2f}
  */
 BerryhunterApi.Resource.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
@@ -352,7 +415,7 @@ BerryhunterApi.Resource.prototype.stock = function() {
 
 /**
  * @param {BerryhunterApi.AABB=} obj
- * @returns {BerryhunterApi.AABB|null}
+ * @returns {BerryhunterApi.AABB}
  */
 BerryhunterApi.Resource.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 16);
@@ -484,7 +547,7 @@ BerryhunterApi.Placeable.prototype.entityType = function() {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f|null}
+ * @returns {BerryhunterApi.Vec2f}
  */
 BerryhunterApi.Placeable.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
@@ -509,7 +572,7 @@ BerryhunterApi.Placeable.prototype.item = function() {
 
 /**
  * @param {BerryhunterApi.AABB=} obj
- * @returns {BerryhunterApi.AABB|null}
+ * @returns {BerryhunterApi.AABB}
  */
 BerryhunterApi.Placeable.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 14);
@@ -633,7 +696,7 @@ BerryhunterApi.Mob.prototype.entityType = function() {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f|null}
+ * @returns {BerryhunterApi.Vec2f}
  */
 BerryhunterApi.Mob.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
@@ -658,7 +721,7 @@ BerryhunterApi.Mob.prototype.rotation = function() {
 
 /**
  * @param {BerryhunterApi.AABB=} obj
- * @returns {BerryhunterApi.AABB|null}
+ * @returns {BerryhunterApi.AABB}
  */
 BerryhunterApi.Mob.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 14);
@@ -798,7 +861,7 @@ BerryhunterApi.Character.prototype.entityType = function() {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f|null}
+ * @returns {BerryhunterApi.Vec2f}
  */
 BerryhunterApi.Character.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 8);
@@ -830,16 +893,17 @@ BerryhunterApi.Character.prototype.isHit = function() {
 };
 
 /**
- * @returns {number}
+ * @param {BerryhunterApi.OngoingAction=} obj
+ * @returns {BerryhunterApi.OngoingAction}
  */
-BerryhunterApi.Character.prototype.actionTick = function() {
+BerryhunterApi.Character.prototype.currentAction = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 16);
-  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+  return offset ? (obj || new BerryhunterApi.OngoingAction).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
+ * @returns {string|Uint8Array}
  */
 BerryhunterApi.Character.prototype.name = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 18);
@@ -897,7 +961,7 @@ BerryhunterApi.Character.prototype.bodyTemperature = function() {
 
 /**
  * @param {BerryhunterApi.AABB=} obj
- * @returns {BerryhunterApi.AABB|null}
+ * @returns {BerryhunterApi.AABB}
  */
 BerryhunterApi.Character.prototype.aabb = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 28);
@@ -961,10 +1025,10 @@ BerryhunterApi.Character.addIsHit = function(builder, isHit) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} actionTick
+ * @param {flatbuffers.Offset} currentActionOffset
  */
-BerryhunterApi.Character.addActionTick = function(builder, actionTick) {
-  builder.addFieldInt16(6, actionTick, 0);
+BerryhunterApi.Character.addCurrentAction = function(builder, currentActionOffset) {
+  builder.addFieldStruct(6, currentActionOffset, 0);
 };
 
 /**
@@ -1090,7 +1154,7 @@ BerryhunterApi.Spectator.prototype.id = function() {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f|null}
+ * @returns {BerryhunterApi.Vec2f}
  */
 BerryhunterApi.Spectator.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -1347,7 +1411,7 @@ BerryhunterApi.Welcome.getRootAsWelcome = function(bb, obj) {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
+ * @returns {string|Uint8Array}
  */
 BerryhunterApi.Welcome.prototype.serverName = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 4);
@@ -1541,7 +1605,7 @@ BerryhunterApi.EntityMessage.prototype.entityId = function() {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
+ * @returns {string|Uint8Array}
  */
 BerryhunterApi.EntityMessage.prototype.message = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -1576,6 +1640,188 @@ BerryhunterApi.EntityMessage.addMessage = function(builder, messageOffset) {
  * @returns {flatbuffers.Offset}
  */
 BerryhunterApi.EntityMessage.endEntityMessage = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.ScoreboardPlayer = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.ScoreboardPlayer}
+ */
+BerryhunterApi.ScoreboardPlayer.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.ScoreboardPlayer=} obj
+ * @returns {BerryhunterApi.ScoreboardPlayer}
+ */
+BerryhunterApi.ScoreboardPlayer.getRootAsScoreboardPlayer = function(bb, obj) {
+  return (obj || new BerryhunterApi.ScoreboardPlayer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array}
+ */
+BerryhunterApi.ScoreboardPlayer.prototype.name = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @returns {flatbuffers.Long}
+ */
+BerryhunterApi.ScoreboardPlayer.prototype.score = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readUint64(this.bb_pos + offset) : this.bb.createLong(0, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.ScoreboardPlayer.startScoreboardPlayer = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} nameOffset
+ */
+BerryhunterApi.ScoreboardPlayer.addName = function(builder, nameOffset) {
+  builder.addFieldOffset(0, nameOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Long} score
+ */
+BerryhunterApi.ScoreboardPlayer.addScore = function(builder, score) {
+  builder.addFieldInt64(1, score, builder.createLong(0, 0));
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.ScoreboardPlayer.endScoreboardPlayer = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+BerryhunterApi.Scoreboard = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {BerryhunterApi.Scoreboard}
+ */
+BerryhunterApi.Scoreboard.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {BerryhunterApi.Scoreboard=} obj
+ * @returns {BerryhunterApi.Scoreboard}
+ */
+BerryhunterApi.Scoreboard.getRootAsScoreboard = function(bb, obj) {
+  return (obj || new BerryhunterApi.Scoreboard).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {number} index
+ * @param {BerryhunterApi.ScoreboardPlayer=} obj
+ * @returns {BerryhunterApi.ScoreboardPlayer}
+ */
+BerryhunterApi.Scoreboard.prototype.players = function(index, obj) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? (obj || new BerryhunterApi.ScoreboardPlayer).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+};
+
+/**
+ * @returns {number}
+ */
+BerryhunterApi.Scoreboard.prototype.playersLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+BerryhunterApi.Scoreboard.startScoreboard = function(builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} playersOffset
+ */
+BerryhunterApi.Scoreboard.addPlayers = function(builder, playersOffset) {
+  builder.addFieldOffset(0, playersOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<flatbuffers.Offset>} data
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Scoreboard.createPlayersVector = function(builder, data) {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+BerryhunterApi.Scoreboard.startPlayersVector = function(builder, numElems) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Scoreboard.endScoreboard = function(builder) {
   var offset = builder.endObject();
   return offset;
 };

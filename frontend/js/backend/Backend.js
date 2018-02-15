@@ -11,14 +11,16 @@ define([
 	'backend/GameState',
 	'backend/ClientMessage',
 	'backend/Welcome',
+	'backend/ScoreboardMessage',
 	'Chat',
+    'Scoreboard',
 	'DayCycle',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState, ClientMessage, Welcome, Chat, DayCycle) {
-
+], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState,
+             ClientMessage, Welcome, ScoreboardMessage, Chat, Scoreboard, DayCycle) {
 
 	const States = {
 		DISCONNECTED: 'DISCONNECTED',
@@ -218,6 +220,32 @@ define([
 
 					break;
 				case BerryhunterApi.ServerMessageBody.Obituary:
+					if (Game.godMode) {
+						console.info('Auto rejoin');
+						Backend.sendJoin({
+							playerName: Game.player.character.name
+						});
+
+						let position = Game.player.character.getPosition();
+						if (Utils.getUrlParameter('token')) {
+							Backend.sendCommand({
+								command: ['Warp ',
+									position.x.toFixed(0),
+									' ',
+									position.y.toFixed(0)].join(''),
+								token: Utils.getUrlParameter('token'),
+							});
+
+							Game.player.character.say('GOD MODE - Respawn');
+
+						} else {
+							Game.player.character.say('GOD MODE - Respawn.');
+							Game.player.character.say('WARNING: Missing token, can\'t reset old position.');
+						}
+
+						break;
+					}
+
 					setState(States.SPECTATING);
 					if (Develop.isActive()) {
 						Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Obituary()), 'Obituary', timeSinceLastMessage);
@@ -254,6 +282,10 @@ define([
 					}
 					this.receiveSnapshot(SnapshotFactory.newSnapshot(state, gameState));
 					break;
+				case BerryhunterApi.ServerMessageBody.Scoreboard:
+					let scoreboardMessage = new ScoreboardMessage(serverMessage.body(new BerryhunterApi.Scoreboard()));
+                    Scoreboard.updateFromBackend(scoreboardMessage);
+					break;
 				default:
 					if (Develop.isActive()) {
 						Develop.logWebsocketStatus('Received unknown body type ' + serverMessage.bodyType(), 'bad');
@@ -274,14 +306,7 @@ define([
 
 			if (state === States.PLAYING) {
 				if (Game.state === Game.States.PLAYING) {
-					if (Utils.isDefined(snapshot.player.position)) {
-						Game.player.character.setPosition(snapshot.player.position.x, snapshot.player.position.y);
-					}
-					['health', 'satiety', 'bodyHeat'].forEach((vitalSign) => {
-						if (Utils.isDefined(snapshot.player[vitalSign])) {
-							Game.player.vitalSigns.setValue(vitalSign, snapshot.player[vitalSign]);
-						}
-					});
+					Game.player.updateFromBackend(snapshot.player);
 				} else {
 					Game.createPlayer(
 						snapshot.player.id,

@@ -82,18 +82,19 @@ type player struct {
 	ownedEntitites model.BasicEntities
 
 	ongoingAction model.PlayerAction
+
+	isGod bool
 }
 
 func (p *player) AddAction(a model.PlayerAction) {
-	if p.ongoingAction != nil {
+	if p.ongoingAction != nil && p.ongoingAction.TicksRemaining() > 0 {
+
 		log.Printf("😧 Already action going on.")
 		return
 	}
 
-	done := a.Start()
-	if !done {
-		p.ongoingAction = a
-	}
+	a.Start()
+	p.ongoingAction = a
 }
 
 func (p *player) CurrentAction() model.PlayerAction {
@@ -208,4 +209,8 @@ func (p *player) updateHand() {
 
 func (p *player) OwnedEntities() model.BasicEntities {
 	return p.ownedEntitites
+}
+
+func (p *player) SetGodmode(on bool) {
+	p.isGod = on
 }

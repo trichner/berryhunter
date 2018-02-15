@@ -47,11 +47,6 @@ define([
 	};
 
 	function onCraftIconLeftClick(event, recipe) {
-		if (!Game.player.inventory.canFitCraft(recipe.materials)) {
-			UserInterface.flashInventory();
-			return;
-		}
-
 		if (MapEditor.isActive()) {
 			for (let material in recipe.materials) {
 				//noinspection JSUnfilteredForInLoop
@@ -62,6 +57,15 @@ define([
 			}
 			Game.player.inventory.addItem(recipe.item);
 		} else {
+			if (Game.player.isCraftInProgress()) {
+				return;
+			}
+
+			if (!Game.player.inventory.canFitCraft(recipe.materials)) {
+				UserInterface.flashInventory();
+				return;
+			}
+
 			let actionAllowed = Game.player.controls
 				.onInventoryAction(
 					recipe.item,

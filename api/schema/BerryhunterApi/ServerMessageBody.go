@@ -9,6 +9,7 @@ const (
 	ServerMessageBodyAccept = 3
 	ServerMessageBodyObituary = 4
 	ServerMessageBodyEntityMessage = 5
+	ServerMessageBodyScoreboard = 6
 )
 
 var EnumNamesServerMessageBody = map[int]string{
@@ -18,5 +19,6 @@ var EnumNamesServerMessageBody = map[int]string{
 	ServerMessageBodyAccept:"Accept",
 	ServerMessageBodyObituary:"Obituary",
 	ServerMessageBodyEntityMessage:"EntityMessage",
+	ServerMessageBodyScoreboard:"Scoreboard",
 }
 

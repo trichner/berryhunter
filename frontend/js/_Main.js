@@ -5,6 +5,7 @@ requirejs.config({
 		PIXI: '../vendor/pixi.min',
 		'vendor/flatbuffers': '../vendor/flatbuffers',
 		underscore: '../vendor/underscore-min',
+		saveAs: '../vendor/FileSaver.min',
 
 		GameObject: 'gameObjects/_GameObject',
 		MapEditor: 'mapEditor/_MapEditor',
@@ -15,6 +16,9 @@ requirejs.config({
 		'underscore': {
 			exports: '_',
 		},
+		saveAs: {
+			exports: 'saveAs',
+		}
 	},
 });
 
@@ -71,10 +75,9 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'backend/Backend',
 					'backend/BackendConstants',
 					'backend/ClientMessage',
+					'backend/ScoreboardMessage',
 					'backend/Welcome',
 					'backend/SnapshotFactory',
-					'KeyEvents',
-					'PointerEvents',
 					'Controls',
 					'Constants',
 					'InjectedSVG',
@@ -118,7 +121,10 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'Vector',
 					'ColorMatrixFilterExtension',
 					'PlayerName',
-				'Text',
+					'Text',
+					'groundTextures/GroundTexture',
+					'groundTextures/GroundTextureTypes',
+					'groundTextures/GroundTextureManager',
 
 					// Develop resources
 					'develop/Fps',
@@ -128,6 +134,9 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					// Map Editor
 					'mapEditor/QuadrantGrid',
 					'MapEditor',
+
+					// Ground Texture Panel
+					'groundTextures/_Panel',
 
 					// The Game
 					// (you just lost it)

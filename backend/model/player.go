@@ -36,6 +36,8 @@ type PlayerEntity interface {
 
 	AddAction(a PlayerAction)
 	CurrentAction() PlayerAction
+
+	SetGodmode(on bool)
 }
 
 type BasicEntities map[uint64]ecs.BasicEntity

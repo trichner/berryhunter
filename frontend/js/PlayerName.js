@@ -33,10 +33,12 @@ define(['NameGenerator'], function (NameGenerator) {
 		let name = inputElement.value;
 		if (!name) {
 			name = inputElement.getAttribute('placeholder');
+		} else {
+			// Only save the name if its not generated
+			this.set(name);
 		}
 		name = name.substr(0, this.MAX_LENGTH);
 
-		this.set(name);
 
 		require(['backend/Backend'], function (Backend) {
 			Backend.sendJoin({

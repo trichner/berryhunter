@@ -6,7 +6,8 @@ define([], function () {
 			MAP_EDITOR: 'map-editor',
 			LOCAL_SERVER: 'local',
 			SERVER_PORT: 'port',
-			DEVELOPMENT: 'develop'
+			DEVELOPMENT: 'develop',
+			GROUND_TEXTURE_EDITOR: 'textures'
 		},
 		USE_NAMED_GROUPS: true,
 
@@ -37,7 +38,7 @@ define([], function () {
 		DEFAULT_TURN_RATE: 2 * 2 * Math.PI / 1000,
 
         INVENTORY_SLOTS: 10,
-		CRAFTING_RANGE: 70,
+		CRAFTING_RANGE: 100,
 		PLACEMENT_RANGE: 60,
 
 		/**

@@ -15,6 +15,11 @@ define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedS
 
 			this.indicators = VitalSigns.indicators;
 
+			// hide all indicators
+			Object.values(this.indicators).forEach(function (indicator) {
+				indicator.visible = false;
+			});
+
 			this.damageIndicatorDuration = 0;
 
 			Game.renderer.on('prerender', this.update, this);
@@ -33,6 +38,10 @@ define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedS
 		}
 
 		setValue(valueIndex, value) {
+			if (Game.godMode) {
+				return;
+			}
+
 			switch (valueIndex) {
 				case 'health':
 					// Hand should deal 1% damage. Anything below is damage over time.
@@ -110,6 +119,10 @@ define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedS
 
 			this.currentIndicator = undefined;
 			this.indicators[indicatorName].visible = false;
+		}
+
+		destroy(){
+			Game.renderer.off('prerender', this.update, this);
 		}
 	}
 

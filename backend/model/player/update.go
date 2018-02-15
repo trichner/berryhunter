@@ -5,11 +5,19 @@ func (p *player) Update(dt float32) {
 
 	// action
 	if p.ongoingAction != nil {
-		done := p.ongoingAction.Update(dt)
-		if done {
+		a := p.ongoingAction
+		a.Update(dt)
+		if a.TicksRemaining() < 0 {
 			p.ongoingAction = nil
 		}
 	}
+
+	if !p.isGod {
+		p.updateVitalSigns(dt)
+	}
+}
+
+func (p *player) updateVitalSigns(dt float32) {
 
 	vitalSigns := p.VitalSigns()
 
@@ -37,7 +45,6 @@ func (p *player) Update(dt float32) {
 		healthFraction := float32(0.001)
 		p.addHealthFraction(-healthFraction)
 	}
-
 }
 
 func (p *player) addHealthFraction(fraction float32) {

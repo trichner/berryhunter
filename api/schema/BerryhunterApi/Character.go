@@ -99,16 +99,17 @@ func (rcv *Character) MutateIsHit(n byte) bool {
 	return rcv._tab.MutateByteSlot(14, n)
 }
 
-func (rcv *Character) ActionTick() uint16 {
+func (rcv *Character) CurrentAction(obj *OngoingAction) *OngoingAction {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+		x := o + rcv._tab.Pos
+		if obj == nil {
+			obj = new(OngoingAction)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 0
-}
-
-func (rcv *Character) MutateActionTick(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(16, n)
+	return nil
 }
 
 func (rcv *Character) Name() []byte {
@@ -214,8 +215,8 @@ func CharacterAddRotation(builder *flatbuffers.Builder, rotation float32) {
 func CharacterAddIsHit(builder *flatbuffers.Builder, isHit byte) {
 	builder.PrependByteSlot(5, isHit, 0)
 }
-func CharacterAddActionTick(builder *flatbuffers.Builder, actionTick uint16) {
-	builder.PrependUint16Slot(6, actionTick, 0)
+func CharacterAddCurrentAction(builder *flatbuffers.Builder, currentAction flatbuffers.UOffsetT) {
+	builder.PrependStructSlot(6, flatbuffers.UOffsetT(currentAction), 0)
 }
 func CharacterAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(name), 0)
