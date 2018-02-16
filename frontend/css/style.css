@@ -913,7 +913,6 @@ code {
 }
 .craftableItem > .subIconRow > .subIcon > .count {
   overflow: hidden;
-  z-index: 1;
 }
 .craftableItem > .progressOverlay {
   position: absolute;
