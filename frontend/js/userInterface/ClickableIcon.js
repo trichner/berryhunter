@@ -88,6 +88,14 @@ define(['Utils', 'items/Items', './SubIcon', 'Game'], function (Utils, Items, Su
 
 				this.subIcons.push(new SubIcon(domElement, itemName, iconPath, count, Game.player.inventory.getItemCount(itemName)));
 			}, this);
+
+			if (hasPrimary) {
+				this.domElement.classList.add('upgrade');
+			}
+
+			if (iconIndex > 0) {
+				this.domElement.classList.add('withIngredients');
+			}
 		}
 
 		activate() {
@@ -120,6 +128,7 @@ define(['Utils', 'items/Items', './SubIcon', 'Game'], function (Utils, Items, Su
 				current: 0
 			};
 
+			this.domElement.classList.add('inProgress');
 			this.progressOverlay.classList.remove('hidden');
 			this.inProgress = true;
 
@@ -129,6 +138,7 @@ define(['Utils', 'items/Items', './SubIcon', 'Game'], function (Utils, Items, Su
 					progress.current += Game.timeDelta;
 					if (progress.current >= progress.duration) {
 						self.progressOverlay.style.top = '100%';
+						self.domElement.classList.remove('inProgress');
 						self.progressOverlay.classList.add('hidden');
 						Game.renderer.off('prerender', updateListener);
 						self.inProgress = false;

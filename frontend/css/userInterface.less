@@ -166,26 +166,43 @@
 	&.hinted {
 
 		// there's an icon in the top left corner
-		.upgrade {
+		&.upgrade {
+			> .iconBackground {
+				-webkit-mask-image: url('../img/hintedCraftMask_upgrade.svg');
+				mask-image: url('../img/hintedCraftMask_upgrade.svg');
+				-webkit-mask-size: 100% 100%;
+				mask-size: 100% 100%;
+			}
+
 			> .subIcon.primary {
 				display: block;
 			}
 		}
 
 		// there are icons in bottom row
-		.with-ingredients {
+		&.withIngredients {
+			> .iconBackground {
+				-webkit-mask-image: url('../img/hintedCraftMask_ingredients.svg');
+				mask-image: url('../img/hintedCraftMask_ingredients.svg');
+				-webkit-mask-size: 100% 100%;
+				mask-size: 100% 100%;
+			}
+
 			> .subIconRow {
 				display: block;
 			}
 		}
 
-		> .iconBackground {
-			//background-color: rgba(255, 255, 255, 0.6);
+		&.upgrade.withIngredients {
+			> .iconBackground {
+				-webkit-mask-image: url('../img/hintedCraftMask2.svg');
+				mask-image: url('../img/hintedCraftMask2.svg');
+				-webkit-mask-size: 100% 100%;
+				mask-size: 100% 100%;
+			}
+		}
 
-			-webkit-mask-image: url('../img/hintedCraftMask2.svg');
-			mask-image: url('../img/hintedCraftMask2.svg');
-			-webkit-mask-size: 100% 100%;
-			mask-size: 100% 100%;
+		> .iconBackground {
 
 			> .itemIcon {
 				opacity: 0.5;

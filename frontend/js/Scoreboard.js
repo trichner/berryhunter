@@ -1,6 +1,6 @@
 "use strict";
 
-define(['UserInterface', 'Utils'], function (UserInterface, Utils) {
+define(['userInterface/UserInterface', 'Utils'], function (UserInterface, Utils) {
 	const Scoreboard = {};
 
 	Scoreboard.setup = function () {

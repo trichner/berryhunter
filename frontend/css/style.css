@@ -71,134 +71,156 @@ svg .clickable text {
 .flex-5 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 5%;
-  flex: 1 1 100%;
+    flex: 1 1 5%;
   box-sizing: border-box;
+    max-width: 5%;
 }
 .flex-10 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 10%;
-  flex: 1 1 100%;
+    flex: 1 1 10%;
   box-sizing: border-box;
+    max-width: 10%;
 }
 .flex-15 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 15%;
-  flex: 1 1 100%;
+    flex: 1 1 15%;
   box-sizing: border-box;
+    max-width: 15%;
 }
 .flex-20 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 20%;
-  flex: 1 1 100%;
+    flex: 1 1 20%;
   box-sizing: border-box;
+    max-width: 20%;
 }
 .flex-25 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 25%;
-  flex: 1 1 100%;
+    flex: 1 1 25%;
   box-sizing: border-box;
+    max-width: 25%;
 }
 .flex-30 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 30%;
-  flex: 1 1 100%;
+    flex: 1 1 30%;
   box-sizing: border-box;
+    max-width: 30%;
 }
 .flex-35 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 35%;
-  flex: 1 1 100%;
+    flex: 1 1 35%;
   box-sizing: border-box;
+    max-width: 35%;
 }
 .flex-40 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 40%;
-  flex: 1 1 100%;
+    flex: 1 1 40%;
   box-sizing: border-box;
+    max-width: 40%;
 }
 .flex-45 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 45%;
-  flex: 1 1 100%;
+    flex: 1 1 45%;
   box-sizing: border-box;
+    max-width: 45%;
 }
 .flex-50 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 50%;
-  flex: 1 1 100%;
+    flex: 1 1 50%;
   box-sizing: border-box;
+    max-width: 50%;
 }
 .flex-55 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 55%;
-  flex: 1 1 100%;
+    flex: 1 1 55%;
   box-sizing: border-box;
+    max-width: 55%;
 }
 .flex-60 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 60%;
-  flex: 1 1 100%;
+    flex: 1 1 60%;
   box-sizing: border-box;
+    max-width: 60%;
 }
 .flex-65 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 65%;
-  flex: 1 1 100%;
+    flex: 1 1 65%;
   box-sizing: border-box;
+    max-width: 65%;
 }
 .flex-70 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 70%;
-  flex: 1 1 100%;
+    flex: 1 1 70%;
   box-sizing: border-box;
+    max-width: 70%;
 }
 .flex-75 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 75%;
-  flex: 1 1 100%;
+    flex: 1 1 75%;
   box-sizing: border-box;
+    max-width: 75%;
 }
 .flex-80 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 80%;
-  flex: 1 1 100%;
+    flex: 1 1 80%;
   box-sizing: border-box;
+    max-width: 80%;
 }
 .flex-85 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 85%;
-  flex: 1 1 100%;
+    flex: 1 1 85%;
   box-sizing: border-box;
+    max-width: 85%;
 }
 .flex-90 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 90%;
-  flex: 1 1 100%;
+    flex: 1 1 90%;
   box-sizing: border-box;
+    max-width: 90%;
 }
 .flex-95 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 95%;
-  flex: 1 1 100%;
+    flex: 1 1 95%;
   box-sizing: border-box;
+    max-width: 95%;
 }
 .flex-100 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 100%;
   flex: 1 1 100%;
   box-sizing: border-box;
+    max-width: 100%;
 }
 .flex-33 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 33.333%;
-  flex: 1 1 100%;
+    flex: 1 1 33.333%;
   box-sizing: border-box;
+    max-width: 33.333%;
 }
 .flex-66 {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 66.666%;
-  flex: 1 1 100%;
+    flex: 1 1 66.666%;
   box-sizing: border-box;
+    max-width: 66.666%;
 }
 .layout-align,
 .layout-align-start-stretch {
@@ -848,13 +870,30 @@ code {
 .craftableItem > .subIconRow {
   display: none;
 }
-.craftableItem.hinted .upgrade > .subIcon.primary {
+
+.craftableItem.hinted.upgrade > .iconBackground {
+    -webkit-mask-image: url('../img/hintedCraftMask_upgrade.svg');
+    mask-image: url('../img/hintedCraftMask_upgrade.svg');
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.craftableItem.hinted.upgrade > .subIcon.primary {
   display: block;
 }
-.craftableItem.hinted .with-ingredients > .subIconRow {
+
+.craftableItem.hinted.withIngredients > .iconBackground {
+    -webkit-mask-image: url('../img/hintedCraftMask_ingredients.svg');
+    mask-image: url('../img/hintedCraftMask_ingredients.svg');
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.craftableItem.hinted.withIngredients > .subIconRow {
   display: block;
 }
-.craftableItem.hinted > .iconBackground {
+
+.craftableItem.hinted.upgrade.withIngredients > .iconBackground {
   -webkit-mask-image: url('../img/hintedCraftMask2.svg');
   mask-image: url('../img/hintedCraftMask2.svg');
   -webkit-mask-size: 100% 100%;

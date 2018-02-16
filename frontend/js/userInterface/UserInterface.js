@@ -152,6 +152,9 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 			return document.getElementById('chat');
 		};
 
+		UserInterface.getScoreboard = function () {
+			return document.getElementById('scoreboard');
+		};
 
 		return UserInterface;
 	});
