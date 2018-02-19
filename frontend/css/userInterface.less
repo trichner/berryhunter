@@ -165,6 +165,9 @@
 
 	&.hinted {
 
+		// TODO withIngredients - icon centriert, und etwas weiter oben
+		// TODO upgrade - icon unten rechts (evtl größer, da alle Icons diagonal sind)
+
 		// there's an icon in the top left corner
 		&.upgrade {
 			> .iconBackground {
@@ -189,7 +192,9 @@
 			}
 
 			> .subIconRow {
-				display: block;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
 			}
 		}
 
@@ -291,6 +296,7 @@
 		}
 
 		> .subIcon {
+			font-size: 11px;
 			//float: left;
 			//width: 33.333%;
 
@@ -317,12 +323,12 @@
 	}
 }
 
-.subIcon {
-	&.hidden {
-		display: block;
-		visibility: hidden;
-	}
-}
+//.subIcon {
+//	&.hidden {
+//		display: block;
+//		visibility: hidden;
+//	}
+//}
 
 #vitalSigns {
 	position: absolute;
