@@ -46,6 +46,11 @@
 @uiElementHeight: 7vh;
 @slotSize: @uiElementHeight;
 
+@backgroundColorDark: @backgroundColor;
+@backgroundColorMedium: rgba(64, 64, 64, 0.6);
+@backgroundColorLight: rgba(255, 255, 255, 0.6);
+
+
 #inventory {
 	position: absolute;
 	bottom: 0;
@@ -87,7 +92,7 @@
 	padding: (0.1 * @slotSize);
 
 	&.empty {
-		background-color: rgba(0, 0, 0, 0.6);
+		background-color: @backgroundColorDark;
 		pointer-events: none;
 
 		> .itemIcon {
@@ -97,11 +102,11 @@
 
 	&.filled {
 		cursor: pointer;
-		background-color: rgba(64, 64, 64, 0.6);
+		background-color: @backgroundColorMedium;
 	}
 
 	&.active {
-		background-color: rgba(255, 255, 255, 0.6);
+		background-color: @backgroundColorLight;
 	}
 
 	> .count {
@@ -137,7 +142,7 @@
 
 	&.empty {
 		> .iconBackground {
-			background-color: rgba(0, 0, 0, 0.6);
+			background-color: @backgroundColorDark;
 
 			> .itemIcon {
 				display: none;
@@ -148,14 +153,19 @@
 
 	&.filled {
 		> .iconBackground {
-			background-color: rgba(64, 64, 64, 0.6);
+			background-color: @backgroundColorMedium;
 		}
 	}
 
 	&.active {
 		> .iconBackground {
-			background-color: rgba(255, 255, 255, 0.6);
+			background-color: @backgroundColorLight;
 		}
+	}
+
+
+	.itemIcon {
+		width: 100%;
 	}
 
 	> .subIcon.primary,
@@ -163,10 +173,59 @@
 		display: none;
 	}
 
+	> .subIcon.primary {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 33.333%;
+
+		background-color: @backgroundColorMedium;
+
+		> .itemIcon {
+			display: block;
+		}
+	}
+
+	> .subIconRow {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+
+		background-color: @backgroundColorMedium;
+
+
+		> .subIcon {
+			position: relative;
+			font-size: 11px;
+
+			> .itemIcon {
+				display: block;
+				margin: 0 auto 20%;
+			}
+
+			> .count {
+				text-align: right;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				overflow: hidden;
+			}
+		}
+	}
+
 	&.hinted {
 
-		// TODO withIngredients - icon centriert, und etwas weiter oben
-		// TODO upgrade - icon unten rechts (evtl größer, da alle Icons diagonal sind)
+		> .iconBackground {
+			background-color: @backgroundColorDark;
+
+			> .itemIcon {
+				display: block;
+				width: 80%;
+				opacity: 0.7;
+			}
+		}
 
 		// there's an icon in the top left corner
 		&.upgrade {
@@ -175,6 +234,11 @@
 				mask-image: url('../img/hintedCraftMask_upgrade.svg');
 				-webkit-mask-size: 100% 100%;
 				mask-size: 100% 100%;
+
+				> .itemIcon {
+					margin-left: auto;
+					margin-top: 20%;
+				}
 			}
 
 			> .subIcon.primary {
@@ -189,6 +253,10 @@
 				mask-image: url('../img/hintedCraftMask_ingredients.svg');
 				-webkit-mask-size: 100% 100%;
 				mask-size: 100% 100%;
+
+				> .itemIcon {
+					margin: 0 auto;
+				}
 			}
 
 			> .subIconRow {
@@ -204,113 +272,17 @@
 				mask-image: url('../img/hintedCraftMask2.svg');
 				-webkit-mask-size: 100% 100%;
 				mask-size: 100% 100%;
+
+				> .itemIcon {
+					margin-right: 0;
+					margin-left: auto;
+				}
 			}
 		}
-
-		> .iconBackground {
-
-			> .itemIcon {
-				opacity: 0.5;
-
-				//width: 66%;
-				margin-left: auto;
-				//margin-top: 17%;
-				width: 80%;
-				//margin: 0 auto;
-
-				display: block;
-
-				//-webkit-mask-image: url('../img/hintedCraftMask.svg');
-				//mask-image: url('../img/hintedCraftMask.svg');
-				//-webkit-mask-size: 100% 100%;
-				//mask-size: 100% 100%;
-			}
-		}
-	}
-
-	.itemIcon {
-		width: 100%;
 	}
 
 	&.inProgress {
 		cursor: default;
-	}
-
-	> .subIcon.primary {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 33.333%;
-		//background: rgb(64, 64, 64);
-		background-color: rgba(0, 0, 0, 0.6);
-
-		> .itemIcon {
-			width: 100%;
-			display: block;
-		}
-	}
-
-	> .subIconRow {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		//height: 33.333%; // height is determined by height of children
-		//float: left;
-		//background: rgb(64, 64, 64);
-		background-color: rgba(0, 0, 0, 0.6);
-
-		&.layout-column {
-			top: 0;
-			width: 33.333%;
-
-			> .subIcon {
-				> .count,
-				> .itemIcon {
-					width: 50%;
-				}
-
-				> .count {
-					max-width: 50%;
-				}
-			}
-		}
-
-		&.layout-row {
-			right: 0;
-
-			> .subIcon {
-				> .count,
-				> .itemIcon {
-				}
-
-				> .itemIcon {
-					width: 50%;
-					display: block;
-					margin: 0 auto;
-				}
-
-				> .count {
-					text-align: center;
-				}
-			}
-		}
-
-		> .subIcon {
-			font-size: 11px;
-			//float: left;
-			//width: 33.333%;
-
-			> .count,
-			> .itemIcon {
-				//float: left;
-				//width: 50%;
-			}
-
-			> .count {
-				overflow: hidden;
-				//max-width: 50%;
-			}
-		}
 	}
 
 	> .progressOverlay {
@@ -322,13 +294,6 @@
 		background-color: rgba(255, 255, 0, 0.5);
 	}
 }
-
-//.subIcon {
-//	&.hidden {
-//		display: block;
-//		visibility: hidden;
-//	}
-//}
 
 #vitalSigns {
 	position: absolute;

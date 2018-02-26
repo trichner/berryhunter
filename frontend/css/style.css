@@ -865,15 +865,63 @@ code {
 .craftableItem.active > .iconBackground {
   background-color: rgba(255, 255, 255, 0.6);
 }
+.craftableItem .itemIcon {
+  width: 100%;
+}
 .craftableItem > .subIcon.primary,
 .craftableItem > .subIconRow {
   display: none;
+}
+.craftableItem > .subIcon.primary {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 33.333%;
+  background-color: rgba(64, 64, 64, 0.6);
+}
+.craftableItem > .subIcon.primary > .itemIcon {
+  display: block;
+}
+.craftableItem > .subIconRow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(64, 64, 64, 0.6);
+}
+.craftableItem > .subIconRow > .subIcon {
+  position: relative;
+  font-size: 11px;
+}
+.craftableItem > .subIconRow > .subIcon > .itemIcon {
+  display: block;
+  margin: 0 auto 20%;
+}
+.craftableItem > .subIconRow > .subIcon > .count {
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+.craftableItem.hinted > .iconBackground {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.craftableItem.hinted > .iconBackground > .itemIcon {
+  display: block;
+  width: 80%;
+  opacity: 0.7;
 }
 .craftableItem.hinted.upgrade > .iconBackground {
   -webkit-mask-image: url('../img/hintedCraftMask_upgrade.svg');
   mask-image: url('../img/hintedCraftMask_upgrade.svg');
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
+}
+.craftableItem.hinted.upgrade > .iconBackground > .itemIcon {
+  margin-left: auto;
+  margin-top: 20%;
 }
 .craftableItem.hinted.upgrade > .subIcon.primary {
   display: block;
@@ -883,6 +931,9 @@ code {
   mask-image: url('../img/hintedCraftMask_ingredients.svg');
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
+}
+.craftableItem.hinted.withIngredients > .iconBackground > .itemIcon {
+  margin: 0 auto;
 }
 .craftableItem.hinted.withIngredients > .subIconRow {
   display: -webkit-box;
@@ -895,62 +946,12 @@ code {
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
-.craftableItem.hinted > .iconBackground > .itemIcon {
-  opacity: 0.5;
+.craftableItem.hinted.upgrade.withIngredients > .iconBackground > .itemIcon {
+  margin-right: 0;
   margin-left: auto;
-  width: 80%;
-  display: block;
-}
-.craftableItem .itemIcon {
-  width: 100%;
 }
 .craftableItem.inProgress {
   cursor: default;
-}
-.craftableItem > .subIcon.primary {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 33.333%;
-  background-color: rgba(0, 0, 0, 0.6);
-}
-.craftableItem > .subIcon.primary > .itemIcon {
-  width: 100%;
-  display: block;
-}
-.craftableItem > .subIconRow {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-}
-.craftableItem > .subIconRow.layout-column {
-  top: 0;
-  width: 33.333%;
-}
-.craftableItem > .subIconRow.layout-column > .subIcon > .count,
-.craftableItem > .subIconRow.layout-column > .subIcon > .itemIcon {
-  width: 50%;
-}
-.craftableItem > .subIconRow.layout-column > .subIcon > .count {
-  max-width: 50%;
-}
-.craftableItem > .subIconRow.layout-row {
-  right: 0;
-}
-.craftableItem > .subIconRow.layout-row > .subIcon > .itemIcon {
-  width: 50%;
-  display: block;
-  margin: 0 auto;
-}
-.craftableItem > .subIconRow.layout-row > .subIcon > .count {
-  text-align: center;
-}
-.craftableItem > .subIconRow > .subIcon {
-  font-size: 11px;
-}
-.craftableItem > .subIconRow > .subIcon > .count {
-  overflow: hidden;
 }
 .craftableItem > .progressOverlay {
   position: absolute;
