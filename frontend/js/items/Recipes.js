@@ -60,6 +60,8 @@ define([
 			 */
 			if (item.isCrafted && item.icon.file) {
 				let recipe = {
+					name: itemName,
+					item: item,
 					craftingTime: item.recipe.craftTimeInSeconds,
 					materials: {},
 				};
@@ -74,12 +76,24 @@ define([
 					}
 				}
 
+				/*
+				 * Loop through all required materials and
+				 * 1. transform them into a map
+				 * 2. determine the required yield (= the highest minimum yield of all materials)
+				 */
+				let requiredYield = 0;
 				item.recipe.materials.forEach((material) => {
 					recipe.materials[material.item] = material.count;
+					if (Utils.isDefined(Items[material.item].factors) &&
+						Items[material.item].factors.minimumYield > requiredYield) {
+						requiredYield = Items[material.item].factors.minimumYield;
+					}
 				});
 
-				recipe.item = item;
-				recipe.name = itemName;
+				// Required yield is 1 more than minimum yield, because with 1 yield
+				// a resource with minimumYield 1 is not yieldable
+				recipe.requiredYield = requiredYield + 1;
+
 				definedRecipes.push(recipe);
 			}
 		}
@@ -92,10 +106,15 @@ define([
 	 */
 	Recipes.getCraftableRecipes = function (inventory) {
 		let availableItems = {};
+		let maximumYield = Items.None.factors.yield;
 		// FIXME IMPROVEMENT: associative inventory could be cached
 		inventory.slots.forEach(function (slot) {
 			if (slot.isFilled()) {
 				availableItems[slot.item.name] = slot.count;
+				if (Utils.isDefined(slot.item.factors) &&
+					slot.item.factors.yield > maximumYield) {
+					maximumYield = slot.item.factors.yield;
+				}
 			}
 		});
 
@@ -109,8 +128,14 @@ define([
 					// If crafted materials are missing, do not show this recipe
 					if (Items[material].isCrafted) {
 						return false;
+					} else if (recipe.requiredYield > maximumYield) {
+						// If the required yield to get the materials of this recipe
+						// is higher than the actual yield of all items in
+						// the inventory, do not show this craft, as the player is
+						// not able yet to even acquire the resources.
+						return false;
 					} else {
-						// Missing non-crafted materials: show as hinted craft
+						// Missing non-crafted, but attainable materials: show as hinted craft
 						recipe.isCraftable = false;
 					}
 					// Is material amount insufficient?

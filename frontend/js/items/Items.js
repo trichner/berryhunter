@@ -21,6 +21,10 @@
 define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment'],
 	function (Environment, Utils, Preloading, ItemType, Equipment) {
 		const Items = {
+			None: {
+				definition: 'none',
+			},
+
 			/***********************************
 			 * TOOLS
 			 ***********************************/
@@ -456,6 +460,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 						item.id = itemDefinition.id;
 						item.type = ItemType[itemDefinition.type];
 						item.recipe = itemDefinition.recipe;
+						item.factors = itemDefinition.factors;
 					}));
 				}
 			}

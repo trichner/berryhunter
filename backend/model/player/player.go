@@ -175,7 +175,7 @@ func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
 		{"IronTool", 1},
 		{"BronzeSword", 1},
 		{"Workbench", 1},
-		{"Campfire", 1},
+		{"BigCampfire", 3},
 	}
 
 	//--- initialize inventory

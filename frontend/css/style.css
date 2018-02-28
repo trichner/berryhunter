@@ -859,6 +859,9 @@ code {
 .craftableItem.empty > .iconBackground > .itemIcon {
   display: none;
 }
+.craftableItem.filled {
+  cursor: pointer;
+}
 .craftableItem.filled > .iconBackground {
   background-color: rgba(64, 64, 64, 0.6);
 }
@@ -904,6 +907,9 @@ code {
   left: 0;
   right: 0;
   overflow: hidden;
+}
+.craftableItem.hinted {
+  cursor: default;
 }
 .craftableItem.hinted > .iconBackground {
   background-color: rgba(0, 0, 0, 0.6);
