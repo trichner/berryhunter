@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Game', 'Vector', 'Camera'], function (Game, Vector, Camera) {
 	class Spectator {

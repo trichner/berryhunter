@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Game', 'GameObject', 'PIXI'], function (Game, GameObject, PIXI) {
 	class Border extends GameObject {

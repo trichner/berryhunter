@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedSVG'], function (Preloading, Game, Utils, UserInterface, InjectedSVG) {
 	class VitalSigns {

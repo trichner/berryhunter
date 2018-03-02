@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 	let Preloading = {};

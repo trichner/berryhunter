@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Preloading', 'Utils'], function (Preloading, Utils) {
 	const Console = {};

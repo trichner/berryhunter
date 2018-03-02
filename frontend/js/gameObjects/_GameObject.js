@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool'], function (Game, InjectedSVG, Constants, Vector, Utils, FilterPool) {
 
@@ -11,7 +11,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool'], fu
 	class GameObject {
 		constructor(gameLayer, x, y, size, rotation) {
 			this.layer = gameLayer;
-			this.size = size || Constants.GRID_SPACING / 2;
+			this.size = size || Constants.GRAPHIC_BASE_SIZE / 2;
 			this.rotation = rotation || 0;
 			this.turnRate = Constants.DEFAULT_TURN_RATE;
 

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['PIXI', 'Constants', 'Utils', 'NamedGroup'], function (PIXI, Constants) {
 

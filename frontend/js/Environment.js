@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Utils'], function (Utils) {
 	let Environment = {};

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Utils', 'underscore'], function (Utils, _) {
 	let SnapshotFactory = {};

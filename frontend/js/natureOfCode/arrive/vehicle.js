@@ -1,6 +1,7 @@
 // The Nature of Code
 // Daniel Shiffman
 // http://natureofcode.com
+'use strict';
 
 // The "Vehicle" class
 define(['Vector', 'Utils'], function (Vector, Utils) {

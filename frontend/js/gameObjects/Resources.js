@@ -1,3 +1,5 @@
+'use strict';
+
 define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Constants'],
 	function (Game, GameObject, PIXI, Preloading, Utils, InjectedSVG, Constants) {
 
@@ -161,7 +163,7 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 			let shape = new PIXI.Graphics();
 			shape.beginFill(0xc20071);
 			shape.drawCircle(0, 0, this.size * 1.2);
-			
+
 			return shape;
 		}
 

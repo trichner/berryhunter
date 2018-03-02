@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Utils', 'userInterface/UserInterface'], function (Utils, UserInterface) {
 	const Chat = {};

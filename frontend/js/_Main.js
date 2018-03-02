@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 requirejs.config({
 	paths: {
@@ -10,6 +10,7 @@ requirejs.config({
 		GameObject: 'gameObjects/_GameObject',
 		MapEditor: 'mapEditor/_MapEditor',
 		Develop: 'develop/_Develop',
+		Constants: '../config/Constants',
 	},
 
 	shim: {

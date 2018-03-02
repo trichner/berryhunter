@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Game', 'GameObject', 'Preloading', 'Utils'], function (Game, GameObject, Preloading, Utils) {
 	class Mob extends GameObject {

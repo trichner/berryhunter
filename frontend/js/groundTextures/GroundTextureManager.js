@@ -1,3 +1,5 @@
+'use strict';
+
 define(['Environment', 'Preloading', 'Utils', './GroundTexture', './GroundTextureTypes'],
 	function (Environment, Preloading, Utils, GroundTexture, GroundTextureTypes) {
 	const GroundTextureManager = {};

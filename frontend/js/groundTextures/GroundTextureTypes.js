@@ -1,3 +1,5 @@
+'use strict';
+
 define(['Environment', 'Preloading'], function (Environment, Preloading) {
 	/**
 	 * Contains informations about types of ground textures that are available for placing.

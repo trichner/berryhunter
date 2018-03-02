@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['userInterface/UserInterface', 'Utils'], function (UserInterface, Utils) {
 	const Scoreboard = {};

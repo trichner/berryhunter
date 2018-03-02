@@ -1,3 +1,5 @@
+'use strict';
+
 define(['gameObjects/Resources'], function (Resources) {
 	let {Tree, RoundTree, MarioTree, Stone, Bronze, BerryBush} = Resources;
 

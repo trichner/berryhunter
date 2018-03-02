@@ -1,3 +1,5 @@
+'use strict';
+
 require(['Utils'], function (Utils) {
 	function assertTrue(value) {
 		if (value !== true) {

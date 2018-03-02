@@ -1,3 +1,5 @@
+'use strict';
+
 define(['Utils', 'items/Items', './SubIcon', 'Game'], function (Utils, Items, SubIcon, Game) {
 	class ClickableIcon {
 		/**

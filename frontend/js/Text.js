@@ -1,3 +1,5 @@
+'use strict';
+
 define(['underscore'], function (_) {
 	const Text = {};
 

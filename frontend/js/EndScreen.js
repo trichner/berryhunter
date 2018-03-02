@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Preloading', 'PlayerName'], function (Preloading, PlayerName) {
 	const EndScreen = {};

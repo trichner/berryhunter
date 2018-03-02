@@ -1,3 +1,5 @@
+'use strict';
+
 define(['./ClickableIcon'], function (ClickableIcon) {
 	class ClickableCountableIcon extends ClickableIcon {
 

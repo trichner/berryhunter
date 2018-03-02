@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Game', 'GameObject', 'Utils', 'InjectedSVG', 'items/Items'], function (Game, GameObject, Utils, InjectedSVG, Items) {
 	class Placeable extends GameObject {

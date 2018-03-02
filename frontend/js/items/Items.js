@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Register of available items in the game.
@@ -444,7 +444,7 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', 'items/Equipment
 				}
 				if (item.graphic && item.graphic.file) {
 					item.graphic.path = 'img/items/' + item.graphic.file + '.svg' + cacheBuster;
-					item.graphic.size = item.graphic.size || Constants.GRID_SPACING;
+					item.graphic.size = item.graphic.size || Constants.GRAPHIC_BASE_SIZE;
 					Preloading.registerGameObjectSVG(item.graphic, item.graphic.path, item.graphic.size);
 				}
 				if (item.definition) {

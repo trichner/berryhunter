@@ -1,3 +1,5 @@
+'use strict';
+
 define(['Utils', 'items/InventoryListeners'], function (Utils, InventoryListeners) {
 	class SubIcon {
 		constructor(domElement, itemName, iconPath, requiredCount, count) {

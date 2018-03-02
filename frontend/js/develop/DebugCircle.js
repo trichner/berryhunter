@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Game', 'GameObject', 'Develop', 'PIXI'], function (Game, GameObject, Develop, PIXI) {
 

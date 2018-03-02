@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['NameGenerator'], function (NameGenerator) {
 	const PlayerName = {};

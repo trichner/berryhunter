@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['items/ItemType'], function (ItemType) {
 	let Equipment = {};

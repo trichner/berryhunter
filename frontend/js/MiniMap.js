@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['PIXI', 'Game', 'userInterface/UserInterface'], function (PIXI, Game, UserInterface) {
 	class MiniMap {

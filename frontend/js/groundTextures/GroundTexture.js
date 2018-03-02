@@ -1,3 +1,5 @@
+'use strict';
+
 define(['InjectedSVG'], function (InjectedSVG) {
 	class GroundTexture {
 		constructor(parameters) {

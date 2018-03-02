@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCountableIcon', './VitalSignBar'],
 	function (Preloading, Constants, Utils, ClickableIcon, ClickableCountableIcon, VitalSignBar) {

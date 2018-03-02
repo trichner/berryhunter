@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * FIXME this class hasn't been updated for quite a while
@@ -14,14 +14,14 @@ define(['Game', 'PIXI', 'Constants'], function (Game, PIXI, Constants) {
 			Game.layers.overlay.addChild(this.xIndices, this.yIndices);
 
 			let index = 1;
-			const gridSpacing = Constants.GRID_SPACING;
+			const gridSpacing = Constants.mapEditor.GRID_SPACING;
 			for (let x = gridSpacing; x <= width; x += gridSpacing) {
 				if (x < width) {
 					this.gridLines.addChild(QuadrantGrid.createGridLine(false, x, 0, x, height));
 				}
 				this.xIndices.addChild(QuadrantGrid.createIndex(index, x - gridSpacing / 2, 20));
 				index++;
-				if (index > Constants.FIELDS_IN_QUADRANT) {
+				if (index > Constants.mapEditor.FIELDS_IN_QUADRANT) {
 					index = 1;
 				}
 			}
@@ -33,7 +33,7 @@ define(['Game', 'PIXI', 'Constants'], function (Game, PIXI, Constants) {
 				}
 				this.yIndices.addChild(QuadrantGrid.createIndex(index, 20, y - gridSpacing / 2));
 				index++;
-				if (index > Constants.FIELDS_IN_QUADRANT) {
+				if (index > Constants.mapEditor.FIELDS_IN_QUADRANT) {
 					index = 1;
 				}
 			}
@@ -56,7 +56,7 @@ define(['Game', 'PIXI', 'Constants'], function (Game, PIXI, Constants) {
 			shape.stroke = 'lightyellow';
 
 			let coord = horizontal ? y1 : x1;
-			if (coord % Constants.QUADRANT_SIZE === 0) {
+			if (coord % QuadrantGrid.QUADRANT_SIZE === 0) {
 				shape.linewidth = 2;
 			} else {
 				shape.linewidth = 1;
@@ -73,6 +73,8 @@ define(['Game', 'PIXI', 'Constants'], function (Game, PIXI, Constants) {
 			return text;
 		}
 	}
+
+	QuadrantGrid.QUADRANT_SIZE = Constants.GRID_SPACING * Constants.FIELDS_IN_QUADRANT;
 
 	return QuadrantGrid;
 });

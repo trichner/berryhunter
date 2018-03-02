@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['items/Items'], function (Items) {
 	let BackendConstants = {};

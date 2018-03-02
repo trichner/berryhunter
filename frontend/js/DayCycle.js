@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define(['Utils', 'Develop'], function (Utils, Develop) {
 	const DayCycle = {};

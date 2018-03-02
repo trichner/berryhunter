@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * XieLongUtils have to be loaded so that the functions are available in global namespace.

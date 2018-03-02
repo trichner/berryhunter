@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * FIXME this class hasn't been updated for quite a while
@@ -31,8 +31,8 @@ define([
 
 	MapEditor.setup = function () {
 		let renderer = PIXI.autoDetectRenderer(
-			Constants.QUADRANT_SIZE,
-			Constants.QUADRANT_SIZE
+			QuadrantGrid.QUADRANT_SIZE,
+			QuadrantGrid.QUADRANT_SIZE
 		);
 
 		document.getElementById('drawingContainer').appendChild(renderer.view);
@@ -127,8 +127,8 @@ define([
 			// If there's no quadrant, at least render 1 empty quadrant
 			let quadrantCount = Math.max(1, Quadrants.length);
 			// TODO Quadranten möglichst quadratisch auslegen, statt alle in die Breite
-			this.mapWidth = Constants.QUADRANT_SIZE * quadrantCount;
-			this.mapHeight = Constants.QUADRANT_SIZE;
+			this.mapWidth = QuadrantGrid.QUADRANT_SIZE * quadrantCount;
+			this.mapHeight = QuadrantGrid.QUADRANT_SIZE;
 		};
 
 		MapEditor.getMapDimensions = function () {
