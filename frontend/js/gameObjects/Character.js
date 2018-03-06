@@ -13,10 +13,11 @@ define([
 	'Preloading',
 	'Vector',
 	'Text',
-], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text) {
+	'GraphicsConfig'
+], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig) {
 	class Character extends GameObject {
 		constructor(id, x, y, name, isPlayerCharacter) {
-			super(Game.layers.characters, x, y, Constants.CHARACTER_SIZE, Math.PI / 2);
+			super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2);
 			this.id = id;
 			this.name = name;
 			this.isPlayerCharacter = isPlayerCharacter;
@@ -45,7 +46,7 @@ define([
 				Constants.PLACEMENT_RANGE,
 				0,
 			);
-			placeableSlot.opacity = 0.6;
+			placeableSlot.opacity = GraphicsConfig.equippedPlaceableOpacity;
 
 			this.createHands();
 
@@ -142,8 +143,8 @@ define([
 
 			let handShape = new PIXI.Graphics();
 			group.addChild(handShape);
-			handShape.beginFill(0xf2a586);
-			handShape.lineColor = 0x000000;
+			handShape.beginFill(GraphicsConfig.character.hands.fillColor);
+			handShape.lineColor = GraphicsConfig.character.hands.lineColor;
 			handShape.lineWidth = 0.212 * 0.6; // relative to size
 			handShape.drawCircle(0, 0, this.size * 0.2);
 
@@ -174,8 +175,8 @@ define([
 
 		createMinimapIcon() {
 			let shape = new PIXI.Graphics();
-			shape.beginFill(0x00008B);
-			shape.drawCircle(0, 0, 30 * 3);
+			shape.beginFill(GraphicsConfig.miniMap.icons.character.color);
+			shape.drawCircle(0, 0, GraphicsConfig.miniMap.icons.character.size);
 
 			return shape;
 		}
@@ -266,7 +267,9 @@ define([
 				}
 
 				this.craftingIndicator.circle.clear();
-				this.craftingIndicator.circle.lineStyle(5, 0xc9a741, 1);
+				this.craftingIndicator.circle.lineStyle(
+					GraphicsConfig.character.craftingIndicator.lineWidth,
+					GraphicsConfig.character.craftingIndicator.lineColor, 1);
 				this.craftingIndicator.circle.arc(0, 0, 27, 0, progress * 2 * Math.PI);
 			}
 
@@ -306,7 +309,7 @@ define([
 			let equipmentGraphic = new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size);
 			slotGroup.addChild(equipmentGraphic);
 
-			if (equipmentSlot === Equipment.Slots.PLACEABLE){
+			if (equipmentSlot === Equipment.Slots.PLACEABLE) {
 				equipmentGraphic.rotation = Math.PI / -2;
 			}
 
@@ -359,17 +362,20 @@ define([
 			this.messages.push(messageShape);
 		}
 
-		remove(){
+		remove() {
 			this.hide();
 			Game.renderer.off('prerender', this.update, this);
 		}
 	}
 
 	Character.hitAnimationFrameDuration = 15;
-	Preloading.registerGameObjectSVG(Character, 'img/character.svg', 30);
+	Preloading.registerGameObjectSVG(Character, GraphicsConfig.character.file, GraphicsConfig.character.size);
 
 	Character.craftingIndicator = {};
-	Preloading.registerGameObjectSVG(Character.craftingIndicator, 'img/crafting.svg', 20);
+	Preloading.registerGameObjectSVG(
+		Character.craftingIndicator,
+		GraphicsConfig.character.craftingIndicator.file,
+		GraphicsConfig.character.craftingIndicator.size);
 
 	return Character;
 });

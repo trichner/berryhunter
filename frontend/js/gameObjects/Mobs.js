@@ -1,6 +1,19 @@
 'use strict';
 
-define(['Game', 'GameObject', 'Preloading', 'Utils'], function (Game, GameObject, Preloading, Utils) {
+define(['Game', 'GameObject', 'Preloading', 'Utils', 'GraphicsConfig'], function (Game, GameObject, Preloading, Utils, GraphicsConfig) {
+
+	function maxSize(mob) {
+		return GraphicsConfig.mobs[mob].maxSize;
+	}
+
+	function minSize(mob) {
+		return GraphicsConfig.mobs[mob].minSize;
+	}
+
+	function file(mob) {
+		return GraphicsConfig.mobs[mob].file;
+	}
+
 	class Mob extends GameObject {
 		constructor(gameLayer, x, y, size, rotation) {
 			super(gameLayer, x, y, size, rotation);
@@ -8,7 +21,6 @@ define(['Game', 'GameObject', 'Preloading', 'Utils'], function (Game, GameObject
 			this.visibleOnMinimap = false;
 		}
 
-		// FIXME remove this method once https://trello.com/c/ykYuFHGU/114-animals-bekommen-keine-sinnvolle-rotation-mitgeschickt is implemented in the backend
 		setRotation(rotation) {
 			if (Utils.isUndefined(rotation)) {
 				return;
@@ -21,27 +33,29 @@ define(['Game', 'GameObject', 'Preloading', 'Utils'], function (Game, GameObject
 
 	class Dodo extends Mob {
 		constructor(x, y) {
-			super(Game.layers.mobs.dodo, x, y, Utils.randomInt(30, 45))
+			super(Game.layers.mobs.dodo, x, y, Utils.randomInt(minSize("dodo"), maxSize("dodo")));
 		}
 	}
 
-	Preloading.registerGameObjectSVG(Dodo, 'img/dodo.svg', 30);
+	Preloading.registerGameObjectSVG(Dodo, file("dodo"), maxSize("dodo"));
 
 	class SaberToothCat extends Mob {
 		constructor(x, y) {
-			super(Game.layers.mobs.saberToothCat, x, y, Utils.randomInt(40, 60));
+			super(Game.layers.mobs.saberToothCat, x, y, Utils.randomInt(minSize("saberToothCat"), maxSize("saberToothCat")));
+
 		}
 	}
 
-	Preloading.registerGameObjectSVG(SaberToothCat, 'img/saberToothCat.svg', 60);
+	Preloading.registerGameObjectSVG(SaberToothCat, file("saberToothCat"), maxSize("saberToothCat"));
+
 
 	class Mammoth extends Mob {
 		constructor(x, y) {
-			super(Game.layers.mobs.mammoth, x, y, Utils.randomInt(70, 100));
+			super(Game.layers.mobs.mammoth, x, y, Utils.randomInt(minSize("mammoth"), maxSize("mammoth")));
 		}
 	}
 
-	Preloading.registerGameObjectSVG(Mammoth, 'img/mammoth.svg', 100);
+	Preloading.registerGameObjectSVG(Mammoth, file("mammoth"), maxSize("mammoth"));
 
 	return {
 		Mob: Mob,

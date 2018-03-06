@@ -3,7 +3,7 @@
 define([], function () {
 
 	//noinspection UnnecessaryLocalVariableJS
-	const Constants = {
+	const BasicConfig = {
 		/**
 		 * Contains all available query parameter that modify the behavior of the game
 		 */
@@ -41,13 +41,6 @@ define([], function () {
 		 * Pixel size of all graphic files. Scaling and loading is done considering this constant.
 		 */
 		GRAPHIC_BASE_SIZE: 100,
-
-		/**
-		 * Pixel radius of the character graphic.
-		 *
-		 * SYNCED WITH BACKEND
-		 */
-		CHARACTER_SIZE: 30,
 
 		/**
 		 * Settings for the map editor
@@ -124,5 +117,5 @@ define([], function () {
 		CHAT_MESSAGE_DURATION: 5000
 	};
 
-	return Constants;
+	return BasicConfig;
 });

@@ -10,7 +10,8 @@ requirejs.config({
 		GameObject: 'gameObjects/_GameObject',
 		MapEditor: 'mapEditor/_MapEditor',
 		Develop: 'develop/_Develop',
-		Constants: '../config/Constants',
+		Constants: '../config/Basic',
+		GraphicsConfig: '../config/Graphics'
 	},
 
 	shim: {
