@@ -73,6 +73,11 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'schema_server',
 					'schema_client',
 
+				// Configs
+				'Constants',
+				'GraphicsConfig',
+				'../config/Items',
+
 					// Game Modules
 					'backend/Backend',
 					'backend/BackendConstants',
@@ -81,7 +86,6 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'backend/Welcome',
 					'backend/SnapshotFactory',
 					'Controls',
-					'Constants',
 					'InjectedSVG',
 					'GameObject',
 					'gameObjects/Mobs',

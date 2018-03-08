@@ -57,7 +57,7 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 		}
 
 		Tree.resourceSpot = {};
-		let treeCfg = GraphicsConfig.resources.spots.tree;
+		let treeCfg = GraphicsConfig.resources.tree;
 		Preloading.registerGameObjectSVG(Tree.resourceSpot, treeCfg.spotFile, treeCfg.maxSize);
 
 		class RoundTree extends Tree {
@@ -93,7 +93,7 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 		}
 
 		Mineral.resourceSpot = {};
-		let mineralCfg = GraphicsConfig.resources.spots.mineral;
+		let mineralCfg = GraphicsConfig.resources.mineral;
 		Preloading.registerGameObjectSVG(Mineral.resourceSpot, mineralCfg.spotFile, mineralCfg.maxSize);
 
 		class Stone extends Mineral {
@@ -150,7 +150,7 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 
 		Preloading.registerGameObjectSVG(Iron, mineralCfg.ironFile, mineralCfg.maxSize);
 
-		let berryBushCfg = GraphicsConfig.resources.spots.berryBush;
+		let berryBushCfg = GraphicsConfig.resources.berryBush;
 
 		class BerryBush extends Resource {
 			constructor(x, y, size) {
