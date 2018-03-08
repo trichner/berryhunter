@@ -44,7 +44,7 @@ define(['Environment', 'Preloading', 'Utils', './GroundTexture', './GroundTextur
 
 	Preloading.registerPreload(Utils.makeRequest({
 		method: 'GET',
-		url: 'js/groundTextures/groundTextures.json' + Environment.getCacheBuster()
+		url: 'config/groundTextures.json' + Environment.getCacheBuster()
 	}).then(function (groundTextures) {
 		groundTextures = JSON.parse(groundTextures);
 

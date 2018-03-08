@@ -1,77 +1,8 @@
 'use strict';
 
-define(['Environment', 'Preloading'], function (Environment, Preloading) {
-	/**
-	 * Contains informations about types of ground textures that are available for placing.
-	 */
-	const GroundTextureTypes = {
-		'Grass, dark green': {
-			file: 'darkGreenGrass1',
-			minSize: 80,
-			maxSize: 300,
-		},
-		'Grass, light green': {
-			file: 'lightGreenGrass1',
-			minSize: 80,
-			maxSize: 300,
-		},
-		'Flowers1': {
-			file: 'flowers1',
-			minSize: 50,
-			maxSize: 100,
-		},
-		'Flowers2': {
-			file: 'flowers2',
-			minSize: 50,
-			maxSize: 100,
-		},
-		'Stone Patch': {
-			file: 'stonePatch1',
-			minSize: 100,
-			maxSize: 300,
-		},
-		'Grass, blade of grass': {
-			file: 'grass1',
-			minSize: 30,
-			maxSize: 70,
-			rotation: false,
-			flipVertical: false,
-		},
-		'Leaves, green': {
-			file: 'leaves1',
-			minSize: 30,
-			maxSize: 100,
-		},
-		'Mushrooms': {
-			file: 'mushrooms1',
-			minSize: 30,
-			maxSize: 100,
-			rotation: false,
-			flipVertical: false,
-		},
-		'Pebble1': {
-			file: 'pebble1',
-			minSize: 30,
-			maxSize: 100,
-		},
-		'Pebble2': {
-			file: 'pebble2',
-			minSize: 30,
-			maxSize: 100,
-		},
-		'Puddle': {
-			file: 'puddle1',
-			minSize: 30,
-			maxSize: 100,
-			rotation: false,
-			flipVertical: false,
-		},
-		'Rubble': {
-			file: 'rubble1',
-			minSize: 30,
-			maxSize: 100,
-		},
-	};
+define(['Environment', 'Preloading', 'GraphicsConfig'], function (Environment, Preloading, GraphicsConfig) {
+
+	const GroundTextureTypes = GraphicsConfig.groundTextureTypes;
 
 	// Validate
 	let hasError = false;

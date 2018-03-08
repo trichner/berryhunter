@@ -175,8 +175,9 @@ define([
 
 		createMinimapIcon() {
 			let shape = new PIXI.Graphics();
-			shape.beginFill(GraphicsConfig.miniMap.icons.character.color);
-			shape.drawCircle(0, 0, GraphicsConfig.miniMap.icons.character.size);
+			let miniMapCfg = GraphicsConfig.miniMap.icons.character;
+			shape.beginFill(miniMapCfg.color, miniMapCfg.alpha);
+			shape.drawCircle(0, 0, this.size * miniMapCfg.sizeFactor);
 
 			return shape;
 		}
