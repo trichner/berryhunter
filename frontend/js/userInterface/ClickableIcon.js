@@ -1,6 +1,6 @@
 'use strict';
 
-define(['Utils', 'items/Items', './SubIcon', 'Game'], function (Utils, Items, SubIcon, Game) {
+define(['Utils', 'items/Items', './SubIcon', 'Game', 'Constants'], function (Utils, Items, SubIcon, Game, Constants) {
 	class ClickableIcon {
 		/**
 		 * @param {Element} node
@@ -125,34 +125,56 @@ define(['Utils', 'items/Items', './SubIcon', 'Game'], function (Utils, Items, Su
 				console.warn('Tried to call startProgress on an ClickableIcon without progressOverlay.');
 				return;
 			}
-			let progress = {
-				duration: seconds * 1000,
-				current: 0
+
+			this.progress = {
+				requiredTicks: seconds * 1000 / Constants.SERVER_TICKRATE
 			};
+			this.progress.remainingTicks = this.progress.requiredTicks;
 
 			this.domElement.classList.add('inProgress');
 			this.progressOverlay.classList.remove('hidden');
 			this.inProgress = true;
 
-			let self = this;
-			require(['Game'], function (Game) {
-				let updateListener = function () {
-					progress.current += Game.timeDelta;
-					if (progress.current >= progress.duration) {
-						self.progressOverlay.style.top = '100%';
-						self.domElement.classList.remove('inProgress');
-						self.progressOverlay.classList.add('hidden');
-						Game.renderer.off('prerender', updateListener);
-						self.inProgress = false;
-						// A little hacky - would be nice with events
-						Game.player.inventory.onChange();
-					} else {
-						let top = 100 - 100 * progress.current / progress.duration;
-						self.progressOverlay.style.top = top.toFixed(3) + '%';
-					}
-				};
-				Game.renderer.on('prerender', updateListener);
-			});
+			// let self = this;
+			// require(['Game'], function (Game) {
+			// 	let updateListener = function () {
+			// 		progress.current += Game.timeDelta;
+			// 		if (progress.current >= progress.duration) {
+			// 			self.progressOverlay.style.top = '100%';
+			// 			self.domElement.classList.remove('inProgress');
+			// 			self.progressOverlay.classList.add('hidden');
+			// 			Game.renderer.off('prerender', updateListener);
+			// 			self.inProgress = false;
+			// 			// A little hacky - would be nice with events
+			// 			Game.player.inventory.onChange();
+			// 		} else {
+			// 			let top = 100 - 100 * progress.current / progress.duration;
+			// 			self.progressOverlay.style.top = top.toFixed(3) + '%';
+			// 		}
+			// 	};
+			// 	Game.renderer.on('prerender', updateListener);
+			// });
+		}
+
+		updateProgress(ticksRemaining) {
+			if (!this.inProgress) {
+				console.error("Invalid State: Received progress update, but this icon is not in progress.");
+				return;
+			}
+			this.progress.remainingTicks = ticksRemaining;
+			if (this.progress.remainingTicks <= 0) {
+				this.progressOverlay.style.top = '100%';
+				this.domElement.classList.remove('inProgress');
+				this.progressOverlay.classList.add('hidden');
+				this.inProgress = false;
+				delete this.progress;
+				// A little hacky - would be nice with events
+				Game.player.inventory.onChange();
+			} else {
+				let top = 100 * this.progress.remainingTicks / this.progress.requiredTicks;
+				this.progressOverlay.style.top = top.toFixed(3) + '%';
+			}
+			console.log(ticksRemaining);
 		}
 
 		// TODO Display delayed click animation

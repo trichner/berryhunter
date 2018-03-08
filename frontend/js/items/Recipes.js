@@ -93,6 +93,7 @@ define([
 				// Required yield is 1 more than minimum yield, because with 1 yield
 				// a resource with minimumYield 1 is not yieldable
 				recipe.requiredYield = requiredYield + 1;
+				item.recipe = recipe;
 
 				definedRecipes.push(recipe);
 			}
