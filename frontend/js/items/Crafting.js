@@ -47,6 +47,10 @@ define([
 	};
 
 	function onCraftIconLeftClick(event, recipe) {
+		if (!recipe.isCraftable) {
+			return;
+		}
+
 		if (MapEditor.isActive()) {
 			for (let material in recipe.materials) {
 				//noinspection JSUnfilteredForInLoop
