@@ -3,16 +3,18 @@
 define(['InjectedSVG'], function (InjectedSVG) {
 	class GroundTexture {
 		constructor(parameters) {
+			this.parameters = parameters;
+		}
 
-			console.log("Texture loaded: " + parameters.type.svg.baseTexture.hasLoaded);
+		addToMap(){
 			this.graphic = new InjectedSVG(
-				parameters.type.svg,
-				parameters.x,
-				parameters.y,
-				parameters.size,
-				parameters.rotation);
+				this.parameters.type.svg,
+				this.parameters.x,
+				this.parameters.y,
+				this.parameters.size,
+				this.parameters.rotation);
 
-			switch (parameters.flipped.toLowerCase()) {
+			switch (this.parameters.flipped.toLowerCase()) {
 				case 'horizontal':
 					this.graphic.scale.x *= -1;
 					break;
@@ -21,10 +23,6 @@ define(['InjectedSVG'], function (InjectedSVG) {
 					break;
 			}
 
-			this.parameters = parameters;
-		}
-
-		addToMap(){
 			let self = this;
 			require(['Game'], function (Game) {
 				Game.layers.terrain.textures.addChild(self.graphic);

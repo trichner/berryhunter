@@ -51,7 +51,6 @@ define(['./keys/Key', './keys/KeyCodes', './combo/KeyCombo', './keys/ProcessKeyD
 				var handler = function (event) {
 					// FIXME Space is always prevented!?
 					if (event.defaultPrevented && (event.keyCode !== KeyCodes.SPACE)) {
-						// console.log("default already prevented for " + event.keyCode, event.type);
 						// Do nothing if event already handled
 						return;
 					}
@@ -59,7 +58,6 @@ define(['./keys/Key', './keys/KeyCodes', './combo/KeyCombo', './keys/ProcessKeyD
 					queue.push(event);
 
 					if (captures[event.keyCode]) {
-						// console.log("Prevent default for " + event.keyCode, event.type);
 						event.preventDefault();
 					}
 				};

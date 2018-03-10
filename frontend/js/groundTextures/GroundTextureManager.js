@@ -8,7 +8,6 @@ define(['Environment', 'Preloading', 'Utils', './GroundTexture', './GroundTextur
 	let renderingStarted = false;
 
 	GroundTextureManager.setup = function () {
-		console.log("GroundTextureManager.setup");
 		textures.forEach(function (texture) {
 			texture.addToMap();
 		});

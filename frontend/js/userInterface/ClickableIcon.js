@@ -174,7 +174,6 @@ define(['Utils', 'items/Items', './SubIcon', 'Game', 'Constants'], function (Uti
 				let top = 100 * this.progress.remainingTicks / this.progress.requiredTicks;
 				this.progressOverlay.style.top = top.toFixed(3) + '%';
 			}
-			console.log(ticksRemaining);
 		}
 
 		// TODO Display delayed click animation

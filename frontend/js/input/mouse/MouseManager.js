@@ -193,8 +193,6 @@ define([], function () {
 						return;
 					}
 
-					// console.log('mouse', event);
-
 					queue.push(event);
 
 					event.preventDefault();
