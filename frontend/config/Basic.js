@@ -12,7 +12,8 @@ define([], function () {
 			LOCAL_SERVER: 'local',
 			SERVER_PORT: 'port',
 			DEVELOPMENT: 'develop',
-			GROUND_TEXTURE_EDITOR: 'textures'
+			GROUND_TEXTURE_EDITOR: 'textures',
+			SUPPRESS_CACHE_BUSTER: 'caching'
 		},
 		/**
 		 * If custom graphic containers should be used, that are named.

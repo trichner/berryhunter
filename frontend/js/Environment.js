@@ -1,10 +1,10 @@
 'use strict';
 
-define(['Utils'], function (Utils) {
+define(['Utils', 'Constants'], function (Utils, Constants) {
 	let Environment = {};
 
 	Environment.cachingEnabled = function () {
-		return window.location.host !== 'localhost:63342' && !Utils.getUrlParameter('caching');
+		return window.location.host !== 'localhost:63342' && !Utils.getUrlParameter(Constants.MODE_PARAMETERS.SUPPRESS_CACHE_BUSTER);
 	};
 
 	/**
