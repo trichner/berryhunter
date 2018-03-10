@@ -4,6 +4,7 @@ define(['InjectedSVG'], function (InjectedSVG) {
 	class GroundTexture {
 		constructor(parameters) {
 
+			console.log("Texture loaded: " + parameters.type.svg.baseTexture.hasLoaded);
 			this.graphic = new InjectedSVG(
 				parameters.type.svg,
 				parameters.x,
