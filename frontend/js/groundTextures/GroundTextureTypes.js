@@ -42,5 +42,6 @@ define(['Environment', 'Preloading', 'GraphicsConfig'], function (Environment, P
 		throw "There are erroneous GroundTextureType(s).";
 	}
 
+	console.log("GroundTextureTypes init done");
 	return GroundTextureTypes;
 });

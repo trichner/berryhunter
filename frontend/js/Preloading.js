@@ -9,10 +9,13 @@ define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 	Preloading.loadingBar = false;
 
 	Preloading.executePreload = function () {
+		console.log("Preloading.executePreload");
 		return Promise.all(promises);
 	};
 
 	Preloading.registerPreload = function (preloadingPromise) {
+		console.log("Preloading.registerPreload");
+
 		preloadingPromise.then(function (data) {
 			loadedPromises++;
 			if (Preloading.loadingBar) {
