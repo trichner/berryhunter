@@ -68,9 +68,11 @@ define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 				}
 				gameObjectClass.svg = PIXI.Texture.fromImage(svgPath, undefined, undefined, sourceScale);
 				gameObjectClass.svg.baseTexture.on('loaded', function () {
+					console.log("Texture loaded");
 					resolve(gameObjectClass.svg);
 				});
 				gameObjectClass.svg.baseTexture.on('error', function () {
+					console.error("Error loading texture '" + svgPath + "'");
 					reject("Error loading texture '" + svgPath + "'");
 				});
 			})
