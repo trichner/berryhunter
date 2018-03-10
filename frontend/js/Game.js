@@ -85,6 +85,7 @@ define([], function () {
 				 * @type Player
 				 */
 				Game.player = new Player(id, x, y, name);
+				Game.player.init();
 				Game.state = States.PLAYING;
 			};
 

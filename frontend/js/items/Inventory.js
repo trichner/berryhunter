@@ -48,6 +48,11 @@ define([
 			}.bind(character);
 		}
 
+		init() {
+			// Display first crafting hints.
+			this.onChange();
+		}
+
 		activateSlot(slotIndex, equipmentSlot) {
 			// 1st: Deactivate all other slots that match the same equipment slot
 			for (let i = 0; i < this.slots.length; i++) {

@@ -34,6 +34,10 @@ define([
 			this.craftableItems = [];
 		}
 
+		init() {
+			this.inventory.init();
+		}
+
 		isCraftInProgress() {
 			return this.craftProgress !== null;
 		}
