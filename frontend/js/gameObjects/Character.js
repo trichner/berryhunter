@@ -257,9 +257,18 @@ define([
 				return true;
 			});
 
-			let craftProgress = Game.player.craftProgress;
-			if (craftProgress) {
+			this.followGroups.forEach(function (group) {
+				group.position.copy(this.shape.position);
+			}, this);
 
+			if (this.isPlayerCharacter){
+				this.updatePlayerCharacter();
+			}
+		}
+
+		updatePlayerCharacter(){
+			if (Game.player.isCraftInProgress()) {
+				let craftProgress = Game.player.craftProgress;
 				let progress = 1 - (craftProgress.remainingTicks / craftProgress.requiredTicks);
 				if (progress >= 1) {
 					Game.player.craftProgress = null;
@@ -273,10 +282,6 @@ define([
 					GraphicsConfig.character.craftingIndicator.lineColor, 1);
 				this.craftingIndicator.circle.arc(0, 0, 27, 0, progress * 2 * Math.PI);
 			}
-
-			this.followGroups.forEach(function (group) {
-				group.position.copy(this.shape.position);
-			}, this);
 		}
 
 		isSlotEquipped(equipmentSlot) {
