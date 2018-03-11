@@ -111,7 +111,7 @@ define([], function () {
 			 */
 			Game.startRendering = function (gameInformation) {
 				const baseTexture = new PIXI.Graphics();
-				Game.layers.terrain.textures.addChild(baseTexture);
+				Game.layers.terrain.ground.addChild(baseTexture);
 				baseTexture.beginFill(0x006030);
 				baseTexture.drawCircle(0, 0, gameInformation.mapRadius);
 
@@ -125,11 +125,11 @@ define([], function () {
 			};
 
 			function createBackground() {
-				const background = new PIXI.Graphics();
-				Game.layers.terrain.background.addChild(background);
+				const waterRect = new PIXI.Graphics();
+				Game.layers.terrain.water.addChild(waterRect);
 
-				background.beginFill(0x287aff);
-				background.drawRect(0, 0, Game.width, Game.height);
+				waterRect.beginFill(0x287aff);
+				waterRect.drawRect(0, 0, Game.width, Game.height);
 			}
 
 			if (MapEditor.isActive()) {
@@ -170,7 +170,8 @@ define([], function () {
 			// TODO: Grids, Borders, AABBs?
 			Game.layers = {
 				terrain: {
-					background: new NamedGroup('background'),
+					water: new NamedGroup('water'),
+					ground: new NamedGroup('ground'),
 					textures: new NamedGroup('textures'),
 					resourceSpots: new NamedGroup('resourceSpots'),
 				},
@@ -209,7 +210,7 @@ define([], function () {
 			Game.stage.addChild(Game.nightFilterContainer);
 
 			// Terrain Background
-			Game.nightFilterContainer.addChild(Game.layers.terrain.background);
+			Game.nightFilterContainer.addChild(Game.layers.terrain.water);
 
 			Game.cameraGroup = new NamedGroup('cameraGroup');
 			Game.nightFilterContainer.addChild(Game.cameraGroup);
