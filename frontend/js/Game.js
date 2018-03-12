@@ -217,6 +217,7 @@ define([], function () {
 
 			// Terrain Textures moving with the camera
 			Game.cameraGroup.addChild(
+				Game.layers.terrain.ground,
 				Game.layers.terrain.textures,
 				Game.layers.terrain.resourceSpots
 			);
