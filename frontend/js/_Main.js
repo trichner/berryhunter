@@ -51,8 +51,8 @@ require(['Environment'], function (Environment) {
 
 define(['Preloading'], function (Preloading) {
 	/*
- * Require all Modules, to create a reasonable loading bar.
- */
+	 * Require all Modules, to create a reasonable loading bar.
+	 */
 	Preloading.executePreload([
 		// Graphics
 		'PIXI',

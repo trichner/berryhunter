@@ -14,28 +14,31 @@ define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 				loadingBar = document.getElementById('loadingBar');
 
 				requires.forEach(function (dependency) {
-					promises.push(Preloading.require(dependency));
+					Preloading.require(dependency);
 				});
 
 				/*
 				 * All modules had a chance to register preloads - now setup waits for those reloads to resolve.
 				 */
-				return Promise.all(promises);
+				return Promise.all(promises).then(function () {
+					return Promise.all(promises);
+				});
 			});
 	};
 
 	Preloading.require = function (dependency) {
-		return new Promise(function (resolve) {
+		return Preloading.registerPreload(new Promise(function (resolve) {
 			require([dependency], function (dependency) {
 				resolve(dependency);
 			});
-		});
+		}));
 	};
 
 	Preloading.registerPreload = function (preloadingPromise) {
 		preloadingPromise.then(function (data) {
 			loadedPromises++;
 			if (loadingBar) {
+				console.log("Load Progress: " + loadedPromises + ' / ' + numberOfPromises);
 				loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
 				if (loadedPromises >= numberOfPromises) {
 					let loadingScreenElement = document.getElementById('loadingScreen');
