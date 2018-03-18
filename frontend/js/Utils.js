@@ -264,5 +264,9 @@ define(['../vendor/XieLongUtils'], function () {
 		return degrees * Math.PI / 180;
 	};
 
+	Utils.resetFocus = function () {
+		document.body.focus();
+	};
+
 	return Utils;
 });
