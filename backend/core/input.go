@@ -75,8 +75,6 @@ func (i *PlayerInputSystem) Update(dt float32) {
 	i.ibufs[i.game.Tick%inputBuffererCount] = NewInputBufferer()
 }
 
-const walkSpeed = 0.1
-
 // applies the inputs to a player
 func (i *PlayerInputSystem) updateInput(p model.PlayerEntity, next, last *model.PlayerInput) {
 
@@ -97,7 +95,7 @@ func (i *PlayerInputSystem) updateInput(p model.PlayerEntity, next, last *model.
 		// we can only move if we are still alive!
 		if p.VitalSigns().Health != 0 {
 			v := input2vec(next)
-			v = v.Mult(walkSpeed)
+			v = v.Mult(p.Config().WalkingSpeed)
 			next := p.Position().Add(v)
 			p.SetPosition(next)
 		}

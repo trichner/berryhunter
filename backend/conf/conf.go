@@ -23,6 +23,9 @@ type Config struct {
 			HealthGainSatietyThreshold        float32 `json:"healthGainSatietyThreshold"`
 			HealthGainTemperatureThreshold    float32 `json:"healthGainTemperatureThreshold"`
 			HealthGainSatietyLossTickFraction float32 `json:"healthGainSatietyLossTickFraction"`
+
+			//
+			WalkingSpeed float32 `json:"walkingSpeed"`
 		} `json:"player"`
 	} `json:"game"`
 }

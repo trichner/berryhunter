@@ -18,6 +18,8 @@ type PlayerConfig struct {
 	HealthGainSatietyThreshold        float32
 	HealthGainTemperatureThreshold    float32
 	HealthGainSatietyLossTickFraction float32
+
+	WalkingSpeed float32
 }
 
 type PlayerVitalSigns struct {
@@ -51,6 +53,8 @@ type PlayerEntity interface {
 	CurrentAction() PlayerAction
 
 	SetGodmode(on bool)
+
+	Config() *PlayerConfig
 }
 
 type BasicEntities map[uint64]ecs.BasicEntity

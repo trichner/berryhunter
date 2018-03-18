@@ -165,6 +165,10 @@ func (p *player) Hand() *model.Hand {
 	return &p.hand
 }
 
+func (p *player) Config() *model.PlayerConfig {
+	return p.config
+}
+
 func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
 
 	type startItem struct {
