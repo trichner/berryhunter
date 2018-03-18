@@ -11,7 +11,7 @@ requirejs.config({
 		MapEditor: 'mapEditor/_MapEditor',
 		Develop: 'develop/_Develop',
 		Constants: '../config/Basic',
-		GraphicsConfig: '../config/Graphics'
+		GraphicsConfig: '../config/Graphics',
 	},
 
 	shim: {
@@ -20,7 +20,7 @@ requirejs.config({
 		},
 		saveAs: {
 			exports: 'saveAs',
-		}
+		},
 	},
 });
 
