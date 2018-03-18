@@ -76,8 +76,7 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			log.Printf("☺️ '%s' joined!", name)
 			sendAcceptMessage(client)
 
-			pc := &s.game.Config().PlayerConfig
-			p := player.New(s.game.Items(), pc, client, name)
+			p := player.New(s.game, client, name)
 
 			// spawn the player at a random location
 			rmax := s.game.Radius() * 0.8

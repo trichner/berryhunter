@@ -8,14 +8,19 @@ import (
 
 func ScoreboardFlatbufMarshal(builder *flatbuffers.Builder, scoreboard model.Scoreboard) flatbuffers.UOffsetT {
 
+	tick := scoreboard.Tick
+
 	n := len(scoreboard.Players)
-	players := make([]flatbuffers.UOffsetT,0,n)
+	players := make([]flatbuffers.UOffsetT, 0, n)
 	for _, p := range scoreboard.Players {
 		name := builder.CreateString(p.Name())
 		BerryhunterApi.ScoreboardPlayerStart(builder)
 		BerryhunterApi.ScoreboardPlayerAddName(builder, name)
-		// TODO add score
-		players=append(players, BerryhunterApi.ScoreboardPlayerEnd(builder))
+
+		score := tick - p.Stats().BirthTick
+		BerryhunterApi.ScoreboardPlayerAddScore(builder, score)
+
+		players = append(players, BerryhunterApi.ScoreboardPlayerEnd(builder))
 	}
 
 	BerryhunterApi.ScoreboardStartPlayersVector(builder, n)

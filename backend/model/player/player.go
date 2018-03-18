@@ -14,7 +14,7 @@ import (
 
 var _ = model.PlayerEntity(&player{})
 
-func New(r items.Registry, config *cfg.PlayerConfig, c model.Client, name string) model.PlayerEntity {
+func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 
 	e := minions.NewCircleEntity(0.25)
 
@@ -24,7 +24,8 @@ func New(r items.Registry, config *cfg.PlayerConfig, c model.Client, name string
 		equipment:      items.NewEquipment(),
 		name:           name,
 		ownedEntitites: model.NewBasicEntities(),
-		config: config,
+		config: &g.Config().PlayerConfig,
+		stats: model.Stats{BirthTick: g.Ticks()},
 	}
 
 	// setup body
@@ -42,7 +43,7 @@ func New(r items.Registry, config *cfg.PlayerConfig, c model.Client, name string
 	p.viewport.Shape().Group = shapeGroup
 
 	//--- initialize inventory
-	inventory, err := initializePlayerInventory(r)
+	inventory, err := initializePlayerInventory(g.Items())
 	if err != nil {
 		panic(err)
 	}
@@ -65,6 +66,7 @@ func New(r items.Registry, config *cfg.PlayerConfig, c model.Client, name string
 }
 
 //---- player
+
 type player struct {
 	name string
 
@@ -88,6 +90,8 @@ type player struct {
 	ongoingAction model.PlayerAction
 
 	isGod bool
+
+	stats model.Stats
 }
 
 func (p *player) AddAction(a model.PlayerAction) {
@@ -168,6 +172,10 @@ func (p *player) Hand() *model.Hand {
 
 func (p *player) Config() *cfg.PlayerConfig {
 	return p.config
+}
+
+func (p *player) Stats() *model.Stats {
+	return &p.stats
 }
 
 func initializePlayerInventory(r items.Registry) (items.Inventory, error) {

@@ -19,6 +19,10 @@ type Hand struct {
 	Item     items.Item
 }
 
+type Stats struct {
+	BirthTick uint64
+}
+
 type Players []PlayerEntity
 
 type PlayerEntity interface {
@@ -41,6 +45,7 @@ type PlayerEntity interface {
 	SetGodmode(on bool)
 
 	Config() *cfg.PlayerConfig
+	Stats() *Stats
 }
 
 type BasicEntities map[uint64]ecs.BasicEntity

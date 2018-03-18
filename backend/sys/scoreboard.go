@@ -41,6 +41,7 @@ func (d *ScoreboardSystem) Update(dt float32) {
 
 	scoreboard := model.Scoreboard{
 		Players:d.players,
+		Tick:d.g.Ticks(),
 	}
 	builder := flatbuffers.NewBuilder(32)
 	msg := codec.ScoreboardFlatbufMarshal(builder, scoreboard)
