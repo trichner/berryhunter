@@ -25,7 +25,7 @@ type Config struct {
 			HealthGainSatietyLossTickFraction float32 `json:"healthGainSatietyLossTickFraction"`
 
 			//
-			WalkingSpeed float32 `json:"walkingSpeed"`
+			WalkingSpeedPerTick float32 `json:"walkingSpeedPerTick"`
 		} `json:"player"`
 	} `json:"game"`
 }

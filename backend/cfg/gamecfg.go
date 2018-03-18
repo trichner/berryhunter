@@ -29,5 +29,5 @@ type PlayerConfig struct {
 	HealthGainTemperatureThreshold    float32
 	HealthGainSatietyLossTickFraction float32
 
-	WalkingSpeed float32
+	WalkingSpeedPerTick float32
 }

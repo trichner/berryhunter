@@ -6,7 +6,6 @@ import (
 	"github.com/trichner/berryhunter/backend/minions"
 	"github.com/trichner/berryhunter/backend/codec"
 	"github.com/google/flatbuffers/go"
-	"log"
 )
 
 type ScoreboardSystem struct {
