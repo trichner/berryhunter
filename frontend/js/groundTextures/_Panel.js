@@ -22,6 +22,13 @@ define([
 		if (!active) {
 			return;
 		}
+		if (Utils.getUrlParameter('token')) {
+			require(['Console'], function (Console) {
+				Console.run('GOD');
+			});
+		} else {
+			alert('WARNING: Missing token, can not activate god mode.')
+		}
 
 		Game.godMode = true;
 

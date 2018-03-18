@@ -65,6 +65,9 @@ define(['Preloading', 'Utils'], function (Preloading, Utils) {
 				});
 			});
 		} else {
+			if (!isOpen){
+				Console.show();
+			}
 			Console.log('ERROR: URL parameter "token" is not defined!');
 		}
 	}

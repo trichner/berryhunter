@@ -13,8 +13,6 @@ define([], function () {
 
 	Game.state = States.INITIALIZING;
 
-	Game.godMode = false;
-
 	Game.setup = function () {
 		require([
 			'PIXI',
