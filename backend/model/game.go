@@ -5,6 +5,7 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/items/mobs"
 	"net/http"
+	"github.com/trichner/berryhunter/backend/cfg"
 )
 
 type Game interface {
@@ -35,4 +36,6 @@ type Game interface {
 
 	// Radius returns the radius of the map
 	Radius() float32
+
+	Config() *cfg.GameConfig
 }

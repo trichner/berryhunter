@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/items/mobs"
 	"log"
 	"os"
 	"sort"
 	"bufio"
+	"github.com/trichner/berryhunter/backend/cfg"
 )
 
 // loadMobs parses the mob definitions from the definition files
@@ -47,10 +47,10 @@ func loadItems(path string) items.Registry {
 }
 
 // loadConf parses the config file
-func loadConf() *conf.Config {
+func loadConf() *cfg.Config {
 
 	configFile := "./conf.json"
-	config, err := conf.ReadConfig(configFile)
+	config, err := cfg.ReadConfig(configFile)
 	if err != nil {
 		log.Panicf("Cannot read config '%s':%v", configFile, err)
 	}

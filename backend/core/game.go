@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/backend/codec"
-	"github.com/trichner/berryhunter/backend/conf"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/items/mobs"
 	"github.com/trichner/berryhunter/backend/model"
@@ -23,6 +22,7 @@ import (
 	"time"
 	"sort"
 	"github.com/trichner/berryhunter/backend/model/constant"
+	"github.com/trichner/berryhunter/backend/cfg"
 )
 
 type entitiesMap map[uint64]model.BasicEntity
@@ -30,7 +30,7 @@ type entitiesMap map[uint64]model.BasicEntity
 type game struct {
 	ecs.World
 	Tick         uint64
-	conf         *conf.Config
+	config       *cfg.GameConfig
 	itemRegistry items.Registry
 	mobRegistry  mobs.Registry
 
@@ -47,9 +47,9 @@ var _ = model.Game(&game{})
 
 func NewGameWith(conf ...Configuration) (model.Game, error) {
 
-	gc := &config{
-		radius: 20,
-		tokens: []string{},
+	gc := &cfg.GameConfig{
+		Radius: 20,
+		Tokens: []string{},
 	}
 
 	for _, c := range conf {
@@ -58,19 +58,21 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 			return nil, err
 		}
 	}
+	log.Printf("%+v", gc)
 
 	g := &game{
 		entities:     make(entitiesMap),
 		joinQueue:    make(chan model.Client, 16),
-		mobRegistry:  gc.mobRegistry,
-		itemRegistry: gc.itemRegistry,
-		radius:       gc.radius,
+		mobRegistry:  gc.MobRegistry,
+		itemRegistry: gc.ItemRegistry,
+		radius:       gc.Radius,
+		config:       gc,
 	}
 
 	// Prepare welcome message. Its static anyways.
 	msg := &codec.Welcome{
 		"berryhunter.io [Alpha] rza, n1b, xyckno & co.",
-		gc.radius * codec.Points2px,
+		gc.Radius * codec.Points2px,
 	}
 	builder := flatbuffers.NewBuilder(32)
 	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, msg)
@@ -81,7 +83,7 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	p := sys.NewPhysicsSystem()
 	g.AddSystem(p)
 
-	wall := phy.NewInvCircle(phy.VEC2F_ZERO, gc.radius)
+	wall := phy.NewInvCircle(phy.VEC2F_ZERO, gc.Radius)
 	wall.Shape().Layer = model.LayerBorderCollision
 	p.AddStaticBody(ecs.NewBasic(), wall)
 
@@ -103,7 +105,7 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	s := sys.NewConnectionStateSystem(g)
 	g.AddSystem(s)
 
-	c := cmd.NewCommandSystem(g, gc.tokens)
+	c := cmd.NewCommandSystem(g, gc.Tokens)
 	g.AddSystem(c)
 
 	chat := chat.New()
@@ -112,7 +114,7 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	d := sys.NewDecaySystem(g)
 	g.AddSystem(d)
 
-	dayCycle := sys.NewDayCycleSystem(g, constant.DayNightCyleTicks, gc.coldFractionNightPerS)
+	dayCycle := sys.NewDayCycleSystem(g, constant.DayNightCyleTicks, gc.ColdFractionNightPerS)
 	g.AddSystem(dayCycle)
 
 	sb := sys.NewScoreboardSystem(g)
@@ -166,6 +168,10 @@ func (g *game) Loop() {
 		g.update()
 		<-ticker.C
 	}
+}
+
+func (g *game) Config() *cfg.GameConfig {
+	return g.config
 }
 
 func (g *game) GetEntity(id uint64) (model.BasicEntity, error) {

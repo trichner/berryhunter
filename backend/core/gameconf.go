@@ -3,48 +3,47 @@ package core
 import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/items/mobs"
-	"github.com/trichner/berryhunter/backend/conf"
+	"github.com/trichner/berryhunter/backend/cfg"
 )
 
-type config struct {
-	tokens       []string
-	radius       float32
-	itemRegistry items.Registry
-	mobRegistry  mobs.Registry
+type Configuration func(g *cfg.GameConfig) error
 
-	coldFractionNightPerS   float32
-	coldFractionRestingPerS float32
-}
+func Config(conf *cfg.Config) Configuration {
+	return func(g *cfg.GameConfig) error {
+		g.ColdFractionNightPerS = conf.Game.ColdFractionNightPerS
+		g.ColdFractionRestingPerS = conf.Game.ColdFractionRestingPerS
 
-type Configuration func(g *config) error
+		g.PlayerConfig.FreezingDamageTickFraction = conf.Game.Player.FreezingDamageTickFraction
+		g.PlayerConfig.HealthGainSatietyLossTickFraction = conf.Game.Player.HealthGainSatietyLossTickFraction
+		g.PlayerConfig.HealthGainSatietyThreshold = conf.Game.Player.HealthGainSatietyThreshold
+		g.PlayerConfig.HealthGainTemperatureThreshold = conf.Game.Player.HealthGainTemperatureThreshold
+		g.PlayerConfig.HealthGainTick = conf.Game.Player.HealthGainTick
+		g.PlayerConfig.SatietyLossTickFraction = conf.Game.Player.SatietyLossTickFraction
+		g.PlayerConfig.StarveDamageTickFraction = conf.Game.Player.StarveDamageTickFraction
+		g.PlayerConfig.WalkingSpeed = conf.Game.Player.WalkingSpeed
 
-func Config(conf *conf.Config) Configuration {
-	return func(g *config) error {
-		g.coldFractionNightPerS = conf.Game.ColdFractionNightPerS
-		g.coldFractionRestingPerS = conf.Game.ColdFractionRestingPerS
 		return nil
 	}
 }
 
 func Registries(r items.Registry, m mobs.Registry) Configuration {
-	return func(g *config) error {
-		g.itemRegistry = r
-		g.mobRegistry = m
+	return func(g *cfg.GameConfig) error {
+		g.ItemRegistry = r
+		g.MobRegistry = m
 		return nil
 	}
 }
 
 func Tokens(t []string) Configuration {
-	return func(g *config) error {
-		g.tokens = t
+	return func(g *cfg.GameConfig) error {
+		g.Tokens = t
 		return nil
 	}
 }
 
 func Radius(r float32) Configuration {
-	return func(g *config) error {
-		g.radius = r
+	return func(g *cfg.GameConfig) error {
+		g.Radius = r
 		return nil
 	}
 }
-

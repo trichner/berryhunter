@@ -5,6 +5,16 @@
   },
   "game": {
     "coldFractionNightPerSecond": 0.01,
-    "coldFractionRestingPerSecond": 0.01
+    "coldFractionRestingPerSecond": 0.01,
+    "player": {
+      "freezingDamageTickFraction": 0.001,
+      "starveDamageTickFraction": 0.001,
+      "satietyLossTickFraction": 0.0002,
+      "healthGainTick": 0.0006,
+      "healthGainSatietyThreshold": 0.6,
+      "healthGainTemperatureThreshold": 0.2,
+      "healthGainSatietyLossTickFraction": 0.0004,
+      "walkingSpeed": 0.1
+    }
   }
 }

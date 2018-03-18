@@ -2,33 +2,9 @@ package sys
 
 import (
 	"engo.io/ecs"
-	"fmt"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/vova616/chipmunk"
 )
-
-func DumpBodies(s *chipmunk.Space) {
-	fmt.Printf("x, y, w, h\n")
-	for _, b := range s.Bodies {
-		dumpBody(b)
-	}
-
-	bb := chipmunk.NewAABB(-110, -110, 110, 110)
-	s.QueryStatic(nil, bb, func(a, b chipmunk.Indexable) {
-		dumpBody(b.Shape().Body)
-	})
-}
-
-func dumpBody(b *chipmunk.Body) {
-	//	pos := b.Position()
-	for _, s := range b.Shapes {
-		bb := s.AABB()
-		v := bb.Upper
-		v.Sub(bb.Lower)
-		fmt.Printf("%f,%f,%f,%f\n", bb.Lower.X, bb.Lower.Y, v.X, v.Y)
-	}
-}
 
 type physicsEntity struct {
 	ecs.BasicEntity

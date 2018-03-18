@@ -5,6 +5,7 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model/vitals"
+	"github.com/trichner/berryhunter/backend/cfg"
 )
 
 type PlayerVitalSigns struct {
@@ -38,6 +39,8 @@ type PlayerEntity interface {
 	CurrentAction() PlayerAction
 
 	SetGodmode(on bool)
+
+	Config() *cfg.PlayerConfig
 }
 
 type BasicEntities map[uint64]ecs.BasicEntity
