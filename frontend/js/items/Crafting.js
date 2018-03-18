@@ -65,7 +65,7 @@ define([
 				return;
 			}
 
-			if (!Game.player.inventory.canFitCraft(recipe.materials)) {
+			if (!Game.player.inventory.canFitCraft(recipe.item, recipe.materials)) {
 				UserInterface.flashInventory();
 				return;
 			}

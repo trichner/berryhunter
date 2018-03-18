@@ -102,6 +102,8 @@ define([], function () {
 		/**
 		 * How far away a character can be to access workbenches and campfires.
 		 * Measured in pixels from center to center.
+		 *
+		 * SYNCED WITH BACKEND
 		 */
 		CRAFTING_RANGE: 100,
 
