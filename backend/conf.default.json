@@ -14,7 +14,7 @@
       "healthGainSatietyThreshold": 0.6,
       "healthGainTemperatureThreshold": 0.2,
       "healthGainSatietyLossTickFraction": 0.0004,
-      "walkingSpeedPerTick": 0.1
+      "walkingSpeedPerTick": 0.07
     }
   }
 }
