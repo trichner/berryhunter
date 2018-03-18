@@ -42,7 +42,7 @@ type Factors struct {
 
 	// Placeable/Heater
 	HeatPerTick uint32
-	Radius      float32
+	HeatRadius  float32
 
 	// Resource
 	ReplenishProbability int
@@ -87,7 +87,7 @@ type itemDefinition struct {
 		MinYield        int     `json:"minimumYield"`
 		DurationInS     int     `json:"durationInSeconds"`
 		HeatPerSecond   float32 `json:"heatPerSecond"`
-		Radius          float32 `json:"radius"`
+		HeatRadius      float32 `json:"heatRadius"`
 
 		ReplenishProbability int `json:"replenishProbability"`
 		Capacity             int `json:"capacity"`
@@ -184,7 +184,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			Yield:                i.Factors.Yield,
 			MinYield:             i.Factors.MinYield,
 			HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
-			Radius:               i.Factors.Radius,
+			HeatRadius:           i.Factors.HeatRadius,
 			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
 			ReplenishProbability: i.Factors.ReplenishProbability,
 			Capacity:             i.Factors.Capacity,

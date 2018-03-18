@@ -72,12 +72,6 @@ func (f *HeaterSystem) Update(dt float32) {
 			continue
 		}
 
-		// are we grilled?
-		if t.temperature > 2*f.baseTemperature {
-			h := t.player.VitalSigns().Health.SubFraction(0.0005)
-			t.player.VitalSigns().Health = h
-		}
-
 		// we are warm, just fine
 		bt := t.player.VitalSigns().BodyTemperature.AddFraction(0.005)
 		t.player.VitalSigns().BodyTemperature = bt

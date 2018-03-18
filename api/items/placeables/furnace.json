@@ -4,7 +4,7 @@
   "type": "PLACEABLE",
   "factors": {
     "heatPerSecond": 0.06,
-    "radius": 2.5,
+    "heatRadius": 1.2,
     "vulnerability": 0.01
   },
   "recipe": {
@@ -28,7 +28,7 @@
     ]
   },
   "body": {
-    "solid": false,
+    "solid": true,
     "radius": 0.667
   }
 }

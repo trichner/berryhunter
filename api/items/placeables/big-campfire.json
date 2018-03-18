@@ -5,7 +5,7 @@
   "factors": {
     "heatPerSecond": 0.05,
     "durationInSeconds": 300,
-    "radius": 2.2,
+    "heatRadius": 1,
     "vulnerability": 0.01
   },
   "recipe": {
@@ -27,6 +27,6 @@
   },
   "body": {
     "solid": false,
-    "radius": 0.6
+    "radius": 1
   }
 }

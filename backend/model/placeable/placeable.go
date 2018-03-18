@@ -81,7 +81,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	if item.Factors.HeatPerTick != 0 {
 		radiator = &model.HeatRadiator{}
 		radiator.HeatPerTick = item.Factors.HeatPerTick
-		radiator.Radius = item.Factors.Radius
+		radiator.Radius = item.Factors.HeatRadius
 		heaterBody := phy.NewCircle(phy.VEC2F_ZERO, radiator.Radius)
 		heaterBody.Shape().IsSensor = true
 		heaterBody.Shape().Mask = model.LayerHeatCollision
