@@ -73,10 +73,10 @@ define(['Utils', 'Preloading'], function (Utils, Preloading) {
 					'schema_server',
 					'schema_client',
 
-				// Configs
-				'Constants',
-				'GraphicsConfig',
-				'../config/Items',
+					// Configs
+					'Constants',
+					'GraphicsConfig',
+					'../config/Items',
 
 					// Game Modules
 					'backend/Backend',
