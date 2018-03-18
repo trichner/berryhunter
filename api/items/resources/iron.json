@@ -3,7 +3,7 @@
   "name": "Iron",
   "type": "RESOURCE",
   "factors": {
-    "replenishProbability": 50,
+    "replenishProbabilityPerSecond": 0.6,
     "minimumYield": 3,
     "capacity": 100
   }

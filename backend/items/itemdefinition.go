@@ -45,7 +45,7 @@ type Factors struct {
 	HeatRadius  float32
 
 	// Resource
-	ReplenishProbability int
+	ReplenishProbability float32
 	Capacity             int
 }
 
@@ -89,8 +89,8 @@ type itemDefinition struct {
 		HeatPerSecond   float32 `json:"heatPerSecond"`
 		HeatRadius      float32 `json:"heatRadius"`
 
-		ReplenishProbability int `json:"replenishProbability"`
-		Capacity             int `json:"capacity"`
+		ReplenishProbabilityPerS float32 `json:"replenishProbabilityPerSecond"`
+		Capacity                 int     `json:"capacity"`
 
 	} `json:"factors"`
 	Slot string `json:"slot"`
@@ -186,7 +186,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
 			HeatRadius:           i.Factors.HeatRadius,
 			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
-			ReplenishProbability: i.Factors.ReplenishProbability,
+			ReplenishProbability: i.Factors.ReplenishProbabilityPerS / constant.TicksPerSecond,
 			Capacity:             i.Factors.Capacity,
 		},
 		Recipe: recipe,
