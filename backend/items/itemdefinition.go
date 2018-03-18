@@ -51,7 +51,7 @@ type Factors struct {
 
 type Body struct {
 	Radius float32
-	Layer  int
+	Solid  bool
 }
 
 type ItemDefinition struct {
@@ -107,7 +107,7 @@ type itemDefinition struct {
 	} `json:"recipe"`
 
 	Body *struct {
-		Layer  int     `json:"layer"`
+		Solid  bool     `json:"solid"`
 		Radius float32 `json:"radius"`
 	} `json:"body"`
 }
@@ -134,7 +134,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	// parse body
 	var body *Body = nil
 	if i.Body != nil {
-		body = &Body{Radius: i.Body.Radius, Layer: i.Body.Layer}
+		body = &Body{Radius: i.Body.Radius, Solid: i.Body.Solid}
 	}
 
 	// parse recipe

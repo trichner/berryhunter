@@ -27,7 +27,7 @@
     ]
   },
   "body": {
-    "layer": 0,
+    "solid": true,
     "radius": 0.417
   }
 }
