@@ -96,11 +96,6 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			sendObituaryMessage(p.Client())
 			deathspot := p.Position()
 
-			// remove the players placed entities
-			for _, e := range p.OwnedEntities() {
-				s.game.RemoveEntity(e)
-			}
-
 			// remove the player from the game
 			s.game.RemoveEntity(p.Basic())
 
@@ -111,6 +106,14 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 		}
 	}
 
+}
+
+func (s *ConnectionStateSystem) doFuneral(p model.PlayerEntity) {
+
+	// remove the players placed entities
+	for _, e := range p.OwnedEntities() {
+		s.game.RemoveEntity(e)
+	}
 }
 
 func (s *ConnectionStateSystem) Remove(e ecs.BasicEntity) {
@@ -132,6 +135,7 @@ func (s *ConnectionStateSystem) removeFromPlayers(e ecs.BasicEntity) {
 	delete := minions.FindBasic(func(i int) model.BasicEntity { return arr[i] }, len(arr), e)
 	if delete >= 0 {
 		p := arr[delete]
+		s.doFuneral(p)
 		s.names.remove(p.Name())
 		s.players = append(arr[:delete], arr[delete+1:]...)
 	}
