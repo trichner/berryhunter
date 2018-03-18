@@ -5,22 +5,8 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/model/vitals"
+	"github.com/trichner/berryhunter/backend/cfg"
 )
-
-type PlayerConfig struct {
-	// tickwise loss
-	FreezingDamageTickFraction float32
-	StarveDamageTickFraction   float32
-	SatietyLossTickFraction    float32
-
-	// constants for gaining health
-	HealthGainTick                    float32
-	HealthGainSatietyThreshold        float32
-	HealthGainTemperatureThreshold    float32
-	HealthGainSatietyLossTickFraction float32
-
-	WalkingSpeed float32
-}
 
 type PlayerVitalSigns struct {
 	Satiety         vitals.VitalSign
@@ -54,7 +40,7 @@ type PlayerEntity interface {
 
 	SetGodmode(on bool)
 
-	Config() *PlayerConfig
+	Config() *cfg.PlayerConfig
 }
 
 type BasicEntities map[uint64]ecs.BasicEntity

@@ -75,21 +75,8 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 			name = s.manglePlayerName(name)
 			log.Printf("☺️ '%s' joined!", name)
 			sendAcceptMessage(client)
-			//TODO real config
-			pc := &model.PlayerConfig{
 
-				// tickwise loss
-				FreezingDamageTickFraction: 0.001,
-				StarveDamageTickFraction:   0.001,
-				SatietyLossTickFraction:    0.0002,
-
-				// constants for gaining health
-				HealthGainTick:                    0.0006,
-				HealthGainSatietyThreshold:        0.6,
-				HealthGainTemperatureThreshold:    0.2,
-				HealthGainSatietyLossTickFraction: 0.0004,
-			}
-
+			pc := &s.game.Config().PlayerConfig
 			p := player.New(s.game.Items(), pc, client, name)
 
 			// spawn the player at a random location

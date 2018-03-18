@@ -48,7 +48,6 @@ func (d *ScoreboardSystem) Update(dt float32) {
 	builder.Finish(msg)
 
 	for _, c := range d.clients {
-		log.Printf("Sending scoreboard to: %d", c.Basic().ID())
 		c.Client().SendMessage(builder.FinishedBytes())
 	}
 }

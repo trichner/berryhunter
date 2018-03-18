@@ -9,11 +9,12 @@ import (
 	"log"
 	"github.com/trichner/berryhunter/backend/model/constant"
 	"github.com/trichner/berryhunter/backend/model/vitals"
+	"github.com/trichner/berryhunter/backend/cfg"
 )
 
 var _ = model.PlayerEntity(&player{})
 
-func New(r items.Registry, config *model.PlayerConfig, c model.Client, name string) model.PlayerEntity {
+func New(r items.Registry, config *cfg.PlayerConfig, c model.Client, name string) model.PlayerEntity {
 
 	e := minions.NewCircleEntity(0.25)
 
@@ -80,7 +81,7 @@ type player struct {
 
 	model.PlayerVitalSigns
 
-	config *model.PlayerConfig
+	config *cfg.PlayerConfig
 
 	ownedEntitites model.BasicEntities
 
@@ -165,7 +166,7 @@ func (p *player) Hand() *model.Hand {
 	return &p.hand
 }
 
-func (p *player) Config() *model.PlayerConfig {
+func (p *player) Config() *cfg.PlayerConfig {
 	return p.config
 }
 
