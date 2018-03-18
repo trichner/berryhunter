@@ -49,119 +49,108 @@ require(['Environment'], function (Environment) {
 });
 
 
-define(['Utils', 'Preloading'], function (Utils, Preloading) {
-	Preloading.loadPartial('partials/loadingScreen.html')
-		.then(function () {
-			Preloading.loadingBar = document.getElementById('loadingBar');
-			/*
-			 * Require all Modules, to create a reasonable loading bar.
-			 */
-			require([
-					// Graphics
-					'PIXI',
+define(['Preloading'], function (Preloading) {
+	/*
+ * Require all Modules, to create a reasonable loading bar.
+ */
+	Preloading.executePreload([
+		// Graphics
+		'PIXI',
 
-					// other libraries
-					'../vendor/tock',
-					'vendor/flatbuffers',
-					'natureOfCode/arrive/vehicle',
+		// other libraries
+		'../vendor/tock',
+		'vendor/flatbuffers',
+		'natureOfCode/arrive/vehicle',
 
-					// own libraries
-					'../vendor/XieLongUtils',
+		// own libraries
+		'../vendor/XieLongUtils',
 
-					// API schema
-					'schema_common',
-					'schema_server',
-					'schema_client',
+		// API schema
+		'schema_common',
+		'schema_server',
+		'schema_client',
 
-					// Configs
-					'Constants',
-					'GraphicsConfig',
-					'../config/Items',
+		// Configs
+		'Constants',
+		'GraphicsConfig',
+		'../config/Items',
 
-					// Game Modules
-					'backend/Backend',
-					'backend/BackendConstants',
-					'backend/ClientMessage',
-					'backend/ScoreboardMessage',
-					'backend/Welcome',
-					'backend/SnapshotFactory',
-					'Controls',
-					'InjectedSVG',
-					'GameObject',
-					'gameObjects/Mobs',
-					'gameObjects/Resources',
-					'gameObjects/Border',
-					'gameObjects/Character',
-					'gameObjects/Placeable',
-					'develop/DebugCircle',
-					'GameMapGenerator',
-					'backend/GameMapWithBackend',
-					'items/Crafting',
-					'items/Equipment',
-					'items/Inventory',
-					'items/InventoryListeners',
-					'items/InventorySlot',
-					'items/Items',
-					'items/ItemType',
-					'items/Recipes',
-					'items/InventorySlot',
-					'items/Crafting',
-					'items/Inventory',
-					'VitalSigns',
-					'Player',
-					'GameMap',
-					'MiniMap',
-					'Camera',
-					'Quadrants',
-					'userInterface/ClickableCountableIcon',
-					'userInterface/ClickableIcon',
-					'userInterface/SubIcon',
-					'userInterface/UserInterface',
-					'userInterface/VitalSignBar',
-					'StartScreen',
-					'NameGenerator',
-					'EndScreen',
-					'Console',
-					'Chat',
-					'NamedGroup',
-					'DayCycle',
-					'Spectator',
-					'FilterPool',
-					'Vector',
-					'ColorMatrixFilterExtension',
-					'PlayerName',
-					'Text',
-					'groundTextures/GroundTexture',
-					'groundTextures/GroundTextureTypes',
-					'groundTextures/GroundTextureManager',
+		// Game Modules
+		'backend/Backend',
+		'backend/BackendConstants',
+		'backend/ClientMessage',
+		'backend/ScoreboardMessage',
+		'backend/Welcome',
+		'backend/SnapshotFactory',
+		'Controls',
+		'InjectedSVG',
+		'GameObject',
+		'gameObjects/Mobs',
+		'gameObjects/Resources',
+		'gameObjects/Border',
+		'gameObjects/Character',
+		'gameObjects/Placeable',
+		'develop/DebugCircle',
+		'GameMapGenerator',
+		'backend/GameMapWithBackend',
+		'items/Crafting',
+		'items/Equipment',
+		'items/Inventory',
+		'items/InventoryListeners',
+		'items/InventorySlot',
+		'items/Items',
+		'items/ItemType',
+		'items/Recipes',
+		'items/InventorySlot',
+		'items/Crafting',
+		'items/Inventory',
+		'VitalSigns',
+		'Player',
+		'GameMap',
+		'MiniMap',
+		'Camera',
+		'Quadrants',
+		'userInterface/ClickableCountableIcon',
+		'userInterface/ClickableIcon',
+		'userInterface/SubIcon',
+		'userInterface/UserInterface',
+		'userInterface/VitalSignBar',
+		'StartScreen',
+		'NameGenerator',
+		'EndScreen',
+		'Console',
+		'Chat',
+		'NamedGroup',
+		'DayCycle',
+		'Spectator',
+		'FilterPool',
+		'Vector',
+		'ColorMatrixFilterExtension',
+		'PlayerName',
+		'Text',
+		'groundTextures/GroundTexture',
+		'groundTextures/GroundTextureTypes',
+		'groundTextures/GroundTextureManager',
 
-					// Develop resources
-					'develop/Fps',
-					'develop/AABBs',
-					'Develop',
+		// Develop resources
+		'develop/Fps',
+		'develop/AABBs',
+		'Develop',
 
-					// Map Editor
-					'mapEditor/QuadrantGrid',
-					'MapEditor',
+		// Map Editor
+		'mapEditor/QuadrantGrid',
+		'MapEditor',
 
-					// Ground Texture Panel
-					'groundTextures/_Panel',
+		// Ground Texture Panel
+		'groundTextures/_Panel',
 
-					// The Game
-					// (you just lost it)
-					'Game',
-				], function () {
-					/*
-					 * All modules had a chance to register preloads - now setup waits for those reloads to resolve.
-					 */
-					Preloading.executePreload().then(() => {
-						require(['Game'], function (Game) {
-							Game.setup();
-						});
-					});
-				},
-			);
+		// The Game
+		// (you just lost it)
+		'Game',
+	]).then(function () {
+		require(['Game'], function (Game) {
+			Game.setup();
 		});
-
+	});
 
 });

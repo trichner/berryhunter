@@ -6,17 +6,37 @@ define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 	const promises = [];
 	let numberOfPromises = 0;
 	let loadedPromises = 0;
-	Preloading.loadingBar = false;
+	let loadingBar = false;
 
-	Preloading.executePreload = function () {
-		return Promise.all(promises);
+	Preloading.executePreload = function (requires) {
+		return Preloading.loadPartial('partials/loadingScreen.html')
+			.then(function () {
+				loadingBar = document.getElementById('loadingBar');
+
+				requires.forEach(function (dependency) {
+					promises.push(Preloading.require(dependency));
+				});
+
+				/*
+				 * All modules had a chance to register preloads - now setup waits for those reloads to resolve.
+				 */
+				return Promise.all(promises);
+			});
+	};
+
+	Preloading.require = function (dependency) {
+		return new Promise(function (resolve) {
+			require([dependency], function (dependency) {
+				resolve(dependency);
+			});
+		});
 	};
 
 	Preloading.registerPreload = function (preloadingPromise) {
 		preloadingPromise.then(function (data) {
 			loadedPromises++;
-			if (Preloading.loadingBar) {
-				Preloading.loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
+			if (loadingBar) {
+				loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
 				if (loadedPromises >= numberOfPromises) {
 					let loadingScreenElement = document.getElementById('loadingScreen');
 					if (loadingScreenElement === null) {
@@ -51,7 +71,7 @@ define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 	Preloading.registerSVG = function (svgPath) {
 		return Preloading.registerPreload(Utils.makeRequest({
 			method: 'GET',
-			url: svgPath
+			url: svgPath,
 		}));
 	};
 
@@ -70,7 +90,7 @@ define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 				gameObjectClass.svg.baseTexture.on('error', function () {
 					reject("Error loading texture '" + svgPath + "'");
 				});
-			})
+			}),
 		);
 	};
 
@@ -88,7 +108,7 @@ define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 	Preloading.loadPartial = function (htmlUrl) {
 		return Utils.makeRequest({
 			method: 'GET',
-			url: htmlUrl
+			url: htmlUrl,
 		}).then(function (html) {
 			switch (document.readyState) {
 				case "interactive":
