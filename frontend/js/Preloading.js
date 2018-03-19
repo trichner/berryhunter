@@ -1,17 +1,16 @@
 'use strict';
 
-define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
+define(['PIXI', 'Utils', 'Constants', 'userInterface/screens/StartScreen'], function (PIXI, Utils, Constants, StartScreen) {
 	let Preloading = {};
 
 	const promises = [];
 	let numberOfPromises = 0;
 	let loadedPromises = 0;
-	let loadingBar = false;
 
 	Preloading.executePreload = function (requires) {
-		return Preloading.loadPartial('partials/loadingScreen.html')
+		return Preloading.loadPartial(StartScreen.htmlFile)
 			.then(function () {
-				loadingBar = document.getElementById('loadingBar');
+				StartScreen.onDomReady();
 
 				requires.forEach(function (dependency) {
 					Preloading.require(dependency);
@@ -37,26 +36,8 @@ define(['PIXI', 'Utils', 'Constants'], function (PIXI, Utils, Constants) {
 	Preloading.registerPreload = function (preloadingPromise) {
 		preloadingPromise.then(function (data) {
 			loadedPromises++;
-			if (loadingBar) {
-				console.log("Load Progress: " + loadedPromises + ' / ' + numberOfPromises);
-				loadingBar.style.width = (loadedPromises / numberOfPromises * 100) + '%';
-				if (loadedPromises >= numberOfPromises) {
-					let loadingScreenElement = document.getElementById('loadingScreen');
-					if (loadingScreenElement === null) {
-						// Element was already removed
-						return;
-					}
-					loadingScreenElement.classList.add('finished');
-
-					loadingScreenElement.addEventListener('animationend', function () {
-						if (this.parentNode === null) {
-							// Element was already removed
-							return;
-						}
-						this.parentNode.removeChild(loadingScreenElement);
-					});
-				}
-			}
+			console.log("Load Progress: " + loadedPromises + ' / ' + numberOfPromises);
+			StartScreen.progress = loadedPromises / numberOfPromises;
 
 			return data;
 		});

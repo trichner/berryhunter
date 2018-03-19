@@ -1,16 +1,22 @@
-<div id="startScreen" class="hidden">
-
+<div id="startScreen" class="">
 	<header class="layout-row">
 		<img id="hunter" src="img/hunter.png"/>
 		<h1>BerryHunter</h1>
 	</header>
 
+	<div id="loadingScreen">
+		<div id="loadingWrapper">
+			<div id="loadingBar"></div>
+			<h2>Loading…</h2>
+		</div>
+	</div>
+
 	<form id="startForm" class="playerForm layout-column">
 		<div class="layout-row" style="margin-bottom: 16px;">
 			<input class="playerNameInput flex"
-			       placeholder="Some Name"
-			       maxlength="20"
-			       tabindex="0" autofocus/>
+				   placeholder="Some Name"
+				   maxlength="20"
+				   tabindex="0" autofocus/>
 		</div>
 		<input type="submit" value="Play"/>
 	</form>

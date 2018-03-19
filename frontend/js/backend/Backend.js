@@ -209,8 +209,8 @@ define([
 					}
 
 					require([
-						'StartScreen',
-						'EndScreen',
+						'userInterface/screens/StartScreen',
+						'userInterface/screens/EndScreen',
 						'userInterface/UserInterface',
 					], function (StartScreen, EndScreen, UserInterface) {
 						StartScreen.hide();
@@ -226,7 +226,7 @@ define([
 					}
 
 					Game.removePlayer();
-					require(['EndScreen'], function (EndScreen) {
+					require(['userInterface/screens/EndScreen'], function (EndScreen) {
 						EndScreen.show();
 					});
 

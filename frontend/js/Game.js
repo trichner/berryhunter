@@ -26,7 +26,7 @@ define([], function () {
 			'Spectator',
 			'GameObject',
 			'userInterface/UserInterface',
-			'StartScreen',
+			'userInterface/screens/StartScreen',
 			'Chat',
 			'Utils',
 			'NamedGroup',
