@@ -58,7 +58,6 @@ func (p *PhysicsSystem) AddEntity(e model.BodiedEntity) {
 }
 
 func (p *PhysicsSystem) Update(dt float32) {
-	//log.Printf("Physics stepping %f having %d balls\n", dt, len(p.entities))
 	p.space.Update()
 }
 
