@@ -159,9 +159,8 @@ func (g *game) Handler() http.HandlerFunc {
 func (g *game) Loop() {
 
 	//---- run game loop
-	tickrate := time.Millisecond * 33
-	tps := time.Second / tickrate
-	log.Printf("Starting loop with %d tps", tps)
+	tickrate := time.Second / constant.TicksPerSecond
+	log.Printf("Starting loop with %d tps", constant.TicksPerSecond)
 
 	ticker := time.NewTicker(tickrate)
 	for {
@@ -178,7 +177,7 @@ func (g *game) GetEntity(id uint64) (model.BasicEntity, error) {
 
 	e, ok := g.entities[id]
 	if !ok {
-		return nil, fmt.Errorf("Entity with id %d not found.", id)
+		return nil, fmt.Errorf("entity with id %d not found", id)
 	}
 	return e, nil
 }

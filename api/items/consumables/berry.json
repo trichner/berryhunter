@@ -4,7 +4,11 @@
   "type": "CONSUMABLE",
   "factors": {
     "food": 0.2,
-    "replenishProbability": 200,
+    "replenishProbabilityPerSecond": 0.15,
     "capacity": 5
+  },
+  "body": {
+    "radius": 0.5,
+    "solid": true
   }
 }

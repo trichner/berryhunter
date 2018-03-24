@@ -36,7 +36,10 @@ func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.Reso
 				continue
 			}
 
-			e := NewRandomEntityFrom(items, ev, entities, crnd)
+			e, err := NewRandomEntityFrom(items, ev, entities, crnd)
+			if err != nil {
+				panic(err)
+			}
 			resourceEntities = append(resourceEntities, e)
 		}
 	}
@@ -55,7 +58,6 @@ var trees = []staticEntityBody{
 	{
 		BerryhunterApi.EntityTypeRoundTree,
 		100,
-		1,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Wood",
@@ -63,7 +65,6 @@ var trees = []staticEntityBody{
 	{
 		BerryhunterApi.EntityTypeMarioTree,
 		100,
-		1,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Wood",
@@ -74,7 +75,6 @@ var resources = []staticEntityBody{
 	{
 		BerryhunterApi.EntityTypeBerryBush,
 		100,
-		0.5,
 		model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Berry",
@@ -82,7 +82,6 @@ var resources = []staticEntityBody{
 	{
 		BerryhunterApi.EntityTypeStone,
 		100,
-		0.5,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Stone",
@@ -90,7 +89,6 @@ var resources = []staticEntityBody{
 	{
 		BerryhunterApi.EntityTypeBronze,
 		100,
-		0.5,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Bronze",
@@ -98,7 +96,6 @@ var resources = []staticEntityBody{
 	{
 		BerryhunterApi.EntityTypeIron,
 		100,
-		0.5,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Iron",
@@ -108,7 +105,6 @@ var resources = []staticEntityBody{
 type staticEntityBody struct {
 	entityType     model.EntityType
 	weight         int
-	radius         float32
 	collisionLayer int
 	collisionMask  int
 	resourceName   string

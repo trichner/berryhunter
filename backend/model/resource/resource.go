@@ -15,7 +15,8 @@ type Resource struct {
 	model.BaseEntity
 	stock model.ResourceStock
 
-	rand *rand.Rand
+	rand                    *rand.Rand
+	invReplenishProbability int
 }
 
 func (r *Resource) replenish(i int) {
@@ -53,7 +54,7 @@ func (r *Resource) Update(dt float32) {
 	if res.Item.Factors.ReplenishProbability <= 0 {
 		return
 	}
-	if r.rand.Intn(res.Item.Factors.ReplenishProbability) == 0 {
+	if r.rand.Intn(r.invReplenishProbability) == 0 {
 		r.replenish(1)
 	}
 }
@@ -61,11 +62,18 @@ func (r *Resource) Update(dt float32) {
 func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityType model.EntityType) (*Resource, error) {
 
 	if resource.ItemDefinition == nil {
-		return nil, fmt.Errorf("No resource provided.")
+		return nil, fmt.Errorf("no resource provided")
 	}
 
+	replenishProbability := resource.ItemDefinition.Factors.ReplenishProbability
+	if replenishProbability <= 0 || replenishProbability > 1 {
+		return nil, fmt.Errorf("invalid replenishProbability '%d' for %s not in (0,1]", replenishProbability, resource.Name)
+	}
+
+	invReplenishProbability := int(1.0 / replenishProbability)
+
 	if body == nil {
-		return nil, fmt.Errorf("No body provided.")
+		return nil, fmt.Errorf("no body provided")
 	}
 
 	base := model.NewBaseEntity(body, entityType)
@@ -76,7 +84,8 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 			Capacity:  resource.Factors.Capacity,
 			Available: resource.Factors.Capacity / 2,
 		},
-		rand:       rand,
+		rand:                    rand,
+		invReplenishProbability: invReplenishProbability,
 	}
 	r.Body.Shape().UserData = r
 	return r, nil

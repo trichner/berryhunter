@@ -45,13 +45,17 @@ type Factors struct {
 	HeatRadius  float32
 
 	// Resource
-	ReplenishProbability int
+	ReplenishProbability float32
 	Capacity             int
 }
 
 type Body struct {
 	Radius float32
 	Solid  bool
+
+	// radii for resources
+	MinRadius float32
+	MaxRadius float32
 }
 
 type ItemDefinition struct {
@@ -76,9 +80,9 @@ type Item struct {
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
-	ID      int    `json:"id"`
-	Type    string `json:"type"`
-	Name    string `json:"name"`
+	ID   int    `json:"id"`
+	Type string `json:"type"`
+	Name string `json:"name"`
 	Factors struct {
 		Food            float32 `json:"food"`
 		Damage          float32 `json:"damage"`
@@ -89,9 +93,8 @@ type itemDefinition struct {
 		HeatPerSecond   float32 `json:"heatPerSecond"`
 		HeatRadius      float32 `json:"heatRadius"`
 
-		ReplenishProbability int `json:"replenishProbability"`
-		Capacity             int `json:"capacity"`
-
+		ReplenishProbabilityPerS float32 `json:"replenishProbabilityPerSecond"`
+		Capacity                 int     `json:"capacity"`
 	} `json:"factors"`
 	Slot string `json:"slot"`
 
@@ -107,8 +110,10 @@ type itemDefinition struct {
 	} `json:"recipe"`
 
 	Body *struct {
-		Solid  bool     `json:"solid"`
-		Radius float32 `json:"radius"`
+		Solid     bool    `json:"solid"`
+		Radius    float32 `json:"radius"`
+		MinRadius float32 `json:"minRadius"`
+		MaxRadius float32 `json:"maxRadius"`
 	} `json:"body"`
 }
 
@@ -134,7 +139,12 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 	// parse body
 	var body *Body = nil
 	if i.Body != nil {
-		body = &Body{Radius: i.Body.Radius, Solid: i.Body.Solid}
+		body = &Body{
+			Radius:    i.Body.Radius,
+			Solid:     i.Body.Solid,
+			MinRadius: i.Body.MinRadius,
+			MaxRadius: i.Body.MaxRadius,
+		}
 	}
 
 	// parse recipe
@@ -186,7 +196,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
 			HeatRadius:           i.Factors.HeatRadius,
 			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
-			ReplenishProbability: i.Factors.ReplenishProbability,
+			ReplenishProbability: i.Factors.ReplenishProbabilityPerS / constant.TicksPerSecond,
 			Capacity:             i.Factors.Capacity,
 		},
 		Recipe: recipe,

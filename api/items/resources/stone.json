@@ -3,8 +3,13 @@
   "name": "Stone",
   "type": "RESOURCE",
   "factors": {
-    "replenishProbability": 50,
+    "replenishProbabilityPerSecond": 0.6,
     "minimumYield": 1,
     "capacity": 100
+  },
+  "body": {
+    "minRadius": 0.4,
+    "maxRadius": 0.6,
+    "solid": true
   }
 }
