@@ -9,9 +9,20 @@ define(['userInterface/UserInterface', 'Utils'], function (UserInterface, Utils)
 		this.rowContainer = this.playerRowTemplate.parentNode;
 		this.rowContainer.removeChild(this.playerRowTemplate);
 		this.rows = [];
+
+		if (Utils.isDefined(this.pendingMessage)) {
+			this.updateFromBackend(this.pendingMessage);
+			delete this.pendingMessage;
+		}
 	};
 
 	Scoreboard.updateFromBackend = function (scoreboardMessage) {
+		if (Utils.isUndefined(this.domElement)) {
+			// Don't try to show a scoreboard if its not yet loaded
+			// instead store the message and show as soon as the dom is ready
+			this.pendingMessage = scoreboardMessage;
+			return;
+		}
         this.domElement.classList.remove('hidden');
 		let players = scoreboardMessage.players;
 		if (this.rows.length !== players.length) {
