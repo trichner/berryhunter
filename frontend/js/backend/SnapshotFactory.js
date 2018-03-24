@@ -13,12 +13,13 @@ define(['Utils', 'underscore'], function (Utils, _) {
 
 			snapshot.player = _.clone(gameState.player);
 
-			if (backendState === 'PLAYING' &&
-				!lastGameState.player.isSpectator &&
-				Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
-				Utils.nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)) {
-				delete snapshot.player.position;
-			}
+			// FIXME this leads to the player being unable to move
+			// if (backendState === 'PLAYING' &&
+			// 	!lastGameState.player.isSpectator &&
+			// 	Utils.nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
+			// 	Utils.nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)) {
+			// 	delete snapshot.player.position;
+			// }
 
 			// Inventory handles item stacks
 			snapshot.inventory = gameState.inventory;

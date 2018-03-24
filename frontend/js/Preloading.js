@@ -36,7 +36,6 @@ define(['PIXI', 'Utils', 'Constants', 'userInterface/screens/StartScreen'], func
 	Preloading.registerPreload = function (preloadingPromise) {
 		preloadingPromise.then(function (data) {
 			loadedPromises++;
-			console.log("Load Progress: " + loadedPromises + ' / ' + numberOfPromises);
 			StartScreen.progress = loadedPromises / numberOfPromises;
 
 			return data;

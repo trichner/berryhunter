@@ -1,31 +1,41 @@
 'use strict';
 
-define([], function () {
+define(['PlayerName'], function (PlayerName) {
 	const StartScreen = {};
 
 	StartScreen.htmlFile = 'partials/startScreen.html';
+	StartScreen.isDomReady = false;
 	let progress = 0;
-	let loadingBar = false;
+	let loadingBar = null;
 	Object.defineProperty(StartScreen, 'progress', {
 		set: function (value) {
 			progress = value;
-			if (loadingBar) {
+			if (this.isDomReady) {
 				loadingBar.style.width = (progress * 100) + '%';
 				if (progress >= 1) {
-					let loadingScreenElement = document.getElementById('loadingScreen');
-					if (loadingScreenElement === null) {
-						// Element was already removed
-						return;
-					}
-					loadingScreenElement.classList.add('finished');
-
-					loadingScreenElement.addEventListener('animationend', function () {
-						if (this.parentNode === null) {
-							// Element was already removed
-							return;
-						}
-						this.parentNode.removeChild(loadingScreenElement);
+					let self = this;
+					require(['backend/Backend'], function (Backend) {
+						Backend.promise.then(function () {
+							self.rootElement.classList.remove('loading');
+							self.rootElement.classList.add('finished');
+							// let loadingScreenElement = document.getElementById('loadingScreen');
+							// if (loadingScreenElement === null) {
+							// 	// Element was already removed
+							// 	return;
+							// }
+							self.rootElement.getElementsByClassName('playerNameSubmit').item(0).value = "Play";
+						});
 					});
+
+					// loadingScreenElement.classList.add('finished');
+					//
+					// loadingScreenElement.addEventListener('animationend', function () {
+					// 	if (this.parentNode === null) {
+					// 		// Element was already removed
+					// 		return;
+					// 	}
+					// 	this.parentNode.removeChild(loadingScreenElement);
+					// });
 				}
 			}
 		},
@@ -41,13 +51,14 @@ define([], function () {
 			.getElementsByClassName('playerNameInput').item(0);
 
 		loadingBar = document.getElementById('loadingBar');
+
+		this.isDomReady = true;
+
+		PlayerName.prepareForm(document.getElementById('startForm'), StartScreen.playerNameInput);
+		PlayerName.fillInput(StartScreen.playerNameInput);
+
 		// re-set progress to ensure the loading bar is synced.
 		this.progress = progress;
-
-		require(['PlayerName'], function (PlayerName) {
-			PlayerName.prepareForm(document.getElementById('startForm'), StartScreen.playerNameInput);
-			PlayerName.fillInput(StartScreen.playerNameInput);
-		});
 	};
 
 	StartScreen.show = function () {

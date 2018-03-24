@@ -223,17 +223,28 @@ svg .clickable text {
 	border-radius: 0.7vh;
 	font-size: 1.75rem;
 
+	> .inputContainer {
+		margin-bottom: 16px;
+	}
+
+	> .submitContainer {
+		position: relative;
+	}
+
 	> label {
 		cursor: pointer;
 	}
 
-	> input[type=submit] {
-		background-color: #e37313;
+	.playerNameSubmit {
+		background: none;
 		color: white;
 		border-radius: 0.7vh;
 		padding: 16px;
 		line-height: 1;
 		font: inherit;
+		width: 100%;
+
+		border: 2px outset rgb(221, 221, 221); // Chrome default style, for all browsers
 
 		&:focus {
 			outline: none;

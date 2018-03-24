@@ -1,23 +1,29 @@
 <div id="startScreen" class="loading">
+	<div id="splashScreen"></div>
+
 	<header class="layout-row">
 		<img id="hunter" src="img/hunter.png"/>
 		<h1>BerryHunter</h1>
 	</header>
 
-	<div id="loadingScreen">
-		<div id="loadingWrapper">
-			<div id="loadingBar"></div>
-			<h2>Loading…</h2>
-		</div>
-	</div>
-
 	<form id="startForm" class="playerForm layout-column">
-		<div class="layout-row" style="margin-bottom: 16px;">
+		<div class="inputContainer layout-row">
 			<input class="playerNameInput flex"
 				   placeholder="Some Name"
 				   maxlength="20"
 				   tabindex="0" autofocus/>
 		</div>
-		<input type="submit" value="Play"/>
+		<div class="submitContainer">
+			<input type="submit" value="Loading..." class="playerNameSubmit"/>
+			<div id="loadingBar"></div>
+		</div>
 	</form>
+
+	<!-- Loading overlays everything -->
+	<div id="loadingScreen" class="hidden">
+		<div id="loadingWrapper">
+			<!--<div id="loadingBar"></div>-->
+			<h2>Loading…</h2>
+		</div>
+	</div>
 </div>

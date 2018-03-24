@@ -1,6 +1,7 @@
 'use strict';
 
 define([
+	'Preloading',
 	'Game',
 	'Utils',
 	'Constants',
@@ -19,7 +20,7 @@ define([
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState,
+], function (Preloading, Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState,
              ClientMessage, Welcome, ScoreboardMessage, Chat, Scoreboard, DayCycle) {
 
 	const States = {
@@ -58,6 +59,10 @@ define([
 		}
 	}
 
+	let firstGameStateReceived = false;
+	let firstGameStateResolve;
+	let firstGameStateReject;
+
 	//noinspection UnnecessaryLocalVariableJS
 	const Backend = {
 		States: States,
@@ -91,6 +96,10 @@ define([
 
 			this.webSocket.onerror = function () {
 				setState(States.ERROR);
+				if (!firstGameStateReceived) {
+					firstGameStateReject();
+					firstGameStateReceived = true;
+				}
 			};
 
 			this.webSocket.onmessage = this.receive.bind(this);
@@ -301,10 +310,20 @@ define([
 			snapshot.entities.forEach(function (entity) {
 				Game.map.addOrUpdate(entity);
 			});
+
+			if (!firstGameStateReceived) {
+				firstGameStateResolve();
+				firstGameStateReceived = true;
+			}
 		},
 
 
 	};
+
+	Backend.promise = new Promise(function (resolve, reject) {
+		firstGameStateResolve = resolve;
+		firstGameStateReject = reject;
+	});
 
 	return Backend;
 });
