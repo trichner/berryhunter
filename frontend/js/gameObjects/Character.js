@@ -261,12 +261,12 @@ define([
 				group.position.copy(this.shape.position);
 			}, this);
 
-			if (this.isPlayerCharacter){
+			if (this.isPlayerCharacter) {
 				this.updatePlayerCharacter();
 			}
 		}
 
-		updatePlayerCharacter(){
+		updatePlayerCharacter() {
 			if (Game.player.isCraftInProgress()) {
 				let craftProgress = Game.player.craftProgress;
 				let progress = 1 - (craftProgress.remainingTicks / craftProgress.requiredTicks);
