@@ -138,7 +138,11 @@ define([
 		},
 
 		sendJoin: function (joinObj) {
-			this.send(ClientMessage.fromJoin(joinObj));
+			let self = this;
+			this.promise.then(function () {
+				console.log("Backend promise resolved - join!");
+				self.send(ClientMessage.fromJoin(joinObj));
+			});
 		},
 
 		sendCommand: function (commandObj) {
@@ -312,6 +316,7 @@ define([
 			});
 
 			if (!firstGameStateReceived) {
+				console.log("Received first game state");
 				firstGameStateResolve();
 				firstGameStateReceived = true;
 			}

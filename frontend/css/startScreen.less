@@ -43,11 +43,51 @@
 			//visibility: hidden; // TODO fade-in
 			opacity: 0;
 		}
+
+		> .infoContainer {
+			background-color: @backgroundColor;
+		}
+
+		.playerNameSubmit {
+			font-variant: small-caps;
+		}
 	}
 
 	&.finished {
 		#splashScreen {
 			opacity: 0;
+		}
+	}
+
+	> .infoContainer {
+		position: absolute;
+		color: white;
+		padding: 0 0.5rem;
+		transition: background-color @splashScreenAnimation;
+		border-radius: 0.7vh;
+
+		a:link,
+		a:visited,
+		a:hover,
+		a:active,
+		a:focus {
+			color: inherit;
+		}
+
+		&.center {
+			left: 50%;
+			transform: translateX(-50%);
+			text-align: center;
+		}
+
+		&.bottom {
+			bottom: 0;
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
+		> p {
+			margin: 0.5rem 0;
 		}
 	}
 }

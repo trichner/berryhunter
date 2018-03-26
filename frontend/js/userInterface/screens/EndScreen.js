@@ -1,6 +1,6 @@
 'use strict';
 
-define(['Preloading', 'PlayerName'], function (Preloading, PlayerName) {
+define(['Preloading', 'PlayerName', 'Console'], function (Preloading, PlayerName, Console) {
 	const EndScreen = {};
 
 	function onDomReady() {
@@ -18,6 +18,9 @@ define(['Preloading', 'PlayerName'], function (Preloading, PlayerName) {
 
 	EndScreen.show = function () {
 		PlayerName.fillInput(this.playerNameInput);
+		Console.hide();
+
+		this.playerNameInput.focus();
 
 		this.rootElement.classList.add('showing');
 	};

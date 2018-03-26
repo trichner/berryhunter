@@ -219,9 +219,9 @@ svg .clickable text {
 
 	color: white;
 	background-color: rgba(0, 0, 0, 0.6);
-	padding: 16px;
+	padding: 1rem;
 	border-radius: 0.7vh;
-	font-size: 1.75rem;
+	font-size: 2rem;
 
 	> .inputContainer {
 		margin-bottom: 16px;
@@ -239,12 +239,17 @@ svg .clickable text {
 		background: none;
 		color: white;
 		border-radius: 0.7vh;
-		padding: 16px;
+		padding: 0.5rem;
 		line-height: 1;
 		font: inherit;
 		width: 100%;
+		font-variant: none;
 
 		border: 2px outset rgb(221, 221, 221); // Chrome default style, for all browsers
+
+		&:active {
+			border-style: inset;
+		}
 
 		&:focus {
 			outline: none;

@@ -137,7 +137,7 @@ define([], function () {
 				Game.renderer = MapEditor.setup();
 			} else {
 				// Setup backend first, as this will take some time to connect.
-				Backend.setup();
+
 				let renderer = PIXI.autoDetectRenderer({
 					antialias: true,
 					backgroundColor: 0x006030
@@ -342,6 +342,10 @@ define([], function () {
 
 			if (MapEditor.isActive()) {
 				MapEditor.afterSetup(Game);
+			} else {
+				console.log("Setup Backend");
+				Backend.setup();
+				console.log("Backend Setup");
 			}
 		});
 	};

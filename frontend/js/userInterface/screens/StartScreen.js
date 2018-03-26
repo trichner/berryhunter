@@ -1,6 +1,6 @@
 'use strict';
 
-define(['PlayerName'], function (PlayerName) {
+define(['PlayerName', 'Utils'], function (PlayerName, Utils) {
 	const StartScreen = {};
 
 	StartScreen.htmlFile = 'partials/startScreen.html';
@@ -9,6 +9,10 @@ define(['PlayerName'], function (PlayerName) {
 	let loadingBar = null;
 	Object.defineProperty(StartScreen, 'progress', {
 		set: function (value) {
+			// Prevent the progress from going backwards
+			if (value <= progress) {
+				return;
+			}
 			progress = value;
 			if (this.isDomReady) {
 				loadingBar.style.width = (progress * 100) + '%';
@@ -47,8 +51,12 @@ define(['PlayerName'], function (PlayerName) {
 
 	StartScreen.onDomReady = function () {
 		this.rootElement = document.getElementById('startScreen');
+
+		Utils.preventInputPropagation(this.rootElement);
+
 		this.playerNameInput = this.rootElement
 			.getElementsByClassName('playerNameInput').item(0);
+		this.rootElement.getElementsByClassName('playerNameSubmit').item(0).disabled = false;
 
 		loadingBar = document.getElementById('loadingBar');
 

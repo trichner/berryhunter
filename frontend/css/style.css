@@ -350,33 +350,34 @@ svg .clickable text {
   margin: 0 auto;
   color: white;
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 16px;
+    padding: 1rem;
   border-radius: 0.7vh;
-  font-size: 1.75rem;
+    font-size: 2rem;
 }
-
 .playerForm > .inputContainer {
     margin-bottom: 16px;
 }
-
 .playerForm > .submitContainer {
     position: relative;
 }
 .playerForm > label {
   cursor: pointer;
 }
-
 .playerForm .playerNameSubmit {
     background: none;
   color: white;
   border-radius: 0.7vh;
-  padding: 16px;
+    padding: 0.5rem;
   line-height: 1;
   font: inherit;
     width: 100%;
+    font-variant: none;
     border: 2px outset #dddddd;
 }
 
+.playerForm .playerNameSubmit:active {
+    border-style: inset;
+}
 .playerForm .playerNameSubmit:focus {
   outline: none;
 }
@@ -1069,15 +1070,52 @@ code {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 #startScreen.loading #hunter {
     opacity: 0;
 }
 
+#startScreen.loading > .infoContainer {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+#startScreen.loading .playerNameSubmit {
+    font-variant: small-caps;
+}
 #startScreen.finished #splashScreen {
     opacity: 0;
 }
 
+#startScreen > .infoContainer {
+    position: absolute;
+    color: white;
+    padding: 0 0.5rem;
+    transition: background-color 1s;
+    border-radius: 0.7vh;
+}
+
+#startScreen > .infoContainer a:link,
+#startScreen > .infoContainer a:visited,
+#startScreen > .infoContainer a:hover,
+#startScreen > .infoContainer a:active,
+#startScreen > .infoContainer a:focus {
+    color: inherit;
+}
+
+#startScreen > .infoContainer.center {
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+#startScreen > .infoContainer.bottom {
+    bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+#startScreen > .infoContainer > p {
+    margin: 0.5rem 0;
+}
 #splashScreen {
     background-color: #2FA107;
     background-image: url('../img/loadingScreen.jpg');
@@ -1125,6 +1163,10 @@ code {
 }
 #endScreen > .playerForm {
   opacity: 0;
+}
+
+#endScreen .playerNameSubmit {
+    background-color: #e37313;
 }
 @keyframes endScreen-fadeIn {
   to {

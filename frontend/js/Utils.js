@@ -268,5 +268,34 @@ define(['../vendor/XieLongUtils'], function () {
 		document.body.focus();
 	};
 
+	/*
+	* Disable event propagation for key and mouse events to prevent those event defaults
+	* from being prevented globally.
+	*/
+	Utils.preventInputPropagation = function (element, ignoredKeys) {
+
+		function preventKeyInputPropagation(event) {
+			if (ignoredKeys.indexOf(event.which) === -1) {
+				event.stopPropagation();
+			}
+		}
+
+		function preventInputPropagation(event) {
+			event.stopPropagation();
+		}
+
+		if (Utils.isDefined(ignoredKeys)) {
+			element.addEventListener('keydown', preventKeyInputPropagation);
+			element.addEventListener('keyup', preventKeyInputPropagation);
+		} else {
+			element.addEventListener('keydown', preventInputPropagation);
+			element.addEventListener('keyup', preventInputPropagation);
+		}
+
+		element.addEventListener('mousedown', preventInputPropagation);
+		element.addEventListener('mouseup', preventInputPropagation);
+		element.addEventListener('click', preventInputPropagation);
+	};
+
 	return Utils;
 });

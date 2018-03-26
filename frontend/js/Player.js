@@ -51,7 +51,6 @@ define([
 		}
 
 		updateFromBackend(entity) {
-			console.log(entity.position);
 			if (Utils.isDefined(entity.position)) {
 				this.character.setPosition(entity.position.x, entity.position.y);
 			}

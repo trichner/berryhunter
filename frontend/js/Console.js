@@ -33,17 +33,7 @@ define(['Preloading', 'Utils'], function (Preloading, Utils) {
 			}
 		});
 
-		/*
-		 * Disable event propagation for key events to prevent those event defaults
-		 * from being prevented globally.
-		 */
-		function preventInputPropagation(event) {
-			if (Console.KEYS.indexOf(event.which) === -1) {
-				event.stopPropagation();
-			}
-		}
-		commandInput.addEventListener('keydown', preventInputPropagation);
-		commandInput.addEventListener('keydown', preventInputPropagation);
+		Utils.preventInputPropagation(commandInput, Console.KEYS);
 
 		document.getElementById('console').addEventListener('submit', function (event) {
 			event.preventDefault();
