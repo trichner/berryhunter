@@ -325,10 +325,10 @@ define([
 
 	};
 
-	Backend.promise = new Promise(function (resolve, reject) {
+	Preloading.registerPreload(new Promise(function (resolve, reject) {
 		firstGameStateResolve = resolve;
 		firstGameStateReject = reject;
-	});
+	}));
 
 	return Backend;
 });

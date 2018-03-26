@@ -17,11 +17,18 @@ define(['PIXI', 'Utils', 'Constants', 'userInterface/screens/StartScreen'], func
 				});
 
 				/*
-				 * All modules had a chance to register preloads - now setup waits for those reloads to resolve.
+				 * As preloads have the chance to register new preloads themself, all preloads are loaded recursively.
 				 */
-				return Promise.all(promises).then(function () {
-					return Promise.all(promises);
-				});
+				return (function waitForPreloads() {
+					return new Promise(function (resolve) {
+						if (promises.length > 0){
+							let promisesToResolve = promises.slice();
+							promises.length = 0;
+							return Promise.all(promisesToResolve).then(waitForPreloads).then(resolve);
+						}
+						resolve();
+					});
+				})();
 			});
 	};
 
