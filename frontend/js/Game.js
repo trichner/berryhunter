@@ -334,8 +334,6 @@ define([], function () {
 				GroundTexturePanel.setup();
 			});
 
-			StartScreen.show();
-
 			if (Develop.isActive()) {
 				Develop.afterSetup(Game);
 			}

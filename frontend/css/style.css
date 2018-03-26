@@ -350,33 +350,32 @@ svg .clickable text {
   margin: 0 auto;
   color: white;
   background-color: rgba(0, 0, 0, 0.6);
-    padding: 1rem;
+  padding: 1rem;
   border-radius: 0.7vh;
-    font-size: 2rem;
+  font-size: 2rem;
 }
 .playerForm > .inputContainer {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 .playerForm > .submitContainer {
-    position: relative;
+  position: relative;
 }
 .playerForm > label {
   cursor: pointer;
 }
 .playerForm .playerNameSubmit {
-    background: none;
+  background: none;
   color: white;
   border-radius: 0.7vh;
-    padding: 0.5rem;
+  padding: 0.5rem;
   line-height: 1;
   font: inherit;
-    width: 100%;
-    font-variant: none;
-    border: 2px outset #dddddd;
+  width: 100%;
+  font-variant: none;
+  border: 2px outset #dddddd;
 }
-
 .playerForm .playerNameSubmit:active {
-    border-style: inset;
+  border-style: inset;
 }
 .playerForm .playerNameSubmit:focus {
   outline: none;
@@ -699,8 +698,8 @@ code {
   background-image: url('../img/loadingScreen.jpg');
   background-position: center center;
   background-size: cover;
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 #loadingScreen > #loadingWrapper {
   position: relative;
@@ -712,8 +711,6 @@ code {
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 1vh;
   overflow: hidden;
-  transition: all 1s;
-  transition-property: top, height, width, border-radius;
 }
 #loadingScreen > #loadingWrapper > h2 {
   line-height: 10vh;
@@ -723,17 +720,7 @@ code {
   color: white;
 }
 #loadingScreen.finished {
-  animation: fade-out 2s 1s forwards;
-}
-#loadingScreen.finished > #loadingWrapper {
-  top: 50%;
-  height: 100vh;
-  width: 100vw;
-  background-color: #006030;
-  border-radius: 0;
-}
-#loadingScreen.finished > #loadingWrapper > h2 {
-  display: none;
+  animation: fade-out 1s forwards;
 }
 @keyframes fade-out {
   to {
@@ -747,9 +734,9 @@ code {
   left: 0;
   bottom: 0;
   width: 0;
-    background-color: #e37313;
+  background-color: #e37313;
   z-index: -1;
-    border-radius: 0.7vh;
+  border-radius: 0.7vh;
   transition: opacity 1s;
 }
 #gameUI.hidden {
@@ -1071,64 +1058,57 @@ code {
   transform: translate(-50%, -50%);
 }
 #startScreen.loading #hunter {
-    opacity: 0;
+  opacity: 0;
 }
-
 #startScreen.loading > .infoContainer {
-    background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6);
 }
-
 #startScreen.loading .playerNameSubmit {
-    font-variant: small-caps;
+  font-variant: small-caps;
 }
 #startScreen.finished #splashScreen {
-    opacity: 0;
+  opacity: 0;
 }
-
 #startScreen > .infoContainer {
-    position: absolute;
-    color: white;
-    padding: 0 0.5rem;
-    transition: background-color 1s;
-    border-radius: 0.7vh;
+  position: absolute;
+  color: white;
+  padding: 0 0.5rem;
+  transition: background-color 1s;
+  border-radius: 0.7vh;
 }
-
 #startScreen > .infoContainer a:link,
 #startScreen > .infoContainer a:visited,
 #startScreen > .infoContainer a:hover,
 #startScreen > .infoContainer a:active,
 #startScreen > .infoContainer a:focus {
-    color: inherit;
+  color: inherit;
 }
-
 #startScreen > .infoContainer.center {
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
 }
-
 #startScreen > .infoContainer.bottom {
-    bottom: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+  bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
-
 #startScreen > .infoContainer > p {
-    margin: 0.5rem 0;
+  margin: 0.5rem 0;
 }
 #splashScreen {
-    background-color: #2FA107;
-    background-image: url('../img/loadingScreen.jpg');
-    background-position: center center;
-    background-size: cover;
-    width: 100%;
-    height: 100%;
-    transition: opacity 1s;
+  background-color: #2FA107;
+  background-image: url('../img/loadingScreen.jpg');
+  background-position: center center;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1s;
 }
 #hunter {
   height: 60vh;
-    transition: all 1s;
-    transition-property: visibility, opacity;
+  transition: all 1s;
+  transition-property: visibility, opacity;
 }
 #endScreen {
   display: none;
@@ -1164,9 +1144,8 @@ code {
 #endScreen > .playerForm {
   opacity: 0;
 }
-
 #endScreen .playerNameSubmit {
-    background-color: #e37313;
+  background-color: #e37313;
 }
 @keyframes endScreen-fadeIn {
   to {
