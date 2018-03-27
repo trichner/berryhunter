@@ -1,6 +1,6 @@
 'use strict';
 
-define(['PlayerName', 'Utils'], function (PlayerName, Utils) {
+define(['PlayerName', 'Utils', 'Events'], function (PlayerName, Utils, Events) {
 	const StartScreen = {};
 
 	StartScreen.htmlFile = 'partials/startScreen.html';
@@ -18,18 +18,16 @@ define(['PlayerName', 'Utils'], function (PlayerName, Utils) {
 				loadingBar.style.width = (progress * 100) + '%';
 				if (progress >= 1) {
 					let self = this;
-					require(['backend/Backend'], function (Backend) {
-						Backend.promise.then(function () {
-							self.rootElement.classList.remove('loading');
-							self.rootElement.classList.add('finished');
-							// let loadingScreenElement = document.getElementById('loadingScreen');
-							// if (loadingScreenElement === null) {
-							// 	// Element was already removed
-							// 	return;
-							// }
-							self.rootElement.getElementsByClassName('playerNameSubmit').item(0).value = "Play";
-						});
-					});
+					Events.on('firstGameStateRendered', function () {
+						self.rootElement.classList.remove('loading');
+						self.rootElement.classList.add('finished');
+						// let loadingScreenElement = document.getElementById('loadingScreen');
+						// if (loadingScreenElement === null) {
+						// 	// Element was already removed
+						// 	return;
+						// }
+						self.rootElement.getElementsByClassName('playerNameSubmit').item(0).value = "Play";
+					})
 
 					// loadingScreenElement.classList.add('finished');
 					//

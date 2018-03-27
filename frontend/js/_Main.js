@@ -49,7 +49,7 @@ require(['Environment'], function (Environment) {
 });
 
 
-define(['Preloading'], function (Preloading) {
+define(['Preloading', 'Events'], function (Preloading, Events) {
 	/*
 	 * Require all Modules, to create a reasonable loading bar.
 	 */
@@ -70,29 +70,54 @@ define(['Preloading'], function (Preloading) {
 		'schema_server',
 		'schema_client',
 
-		// Configs
 		'Constants',
 		'GraphicsConfig',
 		'../config/Items',
 
-		// Game Modules
 		'backend/Backend',
 		'backend/BackendConstants',
 		'backend/ClientMessage',
+		'backend/GameMapWithBackend',
+		'backend/GameState',
 		'backend/ScoreboardMessage',
-		'backend/Welcome',
 		'backend/SnapshotFactory',
-		'Controls',
-		'InjectedSVG',
+		'backend/Welcome',
+
+		'Develop',
+		'develop/AABBs',
+		'develop/DebugCircle',
+		'develop/Fps',
+
 		'GameObject',
-		'gameObjects/Mobs',
-		'gameObjects/Resources',
 		'gameObjects/Border',
 		'gameObjects/Character',
+		'gameObjects/Mobs',
 		'gameObjects/Placeable',
-		'develop/DebugCircle',
-		'GameMapGenerator',
-		'backend/GameMapWithBackend',
+		'gameObjects/Resources',
+
+		'groundTextures/_Panel',
+		'groundTextures/GroundTexture',
+		'groundTextures/GroundTextureManager',
+		'groundTextures/GroundTextureTypes',
+
+		'input/keyboard/combo/AdvanceKeyCombo',
+		'input/keyboard/combo/KeyCombo',
+		'input/keyboard/combo/ProcessKeyCombo',
+		'input/keyboard/combo/ResetKeyCombo',
+		'input/keyboard/keys/DownDuration',
+		'input/keyboard/keys/JustDown',
+		'input/keyboard/keys/JustUp',
+		'input/keyboard/keys/Key',
+		'input/keyboard/keys/KeyCodes',
+		'input/keyboard/keys/ProcessKeyDown',
+		'input/keyboard/keys/ProcessKeyUp',
+		'input/keyboard/keys/ResetKey',
+		'input/keyboard/keys/UpDuration',
+		'input/keyboard/KeyboardManager',
+		'input/mouse/MouseManager',
+		'input/InputManager',
+		'input/Pointer',
+
 		'items/Crafting',
 		'items/Equipment',
 		'items/Inventory',
@@ -101,56 +126,48 @@ define(['Preloading'], function (Preloading) {
 		'items/Items',
 		'items/ItemType',
 		'items/Recipes',
-		'items/InventorySlot',
-		'items/Crafting',
-		'items/Inventory',
-		'VitalSigns',
-		'Player',
-		'GameMap',
-		'MiniMap',
-		'Camera',
-		'Quadrants',
+
+		'MapEditor',
+		'mapEditor/QuadrantGrid',
+
+		'natureOfCode/arrive/vehicle',
+
+		'userInterface/screens/EndScreen',
+		'userInterface/screens/StartScreen',
 		'userInterface/ClickableCountableIcon',
 		'userInterface/ClickableIcon',
 		'userInterface/SubIcon',
 		'userInterface/UserInterface',
 		'userInterface/VitalSignBar',
-		'userInterface/screens/StartScreen',
-		'userInterface/screens/EndScreen',
-		'NameGenerator',
-		'Console',
+
+		'Camera',
 		'Chat',
-		'NamedGroup',
-		'DayCycle',
-		'Spectator',
-		'FilterPool',
-		'Vector',
 		'ColorMatrixFilterExtension',
-		'PlayerName',
-		'Text',
-		'groundTextures/GroundTexture',
-		'groundTextures/GroundTextureTypes',
-		'groundTextures/GroundTextureManager',
-
-		// Develop resources
-		'develop/Fps',
-		'develop/AABBs',
-		'Develop',
-
-		// Map Editor
-		'mapEditor/QuadrantGrid',
-		'MapEditor',
-
-		// Ground Texture Panel
-		'groundTextures/_Panel',
-
-		// The Game
-		// (you just lost it)
+		'Console',
+		'Controls',
+		'DayCycle',
+		'Environment',
+		'Events',
+		'FilterPool',
 		'Game',
+		'GameMap',
+		'GameMapGenerator',
+		'InjectedSVG',
+		'MiniMap',
+		'NamedGroup',
+		'NameGenerator',
+		'Player',
+		'PlayerName',
+		'Preloading',
+		'Quadrants',
+		'Scoreboard',
+		'Spectator',
+		'Text',
+		'Utils',
+		'Vector',
+		'VitalSigns',
 	]).then(function () {
-		require(['Game'], function (Game) {
-			Game.setup();
-		});
+		Events.triggerOneTime('modulesLoaded');
 	});
 
 });

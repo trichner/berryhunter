@@ -16,12 +16,14 @@ define(['PIXI', 'Utils', 'Constants', 'userInterface/screens/StartScreen'], func
 					Preloading.require(dependency);
 				});
 
+				let loadCycle = 1;
 				/*
 				 * As preloads have the chance to register new preloads themself, all preloads are loaded recursively.
 				 */
 				return (function waitForPreloads() {
 					return new Promise(function (resolve) {
-						if (promises.length > 0){
+						loadCycle++;
+						if (promises.length > 0) {
 							let promisesToResolve = promises.slice();
 							promises.length = 0;
 							return Promise.all(promisesToResolve).then(waitForPreloads).then(resolve);
@@ -30,6 +32,25 @@ define(['PIXI', 'Utils', 'Constants', 'userInterface/screens/StartScreen'], func
 					});
 				})();
 			});
+	};
+
+	Preloading.executeSetup = function () {
+
+		let loadCycle = 1;
+		/*
+		 * As preloads have the chance to register new preloads themself, all preloads are loaded recursively.
+		 */
+		return (function waitForPreloads() {
+			return new Promise(function (resolve) {
+				loadCycle++;
+				if (promises.length > 0) {
+					let promisesToResolve = promises.slice();
+					promises.length = 0;
+					return Promise.all(promisesToResolve).then(waitForPreloads).then(resolve);
+				}
+				resolve();
+			});
+		})();
 	};
 
 	Preloading.require = function (dependency) {
@@ -52,6 +73,10 @@ define(['PIXI', 'Utils', 'Constants', 'userInterface/screens/StartScreen'], func
 		numberOfPromises++;
 
 		return preloadingPromise;
+	};
+
+	Preloading.registerSetup = function (setupPromise) {
+		return Preloading.registerPreload(setupPromise);
 	};
 
 	/**

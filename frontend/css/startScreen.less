@@ -109,3 +109,18 @@
 	transition: all @splashScreenAnimation;
 	transition-property: visibility, opacity;
 }
+
+#loadingBar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	//background-image: linear-gradient(to right, white, rgb(0, 96, 48));
+	background-color: #e37313;
+	z-index: -1;
+	border-radius: 0.7vh;
+
+
+	transition: opacity @splashScreenAnimation;
+}

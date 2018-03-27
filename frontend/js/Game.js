@@ -1,6 +1,6 @@
 'use strict';
 
-define([], function () {
+define(['Events'], function (Events) {
 	let Game = {};
 
 	const States = {
@@ -35,6 +35,9 @@ define([], function () {
 		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle,
 		             Player, Spectator, GameObject, UserInterface, StartScreen,
 		             Chat, Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
+
+			let setupPromises = [];
+			let requireAsPromise = Utils.requireAsPromise;
 
 			Game.loop = function (now) {
 				if (Game.paused) {
@@ -137,6 +140,9 @@ define([], function () {
 				Game.renderer = MapEditor.setup();
 			} else {
 				// Setup backend first, as this will take some time to connect.
+				console.log("Setup Backend");
+				Backend.setup();
+				console.log("Backend Setup");
 
 				let renderer = PIXI.autoDetectRenderer({
 					antialias: true,
@@ -263,20 +269,25 @@ define([], function () {
 
 			createBackground();
 
-			require([
-					'Camera',
-					'VitalSigns',
-					'items/Recipes',
-					'Scoreboard',
-					'groundTextures/GroundTextureManager',
-				],
-				function (Camera, VitalSigns, Recipes, Scoreboard, GroundTextureManager) {
-					Camera.setup();
-					VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
-					Recipes.setup();
-					Scoreboard.setup();
-					GroundTextureManager.setup();
-				});
+			setupPromises.push(requireAsPromise([
+				'Camera',
+				'VitalSigns',
+				'items/Recipes',
+				'Scoreboard',
+				'groundTextures/GroundTextureManager',
+			]).then(function (dependencies) {
+				let Camera = dependencies[0];
+				let VitalSigns = dependencies[1];
+				let Recipes = dependencies[2];
+				let Scoreboard = dependencies[3];
+				let GroundTextureManager = dependencies[4];
+
+				Camera.setup();
+				VitalSigns.setup(Game.layers.overlays.vitalSignIndicators);
+				Recipes.setup();
+				Scoreboard.setup();
+				GroundTextureManager.setup();
+			}));
 
 			/**
 			 * @type GameMap|GameMapWithBackend
@@ -288,7 +299,8 @@ define([], function () {
 			GameObject.setup(domElement);
 			DayCycle.setup(domElement, Game.nightFilterContainer);
 
-			require(['input/InputManager'], function (InputManager) {
+			setupPromises.push(requireAsPromise(['input/InputManager']).then(function (dependencies) {
+				let InputManager = dependencies[0];
 				Game.input = new InputManager(Game, {
 					inputKeyboard: true,
 					inputKeyboardEventTarget: window,
@@ -304,7 +316,7 @@ define([], function () {
 					inputGamepad: false,
 				});
 				Game.input.boot();
-			});
+			}));
 
 			// Disable context menu on right click to use the right click ingame
 			document.body.addEventListener('contextmenu', function (event) {
@@ -330,9 +342,10 @@ define([], function () {
 			 */
 
 			Chat.setup();
-			require(['groundTextures/_Panel'], function (GroundTexturePanel) {
+			setupPromises.push(requireAsPromise(['groundTextures/_Panel']).then(function (dependencies) {
+				let GroundTexturePanel = dependencies[0];
 				GroundTexturePanel.setup();
-			});
+			}));
 
 			if (Develop.isActive()) {
 				Develop.afterSetup(Game);
@@ -340,11 +353,11 @@ define([], function () {
 
 			if (MapEditor.isActive()) {
 				MapEditor.afterSetup(Game);
-			} else {
-				console.log("Setup Backend");
-				Backend.setup();
-				console.log("Backend Setup");
 			}
+
+			Promise.all(setupPromises).then(function () {
+				Events.triggerOneTime('gameSetup');
+			});
 		});
 	};
 
@@ -356,6 +369,8 @@ define([], function () {
 	Game.relativeHeight = function (value) {
 		return value * Game.height / 100;
 	};
+
+	Events.on('modulesLoaded', Game.setup);
 
 	return Game;
 });

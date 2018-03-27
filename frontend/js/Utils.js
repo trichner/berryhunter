@@ -293,8 +293,17 @@ define(['../vendor/XieLongUtils'], function () {
 		}
 
 		element.addEventListener('mousedown', preventInputPropagation);
+		element.addEventListener('mousemove', preventInputPropagation);
 		element.addEventListener('mouseup', preventInputPropagation);
 		element.addEventListener('click', preventInputPropagation);
+	};
+
+	Utils.requireAsPromise = function (dependencies) {
+		return new Promise(function (resolve) {
+			require(dependencies, function () {
+				resolve(arguments);
+			});
+		});
 	};
 
 	return Utils;

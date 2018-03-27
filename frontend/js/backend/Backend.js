@@ -1,7 +1,7 @@
 'use strict';
 
 define([
-	'Preloading',
+	'Events',
 	'Game',
 	'Utils',
 	'Constants',
@@ -14,13 +14,13 @@ define([
 	'backend/Welcome',
 	'backend/ScoreboardMessage',
 	'Chat',
-    'Scoreboard',
+	'Scoreboard',
 	'DayCycle',
 	'vendor/flatbuffers',
 	'schema_common',
 	'schema_server',
 	'schema_client',
-], function (Preloading, Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState,
+], function (Events, Game, Utils, Constants, Console, Develop, BackendConstants, SnapshotFactory, GameState,
              ClientMessage, Welcome, ScoreboardMessage, Chat, Scoreboard, DayCycle) {
 
 	const States = {
@@ -73,6 +73,13 @@ define([
 
 		setup: function () {
 			BackendConstants.setup();
+
+			new Promise(function (resolve, reject) {
+				firstGameStateResolve = resolve;
+				firstGameStateReject = reject;
+			}).then(function () {
+				Events.triggerOneTime('firstGameStateRendered');
+			});
 
 			let url;
 			if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
@@ -139,7 +146,7 @@ define([
 
 		sendJoin: function (joinObj) {
 			let self = this;
-			this.promise.then(function () {
+			Events.on('gameSetup', function () {
 				console.log("Backend promise resolved - join!");
 				self.send(ClientMessage.fromJoin(joinObj));
 			});
@@ -267,11 +274,14 @@ define([
 					if (Develop.isActive()) {
 						Develop.logServerTick(gameState, timeSinceLastMessage);
 					}
-					this.receiveSnapshot(SnapshotFactory.newSnapshot(state, gameState));
+					let self = this;
+					Events.on('gameSetup', function () {
+						self.receiveSnapshot(SnapshotFactory.newSnapshot(state, gameState));
+					});
 					break;
 				case BerryhunterApi.ServerMessageBody.Scoreboard:
 					let scoreboardMessage = new ScoreboardMessage(serverMessage.body(new BerryhunterApi.Scoreboard()));
-                    Scoreboard.updateFromBackend(scoreboardMessage);
+					Scoreboard.updateFromBackend(scoreboardMessage);
 					break;
 				default:
 					if (Develop.isActive()) {
@@ -324,11 +334,6 @@ define([
 
 
 	};
-
-	Preloading.registerPreload(new Promise(function (resolve, reject) {
-		firstGameStateResolve = resolve;
-		firstGameStateReject = reject;
-	}));
 
 	return Backend;
 });
