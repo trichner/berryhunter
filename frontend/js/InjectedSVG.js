@@ -1,6 +1,6 @@
 'use strict';
 
-define(['PIXI', 'Constants', 'Utils', 'NamedGroup'], function (PIXI, Constants) {
+define(['PIXI', 'Constants'], function (PIXI, Constants) {
 
 	function InjectedSVG(svgTexture, x, y, size, rotation) {
 		size = size || (Constants.GRAPHIC_BASE_SIZE / 2);
