@@ -57,5 +57,18 @@ define(['NameGenerator'], function (NameGenerator) {
 		inputElement.focus();
 	};
 
+	/**
+	 *
+	 * @return an integer between 0 (included) and max (excluded)
+	 */
+	PlayerName.hash = function (name, max) {
+		let unicodeSum = 0;
+		for (let i = 0; i < name.length; i++){
+			unicodeSum += name.charCodeAt(i);
+		}
+
+		return unicodeSum % max;
+	};
+
 	return PlayerName;
 });
