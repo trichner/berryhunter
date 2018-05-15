@@ -140,9 +140,7 @@ define(['Events'], function (Events) {
 				Game.renderer = MapEditor.setup();
 			} else {
 				// Setup backend first, as this will take some time to connect.
-				console.log("Setup Backend");
 				Backend.setup();
-				console.log("Backend Setup");
 
 				let renderer = PIXI.autoDetectRenderer({
 					antialias: true,

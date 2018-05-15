@@ -147,7 +147,6 @@ define([
 		sendJoin: function (joinObj) {
 			let self = this;
 			Events.on('gameSetup', function () {
-				console.log("Backend promise resolved - join!");
 				self.send(ClientMessage.fromJoin(joinObj));
 			});
 		},
@@ -326,7 +325,6 @@ define([
 			});
 
 			if (!firstGameStateReceived) {
-				console.log("Received first game state");
 				firstGameStateResolve();
 				firstGameStateReceived = true;
 			}

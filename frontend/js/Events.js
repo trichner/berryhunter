@@ -41,8 +41,6 @@ define([], function () {
 			return;
 		}
 
-		console.log('One-Time Event: ' + event);
-
 		oneTimeEvents[event] = {
 			payload: payload,
 			context: context
