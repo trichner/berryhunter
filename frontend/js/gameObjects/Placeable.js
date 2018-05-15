@@ -46,11 +46,12 @@ define(['Game', 'GameObject', 'Utils', 'InjectedSVG', 'items/Items'], function (
 			case Items.StoneWall:
 			case Items.BronzeWall:
 			case Items.IronWall:
+				return Game.layers.placeables.walls;
 			case Items.WoodSpikyWall:
 			case Items.StoneSpikyWall:
 			case Items.BronzeSpikyWall:
 			case Items.IronSpikyWall:
-				return Game.layers.placeables.walls;
+				return Game.layers.placeables.spikyWalls;
 		}
 	}
 

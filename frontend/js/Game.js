@@ -187,6 +187,7 @@ define(['Events'], function (Events) {
 
 					doors: new NamedGroup('doors'),
 					walls: new NamedGroup('walls'),
+					spikyWalls: new NamedGroup('spikyWalls'),
 				},
 				characters: new NamedGroup('characters'),
 				mobs: {
@@ -248,7 +249,8 @@ define(['Events'], function (Events) {
 			// Higher Placeables
 			Game.cameraGroup.addChild(
 				Game.layers.placeables.doors,
-				Game.layers.placeables.walls
+				Game.layers.placeables.walls,
+				Game.layers.placeables.spikyWalls
 			);
 
 			// Resources
