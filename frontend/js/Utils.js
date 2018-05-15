@@ -99,6 +99,10 @@ define(['../vendor/XieLongUtils'], function () {
 		return n * n;
 	};
 
+	Utils.randomRotation = function () {
+		return Utils.random(0, Math.PI * 2)
+	};
+
 	Utils.setClass = function (svgElement, className) {
 		svgElement._renderer.elem.setAttribute('class', className);
 		if (svgElement._renderer.type === 'group') {

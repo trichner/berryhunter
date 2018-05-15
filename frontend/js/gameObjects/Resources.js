@@ -4,8 +4,8 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 	function (Game, GameObject, PIXI, Preloading, Utils, InjectedSVG, Constants, GraphicsConfig) {
 
 		class Resource extends GameObject {
-			constructor(gameLayer, x, y, size) {
-				super(gameLayer, x, y, size, Utils.random(0, Math.PI * 2));
+			constructor(gameLayer, x, y, size, rotation) {
+				super(gameLayer, x, y, size, rotation);
 
 				this.capacity = 0;
 				let stock = 0;
@@ -35,7 +35,7 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 
 		class Tree extends Resource {
 			constructor(x, y, size) {
-				super(Game.layers.resources.trees, x, y, size + GraphicsConfig.character.size);
+				super(Game.layers.resources.trees, x, y, size + GraphicsConfig.character.size, Utils.randomRotation());
 
 				this.resourceSpotTexture = new InjectedSVG(Tree.resourceSpot.svg, x, y, this.size, this.rotation);
 				Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
@@ -78,9 +78,8 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 
 		class Mineral extends Resource {
 			constructor(x, y, size) {
-				super(Game.layers.resources.minerals, x, y, size);
 				// Due to the shadow in the mineral graphics, those should not be randomly rotated
-				this.setRotation(0);
+				super(Game.layers.resources.minerals, x, y, size, 0);
 
 				this.resourceSpotTexture = new InjectedSVG(Mineral.resourceSpot.svg, x, y, this.size, this.rotation);
 				Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
@@ -154,7 +153,7 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 
 		class BerryBush extends Resource {
 			constructor(x, y, size) {
-				super(Game.layers.resources.berryBush, x, y, size);
+				super(Game.layers.resources.berryBush, x, y, size, Utils.randomRotation());
 			}
 
 			initShape(x, y, size, rotation) {
