@@ -22,13 +22,22 @@ var types = func() map[string]model.EntityType {
 	return t
 }()
 
-func NewMob(body, damageAura *phy.Circle, d *mobs.MobDefinition) *Mob {
+func NewMob(d *mobs.MobDefinition) *Mob {
 	entityType, ok := types[d.Name]
 	if !ok {
 		log.Fatalf("Mob type not found: %d/%s", d.ID, d.Name)
 	}
 
-	base := model.NewBaseEntity(body, entityType)
+	mobBody := phy.NewCircle(phy.VEC2F_ZERO, d.Body.Radius)
+	mobBody.Shape().Layer = model.LayerViewportCollision | model.LayerActionCollision
+	mobBody.Shape().Mask = model.LayerMobStaticCollision | model.LayerBorderCollision
+
+	damageAura := phy.NewCircle(phy.VEC2F_ZERO, d.Body.DamageRadius)
+	damageAura.Shape().Layer = model.LayerNoneCollision
+	damageAura.Shape().Mask = model.LayerPlayerCollision
+	damageAura.Shape().IsSensor = true
+
+	base := model.NewBaseEntity(mobBody, entityType)
 	m := &Mob{
 		BaseEntity: base,
 		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
@@ -70,7 +79,7 @@ func (m *Mob) Update(dt float32) bool {
 	for c := range auraCollisions {
 		p, ok := c.Shape().UserData.(model.PlayerEntity)
 		if ok {
-			h := p.VitalSigns().Health.SubFraction(0.002)
+			h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
 			p.VitalSigns().Health = h
 		}
 	}

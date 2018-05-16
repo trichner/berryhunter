@@ -25,6 +25,12 @@ type MobID uint64
 
 type Factors struct {
 	Vulnerability float32
+	DamageFraction float32
+}
+
+type Body struct {
+	Radius    float32
+	DamageRadius float32
 }
 
 type Drops []*items.ItemStack
@@ -35,6 +41,7 @@ type MobDefinition struct {
 	Type    string
 	Factors Factors
 	Drops   Drops
+	Body Body
 }
 
 type mobDefinition struct {
@@ -43,11 +50,17 @@ type mobDefinition struct {
 	Type    string `json:"type"`
 	Factors struct {
 		Vulnerability float32 `json:"vulnerability"`
+		DamageFraction float32 `json:"damageFraction"`
 	} `json:"factors"`
 	Drops []struct {
 		Item  string `json:"item"`
 		Count int    `json:"count"`
 	} `json:"drops"`
+	Body struct {
+		Radius    float32 `json:"radius"`
+		DamageRadius float32 `json:"damageRadius"`
+
+	} `json:"body"`
 }
 
 // parseItemDefinition parses a json string from a byte array into the
@@ -70,8 +83,13 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 		Type: m.Type,
 		Factors: Factors{
 			Vulnerability: m.Factors.Vulnerability,
+			DamageFraction: m.Factors.DamageFraction,
 		},
 		Drops: make(Drops, 0, 1),
+		Body: Body{
+			Radius:m.Body.Radius,
+			DamageRadius:m.Body.DamageRadius,
+		},
 	}
 
 	// append drops

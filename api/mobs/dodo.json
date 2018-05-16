@@ -4,7 +4,6 @@
   "type": "MOB",
   "factors": {
     "vulnerability": 5.0,
-    "damage": 0,
     "speed": 1.0
   },
   "drops": [
@@ -12,5 +11,8 @@
       "item": "RawMeat",
       "count": 1
     }
-  ]
+  ],
+  "body": {
+    "radius": 0.3
+  }
 }
