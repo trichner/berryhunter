@@ -139,8 +139,8 @@ func NewCircle(pos Vec2f, radius float32) *Circle {
 		dynamicColliderShape: newDynamicColliderShape(pos),
 	}
 
-	// collide with everything
-	c.Shape().Layer = -1
+	// collide with nothing
+	c.Shape().Layer = 0
 
 	c.updateBB()
 	return c

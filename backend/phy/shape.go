@@ -70,7 +70,7 @@ func newDynamicColliderShape(pos Vec2f) dynamicColliderShape {
 		colliderShape: colliderShape{
 			shape: Shape{
 				pos:   pos,
-				Layer: -1,
+				Layer: 0,
 			},
 			collisions: make(ColliderSet),
 		},

@@ -70,8 +70,8 @@ func NewInvCircle(pos Vec2f, radius float32) *InvCircle {
 		dynamicColliderShape: newDynamicColliderShape(pos),
 	}
 
-	// collide with everything
-	c.Shape().Layer = -1
+	// collide with nothing
+	c.Shape().Layer = 0
 
 	c.updateBB()
 	return c
