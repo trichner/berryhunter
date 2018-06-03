@@ -69,6 +69,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	if item.Body.Solid {
 		body.Shape().Layer = model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerViewportCollision
 	} else {
+		body.Shape().Layer = model.LayerViewportCollision
 		body.Shape().IsSensor = true
 	}
 

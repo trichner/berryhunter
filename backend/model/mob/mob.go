@@ -41,10 +41,12 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 	m := &Mob{
 		BaseEntity: base,
 		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
-		velocity:   phy.Vec2f{0.04, 0},
+		heading:    phy.Vec2f{1, 0},
 		health:     vitals.Max,
 		definition: d,
 		damageAura: damageAura,
+		wanderAcceleration:phy.Vec2f{0.1, 0},
+		velocity:   0.04,
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -55,18 +57,20 @@ type Mob struct {
 
 	definition *mobs.MobDefinition
 
-	health   vitals.VitalSign
-	velocity phy.Vec2f
-	rand     *rand.Rand
+	health  vitals.VitalSign
+	heading phy.Vec2f
+	rand    *rand.Rand
 
 	damageAura *phy.Circle
+
+	// wandering
+	wanderAcceleration phy.Vec2f
+	velocity           float32
 }
 
 func (m *Mob) Bodies() model.Bodies {
-	b := make(model.Bodies, 2)
-	b[0] = m.Body
-	b[1] = m.damageAura
-	return b
+	b := m.BaseEntity.Bodies()
+	return append(b, m.damageAura)
 }
 
 func (m *Mob) MobID() mobs.MobID {
@@ -84,21 +88,42 @@ func (m *Mob) Update(dt float32) bool {
 		}
 	}
 
+	//TODO:
+	// A: Wandering
+	// - http://natureofcode.com/book/chapter-6-autonomous-agents/
+	// B: Environment Awareness
+	// - add 'horizon' circle
+	// - calculate collision response on 'horizon' circle and use as 'desired' heading
 
-	// random in [-1,1)
-	alpha := (m.rand.Float32() * 2) - 1
-
-	// can tweak this for more erratic movements
-	alpha *= math.Pi / 32
-
-	rot := phy.NewRotMat2f(alpha)
-	m.velocity = rot.Mult(m.velocity)
-
-	pos := m.Position()
-	pos = pos.Add(m.velocity)
+	// wandering
+	m.heading, m.wanderAcceleration = wander(m.heading, m.wanderAcceleration, m.rand)
+	pos := m.Position().Add(m.heading.Mult(m.velocity))
 	m.SetPosition(pos)
 
 	return m.health > 0
+}
+
+// http://natureofcode.com/book/chapter-6-autonomous-agents/
+//
+//       heading * wanderDistance
+//   D ----------------->
+//					   / acceleration
+//                    v
+//
+func wander(heading, acceleration phy.Vec2f, r *rand.Rand) (newHeading, newAcceleration phy.Vec2f) {
+	const wanderDistance float32 = 1
+	const deltaPhi float32 = 2 * math.Pi * 0.1
+
+	wanderHeading := heading.Normalize().Mult(wanderDistance)
+
+	// rotate wanderAcceleration by a random angle
+	phi := (r.Float32()*2 - 1) * deltaPhi
+	rMat := phy.NewRotMat2f(phi)
+	acceleration = rMat.Mult(acceleration)
+
+	// update the heading
+	h := wanderHeading.Add(acceleration).Normalize()
+	return h.Normalize(), acceleration
 }
 
 
@@ -110,7 +135,7 @@ func (m *Mob) SetPosition(p phy.Vec2f) {
 func (m *Mob) Angle() float32 {
 	// FIXME the angle has to be set when the position is updated
 	// => That's where you're wrong kiddo. Vector arithmetic ftw!
-	return phy.Vec2f{-1, 0}.AngleBetween(m.velocity)
+	return phy.Vec2f{-1, 0}.AngleBetween(m.heading)
 }
 
 func (m *Mob) Health() vitals.VitalSign {
