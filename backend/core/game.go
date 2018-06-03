@@ -84,7 +84,7 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	g.AddSystem(p)
 
 	wall := phy.NewInvCircle(phy.VEC2F_ZERO, gc.Radius)
-	wall.Shape().Layer = model.LayerBorderCollision
+	wall.Shape().Layer = int(model.LayerBorderCollision)
 	p.AddStaticBody(ecs.NewBasic(), wall)
 
 	n := NewNetSystem(g)

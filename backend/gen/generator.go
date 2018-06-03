@@ -105,7 +105,7 @@ var resources = []staticEntityBody{
 type staticEntityBody struct {
 	entityType     model.EntityType
 	weight         int
-	collisionLayer int
+	collisionLayer model.CollisionLayer
 	collisionMask  int
 	resourceName   string
 }

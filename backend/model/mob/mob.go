@@ -29,12 +29,12 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 	}
 
 	mobBody := phy.NewCircle(phy.VEC2F_ZERO, d.Body.Radius)
-	mobBody.Shape().Layer = model.LayerViewportCollision | model.LayerActionCollision
-	mobBody.Shape().Mask = model.LayerMobStaticCollision | model.LayerBorderCollision
+	mobBody.Shape().Layer = int(model.LayerViewportCollision | model.LayerActionCollision)
+	mobBody.Shape().Mask = int(model.LayerMobStaticCollision | model.LayerBorderCollision)
 
 	damageAura := phy.NewCircle(phy.VEC2F_ZERO, d.Body.DamageRadius)
-	damageAura.Shape().Layer = model.LayerNoneCollision
-	damageAura.Shape().Mask = model.LayerPlayerCollision
+	damageAura.Shape().Layer = int(model.LayerNoneCollision)
+	damageAura.Shape().Mask = int(model.LayerPlayerCollision)
 	damageAura.Shape().IsSensor = true
 
 	base := model.NewBaseEntity(mobBody, entityType)

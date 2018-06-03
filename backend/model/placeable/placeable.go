@@ -67,9 +67,9 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 
 	body := phy.NewCircle(phy.VEC2F_ZERO, item.Body.Radius)
 	if item.Body.Solid {
-		body.Shape().Layer = model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerViewportCollision
+		body.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerViewportCollision)
 	} else {
-		body.Shape().Layer = model.LayerViewportCollision
+		body.Shape().Layer = int(model.LayerViewportCollision)
 		body.Shape().IsSensor = true
 	}
 
@@ -85,7 +85,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		radiator.Radius = item.Factors.HeatRadius
 		heaterBody := phy.NewCircle(phy.VEC2F_ZERO, radiator.Radius)
 		heaterBody.Shape().IsSensor = true
-		heaterBody.Shape().Mask = model.LayerHeatCollision
+		heaterBody.Shape().Mask = int(model.LayerHeatCollision)
 		heaterBody.Shape().Group = -1 // no need to collide with other heat sources
 		radiator.Body = heaterBody
 	}

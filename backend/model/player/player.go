@@ -32,14 +32,14 @@ func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 	shapeGroup := int(p.ID())
 	p.Body.Shape().UserData = p
 	p.Body.Shape().Group = shapeGroup
-	p.Body.Shape().Layer = model.LayerViewportCollision | model.LayerHeatCollision | model.LayerPlayerCollision
-	p.Body.Shape().Mask = model.LayerPlayerStaticCollision | model.LayerBorderCollision
+	p.Body.Shape().Layer = int(model.LayerViewportCollision | model.LayerHeatCollision | model.LayerPlayerCollision)
+	p.Body.Shape().Mask = int(model.LayerPlayerStaticCollision | model.LayerBorderCollision)
 
 	// setup viewport
 	p.viewport = phy.NewBox(e.Body.Position(), phy.Vec2f{constant.ViewPortWidth / 2, constant.ViewPortHeight / 2})
 
 	p.viewport.Shape().IsSensor = true
-	p.viewport.Shape().Mask = model.LayerViewportCollision
+	p.viewport.Shape().Mask = int(model.LayerViewportCollision)
 	p.viewport.Shape().Group = shapeGroup
 
 	//--- initialize inventory
@@ -210,7 +210,7 @@ func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
 
 func (p *player) startAction(tool items.Item) {
 	p.hand.Item = tool
-	p.hand.Collider.Shape().Mask = model.LayerRessourceCollision | model.LayerActionCollision
+	p.hand.Collider.Shape().Mask = int(model.LayerRessourceCollision | model.LayerActionCollision)
 }
 
 var handOffset = phy.Vec2f{0.25, 0}

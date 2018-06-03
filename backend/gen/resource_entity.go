@@ -46,7 +46,7 @@ func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEnti
 	}
 
 	ball := phy.NewCircle(p, radius)
-	ball.Shape().Layer = body.collisionLayer
+	ball.Shape().Layer = int(body.collisionLayer)
 
 
 	r, err := resource.NewResource(ball, splitRandom(rnd, p), resourceItem, body.entityType)
