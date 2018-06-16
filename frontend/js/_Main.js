@@ -163,6 +163,7 @@ define(['Preloading', 'Events'], function (Preloading, Events) {
 		'Scoreboard',
 		'Spectator',
 		'Text',
+		'Tutorial',
 		'Utils',
 		'Vector',
 		'VitalSigns',
