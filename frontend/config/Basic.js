@@ -2,6 +2,8 @@
 
 define([], function () {
 
+	const PIXEL_PER_METER = 120;
+	
 	//noinspection UnnecessaryLocalVariableJS
 	const BasicConfig = {
 		/**
@@ -25,7 +27,7 @@ define([], function () {
 		 *
 		 * SYNCED WITH BACKEND
 		 */
-        BASE_MOVEMENT_SPEED: 12 * 0.7,
+        BASE_MOVEMENT_SPEED: PIXEL_PER_METER * 0.07,
 
 		/**
 		 * true: character movement AND mouse movement adjust the character facing direction
