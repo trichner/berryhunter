@@ -33,7 +33,7 @@ define([], function () {
 			},
 
 			craftingIndicator: {
-				file: 'img/crafting.svg',
+				file: 'img/userInterface/crafting.svg',
 				size: 20,
 				lineColor: 0xc9a741,
 				lineWidth: 5 //px

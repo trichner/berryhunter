@@ -88,6 +88,7 @@ define(['Events'], function (Events) {
 				Game.player = new Player(id, x, y, name);
 				Game.player.init();
 				Game.state = States.PLAYING;
+				Events.trigger('game.playing');
 			};
 
 			Game.removePlayer = function () {

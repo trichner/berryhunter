@@ -6,8 +6,9 @@ define([
 	'items/ItemType',
 	'userInterface/UserInterface',
 	'./InventoryListeners',
+	'Events',
 	'schema_client',
-], function (Game, Equipment, ItemType, UserInterface, InventoryListeners) {
+], function (Game, Equipment, ItemType, UserInterface, InventoryListeners, Events) {
 
 	class InventorySlot {
 		/**
@@ -74,7 +75,7 @@ define([
 				return false;
 			}
 
-			if (count === 0){
+			if (count === 0) {
 				return this.dropItem();
 			}
 
@@ -89,6 +90,11 @@ define([
 
 		setCount(count) {
 			if (this.count !== count) {
+				if (this.count < count) {
+					Events.trigger('inventory.add', {itemName: this.item.name, change: (count - this.count)});
+				} else {
+					Events.trigger('inventory.remove', {itemName: this.item.name, change: (count - this.count)});
+				}
 				this.count = count;
 				this.clickableIcon.setCount(count);
 				InventoryListeners.notify(this.item.name, count);

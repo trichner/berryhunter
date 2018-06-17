@@ -241,15 +241,20 @@ define([
 				hasInput = true;
 			}
 
+			if (inputManager.activePointer.justMoved) {
+				Events.trigger('controls.rotate', movement);
+			}
+
 			if (movement.x !== 0 || movement.y !== 0) {
 				input.movement = movement;
-				Events.trigger('characterMoved', movement);
+				Events.trigger('controls.movement', movement);
 				this.character.move(movement);
 				hasInput = true;
 			}
 
 			if (action !== null) {
 				input.action = action;
+				Events.trigger('controls.action', movement);
 				hasInput = true;
 			}
 

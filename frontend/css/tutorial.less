@@ -1,0 +1,26 @@
+#tutorial {
+	position: fixed;
+	top: 70vh;
+	left: 50vw;
+	transform: translate(-50%, -50%);
+	//padding: (0.1 * @uiElementHeight);
+	//border-radius: (0.1 * @uiElementHeight);
+	//background: @backgroundColor;
+
+	color: white;
+	pointer-events: none;
+	font-size: 1.33em;
+
+	> .tutorialStep {
+		display: none;
+
+		&.active {
+			display: block;
+		}
+
+		&.done {
+			display: block;
+			color: #4CAF50;
+		}
+	}
+}

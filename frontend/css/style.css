@@ -868,8 +868,8 @@ code {
   opacity: 0.7;
 }
 .craftableItem.hinted.upgrade > .iconBackground {
-  -webkit-mask-image: url('../img/hintedCraftMask_upgrade.svg');
-  mask-image: url('../img/hintedCraftMask_upgrade.svg');
+    -webkit-mask-image: url('../img/userInterface/hintedCraftMask_upgrade.svg');
+    mask-image: url('../img/userInterface/hintedCraftMask_upgrade.svg');
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -881,8 +881,8 @@ code {
   display: block;
 }
 .craftableItem.hinted.withIngredients > .iconBackground {
-  -webkit-mask-image: url('../img/hintedCraftMask_ingredients.svg');
-  mask-image: url('../img/hintedCraftMask_ingredients.svg');
+    -webkit-mask-image: url('../img/userInterface/hintedCraftMask_ingredients.svg');
+    mask-image: url('../img/userInterface/hintedCraftMask_ingredients.svg');
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -895,8 +895,8 @@ code {
   display: flex;
 }
 .craftableItem.hinted.upgrade.withIngredients > .iconBackground {
-  -webkit-mask-image: url('../img/hintedCraftMask2.svg');
-  mask-image: url('../img/hintedCraftMask2.svg');
+    -webkit-mask-image: url('../img/userInterface/hintedCraftMask2.svg');
+    mask-image: url('../img/userInterface/hintedCraftMask2.svg');
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -1052,7 +1052,7 @@ code {
 }
 #splashScreen {
   background-color: #2FA107;
-  background-image: url('../img/loadingScreen.jpg');
+    background-image: url('../img/userInterface/loadingScreen.jpg');
   background-position: center center;
   background-size: cover;
   width: 100%;
@@ -1156,4 +1156,27 @@ code {
 #console_command:focus {
   outline: none;
   box-shadow: none;
+}
+
+#tutorial {
+    position: fixed;
+    top: 70vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    color: white;
+    pointer-events: none;
+    font-size: 1.33em;
+}
+
+#tutorial > .tutorialStep {
+    display: none;
+}
+
+#tutorial > .tutorialStep.active {
+    display: block;
+}
+
+#tutorial > .tutorialStep.done {
+    display: block;
+    color: #4CAF50;
 }
