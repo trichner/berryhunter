@@ -1157,26 +1157,28 @@ code {
   outline: none;
   box-shadow: none;
 }
-
 #tutorial {
     position: fixed;
     top: 70vh;
     left: 50vw;
     transform: translate(-50%, -50%);
-    color: white;
     pointer-events: none;
     font-size: 1.33em;
+    color: white;
 }
-
 #tutorial > .tutorialStep {
     display: none;
+    transition: opacity 350ms 540ms;
 }
-
 #tutorial > .tutorialStep.active {
     display: block;
 }
-
 #tutorial > .tutorialStep.done {
+    opacity: 0;
     display: block;
     color: #4CAF50;
+}
+
+#tutorial > .tutorialStep.done + .active {
+    display: none;
 }

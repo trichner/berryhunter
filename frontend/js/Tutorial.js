@@ -30,15 +30,9 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 			return payload.itemName === 'WoodClub';
 		}
 	}];
-	Tutorial.currentStage = 0;
-
-
-	Preloading.registerPartial('partials/tutorial.html')
-		.then(() => {
-			Tutorial.rootElement = document.getElementById('tutorial');
-		});
 
 	function showNextStep() {
+		Tutorial.currentStage++;
 		if (Tutorial.stages.length <= Tutorial.currentStage) {
 			// Last step was shown
 			console.log('Tutorial complete');
@@ -49,19 +43,36 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 		let tutorialStepElement = document.getElementById('tutorial_' + stage.markupId);
 		tutorialStepElement.classList.add('active');
 
-		Events.once(stage.showUntil, function (payload) {
-			// TODO event filter
+		Events.on(stage.showUntil, function (payload) {
+			if (Utils.isFunction(stage.eventFilter) && !stage.eventFilter(payload)) {
+				return false;
+			}
+
 			console.log('Tutorial Step ' + stage.markupId + ' was done.');
 
 			tutorialStepElement.classList.remove('active');
 			tutorialStepElement.classList.add('done');
-			Tutorial.currentStage++;
-			showNextStep();
+
+			return true;
 		});
 	}
 
+	Preloading.registerPartial('partials/tutorial.html')
+		.then(() => {
+			Tutorial.rootElement = document.getElementById('tutorial');
+			Tutorial.rootElement.addEventListener('transitionend', function (event) {
+				console.log(event);
+				event.target.classList.remove('done');
+				showNextStep();
+			});
+		});
+
 	Events.on('game.playing', function () {
-		// TODO localStorage.get/setItem tutorial last shown timestamp
+		// TODO check/write local storage
+		// new Date(parseInt(localStorage.getItem('tutorialCompleted'), 10))
+		//
+		// Date.now();
+		Tutorial.currentStage = -1;
 		showNextStep();
 	});
 });
