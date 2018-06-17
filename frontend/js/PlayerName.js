@@ -22,6 +22,10 @@ define(['NameGenerator'], function (NameGenerator) {
 		localStorage.setItem('playerName', name);
 	};
 
+	PlayerName.remove = function () {
+		localStorage.removeItem('playerName');
+	};
+
 	PlayerName.prepareForm = function (formElement, inputElement) {
 		inputElement.setAttribute('maxlength', this.MAX_LENGTH);
 		formElement.addEventListener('submit', onSubmit.bind(this, inputElement));
@@ -33,6 +37,7 @@ define(['NameGenerator'], function (NameGenerator) {
 		let name = inputElement.value;
 		if (!name) {
 			name = inputElement.getAttribute('placeholder');
+			this.remove();
 		} else {
 			// Only save the name if its not generated
 			this.set(name);
