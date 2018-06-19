@@ -1,6 +1,8 @@
 'use strict';
 
 define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
+	const LOCAL_STORAGE_KEY = 'tutorialCompleted';
+
 	const Tutorial = {};
 
 	// Ginos Vorschlag: Alle Tutorials als (animierte) Icons
@@ -29,13 +31,46 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 		eventFilter: function (payload) {
 			return payload.itemName === 'WoodClub';
 		}
+	}, {
+		markupId: 'equip',
+		pointTowards: Utils.deg2rad(110), // direction
+		showUntil: 'character.equipItem',
+		eventFilter: function (payload) {
+			return payload.item.name === 'WoodClub';
+		}
+	}, {
+		markupId: 'fire',
+		pointTowards: Utils.deg2rad(225), // direction
+		showUntil: 'inventory.add',
+		eventFilter: function (payload) {
+			return payload.itemName === 'Campfire';
+		}
+	}, {
+		markupId: 'placing',
+		showUntil: 'controls.action',
+		eventFilter: function (payload) {
+			if (payload.item.name !== 'Campfire') {
+				return false;
+			}
+			return payload.actionType = BerryhunterApi.ActionType.PlaceItem;
+		}
+	}, {
+		markupId: 'eating',
+		showUntil: 'controls.action',
+		eventFilter: function (payload) {
+			if (payload.item.name !== 'Berry') {
+				return false;
+			}
+			return payload.actionType = BerryhunterApi.ActionType.ConsumeItem;
+		}
+
 	}];
 
 	function showNextStep() {
 		Tutorial.currentStage++;
 		if (Tutorial.stages.length <= Tutorial.currentStage) {
 			// Last step was shown
-			console.log('Tutorial complete');
+			localStorage.setItem(LOCAL_STORAGE_KEY, Date.now());
 			return;
 		}
 
@@ -48,8 +83,6 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 				return false;
 			}
 
-			console.log('Tutorial Step ' + stage.markupId + ' was done.');
-
 			tutorialStepElement.classList.remove('active');
 			tutorialStepElement.classList.add('done');
 
@@ -61,18 +94,31 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 		.then(() => {
 			Tutorial.rootElement = document.getElementById('tutorial');
 			Tutorial.rootElement.addEventListener('transitionend', function (event) {
-				console.log(event);
 				event.target.classList.remove('done');
 				showNextStep();
 			});
 		});
 
+
 	Events.on('game.playing', function () {
-		// TODO check/write local storage
-		// new Date(parseInt(localStorage.getItem('tutorialCompleted'), 10))
-		//
-		// Date.now();
 		Tutorial.currentStage = -1;
-		showNextStep();
+
+		let elements = Tutorial.rootElement.getElementsByClassName('tutorialStep');
+		for (let i = 0; i < elements.length; i++) {
+			elements[i].classList.remove('active');
+			elements[i].classList.remove('done');
+		}
+
+		let lastCompleted = localStorage.getItem(LOCAL_STORAGE_KEY);
+		if (lastCompleted !== null) {
+			lastCompleted = parseInt(lastCompleted, 10);
+			// more than 14 days difference?
+			if (Date.now() - lastCompleted > 14 * 24 * 60 * 60 * 1000) {
+				showNextStep();
+			}
+		} else {
+			// Tutorial was never completed yet
+			showNextStep();
+		}
 	});
 });

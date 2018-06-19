@@ -13,8 +13,9 @@ define([
 	'Preloading',
 	'Vector',
 	'Text',
-	'GraphicsConfig'
-], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig) {
+	'GraphicsConfig',
+	'Events'
+], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig, Events) {
 	class Character extends GameObject {
 		constructor(id, x, y, name, isPlayerCharacter) {
 			super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2);
@@ -320,6 +321,8 @@ define([
 			}
 
 			this.equippedItems[equipmentSlot] = item;
+
+			Events.trigger('character.equipItem', {item, equipmentSlot});
 
 			return true;
 		}

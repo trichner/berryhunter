@@ -254,7 +254,7 @@ define([
 
 			if (action !== null) {
 				input.action = action;
-				Events.trigger('controls.action', movement);
+				Events.trigger('controls.action', action);
 				hasInput = true;
 			}
 
