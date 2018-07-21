@@ -198,6 +198,11 @@ define([], function () {
 				file: 'rubble1',
 				minSize: 30,
 				maxSize: 100,
+			},
+			'Sand': {
+				file: 'sand1',
+				minSize: 150,
+				maxSize: 200,
 			}
 		}
 	};
