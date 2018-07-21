@@ -125,6 +125,10 @@ define([], function () {
 			}
 		},
 
+		vitalSigns: {
+			overlayThreshold: 0.3
+		},
+
 		/**
 		 * Contains information about types of ground textures that are available for placing.
 		 */

@@ -1,6 +1,6 @@
 'use strict';
 
-define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedSVG'], function (Preloading, Game, Utils, UserInterface, InjectedSVG) {
+define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedSVG', 'GraphicsConfig'], function (Preloading, Game, Utils, UserInterface, InjectedSVG, GraphicsConfig) {
 	class VitalSigns {
 		constructor() {
 			this.health = VitalSigns.MAXIMUM_VALUES.health;
@@ -67,31 +67,24 @@ define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedS
 					this.showIndicator('damage', getDamageOpacity(this.damageIndicatorDuration));
 				}
 			} else {
-				let indicatorToShow = null;
-				let opacity;
-				if (this.satiety < (VitalSigns.MAXIMUM_VALUES.satiety / 2)) {
+				let relativeSatiety = this.satiety / VitalSigns.MAXIMUM_VALUES.satiety;
+				let relativeBodyHeat = this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat;
+				let lowestVitalSign, indicatorToShow;
+
+				if (relativeSatiety < relativeBodyHeat) {
 					indicatorToShow = 'hunger';
-					opacity = 1 - (2 * this.satiety / VitalSigns.MAXIMUM_VALUES.satiety);
+					lowestVitalSign = relativeSatiety;
+				} else {
+					indicatorToShow = 'coldness';
+					lowestVitalSign = relativeBodyHeat;
+				}
+
+				if (lowestVitalSign < GraphicsConfig.vitalSigns.overlayThreshold) {
+					let opacity = 1 - (lowestVitalSign / GraphicsConfig.vitalSigns.overlayThreshold);
+					this.showIndicator(indicatorToShow, opacity);
 				} else {
 					this.hideIndicator('hunger');
-				}
-
-				if (this.bodyHeat < (VitalSigns.MAXIMUM_VALUES.satiety / 2)) {
-					if (indicatorToShow === 'hunger') {
-						if (this.bodyHeat < this.satiety) {
-							opacity = 1 - (2 * this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat);
-							indicatorToShow = 'coldness';
-						}
-					} else {
-						opacity = 1 - (2 * this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat);
-						indicatorToShow = 'coldness';
-					}
-				} else {
 					this.hideIndicator('coldness');
-				}
-
-				if (indicatorToShow !== null) {
-					this.showIndicator(indicatorToShow, opacity);
 				}
 			}
 		}
