@@ -32,14 +32,6 @@
     "flipped": "none"
   },
   {
-    "type": "Puddle",
-    "x": 902,
-    "y": -1640,
-    "size": 40,
-    "rotation": 0,
-    "flipped": "vertical"
-  },
-  {
     "type": "Grass, light green",
     "x": 1272,
     "y": -1414,
@@ -128,14 +120,6 @@
     "flipped": "horizontal"
   },
   {
-    "type": "Mushrooms",
-    "x": 447,
-    "y": 1896,
-    "size": 75,
-    "rotation": 0,
-    "flipped": "horizontal"
-  },
-  {
     "type": "Flowers1",
     "x": 75,
     "y": 2135,
@@ -150,14 +134,6 @@
     "size": 35,
     "rotation": 3.386,
     "flipped": "none"
-  },
-  {
-    "type": "Grass, blade of grass",
-    "x": -442,
-    "y": 2244,
-    "size": 35,
-    "rotation": 0,
-    "flipped": "horizontal"
   },
   {
     "type": "Flowers2",
@@ -181,14 +157,6 @@
     "y": 1461,
     "size": 50,
     "rotation": 0.122,
-    "flipped": "horizontal"
-  },
-  {
-    "type": "Mushrooms",
-    "x": -1134,
-    "y": 1251,
-    "size": 65,
-    "rotation": 0,
     "flipped": "horizontal"
   },
   {
@@ -216,30 +184,6 @@
     "flipped": "horizontal"
   },
   {
-    "type": "Puddle",
-    "x": -2075,
-    "y": 532,
-    "size": 50,
-    "rotation": 0,
-    "flipped": "none"
-  },
-  {
-    "type": "Grass, blade of grass",
-    "x": -1998,
-    "y": 298,
-    "size": 45,
-    "rotation": 0,
-    "flipped": "none"
-  },
-  {
-    "type": "Puddle",
-    "x": -2049,
-    "y": 38,
-    "size": 80,
-    "rotation": 0,
-    "flipped": "none"
-  },
-  {
     "type": "Flowers2",
     "x": -2099,
     "y": -211,
@@ -256,22 +200,6 @@
     "flipped": "none"
   },
   {
-    "type": "Puddle",
-    "x": -1956,
-    "y": -941,
-    "size": 75,
-    "rotation": 0,
-    "flipped": "horizontal"
-  },
-  {
-    "type": "Grass, blade of grass",
-    "x": -1814,
-    "y": -1333,
-    "size": 65,
-    "rotation": 0,
-    "flipped": "horizontal"
-  },
-  {
     "type": "Leaves, green",
     "x": -1604,
     "y": -1657,
@@ -286,14 +214,6 @@
     "size": 105,
     "rotation": 5.864,
     "flipped": "vertical"
-  },
-  {
-    "type": "Puddle",
-    "x": -827,
-    "y": -1964,
-    "size": 75,
-    "rotation": 0,
-    "flipped": "none"
   },
   {
     "type": "Stone Patch",
@@ -344,14 +264,6 @@
     "flipped": "none"
   },
   {
-    "type": "Puddle",
-    "x": 1202,
-    "y": -272,
-    "size": 40,
-    "rotation": 0,
-    "flipped": "horizontal"
-  },
-  {
     "type": "Stone Patch",
     "x": 1151,
     "y": -514,
@@ -390,30 +302,6 @@
     "size": 165,
     "rotation": 0.454,
     "flipped": "horizontal"
-  },
-  {
-    "type": "Mushrooms",
-    "x": 596,
-    "y": -939,
-    "size": 75,
-    "rotation": 0,
-    "flipped": "none"
-  },
-  {
-    "type": "Puddle",
-    "x": 812,
-    "y": -493,
-    "size": 70,
-    "rotation": 0,
-    "flipped": "none"
-  },
-  {
-    "type": "Puddle",
-    "x": 814,
-    "y": -162,
-    "size": 65,
-    "rotation": 0,
-    "flipped": "none"
   },
   {
     "type": "Pebble2",
@@ -478,14 +366,6 @@
     "size": 35,
     "rotation": 3.84,
     "flipped": "vertical"
-  },
-  {
-    "type": "Grass, blade of grass",
-    "x": -259,
-    "y": 1105,
-    "size": 50,
-    "rotation": 0,
-    "flipped": "none"
   },
   {
     "type": "Flowers1",
@@ -576,14 +456,6 @@
     "flipped": "vertical"
   },
   {
-    "type": "Grass, blade of grass",
-    "x": -583,
-    "y": 1392,
-    "size": 55,
-    "rotation": 0,
-    "flipped": "none"
-  },
-  {
     "type": "Rubble",
     "x": -125,
     "y": 1945,
@@ -598,14 +470,6 @@
     "size": 50,
     "rotation": 0.611,
     "flipped": "vertical"
-  },
-  {
-    "type": "Grass, blade of grass",
-    "x": 460,
-    "y": 1041,
-    "size": 45,
-    "rotation": 0,
-    "flipped": "none"
   },
   {
     "type": "Stone Patch",
@@ -640,22 +504,6 @@
     "flipped": "horizontal"
   },
   {
-    "type": "Mushrooms",
-    "x": 506,
-    "y": -1121,
-    "size": 90,
-    "rotation": 0,
-    "flipped": "none"
-  },
-  {
-    "type": "Mushrooms",
-    "x": 1463,
-    "y": -1839,
-    "size": 40,
-    "rotation": 0,
-    "flipped": "horizontal"
-  },
-  {
     "type": "Flowers1",
     "x": -32,
     "y": -2079,
@@ -672,14 +520,6 @@
     "flipped": "horizontal"
   },
   {
-    "type": "Puddle",
-    "x": -616,
-    "y": -362,
-    "size": 55,
-    "rotation": 0,
-    "flipped": "none"
-  },
-  {
     "type": "Rubble",
     "x": -523,
     "y": 307,
@@ -688,27 +528,11 @@
     "flipped": "vertical"
   },
   {
-    "type": "Puddle",
-    "x": -603,
-    "y": 1239,
-    "size": 80,
-    "rotation": 0,
-    "flipped": "none"
-  },
-  {
     "type": "Flowers2",
     "x": -1073,
     "y": 1941,
     "size": 100,
     "rotation": 3.805,
-    "flipped": "none"
-  },
-  {
-    "type": "Puddle",
-    "x": -1345,
-    "y": 1660,
-    "size": 45,
-    "rotation": 0,
     "flipped": "none"
   },
   {
