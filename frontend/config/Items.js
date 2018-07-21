@@ -20,7 +20,8 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 	 *          offsetY: optional number, default to 0
 	 *      },
 	 *      type: ItemType,
-	 *      equipmentSlot: Equipment.Slots
+	 *      equipmentSlot: Equipment.Slots,
+	 *      multiPlacing: optional boolean, default false - after placenment item stays equiped
 	 * }
 	 */
 	const ItemsConfig = {
@@ -205,8 +206,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				size: 100
 			},
 			definition: 'placeables/campfire',
-			type: ItemType.PLACEABLE,
-			multiPlacing: true
+			type: ItemType.PLACEABLE
 		},
 		BigCampfire: {
 			icon: {file: 'fireBigCampIcon'},
@@ -248,7 +248,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			icon: {file: 'fireFurnace'},
 			graphic: {
 				file: 'fireFurnace',
-				size: 80
+				size: 70
 			},
 			definition: 'placeables/furnace',
 			type: ItemType.PLACEABLE
