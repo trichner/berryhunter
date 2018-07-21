@@ -21,7 +21,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 	 *      },
 	 *      type: ItemType,
 	 *      equipmentSlot: Equipment.Slots,
-	 *      multiPlacing: optional boolean, default false - after placenment item stays equiped
+	 *      multiPlacing: optional boolean, default false - after placenment item stays equipped
 	 * }
 	 */
 	const ItemsConfig = {
