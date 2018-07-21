@@ -868,8 +868,8 @@ code {
   opacity: 0.7;
 }
 .craftableItem.hinted.upgrade > .iconBackground {
-    -webkit-mask-image: url('../img/userInterface/hintedCraftMask_upgrade.svg');
-    mask-image: url('../img/userInterface/hintedCraftMask_upgrade.svg');
+  -webkit-mask-image: url('../img/userInterface/hintedCraftMask_upgrade.svg');
+  mask-image: url('../img/userInterface/hintedCraftMask_upgrade.svg');
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -881,8 +881,8 @@ code {
   display: block;
 }
 .craftableItem.hinted.withIngredients > .iconBackground {
-    -webkit-mask-image: url('../img/userInterface/hintedCraftMask_ingredients.svg');
-    mask-image: url('../img/userInterface/hintedCraftMask_ingredients.svg');
+  -webkit-mask-image: url('../img/userInterface/hintedCraftMask_ingredients.svg');
+  mask-image: url('../img/userInterface/hintedCraftMask_ingredients.svg');
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -895,8 +895,8 @@ code {
   display: flex;
 }
 .craftableItem.hinted.upgrade.withIngredients > .iconBackground {
-    -webkit-mask-image: url('../img/userInterface/hintedCraftMask2.svg');
-    mask-image: url('../img/userInterface/hintedCraftMask2.svg');
+  -webkit-mask-image: url('../img/userInterface/hintedCraftMask2.svg');
+  mask-image: url('../img/userInterface/hintedCraftMask2.svg');
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -1052,7 +1052,7 @@ code {
 }
 #splashScreen {
   background-color: #2FA107;
-    background-image: url('../img/userInterface/loadingScreen.jpg');
+  background-image: url('../img/userInterface/loadingScreen.jpg');
   background-position: center center;
   background-size: cover;
   width: 100%;
@@ -1158,27 +1158,26 @@ code {
   box-shadow: none;
 }
 #tutorial {
-    position: fixed;
-    top: 70vh;
-    left: 50vw;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    font-size: 1.33em;
-    color: white;
+  position: fixed;
+  top: 70vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  font-size: 1.33em;
+  color: white;
 }
 #tutorial > .tutorialStep {
-    display: none;
-    transition: opacity 350ms 540ms;
+  display: none;
+  transition: opacity 350ms 540ms;
 }
 #tutorial > .tutorialStep.active {
-    display: block;
+  display: block;
 }
 #tutorial > .tutorialStep.done {
-    opacity: 0;
-    display: block;
-    color: #4CAF50;
+  opacity: 0;
+  display: block;
+  color: #4CAF50;
 }
-
 #tutorial > .tutorialStep.done + .active {
-    display: none;
+  display: none;
 }

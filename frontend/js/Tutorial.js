@@ -64,6 +64,9 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 			return payload.actionType = BerryhunterApi.ActionType.ConsumeItem;
 		}
 
+	}, {
+		markupId: 'finish',
+		showUntil: 'timeout.5000',
 	}];
 
 	function showNextStep() {
@@ -78,7 +81,7 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 		let tutorialStepElement = document.getElementById('tutorial_' + stage.markupId);
 		tutorialStepElement.classList.add('active');
 
-		Events.on(stage.showUntil, function (payload) {
+		let eventHandler = function (payload) {
 			if (Utils.isFunction(stage.eventFilter) && !stage.eventFilter(payload)) {
 				return false;
 			}
@@ -87,7 +90,13 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 			tutorialStepElement.classList.add('done');
 
 			return true;
-		});
+		};
+
+		if (stage.showUntil.startsWith('timeout.')) {
+			setTimeout(eventHandler, stage.showUntil.split('.')[1]);
+		} else {
+			Events.on(stage.showUntil, eventHandler);
+		}
 	}
 
 	Preloading.registerPartial('partials/tutorial.html')
@@ -103,22 +112,28 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 	Events.on('game.playing', function () {
 		Tutorial.currentStage = -1;
 
-		let elements = Tutorial.rootElement.getElementsByClassName('tutorialStep');
-		for (let i = 0; i < elements.length; i++) {
-			elements[i].classList.remove('active');
-			elements[i].classList.remove('done');
-		}
-
 		let lastCompleted = localStorage.getItem(LOCAL_STORAGE_KEY);
 		if (lastCompleted !== null) {
 			lastCompleted = parseInt(lastCompleted, 10);
 			// more than 14 days difference?
 			if (Date.now() - lastCompleted > 14 * 24 * 60 * 60 * 1000) {
 				showNextStep();
+			} else {
+				// Set the tutorial as completed for today, to only show tutorials after inactivity
+				localStorage.setItem(LOCAL_STORAGE_KEY, Date.now());
 			}
 		} else {
 			// Tutorial was never completed yet
 			showNextStep();
+		}
+	});
+
+	Events.on('game.death', function () {
+		// Reset all tutorial elements on death
+		let elements = Tutorial.rootElement.getElementsByClassName('tutorialStep');
+		for (let i = 0; i < elements.length; i++) {
+			elements[i].classList.remove('active');
+			elements[i].classList.remove('done');
 		}
 	});
 });

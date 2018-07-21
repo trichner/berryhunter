@@ -101,6 +101,7 @@ define(['Events'], function (Events) {
 					Game.map.clear();
 				}
 				Game.state = States.RENDERING;
+				Events.trigger('game.death');
 			};
 
 			Game.createSpectator = function (x, y) {
