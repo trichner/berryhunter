@@ -1,0 +1,29 @@
+#tutorial {
+	position: fixed;
+	top: 70vh;
+	left: 50vw;
+	transform: translate(-50%, -50%);
+
+	pointer-events: none;
+	font-size: 1.33em;
+	color: white;
+
+	> .tutorialStep {
+		display: none;
+		transition: opacity 350ms 540ms;
+
+		&.active {
+			display: block;
+		}
+
+		&.done {
+			opacity: 0;
+			display: block;
+			color: #4CAF50;
+		}
+
+		&.done + .active {
+			display: none;
+		}
+	}
+}

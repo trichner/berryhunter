@@ -6,6 +6,11 @@ define([], function () {
 	const oneTimeEvents = {};
 	const registeredListeners = {};
 
+	/**
+	 *
+	 * @param event event name to listen for
+	 * @param callback may return true to be deleted as listener, e.g. (filtered) single execution callbacks
+	 */
 	Events.on = function (event, callback) {
 		if (oneTimeEvents.hasOwnProperty(event)) {
 			// One time event was already triggered - just execute
@@ -29,9 +34,16 @@ define([], function () {
 	Events.trigger = function (event, payload, context) {
 		if (registeredListeners.hasOwnProperty(event)) {
 			let listeners = registeredListeners[event];
-			listeners.forEach(function (listener) {
-				listener.apply(context, payload);
+			let indexToDelete = [];
+			listeners.forEach(function (listener, index) {
+				if (listener.call(context, payload)) {
+					indexToDelete.push(index);
+				}
 			});
+			indexToDelete.forEach(function (index) {
+				listeners.splice(index, 1);
+			})
+
 		}
 	};
 

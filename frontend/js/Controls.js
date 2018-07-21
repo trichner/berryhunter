@@ -2,6 +2,7 @@
 
 define([
 	'Game',
+	'Events',
 	'Constants',
 	'Develop',
 	'MapEditor',
@@ -14,7 +15,7 @@ define([
 	'../vendor/tock',
 	'input/keyboard/keys/KeyCodes',
 	'schema_client'
-], function (Game, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock, KeyCodes) {
+], function (Game, Events, Constants, Develop, MapEditor, Equipment, Placeable, Backend, Console, Chat, Utils, Tock, KeyCodes) {
 
 	let consoleCooldown = 0;
 
@@ -240,14 +241,20 @@ define([
 				hasInput = true;
 			}
 
+			if (inputManager.activePointer.justMoved) {
+				Events.trigger('controls.rotate', movement);
+			}
+
 			if (movement.x !== 0 || movement.y !== 0) {
 				input.movement = movement;
+				Events.trigger('controls.movement', movement);
 				this.character.move(movement);
 				hasInput = true;
 			}
 
 			if (action !== null) {
 				input.action = action;
+				Events.trigger('controls.action', action);
 				hasInput = true;
 			}
 
