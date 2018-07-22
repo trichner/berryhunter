@@ -423,8 +423,8 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			type: ItemType.RESOURCE
 		},
 		Feather: {
-			icon: {file: 'Feather'},
-			definition: 'resources/Feather',
+			icon: {file: 'feather'},
+			definition: 'resources/feather',
 			type: ItemType.RESOURCE
 		}
 	};
