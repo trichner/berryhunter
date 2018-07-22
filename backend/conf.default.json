@@ -4,8 +4,8 @@
     "path": "/game"
   },
   "game": {
-    "coldFractionNightPerSecond": 0.01,
-    "coldFractionRestingPerSecond": 0.01,
+    "coldFractionNightPerSecond": 0.025,
+    "coldFractionRestingPerSecond": 0.005,
     "player": {
       "freezingDamageTickFraction": 0.001,
       "starveDamageTickFraction": 0.001,
