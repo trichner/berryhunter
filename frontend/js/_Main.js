@@ -4,7 +4,7 @@ requirejs.config({
 	paths: {
 		PIXI: '../vendor/pixijs/pixi.min',
 		'vendor/flatbuffers': '../vendor/flatbuffers',
-		underscore: '../vendor/underscore-min',
+		underscore: '../vendor/underscore.min',
 		saveAs: '../vendor/FileSaver.min',
 
 		GameObject: 'gameObjects/_GameObject',
