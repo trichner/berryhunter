@@ -15,6 +15,6 @@
   ],
   "body": {
     "radius": 0.35,
-    "damageRadius": 0.55
+    "damageRadius": 0.5
   }
 }
