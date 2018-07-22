@@ -43,19 +43,19 @@ define([], function () {
 		mobs: {
 			dodo: {
 				file: 'img/dodo.svg',
-				minSize: 30,
+				minSize: 35,
 				maxSize: 45,
 			},
 
 			saberToothCat: {
 				file: 'img/saberToothCat.svg',
-				minSize: 40,
+				minSize: 45,
 				maxSize: 60,
 			},
 
 			mammoth: {
 				file: 'img/mammoth.svg',
-				minSize: 70,
+				minSize: 85,
 				maxSize: 100,
 			}
 		},
@@ -83,7 +83,7 @@ define([], function () {
 				maxSize: 60,
 
 				berryFile: 'img/berry.svg',
-				berrySize: 5,
+				berrySize: 6,
 			}
 		},
 
