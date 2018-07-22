@@ -767,8 +767,10 @@ code {
   display: none;
 }
 .clickableItem.filled {
-  cursor: pointer;
   background-color: rgba(64, 64, 64, 0.6);
+}
+.clickableItem.clickable {
+  cursor: pointer;
 }
 .clickableItem.active {
   background-color: rgba(255, 255, 255, 0.6);

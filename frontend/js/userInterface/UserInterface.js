@@ -100,7 +100,7 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 					clickableIcon.onLeftClick = function (event) {
 						onLeftClick.call(clickableIcon, event, recipe);
 					};
-					clickableIcon.setIconGraphic(recipe.item.icon.path);
+					clickableIcon.setIconGraphic(recipe.item.icon.path, true);
 					clickableIcon.addSubIcons(recipe.materials);
 
 					recipe.clickableIcon = clickableIcon;

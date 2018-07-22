@@ -56,18 +56,23 @@ define(['Utils', 'items/Items', './SubIcon', 'Game', 'Constants'], function (Uti
 			element.appendChild(this.domElement);
 		}
 
-		setIconGraphic(svgPath) {
+		setIconGraphic(svgPath, clickable) {
 			this.imageNode.setAttribute('src', svgPath);
 			this.domElement.classList.remove('empty');
 			this.domElement.classList.add('filled');
-			this.clickable = true;
+			this.setClickable(clickable);
 		}
 
 		removeIconGraphic() {
 			this.imageNode.removeAttribute('src');
 			this.domElement.classList.add('empty');
 			this.domElement.classList.remove('filled');
-			this.clickable = false;
+			this.setClickable(false);
+		}
+
+		setClickable(clickable) {
+			this.clickable = clickable;
+			this.domElement.classList.toggle('clickable', clickable)
 		}
 
 		addSubIcons(materials) {

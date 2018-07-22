@@ -81,7 +81,7 @@ define([
 
 			count = count || 1;
 			this.item = item;
-			this.clickableIcon.setIconGraphic(item.icon.path);
+			this.clickableIcon.setIconGraphic(item.icon.path, isItemClickable(item));
 
 			this.setCount(count);
 
@@ -144,6 +144,17 @@ define([
 		isFilled() {
 			return this.item !== null;
 		}
+	}
+
+	function isItemClickable(item) {
+		switch (item.type) {
+			case ItemType.EQUIPMENT:
+			case ItemType.PLACEABLE:
+			case ItemType.CONSUMABLE:
+				return true;
+		}
+
+		return false;
 	}
 
 	return InventorySlot;
