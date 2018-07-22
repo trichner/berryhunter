@@ -3,7 +3,7 @@
   "name": "Bronze",
   "type": "RESOURCE",
   "factors": {
-    "replenishProbabilityPerSecond": 0.6,
+    "replenishProbabilityPerSecond": 0.4,
     "minimumYield": 2,
     "capacity": 30
   },
