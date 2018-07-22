@@ -5,7 +5,7 @@
   "factors": {
     "replenishProbabilityPerSecond": 0.6,
     "minimumYield": 0,
-    "capacity": 100
+    "capacity": 50
   },
   "body": {
     "minRadius": 0.5,
