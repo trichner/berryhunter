@@ -10,11 +10,11 @@
     "materials": [
       {
         "item": "Berry",
-        "count": 16
+        "count": 10
       },
       {
         "item": "Wood",
-        "count": 45
+        "count": 15
       }
     ],
     "tools": [
