@@ -4,7 +4,7 @@
   "type": "MOB",
   "factors": {
     "vulnerability": 0.667,
-    "damageFraction": 0.002,
+    "damageFraction": 0.003,
     "speed": 1.2
   },
   "drops": [
