@@ -277,11 +277,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			multiPlacing: true
 		},
 		WoodSpikyWall: {
-			// TODO
 			icon: {file: 'wallSpikedWood'},
 			graphic: {
 				file: 'wallSpikedWood',
-				size: 70
+				size: 63
 			},
 			definition: 'walls/wood-spiky-wall',
 			type: ItemType.PLACEABLE,
@@ -298,28 +297,31 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			multiPlacing: true
 		},
 		StoneSpikyWall: {
-			// TODO
 			icon: {file: 'wallSpikedStone'},
 			graphic: {
 				file: 'wallSpikedStone',
-				size: 70
+				size: 63
 			},
 			definition: 'walls/stone-spiky-wall',
 			type: ItemType.PLACEABLE,
 			multiPlacing: true
 		},
 		BronzeWall: {
-			// TODO
-			icon: {file: ''},
-			graphic: {file: ''},
+			icon: {file: 'wallBronze'},
+			graphic: {
+				file: 'wallBronze',
+				size: 50
+			},
 			definition: 'walls/bronze-wall',
 			type: ItemType.PLACEABLE,
 			multiPlacing: true
 		},
 		BronzeSpikyWall: {
-			// TODO
-			icon: {file: ''},
-			graphic: {file: ''},
+			icon: {file: 'wallSpikedBronze'},
+			graphic: {
+				file: 'wallSpikedBronze',
+				size: 63
+			},
 			definition: 'walls/bronze-spiky-wall',
 			type: ItemType.PLACEABLE,
 			multiPlacing: true
@@ -418,6 +420,11 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 		Iron: {
 			icon: {file: 'ironIcon'},
 			definition: 'resources/iron',
+			type: ItemType.RESOURCE
+		},
+		Feather: {
+			icon: {file: 'Feather'},
+			definition: 'resources/Feather',
 			type: ItemType.RESOURCE
 		}
 	};
