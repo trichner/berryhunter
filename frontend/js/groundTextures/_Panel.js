@@ -24,6 +24,7 @@ define([
 		}
 		if (Utils.getUrlParameter('token')) {
 			require(['Console'], function (Console) {
+				Console.log('GroundTexturePanel activated - try to activate GODMODE now.');
 				Console.run('GOD');
 			});
 		} else {
@@ -64,9 +65,11 @@ define([
 		this.sizeInput = document.getElementById('groundTexture_size');
 		this.rotationInput = document.getElementById('groundTexture_rotation');
 		this.flippedRadios = document.getElementsByName('groundTexture_flipped');
+		this.randomizePropertiesToggle = document.getElementById('groundTexture_randomizeProperties');
 		this.textureCount = document.getElementById('groundTexture_textureCount');
 		this.textureCount.textContent = GroundTextureManager.getTextureCount();
 		this.randomizeNextToggle = document.getElementById('groundTexture_randomizeNext');
+		this.undoButton = document.getElementById('groundTexture_undoButton');
 
 		let typeSelect = document.getElementById('groundTexture_type');
 		this.typeSelect = typeSelect;
@@ -94,6 +97,9 @@ define([
 				this.value = value % 360;
 			}
 		});
+
+		// Properties are by default randomized
+		this.randomizePropertiesToggle.checked = true;
 
 		document.getElementById('groundTexture_placeButton').addEventListener('click', function (event) {
 			event.preventDefault();
@@ -127,6 +133,17 @@ define([
 			this.textureCount.textContent = GroundTextureManager.getTextureCount();
 
 			randomizeInputs.call(this);
+
+			this.undoButton.classList.remove('hidden');
+		}.bind(this));
+
+		this.undoButton.addEventListener('click', function (event) {
+			event.preventDefault();
+
+			GroundTextureManager.removeLatestTexture();
+			this.textureCount.textContent = GroundTextureManager.getTextureCount();
+
+			this.undoButton.classList.add('hidden');
 		}.bind(this));
 
 		let popup = document.getElementById('groundTexturePopup');
@@ -165,31 +182,50 @@ define([
 
 		this.minSizeLabel.textContent = groundTextureType.minSize;
 		this.maxSizeLabel.textContent = groundTextureType.maxSize;
-		this.sizeInput.value = Utils.roundToNearest(
-			Utils.randomInt(groundTextureType.minSize, groundTextureType.maxSize + 1),
-			5);
 		this.sizeInput.setAttribute('min', groundTextureType.minSize);
 		this.sizeInput.setAttribute('max', groundTextureType.maxSize);
+		if (this.randomizePropertiesToggle.checked) {
+			this.sizeInput.value = Utils.roundToNearest(
+				Utils.randomInt(groundTextureType.minSize, groundTextureType.maxSize + 1),
+				5);
+		} else {
+			if (this.sizeInput.value > groundTextureType.maxSize) {
+				this.sizeInput.value = groundTextureType.maxSize;
+			} else if (this.sizeInput.value < groundTextureType.minSize) {
+				this.sizeInput.value = groundTextureType.minSize;
+			}
+		}
 
 		if (groundTextureType.hasOwnProperty('rotation')) {
 			this.rotationInput.value = groundTextureType.rotation || 0;
-		} else {
+		} else if (this.randomizePropertiesToggle.checked) {
 			this.rotationInput.value = Utils.randomInt(0, 360);
 		}
 
-		if (groundTextureType.hasOwnProperty('flipVertical') && !groundTextureType.flipVertical){
-			if (groundTextureType.hasOwnProperty('flipHorizontal') && !groundTextureType.flipHorizontal){
+		if (groundTextureType.hasOwnProperty('flipVertical') && !groundTextureType.flipVertical) {
+			if (groundTextureType.hasOwnProperty('flipHorizontal') && !groundTextureType.flipHorizontal) {
 				this.flippedRadios.item(0).checked = true;
 			} else {
-				this.flippedRadios.item(Utils.randomInt(0, 2)).checked = true;
+				if (this.randomizePropertiesToggle.checked) {
+					this.flippedRadios.item(Utils.randomInt(0, 2)).checked = true;
+				} else if (this.flippedRadios.item(2).checked) {
+					// If the vertical flip is active right now, switch to no flipping
+					this.flippedRadios.item(0).checked = true;
+				}
 			}
-		} else if (groundTextureType.hasOwnProperty('flipHorizontal') && !groundTextureType.flipHorizontal){
-			let random = Utils.randomInt(0, 2);
-			if (random === 1){
-				random = 2;
+		} else if (groundTextureType.hasOwnProperty('flipHorizontal') && !groundTextureType.flipHorizontal) {
+			if (this.randomizePropertiesToggle.checked) {
+
+				let random = Utils.randomInt(0, 2);
+				if (random === 1) {
+					random = 2;
+				}
+				this.flippedRadios.item(random).checked = true;
+			} else if (this.flippedRadios.item(1).checked) {
+				// If the horizontal flip is active right now, switch to no flipping
+				this.flippedRadios.item(0).checked = true;
 			}
-			this.flippedRadios.item(random).checked = true;
-		} else {
+		} else if (this.randomizePropertiesToggle.checked) {
 			this.flippedRadios.item(Utils.randomInt(0, 3)).checked = true;
 		}
 	}

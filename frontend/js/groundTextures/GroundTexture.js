@@ -6,7 +6,7 @@ define(['InjectedSVG'], function (InjectedSVG) {
 			this.parameters = parameters;
 		}
 
-		addToMap(){
+		addToMap() {
 			this.graphic = new InjectedSVG(
 				this.parameters.type.svg,
 				this.parameters.x,
@@ -27,6 +27,10 @@ define(['InjectedSVG'], function (InjectedSVG) {
 			require(['Game'], function (Game) {
 				Game.layers.terrain.textures.addChild(self.graphic);
 			});
+		}
+
+		remove() {
+			this.graphic.parent.removeChild(this.graphic);
 		}
 	}
 

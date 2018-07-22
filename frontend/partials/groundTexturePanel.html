@@ -5,17 +5,41 @@
             <a href="#" class="maximize-button">Maximize</a>
         </div>
 
-        <div class="group">Texture will placed<br/>at current position:</div>
-        <div><code>X: <span id="groundTexture_x"></span> / Y: <span id="groundTexture_y"></span></code></div>
-
         <div class="group">
-            <label for="groundTexture_type">Ground Texture Type</label>
+            <label for="groundTexture_type">
+                Ground Texture Type<br/>
+                to be placed
+            </label>
             <select id="groundTexture_type">
                 <option value="" selected disabled>Choose one</option>
             </select>
         </div>
 
         <div id="groundTexture_controls" class="hidden">
+            <div class="group">
+                <label>Placement Mode</label>
+                <div class="radioGroup">
+                    <label>
+                        <input type="radio" name="groundTexture_placementMode" value="button">
+                        via Button
+                    </label>
+                    <label>
+                        <input type="radio" name="groundTexture_placementMode" value="action">
+                        via Action
+                    </label>
+                    <label>
+                        <input type="radio" name="groundTexture_placementMode" value="mouse">
+                        via Mouse
+                    </label>
+                </div>
+            </div>
+
+            <div class="group">
+                Texture will placed<br/>
+                at current position:
+                <div><code>X: <span id="groundTexture_x"></span> / Y: <span id="groundTexture_y"></span></code></div>
+            </div>
+
             <div class="group">
                 <label for="groundTexture_size">Size
                     (min: <span id="groundTexture_minSize"></span>,
@@ -50,6 +74,28 @@
 
             <div class="group">
                 <label>
+                    <input type="checkbox" id="groundTexture_randomizeProperties"/>
+                    Randomize size and <br/>
+                    rotation after placing
+                </label>
+            </div>
+
+            <div class="group">
+                <label>Stacking</label>
+                <div class="radioGroup">
+                    <label>
+                        <input type="radio" name="groundTexture_stacking" value="bottom">
+                        on bottom
+                    </label>
+                    <label>
+                        <input type="radio" name="groundTexture_stacking" value="top">
+                        on top
+                    </label>
+                </div>
+            </div>
+
+            <div class="group">
+                <label>
                     <input type="checkbox" id="groundTexture_randomizeNext"/>
                     Select random next <br/>
                     texture type after <br/>
@@ -59,6 +105,10 @@
 
             <div class="group">
                 <button id="groundTexture_placeButton" class="actionButton">Place Texture</button>
+            </div>
+
+            <div class="group">
+                <button id="groundTexture_undoButton" class="secondaryButton hidden">Undo last placement</button>
             </div>
         </div>
 

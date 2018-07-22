@@ -7,6 +7,7 @@ body {
   font-size: 1.5rem;
   font-variant: small-caps;
   background-color: #006030;
+  overflow: hidden;
 }
 canvas,
 svg {
@@ -532,6 +533,10 @@ h1 {
 .actionButton {
   color: white;
   background-color: #03A9F4;
+}
+.secondaryButton {
+  color: white;
+  background-color: #9E9E9E;
 }
 dl.flatList {
   float: left;
