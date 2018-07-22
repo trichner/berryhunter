@@ -113,6 +113,9 @@ define([
 				if (!Items.hasOwnProperty(item)) {
 					continue;
 				}
+				if (!Items[item].icon) {
+					continue;
+				}
 				if (!Items[item].icon.file) {
 					continue;
 				}
