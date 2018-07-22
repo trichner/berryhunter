@@ -21,7 +21,16 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 	 *      },
 	 *      type: ItemType,
 	 *      equipmentSlot: Equipment.Slots,
-	 *      multiPlacing: optional boolean, default false - after placenment item stays equipped
+	 *      placeable: { must be defined! contains configuration for placeables
+	 *          layer: string, defines the layer this placeable is part of.
+	 *                 See Game.js for defined layers
+	 *          multiPlacing: optional boolean, default false
+	 *                        after placenment item stays equipped
+	 *          visibleOnMinimap: optional boolean, default false
+	 *                            If true, a minimap icon is created for this placeable.
+	 *                            The looks have to be defined in:
+	 *                            GraphicsConfig.miniMap.icons.<itemName>
+	 *      }
 	 * }
 	 */
 	const ItemsConfig = {
@@ -206,7 +215,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				size: 100
 			},
 			definition: 'placeables/campfire',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.campfire'
+			}
 		},
 		BigCampfire: {
 			icon: {file: 'fireBigCampIcon'},
@@ -215,7 +227,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				size: 120
 			},
 			definition: 'placeables/big-campfire',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.campfire'
+			}
 		},
 		Workbench: {
 			icon: {file: 'workbench'},
@@ -224,7 +239,11 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				size: 65
 			},
 			definition: 'placeables/workbench',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.workbench',
+				visibleOnMinimap: true
+			}
 		},
 		Chest: {
 			icon: {file: 'chest'},
@@ -233,7 +252,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				size: 35
 			},
 			definition: 'placeables/chest',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.chest'
+			}
 		},
 		BigChest: {
 			icon: {file: 'chestBig'},
@@ -242,7 +264,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				size: 50
 			},
 			definition: 'placeables/big-chest',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.chest'
+			}
 		},
 		Furnace: {
 			icon: {file: 'fireFurnace'},
@@ -251,7 +276,11 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				size: 70
 			},
 			definition: 'placeables/furnace',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.furnace',
+				visibleOnMinimap: true
+			}
 		},
 		// Seeds: {
 		// 	icon: {file: 'seedIcon'},
@@ -260,7 +289,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 		// 		size: 42
 		// 	},
 		// 	definition: 'placeables/seeds',
-		// 	type: ItemType.PLACEABLE
+		// 	type: ItemType.PLACEABLE,
+		// 	placeable: {
+		// 		layer: 'resources.berryBush'
+		// 	}
 		// },
 
 		/***********************************
@@ -274,7 +306,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			},
 			definition: 'walls/wood-wall',
 			type: ItemType.PLACEABLE,
-			multiPlacing: true
+			placeable: {
+				layer: 'placeables.walls',
+				multiPlacing: true
+			}
 		},
 		WoodSpikyWall: {
 			icon: {file: 'wallSpikedWood'},
@@ -284,7 +319,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			},
 			definition: 'walls/wood-spiky-wall',
 			type: ItemType.PLACEABLE,
-			multiPlacing: true
+			placeable: {
+				layer: 'placeables.spikyWalls',
+				multiPlacing: true
+			}
 		},
 		StoneWall: {
 			icon: {file: 'wallStone'},
@@ -294,7 +332,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			},
 			definition: 'walls/stone-wall',
 			type: ItemType.PLACEABLE,
-			multiPlacing: true
+			placeable: {
+				layer: 'placeables.walls',
+				multiPlacing: true
+			}
 		},
 		StoneSpikyWall: {
 			icon: {file: 'wallSpikedStone'},
@@ -304,7 +345,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			},
 			definition: 'walls/stone-spiky-wall',
 			type: ItemType.PLACEABLE,
-			multiPlacing: true
+			placeable: {
+				layer: 'placeables.spikyWalls',
+				multiPlacing: true
+			}
 		},
 		BronzeWall: {
 			icon: {file: 'wallBronze'},
@@ -314,7 +358,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			},
 			definition: 'walls/bronze-wall',
 			type: ItemType.PLACEABLE,
-			multiPlacing: true
+			placeable: {
+				layer: 'placeables.walls',
+				multiPlacing: true
+			}
 		},
 		BronzeSpikyWall: {
 			icon: {file: 'wallSpikedBronze'},
@@ -324,7 +371,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			},
 			definition: 'walls/bronze-spiky-wall',
 			type: ItemType.PLACEABLE,
-			multiPlacing: true
+			placeable: {
+				layer: 'placeables.spikyWalls',
+				multiPlacing: true
+			}
 		},
 		IronWall: {
 			// TODO
@@ -332,7 +382,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			graphic: {file: ''},
 			definition: 'walls/iron-wall',
 			type: ItemType.PLACEABLE,
-			multiPlacing: true
+			placeable: {
+				layer: 'placeables.walls',
+				multiPlacing: true
+			}
 		},
 		IronSpikyWall: {
 			// TODO
@@ -340,7 +393,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			graphic: {file: ''},
 			definition: 'walls/iron-spiky-wall',
 			type: ItemType.PLACEABLE,
-			multiPlacing: true
+			placeable: {
+				layer: 'placeables.spikyWalls',
+				multiPlacing: true
+			}
 		},
 
 		/***********************************
@@ -351,28 +407,40 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			icon: {file: ''},
 			graphic: {file: ''},
 			definition: 'doors/wood-door',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.doors'
+			}
 		},
 		StoneDoor: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
 			definition: 'doors/stone-door',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.doors'
+			}
 		},
 		BronzeDoor: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
 			definition: 'doors/bronze-door',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.doors'
+			}
 		},
 		IronDoor: {
 			// TODO
 			icon: {file: ''},
 			graphic: {file: ''},
 			definition: 'doors/iron-door',
-			type: ItemType.PLACEABLE
+			type: ItemType.PLACEABLE,
+			placeable: {
+				layer: 'placeables.doors'
+			}
 		},
 
 		/***********************************

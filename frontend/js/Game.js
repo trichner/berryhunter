@@ -358,7 +358,7 @@ define(['Events'], function (Events) {
 			}
 
 			Promise.all(setupPromises).then(function () {
-				Events.triggerOneTime('gameSetup');
+				Events.triggerOneTime('gameSetup', Game);
 			});
 		});
 	};

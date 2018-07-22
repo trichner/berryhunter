@@ -4,8 +4,35 @@
  * Item configs are getting loaded.
  *
  */
-define(['Environment', 'Utils', 'Preloading', 'items/ItemType', '../../config/Items'],
-	function (Environment, Utils, Preloading, ItemType, Items) {
+define(['Environment', 'Utils', 'Preloading', 'items/ItemType', '../../config/Items', 'Events', 'underscore'],
+	function (Environment, Utils, Preloading, ItemType, Items, Events, _) {
+
+		function validatePlaceable(item) {
+			if (item.type !== ItemType.PLACEABLE) {
+				// Only placeables are validated here
+				return;
+			}
+
+			if (!_.isObject(item.placeable)) {
+				throw 'Item "' + item.name + '" must define a property "placeable".';
+			}
+
+			if (!Utils.isDefined(item.placeable.layer)) {
+				throw 'Item "' + item.name + '" must define a property "layer" inside "placeable".';
+			}
+
+			Events.on('gameSetup', function (Game) {
+				let layer = _.property(item.placeable.layer.split('.'))(Game.layers);
+				if (!Utils.isDefined(layer)) {
+					throw 'The defined layer "' + item.placeable.layer + '" in the item "' + item.name + '" is not valid layer. Check out Game.js for a definition of all game layers.';
+				}
+				item.placeable.layer = layer;
+			});
+
+			if (!Utils.isDefined(item.placeable.visibleOnMinimap)) {
+				item.placeable.visibleOnMinimap = false;
+			}
+		}
 
 		(function preloadItemIcons() {
 
@@ -45,12 +72,18 @@ define(['Environment', 'Utils', 'Preloading', 'items/ItemType', '../../config/It
 						if (item.name !== itemDefinition.name) {
 							throw 'Loaded "' + item.definition + '.json" for item "' + item.name + '" but got "' + itemDefinition.name + '".';
 						}
+						if (item.type !== ItemType[itemDefinition.type]) {
+							console.warn(item.definition + '.json specifies item type "' + ItemType[itemDefinition.type] + ' but Item.js specifies "' + item.type + '. JSON file overrides!');
+							item.type = ItemType[itemDefinition.type];
+						}
 
 						item.id = itemDefinition.id;
-						item.type = ItemType[itemDefinition.type];
 						item.recipe = itemDefinition.recipe;
 						item.factors = itemDefinition.factors;
+						validatePlaceable(item);
 					}));
+				} else {
+					validatePlaceable(item);
 				}
 			}
 		})();

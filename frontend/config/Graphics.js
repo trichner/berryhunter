@@ -121,6 +121,16 @@ define([], function () {
 					color: 0xc20071,
 					alpha: 1,
 					sizeFactor: 1.2
+				},
+				Workbench: {
+					color: 0xFF0000,
+					alpha: 1,
+					sizeFactor: 1
+				},
+				Furnace: {
+					color: 0xFF8000,
+					alpha: 1,
+					sizeFactor: 1
 				}
 			}
 		},
