@@ -27,7 +27,7 @@ define([], function () {
 		 *
 		 * SYNCED WITH BACKEND
 		 */
-        BASE_MOVEMENT_SPEED: PIXEL_PER_METER * 0.05,
+        BASE_MOVEMENT_SPEED: PIXEL_PER_METER * 0.055,
 
 		/**
 		 * true: character movement AND mouse movement adjust the character facing direction
