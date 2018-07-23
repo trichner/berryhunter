@@ -46,14 +46,17 @@
     </div>
 
     <div id="inventory" class="layout-row">
-        <!-- States are:
-                - empty
-                - filled
-                - filled active -->
-        <a class="clickableItem inventorySlot empty">
-            <img src="" class="itemIcon"/>
-            <span class="count"></span>
-        </a>
+        <div class="inventorySlot">
+            <a class="autoFeedToggle hidden" href="#"></a>
+            <!-- States are:
+					- empty
+					- filled
+					- filled active -->
+            <a class="clickableItem empty">
+                <img src="" class="itemIcon"/>
+                <span class="count"></span>
+            </a>
+        </div>
     </div>
 
     <div id="chat" class="hidden">

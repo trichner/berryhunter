@@ -50,7 +50,6 @@
 @backgroundColorMedium: rgba(64, 64, 64, 0.6);
 @backgroundColorLight: rgba(255, 255, 255, 0.6);
 
-
 #inventory {
 	position: absolute;
 	bottom: 0;
@@ -60,6 +59,47 @@
 	&.overfilled {
 		> .inventorySlot {
 			animation: red-flash 700ms ease-in-out;
+		}
+	}
+
+	> .inventorySlot {
+		position: relative;
+
+		&.activeAutoFeed {
+			> .autoFeedToggle {
+				background-color: fade(limegreen, 60%);
+
+				> svg * {
+					fill: white;
+				}
+			}
+
+			> .clickableItem {
+				border: 2px solid limegreen;
+			}
+		}
+
+		> .autoFeedToggle {
+			position: absolute;
+			bottom: 100%;
+			left: 50%;
+			margin-left: -18px;
+
+			padding: 6px;
+			width: 36px;
+			height: 36px;
+
+			border-radius: (0.1 * @slotSize);
+			background-color: @backgroundColorMedium;
+
+			> svg {
+				max-width: 100%;
+				max-height: 100%;
+
+				* {
+					fill: limegreen;
+				}
+			}
 		}
 	}
 }
@@ -168,7 +208,6 @@
 		}
 	}
 
-
 	.itemIcon {
 		width: 100%;
 	}
@@ -198,7 +237,6 @@
 		right: 0;
 
 		background-color: @backgroundColorMedium;
-
 
 		> .subIcon {
 			position: relative;

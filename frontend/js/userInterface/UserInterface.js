@@ -9,6 +9,12 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 				UserInterface.rootElement = document.getElementById('gameUI');
 			});
 
+		// TODO korrektes SVG ins Projekt legen
+		Preloading.registerSVG('img/userInterface/pointer.svg')
+			.then((svgText) => {
+				UserInterface.cycleIcon = svgText;
+			});
+
 		UserInterface.setup = function () {
 			setupCrafting.call(this);
 
@@ -27,13 +33,22 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 			let inventorySlot = document.querySelector('#inventory > .inventorySlot');
 
 			this.inventorySlots = new Array(Constants.INVENTORY_SLOTS);
-			this.inventorySlots[0] = new ClickableCountableIcon(inventorySlot);
+			setupInventorySlot.call(this, inventorySlot, 0);
 
 			for (let i = 1; i < Constants.INVENTORY_SLOTS; ++i) {
 				let inventorySlotCopy = inventorySlot.cloneNode(true);
 				inventoryElement.appendChild(inventorySlotCopy);
-				this.inventorySlots[i] = new ClickableCountableIcon(inventorySlotCopy);
+				setupInventorySlot.call(this, inventorySlotCopy, i);
 			}
+		}
+
+		function setupInventorySlot(inventorySlot, index) {
+			this.inventorySlots[index] = new ClickableCountableIcon(
+				inventorySlot
+					.getElementsByClassName('clickableItem')
+					.item(0));
+			let autoFeedToggle = inventorySlot.getElementsByClassName('autoFeedToggle').item(0);
+			autoFeedToggle.innerHTML = UserInterface.cycleIcon;
 		}
 
 		function setupVitalSigns() {
