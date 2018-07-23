@@ -186,14 +186,16 @@ define([
 	}
 
 	function isItemClickable(item) {
-		switch (item.type) {
-			case ItemType.EQUIPMENT:
-			case ItemType.PLACEABLE:
-			case ItemType.CONSUMABLE:
-				return true;
-		}
-
-		return false;
+		// See https://trello.com/c/Te1dzqKd#comment-5b565a43463c9537a185e364
+		// switch (item.type) {
+		// 	case ItemType.EQUIPMENT:
+		// 	case ItemType.PLACEABLE:
+		// 	case ItemType.CONSUMABLE:
+		// 		return true;
+		// }
+		//
+		// return false;
+		return true;
 	}
 
 	return InventorySlot;
