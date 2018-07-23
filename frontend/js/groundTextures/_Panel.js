@@ -57,6 +57,10 @@ define([
 	};
 
 	Events.on('game.playing', function () {
+		if (!active) {
+			return;
+		}
+
 		if (Utils.getUrlParameter('token')) {
 			require(['Console'], function (Console) {
 				Console.log('GroundTexturePanel activated - try to grant MysticWand');
