@@ -1,6 +1,6 @@
 'use strict';
 
-define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedSVG', 'GraphicsConfig'], function (Preloading, Game, Utils, UserInterface, InjectedSVG, GraphicsConfig) {
+define(['Preloading', 'Game', 'Events', 'Utils', 'userInterface/UserInterface', 'InjectedSVG', 'GraphicsConfig'], function (Preloading, Game, Events, Utils, UserInterface, InjectedSVG, GraphicsConfig) {
 	class VitalSigns {
 		constructor() {
 			this.health = VitalSigns.MAXIMUM_VALUES.health;
@@ -48,7 +48,15 @@ define(['Preloading', 'Game', 'Utils', 'userInterface/UserInterface', 'InjectedS
 					break;
 			}
 			this[valueIndex] = value;
-			this.uiBars[valueIndex].setValue(value / VitalSigns.MAXIMUM_VALUES[valueIndex]);
+			let relativeValue = value / VitalSigns.MAXIMUM_VALUES[valueIndex];
+			this.uiBars[valueIndex].setValue(relativeValue);
+			Events.trigger('vitalSign.change', {
+				vitalSign: valueIndex,
+				newValue: {
+					relative: relativeValue,
+					absolute: value
+				}
+			});
 		}
 
 		onDamageTaken() {

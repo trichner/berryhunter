@@ -7,8 +7,9 @@ define([
 	'userInterface/UserInterface',
 	'./InventoryListeners',
 	'Events',
+	'AutoFeed',
 	'schema_client',
-], function (Game, Equipment, ItemType, UserInterface, InventoryListeners, Events) {
+], function (Game, Equipment, ItemType, UserInterface, InventoryListeners, Events, AutoFeed) {
 
 	class InventorySlot {
 		/**
@@ -23,6 +24,7 @@ define([
 			this.item = null;
 			this.count = 0;
 			this.active = false;
+			this.activeAutoFeed = false;
 
 			this.clickableIcon = UserInterface.getInventorySlot(index);
 
@@ -62,6 +64,32 @@ define([
 					Game.player.controls.onInventoryAction(this.item, BerryhunterApi.ActionType.DropItem);
 				}
 			}.bind(this);
+
+			// A bit hacky, but it works...
+			this.domElement = this.clickableIcon.domElement.parentElement;
+			this.autoFeedToggle = this.domElement.getElementsByClassName('autoFeedToggle').item(0);
+			this.autoFeedToggle.addEventListener('click', function (event) {
+				event.preventDefault();
+
+				this.activeAutoFeed = !this.activeAutoFeed;
+				this.domElement.classList.toggle('activeAutoFeed', this.activeAutoFeed);
+				if (this.activeAutoFeed){
+					Events.trigger('autoFeed.activate', {
+						index: this.index,
+						inventorySlot: this
+					});
+				} else {
+					Events.trigger('autoFeed.deactivate');
+				}
+			}.bind(this));
+
+			// Deactivate AutoFeed for this slot if another slot is activated
+			Events.on('autoFeed.activate', function (payload) {
+				if (this.activeAutoFeed && payload.index !== this.index){
+					this.activeAutoFeed = false;
+					this.domElement.classList.remove('activeAutoFeed');
+				}
+			}.bind(this));
 		}
 
 		/**
@@ -82,6 +110,11 @@ define([
 			count = count || 1;
 			this.item = item;
 			this.clickableIcon.setIconGraphic(item.icon.path, isItemClickable(item));
+			if (AutoFeed.isItemSuitable(item)){
+				this.autoFeedToggle.classList.remove('hidden');
+			} else {
+				this.autoFeedToggle.classList.add('hidden');
+			}
 
 			this.setCount(count);
 
@@ -116,6 +149,12 @@ define([
 			}
 
 			this.clickableIcon.removeIconGraphic();
+			this.autoFeedToggle.classList.add('hidden');
+			if (this.activeAutoFeed){
+				this.activeAutoFeed = false;
+				this.domElement.classList.remove('activeAutoFeed');
+				Events.trigger('autoFeed.deactivate');
+			}
 
 			if (this.isActive()) {
 				this.inventory.deactivateSlot(Equipment.Helper.getItemEquipmentSlot(this.item), false);

@@ -140,6 +140,7 @@ define(['Preloading', 'Events'], function (Preloading, Events) {
 		'userInterface/UserInterface',
 		'userInterface/VitalSignBar',
 
+		'AutoFeed',
 		'Camera',
 		'Chat',
 		'ColorMatrixFilterExtension',

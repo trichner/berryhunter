@@ -116,7 +116,7 @@ define(['Preloading', 'Events', 'Utils'], function (Preloading, Events, Utils) {
 		if (lastCompleted !== null) {
 			lastCompleted = parseInt(lastCompleted, 10);
 			// more than 14 days difference?
-			if (Date.now() - lastCompleted > 14 * 24 * 60 * 60 * 1000) {
+			if (Utils.dateDiff(Date.now(), lastCompleted, Utils.dateDiffUnit.days) > 14) {
 				showNextStep();
 			} else {
 				// Set the tutorial as completed for today, to only show tutorials after inactivity

@@ -310,5 +310,19 @@ define(['../vendor/XieLongUtils'], function () {
 		});
 	};
 
+	Utils.dateDiffUnit = {
+		milliseconds: 1,
+		seconds: 1000,
+		days: 24 * 60 * 60 * 1000
+	};
+
+	Utils.dateDiff = function (a, b, unit) {
+		if (Utils.isUndefined(unit)){
+			unit = Utils.dateDiffUnit.milliseconds;
+		}
+
+		return (a - b) / unit;
+	};
+
 	return Utils;
 });

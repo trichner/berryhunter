@@ -136,6 +136,10 @@ define([], function () {
 		},
 
 		vitalSigns: {
+			/**
+			 * Determines below which relative value screen overlays for vital signs are shown
+			 * and how low the satiety has be before auto feed kicks in.
+			 */
 			overlayThreshold: 0.3
 		},
 

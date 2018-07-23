@@ -9,8 +9,7 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 				UserInterface.rootElement = document.getElementById('gameUI');
 			});
 
-		// TODO korrektes SVG ins Projekt legen
-		Preloading.registerSVG('img/userInterface/pointer.svg')
+		Preloading.registerSVG('img/userInterface/cycle-icon.svg')
 			.then((svgText) => {
 				UserInterface.cycleIcon = svgText;
 			});
