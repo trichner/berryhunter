@@ -25,7 +25,11 @@ define(['InjectedSVG'], function (InjectedSVG) {
 
 			let self = this;
 			require(['Game'], function (Game) {
-				Game.layers.terrain.textures.addChild(self.graphic);
+				if (self.parameters.stacking === 'bottom'){
+					Game.layers.terrain.textures.addChildAt(self.graphic, 0);
+				} else {
+					Game.layers.terrain.textures.addChild(self.graphic);
+				}
 			});
 		}
 

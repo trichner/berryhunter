@@ -7,8 +7,7 @@
 
         <div class="group">
             <label for="groundTexture_type">
-                Ground Texture Type<br/>
-                to be placed
+                Ground Texture Type to be placed
             </label>
             <select id="groundTexture_type">
                 <option value="" selected disabled>Choose one</option>
@@ -17,26 +16,7 @@
 
         <div id="groundTexture_controls" class="hidden">
             <div class="group">
-                <label>Placement Mode</label>
-                <div class="radioGroup">
-                    <label>
-                        <input type="radio" name="groundTexture_placementMode" value="button">
-                        via Button
-                    </label>
-                    <label>
-                        <input type="radio" name="groundTexture_placementMode" value="action">
-                        via Action
-                    </label>
-                    <label>
-                        <input type="radio" name="groundTexture_placementMode" value="mouse">
-                        via Mouse
-                    </label>
-                </div>
-            </div>
-
-            <div class="group">
-                Texture will placed<br/>
-                at current position:
+                <span>Texture will placed at mouse position:</span>
                 <div><code>X: <span id="groundTexture_x"></span> / Y: <span id="groundTexture_y"></span></code></div>
             </div>
 
@@ -75,8 +55,8 @@
             <div class="group">
                 <label>
                     <input type="checkbox" id="groundTexture_randomizeProperties"/>
-                    Randomize size and <br/>
-                    rotation after placing
+                    Randomize size, rotation
+                    and flipping after placing
                 </label>
             </div>
 
@@ -88,7 +68,7 @@
                         on bottom
                     </label>
                     <label>
-                        <input type="radio" name="groundTexture_stacking" value="top">
+                        <input type="radio" name="groundTexture_stacking" value="top" checked="checked">
                         on top
                     </label>
                 </div>
@@ -97,14 +77,14 @@
             <div class="group">
                 <label>
                     <input type="checkbox" id="groundTexture_randomizeNext"/>
-                    Select random next <br/>
-                    texture type after <br/>
-                    placing
+                    Select random next texture type after placing
                 </label>
             </div>
 
             <div class="group">
                 <button id="groundTexture_placeButton" class="actionButton">Place Texture</button>
+                    <div>Texture will placed at current position:</div>
+                    <div><code>X: <span id="groundTexture_currentX"></span> / Y: <span id="groundTexture_currentY"></span></code></div>
             </div>
 
             <div class="group">

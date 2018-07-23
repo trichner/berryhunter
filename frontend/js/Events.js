@@ -16,7 +16,7 @@ define([], function () {
 			// One time event was already triggered - just execute
 			// the callback with appropriate parameters and done
 			let eventData = oneTimeEvents[event];
-			callback.apply(eventData.context, eventData.payload);
+			callback.call(eventData.context, eventData.payload);
 			return;
 		}
 

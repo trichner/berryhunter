@@ -49,7 +49,7 @@ define([
 				.then(function () {
 					let developPanel = document.getElementById('developPanel');
 					// Capture inputs to prevent game actions while acting in develop panel
-					['click', 'pointerup', 'pointerdown', 'mouseup', 'mousedown', 'keyup', 'keydown']
+					['click', 'pointerdown', 'mousedown', 'keyup', 'keydown']
 						.forEach(function (eventName) {
 							developPanel.addEventListener(eventName, function (event) {
 								event.stopPropagation();

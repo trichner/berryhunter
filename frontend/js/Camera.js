@@ -40,6 +40,14 @@ define([
 			return mapY - this.getY() + this.offset.y;
 		}
 
+		getMapX(screenX) {
+			return screenX + this.getX() - this.offset.x;
+		}
+
+		getMapY(screenY) {
+			return screenY + this.getY() - this.offset.y;
+		}
+
 		getX() {
 			return this.position.x;
 		}

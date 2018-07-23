@@ -494,7 +494,22 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			icon: {file: 'feather'},
 			definition: 'resources/feather',
 			type: ItemType.RESOURCE
-		}
+		},
+
+		/***********************************
+		 * SPECIAL
+		 ***********************************/
+		MysticWand: {
+			icon: {file: 'wandMysticIcon'},
+			graphic: {
+				file: 'wandMystic',
+				size: 60,
+				offsetX: 20
+			},
+			definition: 'mystic-wand',
+			type: ItemType.EQUIPMENT,
+			equipmentSlot: Equipment.Slots.HAND
+		},
 	};
 
 	return ItemsConfig;

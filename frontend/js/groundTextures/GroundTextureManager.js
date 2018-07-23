@@ -18,7 +18,12 @@ define(['Environment', 'Preloading', 'Utils', './GroundTexture', './GroundTextur
 
 		GroundTextureManager.placeTexture = function (parameters) {
 			let newTexture = new GroundTexture(parameters);
-			latestTextureIndex = textures.push(newTexture) - 1;
+			if (parameters.stacking === 'bottom') {
+				textures.unshift(newTexture);
+				latestTextureIndex = 0;
+			} else {
+				latestTextureIndex = textures.push(newTexture) - 1;
+			}
 
 			if (renderingStarted) {
 				newTexture.addToMap();

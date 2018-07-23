@@ -2,13 +2,16 @@
 
 define([
 	'Game',
+	'Events',
+	'items/Items',
+	'items/Equipment',
 	'Preloading',
 	'Utils',
 	'Constants',
 	'./GroundTextureTypes',
 	'./GroundTextureManager',
 	'saveAs'
-], function (Game, Preloading, Utils, Constants, GroundTextureTypes, GroundTextureManager, saveAs) {
+], function (Game, Events, Items, Equipment, Preloading, Utils, Constants, GroundTextureTypes, GroundTextureManager, saveAs) {
 
 	let active = false;
 
@@ -31,16 +34,36 @@ define([
 			alert('WARNING: Missing token, can not activate god mode.')
 		}
 
-		Game.godMode = true;
-
 		Game.renderer.on('prerender', function () {
 			if (Game.state === Game.States.PLAYING) {
 				let position = Game.player.character.getPosition();
-				this.xLabel.textContent = position.x.toFixed(0);
-				this.yLabel.textContent = position.y.toFixed(0);
+				this.currentXLabel.textContent = position.x.toFixed(0);
+				this.currentYLabel.textContent = position.y.toFixed(0);
+
+				let x = Game.player.camera.getMapX(Game.input.activePointer.x);
+				let y = Game.player.camera.getMapY(Game.input.activePointer.y);
+				this.xLabel.textContent = x.toFixed(0);
+				this.yLabel.textContent = y.toFixed(0);
 			}
 		}, this);
+
+		Game.domElement.addEventListener('click', function (event) {
+			if (Game.player.character.getEquippedItem(Equipment.Slots.HAND) === Items.MysticWand) {
+				let x = Game.player.camera.getMapX(event.pageX);
+				let y = Game.player.camera.getMapY(event.pageY);
+				GroundTexturePanel.placeTexture.call(GroundTexturePanel, {x, y});
+			}
+		});
 	};
+
+	Events.on('game.playing', function () {
+		if (Utils.getUrlParameter('token')) {
+			require(['Console'], function (Console) {
+				Console.log('GroundTexturePanel activated - try to grant MysticWand');
+				Console.run('give MysticWand');
+			});
+		}
+	});
 
 	function stopPropagation(event) {
 		event.stopPropagation();
@@ -51,14 +74,17 @@ define([
 		let groundTexturePanel = document.getElementById('groundTexturePanel');
 		let groundTexturePopup = document.getElementById('groundTexturePopup');
 		// Capture inputs to prevent game actions while acting in develop panel
-		['pointerup', 'pointerdown', 'mouseup', 'mousedown', 'keyup', 'keydown']
+		['pointerdown', 'mousedown', 'keyup', 'keydown']
 			.forEach(function (eventName) {
 				groundTexturePanel.addEventListener(eventName, stopPropagation);
 				groundTexturePopup.addEventListener(eventName, stopPropagation);
 			});
 
+		this.typeSelect = document.getElementById('groundTexture_type');
 		this.xLabel = document.getElementById('groundTexture_x');
 		this.yLabel = document.getElementById('groundTexture_y');
+		this.currentXLabel = document.getElementById('groundTexture_currentX');
+		this.currentYLabel = document.getElementById('groundTexture_currentY');
 		this.controlsContainer = document.getElementById('groundTexture_controls');
 		this.minSizeLabel = document.getElementById('groundTexture_minSize');
 		this.maxSizeLabel = document.getElementById('groundTexture_maxSize');
@@ -66,13 +92,14 @@ define([
 		this.rotationInput = document.getElementById('groundTexture_rotation');
 		this.flippedRadios = document.getElementsByName('groundTexture_flipped');
 		this.randomizePropertiesToggle = document.getElementById('groundTexture_randomizeProperties');
+		this.stackingRadios = document.getElementsByName('groundTexture_stacking');
 		this.textureCount = document.getElementById('groundTexture_textureCount');
 		this.textureCount.textContent = GroundTextureManager.getTextureCount();
 		this.randomizeNextToggle = document.getElementById('groundTexture_randomizeNext');
+		this.placeButton = document.getElementById('groundTexture_placeButton');
 		this.undoButton = document.getElementById('groundTexture_undoButton');
 
-		let typeSelect = document.getElementById('groundTexture_type');
-		this.typeSelect = typeSelect;
+		let typeSelect = this.typeSelect;
 		let types = Object.keys(GroundTextureTypes);
 		this.types = types;
 		Utils.sortStrings(types);
@@ -101,40 +128,10 @@ define([
 		// Properties are by default randomized
 		this.randomizePropertiesToggle.checked = true;
 
-		document.getElementById('groundTexture_placeButton').addEventListener('click', function (event) {
+		this.placeButton.addEventListener('click', function (event) {
 			event.preventDefault();
 
-			if (Utils.isUndefined(this.groundTextureType)) {
-				console.warn('No ground texture type selected');
-				return;
-			}
-
-			if (Game.state !== Game.States.PLAYING) {
-				console.warn('Ground textures can only be placed while being ingame.');
-				return;
-			}
-
-			let position = Game.player.character.getPosition();
-			let flipped = 'none';
-			this.flippedRadios.forEach(function (element) {
-				if (element.checked) {
-					flipped = element.value;
-				}
-			});
-			GroundTextureManager.placeTexture({
-				type: this.groundTextureType,
-				x: Math.round(position.x),
-				y: Math.round(position.y),
-				size: parseInt(this.sizeInput.value),
-				rotation: Utils.deg2rad(this.rotationInput.value),
-				flipped: flipped,
-			});
-
-			this.textureCount.textContent = GroundTextureManager.getTextureCount();
-
-			randomizeInputs.call(this);
-
-			this.undoButton.classList.remove('hidden');
+			this.placeTexture(Game.player.character.getPosition());
 		}.bind(this));
 
 		this.undoButton.addEventListener('click', function (event) {
@@ -169,6 +166,48 @@ define([
 			saveAs(blob, 'groundTextures.json');
 		});
 	}
+
+	GroundTexturePanel.placeTexture = function (position) {
+		if (Utils.isUndefined(this.groundTextureType)) {
+			Game.player.character.say('No ground texture type selected');
+			return;
+		}
+
+		if (Game.state !== Game.States.PLAYING) {
+			console.warn('Ground textures can only be placed while being ingame.');
+			return;
+		}
+
+		let flipped = 'none';
+		this.flippedRadios.forEach(function (element) {
+			if (element.checked) {
+				flipped = element.value;
+			}
+		});
+
+		let stacking = 'top';
+		this.stackingRadios.forEach(function (radio) {
+			if (radio.checked){
+				stacking = radio.value;
+			}
+		});
+
+		GroundTextureManager.placeTexture({
+			type: this.groundTextureType,
+			x: Math.round(position.x),
+			y: Math.round(position.y),
+			size: parseInt(this.sizeInput.value),
+			rotation: Utils.deg2rad(this.rotationInput.value),
+			flipped,
+			stacking
+		});
+
+		this.textureCount.textContent = GroundTextureManager.getTextureCount();
+
+		randomizeInputs.call(this);
+
+		this.undoButton.classList.remove('hidden');
+	};
 
 	function randomizeInputs() {
 		let groundTextureType;

@@ -34,6 +34,11 @@ svg .clickable {
 svg .clickable text {
   cursor: pointer;
 }
+code {
+  font-size: 14px;
+  font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
+  font-variant: normal;
+}
 .layout,
 .layout-column,
 .layout-row {
@@ -593,7 +598,7 @@ dl.flatList > dd {
   right: 0;
   background-color: rgba(255, 255, 255, 0.8);
   padding: 1em;
-  min-width: 16em;
+  max-width: 190px;
   z-index: 1000;
   font-size: 14px;
   font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
@@ -655,11 +660,17 @@ dl.flatList > dd {
 #groundTexturePanel .bad {
   color: #F44336;
 }
+#groundTexturePanel .group {
+  margin-top: 1em;
+}
+#groundTexturePanel label {
+  display: block;
+}
 #groundTexturePopup {
   position: fixed;
   z-index: 2000;
   top: 50%;
-  left: 25%;
+  left: 50%;
   transform: translate(-50%, -50%);
   max-height: 95vh;
   max-width: 40em;
@@ -680,23 +691,6 @@ dl.flatList > dd {
 }
 #groundTexture_closePopup {
   float: right;
-}
-#groundTexturePanel {
-  min-width: 0;
-}
-#groundTexturePanel .group {
-  margin-top: 1em;
-}
-#groundTexturePanel label {
-  display: block;
-}
-#groundTexturePopup {
-  left: 50%;
-}
-code {
-  font-size: 14px;
-  font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
-  font-variant: normal;
 }
 #gameUI.hidden {
   display: block;
