@@ -230,3 +230,8 @@ func (p *player) OwnedEntities() model.BasicEntities {
 func (p *player) SetGodmode(on bool) {
 	p.isGod = on
 }
+
+func (p *player) IsGod() bool {
+	return p.isGod;
+}
+

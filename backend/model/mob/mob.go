@@ -83,6 +83,9 @@ func (m *Mob) Update(dt float32) bool {
 	for c := range auraCollisions {
 		p, ok := c.Shape().UserData.(model.PlayerEntity)
 		if ok {
+			if p.IsGod() {
+				continue
+			}
 			h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
 			p.VitalSigns().Health = h
 		}

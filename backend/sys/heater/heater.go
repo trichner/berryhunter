@@ -65,6 +65,10 @@ func (f *HeaterSystem) Update(dt float32) {
 
 		//FIXME HARDCODED
 
+		if t.player.IsGod() {
+			continue
+		}
+
 		// are we freezing?
 		if t.temperature < f.baseTemperature {
 			bt := t.player.VitalSigns().BodyTemperature.SubFraction(0.0005)

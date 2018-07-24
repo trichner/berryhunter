@@ -36,6 +36,9 @@ func (d *DayCycleSystem) Update(dt float32) {
 
 		// adjust body temp
 		for _, p := range d.players {
+			 if p.IsGod() {
+				continue;
+			}
 			t := p.VitalSigns().BodyTemperature.Sub(d.nightCoolPerTick)
 			p.VitalSigns().BodyTemperature = t
 		}
