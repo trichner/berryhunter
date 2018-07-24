@@ -157,7 +157,6 @@ define([
 				if (entity.currentAction) {
 					switch (entity.currentAction.actionType) {
 						case BerryhunterApi.ActionType.Primary:
-							console.log("Action by " + entity.name + ": " + "Primary" + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
 							character.action();
 							character.progressHitAnimation(entity.currentAction.ticksRemaining);
 							break;
@@ -166,7 +165,6 @@ define([
 							for (let actionType in BerryhunterApi.ActionType) {
 								if (BerryhunterApi.ActionType.hasOwnProperty(actionType)) {
 									if (entity.currentAction.actionType === BerryhunterApi.ActionType[actionType]) {
-										console.log("Action by " + entity.name + ": " + actionType + " (" + entity.currentAction.ticksRemaining + " Ticks remaining)");
 										actionTypeKnown = true;
 										break;
 									}
