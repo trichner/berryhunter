@@ -192,7 +192,7 @@ define([
 							case 'PLACING':
 								let placedItem = this.character.getEquippedItem(Equipment.Slots.PLACEABLE);
 
-								if (!placedItem.multiPlacing) {
+								if (!placedItem.placeable.multiPlacing) {
 									Game.player.inventory.unequipItem(placedItem, Equipment.Slots.PLACEABLE);
 								}
 
