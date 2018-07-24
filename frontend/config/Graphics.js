@@ -140,7 +140,12 @@ define([], function () {
 			 * Determines below which relative value screen overlays for vital signs are shown
 			 * and how low the satiety has be before auto feed kicks in.
 			 */
-			overlayThreshold: 0.3
+			overlayThreshold: 0.3,
+
+			/**
+			 * How many milliseconds old values are shown, after a vital sign has been reduced.
+			 */
+			fadeInMS: 1500
 		},
 
 		/**

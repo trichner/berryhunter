@@ -54,11 +54,11 @@ define([
 			if (Utils.isDefined(entity.position)) {
 				this.character.setPosition(entity.position.x, entity.position.y);
 			}
+			let newVitalSigns = {};
 			['health', 'satiety', 'bodyHeat'].forEach((vitalSign) => {
-				if (Utils.isDefined(entity[vitalSign])) {
-					this.vitalSigns.setValue(vitalSign, entity[vitalSign]);
-				}
+				newVitalSigns[vitalSign] = entity[vitalSign];
 			});
+			this.vitalSigns.updateFromBackend(newVitalSigns);
 
 			/**
 			 * Handle Actions

@@ -963,9 +963,19 @@ dl.flatList > dd {
 }
 #vitalSigns > .bar {
   margin: 0.7vh;
+  position: relative;
+  z-index: 1;
 }
-#vitalSigns > .bar > .indicator {
+
+#vitalSigns > .bar > .indicator,
+#vitalSigns > .bar > .previousIndicator {
   height: 100%;
+}
+
+#vitalSigns > .bar > .previousIndicator {
+  background-color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  z-index: -1;
 }
 #healthBar {
   background-color: #840D25;
