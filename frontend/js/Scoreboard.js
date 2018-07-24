@@ -25,6 +25,9 @@ define(['userInterface/UserInterface', 'Utils'], function (UserInterface, Utils)
 		}
         this.domElement.classList.remove('hidden');
 		let players = scoreboardMessage.players;
+		players.sort(function (a, b) {
+			return b.score - a.score;
+		});
 		if (this.rows.length !== players.length) {
 			Utils.clearNode(this.rowContainer);
 			this.rows.length = 0;
