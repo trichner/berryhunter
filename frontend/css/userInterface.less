@@ -79,6 +79,12 @@
 			}
 		}
 
+		&.eating {
+			> .clickableItem {
+				animation: green-flash 700ms ease-in-out;
+			}
+		}
+
 		> .autoFeedToggle {
 			position: absolute;
 			bottom: 100%;
@@ -107,6 +113,12 @@
 @keyframes red-flash {
 	40%, 60% {
 		background-color: crimson;
+	}
+}
+
+@keyframes green-flash {
+	40%, 60% {
+		background-color: limegreen;
 	}
 }
 

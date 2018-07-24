@@ -131,11 +131,7 @@ define(['Preloading', 'Constants', 'Utils', './ClickableIcon', './ClickableCount
 
 		UserInterface.flashInventory = function () {
 			let inventoryElement = document.getElementById('inventory');
-			inventoryElement.classList.remove('overfilled');
-			// Use 1 render cycle delay to ensure the animation is restarted
-			requestAnimationFrame(function () {
-				inventoryElement.classList.add('overfilled')
-			});
+			Utils.playCssAnimation(inventoryElement, 'overfilled');
 		};
 
 		/**

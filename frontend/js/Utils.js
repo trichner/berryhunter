@@ -324,5 +324,13 @@ define(['../vendor/XieLongUtils'], function () {
 		return (a - b) / unit;
 	};
 
+	Utils.playCssAnimation = function (element, animationClass) {
+		element.classList.remove(animationClass);
+		// Use 1 render cycle delay to ensure the animation is restarted
+		requestAnimationFrame(function () {
+			element.classList.add(animationClass)
+		});
+	};
+
 	return Utils;
 });

@@ -747,6 +747,9 @@ dl.flatList > dd {
 #inventory > .inventorySlot.activeAutoFeed > .clickableItem {
   border: 2px solid limegreen;
 }
+#inventory > .inventorySlot.eating > .clickableItem {
+  animation: green-flash 700ms ease-in-out;
+}
 #inventory > .inventorySlot > .autoFeedToggle {
   position: absolute;
   bottom: 100%;
@@ -769,6 +772,12 @@ dl.flatList > dd {
   40%,
   60% {
     background-color: crimson;
+  }
+}
+@keyframes green-flash {
+  40%,
+  60% {
+    background-color: limegreen;
   }
 }
 .clickableItem,

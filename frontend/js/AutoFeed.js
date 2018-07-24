@@ -52,8 +52,12 @@ define(['Game', 'Events', 'GraphicsConfig', 'Utils', 'underscore', 'schema_clien
 	};
 
 	AutoFeed.eat = function (now) {
-		Game.player.controls.onInventoryAction(this.activeInventorySlot.item, BerryhunterApi.ActionType.ConsumeItem);
-		this.lastAutoFeed = now;
+		if (Game.player.controls.onInventoryAction(
+				this.activeInventorySlot.item,
+				BerryhunterApi.ActionType.ConsumeItem)) {
+			Utils.playCssAnimation(this.activeInventorySlot.domElement, 'eating');
+			this.lastAutoFeed = now;
+		}
 	};
 
 	AutoFeed.getFoodFactor = function () {
