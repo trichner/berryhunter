@@ -9,6 +9,7 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/model/mob"
 	"github.com/trichner/berryhunter/backend/phy"
+	"github.com/trichner/berryhunter/backend/wrand"
 	"log"
 	"math/rand"
 	"net/http"
@@ -47,10 +48,8 @@ func main() {
 
 	if len(mobList) > 0 {
 		// add some mobs
-		for i := 0; i < 100; i++ {
-			n := rand.Int() % len(mobList)
-			m := newMobEntity(mobList[n])
-			m.SetPosition(phy.Vec2f{float32(i), float32(i)})
+		for i := 0; i < 70; i++ {
+			m := newRandomMobEntity(mobList, rnd, radius)
 			g.AddEntity(m)
 		}
 	}
@@ -84,7 +83,18 @@ func bootServer(h http.HandlerFunc, port int, path string, dev bool) {
 	go http.ListenAndServe(addr, nil)
 }
 
-func newMobEntity(def *mobs.MobDefinition) model.MobEntity {
+func newRandomMobEntity(mobList []*mobs.MobDefinition, rnd *rand.Rand, radius float32) model.MobEntity {
+	choices := []wrand.Choice{}
+	for _, m := range mobList {
+		choices = append(choices, wrand.Choice{Weight: m.Generator.Weight, Choice: m})
+	}
+	wc := wrand.NewWeightedChoice(choices)
+	selected := wc.Choose(rnd).(*mobs.MobDefinition)
 
-	return mob.NewMob(def)
+	m := mob.NewMob(selected)
+	x := rand.Float32()*2*radius - radius
+	y := rand.Float32()*2*radius - radius
+	m.SetPosition(phy.Vec2f{float32(x), float32(y)})
+
+	return m
 }

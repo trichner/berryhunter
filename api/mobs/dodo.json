@@ -18,5 +18,8 @@
   ],
   "body": {
     "radius": 0.2
+  },
+  "generator": {
+    "weight": 100
   }
 }

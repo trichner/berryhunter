@@ -14,7 +14,7 @@ const chunkSize = 3
 func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.ResourceEntity {
 
 	var steps int64 = int64(radius*2) / chunkSize
-	var chunkHalfSize float32 = chunkSize / 2.0
+	var maximumOffset float32 = 0.9 * chunkSize
 	var chunkQuarterSize float32 = chunkSize / 4.0
 
 	entities := []staticEntityBody{}
@@ -25,8 +25,8 @@ func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.Reso
 	for x := int64(0); x < steps; x++ {
 		for y := int64(0); y < steps; y++ {
 			crnd := chunkRand(x, y, rnd)
-			dx := crnd.Float32()*chunkHalfSize + chunkQuarterSize
-			dy := crnd.Float32()*chunkHalfSize + chunkQuarterSize
+			dx := crnd.Float32()*maximumOffset + chunkQuarterSize
+			dy := crnd.Float32()*maximumOffset + chunkQuarterSize
 			ex := chunkSize*float32(x) + dx - radius
 			ey := chunkSize*float32(y) + dy - radius
 			ev := phy.Vec2f{ex, ey}
@@ -57,14 +57,14 @@ func chunkRand(x, y int64, rnd *rand.Rand) *rand.Rand {
 var trees = []staticEntityBody{
 	{
 		BerryhunterApi.EntityTypeRoundTree,
-		100,
+		40,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Wood",
 	},
 	{
 		BerryhunterApi.EntityTypeMarioTree,
-		100,
+		40,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Wood",
@@ -74,28 +74,28 @@ var trees = []staticEntityBody{
 var resources = []staticEntityBody{
 	{
 		BerryhunterApi.EntityTypeBerryBush,
-		100,
+		8,
 		model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Berry",
 	},
 	{
 		BerryhunterApi.EntityTypeStone,
-		100,
+		28,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Stone",
 	},
 	{
 		BerryhunterApi.EntityTypeBronze,
-		100,
+		10,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Bronze",
 	},
 	{
 		BerryhunterApi.EntityTypeIron,
-		100,
+		4,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Iron",

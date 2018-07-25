@@ -33,6 +33,10 @@ type Body struct {
 	DamageRadius float32
 }
 
+type Generator struct {
+	Weight int
+}
+
 type Drops []*items.ItemStack
 
 type MobDefinition struct {
@@ -42,6 +46,7 @@ type MobDefinition struct {
 	Factors Factors
 	Drops   Drops
 	Body Body
+	Generator Generator
 }
 
 type mobDefinition struct {
@@ -61,6 +66,9 @@ type mobDefinition struct {
 		DamageRadius float32 `json:"damageRadius"`
 
 	} `json:"body"`
+	Generator struct {
+		Weight int `json:"weight"`
+	} `json:"generator"`
 }
 
 // parseItemDefinition parses a json string from a byte array into the
@@ -89,6 +97,9 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 		Body: Body{
 			Radius:m.Body.Radius,
 			DamageRadius:m.Body.DamageRadius,
+		},
+		Generator: Generator{
+			Weight: m.Generator.Weight,
 		},
 	}
 
