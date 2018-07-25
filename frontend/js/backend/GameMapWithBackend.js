@@ -102,12 +102,13 @@ define([
 						gameObject = new entity.type(entity.position.x, entity.position.y, entity.radius);
 				}
 
+				this.objects[entity.id] = gameObject;
+				gameObject.id = entity.id;
+
 				if (gameObject.visibleOnMinimap) {
 					Game.miniMap.add(gameObject);
 				}
-
-				this.objects[entity.id] = gameObject;
-				gameObject.id = entity.id;
+				
 				if (Develop.isActive()) {
 					gameObject.updateAABB(entity.aabb);
 				}

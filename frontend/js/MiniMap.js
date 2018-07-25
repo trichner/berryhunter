@@ -9,7 +9,7 @@ define(['PIXI', 'Game', 'userInterface/UserInterface'], function (PIXI, Game, Us
 			/**
 			 * All game objects added to the minimap.
 			 */
-			this.registeredGameObjects = [];
+			this.registeredGameObjectIds = [];
 
 			/**
 			 * Moveable game objects those minimap position will be updated continuously.
@@ -84,6 +84,13 @@ define(['PIXI', 'Game', 'userInterface/UserInterface'], function (PIXI, Game, Us
 		 * @param gameObject
 		 */
 		add(gameObject) {
+			if (this.registeredGameObjectIds.indexOf(gameObject.id) !== -1){
+				// The object is already on the minimao
+				return;
+			}
+
+			this.registeredGameObjectIds.push(gameObject.id);
+
 			// Position each icon relative to its position on the real map.
 			const minimapIcon = gameObject.createMinimapIcon();
 			if (gameObject.constructor.name === 'Character') {
@@ -91,6 +98,8 @@ define(['PIXI', 'Game', 'userInterface/UserInterface'], function (PIXI, Game, Us
 			} else {
 				this.iconGroup.addChild(minimapIcon);
 			}
+
+			console.log(this.iconGroup.children.length);
 
 			let x = gameObject.getX() * this.scale;
 			let y = gameObject.getY() * this.scale;
@@ -105,6 +114,7 @@ define(['PIXI', 'Game', 'userInterface/UserInterface'], function (PIXI, Game, Us
 		}
 
 		clear() {
+			this.registeredGameObjectIds.length = 0;
 			this.trackedGameObjects.length = 0;
 			this.playerGroup.removeChildren();
 			this.iconGroup.removeChildren();
