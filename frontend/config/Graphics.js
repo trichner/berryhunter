@@ -110,12 +110,12 @@ define([], function () {
 				bronze: {
 					color: 0xb57844,
 					alpha: 1,
-					sizeFactor: 1
+					sizeFactor: 1.5
 				},
 				iron: {
 					color: 0xa46262,
 					alpha: 1,
-					sizeFactor: 1
+					sizeFactor: 1.3
 				},
 				berryBush: {
 					color: 0xc20071,
