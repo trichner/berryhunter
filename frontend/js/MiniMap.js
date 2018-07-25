@@ -99,8 +99,6 @@ define(['PIXI', 'Game', 'userInterface/UserInterface'], function (PIXI, Game, Us
 				this.iconGroup.addChild(minimapIcon);
 			}
 
-			console.log(this.iconGroup.children.length);
-
 			let x = gameObject.getX() * this.scale;
 			let y = gameObject.getY() * this.scale;
 			minimapIcon.position.set(x, y);
