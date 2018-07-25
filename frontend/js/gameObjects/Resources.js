@@ -138,7 +138,7 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 
 			createMinimapIcon() {
 				let shape = new PIXI.Graphics();
-				let miniMapCfg = GraphicsConfig.miniMap.icons.bronze;
+				let miniMapCfg = GraphicsConfig.miniMap.icons.iron;
 				shape.beginFill(miniMapCfg.color, miniMapCfg.alpha);
 				shape.rotation = this.rotation;
 				shape.drawPolygon(Utils.TwoDimensional.makePolygon(this.size * miniMapCfg.sizeFactor, 6, true));
