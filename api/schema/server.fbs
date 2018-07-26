@@ -16,7 +16,8 @@ enum EntityType : ushort {
   SaberToothCat,
   Mammoth,
   Placeable,
-  Titanium
+  Titanium,
+  Flower
 }
 
 struct AABB {

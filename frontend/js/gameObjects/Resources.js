@@ -221,6 +221,17 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 		BerryBush.berry = {};
 		Preloading.registerGameObjectSVG(BerryBush.berry, berryBushCfg.berryFile, berryBushCfg.berrySize);
 
+		let flowerCfg = GraphicsConfig.resources.flower;
+
+		class Flower extends Resource {
+			constructor(x, y, size) {
+				super(Game.layers.resources.berryBush, x, y, size, Utils.deg2rad(0));
+				this.visibleOnMinimap = false;
+			}
+		}
+
+		Preloading.registerGameObjectSVG(Flower, flowerCfg.file, flowerCfg.maxSize);
+
 		return {
 			Resource: Resource,
 			Tree: Tree,
@@ -231,6 +242,7 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 			Bronze: Bronze,
 			Iron: Iron,
 			Titanium: Titanium,
-			BerryBush: BerryBush
+			BerryBush: BerryBush,
+			Flower: Flower
 		}
 	});

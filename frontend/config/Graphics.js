@@ -85,6 +85,11 @@ define([], function () {
 
 				berryFile: 'img/berry.svg',
 				berrySize: 6,
+			},
+
+			flower: {
+				file: 'img/flower.svg',
+				maxSize: 20,
 			}
 		},
 

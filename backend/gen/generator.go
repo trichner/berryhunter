@@ -5,17 +5,19 @@ import (
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
+	"log"
 	"math/rand"
 )
 
 const gridSize = 100
-const chunkSize = 3
+const chunkSize float32 = 2.7
 
 func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.ResourceEntity {
 
-	var steps int64 = int64(radius*2) / chunkSize
+	var steps int64 = int64(radius*2 / chunkSize)
 	var maximumOffset float32 = 0.9 * chunkSize
 	var chunkQuarterSize float32 = chunkSize / 4.0
+	var countEntities int64 = 0;
 
 	entities := []staticEntityBody{}
 	entities = append(entities, trees...)
@@ -41,8 +43,11 @@ func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.Reso
 				panic(err)
 			}
 			resourceEntities = append(resourceEntities, e)
+			countEntities = countEntities+1;
 		}
 	}
+
+	log.Printf("%d entities spawned.", countEntities)
 
 	return resourceEntities
 }
@@ -72,6 +77,13 @@ var trees = []staticEntityBody{
 }
 
 var resources = []staticEntityBody{
+	{
+		BerryhunterApi.EntityTypeFlower,
+		20,
+		model.LayerRessourceCollision | model.LayerViewportCollision,
+		0,
+		"Flower",
+	},
 	{
 		BerryhunterApi.EntityTypeBerryBush,
 		8,

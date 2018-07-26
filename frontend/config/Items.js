@@ -500,6 +500,11 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			definition: 'resources/feather',
 			type: ItemType.RESOURCE
 		},
+		Flower: {
+			icon: {file: '../dummy'},
+			definition: 'resources/flower',
+			type: ItemType.RESOURCE
+		},
 
 		/***********************************
 		 * SPECIAL
