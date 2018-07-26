@@ -490,6 +490,11 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			definition: 'resources/iron',
 			type: ItemType.RESOURCE
 		},
+		Titanium: {
+			icon: {file: 'titaniumIcon'},
+			definition: 'resources/titanium',
+			type: ItemType.RESOURCE
+		},
 		Feather: {
 			icon: {file: 'feather'},
 			definition: 'resources/feather',

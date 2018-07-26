@@ -158,6 +158,7 @@ define(['backend/BackendConstants',
 		Mobs.SaberToothCat,
 		Mobs.Mammoth,
 		Placeable,
+		Resources.Titanium
 	];
 
 	function unmarshalEntityType(entityType) {

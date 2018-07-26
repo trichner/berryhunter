@@ -75,7 +75,8 @@ define([], function () {
 
 				stoneFile: 'img/stone.svg',
 				bronzeFile: 'img/bronze.svg',
-				ironFile: 'img/iron.svg'
+				ironFile: 'img/iron.svg',
+				titaniumFile: 'img/titanium.svg'
 			},
 
 			berryBush: {
@@ -114,6 +115,11 @@ define([], function () {
 				},
 				iron: {
 					color: 0xa46262,
+					alpha: 1,
+					sizeFactor: 1.3
+				},
+				titanium: {
+					color: 0x181818,
 					alpha: 1,
 					sizeFactor: 1.3
 				},

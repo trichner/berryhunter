@@ -81,7 +81,7 @@ var resources = []staticEntityBody{
 	},
 	{
 		BerryhunterApi.EntityTypeStone,
-		28,
+		27,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Stone",
@@ -99,6 +99,13 @@ var resources = []staticEntityBody{
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Iron",
+	},
+	{
+		BerryhunterApi.EntityTypeTitanium,
+		2,
+		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
+		0,
+		"Titanium",
 	},
 }
 
