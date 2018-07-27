@@ -466,6 +466,11 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			definition: 'consumables/berry-bowl',
 			type: ItemType.CONSUMABLE
 		},
+		Flower: {
+			icon: {file: 'flowerIcon'},
+			definition: 'consumables/flower',
+			type: ItemType.CONSUMABLE
+		},
 
 		/***********************************
 		 * RESOURCES
@@ -488,6 +493,11 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 		Iron: {
 			icon: {file: 'ironIcon'},
 			definition: 'resources/iron',
+			type: ItemType.RESOURCE
+		},
+		Titanium: {
+			icon: {file: 'titaniumIcon'},
+			definition: 'resources/titanium',
 			type: ItemType.RESOURCE
 		},
 		Feather: {

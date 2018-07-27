@@ -7,8 +7,8 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 			constructor(gameLayer, x, y, size, rotation) {
 				super(gameLayer, x, y, size, rotation);
 
-				this.capacity = 0;
-				let stock = 0;
+				this.capacity = undefined;
+				let stock = undefined;
 
 				Object.defineProperties(this, {
 					'stock': {
@@ -149,6 +149,24 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 
 		Preloading.registerGameObjectSVG(Iron, mineralCfg.ironFile, mineralCfg.maxSize);
 
+		class Titanium extends Mineral {
+			constructor(x, y, size) {
+				super(x, y, size);
+			}
+
+			createMinimapIcon() {
+				let shape = new PIXI.Graphics();
+				let miniMapCfg = GraphicsConfig.miniMap.icons.titanium;
+				shape.beginFill(miniMapCfg.color, miniMapCfg.alpha);
+				shape.rotation = this.rotation;
+				shape.drawPolygon(Utils.TwoDimensional.makePolygon(this.size * miniMapCfg.sizeFactor, 4, true));
+
+				return shape;
+			}
+		}
+
+		Preloading.registerGameObjectSVG(Titanium, mineralCfg.titaniumFile, mineralCfg.maxSize);
+
 		let berryBushCfg = GraphicsConfig.resources.berryBush;
 
 		class BerryBush extends Resource {
@@ -203,6 +221,17 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 		BerryBush.berry = {};
 		Preloading.registerGameObjectSVG(BerryBush.berry, berryBushCfg.berryFile, berryBushCfg.berrySize);
 
+		let flowerCfg = GraphicsConfig.resources.flower;
+
+		class Flower extends Resource {
+			constructor(x, y, size) {
+				super(Game.layers.resources.berryBush, x, y, size, Utils.deg2rad(0));
+				this.visibleOnMinimap = false;
+			}
+		}
+
+		Preloading.registerGameObjectSVG(Flower, flowerCfg.file, flowerCfg.maxSize);
+
 		return {
 			Resource: Resource,
 			Tree: Tree,
@@ -212,6 +241,8 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 			Stone: Stone,
 			Bronze: Bronze,
 			Iron: Iron,
-			BerryBush: BerryBush
+			Titanium: Titanium,
+			BerryBush: BerryBush,
+			Flower: Flower
 		}
 	});

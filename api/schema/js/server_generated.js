@@ -22,7 +22,9 @@ BerryhunterApi.EntityType = {
   Dodo: 9,
   SaberToothCat: 10,
   Mammoth: 11,
-  Placeable: 12
+	Placeable: 12,
+	Titanium: 13,
+	Flower: 14
 };
 
 /**
