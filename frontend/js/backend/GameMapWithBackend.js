@@ -106,16 +106,16 @@ define([
 					Game.miniMap.add(gameObject);
 				}
 
+				if (gameObject instanceof Resources.Resource) {
+					gameObject.capacity = entity.capacity;
+					gameObject.stock = entity.stock;
+				}
+
 				this.objects[entity.id] = gameObject;
 				gameObject.id = entity.id;
 				if (Develop.isActive()) {
 					gameObject.updateAABB(entity.aabb);
 				}
-			}
-
-			if (gameObject instanceof Resources.Resource) {
-				gameObject.capacity = entity.capacity;
-				gameObject.stock = entity.stock;
 			}
 
 			if (entity.type === Character) {

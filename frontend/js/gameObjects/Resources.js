@@ -7,8 +7,8 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 			constructor(gameLayer, x, y, size, rotation) {
 				super(gameLayer, x, y, size, rotation);
 
-				this.capacity = 0;
-				let stock = 0;
+				this.capacity = undefined;
+				let stock = undefined;
 
 				Object.defineProperties(this, {
 					'stock': {
