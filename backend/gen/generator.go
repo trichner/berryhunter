@@ -114,7 +114,7 @@ var resources = []staticEntityBody{
 	},
 	{
 		BerryhunterApi.EntityTypeTitanium,
-		2,
+		3,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Titanium",
