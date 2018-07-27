@@ -73,7 +73,9 @@ define(['Game', 'Events', 'GraphicsConfig', 'Utils', 'underscore', 'schema_clien
 			return false;
 		}
 
-		return item.factors.food > 0;
+		// Food = 0 is stuff that can't be eaten
+		// Food <= 0.05 is stuff you can eat, but would not on a regular basis
+		return item.factors.food > 0.05;
 	};
 
 	return AutoFeed;

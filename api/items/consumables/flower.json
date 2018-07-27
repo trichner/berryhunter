@@ -1,8 +1,9 @@
 {
   "id": 45,
   "name": "Flower",
-  "type": "RESOURCE",
+  "type": "CONSUMABLE",
   "factors": {
+    "food": 0.02,
     "replenishProbabilityPerSecond": 0.05,
     "capacity": 1
   },

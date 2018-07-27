@@ -466,6 +466,11 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			definition: 'consumables/berry-bowl',
 			type: ItemType.CONSUMABLE
 		},
+		Flower: {
+			icon: {file: 'flowerIcon'},
+			definition: 'consumables/flower',
+			type: ItemType.CONSUMABLE
+		},
 
 		/***********************************
 		 * RESOURCES
@@ -498,11 +503,6 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 		Feather: {
 			icon: {file: 'feather'},
 			definition: 'resources/feather',
-			type: ItemType.RESOURCE
-		},
-		Flower: {
-			icon: {file: '../dummy'},
-			definition: 'resources/flower',
 			type: ItemType.RESOURCE
 		},
 

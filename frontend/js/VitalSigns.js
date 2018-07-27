@@ -58,7 +58,18 @@ define(['Preloading', 'Game', 'Events', 'Utils', 'userInterface/UserInterface', 
 				let previousValue = this[valueIndex];
 				this[valueIndex] = value;
 				let relativeValue = value / VitalSigns.MAXIMUM_VALUES[valueIndex];
+
+				// If the vital sign increased ...
+				if (value > previousValue){
+					// discard all recorded values to make sure the previous values will be correctly shown for the next ticks
+					this.previousValues.forEach(function (previousValueObject) {
+						previousValueObject[valueIndex] = value;
+					});
+				}
+
+				// If there are already recorded previous values...
 				if (this.previousValues.length > 0) {
+					// set the actual previous value to the first recorded value
 					previousValue = this.previousValues[0][valueIndex];
 				}
 				previousValue /= VitalSigns.MAXIMUM_VALUES[valueIndex];

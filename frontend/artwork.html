@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BerryHunter Artwork Presentation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        #artwork {
+            color: white;
+            letter-spacing: 0.04em;
+        }
+
+        #artwork * {
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        h1 {
+            text-shadow: #e37313 5px 0 0, #e37313 4.9px 1px 0, #e37313 4.6px 1.95px 0, #e37313 4.13333px 2.81667px 0, #e37313 3.48333px 3.58333px 0, #e37313 2.7px 4.2px 0, #e37313 1.81667px 4.66667px 0, #e37313 0.85px 4.93333px 0, #e37313 -0.15px 5px 0, #e37313 -1.13333px 4.86667px 0, #e37313 -2.08333px 4.55px 0, #e37313 -2.95px 4.05px 0, #e37313 -3.68333px 3.38333px 0, #e37313 -4.28333px 2.58333px 0, #e37313 -4.71667px 1.66667px 0, #e37313 -4.95px 0.7px 0, #e37313 -4.98333px -0.3px 0, #e37313 -4.83333px -1.28333px 0, #e37313 -4.48333px -2.21667px 0, #e37313 -3.95px -3.06667px 0, #e37313 -3.26667px -3.78333px 0, #e37313 -2.45px -4.35px 0, #e37313 -1.53333px -4.75px 0, #e37313 -0.566667px -4.96667px 0, #e37313 0.433333px -4.98333px 0, #e37313 1.41667px -4.8px 0, #e37313 2.35px -4.41667px 0, #e37313 3.16667px -3.86667px 0, #e37313 3.88333px -3.15px 0, #e37313 4.43333px -2.31667px 0, #e37313 4.8px -1.4px 0, #e37313 4.98333px -0.416667px 0;
+
+            font-size: 12vw;
+            margin: 0;
+            position: absolute;
+            bottom: 110%;
+        }
+
+        h2 {
+            font-size: 4vw;
+            margin: 0;
+            position: absolute;
+            top: 110%;
+        }
+
+        .sources {
+            position: fixed;
+            bottom: 5vh;
+
+        }
+
+        .sources > a {
+            display: block;
+            color: inherit;
+        }
+
+        .sources > a:before {
+            content: attr(href);
+        }
+
+        .clickableItem {
+            width: 40vh;
+            height: 40vh;
+            margin: 0;
+            font-size: 10vh;
+            padding: 4vh;
+        }
+
+        .clickableItem > .count {
+            bottom: 3%;
+            right: 3%;
+        }
+
+        .inventory {
+            position: absolute;
+            top: 25vh;
+            right: 52.5vw;
+        }
+
+        .inventorySlot {
+            float: left;
+            margin-right: 4vh;
+        }
+
+        .ingame {
+            position: absolute;
+            top: 10vh;
+            left: 52.5vw;
+        }
+
+        .ingame > img {
+            height: 80vh;
+        }
+    </style>
+</head>
+<body id="artwork">
+<div class="inventory">
+    <h1>Flower</h1>
+    <h2>by Raoul</h2>
+    <div class="sources">
+        <h3>Sources</h3>
+        <a href="https://game-icons.net/delapouite/originals/jasmine.html"></a>
+        <a href="https://game-icons.net/lorc/originals/daisy.html"></a>
+    </div>
+    <div class="inventorySlot">
+        <a class="clickableItem filled">
+            <img src="img/items/flowerIcon.svg" class="itemIcon"/>
+            <span class="count">10</span>
+        </a>
+    </div>
+    <div class="inventorySlot">
+        <a class="clickableItem active">
+            <img src="img/items/flowerIcon.svg" class="itemIcon"/>
+            <span class="count"></span>
+        </a>
+    </div>
+</div>
+
+<div class="ingame">
+    <img src="img/flower.svg"/>
+</div>
+</body>
+</html>
