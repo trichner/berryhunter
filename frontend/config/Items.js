@@ -270,10 +270,10 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			}
 		},
 		Furnace: {
-			icon: {file: 'fireFurnace'},
+			icon: {file: 'furnace'},
 			graphic: {
-				file: 'fireFurnace',
-				size: 70
+				file: 'furnace',
+				size: 180
 			},
 			definition: 'placeables/furnace',
 			type: ItemType.PLACEABLE,
@@ -312,9 +312,9 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			}
 		},
 		WoodSpikyWall: {
-			icon: {file: 'wallSpikedWood'},
+			icon: {file: 'woodSpikyWall'},
 			graphic: {
-				file: 'wallSpikedWood',
+				file: 'woodSpikyWall',
 				size: 63
 			},
 			definition: 'walls/wood-spiky-wall',
@@ -338,9 +338,9 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			}
 		},
 		StoneSpikyWall: {
-			icon: {file: 'wallSpikedStone'},
+			icon: {file: 'stoneSpikyWall'},
 			graphic: {
-				file: 'wallSpikedStone',
+				file: 'stoneSpikyWall',
 				size: 63
 			},
 			definition: 'walls/stone-spiky-wall',
@@ -364,9 +364,9 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			}
 		},
 		BronzeSpikyWall: {
-			icon: {file: 'wallSpikedBronze'},
+			icon: {file: 'bronzeSpikyWall'},
 			graphic: {
-				file: 'wallSpikedBronze',
+				file: 'bronzeSpikyWall',
 				size: 63
 			},
 			definition: 'walls/bronze-spiky-wall',
