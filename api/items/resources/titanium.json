@@ -1,0 +1,15 @@
+{
+  "id": 44,
+  "name": "Titanium",
+  "type": "RESOURCE",
+  "factors": {
+    "replenishProbabilityPerSecond": 0.25,
+    "minimumYield": 4,
+    "capacity": 15
+  },
+  "body": {
+    "minRadius": 0.2,
+    "maxRadius": 0.5,
+    "solid": true
+  }
+}
