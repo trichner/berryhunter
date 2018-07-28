@@ -35,8 +35,8 @@ define(['Utils', 'Develop'], function (Utils, Develop) {
 
 	let timeOfDay;
 
-	DayCycle.setup = function (mainSvgElement, stage) {
-		this.stage = stage;
+	DayCycle.setup = function (mainSvgElement, filteredContainers) {
+		this.filteredContainers = filteredContainers;
 
 		this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
 		this.filters = [this.colorMatrix];
@@ -104,9 +104,13 @@ define(['Utils', 'Develop'], function (Utils, Develop) {
 			lastOpacity = opacity;
 
 			if (opacity === 0) {
-				this.stage.filters = null;
+				this.filteredContainers.forEach(function (container) {
+					container.filters = null;
+				})
 			} else {
-				this.stage.filters = this.filters;
+				this.filteredContainers.forEach(function (container) {
+					container.filters = this.filters;
+				}, this);
 				/**
 				 * Opacity: Saturation
 				 * 0    : 1

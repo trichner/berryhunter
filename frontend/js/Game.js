@@ -211,14 +211,12 @@ define(['Events'], function (Events) {
 			};
 
 			Game.stage = new PIXI.Container();
-			Game.nightFilterContainer = new NamedGroup('nightFilterContainer');
-			Game.stage.addChild(Game.nightFilterContainer);
 
 			// Terrain Background
-			Game.nightFilterContainer.addChild(Game.layers.terrain.water);
+			Game.stage.addChild(Game.layers.terrain.water);
 
 			Game.cameraGroup = new NamedGroup('cameraGroup');
-			Game.nightFilterContainer.addChild(Game.cameraGroup);
+			Game.stage.addChild(Game.cameraGroup);
 
 			// Terrain Textures moving with the camera
 			Game.cameraGroup.addChild(
@@ -299,7 +297,26 @@ define(['Events'], function (Events) {
 			let domElement = Game.renderer.view;
 			Game.domElement = domElement;
 			GameObject.setup(domElement);
-			DayCycle.setup(domElement, Game.nightFilterContainer);
+			DayCycle.setup(domElement, [
+				Game.layers.terrain.water,
+				Game.layers.terrain.ground,
+				Game.layers.terrain.textures,
+				Game.layers.terrain.resourceSpots,
+				Game.layers.placeables.chest,
+				Game.layers.placeables.workbench,
+				Game.layers.resources.berryBush,
+				Game.layers.characters,
+				Game.layers.mobs.dodo,
+				Game.layers.mobs.saberToothCat,
+				Game.layers.mobs.mammoth,
+				Game.layers.placeables.doors,
+				Game.layers.placeables.walls,
+				Game.layers.placeables.spikyWalls,
+				Game.layers.resources.minerals,
+				Game.layers.resources.trees,
+				Game.layers.characterAdditions.craftProgress,
+				Game.layers.characterAdditions.chatMessages
+			]);
 
 			setupPromises.push(requireAsPromise(['input/InputManager']).then(function (dependencies) {
 				let InputManager = dependencies[0];

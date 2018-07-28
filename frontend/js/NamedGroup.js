@@ -10,7 +10,6 @@ define(['PIXI', 'Constants'], function (PIXI, Constants) {
 			super();
 
 			NamedGroup.nameGroup(this, name);
-			this.domInitialized = false;
 		}
 	}
 
