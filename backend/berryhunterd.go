@@ -92,9 +92,17 @@ func newRandomMobEntity(mobList []*mobs.MobDefinition, rnd *rand.Rand, radius fl
 	selected := wc.Choose(rnd).(*mobs.MobDefinition)
 
 	m := mob.NewMob(selected)
-	x := rand.Float32()*2*radius - radius
-	y := rand.Float32()*2*radius - radius
+	x := newRandomCoordinate(radius)
+	y := newRandomCoordinate(radius)
+	for (x * x + y * y > radius * radius) {
+		x = newRandomCoordinate(radius)
+		y = newRandomCoordinate(radius)
+	}
 	m.SetPosition(phy.Vec2f{float32(x), float32(y)})
 
 	return m
+}
+
+func newRandomCoordinate(radius float32) float32 {
+    return rand.Float32()*2*radius - radius
 }
