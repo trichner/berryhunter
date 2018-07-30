@@ -63,7 +63,8 @@ define(['Preloading', 'Game', 'Events', 'Utils', 'userInterface/UserInterface', 
 				if (value > previousValue){
 					// discard all recorded values to make sure the previous values will be correctly shown for the next ticks
 					this.previousValues.forEach(function (previousValueObject) {
-						previousValueObject[valueIndex] = value;
+						// Use the higher value, to ensure that a visible previous value is not discarded
+						previousValueObject[valueIndex] = Math.max(value, previousValueObject[valueIndex]);
 					});
 				}
 
