@@ -122,6 +122,7 @@ define(['Preloading', 'Events'], function (Preloading, Events) {
 		'items/Equipment',
 		'items/Inventory',
 		'items/InventoryListeners',
+		'items/InventoryShortcuts',
 		'items/InventorySlot',
 		'items/Items',
 		'items/ItemType',

@@ -28,42 +28,9 @@ define([
 
 			this.clickableIcon = UserInterface.getInventorySlot(index);
 
-			this.clickableIcon.onLeftClick = function () {
-				if (!this.isFilled()) {
-					return;
-				}
+			this.clickableIcon.onLeftClick = this.leftClick.bind(this);
 
-				if (this.inventory.isCraftInProgress()) {
-					return;
-				}
-
-				switch (this.item.type) {
-					case ItemType.EQUIPMENT:
-					case ItemType.PLACEABLE:
-						let equipmentSlot = Equipment.Helper.getItemEquipmentSlot(this.item);
-						if (this.isActive()) {
-							this.deactivate();
-							this.inventory.deactivateSlot(equipmentSlot, true);
-						} else {
-							this.inventory.activateSlot(this.index, equipmentSlot);
-						}
-						break;
-					case ItemType.CONSUMABLE:
-						Game.player.controls.onInventoryAction(this.item, BerryhunterApi.ActionType.ConsumeItem);
-						break;
-				}
-
-			}.bind(this);
-
-			this.clickableIcon.onRightClick = function () {
-				if (this.inventory.isCraftInProgress()) {
-					return;
-				}
-
-				if (this.isFilled()) {
-					Game.player.controls.onInventoryAction(this.item, BerryhunterApi.ActionType.DropItem);
-				}
-			}.bind(this);
+			this.clickableIcon.onRightClick = this.rightClick.bind(this);
 
 			// A bit hacky, but it works...
 			this.domElement = this.clickableIcon.domElement.parentElement;
@@ -90,6 +57,42 @@ define([
 					this.domElement.classList.remove('activeAutoFeed');
 				}
 			}.bind(this));
+		}
+
+		leftClick() {
+			if (!this.isFilled()) {
+				return;
+			}
+
+			if (this.inventory.isCraftInProgress()) {
+				return;
+			}
+
+			switch (this.item.type) {
+				case ItemType.EQUIPMENT:
+				case ItemType.PLACEABLE:
+					let equipmentSlot = Equipment.Helper.getItemEquipmentSlot(this.item);
+					if (this.isActive()) {
+						this.deactivate();
+						this.inventory.deactivateSlot(equipmentSlot, true);
+					} else {
+						this.inventory.activateSlot(this.index, equipmentSlot);
+					}
+					break;
+				case ItemType.CONSUMABLE:
+					Game.player.controls.onInventoryAction(this.item, BerryhunterApi.ActionType.ConsumeItem);
+					break;
+			}
+		}
+
+		rightClick () {
+			if (this.inventory.isCraftInProgress()) {
+				return;
+			}
+
+			if (this.isFilled()) {
+				Game.player.controls.onInventoryAction(this.item, BerryhunterApi.ActionType.DropItem);
+			}
 		}
 
 		/**
