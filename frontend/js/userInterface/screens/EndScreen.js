@@ -64,38 +64,29 @@ define(['Preloading', 'PlayerName', 'Console', 'Utils', 'Events', 'DayCycle', 'b
 				}
 			}
 
-			for (daysSurvived; daysSurvived <= 5; daysSurvived++) {
-				for (let i = 0; i <= 1; i++) {
-					joinedAtDayTime = !!i;
+			let obituaryText = '';
+			obituaryText += 'You survived ';
 
-					let obituaryText = '';
-					obituaryText += 'You survived ';
-
-					if (daysSurvived < 1) {
-						obituaryText += 'not even the ';
-						obituaryText += dayOrNight(joinedAtDayTime, daysSurvived);
-					} else {
-						obituaryText += Math.ceil(daysSurvived / 2); // Round up to split an uneven numbers of days and
-						                                             // nights to whatever time the player joined
-						obituaryText += ' ';
-						obituaryText += dayOrNight(joinedAtDayTime, Math.ceil(daysSurvived / 2));
-					}
-
-					if (daysSurvived > 1) {
-						obituaryText += ' and ';
-						obituaryText += Math.floor(daysSurvived / 2); // Round down, to have the rest of the
-						                                              // calculation above
-						obituaryText += ' ';
-						obituaryText += dayOrNight(!joinedAtDayTime, Math.floor(daysSurvived / 2));
-					}
-					obituaryText += '.';
-
-					console.info(obituaryText);
-				}
-
+			if (daysSurvived < 1) {
+				obituaryText += 'not even the ';
+				obituaryText += dayOrNight(joinedAtDayTime, daysSurvived);
+			} else {
+				obituaryText += Math.ceil(daysSurvived / 2); // Round up to split an uneven numbers of days and
+			                                                 // nights to whatever time the player joined
+				obituaryText += ' ';
+				obituaryText += dayOrNight(joinedAtDayTime, Math.ceil(daysSurvived / 2));
 			}
 
-			// EndScreen.rootElement.getElementsByClassName('obituary').item(0).textContent = obituaryText;
+			if (daysSurvived > 1) {
+				obituaryText += ' and ';
+				obituaryText += Math.floor(daysSurvived / 2); // Round down, to have the rest of the
+			                                                  // calculation above
+				obituaryText += ' ';
+				obituaryText += dayOrNight(!joinedAtDayTime, Math.floor(daysSurvived / 2));
+			}
+			obituaryText += '.';
+
+			EndScreen.rootElement.getElementsByClassName('obituary').item(0).textContent = obituaryText;
 		});
 
 		return EndScreen;

@@ -23,6 +23,10 @@
 			endScreen-title (@fadeInTitleDuration / 2) (@fadeInScreenDuration / 2) forwards ease-in-out;
 		}
 
+		> .obituary {
+			animation: endScreen-fadeIn 2s ((@fadeInTitleDuration + @fadeInScreenDuration) / 3) forwards ease-in-out;
+		}
+
 		> .playerForm {
 			animation: endScreen-fadeIn 0.18s ((@fadeInTitleDuration + @fadeInScreenDuration) / 2) forwards ease-in-out;
 		}
@@ -52,7 +56,16 @@
 	}
 
 	> .obituary {
+		position: relative;
+		top: 19%;
+		margin: 0;
+		margin-bottom: -1em;
+
 		color: white;
+		font-size: 2rem;
+		text-align: center;
+
+		opacity: 0;
 	}
 
 	> .playerForm {
