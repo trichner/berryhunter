@@ -46,6 +46,18 @@ define(['Utils', 'Develop'], function (Utils, Develop) {
 		return timeOfDay;
 	};
 
+	DayCycle.isDay = function () {
+		return timeOfDay > sunriseHour && timeOfDay < sunsetHour;
+	};
+
+	DayCycle.isNight = function () {
+		return !this.isDay();
+	};
+
+	DayCycle.getDays = function (serverTicks) {
+		return serverTicks / ticksPerDay;
+	};
+
 	DayCycle.getFormattedTime = function () {
 		let hours = Math.floor(timeOfDay);
 		let minutes = Math.round(timeOfDay % 1 * 60);
