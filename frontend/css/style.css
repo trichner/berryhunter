@@ -1140,7 +1140,6 @@ dl.flatList > dd {
 #endScreen.showing .title {
   animation: endScreen-fadeIn 5s 0.25s forwards ease-in-out, endScreen-title 2.5s 0.25s forwards ease-in-out;
 }
-
 #endScreen.showing > .obituary {
   animation: endScreen-fadeIn 2s 1.83333333s forwards ease-in-out;
 }

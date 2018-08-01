@@ -270,7 +270,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			}
 		},
 		Furnace: {
-			icon: {file: 'furnace'},
+			icon: {file: 'furnaceIcon'},
 			graphic: {
 				file: 'furnace',
 				size: 180
