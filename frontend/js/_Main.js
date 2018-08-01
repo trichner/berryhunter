@@ -3,6 +3,7 @@
 requirejs.config({
 	paths: {
 		PIXI: '../vendor/pixijs/pixi.min',
+		'pixi-ease': '../vendor/pixijs/plugins/pixi-ease',
 		'vendor/flatbuffers': '../vendor/flatbuffers',
 		underscore: '../vendor/underscore.min',
 		saveAs: '../vendor/FileSaver.min',
@@ -21,6 +22,10 @@ requirejs.config({
 		saveAs: {
 			exports: 'saveAs',
 		},
+		'pixi-ease': {
+			deps: ['PIXI'],
+			exports: 'PIXI.extras.Ease'
+		}
 	},
 });
 

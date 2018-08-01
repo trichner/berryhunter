@@ -4,6 +4,7 @@ define([
 	'Game',
 	'GameObject',
 	'PIXI',
+	'pixi-ease',
 	'NamedGroup',
 	'Constants',
 	'Utils',
@@ -14,8 +15,8 @@ define([
 	'Vector',
 	'Text',
 	'GraphicsConfig',
-	'Events'
-], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig, Events) {
+	'Events',
+], function (Game, GameObject, PIXI, Ease, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig, Events) {
 	class Character extends GameObject {
 		constructor(id, x, y, name, isPlayerCharacter) {
 			super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2);
@@ -96,6 +97,13 @@ define([
 			}, this);
 
 			Game.renderer.on('prerender', this.update, this);
+
+			// TODO remove
+			if (isPlayerCharacter) {
+				window.character = this;
+			}
+
+			console.log(Ease);
 		}
 
 		initShape(x, y, size, rotation) {
@@ -216,6 +224,111 @@ define([
 
 		progressHitAnimation(animationFrame) {
 			this.actionAnimationFrame = animationFrame;
+			// console.log(animationFrame);
+		}
+
+		animate(animationFrame) {
+			if (Utils.isUndefined(animationFrame)) {
+				animationFrame = Character.hitAnimationFrameDuration;
+			}
+			let hand = this.rightHand;
+			let animation = new Ease.list();
+			let slowmo = 1;
+			let onlyReverse = false;
+			let overallDuration = 500 * slowmo;
+			let forwardDuration = overallDuration * 0.4;
+			let start = overallDuration * (1 - animationFrame / Character.hitAnimationFrameDuration);
+			console.log("Forward start at", start / slowmo);
+			if (!onlyReverse) {
+				animation.to(
+					hand,
+					{
+						x: hand.originalTranslation.x + this.size * 0.6,
+					},
+					forwardDuration,
+					{
+						ease: 'easeOutCirc',
+					},
+				).time = start;
+				animation.to(
+					hand,
+					{
+						y: hand.originalTranslation.y - this.size * 0.6,
+					},
+					forwardDuration,
+					{
+						ease: 'easeInCirc',
+					},
+				).time = start;
+				animation.to(
+					hand,
+					{
+						rotation: Utils.deg2rad(-45),
+					},
+					forwardDuration,
+					{
+						ease: 'linear',
+					},
+				).time = start;
+				onlyReverse = true;
+			}
+			if (onlyReverse) {
+				// if (!reverse ) {
+
+			}
+			// animation.to(
+			// 	hand,
+			// 	{
+			// 		y: hand.originalTranslation.y + maxOffset,
+			// 	},
+			// 	1000,
+			// 	{
+			// 		wait: 500,
+			// 		reverse: true,
+			// 		ease: 'easeOutQuad'
+			// 	}
+			// );
+
+			animation.on('done', function (animation) {
+				let duration = overallDuration - forwardDuration;
+				start = Math.max(0, start - forwardDuration);
+				console.log("Backward start at", start);
+				animation.to(
+					hand,
+					{
+						x: hand.originalTranslation.x,
+					},
+					duration,
+					{
+						ease: 'easeInCirc',
+					},
+				).time = start;
+				animation.to(
+					hand,
+					{
+						y: hand.originalTranslation.y,
+					},
+					duration,
+					{
+						ease: 'easeOutCirc',
+					},
+				).time = start;
+				animation.to(
+					hand,
+					{
+						rotation: 0,
+					},
+					duration,
+					{
+						ease: 'linear',
+					},
+				).time = start;
+
+				// TODO doesn't work - but we need to know when the whole animation ends
+				animation.on('done', function (animation) {
+					console.log('All done');
+				});
+			});
 		}
 
 		update() {
