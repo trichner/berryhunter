@@ -32,5 +32,5 @@ COPY --from=go_builder /go/src/github.com/trichner/berryhunter/backend/berryhunt
 COPY $CONF conf.json
 
 
-EXPOSE 2000
+EXPOSE 80
 CMD ["./berryhunterd", "--dev"]
