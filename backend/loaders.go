@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"sort"
+	"strings"
 	"bufio"
 	"github.com/trichner/berryhunter/backend/cfg"
 )
@@ -49,7 +50,10 @@ func loadItems(path string) items.Registry {
 // loadConf parses the config file
 func loadConf() *cfg.Config {
 
-	configFile := "./conf.json"
+	configFile := strings.TrimSpace(os.Getenv("BERRYHUNTERD_CONF"))
+	if configFile == "" {
+		configFile = "./conf.json"
+	}
 	config, err := cfg.ReadConfig(configFile)
 	if err != nil {
 		log.Panicf("Cannot read config '%s':%v", configFile, err)
