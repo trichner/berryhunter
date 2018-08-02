@@ -50,8 +50,25 @@ func (rcv *Placeable) MutateEntityType(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(6, n)
 }
 
-func (rcv *Placeable) Pos(obj *Vec2f) *Vec2f {
+func (rcv *Placeable) StatusEffects(j int) uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetUint16(a + flatbuffers.UOffsetT(j*2))
+	}
+	return 0
+}
+
+func (rcv *Placeable) StatusEffectsLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *Placeable) Pos(obj *Vec2f) *Vec2f {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -64,7 +81,7 @@ func (rcv *Placeable) Pos(obj *Vec2f) *Vec2f {
 }
 
 func (rcv *Placeable) Radius() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
@@ -72,11 +89,11 @@ func (rcv *Placeable) Radius() uint16 {
 }
 
 func (rcv *Placeable) MutateRadius(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(10, n)
+	return rcv._tab.MutateUint16Slot(12, n)
 }
 
 func (rcv *Placeable) Item() byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
@@ -84,11 +101,11 @@ func (rcv *Placeable) Item() byte {
 }
 
 func (rcv *Placeable) MutateItem(n byte) bool {
-	return rcv._tab.MutateByteSlot(12, n)
+	return rcv._tab.MutateByteSlot(14, n)
 }
 
 func (rcv *Placeable) Aabb(obj *AABB) *AABB {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -101,7 +118,7 @@ func (rcv *Placeable) Aabb(obj *AABB) *AABB {
 }
 
 func PlaceableStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(7)
 }
 func PlaceableAddId(builder *flatbuffers.Builder, id uint64) {
 	builder.PrependUint64Slot(0, id, 0)
@@ -109,17 +126,23 @@ func PlaceableAddId(builder *flatbuffers.Builder, id uint64) {
 func PlaceableAddEntityType(builder *flatbuffers.Builder, entityType uint16) {
 	builder.PrependUint16Slot(1, entityType, 0)
 }
+func PlaceableAddStatusEffects(builder *flatbuffers.Builder, statusEffects flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(statusEffects), 0)
+}
+func PlaceableStartStatusEffectsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(2, numElems, 2)
+}
 func PlaceableAddPos(builder *flatbuffers.Builder, pos flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(2, flatbuffers.UOffsetT(pos), 0)
+	builder.PrependStructSlot(3, flatbuffers.UOffsetT(pos), 0)
 }
 func PlaceableAddRadius(builder *flatbuffers.Builder, radius uint16) {
-	builder.PrependUint16Slot(3, radius, 0)
+	builder.PrependUint16Slot(4, radius, 0)
 }
 func PlaceableAddItem(builder *flatbuffers.Builder, item byte) {
-	builder.PrependByteSlot(4, item, 0)
+	builder.PrependByteSlot(5, item, 0)
 }
 func PlaceableAddAabb(builder *flatbuffers.Builder, aabb flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(5, flatbuffers.UOffsetT(aabb), 0)
+	builder.PrependStructSlot(6, flatbuffers.UOffsetT(aabb), 0)
 }
 func PlaceableEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
