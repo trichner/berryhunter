@@ -8,8 +8,11 @@ import (
 
 func MobEntityFlatbufMarshal(m model.MobEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
+	statusEffects := StatusEffectsMarshal(builder, m)
+
 	BerryhunterApi.MobStart(builder)
 	BerryhunterApi.MobAddId(builder, m.Basic().ID())
+	BerryhunterApi.MobAddStatusEffects(builder, statusEffects)
 	BerryhunterApi.MobAddMobId(builder, uint16(m.MobID()))
 	BerryhunterApi.MobAddEntityType(builder, uint16(m.Type()))
 	BerryhunterApi.MobAddRotation(builder, m.Angle())

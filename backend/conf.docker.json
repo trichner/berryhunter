@@ -1,0 +1,20 @@
+{
+  "server": {
+    "port": 80,
+    "path": "/game"
+  },
+  "game": {
+    "coldFractionNightPerSecond": 0.025,
+    "coldFractionRestingPerSecond": 0.005,
+    "player": {
+      "freezingDamageTickFraction": 0.001,
+      "starveDamageTickFraction": 0.001,
+      "satietyLossTickFraction": 0.0002,
+      "healthGainSatietyThreshold": 0.5,
+      "healthGainTemperatureThreshold": 0.5,
+      "healthGainTick": 0.0006,
+      "healthGainSatietyLossTickFraction": 0.0002,
+      "walkingSpeedPerTick": 0.055
+    }
+  }
+}

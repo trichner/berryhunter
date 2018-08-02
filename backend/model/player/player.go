@@ -26,6 +26,7 @@ func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 		ownedEntitites: model.NewBasicEntities(),
 		config: &g.Config().PlayerConfig,
 		stats: model.Stats{BirthTick: g.Ticks()},
+		statusEffects: make(model.StatusEffects),
 	}
 
 	// setup body
@@ -71,6 +72,7 @@ type player struct {
 	name string
 
 	model.BaseEntity
+	statusEffects model.StatusEffects
 
 	angle  float32
 	client model.Client
@@ -92,6 +94,10 @@ type player struct {
 	isGod bool
 
 	stats model.Stats
+}
+
+func (p *player) StatusEffects() model.StatusEffects {
+	return p.statusEffects
 }
 
 func (p *player) AddAction(a model.PlayerAction) {

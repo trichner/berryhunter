@@ -39,14 +39,14 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 
 	base := model.NewBaseEntity(mobBody, entityType)
 	m := &Mob{
-		BaseEntity: base,
-		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
-		heading:    phy.Vec2f{1, 0},
-		health:     vitals.Max,
-		definition: d,
-		damageAura: damageAura,
-		wanderAcceleration:phy.Vec2f{0.1, 0},
-		velocity:   0.04,
+		BaseEntity:         base,
+		rand:               rand.New(rand.NewSource(int64(base.Basic().ID()))),
+		heading:            phy.Vec2f{1, 0},
+		health:             vitals.Max,
+		definition:         d,
+		damageAura:         damageAura,
+		wanderAcceleration: phy.Vec2f{0.1, 0},
+		velocity:           0.04,
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -128,7 +128,6 @@ func wander(heading, acceleration phy.Vec2f, r *rand.Rand) (newHeading, newAccel
 	h := wanderHeading.Add(acceleration).Normalize()
 	return h.Normalize(), acceleration
 }
-
 
 func (m *Mob) SetPosition(p phy.Vec2f) {
 	m.Body.SetPosition(p)

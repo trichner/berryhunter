@@ -27,6 +27,10 @@ func (r *Resource) replenish(i int) {
 	}
 }
 
+func (r *Resource) StatusEffects() model.StatusEffects {
+	return make(model.StatusEffects)
+}
+
 func (r *Resource) Resource() *model.ResourceStock {
 	return &r.stock
 }

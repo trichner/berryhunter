@@ -1,7 +1,11 @@
 package player
 
+import "github.com/trichner/berryhunter/backend/model"
+
 func (p *player) Update(dt float32) {
 	// update time based tings
+
+	p.statusEffects = make(model.StatusEffects)
 
 	// action
 	if p.ongoingAction != nil {
@@ -27,6 +31,7 @@ func (p *player) updateVitalSigns(dt float32) {
 	if vitalSigns.BodyTemperature <= 0 {
 		healthFraction := c.FreezingDamageTickFraction
 		p.addHealthFraction(-healthFraction)
+		p.statusEffects.Add(model.StatusEffectFreezing)
 	}
 
 	// satiety
@@ -42,10 +47,12 @@ func (p *player) updateVitalSigns(dt float32) {
 		s := vitalSigns.Satiety
 		satietyFraction := c.HealthGainSatietyLossTickFraction
 		vitalSigns.Satiety = s.SubFraction(satietyFraction)
+		p.statusEffects.Add(model.StatusEffectRegenerating)
 	} else if vitalSigns.Satiety.Fraction() <= 0 {
 		// are we starving?
 		healthFraction := c.StarveDamageTickFraction
 		p.addHealthFraction(-healthFraction)
+		p.statusEffects.Add(model.StatusEffectStarving)
 	}
 }
 
