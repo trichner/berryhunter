@@ -2,11 +2,11 @@
 
 define([], function () {
 	const StatusEffect = {
-		DAMAGED: 'Damaged',
-		YIELDED: 'Yielded',
-		FREEZING: 'Freezing',
-		STARVING: 'Starving',
-		REGENERATING: 'Regenerating'
+		Damaged: 'Damaged',
+		Yielded: 'Yielded',
+		Freezing: 'Freezing',
+		Starving: 'Starving',
+		Regenerating: 'Regenerating'
 	};
 
 	return StatusEffect;

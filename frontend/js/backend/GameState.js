@@ -59,13 +59,6 @@ define([
 	 * @param {BerryhunterApi.Vec2f|null} vec
 	 */
 	function unmarshallVec2f(vec2f) {
-		if (vec2f === null){
-			return {
-				x: 0,
-				y: 0,
-			}
-		}
-
 		return {
 			x: vec2f.x(),
 			y: vec2f.y(),
@@ -154,9 +147,9 @@ define([
 
 		if (Utils.isFunction(entity.statusEffectsLength) &&
 			Utils.isFunction(entity.statusEffects)) {
-			result.statusEffects = unmarshallStatusEffects(entity.statusEffectsLength(), entity.statusEffects);
+			result.statusEffects = unmarshallStatusEffects(entity.statusEffectsLength(), entity.statusEffects.bind(entity));
 			if (result.statusEffects.length) {
-				console.log(result.name || '' + ' [' + id + '] ' + result.statusEffects);
+				console.log((result.name || '') + ' [' + id + '] ' + result.statusEffects);
 			}
 		}
 
@@ -193,14 +186,6 @@ define([
 	 * @param {BerryhunterApi.AABB|null} aabb
 	 */
 	function unmarshalAABB(aabb) {
-		if (aabb === null){
-			return {
-				LowerX: 0,
-				LowerY: 0,
-				UpperX: 0,
-				UpperY: 0,
-			}
-		}
 		return {
 			LowerX: aabb.lower().x(),
 			LowerY: aabb.lower().y(),

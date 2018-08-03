@@ -168,7 +168,6 @@ define([
 				return;
 			}
 
-
 			let data, buffer;
 			/**
 			 * @type {BerryhunterApi.ServerMessage}
