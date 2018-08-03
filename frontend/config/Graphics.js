@@ -141,7 +141,7 @@ define([], function () {
 				Furnace: {
 					color: 0xFF8000,
 					alpha: 1,
-					sizeFactor: 1
+					sizeFactor: 0.4
 				}
 			}
 		},
