@@ -1,24 +1,23 @@
 'use strict';
 
-define(['backend/BackendConstants',
+define([
+	'backend/BackendConstants',
 	'gameObjects/Resources',
 	'gameObjects/Mobs',
 	'develop/DebugCircle',
 	'gameObjects/Border',
 	'gameObjects/Character',
 	'gameObjects/Placeable',
-	'schema_client'
-], function (BackendConstants, Resources, Mobs, DebugCircle, Border, Character, Placeable,) {
+	'Utils',
+	'schema_client',
+], function (BackendConstants, Resources, Mobs, DebugCircle, Border, Character, Placeable, Utils) {
 	class Spectator {
 		/**
 		 * @param {BerryhunterApi.Spectator} spectator
 		 */
 		constructor(spectator) {
 			this.id = spectator.id().toFloat64();
-			this.position = {
-				x: spectator.pos().x(),
-				y: spectator.pos().y(),
-			};
+			this.position = unmarshallVec2f(spectator.pos());
 			this.isSpectator = true;
 		}
 	}
@@ -52,6 +51,24 @@ define(['backend/BackendConstants',
 			for (let i = 0; i < gameState.entitiesLength(); ++i) {
 				this.entities.push(unmarshalWrappedEntity(gameState.entities(i)));
 			}
+		}
+	}
+
+	/**
+	 *
+	 * @param {BerryhunterApi.Vec2f|null} vec
+	 */
+	function unmarshallVec2f(vec2f) {
+		if (vec2f === null){
+			return {
+				x: 0,
+				y: 0,
+			}
+		}
+
+		return {
+			x: vec2f.x(),
+			y: vec2f.y(),
 		}
 	}
 
@@ -90,10 +107,7 @@ define(['backend/BackendConstants',
 
 		let result = {
 			id: id,
-			position: {
-				x: entity.pos().x(),
-				y: entity.pos().y(),
-			},
+			position: unmarshallVec2f(entity.pos()),
 			radius: entity.radius(),
 			type: unmarshalEntityType(entity.entityType()),
 			aabb: unmarshalAABB(entity.aabb()),
@@ -138,6 +152,14 @@ define(['backend/BackendConstants',
 			}
 		}
 
+		if (Utils.isFunction(entity.statusEffectsLength) &&
+			Utils.isFunction(entity.statusEffects)) {
+			result.statusEffects = unmarshallStatusEffects(entity.statusEffectsLength(), entity.statusEffects);
+			if (result.statusEffects.length) {
+				console.log(result.name || '' + ' [' + id + '] ' + result.statusEffects);
+			}
+		}
+
 		return result
 	}
 
@@ -159,7 +181,7 @@ define(['backend/BackendConstants',
 		Mobs.Mammoth,
 		Placeable,
 		Resources.Titanium,
-		Resources.Flower
+		Resources.Flower,
 	];
 
 	function unmarshalEntityType(entityType) {
@@ -168,9 +190,17 @@ define(['backend/BackendConstants',
 
 	/**
 	 *
-	 * @param {BerryhunterApi.AABB} aabb
+	 * @param {BerryhunterApi.AABB|null} aabb
 	 */
 	function unmarshalAABB(aabb) {
+		if (aabb === null){
+			return {
+				LowerX: 0,
+				LowerY: 0,
+				UpperX: 0,
+				UpperY: 0,
+			}
+		}
 		return {
 			LowerX: aabb.lower().x(),
 			LowerY: aabb.lower().y(),
@@ -197,6 +227,16 @@ define(['backend/BackendConstants',
 	 */
 	function unmarshalItem(itemId) {
 		return BackendConstants.itemLookupTable[itemId];
+	}
+
+	function unmarshallStatusEffects(length, getter) {
+		let statusEffects = [];
+
+		for (let i = 0; i < length; ++i) {
+			statusEffects.push(BackendConstants.statusEffectLookupTable[getter(i)]);
+		}
+
+		return statusEffects;
 	}
 
 	return GameState;
