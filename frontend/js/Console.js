@@ -111,7 +111,5 @@ define(['Preloading', 'Utils'], function (Preloading, Utils) {
 			onDomReady();
 		});
 
-	window.run = Console.run;
-
 	return Console;
 });

@@ -196,20 +196,10 @@ define([
 									Game.player.inventory.unequipItem(placedItem, Equipment.Slots.PLACEABLE);
 								}
 
-								if (MapEditor.isActive()) {
-									let placeableGameobject = new Placeable(
-										placedItem,
-										this.character.getX() + Math.cos(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
-										this.character.getY() + Math.sin(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
-									);
-									Game.map.objects.push(placeableGameobject);
-									Game.player.inventory.removeItem(placedItem, 1);
-								} else {
-									action = {
-										item: placedItem,
-										actionType: BerryhunterApi.ActionType.PlaceItem
-									}
-								}
+								action = {
+									item: placedItem,
+									actionType: BerryhunterApi.ActionType.PlaceItem
+								};
 								break;
 						}
 					} else if (this.altActionKeys.isDown || inputManager.activePointer.rightButtonDown()) {

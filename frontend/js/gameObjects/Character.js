@@ -4,6 +4,7 @@ define([
 	'Game',
 	'GameObject',
 	'PIXI',
+	'pixi-ease',
 	'NamedGroup',
 	'Constants',
 	'Utils',
@@ -14,8 +15,9 @@ define([
 	'Vector',
 	'Text',
 	'GraphicsConfig',
-	'Events'
-], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig, Events) {
+	'Events',
+	'./AnimateAction'
+], function (Game, GameObject, PIXI, Ease, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig, Events, animateAction) {
 	class Character extends GameObject {
 		constructor(id, x, y, name, isPlayerCharacter) {
 			super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2);
@@ -229,6 +231,11 @@ define([
 
 		progressHitAnimation(animationFrame) {
 			this.actionAnimationFrame = animationFrame;
+			// console.log(animationFrame);
+		}
+
+		animate(type, animationFrame) {
+			animateAction.call(this, this.rightHand, type, animationFrame);
 		}
 
 		update() {

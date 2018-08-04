@@ -37,6 +37,28 @@ define([], function () {
 				size: 20,
 				lineColor: 0xc9a741,
 				lineWidth: 5 //px
+			},
+
+			actionAnimation: {
+				/**
+				 * In milliseconds.
+				 *
+				 * Should be synchronized with the value below,
+				 * but is purely used for a smooth client side animation.
+				 */
+				duration: 500,
+
+				/**
+				 * How much of the animation is forward - the rest is reversing.
+				 * 0.4 ==> 40% (200ms of 500ms) are forward movement, 60% is backwards
+				 */
+				relativeDurationForward: 0.35,
+
+				/**
+				 * How many ticks will the backend communicate an action in progress
+				 * SYNCED WITH BACKEND
+				 */
+				backendTicks: 15
 			}
 		},
 
