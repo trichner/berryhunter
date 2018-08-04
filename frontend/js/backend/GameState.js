@@ -17,7 +17,7 @@ define([
 		 */
 		constructor(spectator) {
 			this.id = spectator.id().toFloat64();
-			this.position = unmarshallVec2f(spectator.pos());
+			this.position = unmarshalVec2f(spectator.pos());
 			this.isSpectator = true;
 		}
 	}
@@ -58,7 +58,7 @@ define([
 	 *
 	 * @param {BerryhunterApi.Vec2f|null} vec
 	 */
-	function unmarshallVec2f(vec2f) {
+	function unmarshalVec2f(vec2f) {
 		return {
 			x: vec2f.x(),
 			y: vec2f.y(),
@@ -100,7 +100,7 @@ define([
 
 		let result = {
 			id: id,
-			position: unmarshallVec2f(entity.pos()),
+			position: unmarshalVec2f(entity.pos()),
 			radius: entity.radius(),
 			type: unmarshalEntityType(entity.entityType()),
 			aabb: unmarshalAABB(entity.aabb()),
@@ -147,7 +147,7 @@ define([
 
 		if (Utils.isFunction(entity.statusEffectsLength) &&
 			Utils.isFunction(entity.statusEffects)) {
-			result.statusEffects = unmarshallStatusEffects(entity.statusEffectsLength(), entity.statusEffects.bind(entity));
+			result.statusEffects = unmarshalStatusEffects(entity.statusEffectsLength(), entity.statusEffects.bind(entity));
 			if (result.statusEffects.length) {
 				console.log((result.name || '') + ' [' + id + '] ' + result.statusEffects);
 			}
@@ -214,7 +214,7 @@ define([
 		return BackendConstants.itemLookupTable[itemId];
 	}
 
-	function unmarshallStatusEffects(length, getter) {
+	function unmarshalStatusEffects(length, getter) {
 		let statusEffects = [];
 
 		for (let i = 0; i < length; ++i) {

@@ -40,9 +40,9 @@ define(['PIXI'], function (PIXI) {
 		}
 
 		let matrix =
-			[colorOpacity(107), 0, 0, 0, 0,
-				0, colorOpacity(131), 0, 0, 0,
-				0, 0, colorOpacity(185), 0, 0,
+			[colorOpacity(red), 0, 0, 0, 0,
+				0, colorOpacity(green), 0, 0, 0,
+				0, 0, colorOpacity(blue), 0, 0,
 				0, 0, 0, 1, 0,];
 
 		this._loadMatrix(matrix, multiply);

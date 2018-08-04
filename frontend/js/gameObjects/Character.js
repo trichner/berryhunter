@@ -23,6 +23,8 @@ define([
 			this.name = name;
 			this.isPlayerCharacter = isPlayerCharacter;
 
+			if (isPlayerCharacter) window.character = this;
+
 			this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
 			this.isMoveable = true;
 			this.visibleOnMinimap = false;
@@ -96,6 +98,17 @@ define([
 			}, this);
 
 			Game.renderer.on('prerender', this.update, this);
+
+			let colorMatrix = new PIXI.filters.ColorMatrixFilter();
+			let opacity = 0.5;
+			// #BF153A
+			colorMatrix.flood(
+				191, 21, 58,
+				opacity
+			);
+			// colorMatrix.alpha = opacity;
+
+			this.actualShape.filters = [colorMatrix];
 		}
 
 		initShape(x, y, size, rotation) {
