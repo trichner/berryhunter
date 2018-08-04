@@ -3,7 +3,11 @@
 define(['PIXI', 'Game', 'GameObject', 'Utils', 'InjectedSVG', 'GraphicsConfig'], function (PIXI, Game, GameObject, Utils, InjectedSVG, GraphicsConfig) {
 	class Placeable extends GameObject {
 		constructor(placeableItem, x, y) {
-			super(placeableItem.placeable.layer, x, y, placeableItem.graphic.size, Utils.random(0, Math.PI * 2), placeableItem.graphic.svg);
+			super(placeableItem.placeable.layer,
+				x, y,
+				placeableItem.graphic.size,
+				Utils.randomRotation(placeableItem.placeable.directions),
+				placeableItem.graphic.svg);
 
 			this.item = placeableItem;
 			this.visibleOnMinimap = placeableItem.placeable.visibleOnMinimap;

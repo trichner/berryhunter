@@ -99,8 +99,20 @@ define(['../vendor/XieLongUtils'], function () {
 		return n * n;
 	};
 
-	Utils.randomRotation = function () {
-		return Utils.random(0, Math.PI * 2)
+	/**
+	 *
+	 * @param {number} limitDirections 4 = only top, right, bottom, left. 8 = top, top-left, ...
+	 *                     Can be any number, per default no limit is applied and any angle can be returned.
+	 * @return {number}
+	 */
+	Utils.randomRotation = function (limitDirections) {
+		if (limitDirections === false || limitDirections === 0){
+			return 0;
+		}
+		if (Utils.isNumber(limitDirections)){
+			return Utils.randomInt(0, limitDirections) * Math.PI * 2 / limitDirections;
+		}
+		return Utils.random(0, Math.PI * 2);
 	};
 
 	Utils.setClass = function (svgElement, className) {
@@ -317,7 +329,7 @@ define(['../vendor/XieLongUtils'], function () {
 	};
 
 	Utils.dateDiff = function (a, b, unit) {
-		if (Utils.isUndefined(unit)){
+		if (Utils.isUndefined(unit)) {
 			unit = Utils.dateDiffUnit.milliseconds;
 		}
 

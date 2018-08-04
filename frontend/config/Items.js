@@ -30,6 +30,11 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 	 *                            If true, a minimap icon is created for this placeable.
 	 *                            The looks have to be defined in:
 	 *                            GraphicsConfig.miniMap.icons.<itemName>
+	 *          directions: optional boolean|number.
+	 *                      false = no rotation at all.
+	 *                      4 = only 4 directions.
+	 *                      8 = only 8 directions.
+	 *                      If omitted, the placeable is freely rotated.
 	 *      }
 	 * }
 	 */
@@ -308,7 +313,8 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			type: ItemType.PLACEABLE,
 			placeable: {
 				layer: 'placeables.walls',
-				multiPlacing: true
+				multiPlacing: true,
+				directions: 4
 			}
 		},
 		WoodSpikyWall: {
@@ -321,7 +327,8 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			type: ItemType.PLACEABLE,
 			placeable: {
 				layer: 'placeables.spikyWalls',
-				multiPlacing: true
+				multiPlacing: true,
+				directions: 4
 			}
 		},
 		StoneWall: {
@@ -334,7 +341,8 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			type: ItemType.PLACEABLE,
 			placeable: {
 				layer: 'placeables.walls',
-				multiPlacing: true
+				multiPlacing: true,
+				directions: false
 			}
 		},
 		StoneSpikyWall: {
@@ -347,7 +355,8 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			type: ItemType.PLACEABLE,
 			placeable: {
 				layer: 'placeables.spikyWalls',
-				multiPlacing: true
+				multiPlacing: true,
+				directions: false
 			}
 		},
 		BronzeWall: {
@@ -360,7 +369,8 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			type: ItemType.PLACEABLE,
 			placeable: {
 				layer: 'placeables.walls',
-				multiPlacing: true
+				multiPlacing: true,
+				directions: false
 			}
 		},
 		BronzeSpikyWall: {
@@ -373,7 +383,8 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			type: ItemType.PLACEABLE,
 			placeable: {
 				layer: 'placeables.spikyWalls',
-				multiPlacing: true
+				multiPlacing: true,
+				directions: false
 			}
 		},
 		IronWall: {
