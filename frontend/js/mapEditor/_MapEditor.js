@@ -142,6 +142,15 @@ define([
 
 	if (MapEditor.isActive()) {
 		Preloading.registerPartial('partials/mapEditor.html');
+
+		// TODO onAction
+		let placeableGameobject = new Placeable(
+			placedItem,
+			this.character.getX() + Math.cos(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
+			this.character.getY() + Math.sin(this.character.getRotation()) * Constants.PLACEMENT_RANGE,
+		);
+		Game.map.objects.push(placeableGameobject);
+		Game.player.inventory.removeItem(placedItem, 1);
 	}
 
 	return MapEditor;

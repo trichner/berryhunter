@@ -94,6 +94,7 @@ define(['Preloading', 'Events'], function (Preloading, Events) {
 		'develop/Fps',
 
 		'GameObject',
+		'gameObjects/AnimateAction',
 		'gameObjects/Border',
 		'gameObjects/Character',
 		'gameObjects/Mobs',
@@ -147,6 +148,7 @@ define(['Preloading', 'Events'], function (Preloading, Events) {
 		'userInterface/VitalSignBar',
 
 		'AutoFeed',
+		'BrowserConsole',
 		'Camera',
 		'Chat',
 		'ColorMatrixFilterExtension',
