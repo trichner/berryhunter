@@ -130,6 +130,17 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
+		TitaniumSword: {
+			icon: {file: 'swordTitaniumIcon'},
+			graphic: {
+				file: 'swordTitanium',
+				size: 40,
+				offsetX: 15
+			},
+			definition: 'swords/titanium-sword',
+			type: ItemType.EQUIPMENT,
+			equipmentSlot: Equipment.Slots.HAND
+		},
 
 		/***********************************
 		 * Spears
@@ -164,6 +175,17 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				offsetX: 20
 			},
 			definition: 'spears/iron-spear',
+			type: ItemType.EQUIPMENT,
+			equipmentSlot: Equipment.Slots.HAND
+		},
+		TitaniumSpear: {
+			icon: {file: 'spearTitaniumIcon'},
+			graphic: {
+				file: 'spearTitanium',
+				size: 60,
+				offsetX: 20
+			},
+			definition: 'spears/titanium-spear',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
