@@ -97,6 +97,8 @@ define([
 				group.position.copy(this.shape.position);
 			}, this);
 
+			this.actionAnimation = new Ease.list();
+
 			Game.renderer.on('prerender', this.update, this);
 		}
 
@@ -196,23 +198,40 @@ define([
 			this.movePosition(moveVec);
 		}
 
-		action() {
+		action(animationFrame) {
 			if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
 				this.currentAction = 'PLACING';
+				let self = this;
+				// TODO swing with both hands = looks like putting something down
+				animateAction.call(this, this.rightHand, 'stab', this.actionAnimation, animationFrame, function () {
+					self.currentAction = false;
+				});
 				return Character.hitAnimationFrameDuration;
 			}
 
-			this.currentAction = 'MAIN';
+			if (!this.currentAction) {
+				this.currentAction = 'MAIN';
+				let self = this;
+				animateAction.call(this, this.rightHand, 'swing', this.actionAnimation, animationFrame, function () {
+					self.currentAction = false;
+				});
+			}
 			return Character.hitAnimationFrameDuration;
 		}
 
-		altAction() {
+		altAction(animationFrame) {
 			if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
 				this.currentAction = false;
 				return 0;
 			}
 
-			this.currentAction = 'ALT';
+			if (!this.currentAction) {
+				this.currentAction = 'ALT';
+				let self = this;
+				animateAction.call(this, this.rightHand, 'swing', this.actionAnimation, animationFrame, function () {
+					self.currentAction = false;
+				});
+			}
 			return Character.hitAnimationFrameDuration;
 		}
 
@@ -227,34 +246,34 @@ define([
 
 		update() {
 			let timeDelta = Game.timeDelta;
-			if (this.currentAction) {
-				let hand;
-				switch (this.currentAction) {
-					case 'MAIN':
-					case 'PLACING':
-						hand = this.rightHand;
-						break;
-					case 'ALT':
-						hand = this.leftHand;
-						break;
-				}
-
-				const maxOffset = this.size * 0.4;
-				let offset;
-				if (this.actionAnimationFrame > 0.7 * Character.hitAnimationFrameDuration) {
-					offset = Utils.sq((Character.hitAnimationFrameDuration + 1 - this.actionAnimationFrame)) /
-						Utils.sq(0.3 * Character.hitAnimationFrameDuration) * maxOffset;
-				} else if (this.actionAnimationFrame > 0.6 * Character.hitAnimationFrameDuration) {
-					offset = maxOffset;
-				} else {
-					offset = this.actionAnimationFrame / (0.6 * Character.hitAnimationFrameDuration) * maxOffset;
-				}
-				hand.position.x = hand.originalTranslation.x + offset;
-
-				if (this.actionAnimationFrame <= 1) {
-					this.currentAction = false;
-				}
-			}
+			// if (this.currentAction) {
+			// 	let hand;
+			// 	switch (this.currentAction) {
+			// 		case 'MAIN':
+			// 		case 'PLACING':
+			// 			hand = this.rightHand;
+			// 			break;
+			// 		case 'ALT':
+			// 			hand = this.leftHand;
+			// 			break;
+			// 	}
+			//
+			// 	const maxOffset = this.size * 0.4;
+			// 	let offset;
+			// 	if (this.actionAnimationFrame > 0.7 * Character.hitAnimationFrameDuration) {
+			// 		offset = Utils.sq((Character.hitAnimationFrameDuration + 1 - this.actionAnimationFrame)) /
+			// 			Utils.sq(0.3 * Character.hitAnimationFrameDuration) * maxOffset;
+			// 	} else if (this.actionAnimationFrame > 0.6 * Character.hitAnimationFrameDuration) {
+			// 		offset = maxOffset;
+			// 	} else {
+			// 		offset = this.actionAnimationFrame / (0.6 * Character.hitAnimationFrameDuration) * maxOffset;
+			// 	}
+			// 	hand.position.x = hand.originalTranslation.x + offset;
+			//
+			// 	if (this.actionAnimationFrame <= 1) {
+			// 		this.currentAction = false;
+			// 	}
+			// }
 
 			this.messages = this.messages.filter((message) => {
 				message.timeToLife -= timeDelta;

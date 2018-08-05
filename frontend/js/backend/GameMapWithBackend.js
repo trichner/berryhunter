@@ -158,7 +158,8 @@ define([
 				if (entity.currentAction) {
 					switch (entity.currentAction.actionType) {
 						case BerryhunterApi.ActionType.Primary:
-							character.action();
+							console.log("entity.currentAction.ticksRemaining", entity.currentAction.ticksRemaining);
+							character.action(entity.currentAction.ticksRemaining);
 							character.progressHitAnimation(entity.currentAction.ticksRemaining);
 							break;
 						default:

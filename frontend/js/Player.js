@@ -74,6 +74,9 @@ define([
 						this.craftProgress.remainingTicks = ticksRemaining;
 						entity.currentAction.item.recipe.clickableIcon.updateProgress(ticksRemaining);
 						break;
+					case BerryhunterApi.ActionType.Primary:
+
+						break;
 				}
 			}
 		}
