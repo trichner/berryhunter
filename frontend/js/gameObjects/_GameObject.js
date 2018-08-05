@@ -24,6 +24,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'Gr
 
 				const args = Array.prototype.splice.call(arguments, 5);
 				this.shape = this.initShape.apply(this, [x, y, size, rotation].concat(args));
+				this.statusEffects = this.createStatusEffects();
 				this.show();
 			}
 
@@ -34,6 +35,11 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'Gr
 					const args = Array.prototype.splice.call(arguments, 2);
 					return this.createShape.apply(this, [x, y].concat(args));
 				}
+			}
+
+			createStatusEffects(){
+				// Default NOP
+				return {};
 			}
 
 			/**

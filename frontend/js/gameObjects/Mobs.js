@@ -1,6 +1,6 @@
 'use strict';
 
-define(['Game', 'GameObject', 'Preloading', 'Utils', 'GraphicsConfig'], function (Game, GameObject, Preloading, Utils, GraphicsConfig) {
+define(['Game', 'GameObject', 'Preloading', 'Utils', 'GraphicsConfig', './StatusEffect'], function (Game, GameObject, Preloading, Utils, GraphicsConfig, StatusEffect) {
 
 	function maxSize(mob) {
 		return GraphicsConfig.mobs[mob].maxSize;
@@ -29,6 +29,13 @@ define(['Game', 'GameObject', 'Preloading', 'Utils', 'GraphicsConfig'], function
 			// Subtract the default rotation offset of all animal graphics
 			GameObject.prototype.setRotation.call(this, rotation + Math.PI / 2);
 		}
+
+		// TODO
+		// createStatusEffects(){
+		// 	return {
+		// 		DamagedOverTime: StatusEffect.forDamagedOverTime(this.shape)
+		// 	}
+		// }
 	}
 
 	class Dodo extends Mob {

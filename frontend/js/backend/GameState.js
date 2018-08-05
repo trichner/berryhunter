@@ -148,8 +148,9 @@ define([
 		if (Utils.isFunction(entity.statusEffectsLength) &&
 			Utils.isFunction(entity.statusEffects)) {
 			result.statusEffects = unmarshalStatusEffects(entity.statusEffectsLength(), entity.statusEffects.bind(entity));
+			// TODO remove debug output
 			if (result.statusEffects.length) {
-				console.log((result.name || '') + ' [' + id + '] ' + result.statusEffects);
+				//console.log((result.name || '') + ' [' + id + '] ' + result.statusEffects);
 			}
 		}
 

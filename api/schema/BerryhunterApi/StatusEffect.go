@@ -4,14 +4,16 @@ package BerryhunterApi
 
 const (
 	StatusEffectDamaged = 0
-	StatusEffectYielded = 1
-	StatusEffectFreezing = 2
-	StatusEffectStarving = 3
-	StatusEffectRegenerating = 4
+	StatusEffectDamagedOverTime = 1
+	StatusEffectYielded = 2
+	StatusEffectFreezing = 3
+	StatusEffectStarving = 4
+	StatusEffectRegenerating = 5
 )
 
 var EnumNamesStatusEffect = map[int]string{
 	StatusEffectDamaged:"Damaged",
+	StatusEffectDamagedOverTime:"DamagedOverTime",
 	StatusEffectYielded:"Yielded",
 	StatusEffectFreezing:"Freezing",
 	StatusEffectStarving:"Starving",

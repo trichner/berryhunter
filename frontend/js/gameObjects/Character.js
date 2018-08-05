@@ -16,8 +16,9 @@ define([
 	'Text',
 	'GraphicsConfig',
 	'Events',
-	'./AnimateAction'
-], function (Game, GameObject, PIXI, Ease, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig, Events, animateAction) {
+	'./AnimateAction',
+	'./StatusEffect'
+], function (Game, GameObject, PIXI, Ease, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig, Events, animateAction, StatusEffect) {
 	class Character extends GameObject {
 		constructor(id, x, y, name, isPlayerCharacter) {
 			super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2);
@@ -101,16 +102,8 @@ define([
 
 			Game.renderer.on('prerender', this.update, this);
 
-			let colorMatrix = new PIXI.filters.ColorMatrixFilter();
-			let opacity = 0.5;
-			// #BF153A
-			colorMatrix.flood(
-				191, 21, 58,
-				opacity
-			);
-			// colorMatrix.alpha = opacity;
-
-			this.actualShape.filters = [colorMatrix];
+			// TODO remove
+			this.statusEffect = new StatusEffect(this.actualShape, 191, 21, 58, 0.2, 0.8);
 		}
 
 		initShape(x, y, size, rotation) {
@@ -123,6 +116,19 @@ define([
 
 			return group;
 		}
+
+		// TODO
+		// createStatusEffects() {
+		// 	if (this.isPlayerCharacter) {
+		// 		super.createStatusEffects();
+		// 	}
+		//
+		// 	return {
+		// 		DamagedOverTime: StatusEffect.forDamagedOverTime(this.actualShape),
+		// 		Freezing: StatusEffect.forFreezing(this.actualShape),
+		// 		Starving: StatusEffect.forStarving(this.actualShape)
+		// 	}
+		// }
 
 		getRotationShape() {
 			return this.actualShape;
