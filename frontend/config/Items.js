@@ -135,7 +135,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			graphic: {
 				file: 'swordTitanium',
 				size: 40,
-				offsetX: 15
+				offsetX: 18
 			},
 			definition: 'swords/titanium-sword',
 			type: ItemType.EQUIPMENT,
@@ -150,7 +150,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			graphic: {
 				file: 'spearStone',
 				size: 60,
-				offsetX: 20
+				offsetX: 15
 			},
 			definition: 'spears/stone-spear',
 			type: ItemType.EQUIPMENT,
@@ -161,7 +161,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			graphic: {
 				file: 'spearBronze',
 				size: 60,
-				offsetX: 20
+				offsetX: 15
 			},
 			definition: 'spears/bronze-spear',
 			type: ItemType.EQUIPMENT,
@@ -172,7 +172,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			graphic: {
 				file: 'spearIron',
 				size: 60,
-				offsetX: 20
+				offsetX: 15
 			},
 			definition: 'spears/iron-spear',
 			type: ItemType.EQUIPMENT,
@@ -183,7 +183,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			graphic: {
 				file: 'spearTitanium',
 				size: 60,
-				offsetX: 20
+				offsetX: 15
 			},
 			definition: 'spears/titanium-spear',
 			type: ItemType.EQUIPMENT,
