@@ -72,8 +72,8 @@ func ongoingActionMarshalFlatbuf(builder *flatbuffers.Builder, action model.Play
 
 func StatusEffectsMarshal(builder *flatbuffers.Builder, e model.StatusEntity) flatbuffers.UOffsetT {
 
-	se := e.StatusEffects()
-	if se == nil {
+	se := e.StatusEffects().Effects()
+	if se == nil || len(se) == 0 {
 		builder.StartVector(1, 0, 0)
 		return builder.EndVector(0)
 	}

@@ -17,10 +17,6 @@ type BaseEntity struct {
 	EntityType EntityType
 }
 
-func (e *BaseEntity) StatusEffects() StatusEffects {
-	return nil
-}
-
 func (e *BaseEntity) Basic() ecs.BasicEntity {
 	return e.BasicEntity
 }

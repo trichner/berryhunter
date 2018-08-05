@@ -15,8 +15,9 @@ type Placeable struct {
 	model.BaseEntity
 	item items.Item
 
-	radiator  *model.HeatRadiator
-	ticksLeft int
+	radiator      *model.HeatRadiator
+	ticksLeft     int
+	statusEffects model.StatusEffects
 }
 
 func (p *Placeable) Update(dt float32) {
@@ -53,6 +54,10 @@ func (p *Placeable) Bodies() model.Bodies {
 
 func (p *Placeable) Item() items.Item {
 	return p.item
+}
+
+func (p *Placeable) StatusEffects() *model.StatusEffects {
+	return &p.statusEffects
 }
 
 func NewPlaceable(item items.Item) (*Placeable, error) {
@@ -98,10 +103,11 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 
 	base := model.NewBaseEntity(body, BerryhunterApi.EntityTypePlaceable)
 	p := &Placeable{
-		BaseEntity: base,
-		item:       item,
-		radiator:   radiator,
-		ticksLeft:  ticksLeft,
+		BaseEntity:    base,
+		item:          item,
+		radiator:      radiator,
+		ticksLeft:     ticksLeft,
+		statusEffects: model.NewStatusEffects(),
 	}
 	p.Body.Shape().UserData = p
 	return p, nil

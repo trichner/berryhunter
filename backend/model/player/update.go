@@ -1,11 +1,13 @@
 package player
 
-import "github.com/trichner/berryhunter/backend/model"
+import (
+	"github.com/trichner/berryhunter/backend/model"
+	"github.com/trichner/berryhunter/backend/model/vitals"
+)
 
 func (p *player) Update(dt float32) {
 	// update time based tings
 
-	p.statusEffects = make(model.StatusEffects)
 
 	// action
 	if p.ongoingAction != nil {
@@ -41,13 +43,19 @@ func (p *player) updateVitalSigns(dt float32) {
 
 	// heal if satiety and temperature are high enough
 	if vitalSigns.Satiety.Fraction() > c.HealthGainSatietyThreshold && vitalSigns.BodyTemperature.Fraction() > c.HealthGainTemperatureThreshold {
-		healthFraction := c.HealthGainTick
-		p.addHealthFraction(healthFraction)
 
-		s := vitalSigns.Satiety
-		satietyFraction := c.HealthGainSatietyLossTickFraction
-		vitalSigns.Satiety = s.SubFraction(satietyFraction)
-		p.statusEffects.Add(model.StatusEffectRegenerating)
+		if vitalSigns.Health != vitals.Max {
+
+			healthFraction := c.HealthGainTick
+			p.addHealthFraction(healthFraction)
+
+			p.statusEffects.Add(model.StatusEffectRegenerating)
+
+			s := vitalSigns.Satiety
+			satietyFraction := c.HealthGainSatietyLossTickFraction
+			vitalSigns.Satiety = s.SubFraction(satietyFraction)
+		}
+
 	} else if vitalSigns.Satiety.Fraction() <= 0 {
 		// are we starving?
 		healthFraction := c.StarveDamageTickFraction
@@ -61,3 +69,4 @@ func (p *player) addHealthFraction(fraction float32) {
 	h = h.AddFraction(fraction)
 	p.VitalSigns().Health = h
 }
+

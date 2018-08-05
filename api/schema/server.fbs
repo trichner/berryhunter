@@ -22,11 +22,11 @@ enum EntityType : ushort {
 
 enum StatusEffect : ushort {
   Damaged = 0,
-  DamagedOverTime,
   Yielded,
   Freezing,
   Starving,
-  Regenerating
+  Regenerating,
+  DamagedAmbient
 }
 
 struct AABB {

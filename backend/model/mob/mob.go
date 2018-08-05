@@ -47,6 +47,7 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 		damageAura:         damageAura,
 		wanderAcceleration: phy.Vec2f{0.1, 0},
 		velocity:           0.04,
+		statusEffects:      model.NewStatusEffects(),
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -66,6 +67,12 @@ type Mob struct {
 	// wandering
 	wanderAcceleration phy.Vec2f
 	velocity           float32
+
+	statusEffects model.StatusEffects
+}
+
+func (m *Mob) StatusEffects() *model.StatusEffects {
+	return &m.statusEffects
 }
 
 func (m *Mob) Bodies() model.Bodies {
@@ -88,6 +95,7 @@ func (m *Mob) Update(dt float32) bool {
 			}
 			h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
 			p.VitalSigns().Health = h
+			p.StatusEffects().Add(model.StatusEffectDamagedAmbient)
 		}
 	}
 

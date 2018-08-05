@@ -43,29 +43,6 @@ type Entity interface {
 	Type() EntityType
 }
 
-const (
-	StatusEffectDamaged      = StatusEffect(0)
-	StatusEffectYielded      = StatusEffect(1)
-	StatusEffectFreezing     = StatusEffect(2)
-	StatusEffectStarving     = StatusEffect(3)
-	StatusEffectRegenerating = StatusEffect(4)
-)
-
-type StatusEffect int
-type StatusEffects map[StatusEffect]struct{}
-
-func (s StatusEffects) Add(e StatusEffect) {
-	s[e] = struct{}{}
-}
-
-func (s StatusEffects) Remove(e StatusEffect) {
-	delete(s, e)
-}
-
-type StatusEntity interface {
-	StatusEffects() StatusEffects
-}
-
 // Heater is an entity that radiates heat
 type Heater interface {
 	BasicEntity

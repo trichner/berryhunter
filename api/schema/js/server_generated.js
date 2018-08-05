@@ -32,11 +32,11 @@ BerryhunterApi.EntityType = {
  */
 BerryhunterApi.StatusEffect = {
   Damaged: 0,
-  DamagedOverTime: 1,
-  Yielded: 2,
-  Freezing: 3,
-  Starving: 4,
-  Regenerating: 5
+  Yielded: 1,
+  Freezing: 2,
+  Starving: 3,
+  Regenerating: 4,
+  DamagedAmbient: 5
 };
 
 /**
