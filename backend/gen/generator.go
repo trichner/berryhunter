@@ -79,21 +79,21 @@ var trees = []staticEntityBody{
 var resources = []staticEntityBody{
 	{
 		BerryhunterApi.EntityTypeFlower,
-		20,
+		18,
 		model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Flower",
 	},
 	{
 		BerryhunterApi.EntityTypeBerryBush,
-		8,
+		6,
 		model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Berry",
 	},
 	{
 		BerryhunterApi.EntityTypeStone,
-		27,
+		20,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Stone",
@@ -114,7 +114,7 @@ var resources = []staticEntityBody{
 	},
 	{
 		BerryhunterApi.EntityTypeTitanium,
-		3,
+		2,
 		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
 		0,
 		"Titanium",

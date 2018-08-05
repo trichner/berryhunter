@@ -38,7 +38,7 @@ func main() {
 	}
 
 	// populate game
-	rnd := rand.New(rand.NewSource(0xDEADBEEF))
+	rnd := rand.New(rand.NewSource(0xDEADBEEF+5)) // 3?
 	entities := gen.Generate(g.Items(), rnd, radius)
 	for _, e := range entities {
 		g.AddEntity(e)
