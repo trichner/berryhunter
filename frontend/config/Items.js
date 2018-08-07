@@ -182,7 +182,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			icon: {file: 'spearTitaniumIcon'},
 			graphic: {
 				file: 'spearTitanium',
-				size: 60,
+				size: 80,
 				offsetX: 14
 			},
 			definition: 'spears/titanium-spear',
