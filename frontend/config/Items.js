@@ -93,6 +93,18 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
 		},
+		TitaniumTool: {
+			icon: {file: 'toolTitaniumIcon'},
+			graphic: {
+				file: 'toolTitanium',
+				size: 35,
+				offsetX: 10,
+				offsetY: 2.5
+			},
+			definition: 'tools/titanium-tool',
+			type: ItemType.EQUIPMENT,
+			equipmentSlot: Equipment.Slots.HAND
+		}
 
 		/***********************************
 		 * WEAPONS
