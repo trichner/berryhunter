@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>BerryHunter Artwork Presentation</title>
+	<link rel="stylesheet" href="css/style.css">
+	<style>
+		#artwork {
+			color: white;
+			letter-spacing: 0.04em;
+		}
+
+		#artwork * {
+			box-sizing: border-box;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		h1 {
+			text-shadow: #e37313 5px 0 0, #e37313 4.9px 1px 0, #e37313 4.6px 1.95px 0, #e37313 4.13333px 2.81667px 0, #e37313 3.48333px 3.58333px 0, #e37313 2.7px 4.2px 0, #e37313 1.81667px 4.66667px 0, #e37313 0.85px 4.93333px 0, #e37313 -0.15px 5px 0, #e37313 -1.13333px 4.86667px 0, #e37313 -2.08333px 4.55px 0, #e37313 -2.95px 4.05px 0, #e37313 -3.68333px 3.38333px 0, #e37313 -4.28333px 2.58333px 0, #e37313 -4.71667px 1.66667px 0, #e37313 -4.95px 0.7px 0, #e37313 -4.98333px -0.3px 0, #e37313 -4.83333px -1.28333px 0, #e37313 -4.48333px -2.21667px 0, #e37313 -3.95px -3.06667px 0, #e37313 -3.26667px -3.78333px 0, #e37313 -2.45px -4.35px 0, #e37313 -1.53333px -4.75px 0, #e37313 -0.566667px -4.96667px 0, #e37313 0.433333px -4.98333px 0, #e37313 1.41667px -4.8px 0, #e37313 2.35px -4.41667px 0, #e37313 3.16667px -3.86667px 0, #e37313 3.88333px -3.15px 0, #e37313 4.43333px -2.31667px 0, #e37313 4.8px -1.4px 0, #e37313 4.98333px -0.416667px 0;
+
+			font-size: 12vw;
+			margin: 0;
+		}
+
+		h2 {
+			font-size: 4vw;
+			margin: 0;
+		}
+
+		.sources {
+			position: fixed;
+			bottom: 5vh;
+
+		}
+
+		.sources > a {
+			display: block;
+			color: inherit;
+		}
+
+		.sources > a:before {
+			content: attr(href);
+		}
+
+		.clickableItem {
+			width: 40vh;
+			height: 40vh;
+			margin: 0;
+			font-size: 10vh;
+			padding: 4vh;
+		}
+
+		.clickableItem > .count {
+			bottom: 3%;
+			right: 3%;
+		}
+
+		.inventory {
+			position: absolute;
+			top: 25vh;
+			right: 52.5vw;
+		}
+
+		.inventorySlot {
+			float: left;
+			margin-right: 4vh;
+		}
+
+		.ingame {
+			position: absolute;
+			top: 10vh;
+			left: 52.5vw;
+		}
+
+		.ingame > img {
+			height: 80vh;
+		}
+	</style>
+	<style type="text/css">
+		* {
+			box-sizing: border-box;
+		}
+
+		#artwork {
+			max-width: 960px;
+			margin: 0 auto;
+			padding: 30px;
+			overflow: visible;
+		}
+
+		h1 {
+			font-size: 96px;
+		}
+
+		h2 {
+			font-size: 32px;
+			margin-bottom: 0.5em;
+		}
+
+		section {
+			float: left;
+			clear: both;
+			width: 100%;
+			margin-top: 30px;
+		}
+
+		.graphicContainer {
+			float: left;
+			min-width: 50%;
+			min-height: 200px;
+		}
+
+		#uiColors {
+			background-color: #111;
+			padding: 30px;
+		}
+
+		#uiColors table {
+			width: 100%;
+		}
+
+		#uiColors td {
+			padding: 5px 0;
+		}
+
+		/*#uiColors .graphicContainer{
+			padding: 15px;
+		}*/
+
+		.colorSample {
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+		}
+	</style>
+</head>
+<body id="artwork">
+<main>
+	<h1>BerryHunter.io Graphics</h1>
+	<section id="uiColors">
+		<h2>UI Colors</h2>
+		<div class="graphicContainer">
+			<table>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #ffffff"></div>
+					</td>
+					<td>
+						#ffffff
+					</td>
+					<td>
+						Font
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #006030"></div>
+					</td>
+					<td>
+						#006030
+					</td>
+					<td>
+						Grass / Background
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #DC143C"></div>
+					</td>
+					<td>
+						#DC143C
+					</td>
+					<td>
+						Health
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #32CD32"></div>
+					</td>
+					<td>
+						#32CD32
+					</td>
+					<td>
+						Hunger & Satiety
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #1E90FF"></div>
+					</td>
+					<td>
+						#1E90FF
+					</td>
+					<td>
+						Coldness
+					</td>
+				</tr>
+				<!--				<tr>
+									<td>
+										<div class="colorSample" style="background-color: rgba(0,0,0,0.6)"></div>
+									</td>
+									<td>
+										#000000 (60%)
+									</td>
+									<td>
+										Dark Background
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="colorSample" style="background-color: rgba(64, 64, 64,0.6)"></div>
+									</td>
+									<td>
+										#404040 (60%)
+									</td>
+									<td>
+										Medium Background
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="colorSample" style="background-color: rgba(255, 255, 255, 0.6)"></div>
+									</td>
+									<td>
+										#FFFFFF (60%)
+									</td>
+									<td>
+										Light Background
+									</td>
+								</tr>-->
+			</table>
+		</div>
+		<div class="graphicContainer">
+			<table>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #e37313"></div>
+					</td>
+					<td>
+						#E37313
+					</td>
+					<td>
+						Highlight Font
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #287aff"></div>
+					</td>
+					<td>
+						#287Aff
+					</td>
+					<td>
+						Water
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #840D25"></div>
+					</td>
+					<td>
+						#840D25
+					</td>
+					<td>
+						Health (dark)
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #1E7A1E"></div>
+					</td>
+					<td>
+						#1E7A1E
+					</td>
+					<td>
+						Hunger & Satiety (dark)
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="colorSample" style="background-color: #125799"></div>
+					</td>
+					<td>
+						#125799
+					</td>
+					<td>
+						Coldness (dark)
+					</td>
+				</tr>
+				<!--				<tr>
+									<td>
+										<div class="colorSample" style="background-color: #FFF8DC; opacity: 0.5"></div>
+									</td>
+									<td>
+										#FFF8DC, (50%)
+									</td>
+									<td>
+										Minimap
+									</td>
+								</tr>-->
+			</table>
+		</div>
+	</section>
+	<section>
+		<h2>Character &amp; Mobs</h2>
+		<div class="graphicContainer">
+			<img src="img/character.svg" width="60px"/>
+			<h4>Character</h4>
+		</div>
+		<div class="graphicContainer">
+			<img src="img/dodo.svg" width="48px"/>
+			<h4>Dodo</h4>
+		</div>
+		<div class="graphicContainer">
+			<img src="img/mammoth.svg" width="120px"/>
+			<h4>Mammoth</h4>
+		</div>
+		<div class="graphicContainer">
+			<img src="img/saberToothCat.svg" width="84px"/>
+			<h4>Saber Tooth Cat</h4>
+		</div>
+	</section>
+</main>
+</body>
+</html>
