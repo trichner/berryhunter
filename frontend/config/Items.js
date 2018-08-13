@@ -147,6 +147,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			graphic: {
 				file: 'swordTitanium',
 				size: 55,
+				offsetX: 23
 			},
 			definition: 'swords/titanium-sword',
 			type: ItemType.EQUIPMENT,
