@@ -93,9 +93,11 @@ func (m *Mob) Update(dt float32) bool {
 			if p.IsGod() {
 				continue
 			}
-			h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
-			p.VitalSigns().Health = h
-			p.StatusEffects().Add(model.StatusEffectDamagedAmbient)
+			if m.definition.Factors.DamageFraction != 0 {
+				h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
+				p.VitalSigns().Health = h
+				p.StatusEffects().Add(model.StatusEffectDamagedAmbient)
+			}
 		}
 	}
 

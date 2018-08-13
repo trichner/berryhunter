@@ -79,7 +79,7 @@ func StatusEffectsMarshal(builder *flatbuffers.Builder, e model.StatusEntity) fl
 	}
 
 	builder.StartVector(1, len(se), 0)
-	for k := range se {
+	for _, k := range se {
 		builder.PrependUint16(uint16(k))
 	}
 	return builder.EndVector(len(se))
