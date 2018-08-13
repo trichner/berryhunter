@@ -8,25 +8,16 @@ define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ea
 
 			this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
 			this.colorMatrix.flood(red, green, blue, 1);
+			this.colorMatrix.alpha = minAlpha;
+			this.colorMatrix.enabled = false;
 
 			this.maxAlpha = maxAlpha;
 
-			let filterIndex;
 			if (_.isArray(gameObjectShape.filters)) {
-				let filters = gameObjectShape.filters;
-				filterIndex = filters.push(this.colorMatrix) - 1;
-				gameObjectShape.filters = filters;
+				gameObjectShape.filters.push(this.colorMatrix);
 			} else {
 				gameObjectShape.filters = [this.colorMatrix];
-				filterIndex = 0;
 			}
-
-			// Bug in pixi.js? Our filter reference gets messed up the first time it is rendered
-			Game.renderer.once('prerender', function () {
-				this.colorMatrix = gameObjectShape.filters[filterIndex];
-				this.colorMatrix.alpha = minAlpha;
-				this.colorMatrix.enabled = false;
-			}, this);
 		}
 
 		static forDamagedOverTime(gameObjectShape) {
@@ -51,7 +42,7 @@ define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ea
 			}
 
 			this.showing = true;
-			let animation = new Ease.list({noTicker: false});
+			let animation = new Ease.list({noTicker: true});
 			const ticker = PIXI.ticker.shared;
 			let updateFn = function () {
 				animation.update(ticker.deltaTime * 16.66);
@@ -70,12 +61,15 @@ define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ea
 
 			this.colorMatrix.enabled = true;
 
+			let isReverse = false;
 			to.on('loop', function () {
+				isReverse = !isReverse;
 				// The effect was scheduled to be removed - remove the update function from the global ticker
 				// the rest will be cleaned up by the GC
-				if (!this.showing) {
+				if (!this.showing && !isReverse) {
 					ticker.remove(updateFn);
 					this.colorMatrix.enabled = false;
+					this.colorMatrix.alpha = 0.2;
 				}
 			}, this);
 		}
@@ -86,32 +80,11 @@ define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ea
 	}
 
 	StatusEffect.Damaged = 'Damaged';
-	StatusEffect.DamagedOverTime = 'DamagedOverTime';
+	StatusEffect.DamagedAmbient = 'DamagedAmbient';
 	StatusEffect.Yielded = 'Yielded';
 	StatusEffect.Freezing = 'Freezing';
 	StatusEffect.Starving = 'Starving';
 	StatusEffect.Regenerating = 'Regenerating';
-
-
-	function statusEffectFilter() {
-		let colorMatrix = new PIXI.filters.ColorMatrixFilter();
-		let opacity = 0;
-		// #BF153A
-		colorMatrix.flood(
-			191, 21, 58,
-			1
-		);
-		colorMatrix.alpha = opacity;
-
-		// let animation = new Ease.list();
-		// let to = animation.to(colorMatrix, {alpha: 0.2}, 500, {
-		// 	repeat: true,
-		// 	reverse: true,
-		// 	ease: 'easeInOutCubic'
-		// });
-
-		return [colorMatrix];
-	}
 
 	window.hit = function () {
 		let colorMatrix = Game.player.character.actualShape.filters[0];
@@ -139,11 +112,6 @@ define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ea
 			statusEffect.show();
 		}
 	};
-
-	// FIXME THIS IS THE FUCKING "BUG" DESCRIBED ABOVE AHHHHHHHHHHH
-	Events.on('game.playing', function (Game) {
-		Game.player.character.actualShape.filters = statusEffectFilter();
-	});
 
 	return StatusEffect;
 });

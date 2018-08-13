@@ -25,6 +25,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'Gr
 				const args = Array.prototype.splice.call(arguments, 5);
 				this.shape = this.initShape.apply(this, [x, y, size, rotation].concat(args));
 				this.statusEffects = this.createStatusEffects();
+				this.activeStatusEffects = null;
 				this.show();
 			}
 
@@ -37,7 +38,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'Gr
 				}
 			}
 
-			createStatusEffects(){
+			createStatusEffects() {
 				// Default NOP
 				return {};
 			}
@@ -143,6 +144,7 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'Gr
 				this.layer.removeChild(this.shape);
 			}
 
+			// TODO Remove
 			playHitAnimation() {
 				let now = performance.now();
 				if (this.hitAnimation === null) {
@@ -161,9 +163,44 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'Gr
 				}
 			}
 
+			// TODO Remove
 			removeHitAnimation() {
 				this.getRotationShape()._renderer.elem.removeAttribute('filter');
 				this.hitAnimation = null;
+			}
+
+			updateStatusEffects(newStatusEffects) {
+				if (!_.isArray(newStatusEffects) || newStatusEffects.length === 0) {
+					// Just reset active status effects
+					if (this.activeStatusEffects !== null) {
+						Object.values(this.activeStatusEffects).forEach(function (statusEffect) {
+							statusEffect.hide();
+						});
+						this.activeStatusEffects = null;
+					}
+				} else {
+					if (this.activeStatusEffects !== null) {
+						for (let statusEffect in this.activeStatusEffects) {
+							let indexOf = newStatusEffects.indexOf(statusEffect);
+							if (indexOf !== -1) {
+								this.activeStatusEffects[statusEffect].hide();
+								delete this.activeStatusEffects[statusEffect];
+							}
+							newStatusEffects.splice(indexOf, 1);
+						}
+					}
+
+					newStatusEffects.forEach(function (statusEffect) {
+						if (this.statusEffects.hasOwnProperty(statusEffect)) {
+							let statusEffectObject = this.statusEffects[statusEffect];
+							statusEffectObject.show();
+							if (this.activeStatusEffects === null) {
+								this.activeStatusEffects = {};
+							}
+							this.activeStatusEffects[statusEffect] = statusEffectObject;
+						}
+					}, this);
+				}
 			}
 		}
 

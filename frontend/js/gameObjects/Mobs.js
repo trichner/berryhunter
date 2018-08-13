@@ -30,12 +30,11 @@ define(['Game', 'GameObject', 'Preloading', 'Utils', 'GraphicsConfig', './Status
 			GameObject.prototype.setRotation.call(this, rotation + Math.PI / 2);
 		}
 
-		// TODO
-		// createStatusEffects(){
-		// 	return {
-		// 		DamagedOverTime: StatusEffect.forDamagedOverTime(this.shape)
-		// 	}
-		// }
+		createStatusEffects() {
+			return {
+				DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape)
+			}
+		}
 	}
 
 	class Dodo extends Mob {

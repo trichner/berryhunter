@@ -76,6 +76,8 @@ define([
 						break;
 				}
 			}
+
+			this.character.updateStatusEffects(entity.statusEffects);
 		}
 
 		remove() {

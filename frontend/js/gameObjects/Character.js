@@ -103,7 +103,7 @@ define([
 			Game.renderer.on('prerender', this.update, this);
 
 			// TODO remove
-			this.statusEffect = new StatusEffect(this.actualShape, 191, 21, 58, 0.2, 0.8);
+			this.statusEffect = StatusEffect.forDamagedOverTime(this.actualShape);
 		}
 
 		initShape(x, y, size, rotation) {
@@ -117,18 +117,17 @@ define([
 			return group;
 		}
 
-		// TODO
-		// createStatusEffects() {
-		// 	if (this.isPlayerCharacter) {
-		// 		super.createStatusEffects();
-		// 	}
-		//
-		// 	return {
-		// 		DamagedOverTime: StatusEffect.forDamagedOverTime(this.actualShape),
-		// 		Freezing: StatusEffect.forFreezing(this.actualShape),
-		// 		Starving: StatusEffect.forStarving(this.actualShape)
-		// 	}
-		// }
+		createStatusEffects() {
+			if (this.isPlayerCharacter) {
+				super.createStatusEffects();
+			}
+
+			return {
+				DamagedAmbient: StatusEffect.forDamagedOverTime(this.actualShape),
+				Freezing: StatusEffect.forFreezing(this.actualShape),
+				Starving: StatusEffect.forStarving(this.actualShape)
+			}
+		}
 
 		getRotationShape() {
 			return this.actualShape;
