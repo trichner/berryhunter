@@ -104,7 +104,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			definition: 'tools/titanium-tool',
 			type: ItemType.EQUIPMENT,
 			equipmentSlot: Equipment.Slots.HAND
-		}
+		},
 
 		/***********************************
 		 * WEAPONS
@@ -146,8 +146,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			icon: {file: 'swordTitaniumIcon'},
 			graphic: {
 				file: 'swordTitanium',
-				size: 40,
-				offsetX: 18
+				size: 55,
 			},
 			definition: 'swords/titanium-sword',
 			type: ItemType.EQUIPMENT,
