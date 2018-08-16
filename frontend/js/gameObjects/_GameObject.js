@@ -165,7 +165,6 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'GraphicsConfig',
 							this.activeStatusEffect.show();
 						}
 					} else {
-						console.log(newStatusEffects.map(e => e.id), ' not found in ' + this.constructor.name);
 						if (this.activeStatusEffect !== null) {
 							this.activeStatusEffect.hide();
 							this.activeStatusEffect = null;

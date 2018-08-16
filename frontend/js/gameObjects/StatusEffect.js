@@ -85,10 +85,6 @@ define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ea
 					this.forceHide();
 				}
 			}, this);
-
-			to.on('each', function () {
-				console.log('Animation step', this.colorMatrix.alpha.toFixed(2));
-			}, this);
 		}
 
 		hide() {
@@ -113,33 +109,6 @@ define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ea
 		return statusEffects.sort(function (a, b) {
 			return a.priority - b.priority;
 		});
-	};
-
-	window.hit = function () {
-		let colorMatrix = Game.player.character.actualShape.filters[0];
-
-		let animation = new Ease.list();
-		let to = animation.to(colorMatrix, {alpha: 0.8}, 0.01, {
-			ease: 'easeOutCubic'
-		});
-		to.on('done', function () {
-			animation = new Ease.list();
-			let to2 = animation.to(colorMatrix, {alpha: 0}, 300, {
-				ease: 'easeInCubic'
-			});
-			to2.on('done', function () {
-				console.log('both done');
-			});
-		});
-	};
-
-	window.toggleHit = function () {
-		let statusEffect = Game.player.character.statusEffect;
-		if (statusEffect.showing) {
-			statusEffect.hide();
-		} else {
-			statusEffect.show();
-		}
 	};
 
 	return StatusEffect;

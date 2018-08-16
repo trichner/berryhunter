@@ -42,25 +42,12 @@ define(['Preloading', 'Game', 'Events', 'Utils', 'userInterface/UserInterface', 
 			}
 
 			setValue(valueIndex, value) {
-				switch (valueIndex) {
-					case 'health':
-						// Hand should deal 1% damage. Anything below is damage over time.
-
-						/*
-						 * FIXME: will be later replaced with a system to use hits reported
-						 * FIXME by the backend (that are also used for hit animations)
-						 */
-						if ((this.health - value) > (0.009 * VitalSigns.MAXIMUM_VALUES.health)) {
-							this.onDamageTaken();
-						}
-						break;
-				}
 				let previousValue = this[valueIndex];
 				this[valueIndex] = value;
 				let relativeValue = value / VitalSigns.MAXIMUM_VALUES[valueIndex];
 
 				// If the vital sign increased ...
-				if (value > previousValue){
+				if (value > previousValue) {
 					// discard all recorded values to make sure the previous values will be correctly shown for the next ticks
 					this.previousValues.forEach(function (previousValueObject) {
 						// Use the higher value, to ensure that a visible previous value is not discarded
@@ -84,9 +71,13 @@ define(['Preloading', 'Game', 'Events', 'Utils', 'userInterface/UserInterface', 
 				});
 			}
 
-			onDamageTaken() {
+			onDamageTaken(skipFadeIn) {
 				// 300ms shows the damage indicator
-				this.damageIndicatorDuration = 500;
+				if (skipFadeIn) {
+					this.damageIndicatorDuration = 420;
+				} else {
+					this.damageIndicatorDuration = 500;
+				}
 				this.showIndicator('damage', 0);
 			}
 

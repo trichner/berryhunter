@@ -123,7 +123,7 @@ define([
 			}
 
 			return {
-				// Damaged: StatusEffect.forDamaged(this.actualShape),
+				Damaged: StatusEffect.forDamaged(this.actualShape),
 				DamagedAmbient: StatusEffect.forDamagedOverTime(this.actualShape),
 				Freezing: StatusEffect.forFreezing(this.actualShape)
 			}
@@ -236,7 +236,6 @@ define([
 
 		progressHitAnimation(animationFrame) {
 			this.actionAnimationFrame = animationFrame;
-			// console.log(animationFrame);
 		}
 
 		animate(type, animationFrame) {
