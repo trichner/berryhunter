@@ -39,14 +39,15 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 
 	base := model.NewBaseEntity(mobBody, entityType)
 	m := &Mob{
-		BaseEntity: base,
-		rand:       rand.New(rand.NewSource(int64(base.Basic().ID()))),
-		heading:    phy.Vec2f{1, 0},
-		health:     vitals.Max,
-		definition: d,
-		damageAura: damageAura,
-		wanderAcceleration:phy.Vec2f{0.1, 0},
-		velocity:   0.04,
+		BaseEntity:         base,
+		rand:               rand.New(rand.NewSource(int64(base.Basic().ID()))),
+		heading:            phy.Vec2f{1, 0},
+		health:             vitals.Max,
+		definition:         d,
+		damageAura:         damageAura,
+		wanderAcceleration: phy.Vec2f{0.1, 0},
+		velocity:           0.04,
+		statusEffects:      model.NewStatusEffects(),
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -66,6 +67,12 @@ type Mob struct {
 	// wandering
 	wanderAcceleration phy.Vec2f
 	velocity           float32
+
+	statusEffects model.StatusEffects
+}
+
+func (m *Mob) StatusEffects() *model.StatusEffects {
+	return &m.statusEffects
 }
 
 func (m *Mob) Bodies() model.Bodies {
@@ -86,8 +93,11 @@ func (m *Mob) Update(dt float32) bool {
 			if p.IsGod() {
 				continue
 			}
-			h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
-			p.VitalSigns().Health = h
+			if m.definition.Factors.DamageFraction != 0 {
+				h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
+				p.VitalSigns().Health = h
+				p.StatusEffects().Add(model.StatusEffectDamagedAmbient)
+			}
 		}
 	}
 
@@ -129,7 +139,6 @@ func wander(heading, acceleration phy.Vec2f, r *rand.Rand) (newHeading, newAccel
 	return h.Normalize(), acceleration
 }
 
-
 func (m *Mob) SetPosition(p phy.Vec2f) {
 	m.Body.SetPosition(p)
 	m.damageAura.SetPosition(p)
@@ -154,12 +163,15 @@ func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	}
 
 	dmgFraction := item.Factors.Damage * vulnerability
-	m.health = m.health.SubFraction(dmgFraction)
+	if dmgFraction > 0 {
+		m.health = m.health.SubFraction(dmgFraction)
+		m.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
 
-	// is it dead?
-	if m.health <= 0 {
-		for _, i := range m.definition.Drops {
-			p.Inventory().AddItem(i)
+		// is it dead?
+		if m.health <= 0 {
+			for _, i := range m.definition.Drops {
+				p.Inventory().AddItem(i)
+			}
 		}
 	}
 }

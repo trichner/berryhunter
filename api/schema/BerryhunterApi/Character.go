@@ -50,8 +50,25 @@ func (rcv *Character) MutateEntityType(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(6, n)
 }
 
-func (rcv *Character) Pos(obj *Vec2f) *Vec2f {
+func (rcv *Character) StatusEffects(j int) uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetUint16(a + flatbuffers.UOffsetT(j*2))
+	}
+	return 0
+}
+
+func (rcv *Character) StatusEffectsLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *Character) Pos(obj *Vec2f) *Vec2f {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -64,7 +81,7 @@ func (rcv *Character) Pos(obj *Vec2f) *Vec2f {
 }
 
 func (rcv *Character) Radius() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
@@ -72,11 +89,11 @@ func (rcv *Character) Radius() uint16 {
 }
 
 func (rcv *Character) MutateRadius(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(10, n)
+	return rcv._tab.MutateUint16Slot(12, n)
 }
 
 func (rcv *Character) Rotation() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
 	}
@@ -84,11 +101,11 @@ func (rcv *Character) Rotation() float32 {
 }
 
 func (rcv *Character) MutateRotation(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(12, n)
+	return rcv._tab.MutateFloat32Slot(14, n)
 }
 
 func (rcv *Character) IsHit() byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
@@ -96,11 +113,11 @@ func (rcv *Character) IsHit() byte {
 }
 
 func (rcv *Character) MutateIsHit(n byte) bool {
-	return rcv._tab.MutateByteSlot(14, n)
+	return rcv._tab.MutateByteSlot(16, n)
 }
 
 func (rcv *Character) CurrentAction(obj *OngoingAction) *OngoingAction {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -113,7 +130,7 @@ func (rcv *Character) CurrentAction(obj *OngoingAction) *OngoingAction {
 }
 
 func (rcv *Character) Name() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -121,7 +138,7 @@ func (rcv *Character) Name() []byte {
 }
 
 func (rcv *Character) Equipment(j int) byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
@@ -130,7 +147,7 @@ func (rcv *Character) Equipment(j int) byte {
 }
 
 func (rcv *Character) EquipmentLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -138,7 +155,7 @@ func (rcv *Character) EquipmentLength() int {
 }
 
 func (rcv *Character) EquipmentBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -146,18 +163,6 @@ func (rcv *Character) EquipmentBytes() []byte {
 }
 
 func (rcv *Character) Health() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.GetUint32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *Character) MutateHealth(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(22, n)
-}
-
-func (rcv *Character) Satiety() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
@@ -165,11 +170,11 @@ func (rcv *Character) Satiety() uint32 {
 	return 0
 }
 
-func (rcv *Character) MutateSatiety(n uint32) bool {
+func (rcv *Character) MutateHealth(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(24, n)
 }
 
-func (rcv *Character) BodyTemperature() uint32 {
+func (rcv *Character) Satiety() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
@@ -177,12 +182,24 @@ func (rcv *Character) BodyTemperature() uint32 {
 	return 0
 }
 
-func (rcv *Character) MutateBodyTemperature(n uint32) bool {
+func (rcv *Character) MutateSatiety(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(26, n)
 }
 
-func (rcv *Character) Aabb(obj *AABB) *AABB {
+func (rcv *Character) BodyTemperature() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Character) MutateBodyTemperature(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(28, n)
+}
+
+func (rcv *Character) Aabb(obj *AABB) *AABB {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		x := o + rcv._tab.Pos
 		if obj == nil {
@@ -195,7 +212,7 @@ func (rcv *Character) Aabb(obj *AABB) *AABB {
 }
 
 func CharacterStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(14)
 }
 func CharacterAddId(builder *flatbuffers.Builder, id uint64) {
 	builder.PrependUint64Slot(0, id, 0)
@@ -203,41 +220,47 @@ func CharacterAddId(builder *flatbuffers.Builder, id uint64) {
 func CharacterAddEntityType(builder *flatbuffers.Builder, entityType uint16) {
 	builder.PrependUint16Slot(1, entityType, 0)
 }
+func CharacterAddStatusEffects(builder *flatbuffers.Builder, statusEffects flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(statusEffects), 0)
+}
+func CharacterStartStatusEffectsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(2, numElems, 2)
+}
 func CharacterAddPos(builder *flatbuffers.Builder, pos flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(2, flatbuffers.UOffsetT(pos), 0)
+	builder.PrependStructSlot(3, flatbuffers.UOffsetT(pos), 0)
 }
 func CharacterAddRadius(builder *flatbuffers.Builder, radius uint16) {
-	builder.PrependUint16Slot(3, radius, 0)
+	builder.PrependUint16Slot(4, radius, 0)
 }
 func CharacterAddRotation(builder *flatbuffers.Builder, rotation float32) {
-	builder.PrependFloat32Slot(4, rotation, 0.0)
+	builder.PrependFloat32Slot(5, rotation, 0.0)
 }
 func CharacterAddIsHit(builder *flatbuffers.Builder, isHit byte) {
-	builder.PrependByteSlot(5, isHit, 0)
+	builder.PrependByteSlot(6, isHit, 0)
 }
 func CharacterAddCurrentAction(builder *flatbuffers.Builder, currentAction flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(6, flatbuffers.UOffsetT(currentAction), 0)
+	builder.PrependStructSlot(7, flatbuffers.UOffsetT(currentAction), 0)
 }
 func CharacterAddName(builder *flatbuffers.Builder, name flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(name), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(name), 0)
 }
 func CharacterAddEquipment(builder *flatbuffers.Builder, equipment flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(equipment), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(equipment), 0)
 }
 func CharacterStartEquipmentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
 func CharacterAddHealth(builder *flatbuffers.Builder, health uint32) {
-	builder.PrependUint32Slot(9, health, 0)
+	builder.PrependUint32Slot(10, health, 0)
 }
 func CharacterAddSatiety(builder *flatbuffers.Builder, satiety uint32) {
-	builder.PrependUint32Slot(10, satiety, 0)
+	builder.PrependUint32Slot(11, satiety, 0)
 }
 func CharacterAddBodyTemperature(builder *flatbuffers.Builder, bodyTemperature uint32) {
-	builder.PrependUint32Slot(11, bodyTemperature, 0)
+	builder.PrependUint32Slot(12, bodyTemperature, 0)
 }
 func CharacterAddAabb(builder *flatbuffers.Builder, aabb flatbuffers.UOffsetT) {
-	builder.PrependStructSlot(12, flatbuffers.UOffsetT(aabb), 0)
+	builder.PrependStructSlot(13, flatbuffers.UOffsetT(aabb), 0)
 }
 func CharacterEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

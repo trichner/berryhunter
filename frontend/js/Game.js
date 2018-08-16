@@ -88,7 +88,7 @@ define(['Events'], function (Events) {
 				Game.player = new Player(id, x, y, name);
 				Game.player.init();
 				Game.state = States.PLAYING;
-				Events.trigger('game.playing');
+				Events.trigger('game.playing', Game);
 			};
 
 			Game.removePlayer = function () {
@@ -101,7 +101,7 @@ define(['Events'], function (Events) {
 					Game.map.clear();
 				}
 				Game.state = States.RENDERING;
-				Events.trigger('game.death');
+				Events.trigger('game.death', Game);
 			};
 
 			Game.createSpectator = function (x, y) {

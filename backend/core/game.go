@@ -16,6 +16,7 @@ import (
 	"github.com/trichner/berryhunter/backend/sys/chat"
 	"github.com/trichner/berryhunter/backend/sys/cmd"
 	"github.com/trichner/berryhunter/backend/sys/heater"
+	"github.com/trichner/berryhunter/backend/sys/statuseffects"
 	"log"
 	"net/http"
 	"sync/atomic"
@@ -99,8 +100,17 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	f := heater.New()
 	g.AddSystem(f)
 
+	preu := sys.NewPreUpdateSystem()
+	g.AddSystem(preu)
+
 	pl := sys.NewUpdateSystem()
 	g.AddSystem(pl)
+
+	postu := sys.NewPostUpdateSystem()
+	g.AddSystem(postu)
+
+	se := statuseffects.NewStatusEffectsSystem()
+	g.AddSystem(se)
 
 	s := sys.NewConnectionStateSystem(g)
 	g.AddSystem(s)
@@ -213,17 +223,17 @@ func (g *game) addSpectator(e model.Spectator) {
 	for _, system := range g.Systems() {
 
 		// Use a type-switch to figure out which System is which
-		switch sys := system.(type) {
+		switch s := system.(type) {
 
 		// Create a case for each System you want to use
 		case *sys.PhysicsSystem:
-			sys.AddEntity(e)
+			s.AddEntity(e)
 		case *NetSystem:
-			sys.AddSpectator(e)
+			s.AddSpectator(e)
 		case *sys.ConnectionStateSystem:
-			sys.AddSpectator(e)
+			s.AddSpectator(e)
 		case *sys.ScoreboardSystem:
-			sys.AddSpectator(e)
+			s.AddSpectator(e)
 		}
 	}
 }
@@ -234,15 +244,17 @@ func (g *game) addMobEntity(e model.MobEntity) {
 	for _, system := range g.Systems() {
 
 		// Use a type-switch to figure out which System is which
-		switch sys := system.(type) {
+		switch s := system.(type) {
 
 		// Create a case for each System you want to use
 		case *sys.PhysicsSystem:
-			sys.AddEntity(e)
+			s.AddEntity(e)
+		case *statuseffects.StatusEffectsSystem:
+			s.Add(e, e)
 		case *NetSystem:
-			sys.AddEntity(e)
+			s.AddEntity(e)
 		case *sys.MobSystem:
-			sys.AddEntity(e)
+			s.AddEntity(e)
 		}
 	}
 }
@@ -252,20 +264,22 @@ func (g *game) addPlaceableEntity(p model.PlaceableEntity) {
 	for _, system := range g.Systems() {
 
 		// Use a type-switch to figure out which System is which
-		switch sys := system.(type) {
+		switch s := system.(type) {
 
 		// Create a case for each System you want to use
 		case *sys.PhysicsSystem:
-			sys.AddEntity(p)
+			s.AddEntity(p)
 		case *NetSystem:
-			sys.AddEntity(p)
+			s.AddEntity(p)
+		case *statuseffects.StatusEffectsSystem:
+			s.Add(p, p)
 		case *sys.UpdateSystem:
-			sys.AddUpdateable(p)
+			s.AddUpdateable(p)
 		case *sys.DecaySystem:
-			sys.AddDecayable(p)
+			s.AddDecayable(p)
 		case *heater.HeaterSystem:
 			if p.HeatRadiation() != nil {
-				sys.AddHeater(p)
+				s.AddHeater(p)
 			}
 		}
 	}
@@ -292,15 +306,17 @@ func (g *game) addResourceEntity(e model.ResourceEntity) {
 	for _, system := range g.Systems() {
 
 		// Use a type-switch to figure out which System is which
-		switch sys := system.(type) {
+		switch s := system.(type) {
 
 		// Create a case for each System you want to use
 		case *sys.PhysicsSystem:
-			sys.AddStaticBody(e.Basic(), e.Bodies()[0])
+			s.AddStaticBody(e.Basic(), e.Bodies()[0])
+		case *statuseffects.StatusEffectsSystem:
+			s.Add(e, e)
 		case *NetSystem:
-			sys.AddEntity(e)
+			s.AddEntity(e)
 		case *sys.UpdateSystem:
-			sys.AddUpdateable(e)
+			s.AddUpdateable(e)
 		}
 	}
 }
@@ -310,27 +326,29 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 	for _, system := range g.Systems() {
 
 		// Use a type-switch to figure out which System is which
-		switch sys := system.(type) {
+		switch s := system.(type) {
 		case *sys.PhysicsSystem:
-			sys.AddEntity(p)
+			s.AddEntity(p)
 		case *NetSystem:
-			sys.AddPlayer(p)
+			s.AddPlayer(p)
 		case *PlayerInputSystem:
-			sys.AddPlayer(p)
+			s.AddPlayer(p)
 		case *sys.UpdateSystem:
-			sys.AddUpdateable(p)
+			s.AddUpdateable(p)
+		case *statuseffects.StatusEffectsSystem:
+			s.Add(p, p)
 		case *cmd.CommandSystem:
-			sys.AddPlayer(p)
+			s.AddPlayer(p)
 		case *chat.ChatSystem:
-			sys.AddPlayer(p)
+			s.AddPlayer(p)
 		case *sys.ConnectionStateSystem:
-			sys.AddPlayer(p)
+			s.AddPlayer(p)
 		case *heater.HeaterSystem:
-			sys.AddPlayer(p)
+			s.AddPlayer(p)
 		case *sys.DayCycleSystem:
-			sys.AddPlayer(p)
+			s.AddPlayer(p)
 		case *sys.ScoreboardSystem:
-			sys.AddPlayer(p)
+			s.AddPlayer(p)
 		}
 	}
 }

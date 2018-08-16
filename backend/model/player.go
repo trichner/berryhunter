@@ -27,6 +27,8 @@ type Players []PlayerEntity
 
 type PlayerEntity interface {
 	Entity
+	StatusEntity
+
 	Name() string
 	Equipment() *items.Equipment
 	VitalSigns() *PlayerVitalSigns

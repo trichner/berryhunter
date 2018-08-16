@@ -26,6 +26,7 @@ func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 		ownedEntitites: model.NewBasicEntities(),
 		config: &g.Config().PlayerConfig,
 		stats: model.Stats{BirthTick: g.Ticks()},
+		statusEffects: model.NewStatusEffects(),
 	}
 
 	// setup body
@@ -71,6 +72,8 @@ type player struct {
 	name string
 
 	model.BaseEntity
+	statusEffects    model.StatusEffects
+	newStatusEffects model.StatusEffects
 
 	angle  float32
 	client model.Client
@@ -94,6 +97,10 @@ type player struct {
 	stats model.Stats
 }
 
+func (p *player) StatusEffects() *model.StatusEffects {
+	return &p.statusEffects
+}
+
 func (p *player) AddAction(a model.PlayerAction) {
 	if p.ongoingAction != nil && p.ongoingAction.TicksRemaining() > 0 {
 
@@ -113,7 +120,10 @@ func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	h := p.PlayerVitalSigns.Health
 
 	dmgFraction := item.Factors.Damage // * vulnerability
-	p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)
+	if dmgFraction > 0 {
+		p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)
+		p.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
+	}
 }
 
 func (p *player) Name() string {

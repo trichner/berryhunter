@@ -13,7 +13,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -o berryhunterd .
 # ---- actual image
 FROM alpine:latest
 
-ARG CONF=backend/conf.default.json
+ARG CONF=backend/conf.docker.json
 
 WORKDIR /root/
 

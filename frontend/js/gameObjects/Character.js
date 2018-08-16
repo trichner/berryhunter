@@ -4,6 +4,7 @@ define([
 	'Game',
 	'GameObject',
 	'PIXI',
+	'pixi-ease',
 	'NamedGroup',
 	'Constants',
 	'Utils',
@@ -14,14 +15,18 @@ define([
 	'Vector',
 	'Text',
 	'GraphicsConfig',
-	'Events'
-], function (Game, GameObject, PIXI, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig, Events) {
+	'Events',
+	'./AnimateAction',
+	'./StatusEffect'
+], function (Game, GameObject, PIXI, Ease, NamedGroup, Constants, Utils, MapEditor, Equipment, InjectedSVG, Preloading, Vector, Text, GraphicsConfig, Events, animateAction, StatusEffect) {
 	class Character extends GameObject {
 		constructor(id, x, y, name, isPlayerCharacter) {
 			super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2);
 			this.id = id;
 			this.name = name;
 			this.isPlayerCharacter = isPlayerCharacter;
+
+			if (isPlayerCharacter) window.character = this;
 
 			this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
 			this.isMoveable = true;
@@ -96,6 +101,9 @@ define([
 			}, this);
 
 			Game.renderer.on('prerender', this.update, this);
+
+			// TODO remove
+			this.statusEffect = StatusEffect.forDamagedOverTime(this.actualShape);
 		}
 
 		initShape(x, y, size, rotation) {
@@ -107,6 +115,18 @@ define([
 			group.addChild(this.actualShape);
 
 			return group;
+		}
+
+		createStatusEffects() {
+			if (this.isPlayerCharacter) {
+				super.createStatusEffects();
+			}
+
+			return {
+				Damaged: StatusEffect.forDamaged(this.actualShape),
+				DamagedAmbient: StatusEffect.forDamagedOverTime(this.actualShape),
+				Freezing: StatusEffect.forFreezing(this.actualShape)
+			}
 		}
 
 		getRotationShape() {
@@ -216,6 +236,10 @@ define([
 
 		progressHitAnimation(animationFrame) {
 			this.actionAnimationFrame = animationFrame;
+		}
+
+		animate(type, animationFrame) {
+			animateAction.call(this, this.rightHand, type, animationFrame);
 		}
 
 		update() {

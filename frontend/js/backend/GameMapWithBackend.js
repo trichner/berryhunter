@@ -179,8 +179,8 @@ define([
 				}
 			}
 
-			if (entity.isHit) {
-				gameObject.playHitAnimation();
+			if (_.isArray(entity.statusEffects)) {
+				gameObject.updateStatusEffects(entity.statusEffects);
 			}
 		};
 

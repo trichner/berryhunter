@@ -3,13 +3,14 @@
 define([
 	'Game',
 	'gameObjects/Character',
+	'gameObjects/StatusEffect',
 	'Controls',
 	'Camera',
 	'items/Inventory',
 	'VitalSigns',
 	'Utils',
 	'Constants'
-], function (Game, Character, Controls, Camera, Inventory, VitalSigns, Utils, Constants) {
+], function (Game, Character, StatusEffect, Controls, Camera, Inventory, VitalSigns, Utils, Constants) {
 	class Player {
 		constructor(id, x, y, name) {
 			/**
@@ -54,10 +55,18 @@ define([
 			if (Utils.isDefined(entity.position)) {
 				this.character.setPosition(entity.position.x, entity.position.y);
 			}
-			let newVitalSigns = {};
-			['health', 'satiety', 'bodyHeat'].forEach((vitalSign) => {
-				newVitalSigns[vitalSign] = entity[vitalSign];
-			});
+
+			if (entity.statusEffects.indexOf(StatusEffect.Damaged) !== -1) {
+				this.vitalSigns.onDamageTaken();
+			} else if (entity.statusEffects.indexOf(StatusEffect.DamagedAmbient) !== -1) {
+				this.vitalSigns.onDamageTaken(true);
+			}
+
+			let newVitalSigns = {
+				health: entity.health,
+				satiety: entity.satiety,
+				bodyHeat: entity.bodyHeat
+			};
 			this.vitalSigns.updateFromBackend(newVitalSigns);
 
 			/**

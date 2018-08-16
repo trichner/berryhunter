@@ -20,6 +20,15 @@ enum EntityType : ushort {
   Flower
 }
 
+enum StatusEffect : ushort {
+  Damaged = 0,
+  Yielded,
+  Freezing,
+  Starving,
+  Regenerating,
+  DamagedAmbient
+}
+
 struct AABB {
   lower:Vec2f;
   upper:Vec2f;
@@ -44,6 +53,7 @@ table Entity { e:AnyEntity; }
 table Resource {
   id:ulong;
   entity_type:EntityType;
+  status_effects:[StatusEffect];
 
   pos:Vec2f;
   radius:ushort;
@@ -57,6 +67,7 @@ table Resource {
 table Placeable {
   id:ulong;
   entity_type:EntityType;
+  status_effects:[StatusEffect];
 
   pos:Vec2f;
   radius:ushort;
@@ -68,6 +79,7 @@ table Placeable {
 table Mob {
   id:ulong;
   entity_type:EntityType;
+  status_effects:[StatusEffect];
 
   pos:Vec2f;
   radius:ushort;
@@ -81,6 +93,8 @@ table Mob {
 table Character {
   id:ulong;
   entity_type:EntityType;
+  status_effects:[StatusEffect];
+
   pos:Vec2f;
   radius:ushort;
 

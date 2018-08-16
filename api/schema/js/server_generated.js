@@ -22,9 +22,21 @@ BerryhunterApi.EntityType = {
   Dodo: 9,
   SaberToothCat: 10,
   Mammoth: 11,
-	Placeable: 12,
-	Titanium: 13,
-	Flower: 14
+  Placeable: 12,
+  Titanium: 13,
+  Flower: 14
+};
+
+/**
+ * @enum
+ */
+BerryhunterApi.StatusEffect = {
+  Damaged: 0,
+  Yielded: 1,
+  Freezing: 2,
+  Starving: 3,
+  Regenerating: 4,
+  DamagedAmbient: 5
 };
 
 /**
@@ -88,7 +100,7 @@ BerryhunterApi.AABB.prototype.__init = function(i, bb) {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f}
+ * @returns {BerryhunterApi.Vec2f|null}
  */
 BerryhunterApi.AABB.prototype.lower = function(obj) {
   return (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos, this.bb);
@@ -96,7 +108,7 @@ BerryhunterApi.AABB.prototype.lower = function(obj) {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f}
+ * @returns {BerryhunterApi.Vec2f|null}
  */
 BerryhunterApi.AABB.prototype.upper = function(obj) {
   return (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + 8, this.bb);
@@ -383,11 +395,36 @@ BerryhunterApi.Resource.prototype.entityType = function() {
 };
 
 /**
+ * @param {number} index
+ * @returns {BerryhunterApi.StatusEffect}
+ */
+BerryhunterApi.Resource.prototype.statusEffects = function(index) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? /** @type {BerryhunterApi.StatusEffect} */ (this.bb.readUint16(this.bb.__vector(this.bb_pos + offset) + index * 2)) : /** @type {BerryhunterApi.StatusEffect} */ (0);
+};
+
+/**
+ * @returns {number}
+ */
+BerryhunterApi.Resource.prototype.statusEffectsLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {Uint16Array}
+ */
+BerryhunterApi.Resource.prototype.statusEffectsArray = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? new Uint16Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f}
+ * @returns {BerryhunterApi.Vec2f|null}
  */
 BerryhunterApi.Resource.prototype.pos = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -395,7 +432,7 @@ BerryhunterApi.Resource.prototype.pos = function(obj) {
  * @returns {number}
  */
 BerryhunterApi.Resource.prototype.radius = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
@@ -403,7 +440,7 @@ BerryhunterApi.Resource.prototype.radius = function() {
  * @returns {number}
  */
 BerryhunterApi.Resource.prototype.capacity = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
@@ -411,16 +448,16 @@ BerryhunterApi.Resource.prototype.capacity = function() {
  * @returns {number}
  */
 BerryhunterApi.Resource.prototype.stock = function() {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
 /**
  * @param {BerryhunterApi.AABB=} obj
- * @returns {BerryhunterApi.AABB}
+ * @returns {BerryhunterApi.AABB|null}
  */
 BerryhunterApi.Resource.prototype.aabb = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -428,7 +465,7 @@ BerryhunterApi.Resource.prototype.aabb = function(obj) {
  * @param {flatbuffers.Builder} builder
  */
 BerryhunterApi.Resource.startResource = function(builder) {
-  builder.startObject(7);
+  builder.startObject(8);
 };
 
 /**
@@ -449,10 +486,39 @@ BerryhunterApi.Resource.addEntityType = function(builder, entityType) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} statusEffectsOffset
+ */
+BerryhunterApi.Resource.addStatusEffects = function(builder, statusEffectsOffset) {
+  builder.addFieldOffset(2, statusEffectsOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<BerryhunterApi.StatusEffect>} data
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Resource.createStatusEffectsVector = function(builder, data) {
+  builder.startVector(2, data.length, 2);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt16(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+BerryhunterApi.Resource.startStatusEffectsVector = function(builder, numElems) {
+  builder.startVector(2, numElems, 2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
 BerryhunterApi.Resource.addPos = function(builder, posOffset) {
-  builder.addFieldStruct(2, posOffset, 0);
+  builder.addFieldStruct(3, posOffset, 0);
 };
 
 /**
@@ -460,7 +526,7 @@ BerryhunterApi.Resource.addPos = function(builder, posOffset) {
  * @param {number} radius
  */
 BerryhunterApi.Resource.addRadius = function(builder, radius) {
-  builder.addFieldInt16(3, radius, 0);
+  builder.addFieldInt16(4, radius, 0);
 };
 
 /**
@@ -468,7 +534,7 @@ BerryhunterApi.Resource.addRadius = function(builder, radius) {
  * @param {number} capacity
  */
 BerryhunterApi.Resource.addCapacity = function(builder, capacity) {
-  builder.addFieldInt8(4, capacity, 0);
+  builder.addFieldInt8(5, capacity, 0);
 };
 
 /**
@@ -476,7 +542,7 @@ BerryhunterApi.Resource.addCapacity = function(builder, capacity) {
  * @param {number} stock
  */
 BerryhunterApi.Resource.addStock = function(builder, stock) {
-  builder.addFieldInt8(5, stock, 0);
+  builder.addFieldInt8(6, stock, 0);
 };
 
 /**
@@ -484,7 +550,7 @@ BerryhunterApi.Resource.addStock = function(builder, stock) {
  * @param {flatbuffers.Offset} aabbOffset
  */
 BerryhunterApi.Resource.addAabb = function(builder, aabbOffset) {
-  builder.addFieldStruct(6, aabbOffset, 0);
+  builder.addFieldStruct(7, aabbOffset, 0);
 };
 
 /**
@@ -548,11 +614,36 @@ BerryhunterApi.Placeable.prototype.entityType = function() {
 };
 
 /**
+ * @param {number} index
+ * @returns {BerryhunterApi.StatusEffect}
+ */
+BerryhunterApi.Placeable.prototype.statusEffects = function(index) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? /** @type {BerryhunterApi.StatusEffect} */ (this.bb.readUint16(this.bb.__vector(this.bb_pos + offset) + index * 2)) : /** @type {BerryhunterApi.StatusEffect} */ (0);
+};
+
+/**
+ * @returns {number}
+ */
+BerryhunterApi.Placeable.prototype.statusEffectsLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {Uint16Array}
+ */
+BerryhunterApi.Placeable.prototype.statusEffectsArray = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? new Uint16Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f}
+ * @returns {BerryhunterApi.Vec2f|null}
  */
 BerryhunterApi.Placeable.prototype.pos = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -560,7 +651,7 @@ BerryhunterApi.Placeable.prototype.pos = function(obj) {
  * @returns {number}
  */
 BerryhunterApi.Placeable.prototype.radius = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
@@ -568,16 +659,16 @@ BerryhunterApi.Placeable.prototype.radius = function() {
  * @returns {number}
  */
 BerryhunterApi.Placeable.prototype.item = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
 /**
  * @param {BerryhunterApi.AABB=} obj
- * @returns {BerryhunterApi.AABB}
+ * @returns {BerryhunterApi.AABB|null}
  */
 BerryhunterApi.Placeable.prototype.aabb = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -585,7 +676,7 @@ BerryhunterApi.Placeable.prototype.aabb = function(obj) {
  * @param {flatbuffers.Builder} builder
  */
 BerryhunterApi.Placeable.startPlaceable = function(builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 };
 
 /**
@@ -606,10 +697,39 @@ BerryhunterApi.Placeable.addEntityType = function(builder, entityType) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} statusEffectsOffset
+ */
+BerryhunterApi.Placeable.addStatusEffects = function(builder, statusEffectsOffset) {
+  builder.addFieldOffset(2, statusEffectsOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<BerryhunterApi.StatusEffect>} data
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Placeable.createStatusEffectsVector = function(builder, data) {
+  builder.startVector(2, data.length, 2);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt16(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+BerryhunterApi.Placeable.startStatusEffectsVector = function(builder, numElems) {
+  builder.startVector(2, numElems, 2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
 BerryhunterApi.Placeable.addPos = function(builder, posOffset) {
-  builder.addFieldStruct(2, posOffset, 0);
+  builder.addFieldStruct(3, posOffset, 0);
 };
 
 /**
@@ -617,7 +737,7 @@ BerryhunterApi.Placeable.addPos = function(builder, posOffset) {
  * @param {number} radius
  */
 BerryhunterApi.Placeable.addRadius = function(builder, radius) {
-  builder.addFieldInt16(3, radius, 0);
+  builder.addFieldInt16(4, radius, 0);
 };
 
 /**
@@ -625,7 +745,7 @@ BerryhunterApi.Placeable.addRadius = function(builder, radius) {
  * @param {number} item
  */
 BerryhunterApi.Placeable.addItem = function(builder, item) {
-  builder.addFieldInt8(4, item, 0);
+  builder.addFieldInt8(5, item, 0);
 };
 
 /**
@@ -633,7 +753,7 @@ BerryhunterApi.Placeable.addItem = function(builder, item) {
  * @param {flatbuffers.Offset} aabbOffset
  */
 BerryhunterApi.Placeable.addAabb = function(builder, aabbOffset) {
-  builder.addFieldStruct(5, aabbOffset, 0);
+  builder.addFieldStruct(6, aabbOffset, 0);
 };
 
 /**
@@ -697,11 +817,36 @@ BerryhunterApi.Mob.prototype.entityType = function() {
 };
 
 /**
+ * @param {number} index
+ * @returns {BerryhunterApi.StatusEffect}
+ */
+BerryhunterApi.Mob.prototype.statusEffects = function(index) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? /** @type {BerryhunterApi.StatusEffect} */ (this.bb.readUint16(this.bb.__vector(this.bb_pos + offset) + index * 2)) : /** @type {BerryhunterApi.StatusEffect} */ (0);
+};
+
+/**
+ * @returns {number}
+ */
+BerryhunterApi.Mob.prototype.statusEffectsLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {Uint16Array}
+ */
+BerryhunterApi.Mob.prototype.statusEffectsArray = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? new Uint16Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f}
+ * @returns {BerryhunterApi.Vec2f|null}
  */
 BerryhunterApi.Mob.prototype.pos = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -709,7 +854,7 @@ BerryhunterApi.Mob.prototype.pos = function(obj) {
  * @returns {number}
  */
 BerryhunterApi.Mob.prototype.radius = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
@@ -717,16 +862,16 @@ BerryhunterApi.Mob.prototype.radius = function() {
  * @returns {number}
  */
 BerryhunterApi.Mob.prototype.rotation = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
 /**
  * @param {BerryhunterApi.AABB=} obj
- * @returns {BerryhunterApi.AABB}
+ * @returns {BerryhunterApi.AABB|null}
  */
 BerryhunterApi.Mob.prototype.aabb = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -734,7 +879,7 @@ BerryhunterApi.Mob.prototype.aabb = function(obj) {
  * @returns {number}
  */
 BerryhunterApi.Mob.prototype.mobId = function() {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
@@ -742,7 +887,7 @@ BerryhunterApi.Mob.prototype.mobId = function() {
  * @param {flatbuffers.Builder} builder
  */
 BerryhunterApi.Mob.startMob = function(builder) {
-  builder.startObject(7);
+  builder.startObject(8);
 };
 
 /**
@@ -763,10 +908,39 @@ BerryhunterApi.Mob.addEntityType = function(builder, entityType) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} statusEffectsOffset
+ */
+BerryhunterApi.Mob.addStatusEffects = function(builder, statusEffectsOffset) {
+  builder.addFieldOffset(2, statusEffectsOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<BerryhunterApi.StatusEffect>} data
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Mob.createStatusEffectsVector = function(builder, data) {
+  builder.startVector(2, data.length, 2);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt16(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+BerryhunterApi.Mob.startStatusEffectsVector = function(builder, numElems) {
+  builder.startVector(2, numElems, 2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
 BerryhunterApi.Mob.addPos = function(builder, posOffset) {
-  builder.addFieldStruct(2, posOffset, 0);
+  builder.addFieldStruct(3, posOffset, 0);
 };
 
 /**
@@ -774,7 +948,7 @@ BerryhunterApi.Mob.addPos = function(builder, posOffset) {
  * @param {number} radius
  */
 BerryhunterApi.Mob.addRadius = function(builder, radius) {
-  builder.addFieldInt16(3, radius, 0);
+  builder.addFieldInt16(4, radius, 0);
 };
 
 /**
@@ -782,7 +956,7 @@ BerryhunterApi.Mob.addRadius = function(builder, radius) {
  * @param {number} rotation
  */
 BerryhunterApi.Mob.addRotation = function(builder, rotation) {
-  builder.addFieldFloat32(4, rotation, 0.0);
+  builder.addFieldFloat32(5, rotation, 0.0);
 };
 
 /**
@@ -790,7 +964,7 @@ BerryhunterApi.Mob.addRotation = function(builder, rotation) {
  * @param {flatbuffers.Offset} aabbOffset
  */
 BerryhunterApi.Mob.addAabb = function(builder, aabbOffset) {
-  builder.addFieldStruct(5, aabbOffset, 0);
+  builder.addFieldStruct(6, aabbOffset, 0);
 };
 
 /**
@@ -798,7 +972,7 @@ BerryhunterApi.Mob.addAabb = function(builder, aabbOffset) {
  * @param {number} mobId
  */
 BerryhunterApi.Mob.addMobId = function(builder, mobId) {
-  builder.addFieldInt16(6, mobId, 0);
+  builder.addFieldInt16(7, mobId, 0);
 };
 
 /**
@@ -862,11 +1036,36 @@ BerryhunterApi.Character.prototype.entityType = function() {
 };
 
 /**
+ * @param {number} index
+ * @returns {BerryhunterApi.StatusEffect}
+ */
+BerryhunterApi.Character.prototype.statusEffects = function(index) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? /** @type {BerryhunterApi.StatusEffect} */ (this.bb.readUint16(this.bb.__vector(this.bb_pos + offset) + index * 2)) : /** @type {BerryhunterApi.StatusEffect} */ (0);
+};
+
+/**
+ * @returns {number}
+ */
+BerryhunterApi.Character.prototype.statusEffectsLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {Uint16Array}
+ */
+BerryhunterApi.Character.prototype.statusEffectsArray = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? new Uint16Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f}
+ * @returns {BerryhunterApi.Vec2f|null}
  */
 BerryhunterApi.Character.prototype.pos = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? (obj || new BerryhunterApi.Vec2f).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -874,7 +1073,7 @@ BerryhunterApi.Character.prototype.pos = function(obj) {
  * @returns {number}
  */
 BerryhunterApi.Character.prototype.radius = function() {
-  var offset = this.bb.__offset(this.bb_pos, 10);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
@@ -882,7 +1081,7 @@ BerryhunterApi.Character.prototype.radius = function() {
  * @returns {number}
  */
 BerryhunterApi.Character.prototype.rotation = function() {
-  var offset = this.bb.__offset(this.bb_pos, 12);
+  var offset = this.bb.__offset(this.bb_pos, 14);
   return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
 };
 
@@ -890,25 +1089,25 @@ BerryhunterApi.Character.prototype.rotation = function() {
  * @returns {boolean}
  */
 BerryhunterApi.Character.prototype.isHit = function() {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
 
 /**
  * @param {BerryhunterApi.OngoingAction=} obj
- * @returns {BerryhunterApi.OngoingAction}
+ * @returns {BerryhunterApi.OngoingAction|null}
  */
 BerryhunterApi.Character.prototype.currentAction = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? (obj || new BerryhunterApi.OngoingAction).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array}
+ * @returns {string|Uint8Array|null}
  */
 BerryhunterApi.Character.prototype.name = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 18);
+  var offset = this.bb.__offset(this.bb_pos, 20);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
@@ -917,7 +1116,7 @@ BerryhunterApi.Character.prototype.name = function(optionalEncoding) {
  * @returns {number}
  */
 BerryhunterApi.Character.prototype.equipment = function(index) {
-  var offset = this.bb.__offset(this.bb_pos, 20);
+  var offset = this.bb.__offset(this.bb_pos, 22);
   return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
 
@@ -925,7 +1124,7 @@ BerryhunterApi.Character.prototype.equipment = function(index) {
  * @returns {number}
  */
 BerryhunterApi.Character.prototype.equipmentLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 20);
+  var offset = this.bb.__offset(this.bb_pos, 22);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -933,7 +1132,7 @@ BerryhunterApi.Character.prototype.equipmentLength = function() {
  * @returns {Uint8Array}
  */
 BerryhunterApi.Character.prototype.equipmentArray = function() {
-  var offset = this.bb.__offset(this.bb_pos, 20);
+  var offset = this.bb.__offset(this.bb_pos, 22);
   return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
 
@@ -941,14 +1140,6 @@ BerryhunterApi.Character.prototype.equipmentArray = function() {
  * @returns {number}
  */
 BerryhunterApi.Character.prototype.health = function() {
-  var offset = this.bb.__offset(this.bb_pos, 22);
-  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns {number}
- */
-BerryhunterApi.Character.prototype.satiety = function() {
   var offset = this.bb.__offset(this.bb_pos, 24);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
@@ -956,17 +1147,25 @@ BerryhunterApi.Character.prototype.satiety = function() {
 /**
  * @returns {number}
  */
-BerryhunterApi.Character.prototype.bodyTemperature = function() {
+BerryhunterApi.Character.prototype.satiety = function() {
   var offset = this.bb.__offset(this.bb_pos, 26);
   return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
 /**
+ * @returns {number}
+ */
+BerryhunterApi.Character.prototype.bodyTemperature = function() {
+  var offset = this.bb.__offset(this.bb_pos, 28);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {BerryhunterApi.AABB=} obj
- * @returns {BerryhunterApi.AABB}
+ * @returns {BerryhunterApi.AABB|null}
  */
 BerryhunterApi.Character.prototype.aabb = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 28);
+  var offset = this.bb.__offset(this.bb_pos, 30);
   return offset ? (obj || new BerryhunterApi.AABB).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -974,7 +1173,7 @@ BerryhunterApi.Character.prototype.aabb = function(obj) {
  * @param {flatbuffers.Builder} builder
  */
 BerryhunterApi.Character.startCharacter = function(builder) {
-  builder.startObject(13);
+  builder.startObject(14);
 };
 
 /**
@@ -995,10 +1194,39 @@ BerryhunterApi.Character.addEntityType = function(builder, entityType) {
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} statusEffectsOffset
+ */
+BerryhunterApi.Character.addStatusEffects = function(builder, statusEffectsOffset) {
+  builder.addFieldOffset(2, statusEffectsOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<BerryhunterApi.StatusEffect>} data
+ * @returns {flatbuffers.Offset}
+ */
+BerryhunterApi.Character.createStatusEffectsVector = function(builder, data) {
+  builder.startVector(2, data.length, 2);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt16(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+BerryhunterApi.Character.startStatusEffectsVector = function(builder, numElems) {
+  builder.startVector(2, numElems, 2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} posOffset
  */
 BerryhunterApi.Character.addPos = function(builder, posOffset) {
-  builder.addFieldStruct(2, posOffset, 0);
+  builder.addFieldStruct(3, posOffset, 0);
 };
 
 /**
@@ -1006,7 +1234,7 @@ BerryhunterApi.Character.addPos = function(builder, posOffset) {
  * @param {number} radius
  */
 BerryhunterApi.Character.addRadius = function(builder, radius) {
-  builder.addFieldInt16(3, radius, 0);
+  builder.addFieldInt16(4, radius, 0);
 };
 
 /**
@@ -1014,7 +1242,7 @@ BerryhunterApi.Character.addRadius = function(builder, radius) {
  * @param {number} rotation
  */
 BerryhunterApi.Character.addRotation = function(builder, rotation) {
-  builder.addFieldFloat32(4, rotation, 0.0);
+  builder.addFieldFloat32(5, rotation, 0.0);
 };
 
 /**
@@ -1022,7 +1250,7 @@ BerryhunterApi.Character.addRotation = function(builder, rotation) {
  * @param {boolean} isHit
  */
 BerryhunterApi.Character.addIsHit = function(builder, isHit) {
-  builder.addFieldInt8(5, +isHit, +false);
+  builder.addFieldInt8(6, +isHit, +false);
 };
 
 /**
@@ -1030,7 +1258,7 @@ BerryhunterApi.Character.addIsHit = function(builder, isHit) {
  * @param {flatbuffers.Offset} currentActionOffset
  */
 BerryhunterApi.Character.addCurrentAction = function(builder, currentActionOffset) {
-  builder.addFieldStruct(6, currentActionOffset, 0);
+  builder.addFieldStruct(7, currentActionOffset, 0);
 };
 
 /**
@@ -1038,7 +1266,7 @@ BerryhunterApi.Character.addCurrentAction = function(builder, currentActionOffse
  * @param {flatbuffers.Offset} nameOffset
  */
 BerryhunterApi.Character.addName = function(builder, nameOffset) {
-  builder.addFieldOffset(7, nameOffset, 0);
+  builder.addFieldOffset(8, nameOffset, 0);
 };
 
 /**
@@ -1046,7 +1274,7 @@ BerryhunterApi.Character.addName = function(builder, nameOffset) {
  * @param {flatbuffers.Offset} equipmentOffset
  */
 BerryhunterApi.Character.addEquipment = function(builder, equipmentOffset) {
-  builder.addFieldOffset(8, equipmentOffset, 0);
+  builder.addFieldOffset(9, equipmentOffset, 0);
 };
 
 /**
@@ -1075,7 +1303,7 @@ BerryhunterApi.Character.startEquipmentVector = function(builder, numElems) {
  * @param {number} health
  */
 BerryhunterApi.Character.addHealth = function(builder, health) {
-  builder.addFieldInt32(9, health, 0);
+  builder.addFieldInt32(10, health, 0);
 };
 
 /**
@@ -1083,7 +1311,7 @@ BerryhunterApi.Character.addHealth = function(builder, health) {
  * @param {number} satiety
  */
 BerryhunterApi.Character.addSatiety = function(builder, satiety) {
-  builder.addFieldInt32(10, satiety, 0);
+  builder.addFieldInt32(11, satiety, 0);
 };
 
 /**
@@ -1091,7 +1319,7 @@ BerryhunterApi.Character.addSatiety = function(builder, satiety) {
  * @param {number} bodyTemperature
  */
 BerryhunterApi.Character.addBodyTemperature = function(builder, bodyTemperature) {
-  builder.addFieldInt32(11, bodyTemperature, 0);
+  builder.addFieldInt32(12, bodyTemperature, 0);
 };
 
 /**
@@ -1099,7 +1327,7 @@ BerryhunterApi.Character.addBodyTemperature = function(builder, bodyTemperature)
  * @param {flatbuffers.Offset} aabbOffset
  */
 BerryhunterApi.Character.addAabb = function(builder, aabbOffset) {
-  builder.addFieldStruct(12, aabbOffset, 0);
+  builder.addFieldStruct(13, aabbOffset, 0);
 };
 
 /**
@@ -1156,7 +1384,7 @@ BerryhunterApi.Spectator.prototype.id = function() {
 
 /**
  * @param {BerryhunterApi.Vec2f=} obj
- * @returns {BerryhunterApi.Vec2f}
+ * @returns {BerryhunterApi.Vec2f|null}
  */
 BerryhunterApi.Spectator.prototype.pos = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -1413,7 +1641,7 @@ BerryhunterApi.Welcome.getRootAsWelcome = function(bb, obj) {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array}
+ * @returns {string|Uint8Array|null}
  */
 BerryhunterApi.Welcome.prototype.serverName = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 4);
@@ -1607,7 +1835,7 @@ BerryhunterApi.EntityMessage.prototype.entityId = function() {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array}
+ * @returns {string|Uint8Array|null}
  */
 BerryhunterApi.EntityMessage.prototype.message = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 6);
@@ -1683,7 +1911,7 @@ BerryhunterApi.ScoreboardPlayer.getRootAsScoreboardPlayer = function(bb, obj) {
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array}
+ * @returns {string|Uint8Array|null}
  */
 BerryhunterApi.ScoreboardPlayer.prototype.name = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 4);

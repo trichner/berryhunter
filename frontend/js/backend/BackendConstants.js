@@ -1,6 +1,6 @@
 'use strict';
 
-define(['items/Items'], function (Items) {
+define(['items/Items', 'gameObjects/StatusEffect', 'schema_server'], function (Items, StatusEffect) {
 	let BackendConstants = {};
 
 	const NONE_ITEM_ID = 0;
@@ -15,11 +15,22 @@ define(['items/Items'], function (Items) {
 		}
 	}
 
+	const statusEffectLookupTable = [];
+
+	function initializeStatusEffectLookupTable() {
+		for (let statusEffect in BerryhunterApi.StatusEffect) {
+			//noinspection JSUnfilteredForInLoop
+			statusEffectLookupTable[BerryhunterApi.StatusEffect[statusEffect]] = StatusEffect[statusEffect];
+		}
+	}
+
 	BackendConstants.setup = function () {
 		initializeItemLookupTable();
+		initializeStatusEffectLookupTable();
 	};
 	BackendConstants.NONE_ITEM_ID = NONE_ITEM_ID;
 	BackendConstants.itemLookupTable = itemLookupTable;
+	BackendConstants.statusEffectLookupTable = statusEffectLookupTable;
 
 	return BackendConstants;
 });

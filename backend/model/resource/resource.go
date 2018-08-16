@@ -17,6 +17,7 @@ type Resource struct {
 
 	rand                    *rand.Rand
 	invReplenishProbability int
+	statusEffects           model.StatusEffects
 }
 
 func (r *Resource) replenish(i int) {
@@ -25,6 +26,10 @@ func (r *Resource) replenish(i int) {
 	if res.Available > res.Capacity {
 		res.Available = res.Capacity
 	}
+}
+
+func (r *Resource) StatusEffects() *model.StatusEffects {
+	return &r.statusEffects
 }
 
 func (r *Resource) Resource() *model.ResourceStock {
@@ -37,6 +42,8 @@ func (r *Resource) yield(i int) (yielded int) {
 	if i < 1 {
 		return 0
 	}
+
+	r.StatusEffects().Add(model.StatusEffectYielded)
 
 	res := &r.stock
 	if res.Available < i {
@@ -86,6 +93,7 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 		},
 		rand:                    rand,
 		invReplenishProbability: invReplenishProbability,
+		statusEffects:           model.NewStatusEffects(),
 	}
 	r.Body.Shape().UserData = r
 	return r, nil

@@ -33,11 +33,13 @@ func characterCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerE
 	// prepend entity specific things
 	equipment := EquipmentMarshalFlatbuf(p.Equipment().Equipped(), builder)
 	name := builder.CreateString(p.Name())
+	statusEffects := StatusEffectsMarshal(builder, p)
 
 	// populate player table
 	BerryhunterApi.CharacterStart(builder)
 	BerryhunterApi.CharacterAddId(builder, p.Basic().ID())
 	BerryhunterApi.CharacterAddName(builder, name)
+	BerryhunterApi.CharacterAddStatusEffects(builder, statusEffects)
 	ca := p.CurrentAction()
 	if ca != nil {
 		BerryhunterApi.CharacterAddCurrentAction(builder, ongoingActionMarshalFlatbuf(builder, ca))
@@ -66,6 +68,21 @@ func ongoingActionMarshalFlatbuf(builder *flatbuffers.Builder, action model.Play
 	item := action.Item()
 	itemId := byte(item.ItemDefinition.ID)
 	return BerryhunterApi.CreateOngoingAction(builder, tr, playerActionTypeMarshal(action.Type()), itemId)
+}
+
+func StatusEffectsMarshal(builder *flatbuffers.Builder, e model.StatusEntity) flatbuffers.UOffsetT {
+
+	se := e.StatusEffects().Effects()
+	if se == nil || len(se) == 0 {
+		builder.StartVector(1, 0, 0)
+		return builder.EndVector(0)
+	}
+
+	builder.StartVector(1, len(se), 0)
+	for _, k := range se {
+		builder.PrependUint16(uint16(k))
+	}
+	return builder.EndVector(len(se))
 }
 
 // general player as seen by other players
@@ -211,8 +228,11 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 // flatbuffer schema
 func ResourceEntityFlatbufMarshal(e model.ResourceEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
+	statusEffects := StatusEffectsMarshal(builder, e)
+
 	BerryhunterApi.ResourceStart(builder)
 	BerryhunterApi.ResourceAddId(builder, e.Basic().ID())
+	BerryhunterApi.ResourceAddStatusEffects(builder, statusEffects)
 
 	pos := Vec2fMarshalFlatbuf(builder, e.Position())
 	BerryhunterApi.ResourceAddPos(builder, pos)
@@ -231,8 +251,11 @@ func ResourceEntityFlatbufMarshal(e model.ResourceEntity, builder *flatbuffers.B
 
 func PlaceableEntityFlatbufMarshal(e model.PlaceableEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
+	statusEffects := StatusEffectsMarshal(builder, e)
+
 	BerryhunterApi.PlaceableStart(builder)
 	BerryhunterApi.PlaceableAddId(builder, e.Basic().ID())
+	BerryhunterApi.PlaceableAddStatusEffects(builder, statusEffects)
 
 	pos := Vec2fMarshalFlatbuf(builder, e.Position())
 	BerryhunterApi.PlaceableAddPos(builder, pos)

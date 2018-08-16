@@ -53,6 +53,7 @@ type Heater interface {
 // dynamically placed and might need constant updates
 type PlaceableEntity interface {
 	Entity
+	StatusEntity
 
 	Decayed() bool
 	Update(dt float32)
@@ -70,6 +71,7 @@ type ResourceStock struct {
 type ResourceEntity interface {
 	Entity
 	Interacter
+	StatusEntity
 
 	Update(dt float32)
 	Resource() *ResourceStock
@@ -80,6 +82,7 @@ type ResourceEntity interface {
 // and also needs constant updates since it might move/have an AI
 type MobEntity interface {
 	Entity
+	StatusEntity
 
 	MobID() mobs.MobID
 	Health() vitals.VitalSign
