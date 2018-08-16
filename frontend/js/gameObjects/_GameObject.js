@@ -1,13 +1,10 @@
 'use strict';
 
-define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'GraphicsConfig'],
-	function (Game, InjectedSVG, Constants, Vector, Utils, FilterPool, GraphicsConfig) {
+define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'GraphicsConfig', 'gameObjects/StatusEffect'],
+	function (Game, InjectedSVG, Constants, Vector, Utils, GraphicsConfig, StatusEffect) {
 
 		let movementInterpolatedObjects = new Set();
 		let rotatingObjects = new Set();
-		let hitAnimationFilterPool;
-		let hitAnimations = new Set();
-		const HIT_ANIMATION_FLOOD_OPACITY = GraphicsConfig.hitAnimation.floodOpacity;
 
 		class GameObject {
 			constructor(gameLayer, x, y, size, rotation) {
@@ -20,12 +17,13 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'Gr
 				this.rotateOnPositioning = false;
 				this.visibleOnMinimap = true;
 
-				this.hitAnimation = null;
-
 				const args = Array.prototype.splice.call(arguments, 5);
 				this.shape = this.initShape.apply(this, [x, y, size, rotation].concat(args));
 				this.statusEffects = this.createStatusEffects();
-				this.activeStatusEffects = null;
+				for (let statusEffect in this.statusEffects) {
+					this.statusEffects[statusEffect].id = statusEffect;
+				}
+				this.activeStatusEffect = null;
 				this.show();
 			}
 
@@ -144,100 +142,46 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'Gr
 				this.layer.removeChild(this.shape);
 			}
 
-			// TODO Remove
-			playHitAnimation() {
-				let now = performance.now();
-				if (this.hitAnimation === null) {
-					this.hitAnimation = {
-						filter: hitAnimationFilterPool.getFilter(),
-						start: now,
-						end: now + GraphicsConfig.hitAnimation.duration,
-						gameObject: this
-					};
-					this.getRotationShape()._renderer.elem.setAttribute('filter', 'url(#' + this.hitAnimation.filter.id + ')');
-					hitAnimations.add(this.hitAnimation);
-				} else {
-					// A hit animation already runs - reset it
-					this.hitAnimation.start = now;
-					this.hitAnimation.end = now + GraphicsConfig.hitAnimation.duration;
-				}
-			}
-
-			// TODO Remove
-			removeHitAnimation() {
-				this.getRotationShape()._renderer.elem.removeAttribute('filter');
-				this.hitAnimation = null;
-			}
-
 			updateStatusEffects(newStatusEffects) {
+				this.scheduledStatusEffect = null;
 				if (!_.isArray(newStatusEffects) || newStatusEffects.length === 0) {
-					// Just reset active status effects
-					if (this.activeStatusEffects !== null) {
-						Object.values(this.activeStatusEffects).forEach(function (statusEffect) {
-							statusEffect.hide();
-						});
-						this.activeStatusEffects = null;
+					if (this.activeStatusEffect !== null) {
+						this.activeStatusEffect.hide();
+						this.activeStatusEffect = null;
 					}
 				} else {
-					if (this.activeStatusEffects !== null) {
-						for (let statusEffect in this.activeStatusEffects) {
-							let indexOf = newStatusEffects.indexOf(statusEffect);
-							if (indexOf !== -1) {
-								this.activeStatusEffects[statusEffect].hide();
-								delete this.activeStatusEffects[statusEffect];
-							}
-							newStatusEffects.splice(indexOf, 1);
+					newStatusEffects = StatusEffect.sortByPriority(newStatusEffects);
+					let newStatusEffect = newStatusEffects.find(function (newStatusEffect) {
+						return this.statusEffects.hasOwnProperty(newStatusEffect.id);
+					}, this);
+					if (Utils.isDefined(newStatusEffect)) {
+						if (this.activeStatusEffect === null) {
+							// No effect running, run one
+							this.activeStatusEffect = this.statusEffects[newStatusEffect.id];
+							this.activeStatusEffect.show();
+						} else if (this.activeStatusEffect.id !== newStatusEffect.id) {
+							this.activeStatusEffect.forceHide();
+							this.activeStatusEffect = this.statusEffects[newStatusEffect.id];
+							this.activeStatusEffect.show();
+						}
+					} else {
+						console.log(newStatusEffects.map(e => e.id), ' not found in ' + this.constructor.name);
+						if (this.activeStatusEffect !== null) {
+							this.activeStatusEffect.hide();
+							this.activeStatusEffect = null;
 						}
 					}
-
-					newStatusEffects.forEach(function (statusEffect) {
-						if (this.statusEffects.hasOwnProperty(statusEffect)) {
-							let statusEffectObject = this.statusEffects[statusEffect];
-							statusEffectObject.show();
-							if (this.activeStatusEffects === null) {
-								this.activeStatusEffects = {};
-							}
-							this.activeStatusEffects[statusEffect] = statusEffectObject;
-						}
-					}, this);
 				}
 			}
 		}
 
-		GameObject.setup = function (mainSvgElement) {
+		GameObject.setup = function () {
 			if (Constants.MOVEMENT_INTERPOLATION) {
 				Game.renderer.on('prerender', moveInterpolatedObjects);
 			}
 			if (Constants.LIMIT_TURN_RATE) {
 				Game.renderer.on('prerender', applyTurnRate);
 			}
-
-			//FIXME Hit Animation Filter
-			return;
-			Game.renderer.on('prerender', animateHits);
-
-			// Create filter for hit animation
-
-			let defContainer = mainSvgElement.getElementsByTagName('defs')[0];
-
-			let hitAnimationFilter = Utils.svgToElement(
-				'<filter x="0" y="0" width="1" height="1" ' +
-				'color-interpolation-filters="sRGB" id="hitAnimationFilter"></filter>');
-			defContainer.appendChild(hitAnimationFilter);
-
-			hitAnimationFilter.appendChild(Utils.svgToElement('<feFlood ' +
-				'flood-opacity="' + HIT_ANIMATION_FLOOD_OPACITY + '" ' +
-				// Health Bar dark red
-				'flood-color="' + '#bf153a' + '" />'));
-
-			hitAnimationFilter.appendChild(Utils.svgToElement('<feBlend ' +
-				'in2="SourceGraphic" ' +
-				'mode="multiply" />'));
-			hitAnimationFilter.appendChild(Utils.svgToElement('<feComposite ' +
-				'in2="SourceGraphic" ' +
-				'operator="in" />'));
-
-			hitAnimationFilterPool = new FilterPool(hitAnimationFilter, 'feFlood');
 		};
 
 		function moveInterpolatedObjects() {
@@ -297,30 +241,6 @@ define(['Game', 'InjectedSVG', 'Constants', 'Vector', 'Utils', 'FilterPool', 'Gr
 					}
 
 					gameObject.desiredRotationTimestamp = now;
-				});
-		}
-
-		function animateHits() {
-			let now = performance.now();
-
-			hitAnimations.forEach(
-				/**
-				 *
-				 * @param {{filter: {id: string, domElement: Element}, start: number, end: number}} hitAnimation
-				 */
-				function (hitAnimation) {
-					let opacity;
-					if (now >= hitAnimation.end) {
-						opacity = 0;
-						hitAnimationFilterPool.freeFilter(hitAnimation.filter);
-						hitAnimation.gameObject.removeHitAnimation();
-						hitAnimations.delete(hitAnimation);
-					} else {
-						// opacity = Utils.map(now, HIT_ANIMATION_FLOOD_OPACITY, 0, hitAnimation.start,
-						// hitAnimation.end);
-						opacity = Utils.map(now, hitAnimation.start, hitAnimation.end, HIT_ANIMATION_FLOOD_OPACITY, 0);
-					}
-					hitAnimation.filter.domElement.setAttribute('flood-opacity', opacity);
 				});
 		}
 

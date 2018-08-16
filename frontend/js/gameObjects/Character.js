@@ -123,9 +123,9 @@ define([
 			}
 
 			return {
+				// Damaged: StatusEffect.forDamaged(this.actualShape),
 				DamagedAmbient: StatusEffect.forDamagedOverTime(this.actualShape),
-				Freezing: StatusEffect.forFreezing(this.actualShape),
-				Starving: StatusEffect.forStarving(this.actualShape)
+				Freezing: StatusEffect.forFreezing(this.actualShape)
 			}
 		}
 

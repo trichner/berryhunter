@@ -157,7 +157,6 @@ define(['Preloading', 'Events'], function (Preloading, Events) {
 		'DayCycle',
 		'Environment',
 		'Events',
-		'FilterPool',
 		'Game',
 		'GameMap',
 		'GameMapGenerator',

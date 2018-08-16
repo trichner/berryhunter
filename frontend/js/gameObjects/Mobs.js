@@ -32,6 +32,7 @@ define(['Game', 'GameObject', 'Preloading', 'Utils', 'GraphicsConfig', './Status
 
 		createStatusEffects() {
 			return {
+				Damaged: StatusEffect.forDamaged(this.shape),
 				DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape)
 			}
 		}

@@ -3,31 +3,42 @@
 define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ease, Events, Game, _) {
 
 	class StatusEffect {
-		constructor(gameObjectShape, red, green, blue, minAlpha, maxAlpha) {
+		constructor(gameObjectShape, red, green, blue, startAlpha, endAlpha) {
 			this.showing = false;
 
 			this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
 			this.colorMatrix.flood(red, green, blue, 1);
-			this.colorMatrix.alpha = minAlpha;
+			this.colorMatrix.alpha = startAlpha;
 			this.colorMatrix.enabled = false;
 
-			this.maxAlpha = maxAlpha;
+			this.startAlpha = startAlpha;
+			this.endAlpha = endAlpha;
 
 			if (_.isArray(gameObjectShape.filters)) {
-				gameObjectShape.filters.push(this.colorMatrix);
+				// filters are returned as copy
+				let filters = gameObjectShape.filters;
+				// so we modify the copy
+				filters.push(this.colorMatrix);
+				// and replace the filters with the modified copy
+				gameObjectShape.filters = filters;
 			} else {
 				gameObjectShape.filters = [this.colorMatrix];
 			}
 		}
 
+		static forDamaged(gameObjectShape) {
+			// #BF153A old Health Bar dark red?
+			return new StatusEffect(gameObjectShape, 191, 21, 58, 0.8, 0.0);
+		}
+
 		static forDamagedOverTime(gameObjectShape) {
 			// #BF153A old Health Bar dark red?
-			return new StatusEffect(gameObjectShape, 191, 21, 58, 0.2, 0.8);
+			return new StatusEffect(gameObjectShape, 191, 21, 58, 0.8, 0.2);
 		}
 
 		static forFreezing(gameObjectShape) {
 			// #1E7A1E
-			return new StatusEffect(gameObjectShape, 18, 87, 153, 0.2, 0.8);
+			return new StatusEffect(gameObjectShape, 18, 87, 153, 0.4, 0.8);
 		}
 
 		static forStarving(gameObjectShape) {
@@ -42,15 +53,19 @@ define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ea
 			}
 
 			this.showing = true;
+
+			this.colorMatrix.enabled = true;
+			this.colorMatrix.alpha = this.startAlpha;
+			
 			let animation = new Ease.list({noTicker: true});
 			const ticker = PIXI.ticker.shared;
-			let updateFn = function () {
+			this.updateFn = function () {
 				animation.update(ticker.deltaTime * 16.66);
 			};
-			ticker.add(updateFn);
+			ticker.add(this.updateFn);
 			let to = animation.to(
 				this.colorMatrix,
-				{alpha: this.maxAlpha},
+				{alpha: this.endAlpha},
 				500,
 				{
 					repeat: true,
@@ -59,32 +74,46 @@ define(['PIXI', 'pixi-ease', 'Events', 'Game', 'underscore'], function (PIXI, Ea
 				}
 			);
 
-			this.colorMatrix.enabled = true;
-
-			let isReverse = false;
+			// If the startAlpha is lower, we want the animation to end on the start
+			// in the opposite case, the animation should end on the end (without reversing)
+			let isReverse = (this.startAlpha > this.endAlpha);
 			to.on('loop', function () {
 				isReverse = !isReverse;
 				// The effect was scheduled to be removed - remove the update function from the global ticker
 				// the rest will be cleaned up by the GC
 				if (!this.showing && !isReverse) {
-					ticker.remove(updateFn);
-					this.colorMatrix.enabled = false;
-					this.colorMatrix.alpha = 0.2;
+					this.forceHide();
 				}
+			}, this);
+
+			to.on('each', function () {
+				console.log('Animation step', this.colorMatrix.alpha.toFixed(2));
 			}, this);
 		}
 
 		hide() {
 			this.showing = false;
 		}
+
+		forceHide() {
+			this.showing = false;
+			PIXI.ticker.shared.remove(this.updateFn);
+			this.colorMatrix.enabled = false;
+		}
 	}
 
-	StatusEffect.Damaged = 'Damaged';
-	StatusEffect.DamagedAmbient = 'DamagedAmbient';
-	StatusEffect.Yielded = 'Yielded';
-	StatusEffect.Freezing = 'Freezing';
-	StatusEffect.Starving = 'Starving';
-	StatusEffect.Regenerating = 'Regenerating';
+	StatusEffect.Damaged = {id: 'Damaged', priority: 1};
+	StatusEffect.DamagedAmbient = {id: 'DamagedAmbient', priority: 2};
+	StatusEffect.Yielded = {id: 'Yielded', priority: 3};
+	StatusEffect.Freezing = {id: 'Freezing', priority: 4};
+	StatusEffect.Starving = {id: 'Starving', priority: 5};
+	StatusEffect.Regenerating = {id: 'Regenerating', priority: 6};
+
+	StatusEffect.sortByPriority = function (statusEffects) {
+		return statusEffects.sort(function (a, b) {
+			return a.priority - b.priority;
+		});
+	};
 
 	window.hit = function () {
 		let colorMatrix = Game.player.character.actualShape.filters[0];
