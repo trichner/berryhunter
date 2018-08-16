@@ -120,8 +120,10 @@ func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	h := p.PlayerVitalSigns.Health
 
 	dmgFraction := item.Factors.Damage // * vulnerability
-	p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)
-	p.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
+	if dmgFraction > 0 {
+		p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)
+		p.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
+	}
 }
 
 func (p *player) Name() string {
