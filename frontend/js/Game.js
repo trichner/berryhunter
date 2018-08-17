@@ -273,7 +273,7 @@ define(['Events'], function (Events) {
 				'Camera',
 				'VitalSigns',
 				'items/Recipes',
-				'Scoreboard',
+				'scores/Scoreboard',
 				'groundTextures/GroundTextureManager',
 			]).then(function (dependencies) {
 				let Camera = dependencies[0];

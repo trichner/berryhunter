@@ -65,6 +65,8 @@ define(['PlayerName', 'Utils', 'Events'], function (PlayerName, Utils, Events) {
 
 		// re-set progress to ensure the loading bar is synced.
 		this.progress = progress;
+
+		Events.triggerOneTime('startScreen.domReady', this.rootElement)
 	};
 
 	StartScreen.show = function () {

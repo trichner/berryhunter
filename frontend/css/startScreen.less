@@ -63,7 +63,8 @@
 		position: absolute;
 		color: white;
 		padding: 0 0.5rem;
-		transition: background-color @splashScreenAnimation;
+		transition: all @splashScreenAnimation;
+		transition-property: background-color, bottom;
 		border-radius: 0.7vh;
 
 		a:link,
@@ -121,6 +122,95 @@
 	z-index: -1;
 	border-radius: 0.7vh;
 
-
 	transition: opacity @splashScreenAnimation;
+}
+
+#highScores {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+
+	background-color: @backgroundColor;
+	color: white;
+
+	//line-height: 3.25rem;
+	padding: 1rem;
+	line-height: 0.7;
+
+	transform: translateY(-100%);
+	transition: transform @splashScreenAnimation;
+
+	&.loaded {
+		transform: translateY(0);
+	}
+
+	> h3 {
+		margin: 0;
+		font-weight: normal;
+
+		float: left;
+		width: 10%;
+
+		font-size: 2rem;
+		line-height: 1rem;
+		letter-spacing: 0.06em;
+	}
+
+	> .highscore {
+		float: left;
+		width: (90% / 5);
+
+		> h4 {
+			margin: -0.4rem 0 -0.6rem;
+			font-size: inherit;
+			font-weight: normal;
+			display: inline-block;
+			margin-right: 1rem;
+			color: black;
+			padding: 0.4rem 1rem 0.6rem;
+			border-top-left-radius: 1.125rem;
+			border-bottom-left-radius: 1.125rem;
+		}
+	}
+
+	> .alltime {
+		color: #FFC400; // Material Design Amber A400
+
+		> h4 {
+			background-color: #FFC400; // Material Design Amber A400
+		}
+	}
+
+	> .monthly {
+		color: #FF1744; // Material Design Red A400
+
+		> h4 {
+			background-color: #FF1744; // Material Design Amber A400
+		}
+	}
+
+	> .weekly {
+		color: #00B0FF; // Material Design Light Blue A400
+
+		> h4 {
+			background-color: #00B0FF; // Material Design Amber A400
+		}
+	}
+
+	> .daily {
+		color: #76FF03; // Material Design Light Green A400
+
+		> h4 {
+			background-color: #76FF03; // Material Design Amber A400
+		}
+	}
+
+	> .current {
+		color: white;
+
+		> h4 {
+			background-color: white;
+		}
+	}
 }

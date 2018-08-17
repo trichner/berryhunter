@@ -139,6 +139,9 @@ define(['Preloading', 'Events'], function (Preloading, Events) {
 
 		'natureOfCode/arrive/vehicle',
 
+		'scores/Scoreboard',
+		'scores/HighScores',
+
 		'userInterface/screens/EndScreen',
 		'userInterface/screens/StartScreen',
 		'userInterface/ClickableCountableIcon',
@@ -168,7 +171,6 @@ define(['Preloading', 'Events'], function (Preloading, Events) {
 		'PlayerName',
 		'Preloading',
 		'Quadrants',
-		'Scoreboard',
 		'Spectator',
 		'Text',
 		'Tutorial',
