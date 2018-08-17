@@ -4,7 +4,7 @@
   "type": "CONSUMABLE",
   "factors": {
     "food": 0.2,
-    "replenishProbabilityPerSecond": 0.15,
+    "replenishProbabilityPerSecond": 0.08,
     "capacity": 5
   },
   "body": {
