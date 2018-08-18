@@ -351,20 +351,20 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				directions: 4
 			}
 		},
-		WoodSpikyWall: {
-			icon: {file: 'woodSpikyWall'},
-			graphic: {
-				file: 'woodSpikyWall',
-				size: 63
-			},
-			definition: 'walls/wood-spiky-wall',
-			type: ItemType.PLACEABLE,
-			placeable: {
-				layer: 'placeables.spikyWalls',
-				multiPlacing: true,
-				directions: 4
-			}
-		},
+		// WoodSpikyWall: {
+		// 	icon: {file: 'woodSpikyWall'},
+		// 	graphic: {
+		// 		file: 'woodSpikyWall',
+		// 		size: 63
+		// 	},
+		// 	definition: 'walls/wood-spiky-wall',
+		// 	type: ItemType.PLACEABLE,
+		// 	placeable: {
+		// 		layer: 'placeables.spikyWalls',
+		// 		multiPlacing: true,
+		// 		directions: 4
+		// 	}
+		// },
 		StoneWall: {
 			icon: {file: 'wallStone'},
 			graphic: {
@@ -379,20 +379,20 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				directions: false
 			}
 		},
-		StoneSpikyWall: {
-			icon: {file: 'stoneSpikyWall'},
-			graphic: {
-				file: 'stoneSpikyWall',
-				size: 63
-			},
-			definition: 'walls/stone-spiky-wall',
-			type: ItemType.PLACEABLE,
-			placeable: {
-				layer: 'placeables.spikyWalls',
-				multiPlacing: true,
-				directions: false
-			}
-		},
+		// StoneSpikyWall: {
+		// 	icon: {file: 'stoneSpikyWall'},
+		// 	graphic: {
+		// 		file: 'stoneSpikyWall',
+		// 		size: 63
+		// 	},
+		// 	definition: 'walls/stone-spiky-wall',
+		// 	type: ItemType.PLACEABLE,
+		// 	placeable: {
+		// 		layer: 'placeables.spikyWalls',
+		// 		multiPlacing: true,
+		// 		directions: false
+		// 	}
+		// },
 		BronzeWall: {
 			icon: {file: 'wallBronze'},
 			graphic: {
@@ -407,20 +407,20 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				directions: false
 			}
 		},
-		BronzeSpikyWall: {
-			icon: {file: 'bronzeSpikyWall'},
-			graphic: {
-				file: 'bronzeSpikyWall',
-				size: 63
-			},
-			definition: 'walls/bronze-spiky-wall',
-			type: ItemType.PLACEABLE,
-			placeable: {
-				layer: 'placeables.spikyWalls',
-				multiPlacing: true,
-				directions: false
-			}
-		},
+		// BronzeSpikyWall: {
+		// 	icon: {file: 'bronzeSpikyWall'},
+		// 	graphic: {
+		// 		file: 'bronzeSpikyWall',
+		// 		size: 63
+		// 	},
+		// 	definition: 'walls/bronze-spiky-wall',
+		// 	type: ItemType.PLACEABLE,
+		// 	placeable: {
+		// 		layer: 'placeables.spikyWalls',
+		// 		multiPlacing: true,
+		// 		directions: false
+		// 	}
+		// },
 		IronWall: {
 			// TODO
 			icon: {file: ''},
@@ -432,61 +432,61 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				multiPlacing: true
 			}
 		},
-		IronSpikyWall: {
-			// TODO
-			icon: {file: ''},
-			graphic: {file: ''},
-			definition: 'walls/iron-spiky-wall',
-			type: ItemType.PLACEABLE,
-			placeable: {
-				layer: 'placeables.spikyWalls',
-				multiPlacing: true
-			}
-		},
+		// IronSpikyWall: {
+		// 	// TODO
+		// 	icon: {file: ''},
+		// 	graphic: {file: ''},
+		// 	definition: 'walls/iron-spiky-wall',
+		// 	type: ItemType.PLACEABLE,
+		// 	placeable: {
+		// 		layer: 'placeables.spikyWalls',
+		// 		multiPlacing: true
+		// 	}
+		// },
 
 		/***********************************
 		 * DOORS
 		 ***********************************/
-		WoodDoor: {
-			// TODO
-			icon: {file: ''},
-			graphic: {file: ''},
-			definition: 'doors/wood-door',
-			type: ItemType.PLACEABLE,
-			placeable: {
-				layer: 'placeables.doors'
-			}
-		},
-		StoneDoor: {
-			// TODO
-			icon: {file: ''},
-			graphic: {file: ''},
-			definition: 'doors/stone-door',
-			type: ItemType.PLACEABLE,
-			placeable: {
-				layer: 'placeables.doors'
-			}
-		},
-		BronzeDoor: {
-			// TODO
-			icon: {file: ''},
-			graphic: {file: ''},
-			definition: 'doors/bronze-door',
-			type: ItemType.PLACEABLE,
-			placeable: {
-				layer: 'placeables.doors'
-			}
-		},
-		IronDoor: {
-			// TODO
-			icon: {file: ''},
-			graphic: {file: ''},
-			definition: 'doors/iron-door',
-			type: ItemType.PLACEABLE,
-			placeable: {
-				layer: 'placeables.doors'
-			}
-		},
+		// WoodDoor: {
+		// 	// TODO
+		// 	icon: {file: ''},
+		// 	graphic: {file: ''},
+		// 	definition: 'doors/wood-door',
+		// 	type: ItemType.PLACEABLE,
+		// 	placeable: {
+		// 		layer: 'placeables.doors'
+		// 	}
+		// },
+		// StoneDoor: {
+		// 	// TODO
+		// 	icon: {file: ''},
+		// 	graphic: {file: ''},
+		// 	definition: 'doors/stone-door',
+		// 	type: ItemType.PLACEABLE,
+		// 	placeable: {
+		// 		layer: 'placeables.doors'
+		// 	}
+		// },
+		// BronzeDoor: {
+		// 	// TODO
+		// 	icon: {file: ''},
+		// 	graphic: {file: ''},
+		// 	definition: 'doors/bronze-door',
+		// 	type: ItemType.PLACEABLE,
+		// 	placeable: {
+		// 		layer: 'placeables.doors'
+		// 	}
+		// },
+		// IronDoor: {
+		// 	// TODO
+		// 	icon: {file: ''},
+		// 	graphic: {file: ''},
+		// 	definition: 'doors/iron-door',
+		// 	type: ItemType.PLACEABLE,
+		// 	placeable: {
+		// 		layer: 'placeables.doors'
+		// 	}
+		// },
 
 		/***********************************
 		 * FOOD & HEALING
