@@ -141,8 +141,16 @@
 	transform: translateY(-100%);
 	transition: transform @splashScreenAnimation;
 
+	cursor: pointer;
+
 	&.loaded {
 		transform: translateY(0);
+	}
+
+	&:hover {
+		.icon.expand {
+			animation: jump 800ms alternate infinite ease-in-out;
+		}
 	}
 
 	> h3 {
@@ -155,6 +163,12 @@
 		font-size: 2rem;
 		line-height: 1rem;
 		letter-spacing: 0.06em;
+	}
+
+	.icon.expand {
+		height: 0.9em;
+		margin-bottom: -7px;
+		margin-top: -2px;
 	}
 
 	> .highscore {
@@ -212,5 +226,14 @@
 		> h4 {
 			background-color: white;
 		}
+	}
+}
+
+@keyframes jump {
+	from {
+		transform: translateY(0%);
+	}
+	to {
+		transform: translateY(50%);
 	}
 }
