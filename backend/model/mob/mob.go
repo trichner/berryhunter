@@ -46,7 +46,8 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 		definition:         d,
 		damageAura:         damageAura,
 		wanderAcceleration: phy.Vec2f{0.1, 0},
-		velocity:           0.04,
+		// TODO use walkingSpeedPerTick from global config
+		velocity:           0.055 * d.Factors.Speed,
 		statusEffects:      model.NewStatusEffects(),
 	}
 	m.Body.Shape().UserData = m

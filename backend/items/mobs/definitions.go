@@ -26,6 +26,7 @@ type MobID uint64
 type Factors struct {
 	Vulnerability float32
 	DamageFraction float32
+	Speed float32
 }
 
 type Body struct {
@@ -56,6 +57,7 @@ type mobDefinition struct {
 	Factors struct {
 		Vulnerability float32 `json:"vulnerability"`
 		DamageFraction float32 `json:"damageFraction"`
+		Speed float32 `json:"speed"`
 	} `json:"factors"`
 	Drops []struct {
 		Item  string `json:"item"`
@@ -92,6 +94,7 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 		Factors: Factors{
 			Vulnerability: m.Factors.Vulnerability,
 			DamageFraction: m.Factors.DamageFraction,
+			Speed: m.Factors.Speed,
 		},
 		Drops: make(Drops, 0, 1),
 		Body: Body{
