@@ -6,10 +6,10 @@ define(['underscore'], function (_) {
 	Text.defaultStyle = function () {
 		return {
 			fontFamily: 'stone-age',
-			fontSize: 24,
-			// fontWeight: '700',
+			fontSize: 26,
 			align: 'center',
-			fontVariant: 'small-caps'
+			fontVariant: 'small-caps',
+			letterSpacing: 2
 		};
 	};
 

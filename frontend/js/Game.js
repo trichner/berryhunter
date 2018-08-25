@@ -31,10 +31,9 @@ define(['Events'], function (Events) {
 			'Utils',
 			'NamedGroup',
 			'Constants',
-			'ColorMatrixFilterExtension'
 		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle,
 		             Player, Spectator, GameObject, UserInterface, StartScreen,
-		             Chat, Utils, NamedGroup, Constants, ColorMatrixFilterExtension) {
+		             Chat, Utils, NamedGroup, Constants) {
 
 			let setupPromises = [];
 			let requireAsPromise = Utils.requireAsPromise;
@@ -314,8 +313,6 @@ define(['Events'], function (Events) {
 				Game.layers.placeables.spikyWalls,
 				Game.layers.resources.minerals,
 				Game.layers.resources.trees,
-				Game.layers.characterAdditions.craftProgress,
-				Game.layers.characterAdditions.chatMessages
 			]);
 
 			setupPromises.push(requireAsPromise(['input/InputManager']).then(function (dependencies) {
