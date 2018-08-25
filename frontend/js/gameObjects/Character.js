@@ -379,7 +379,7 @@ define([
 		}
 
 		say(message) {
-			let textStyle = Text.style({fill: '#ffffff', stroke: '#000000', strokeThickness: 5});
+			let textStyle = Text.style({fill: '#e37313', stroke: '#000000', strokeThickness: 5});
 			let fontSize = textStyle.fontSize;
 
 			// Move all currently displayed messages up

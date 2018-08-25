@@ -6,7 +6,7 @@ define(['underscore'], function (_) {
 	Text.defaultStyle = function () {
 		return {
 			fontFamily: 'stone-age',
-			fontSize: 26,
+			fontSize: 30,
 			align: 'center',
 			fontVariant: 'small-caps',
 			letterSpacing: 2
