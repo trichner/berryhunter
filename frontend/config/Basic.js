@@ -99,7 +99,7 @@ define([], function () {
 		 *
 		 * SYNCED WITH BACKEND
 		 */
-        INVENTORY_SLOTS: 8,
+		INVENTORY_SLOTS: 9,
 
 		/**
 		 * How far away a character can be to access workbenches and campfires.

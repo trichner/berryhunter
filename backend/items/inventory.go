@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-const DEFAULT_INVENTORY_CAP = 8
+const DEFAULT_INVENTORY_CAP = 9
 
 // ItemID represents the ID of the item
 type ItemID int
