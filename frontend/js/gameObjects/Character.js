@@ -395,6 +395,13 @@ define([
 			this.messages.push(messageShape);
 		}
 
+		hide() {
+			super.hide();
+			this.followGroups.forEach(function (followGroup) {
+				followGroup.parent.removeChild(followGroup);
+			});
+		}
+
 		remove() {
 			this.hide();
 			Game.renderer.off('prerender', this.update, this);
