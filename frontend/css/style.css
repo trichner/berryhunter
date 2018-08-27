@@ -1112,6 +1112,35 @@ dl.flatList > dd {
   transition: all 1s;
   transition-property: visibility, opacity;
 }
+#chromeWarning > .warning {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.7em;
+  color: crimson;
+  text-align: center;
+}
+#chromeWarning > p {
+  margin: 1rem 0;
+}
+#chromeWarning .button {
+  background-color: #e37313;
+  color: white;
+  border-radius: 0.7vh;
+  padding: 0.5rem;
+  line-height: 1;
+  font: inherit;
+  width: 100%;
+  font-variant: none;
+  text-align: center;
+  text-decoration: none;
+  border: 2px outset #dddddd;
+}
+#chromeWarning .button:active {
+  border-style: inset;
+}
+#chromeWarning .button:focus {
+  outline: none;
+}
 #loadingBar {
   position: absolute;
   top: 0;

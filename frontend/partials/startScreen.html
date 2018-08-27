@@ -6,7 +6,23 @@
 		<h1>BerryHunter</h1>
 	</header>
 
-	<form id="startForm" class="playerForm layout-column">
+	<div id="chromeWarning" class="playerForm layout-column">
+		<em class="warning">Warning</em>
+		<p>
+			In the Beta version, the game only runs smoothly on Google Chrome.
+		</p>
+		<div class="layout-row">
+			<a href="#" id="continueAnywayButton" class="button flex-50">
+				Continue anyway
+			</a>
+			<span style="width: 1rem;"></span>
+			<a href="https://www.google.com/chrome" target="_blank" class="button flex-50">
+				Get Chrome
+			</a>
+		</div>
+	</div>
+
+	<form id="startForm" class="playerForm layout-column hidden">
 		<div class="inputContainer layout-row">
 			<input class="playerNameInput flex"
 				   placeholder="Some Name"

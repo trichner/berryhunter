@@ -110,6 +110,45 @@
 	transition-property: visibility, opacity;
 }
 
+#chromeWarning {
+	> .warning {
+		font-weight: normal;
+		font-style: normal;
+		font-size: 1.7em;
+		color: crimson;
+		text-align: center;
+	}
+
+	> p {
+		margin: 1rem 0;
+	}
+
+	// Same style as .playerNameSubmit
+	.button {
+		background-color: #e37313;
+		color: white;
+		border-radius: 0.7vh;
+		padding: 0.5rem;
+		line-height: 1;
+		font: inherit;
+		width: 100%;
+		font-variant: none;
+
+		text-align: center;
+		text-decoration: none;
+
+		border: 2px outset rgb(221, 221, 221); // Chrome default style, for all browsers
+
+		&:active {
+			border-style: inset;
+		}
+
+		&:focus {
+			outline: none;
+		}
+	}
+}
+
 #loadingBar {
 	position: absolute;
 	top: 0;
