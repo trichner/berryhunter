@@ -50,6 +50,7 @@
 
 		.playerNameSubmit {
 			font-variant: small-caps;
+			cursor: default;
 		}
 	}
 
@@ -111,6 +112,9 @@
 }
 
 #chromeWarning {
+	border: 5px solid crimson;
+	min-width: 32.5rem;
+
 	> .warning {
 		font-weight: normal;
 		font-style: normal;
@@ -146,6 +150,10 @@
 		&:focus {
 			outline: none;
 		}
+
+        &.secondary {
+          background-color: black;
+        }
 	}
 }
 

@@ -378,6 +378,7 @@ code {
   font: inherit;
   width: 100%;
   font-variant: none;
+  cursor: pointer;
   border: 2px outset #dddddd;
 }
 .playerForm .playerNameSubmit:active {
@@ -1067,6 +1068,7 @@ dl.flatList > dd {
 }
 #startScreen.loading .playerNameSubmit {
   font-variant: small-caps;
+  cursor: default;
 }
 #startScreen.finished #splashScreen {
   opacity: 0;
@@ -1112,6 +1114,10 @@ dl.flatList > dd {
   transition: all 1s;
   transition-property: visibility, opacity;
 }
+#chromeWarning {
+  border: 5px solid crimson;
+  min-width: 32.5rem;
+}
 #chromeWarning > .warning {
   font-weight: normal;
   font-style: normal;
@@ -1140,6 +1146,9 @@ dl.flatList > dd {
 }
 #chromeWarning .button:focus {
   outline: none;
+}
+#chromeWarning .button.secondary {
+  background-color: black;
 }
 #loadingBar {
   position: absolute;

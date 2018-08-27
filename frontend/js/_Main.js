@@ -4,6 +4,7 @@ requirejs.config({
 	paths: {
 		PIXI: '../vendor/pixijs/pixi.min',
 		'pixi-ease': '../vendor/pixijs/plugins/pixi-ease',
+		'vendor/detect-browser': '../vendor/detect-browser-3.0.0',
 		'vendor/flatbuffers': '../vendor/flatbuffers',
 		underscore: '../vendor/underscore.min',
 		saveAs: '../vendor/FileSaver.min',
@@ -64,6 +65,7 @@ define(['Preloading', 'Events'], function (Preloading, Events) {
 
 		// other libraries
 		'../vendor/tock',
+		'vendor/detect-browser',
 		'vendor/flatbuffers',
 		'natureOfCode/arrive/vehicle',
 

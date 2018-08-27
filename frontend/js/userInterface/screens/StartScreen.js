@@ -1,6 +1,6 @@
 'use strict';
 
-define(['PlayerName', 'Utils', 'Events'], function (PlayerName, Utils, Events) {
+define(['PlayerName', 'Utils', 'Events', 'vendor/detect-browser'], function (PlayerName, Utils, Events, DetectBrowser) {
 	const StartScreen = {};
 
 	StartScreen.htmlFile = 'partials/startScreen.html';
@@ -60,11 +60,25 @@ define(['PlayerName', 'Utils', 'Events'], function (PlayerName, Utils, Events) {
 
 		this.isDomReady = true;
 
-		PlayerName.prepareForm(document.getElementById('startForm'), StartScreen.playerNameInput);
+		let startForm = document.getElementById('startForm');
+		PlayerName.prepareForm(startForm, StartScreen.playerNameInput);
 		PlayerName.fillInput(StartScreen.playerNameInput);
 
 		// re-set progress to ensure the loading bar is synced.
 		this.progress = progress;
+
+		this.chromeWarning = document.getElementById('chromeWarning');
+
+		let browser = DetectBrowser.detect();
+		if (browser.name !== 'chrome') {
+			this.chromeWarning.classList.remove('hidden');
+			startForm.classList.add('hidden');
+			document.getElementById('continueAnywayButton').addEventListener('click', function (event) {
+				event.preventDefault();
+				this.chromeWarning.classList.add('hidden');
+				startForm.classList.remove('hidden');
+			}.bind(this));
+		}
 	};
 
 	StartScreen.show = function () {
