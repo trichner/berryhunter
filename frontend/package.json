@@ -1,0 +1,14 @@
+{
+  "name": "berryhunter-frontend",
+  "version": "0.0.1",
+  "description": "Frontend for BerryHunter game",
+  "main": "index.js",
+  "repository": "https://github.com/trichner/berryhunter",
+  "author": "Raoul Zander",
+  "license": "None",
+  "private": true,
+  "devDependencies": {
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0"
+  }
+}
