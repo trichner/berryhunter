@@ -46,7 +46,7 @@ define([], function () {
 				 * Should be synchronized with the value below,
 				 * but is purely used for a smooth client side animation.
 				 */
-				duration: 500,
+				duration: 300,
 
 				/**
 				 * How much of the animation is forward - the rest is reversing.
@@ -58,7 +58,7 @@ define([], function () {
 				 * How many ticks will the backend communicate an action in progress
 				 * SYNCED WITH BACKEND
 				 */
-				backendTicks: 15
+				backendTicks: 10
 			}
 		},
 

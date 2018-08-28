@@ -6,20 +6,22 @@ define(['Utils', 'GraphicsConfig', 'pixi-ease'], function (Utils, GraphicsConfig
 
 	const types = {};
 
-	function animateAction(hand, type, animationFrame) {
+	function animateAction(hand, type, animation, animationFrame, onDone) {
+		if (!this.isPlayerCharacter) {
+			console.log('start action animation at frame ' + animationFrame);
+		}
+
 		if (Utils.isUndefined(animationFrame)) {
 			animationFrame = animationCfg.backendTicks;
 		}
 		let slowmo = 1;
 		let overallDuration = animationCfg.duration * slowmo;
 		let forwardDuration = overallDuration * animationCfg.relativeDurationForward;
-		let start = overallDuration * (1 - animationFrame / animationCfg.backendTicks);
-		console.log("Forward start at", start / slowmo);
-		types[type].call(this, hand, overallDuration, forwardDuration, start);
+		let start = overallDuration * (1 - (animationFrame + 1) / animationCfg.backendTicks);
+		types[type].call(this, hand, animation, overallDuration, forwardDuration, start, onDone);
 	}
 
-	types.swing = function (hand, overallDuration, forwardDuration, start) {
-		let animation = new Ease.list();
+	types.swing = function (hand, animation, overallDuration, forwardDuration, start, onDone) {
 		animation.to(
 			hand,
 			{
@@ -55,7 +57,6 @@ define(['Utils', 'GraphicsConfig', 'pixi-ease'], function (Utils, GraphicsConfig
 			let animation = new Ease.list();
 			let duration = overallDuration - forwardDuration;
 			start = Math.max(0, start - forwardDuration);
-			console.log("Backward start at", start);
 			animation.to(
 				hand,
 				{
@@ -88,13 +89,12 @@ define(['Utils', 'GraphicsConfig', 'pixi-ease'], function (Utils, GraphicsConfig
 			).time = start;
 
 			animation.on('done', function () {
-				console.log('All done');
+				onDone();
 			});
 		});
 	};
 
-	types.stab = function (hand, overallDuration, forwardDuration, start) {
-		let animation = new Ease.list();
+	types.stab = function (hand, animation, overallDuration, forwardDuration, start, onDone) {
 		animation.to(
 			hand,
 			{
@@ -110,7 +110,6 @@ define(['Utils', 'GraphicsConfig', 'pixi-ease'], function (Utils, GraphicsConfig
 			let animation = new Ease.list();
 			let duration = overallDuration - forwardDuration;
 			start = Math.max(0, start - forwardDuration);
-			console.log("Backward start at", start);
 			animation.to(
 				hand,
 				{
@@ -123,7 +122,7 @@ define(['Utils', 'GraphicsConfig', 'pixi-ease'], function (Utils, GraphicsConfig
 			).time = start;
 
 			animation.on('done', function () {
-				console.log('All done');
+				onDone();
 			});
 		});
 	};
