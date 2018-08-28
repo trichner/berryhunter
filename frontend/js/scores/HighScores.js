@@ -52,29 +52,29 @@ define(['Events', 'Utils'], function (Events, Utils) {
 		HighScores.startScreenElement = startScreenElement;
 	});
 
-	let mockHighScores = {};
-	require(['NameGenerator'], function (NameGenerator) {
-		let absoluteHighScore = Utils.randomInt(60000, 300000);
-
-		HighScores.categories.forEach(function (category) {
-
-			mockHighScores[category] = [{
-				playerName: NameGenerator.generate(),
-				score: absoluteHighScore
-			}];
-
-			absoluteHighScore *= Utils.random(0.5, 0.8);
-			absoluteHighScore = Math.round(absoluteHighScore);
-		});
-
-		setInterval(function () {
-			HighScores.updateFromBackend(mockHighScores);
-
-			HighScores.categories.forEach(function (category) {
-				mockHighScores[category][0].score += Utils.randomInt(1, 18);
-			});
-		}, 500);
-	});
+	// let mockHighScores = {};
+	// require(['NameGenerator'], function (NameGenerator) {
+	// 	let absoluteHighScore = Utils.randomInt(60000, 300000);
+	//
+	// 	HighScores.categories.forEach(function (category) {
+	//
+	// 		mockHighScores[category] = [{
+	// 			playerName: NameGenerator.generate(),
+	// 			score: absoluteHighScore
+	// 		}];
+	//
+	// 		absoluteHighScore *= Utils.random(0.5, 0.8);
+	// 		absoluteHighScore = Math.round(absoluteHighScore);
+	// 	});
+	//
+	// 	setInterval(function () {
+	// 		HighScores.updateFromBackend(mockHighScores);
+	//
+	// 		HighScores.categories.forEach(function (category) {
+	// 			mockHighScores[category][0].score += Utils.randomInt(1, 18);
+	// 		});
+	// 	}, 500);
+	// });
 
 	return HighScores;
 });
