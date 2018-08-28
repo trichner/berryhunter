@@ -79,6 +79,8 @@ define(['PlayerName', 'Utils', 'Events', 'vendor/detect-browser'], function (Pla
 				startForm.classList.remove('hidden');
 			}.bind(this));
 		}
+
+		Events.triggerOneTime('startScreen.domReady', this.rootElement)
 	};
 
 	StartScreen.show = function () {

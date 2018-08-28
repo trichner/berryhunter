@@ -14,7 +14,7 @@ define([
 	'backend/Welcome',
 	'backend/ScoreboardMessage',
 	'Chat',
-	'Scoreboard',
+	'scores/Scoreboard',
 	'DayCycle',
 	'vendor/flatbuffers',
 	'schema_common',
