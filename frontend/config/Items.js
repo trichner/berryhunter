@@ -75,7 +75,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				file: 'toolBronze',
 				size: 30,
 				offsetX: 10,
-				offsetY: 2.5
+				offsetY: 1.25
 			},
 			definition: 'tools/bronze-tool',
 			type: ItemType.EQUIPMENT,
@@ -87,7 +87,7 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 				file: 'toolIron',
 				size: 30,
 				offsetX: 10,
-				offsetY: 2.5
+				offsetY: 1.25
 			},
 			definition: 'tools/iron-tool',
 			type: ItemType.EQUIPMENT,
@@ -98,8 +98,8 @@ define(['items/ItemType', 'items/Equipment'], function (ItemType, Equipment) {
 			graphic: {
 				file: 'toolTitanium',
 				size: 35,
-				offsetX: 10,
-				offsetY: 2.5
+				offsetX: 12,
+				offsetY: 1.25
 			},
 			definition: 'tools/titanium-tool',
 			type: ItemType.EQUIPMENT,
