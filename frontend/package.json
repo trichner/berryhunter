@@ -2,12 +2,19 @@
   "name": "berryhunter-frontend",
   "version": "0.0.1",
   "description": "Frontend for BerryHunter game",
-  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "main": "game.js",
   "repository": "https://github.com/trichner/berryhunter",
   "author": "Raoul Zander",
   "license": "None",
   "private": true,
   "devDependencies": {
+    "awesome-typescript-loader": "^5.2.0",
+    "source-map-loader": "^0.2.4",
+    "typescript": "^3.0.1",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0"
   }
