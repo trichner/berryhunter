@@ -1,5 +1,5 @@
 module.exports = {
-	entry: "./src/index.tsx",
+	entry: "./src/ts/index.ts",
 	output: {
 		filename: "game.js",
 		path: __dirname + "/dist"
@@ -19,7 +19,19 @@ module.exports = {
 			{ test: /\.ts$/, loader: "awesome-typescript-loader" },
 
 			// All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-			{ enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+			{enforce: "pre", test: /\.js$/, loader: "source-map-loader"},
+
+			// https://webpack.js.org/loaders/less-loader/
+			{
+				test: /\.less$/,
+				use: [{
+					loader: 'style-loader' // creates style nodes from JS strings
+				}, {
+					loader: 'css-loader' // translates CSS into CommonJS
+				}, {
+					loader: 'less-loader' // compiles Less to CSS
+				}]
+			}
 		]
 	},
 
