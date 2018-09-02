@@ -5,7 +5,7 @@
   "factors": {
     "vulnerability": 0.667,
     "damageFraction": 0.003,
-    "speed": 1.2
+    "speed": 0.9
   },
   "drops": [
     {
