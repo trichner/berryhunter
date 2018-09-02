@@ -13,8 +13,8 @@
 ## Setup
 
 yarn add typescript awesome-typescript-loader source-map-loader --dev
-npm install --save-dev style-loader css-loader
-yarn add less-loader --dev
+yarn add style-loader css-loader less-loader --dev
+
 
 ## Ziele
 

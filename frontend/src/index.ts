@@ -1,4 +1,4 @@
-import '../css/style.less';
+import './css/index.less';
 
 class Student {
     fullName: string;
@@ -17,6 +17,6 @@ function greeter(person: Person) {
     return "Hello, " + person.firstName + " " + person.lastName;
 }
 
-let user = new Student("Jane", "M.", "User");
+let user = new Student("Raoul", "M.", "User");
 
-document.body.innerHTML = greeter(user);
+document.getElementById('main').innerHTML = greeter(user);
