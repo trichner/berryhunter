@@ -7,9 +7,9 @@ import (
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/phy"
 	"log"
-	"math"
 	"math/rand"
 	"github.com/trichner/berryhunter/backend/model/vitals"
+	"math"
 )
 
 var _ = model.MobEntity(&Mob{})
@@ -45,7 +45,8 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 		health:             vitals.Max,
 		definition:         d,
 		damageAura:         damageAura,
-		wanderAcceleration: phy.Vec2f{0.1, 0},
+		wanderAcceleration: phy.Vec2f{d.Factors.TurnRate, 0},
+		wanderDeltaPhi:     2 * math.Pi * d.Factors.DeltaPhi,
 		// TODO use walkingSpeedPerTick from global config
 		velocity:           0.055 * d.Factors.Speed,
 		statusEffects:      model.NewStatusEffects(),
@@ -67,6 +68,7 @@ type Mob struct {
 
 	// wandering
 	wanderAcceleration phy.Vec2f
+	wanderDeltaPhi     float32
 	velocity           float32
 
 	statusEffects model.StatusEffects
@@ -110,7 +112,7 @@ func (m *Mob) Update(dt float32) bool {
 	// - calculate collision response on 'horizon' circle and use as 'desired' heading
 
 	// wandering
-	m.heading, m.wanderAcceleration = wander(m.heading, m.wanderAcceleration, m.rand)
+	m.heading, m.wanderAcceleration = wander(m.heading, m.wanderAcceleration, m.wanderDeltaPhi, m.rand)
 	pos := m.Position().Add(m.heading.Mult(m.velocity))
 	m.SetPosition(pos)
 
@@ -124,9 +126,8 @@ func (m *Mob) Update(dt float32) bool {
 //					   / acceleration
 //                    v
 //
-func wander(heading, acceleration phy.Vec2f, r *rand.Rand) (newHeading, newAcceleration phy.Vec2f) {
+func wander(heading, acceleration phy.Vec2f, deltaPhi float32, r *rand.Rand) (newHeading, newAcceleration phy.Vec2f) {
 	const wanderDistance float32 = 1
-	const deltaPhi float32 = 2 * math.Pi * 0.1
 
 	wanderHeading := heading.Normalize().Mult(wanderDistance)
 

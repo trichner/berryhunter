@@ -5,7 +5,9 @@
   "factors": {
     "vulnerability": 0.5,
     "damageFraction": 0.001,
-    "speed": 0.6
+    "speed": 0.6,
+    "deltaPhi": 0.1,
+    "turnRate": 0.04
   },
   "drops": [
     {

@@ -24,9 +24,11 @@ import (
 type MobID uint64
 
 type Factors struct {
-	Vulnerability float32
+	Vulnerability  float32
 	DamageFraction float32
-	Speed float32
+	Speed          float32
+	DeltaPhi       float32
+	TurnRate       float32
 }
 
 type Body struct {
@@ -55,9 +57,11 @@ type mobDefinition struct {
 	Name    string `json:"name"`
 	Type    string `json:"type"`
 	Factors struct {
-		Vulnerability float32 `json:"vulnerability"`
+		Vulnerability  float32 `json:"vulnerability"`
 		DamageFraction float32 `json:"damageFraction"`
-		Speed float32 `json:"speed"`
+		Speed          float32 `json:"speed"`
+		DeltaPhi       float32 `json:"deltaPhi"`
+		TurnRate       float32 `json:"turnRate"`
 	} `json:"factors"`
 	Drops []struct {
 		Item  string `json:"item"`
@@ -92,9 +96,11 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 		Name: m.Name,
 		Type: m.Type,
 		Factors: Factors{
-			Vulnerability: m.Factors.Vulnerability,
+			Vulnerability:  m.Factors.Vulnerability,
 			DamageFraction: m.Factors.DamageFraction,
-			Speed: m.Factors.Speed,
+			Speed:          m.Factors.Speed,
+			DeltaPhi:       m.Factors.DeltaPhi,
+			TurnRate:       m.Factors.TurnRate,
 		},
 		Drops: make(Drops, 0, 1),
 		Body: Body{
