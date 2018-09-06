@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Convert Imports</title>
+	<style>
+        textarea {
+            height: 90vh;
+            width: 48vw;
+        }
+    </style>
+</head>
+<body>
+<textarea id="input"></textarea>
+<textarea id="output"></textarea>
+<button id="convert">Convert</button>
+<script>
+    document.getElementById('convert').addEventListener('click', function () {
+		let input = document.getElementById('input').value;
+		let match = input.match(/(?:define|require)\(\[([^\]]*)], function ?\(([^\)]*)\)/);
+		if (!match){
+			alert('Input didn\'t match :(');
+        } else {
+			function split(input){
+				return input.split(',').map(part => part.trim());
+            }
+
+			let paths = split(match[1]);
+			let modules = split(match[2]);
+
+			let imports = [];
+
+			for (let i = 0; i < paths.length; i++){
+				if (!paths[i]){
+					continue;
+                }
+
+                // Handle common special cases
+                switch (modules[i]) {
+                    case 'Constants':
+                    	imports.push('import {BasicConfig as Constants} from \'../config/Basic\';\n');
+                    	continue;
+				}
+
+				imports.push('import ');
+				if (modules[i]){
+					imports.push('* as ');
+					imports.push(modules[i]);
+                } else {
+					imports.push('?');
+				}
+				imports.push(' from ');
+				imports.push(paths[i].replace("'", "'./"));
+				imports.push(';');
+				imports.push('\n');
+            }
+
+			document.getElementById('output').value = imports.join('');
+        }
+	})
+</script>
+</body>
+</html>
