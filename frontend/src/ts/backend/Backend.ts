@@ -5,8 +5,8 @@ import * as Game from '../Game';
 import * as Utils from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
 import * as Console from '../Console';
-import * as Develop from '../Develop';
-import * as BackendConstants from '../backend/BackendConstants';
+import * as Develop from '../develop/_Develop';
+import * as BackendConstants from './BackendConstants';
 import * as SnapshotFactory from '../backend/SnapshotFactory';
 import * as GameState from '../backend/GameState';
 import * as ClientMessage from '../backend/ClientMessage';
@@ -18,10 +18,9 @@ import * as DayCycle from '../DayCycle';
 import * as StartScreen from '../userInterface/screens/StartScreen';
 import * as EndScreen from '../userInterface/screens/EndScreen';
 import * as UserInterface from '../userInterface/UserInterface';
-
+// TODO BerryhunterApi
 import BerryhunterApi from './BerryhunterApi';
-// TODO vendor
-import {flatbuffers} from './vendor/flatbuffers';
+import {flatbuffers} from 'flatbuffers';
 
 
 export const States = {

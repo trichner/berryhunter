@@ -4,32 +4,33 @@
  * FIXME this class hasn't been updated for quite a while
  */
 
-define([
-	'Utils',
-	'Constants',
-	'GameMapGenerator',
-	'mapEditor/QuadrantGrid',
-	'GameMap',
-	'MiniMap',
-	'Preloading',
-	'Quadrants',
-	'gameObjects/Mobs',
-	'gameObjects/Resources',
-	'underscore',
-], function (Utils, Constants, GameMapGenerator, QuadrantGrid, GameMap, MiniMap, Preloading, Quadrants, Mobs, Resources, _) {
-	let MapEditor = {};
+import {getUrlParameter} from '../Utils';
+import {BasicConfig as Constants} from '../../config/Basic';
+import * as GameMapGenerator from './GameMapGenerator';
+import * as QuadrantGrid from '../mapEditor/QuadrantGrid';
+import * as GameMap from '../GameMap';
+import * as Preloading from '../Preloading';
+import * as Quadrants from '../Quadrants';
+import * as Mobs from '../gameObjects/Mobs';
+import * as Resources from '../gameObjects/Resources';
+import * as _ from '../underscore';
+import * as Develop from './_Develop';
+import * as Game from '../Game';
+// TODO vendor
+import * as PIXI from '../PIXI';
 
-	MapEditor.isActive = function () {
+
+export function isActive () {
 		if (typeof this.active !== 'undefined') {
 			return this.active;
 		}
 
-		let quadrantParameter = Utils.getUrlParameter(Constants.MODE_PARAMETERS.MAP_EDITOR);
+		let quadrantParameter = getUrlParameter(Constants.MODE_PARAMETERS.MAP_EDITOR);
 		this.active = !!quadrantParameter;
 		return this.active;
-	};
+	}
 
-	MapEditor.setup = function () {
+export function setup () {
 		let renderer = PIXI.autoDetectRenderer(
 			QuadrantGrid.QUADRANT_SIZE,
 			QuadrantGrid.QUADRANT_SIZE
@@ -37,11 +38,9 @@ define([
 
 		document.getElementById('drawingContainer').appendChild(renderer.view);
 
-		require(['Develop'], function (Develop) {
 			if (Develop.isActive()) {
 				Develop.logWebsocketStatus('Disabled', 'neutral');
 			}
-		});
 
 		// Empty quadrants
 		Quadrants = [[]];
@@ -56,10 +55,9 @@ define([
 		_.extend(window, Resources);
 
 		return renderer;
-	};
+	}
 
-	require(['Game'], function (Game) {
-		MapEditor.afterSetup = function () {
+export function afterSetup () {
 			Game.pause();
 
 			Game.createPlayer(0, Game.width / 2, Game.height / 2, 'Map Architect');
@@ -73,7 +71,7 @@ define([
 			this.tryRenderQuadrants();
 		};
 
-		MapEditor.tryRenderQuadrants = function () {
+export function tryRenderQuadrants () {
 			let jsonStatus = document.getElementById('jsonStatus');
 			jsonStatus.classList.remove('error');
 			jsonStatus.classList.remove('success');
@@ -123,7 +121,7 @@ define([
 			jsonStatus.classList.add('success');
 		};
 
-		MapEditor.calculateMapDimensions = function () {
+export function calculateMapDimensions () {
 			// If there's no quadrant, at least render 1 empty quadrant
 			let quadrantCount = Math.max(1, Quadrants.length);
 			// TODO Quadranten möglichst quadratisch auslegen, statt alle in die Breite
@@ -131,16 +129,15 @@ define([
 			this.mapHeight = QuadrantGrid.QUADRANT_SIZE;
 		};
 
-		MapEditor.getMapDimensions = function () {
+export function getMapDimensions () {
 			return {
 				width: this.mapWidth,
 				height: this.mapHeight,
 			}
 		};
-	});
 
 
-	if (MapEditor.isActive()) {
+	if (isActive()) {
 		Preloading.registerPartial('partials/mapEditor.html');
 
 		// TODO onAction
@@ -153,5 +150,3 @@ define([
 		Game.player.inventory.removeItem(placedItem, 1);
 	}
 
-	return MapEditor;
-});

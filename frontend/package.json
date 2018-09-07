@@ -30,6 +30,7 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "flatbuffers": "^1.9.0",
     "promise-polyfill": "^8.1.0"
   }
 }

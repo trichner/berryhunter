@@ -1,10 +1,9 @@
 'use strict';
 
-define(['gameObjects/Resources'], function (Resources) {
-	let {Tree, RoundTree, MarioTree, Stone, Bronze, BerryBush} = Resources;
+import {BerryBush, Bronze, MarioTree, Stone, Tree} from '../gameObjects/Resources';
 
-	//noinspection UnnecessaryLocalVariableJS
-	let Quadrants = [
+//noinspection UnnecessaryLocalVariableJS
+	export const Quadrants = [
 		// Berries behind a row of trees
 		[
 			{
@@ -133,6 +132,3 @@ define(['gameObjects/Resources'], function (Resources) {
 			}
 		]
 	];
-
-	return Quadrants;
-});

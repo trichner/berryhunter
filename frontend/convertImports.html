@@ -20,7 +20,7 @@
 <script>
     document.getElementById('convert').addEventListener('click', function () {
 		let input = document.getElementById('input').value;
-		let match = input.match(/(?:define|require)\(\[([^\]]*)], function ?\(([^\)]*)\)/);
+		let match = input.match(/(?:define|require)\(\[([^\]]*)],\s*function ?\(([^\)]*)\)/);
 		if (!match){
 			alert('Input didn\'t match :(');
         } else {
@@ -43,6 +43,17 @@
                     case 'Constants':
                     	imports.push('import {BasicConfig as Constants} from \'../config/Basic\';\n');
                     	continue;
+					case 'GraphicsConfig':
+						imports.push('import {GraphicsConfig} from \'../config/Graphics\';\n');
+						continue;
+					case 'Utils':
+						imports.push('import {} from \'./Utils\';\n');
+						continue;
+					case 'GameObject':
+						imports.push('import GameObject from \'./gameObjects/_GameObject\';\n');
+						continue;
+					case 'Develop':
+						imports.push('import * as Develop from \'./develop/_Develop\';\n');
 				}
 
 				imports.push('import ');

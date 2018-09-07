@@ -2,154 +2,65 @@
 
 // TODO Does webpack handle circular dependencies?
 
-define(['Events'], function (Events) {
-	let Game = {};
+// TODO vendor
+import * as PIXI from './PIXI';
 
-	const States = {
+import * as Preloading from './Preloading';
+import * as MapEditor from './mapEditor/_MapEditor';
+import * as Backend from './backend/Backend';
+import * as Develop from './develop/_Develop';
+import * as GameMapWithBackend from './backend/GameMapWithBackend';
+import * as MiniMap from './MiniMap';
+import * as DayCycle from './DayCycle';
+import * as Player from './Player';
+import * as Spectator from './Spectator';
+import GameObject from './gameObjects/_GameObject';
+import * as UserInterface from './userInterface/UserInterface';
+import * as Chat from './Chat';
+import * as NamedGroup from './NamedGroup';
+import {BasicConfig as Constants} from '../config/Basic';
+
+import * as Events from './Events';
+
+
+export const States = {
 		INITIALIZING: 'INITIALIZING',
 		RENDERING: 'RENDERING',
 		PLAYING: 'PLAYING'
 	};
 
-	Game.States = States;
 
-	Game.state = States.INITIALIZING;
+export let state = States.INITIALIZING;
 
-	Game.setup = function () {
-		require([
-			'PIXI',
-			'MapEditor',
-			'backend/Backend',
-			'Develop',
-			'backend/GameMapWithBackend',
-			'MiniMap',
-			'DayCycle',
-			'Player',
-			'Spectator',
-			'GameObject',
-			'userInterface/UserInterface',
-			'userInterface/screens/StartScreen',
-			'Chat',
-			'Utils',
-			'NamedGroup',
-			'Constants',
-		], function (PIXI, MapEditor, Backend, Develop, GameMapWithBackend, MiniMap, DayCycle,
-		             Player, Spectator, GameObject, UserInterface, StartScreen,
-		             Chat, Utils, NamedGroup, Constants) {
+export let renderer;
+export let width, height;
+export let centerX, centerY;
+export let layers;
+export let stage;
+export let cameraGroup;
+
+export let map: GameMapWithBackend  = null;
+
+export function setup () {
+
 
 			let setupPromises = [];
-			let requireAsPromise = Utils.requireAsPromise;
 
-			Game.loop = function (now) {
-				if (Game.paused) {
-					return;
-				}
-
-				requestAnimationFrame(Game.loop);
-
-				Game.timeDelta = Game.timeSinceLastFrame(now);
-
-				Game.render();
-
-				Game._lastFrame = now;
-			};
-
-			Game.timeSinceLastFrame = function (now) {
-				return now - Game._lastFrame;
-			};
-
-			Game.play = function () {
-				Game.playing = true;
-				Game.paused = false;
-				Game._lastFrame = performance.now();
-				Game.loop();
-			};
-
-			Game.pause = function () {
-				Game.playing = false;
-				Game.paused = true;
-			};
-
-			Game.render = function () {
-				Game.renderer.render(Game.stage);
-			};
-
-			/**
-			 * Creating a player starts implicitly the game
-			 */
-			Game.createPlayer = function (id, x, y, name) {
-				if (Utils.isDefined(Game.spectator)) {
-					Game.spectator.remove();
-					delete Game.spectator;
-				}
-
-				/**
-				 * @type Player
-				 */
-				Game.player = new Player(id, x, y, name);
-				Game.player.init();
-				Game.state = States.PLAYING;
-				Events.trigger('game.playing', Game);
-			};
-
-			Game.removePlayer = function () {
-				Game.createSpectator(Game.player.character.getX(), Game.player.character.getY());
-				Game.player.remove();
-				delete Game.Player;
-				if (Constants.CLEAR_MINIMAP_ON_DEATH) {
-					Game.miniMap.clear();
-					// Game.miniMap.stop();
-					Game.map.clear();
-				}
-				Game.state = States.RENDERING;
-				Events.trigger('game.death', Game);
-			};
-
-			Game.createSpectator = function (x, y) {
-				Game.spectator = new Spectator(x, y);
-			};
-
-			/**
-			 *
-			 * @param {{mapRadius: number}} gameInformation
-			 */
-			Game.startRendering = function (gameInformation) {
-				const baseTexture = new PIXI.Graphics();
-				Game.layers.terrain.ground.addChild(baseTexture);
-				baseTexture.beginFill(0x006030);
-				baseTexture.drawCircle(0, 0, gameInformation.mapRadius);
-
-				Game.map = new GameMapWithBackend(gameInformation.mapRadius);
-				Game.play();
-				Game.state = States.RENDERING;
-				/**
-				 * @type MiniMap
-				 */
-				Game.miniMap = new MiniMap(Game.map.width, Game.map.height);
-			};
-
-			function createBackground() {
-				const waterRect = new PIXI.Graphics();
-				Game.layers.terrain.water.addChild(waterRect);
-
-				waterRect.beginFill(0x287aff);
-				waterRect.drawRect(0, 0, Game.width, Game.height);
-			}
+			
 
 			if (MapEditor.isActive()) {
 				/**
 				 * @type PIXI.WebGLRenderer
 				 */
-				Game.renderer = MapEditor.setup();
+				renderer = MapEditor.setup();
 			} else {
 				// Setup backend first, as this will take some time to connect.
 				Backend.setup();
 
-				let renderer = PIXI.autoDetectRenderer({
+				renderer = PIXI.autoDetectRenderer({
 					antialias: true,
 					backgroundColor: 0x006030
 				});
-				Game.renderer = renderer;
 
 				// Fullscreen
 				renderer.view.style.position = "absolute";
@@ -163,17 +74,17 @@ define(['Events'], function (Events) {
 					document.body.firstChild);
 			}
 
-			Game.width = Game.renderer.width;
-			Game.height = Game.renderer.height;
+			width = renderer.width;
+			height = renderer.height;
 
-			Game.centerX = Game.width / 2;
-			Game.centerY = Game.height / 2;
+			centerX = width / 2;
+			centerY = height / 2;
 
 			/**
 			 * Ordered by z-index
 			 */
 			// TODO: Grids, Borders, AABBs?
-			Game.layers = {
+			layers = {
 				terrain: {
 					water: new NamedGroup('water'),
 					ground: new NamedGroup('ground'),
@@ -211,66 +122,66 @@ define(['Events'], function (Events) {
 				// UI Overlay is the highest layer, but not managed with pixi.js
 			};
 
-			Game.stage = new PIXI.Container();
+			stage = new PIXI.Container();
 
 			// Terrain Background
-			Game.stage.addChild(Game.layers.terrain.water);
+			stage.addChild(layers.terrain.water);
 
-			Game.cameraGroup = new NamedGroup('cameraGroup');
-			Game.stage.addChild(Game.cameraGroup);
+			cameraGroup = new NamedGroup('cameraGroup');
+			stage.addChild(cameraGroup);
 
 			// Terrain Textures moving with the camera
-			Game.cameraGroup.addChild(
-				Game.layers.terrain.ground,
-				Game.layers.terrain.textures,
-				Game.layers.terrain.resourceSpots
+			cameraGroup.addChild(
+				layers.terrain.ground,
+				layers.terrain.textures,
+				layers.terrain.resourceSpots
 			);
 
 			// Lower Placeables
-			Game.cameraGroup.addChild(
-				Game.layers.placeables.campfire,
-				Game.layers.placeables.chest,
-				Game.layers.placeables.workbench,
-				Game.layers.placeables.furnace,
-				Game.layers.resources.berryBush
+			cameraGroup.addChild(
+				layers.placeables.campfire,
+				layers.placeables.chest,
+				layers.placeables.workbench,
+				layers.placeables.furnace,
+				layers.resources.berryBush
 			);
 
 			// Characters
-			Game.cameraGroup.addChild(Game.layers.characters);
+			cameraGroup.addChild(layers.characters);
 
 			// Mobs
-			Game.cameraGroup.addChild(
-				Game.layers.mobs.dodo,
-				Game.layers.mobs.saberToothCat,
-				Game.layers.mobs.mammoth
+			cameraGroup.addChild(
+				layers.mobs.dodo,
+				layers.mobs.saberToothCat,
+				layers.mobs.mammoth
 			);
 
 			// Higher Placeables
-			Game.cameraGroup.addChild(
-				Game.layers.placeables.doors,
-				Game.layers.placeables.walls,
-				Game.layers.placeables.spikyWalls
+			cameraGroup.addChild(
+				layers.placeables.doors,
+				layers.placeables.walls,
+				layers.placeables.spikyWalls
 			);
 
 			// Resources
-			Game.cameraGroup.addChild(
-				Game.layers.resources.minerals,
-				Game.layers.resources.trees
+			cameraGroup.addChild(
+				layers.resources.minerals,
+				layers.resources.trees
 			);
 
 			// Character Additions
-			Game.cameraGroup.addChild(
-				Game.layers.characterAdditions.craftProgress,
-				Game.layers.characterAdditions.chatMessages,
+			cameraGroup.addChild(
+				layers.characterAdditions.craftProgress,
+				layers.characterAdditions.chatMessages,
 			);
 
 			// Vital Sign Indicators on top of everything
 			// And not part of the night filter container
-			Game.stage.addChild(Game.layers.overlays.vitalSignIndicators);
+			stage.addChild(layers.overlays.vitalSignIndicators);
 
 			createBackground();
 
-			setupPromises.push(requireAsPromise([
+			setupPromises.push(Preloading.requireAsPromise([
 				'Camera',
 				'VitalSigns',
 				'items/Recipes',
@@ -290,10 +201,7 @@ define(['Events'], function (Events) {
 				GroundTextureManager.setup();
 			}));
 
-			/**
-			 * @type GameMap|GameMapWithBackend
-			 */
-			Game.map = null;
+
 
 			let domElement = Game.renderer.view;
 			Game.domElement = domElement;
@@ -376,19 +284,111 @@ define(['Events'], function (Events) {
 			Promise.all(setupPromises).then(function () {
 				Events.triggerOneTime('gameSetup', Game);
 			});
-		});
-	};
+	}
 
 
-	Game.relativeWidth = function (value) {
+export function relativeWidth (value) {
 		return value * Game.width / 100;
 	};
 
-	Game.relativeHeight = function (value) {
+export function relativeHeight (value) {
 		return value * Game.height / 100;
 	};
 
-	Events.on('modulesLoaded', Game.setup);
+export function loop (now) {
+    if (Game.paused) {
+        return;
+    }
 
-	return Game;
-});
+    requestAnimationFrame(Game.loop);
+
+    Game.timeDelta = Game.timeSinceLastFrame(now);
+
+    Game.render();
+
+    Game._lastFrame = now;
+};
+
+export function timeSinceLastFrame (now) {
+    return now - Game._lastFrame;
+};
+
+export function play () {
+    Game.playing = true;
+    Game.paused = false;
+    Game._lastFrame = performance.now();
+    Game.loop();
+};
+
+export function pause () {
+    Game.playing = false;
+    Game.paused = true;
+};
+
+export function render () {
+    Game.renderer.render(Game.stage);
+};
+
+/**
+ * Creating a player starts implicitly the game
+ */
+export function createPlayer (id, x, y, name) {
+    if (Utils.isDefined(Game.spectator)) {
+        Game.spectator.remove();
+        delete Game.spectator;
+    }
+
+    /**
+     * @type Player
+     */
+    Game.player = new Player(id, x, y, name);
+    Game.player.init();
+    Game.state = States.PLAYING;
+    Events.trigger('game.playing', Game);
+};
+
+export function removePlayer () {
+    Game.createSpectator(Game.player.character.getX(), Game.player.character.getY());
+    Game.player.remove();
+    delete Game.Player;
+    if (Constants.CLEAR_MINIMAP_ON_DEATH) {
+        Game.miniMap.clear();
+        // Game.miniMap.stop();
+        Game.map.clear();
+    }
+    Game.state = States.RENDERING;
+    Events.trigger('game.death', Game);
+};
+
+export function createSpectator (x, y) {
+    Game.spectator = new Spectator(x, y);
+};
+
+/**
+ *
+ * @param {{mapRadius: number}} gameInformation
+ */
+export function startRendering (gameInformation) {
+    const baseTexture = new PIXI.Graphics();
+    Game.layers.terrain.ground.addChild(baseTexture);
+    baseTexture.beginFill(0x006030);
+    baseTexture.drawCircle(0, 0, gameInformation.mapRadius);
+
+    Game.map = new GameMapWithBackend(gameInformation.mapRadius);
+    Game.play();
+    Game.state = States.RENDERING;
+    /**
+     * @type MiniMap
+     */
+    Game.miniMap = new MiniMap(Game.map.width, Game.map.height);
+};
+
+function createBackground() {
+    const waterRect = new PIXI.Graphics();
+    Game.layers.terrain.water.addChild(waterRect);
+
+    waterRect.beginFill(0x287aff);
+    waterRect.drawRect(0, 0, Game.width, Game.height);
+}
+
+	Events.on('modulesLoaded', Game.setup);

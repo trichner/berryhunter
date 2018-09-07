@@ -58,7 +58,7 @@ export function executeSetup() {
         })();
     }
 
-function requireAsPromise(dependency) {
+export function requireAsPromise(dependency) {
         return registerPreload(new Promise(function (resolve) {
             require([dependency], function (dependency) {
                 resolve(dependency);

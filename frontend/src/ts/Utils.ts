@@ -142,7 +142,7 @@ export function sq(n) {
  *                     Can be any number, per default no limit is applied and any angle can be returned.
  * @return {number}
  */
-export function randomRotation(limitDirections) {
+export function randomRotation(limitDirections?) {
     if (limitDirections === false || limitDirections === 0) {
         return 0;
     }
