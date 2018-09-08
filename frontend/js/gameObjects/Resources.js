@@ -35,7 +35,7 @@ define(['Game', 'GameObject', 'PIXI', 'Preloading', 'Utils', 'InjectedSVG', 'Con
 
 		class Tree extends Resource {
 			constructor(x, y, size) {
-				super(Game.layers.resources.trees, x, y, size * 1.4 + GraphicsConfig.character.size, 0);
+				super(Game.layers.resources.trees, x, y, size * 1.8 + GraphicsConfig.character.size, 0);
 
 				this.resourceSpotTexture = new InjectedSVG(Tree.resourceSpot.svg, x, y, this.size * 0.7, Utils.randomRotation());
 				Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
