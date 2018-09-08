@@ -3,8 +3,7 @@
 import GameObject from '../gameObjects/_GameObject';
 import * as Develop from './_Develop';
 import {isDefined, isUndefined} from '../Utils';
-// TODO vendor
-import * as PIXI from './PIXI';
+import * as PIXI from 'pixi.js';
 
 export function setup() {
 

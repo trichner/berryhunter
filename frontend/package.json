@@ -30,7 +30,9 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "core-js": "^2.5.7",
     "flatbuffers": "^1.9.0",
-    "promise-polyfill": "^8.1.0"
+    "lodash": "^4.17.10",
+    "pixi.js": "^4.8.2"
   }
 }

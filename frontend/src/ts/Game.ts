@@ -2,14 +2,13 @@
 
 // TODO Does webpack handle circular dependencies?
 
-// TODO vendor
-import * as PIXI from './PIXI';
+import * as PIXI from 'pixi.js';
 
 import * as Preloading from './Preloading';
 import * as MapEditor from './mapEditor/_MapEditor';
 import * as Backend from './backend/Backend';
+import GameMapWithBackend from './backend/GameMapWithBackend';
 import * as Develop from './develop/_Develop';
-import * as GameMapWithBackend from './backend/GameMapWithBackend';
 import * as MiniMap from './MiniMap';
 import * as DayCycle from './DayCycle';
 import * as Player from './Player';
@@ -40,6 +39,7 @@ export let stage;
 export let cameraGroup;
 
 export let map: GameMapWithBackend  = null;
+export let miniMap: MiniMap = null;
 
 export function setup () {
 
@@ -380,7 +380,7 @@ export function startRendering (gameInformation) {
     /**
      * @type MiniMap
      */
-    Game.miniMap = new MiniMap(Game.map.width, Game.map.height);
+    miniMap = new MiniMap(Game.map.width, Game.map.height);
 };
 
 function createBackground() {
