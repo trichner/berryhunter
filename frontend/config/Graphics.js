@@ -85,7 +85,7 @@ define([], function () {
 		resources: {
 			tree: {
 				spotFile: 'img/treeSpot.svg',
-				maxSize: 120,
+				maxSize: 232,
 
 				roundTreeFile: 'img/roundTree.svg',
 				deciduousTreeFile: 'img/deciduousTree.svg'
