@@ -1,11 +1,10 @@
 'use strict';
 
 // TODO vendor
-import {PIXI} from '../../vendor/pixijs/pixi';
+import * as PIXI from 'pixi.js';
 import {htmlToElement, isNumber, makeRequest} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
 import * as StartScreen from './userInterface/screens/StartScreen';
-import Promise from 'promise-polyfill';
 
 
 const promises = [];

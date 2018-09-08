@@ -13,11 +13,11 @@ import * as Preloading from '../Preloading';
 import * as Quadrants from '../Quadrants';
 import * as Mobs from '../gameObjects/Mobs';
 import * as Resources from '../gameObjects/Resources';
-import * as _ from '../underscore';
 import * as Develop from './_Develop';
 import * as Game from '../Game';
-// TODO vendor
-import * as PIXI from '../PIXI';
+
+import * as _ from 'lodash';
+import * as PIXI from 'pixi.js';
 
 
 export function isActive () {

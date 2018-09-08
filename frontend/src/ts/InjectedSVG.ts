@@ -1,8 +1,7 @@
 'use strict';
 
 import {BasicConfig as Constants} from '../config/Basic';
-// TODO vendor
-import * as PIXI from './PIXI';
+import * as PIXI from 'pixi.js';
 
 
 export default function InjectedSVG(svgTexture, x, y, size, rotation) {

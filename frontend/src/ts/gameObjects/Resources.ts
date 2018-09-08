@@ -6,8 +6,7 @@ import * as Preloading from '../Preloading';
 import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../Utils';
 import InjectedSVG from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
-// TODO vendor
-import * as PIXI from '../PIXI';
+import * as PIXI from 'pixi.js';
 
 export default class Resource extends GameObject {
     capacity: number;
