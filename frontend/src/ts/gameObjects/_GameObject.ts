@@ -58,7 +58,7 @@ export default class GameObject {
 
     initShape(svg, x, y, size, rotation) {
         if (svg) {
-            return InjectedSVG(svg, x, y, this.size, this.rotation);
+            return new InjectedSVG(svg, x, y, this.size, this.rotation);
         } else {
             const args = Array.prototype.splice.call(arguments, 2);
             return this.createShape.apply(this, [x, y].concat(args));
@@ -112,7 +112,7 @@ export default class GameObject {
         return true;
     }
 
-    movePosition(deltaX, deltaY) {
+    movePosition(deltaX, deltaY?) {
         if (arguments.length === 1) {
             // Seems to be a vector
             deltaY = deltaX.y;

@@ -5,7 +5,6 @@ import {isDefined} from '../Utils';
 import * as Game from '../Game';
 import DebugCircle from '../develop/DebugCircle';
 import GameObject from '../gameObjects/_GameObject';
-import * as Border from '../gameObjects/Border';
 import * as Character from '../gameObjects/Character';
 import * as Placeable from '../gameObjects/Placeable';
 import Resource from '../gameObjects/Resources';
@@ -62,42 +61,6 @@ export default class GameMapWithBackend {
                     break;
                 case Placeable:
                     gameObject = new Placeable(entity.item, entity.position.x, entity.position.y);
-                    break;
-                case Border:
-                    let startX = entity.aabb.LowerX;
-                    let startY = entity.aabb.LowerY;
-                    let endX = entity.aabb.UpperX;
-                    let endY = entity.aabb.UpperY;
-                    let x1, y1, x2, y2;
-
-                    if (startX > 0) {
-                        // Right Border
-                        x1 = startX;
-                        y1 = 0;
-                        x2 = x1;
-                        y2 = endY + startY;
-                    } else if (startY > 0) {
-                        // Bottom Border
-                        x1 = 0;
-                        y1 = startY;
-                        x2 = endX + startX;
-                        y2 = startY;
-                    } else if (endX <= 0) {
-                        // Left Border
-                        x1 = 0;
-                        y1 = 0;
-                        x2 = x1;
-                        y2 = endY + startY;
-                    } else if (endY <= 0) {
-                        // Top Border
-                        x1 = 0;
-                        y1 = 0;
-                        x2 = endX + startX;
-                        y2 = y1;
-                    } else {
-                        throw "Unknown Border orientation " + JSON.stringify(entity.aabb);
-                    }
-                    gameObject = new Border(x1, y1, x2, y2);
                     break;
                 case DebugCircle:
                     if (!Develop.isActive()) {
@@ -201,6 +164,10 @@ export default class GameMapWithBackend {
             delete this.objects[entity.id];
         }, this);
     };
+
+    getObjectsInRange() {
+        return this.getObjectsInView();
+    }
 
     getObjectsInView() {
         return Object.values(this.objects);

@@ -1,7 +1,5 @@
 'use strict';
 
-import Promise from 'promise-polyfill';
-
 /*
  http://stackoverflow.com/a/3885844
  */
@@ -277,7 +275,7 @@ export function nearlyEqual(a, b, epsilon) {
     return Math.abs(a - b) < epsilon;
 }
 
-export function sortStrings(array, key) {
+export function sortStrings(array, key?) {
     return array.sort(function (a, b) {
         let valueA;
         let valueB;

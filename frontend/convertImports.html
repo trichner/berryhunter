@@ -71,6 +71,11 @@
 							(isSubdirectory ? '.' : '') +
 							'./develop/_Develop\';\n');
 						continue;
+					case 'MapEditor':
+						imports.push('import * as MapEditor from \'' +
+							(isSubdirectory ? '.' : '') +
+							'./mapEditor/_MapEditor\';\n');
+						continue;
 					case 'PIXI':
 						imports.push('import * as PIXI from \'pixi.js\';\n');
 						continue;
@@ -90,7 +95,16 @@
 					'GameMapWithBackend',
 					'DebugCircle',
 					'Resource',
-					'Vector'
+					'Vector',
+					'ClientMessage',
+					'GameState',
+					'ScoreboardMessage',
+					'Welcome',
+					'Character',
+					'InjectedSVG',
+					'Mob',
+					'Placeable',
+					'Items'
 				];
 
 				imports.push('import ');

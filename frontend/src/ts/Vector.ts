@@ -16,6 +16,10 @@ export default class Vector {
 
     }
 
+    static clone(vector) {
+        return new Vector(vector.x, vector.y);
+    }
+
     set(x, y) {
         this.x = x;
         this.y = y;
