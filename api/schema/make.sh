@@ -2,7 +2,7 @@
 
 echo "Building Go bindings."
 rm -rf "./BerryhunterApi"
-flatc -g *.fbs
+flatc --go *.fbs
 
 echo "Building JavaScript bindings."
 rm -rf "./js"
