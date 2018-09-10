@@ -8,10 +8,10 @@ import * as Console from '../Console';
 import * as Develop from '../develop/_Develop';
 import * as BackendConstants from './BackendConstants';
 import * as SnapshotFactory from './SnapshotFactory';
-import * as GameState from './GameState';
-import * as ClientMessage from '../backend/ClientMessage';
-import * as Welcome from '../backend/Welcome';
-import * as ScoreboardMessage from '../backend/ScoreboardMessage';
+import GameState from './GameState';
+import ClientMessage from './ClientMessage';
+import Welcome from './Welcome';
+import ScoreboardMessage from './ScoreboardMessage';
 import * as Chat from '../Chat';
 import * as Scoreboard from '../scores/Scoreboard';
 import * as DayCycle from '../DayCycle';
@@ -19,7 +19,7 @@ import * as StartScreen from '../userInterface/screens/StartScreen';
 import * as EndScreen from '../userInterface/screens/EndScreen';
 import * as UserInterface from '../userInterface/UserInterface';
 // TODO BerryhunterApi
-import BerryhunterApi from './BerryhunterApi';
+import * as BerryhunterApi from './BerryhunterApi';
 import {flatbuffers} from 'flatbuffers';
 
 

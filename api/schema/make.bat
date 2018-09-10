@@ -4,7 +4,7 @@ flatc --go common.fbs client.fbs server.fbs
 
 echo "Building JavaScript bindings."
 rmdir /s /q "./js"
-flatc --js --gen-onefile -o js/  common.fbs client.fbs server.fbs
-REM flatc --js --gen-onefile -o js/  common.fbs client.fbs server.fbs
+flatc --ts -o js/  common.fbs client.fbs server.fbs
+REM flatc --js -o js/  common.fbs client.fbs server.fbs
 
 echo "Bindings updated."
