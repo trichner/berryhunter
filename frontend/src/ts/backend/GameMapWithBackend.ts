@@ -5,16 +5,12 @@ import {isDefined} from '../Utils';
 import * as Game from '../Game';
 import DebugCircle from '../develop/DebugCircle';
 import GameObject from '../gameObjects/_GameObject';
-import * as Character from '../gameObjects/Character';
-import * as Placeable from '../gameObjects/Placeable';
+import Character from '../gameObjects/Character';
+import Placeable from '../gameObjects/Placeable';
 import Resource from '../gameObjects/Resources';
 import * as Develop from '../develop/_Develop';
 import * as Equipment from '../items/Equipment';
-import 'object_value';
-
-// TODO schema
-import BerryhunterApi from './BerryhunterApi';
-
+import {BerryhunterApi} from './BerryhunterApi';
 
 export default class GameMapWithBackend {
     radius: number;

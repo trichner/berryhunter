@@ -1,7 +1,7 @@
 'use strict';
 
 import {isFunction} from '../Utils';
-import * as Items from '../items/Items';
+import Items from '../items/Items';
 import SubIcon from './SubIcon';
 import * as Game from '../Game';
 import {BasicConfig as Constants} from '../../config/Basic';

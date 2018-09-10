@@ -268,7 +268,7 @@ export function arraysEqual(a, b, compareFn) {
 // 	}
 // };
 
-export function nearlyEqual(a, b, epsilon) {
+export function nearlyEqual(a, b, epsilon?) {
     if (a === b) {
         return true;
     }

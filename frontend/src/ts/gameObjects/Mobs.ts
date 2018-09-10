@@ -5,7 +5,7 @@ import GameObject from '../gameObjects/_GameObject';
 import * as Preloading from '../Preloading';
 import {isUndefined, randomInt} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
-import * as StatusEffect from './StatusEffect';
+import StatusEffect from './StatusEffect';
 
 function maxSize(mob) {
     return GraphicsConfig.mobs[mob].maxSize;

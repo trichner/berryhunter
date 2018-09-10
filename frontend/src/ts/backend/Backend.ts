@@ -18,8 +18,7 @@ import * as DayCycle from '../DayCycle';
 import * as StartScreen from '../userInterface/screens/StartScreen';
 import * as EndScreen from '../userInterface/screens/EndScreen';
 import * as UserInterface from '../userInterface/UserInterface';
-// TODO BerryhunterApi
-import * as BerryhunterApi from './BerryhunterApi';
+import {BerryhunterApi} from './BerryhunterApi';
 import {flatbuffers} from 'flatbuffers';
 
 

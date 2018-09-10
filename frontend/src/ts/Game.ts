@@ -17,7 +17,7 @@ import * as NamedGroup from './NamedGroup';
 import {BasicConfig as Constants} from '../config/Basic';
 import InputManager from './input/InputManager';
 import * as Events from './Events';
-import * as GroundTexturePanel from 'groundTextures/_Panel';
+import * as GroundTexturePanel from './groundTextures/_Panel';
 import {isDefined} from './Utils';
 import Welcome from "./backend/Welcome";
 import * as Console from './Console';
@@ -97,7 +97,6 @@ export function setup() {
     /**
      * Ordered by z-index
      */
-    // TODO: Grids, Borders, AABBs?
     layers = {
         terrain: {
             water: new NamedGroup('water'),
@@ -237,7 +236,7 @@ export function setup() {
         layers.resources.trees,
     ]);
 
-    input = new InputManager(undefined, {
+    input = new InputManager({
         inputKeyboard: true,
         inputKeyboardEventTarget: window,
 

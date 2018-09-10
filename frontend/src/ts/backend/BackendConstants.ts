@@ -1,8 +1,8 @@
 'use strict';
 
-import * as Items from '../items/Items';
-import * as StatusEffect from '../gameObjects/StatusEffect';
-import BerryhunterApi from './BerryhunterApi';
+import Items from '../items/Items';
+import StatusEffect from '../gameObjects/StatusEffect';
+import {BerryhunterApi} from './BerryhunterApi';
 
 
 export const NONE_ITEM_ID = 0;

@@ -1,5 +1,5 @@
 'use strict';
-import BerryhunterApi from './BerryhunterApi';
+import {BerryhunterApi} from './BerryhunterApi';
 
 export default class Welcome {
 

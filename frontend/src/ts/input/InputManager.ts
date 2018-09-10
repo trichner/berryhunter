@@ -4,7 +4,7 @@ import Pointer from './Pointer';
 
 //  Phaser.Input.InputManager
 
-class InputManager {
+export default class InputManager {
 
     /**
      * [description]

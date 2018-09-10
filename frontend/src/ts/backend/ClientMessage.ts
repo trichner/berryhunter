@@ -3,7 +3,7 @@
 import {isDefined} from '../Utils';
 import * as BackendConstants from './BackendConstants';
 import {flatbuffers} from 'flatbuffers';
-import BerryhunterApi from './BerryhunterApi';
+import {BerryhunterApi} from './BerryhunterApi';
 
 export default class ClientMessage {
     builder;

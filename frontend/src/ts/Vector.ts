@@ -8,7 +8,6 @@ export default class Vector {
 
     static zero = new Vector();
 
-
     constructor(x?, y?) {
 
         this.x = x || 0;

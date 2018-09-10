@@ -65,6 +65,7 @@ export function afterSetup() {
 
     this.grid = new QuadrantGrid(Game.width, Game.height);
 
+    // TODO Events.on('camera.update')
     Game.player.camera.onUpdate = function (position) {
         this.grid.cameraUpdate(position);
     }.bind(this);

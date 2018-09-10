@@ -3,6 +3,7 @@
 import * as PIXI from 'pixi.js';
 import * as Ease from 'pixi-ease';
 import * as _ from 'lodash';
+import ExtendedColorMatrixFilter from '../ColorMatrixFilterExtension';
 
 export default class StatusEffect {
     static Damaged = {id: 'Damaged', priority: 1};
@@ -13,14 +14,14 @@ export default class StatusEffect {
     static Regenerating = {id: 'Regenerating', priority: 6};
 
     showing: boolean = false;
-    colorMatrix;
+    colorMatrix: ExtendedColorMatrixFilter;
     startAlpha: number;
     endAlpha: number;
     updateFn: () => void;
 
     constructor(gameObjectShape, red, green, blue, startAlpha, endAlpha) {
 
-        this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
+        this.colorMatrix = new ExtendedColorMatrixFilter();
         this.colorMatrix.flood(red, green, blue, 1);
         this.colorMatrix.alpha = startAlpha;
         this.colorMatrix.enabled = false;
@@ -97,14 +98,14 @@ export default class StatusEffect {
         // If the startAlpha is lower, we want the animation to end on the start
         // in the opposite case, the animation should end on the end (without reversing)
         let isReverse = (this.startAlpha > this.endAlpha);
-        to.on('loop', function () {
+        to.on('loop', () => {
             isReverse = !isReverse;
             // The effect was scheduled to be removed - remove the update function from the global ticker
             // the rest will be cleaned up by the GC
             if (!this.showing && !isReverse) {
                 this.forceHide();
             }
-        }, this);
+        });
     }
 
     hide() {

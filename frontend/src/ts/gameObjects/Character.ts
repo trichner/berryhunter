@@ -3,7 +3,7 @@
 import * as Game from '../Game';
 import GameObject from './_GameObject';
 import * as PIXI from 'pixi.js';
-import * as NamedGroup from '../NamedGroup';
+import NamedGroup from '../NamedGroup';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {isDefined, sq} from '../Utils';
 import * as MapEditor from '../mapEditor/_MapEditor';
@@ -15,7 +15,7 @@ import * as Text from '../Text';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as Events from '../Events';
 import animateAction from './AnimateAction';
-import * as StatusEffect from './StatusEffect';
+import StatusEffect from './StatusEffect';
 
 export default class Character extends GameObject {
     static svg;
@@ -110,7 +110,7 @@ export default class Character extends GameObject {
             craftingIndicator.visible = false;
 
             let circle = new PIXI.Graphics();
-            this.craftingIndicator.circle = circle;
+            this.craftingIndicator['circle'] = circle;
             craftingIndicator.addChild(circle);
             // Let the progress start at 12 o'clock
             circle.rotation = -0.5 * Math.PI;
@@ -318,11 +318,12 @@ export default class Character extends GameObject {
                 this.craftingIndicator.visible = false;
             }
 
-            this.craftingIndicator.circle.clear();
-            this.craftingIndicator.circle.lineStyle(
+            let craftingIndicatorCircle = this.craftingIndicator['circle'];
+            craftingIndicatorCircle.clear();
+            craftingIndicatorCircle.lineStyle(
                 GraphicsConfig.character.craftingIndicator.lineWidth,
                 GraphicsConfig.character.craftingIndicator.lineColor, 1);
-            this.craftingIndicator.circle.arc(0, 0, 27, 0, progress * 2 * Math.PI);
+            craftingIndicatorCircle.arc(0, 0, 27, 0, progress * 2 * Math.PI);
         }
     }
 

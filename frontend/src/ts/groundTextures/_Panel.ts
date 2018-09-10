@@ -2,7 +2,7 @@
 
 import * as Game from '../Game';
 import * as Events from '../Events';
-import * as Items from '../items/Items';
+import Items from '../items/Items';
 import * as Equipment from '../items/Equipment';
 import * as Preloading from '../Preloading';
 import {

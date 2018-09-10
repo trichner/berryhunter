@@ -5,13 +5,21 @@ import * as Develop from './_Develop';
 import {isDefined, isUndefined} from '../Utils';
 import * as PIXI from 'pixi.js';
 
+export interface hasAABB {
+    aabb: PIXI.Graphics;
+    aabbConnector: PIXI.Graphics;
+    updateAABB: (aabb) => void;
+    hideAABB: () => void;
+    showAABB: () => void;
+}
+
 export function setup() {
 
     /**
      *
      * @param {{LowerX: number, LowerY: number, UpperX: number, UpperY: number}} aabb
      */
-    GameObject.prototype.updateAABB = function (aabb) {
+    GameObject.prototype['updateAABB'] = function (aabb) {
         if (!(Develop.settings.showAABBs && //
             aabb && //
             !isUndefined(aabb.LowerX) && //
@@ -50,13 +58,13 @@ export function setup() {
         }
     };
 
-    GameObject.prototype.hideAABB = function () {
+    GameObject.prototype['hideAABB'] = function () {
         if (isDefined(this.aabb)) {
             this.aabb.noStroke();
         }
     };
 
-    GameObject.prototype.showAABB = function () {
+    GameObject.prototype['showAABB'] = function () {
         if (isDefined(this.aabb)) {
             this.aabb.stroke = Develop.settings.elementColor;
             this.aabb.linewidth = Develop.settings.linewidth;

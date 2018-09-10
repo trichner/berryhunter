@@ -7,7 +7,7 @@ import DebugCircle from '../develop/DebugCircle';
 import * as Character from '../gameObjects/Character';
 import * as Placeable from '../gameObjects/Placeable';
 import {isFunction} from '../Utils';
-import BerryhunterApi from './BerryhunterApi';
+import {BerryhunterApi} from './BerryhunterApi';
 
 export class Spectator {
     id: number;

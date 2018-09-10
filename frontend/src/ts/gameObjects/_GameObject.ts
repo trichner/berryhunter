@@ -6,7 +6,7 @@ import InjectedSVG from '../InjectedSVG';
 import {BasicConfig as Constants} from '../../config/Basic';
 import Vector from '../Vector';
 import {isUndefined, isDefined, nearlyEqual, TwoDimensional} from '../Utils';
-import * as StatusEffect from './StatusEffect';
+import StatusEffect from './StatusEffect';
 
 
 let movementInterpolatedObjects = new Set();

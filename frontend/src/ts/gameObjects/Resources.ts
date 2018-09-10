@@ -3,7 +3,7 @@
 import * as Game from '../Game';
 import GameObject from './_GameObject';
 import * as Preloading from '../Preloading';
-import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../Utils';
+import {isDefined, randomRotation, TwoDimensional} from '../Utils';
 import InjectedSVG from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as PIXI from 'pixi.js';

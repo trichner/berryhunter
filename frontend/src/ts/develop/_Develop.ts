@@ -5,12 +5,12 @@ import * as AABBs from './AABBs';
 import * as Fps from './Fps';
 import * as Preloading from '../Preloading';
 import {getUrlParameter, htmlToElement, isDefined, isUndefined, rad2deg} from '../Utils';
-import * as MapEditor from '../MapEditor';
+import * as MapEditor from '../mapEditor/_MapEditor';
 import * as Console from '../Console';
 import * as ItemType from '../items/ItemType';
 import {BasicConfig as Constants} from '../../config/Basic';
-import * as Items from '../items/Items';
-import BerryhunterApi from '../backend/BerryhunterApi';
+import Items from '../items/Items';
+import {BerryhunterApi} from '../backend/BerryhunterApi';
 
 
 let active = false;
@@ -123,15 +123,15 @@ export function setupItemAdding() {
             continue;
         }
 
-        optionGroups[Items[item].type].appendChild(Utils.htmlToElement('<option value="' + item + '">' + item + '</option>'));
+        optionGroups[Items[item].type].appendChild(htmlToElement('<option value="' + item + '">' + item + '</option>'));
     }
 
     let itemAdd = document.getElementById('develop_itemAdd');
-    let itemCount = document.getElementById('develop_itemCount');
+    let itemCount = document.getElementById('develop_itemCount') as HTMLInputElement;
     itemCount.addEventListener('input', function () {
         itemCount.style.width = Math.max(1.6, (1 + (itemCount.value.length * 0.6))) + 'em';
         let step;
-        if (itemCount.value < 10) {
+        if (parseInt(itemCount.value, 10) < 10) {
             step = 1;
         } else {
             step = Math.pow(10, itemCount.value.length - 2) * 5;
@@ -145,7 +145,7 @@ export function setupItemAdding() {
 
 
     itemAdd.addEventListener('click', function () {
-        let item = document.getElementById('develop_itemSelect').value;
+        let item = (document.getElementById('develop_itemSelect') as HTMLInputElement).value;
         let count = itemCount.value;
         if (MapEditor.isActive()) {
             Game.player.inventory.addItem(
@@ -162,7 +162,7 @@ function onSettingToggle(setting, newValue) {
     switch (setting) {
         case 'showAABBs':
             Object.values(Game.map.objects)
-                .forEach(function (gameObject) {
+                .forEach(function (gameObject: AABBs.hasAABB) {
                     if (newValue) {
                         gameObject.showAABB();
                         if (isDefined(Game.player)) {
