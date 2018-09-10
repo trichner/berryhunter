@@ -9,10 +9,9 @@ import * as Backend from './backend/Backend';
 import * as Console from './Console';
 import * as Chat from './Chat';
 import {isUndefined, isDefined, TwoDimensional} from './Utils';
-// TODO vendor
-import * as Tock from './../vendor/tock';
+import * as Tock from 'tocktimer';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
-import * as BerryhunterApi from './BerryhunterApi';
+import {BerryhunterApi} from './backend/BerryhunterApi';
 
 let consoleCooldown = 0;
 

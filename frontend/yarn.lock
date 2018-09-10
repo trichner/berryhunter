@@ -4305,6 +4305,10 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
 
+tocktimer@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/tocktimer/-/tocktimer-1.0.12.tgz#d93acd8ef966b317c91be792f27d43d69e6542eb"
+
 toposort@^1.0.0:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/toposort/-/toposort-1.0.7.tgz#2e68442d9f64ec720b8cc89e6443ac6caa950029"
