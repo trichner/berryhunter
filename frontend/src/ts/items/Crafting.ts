@@ -3,7 +3,7 @@
 import * as Game from '../Game';
 import * as MapEditor from '../mapEditor/_MapEditor';
 import {arraysEqual, isUndefined} from '../Utils';
-import Items from '../items/Items';
+import {Items} from '../items/Items';
 import * as UserInterface from '../userInterface/UserInterface';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 

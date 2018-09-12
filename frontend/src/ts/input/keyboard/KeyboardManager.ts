@@ -9,13 +9,13 @@
  * So please check your extensions before opening Phaser issues.
  */
 
-import Key from './keys/Key';
+import {Key} from './keys/Key';
 import {KeyCodes} from './keys/KeyCodes';
-import KeyCombo from './combo/KeyCombo';
-import ProcessKeyDown from './keys/ProcessKeyDown';
-import ProcessKeyUp from './keys/ProcessKeyUp';
+import {KeyCombo} from './combo/KeyCombo';
+import {ProcessKeyDown} from './keys/ProcessKeyDown';
+import {ProcessKeyUp} from './keys/ProcessKeyUp';
 
-export default class KeyboardManager {
+export class KeyboardManager {
     enabled = false;
     target;
     keys = [];

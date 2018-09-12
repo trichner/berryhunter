@@ -3,9 +3,9 @@
 import * as Preloading from '../Preloading';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {clearNode, isUndefined, playCssAnimation} from '../Utils';
-import ClickableIcon from './ClickableIcon';
-import ClickableCountableIcon from './ClickableCountableIcon';
-import VitalSignBar from './VitalSignBar';
+import {ClickableIcon} from './ClickableIcon';
+import {ClickableCountableIcon} from './ClickableCountableIcon';
+import {VitalSignBar} from './VitalSignBar';
 import * as Game from '../Game';
 
 let rootElement;

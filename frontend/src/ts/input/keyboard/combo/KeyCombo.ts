@@ -1,11 +1,11 @@
-import ProcessKeyCombo from './ProcessKeyCombo';
-import ResetKeyCombo from './ResetKeyCombo';
+import {ProcessKeyCombo} from './ProcessKeyCombo';
+import {ResetKeyCombo} from './ResetKeyCombo';
 //  Keys can be either:
 //
 //  A string (ATARI)
 //  An array of either integers (key codes) or strings, or a mixture of both
 //  An array of objects (such as Key objects) with a public 'keyCode' property
-export default class KeyCombo {
+export class KeyCombo {
     manager;
     enabled;
     keyCodes;

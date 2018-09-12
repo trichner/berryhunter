@@ -1,7 +1,7 @@
 'use strict';
 
 
-export default class Vector {
+export class Vector {
     x: number;
     y: number;
 

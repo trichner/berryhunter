@@ -1,9 +1,9 @@
 'use strict';
 
-import InjectedSVG from '../InjectedSVG';
+import {InjectedSVG} from '../InjectedSVG';
 import * as Game from '../Game';
 
-export default class GroundTexture {
+export class GroundTexture {
     parameters;
     graphic;
 

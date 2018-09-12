@@ -5,7 +5,7 @@
  */
 import * as PIXI from 'pixi.js';
 
-export default class ExtendedColorMatrixFilter extends PIXI.filters.ColorMatrixFilter {
+export class ExtendedColorMatrixFilter extends PIXI.filters.ColorMatrixFilter {
     constructor() {
         super();
     }

@@ -9,7 +9,7 @@ import * as MapEditor from '../mapEditor/_MapEditor';
 import * as Console from '../Console';
 import {ItemType} from '../items/ItemType';
 import {BasicConfig as Constants} from '../../config/Basic';
-import Items from '../items/Items';
+import {Items} from '../items/Items';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 
 

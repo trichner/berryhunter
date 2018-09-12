@@ -2,18 +2,18 @@
 
 import * as Game from '../Game';
 import * as Events from '../Events';
-import Items from '../items/Items';
+import {Items} from '../items/Items';
 import * as Equipment from '../items/Equipment';
 import * as Preloading from '../Preloading';
 import {
+    deg2rad,
     getUrlParameter,
-    sortStrings,
     htmlToElement,
     isUndefined,
-    deg2rad,
     random,
     randomInt,
-    roundToNearest
+    roundToNearest,
+    sortStrings
 } from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
 import * as GroundTextureTypes from './GroundTextureTypes';

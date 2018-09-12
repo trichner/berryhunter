@@ -5,7 +5,7 @@ const Features = {
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
 
-export default class MouseManager {
+export class MouseManager {
 
     /**
      * [description]

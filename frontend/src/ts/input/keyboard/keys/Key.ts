@@ -2,7 +2,7 @@
 
 //  A generic Key object which can be passed to the Process functions (and so on)
 //  keycode must be an integer
-export default class Key {
+export class Key {
 
     //  @property {integer} keyCode - The keycode of this key.
     keyCode;

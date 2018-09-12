@@ -3,8 +3,8 @@
 import * as Game from '../Game';
 import {isDefined, isFunction} from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
-import Placeable from '../gameObjects/Placeable';
-import Items from '../items/Items';
+import {Placeable} from '../gameObjects/Placeable';
+import {Items} from '../items/Items';
 
 /**
  * Gets filled with all defined recipes

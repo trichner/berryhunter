@@ -4,10 +4,10 @@
 'use strict';
 
 // The "Vehicle" class
-import Vector from '../../Vector';
+import {Vector} from '../../Vector';
 import {map} from '../../Utils';
 
-export default class Vehicle {
+export class Vehicle {
     acceleration = new Vector(0, 0);
     velocity = new Vector(0, 0);
     position: Vector;

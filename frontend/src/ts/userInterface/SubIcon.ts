@@ -2,7 +2,7 @@
 
 import * as InventoryListeners from '../items/InventoryListeners';
 
-export default class SubIcon {
+export class SubIcon {
     countElement;
     requiredCount;
 

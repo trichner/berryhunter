@@ -6,7 +6,7 @@
 
 import {getUrlParameter, isDefined} from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
-import QuadrantGrid from '../mapEditor/QuadrantGrid';
+import {QuadrantGrid} from '../mapEditor/QuadrantGrid';
 import * as Preloading from '../Preloading';
 import {Quadrants} from './Quadrants';
 import * as Mobs from '../gameObjects/Mobs';

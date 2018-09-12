@@ -4,7 +4,7 @@ import {BasicConfig as Constants} from '../../config/Basic';
 import * as GameMapGenerator from './GameMapGenerator';
 import * as MapEditor from './_MapEditor';
 
-export default class GameMap {
+export class GameMap {
     width;
     height;
     objects;

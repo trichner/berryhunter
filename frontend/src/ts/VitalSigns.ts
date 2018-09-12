@@ -3,13 +3,13 @@
 import * as Preloading from './Preloading';
 import * as Game from './Game';
 import * as Events from './Events';
-import {map, isDefined} from './Utils';
+import {isDefined, map} from './Utils';
 import * as UserInterface from './userInterface/UserInterface';
-import InjectedSVG from './InjectedSVG';
+import {InjectedSVG} from './InjectedSVG';
 import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/Basic';
 
-export default class VitalSigns {
+export class VitalSigns {
 
     /**
      * All values are 32bit.

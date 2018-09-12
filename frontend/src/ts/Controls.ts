@@ -8,7 +8,7 @@ import * as Equipment from './items/Equipment';
 import * as Backend from './backend/Backend';
 import * as Console from './Console';
 import * as Chat from './Chat';
-import {isUndefined, isDefined, TwoDimensional} from './Utils';
+import {isDefined, isUndefined, TwoDimensional} from './Utils';
 import Tock from 'tocktimer';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import {BerryhunterApi} from './backend/BerryhunterApi';
@@ -32,7 +32,7 @@ class Keys {
     }
 }
 
-export default class Controls {
+export class Controls {
     isCraftInProgress;
     character;
     lastX;

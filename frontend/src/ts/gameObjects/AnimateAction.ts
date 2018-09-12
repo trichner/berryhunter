@@ -1,6 +1,6 @@
 'use strict';
 
-import {isUndefined, deg2rad} from '../Utils';
+import {deg2rad, isUndefined} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as Ease from 'pixi-ease';
 
@@ -11,7 +11,7 @@ const types = {
     stab: undefined,
 };
 
-export default function animateAction(hand, type, animation, animationFrame, onDone) {
+export function animateAction(hand, type, animation, animationFrame, onDone) {
     if (!this.isPlayerCharacter) {
         console.log('start action animation at frame ' + animationFrame);
     }

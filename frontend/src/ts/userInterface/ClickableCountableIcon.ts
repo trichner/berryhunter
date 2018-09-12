@@ -1,8 +1,8 @@
 'use strict';
 
-import ClickableIcon from './ClickableIcon';
+import {ClickableIcon} from './ClickableIcon';
 
-export default class ClickableCountableIcon extends ClickableIcon {
+export class ClickableCountableIcon extends ClickableIcon {
     countNode;
 
     /**

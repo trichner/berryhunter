@@ -1,7 +1,7 @@
 'use strict';
 
-import Items from '../items/Items';
-import StatusEffect from '../gameObjects/StatusEffect';
+import {Items} from '../items/Items';
+import {StatusEffect} from '../gameObjects/StatusEffect';
 import {BerryhunterApi} from './BerryhunterApi';
 
 

@@ -6,12 +6,12 @@ import {BasicConfig as Constants} from '../../config/Basic';
 import * as Recipes from './Recipes';
 import * as Crafting from './Crafting';
 import * as Equipment from './Equipment';
-import InventorySlot from './InventorySlot';
+import {InventorySlot} from './InventorySlot';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import './InventoryShortcuts';
 
 
-export default class Inventory {
+export class Inventory {
 
     character;
     isCraftInProgress;

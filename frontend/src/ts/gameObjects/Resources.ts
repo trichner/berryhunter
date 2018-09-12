@@ -1,14 +1,14 @@
 'use strict';
 
 import * as Game from '../Game';
-import GameObject from './_GameObject';
+import {GameObject} from './_GameObject';
 import * as Preloading from '../Preloading';
 import {isDefined, randomRotation, TwoDimensional} from '../Utils';
-import InjectedSVG from '../InjectedSVG';
+import {InjectedSVG} from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as PIXI from 'pixi.js';
 
-export default class Resource extends GameObject {
+export class Resource extends GameObject {
     capacity: number;
     baseScale: number;
     private _stock;

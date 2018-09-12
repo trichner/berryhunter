@@ -2,17 +2,17 @@
 
 import * as _ from 'lodash';
 import * as Game from '../Game';
-import InjectedSVG from '../InjectedSVG';
+import {InjectedSVG} from '../InjectedSVG';
 import {BasicConfig as Constants} from '../../config/Basic';
-import Vector from '../Vector';
-import {isUndefined, isDefined, nearlyEqual, TwoDimensional} from '../Utils';
-import StatusEffect from './StatusEffect';
+import {Vector} from '../Vector';
+import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../Utils';
+import {StatusEffect} from './StatusEffect';
 
 
 let movementInterpolatedObjects = new Set();
 let rotatingObjects = new Set();
 
-export default class GameObject {
+export class GameObject {
     id: number; // will be filled in GameMapWithBackend with backend ids
 
     layer;

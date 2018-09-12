@@ -1,23 +1,23 @@
 'use strict';
 
 import * as Game from '../Game';
-import GameObject from './_GameObject';
+import {GameObject} from './_GameObject';
 import * as PIXI from 'pixi.js';
-import NamedGroup from '../NamedGroup';
+import {NamedGroup} from '../NamedGroup';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {isDefined, sq} from '../Utils';
 import * as MapEditor from '../mapEditor/_MapEditor';
 import * as Equipment from '../items/Equipment';
-import InjectedSVG from '../InjectedSVG';
+import {InjectedSVG} from '../InjectedSVG';
 import * as Preloading from '../Preloading';
-import Vector from '../Vector';
+import {Vector} from '../Vector';
 import * as Text from '../Text';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as Events from '../Events';
-import animateAction from './AnimateAction';
-import StatusEffect from './StatusEffect';
+import {animateAction} from './AnimateAction';
+import {StatusEffect} from './StatusEffect';
 
-export default class Character extends GameObject {
+export class Character extends GameObject {
     static svg;
     static craftingIndicator = {svg: undefined};
     static hitAnimationFrameDuration: number = 15;

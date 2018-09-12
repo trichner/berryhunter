@@ -1,7 +1,7 @@
 'use strict';
 import {BerryhunterApi} from './BerryhunterApi';
 
-export default class Welcome {
+export class Welcome {
 
     serverName: string;
     mapRadius: number;

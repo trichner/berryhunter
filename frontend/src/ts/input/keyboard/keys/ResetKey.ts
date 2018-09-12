@@ -1,6 +1,6 @@
 //  Resets a Key object back to its default settings.
 //  Optionally resets the keyCode as well.
-export default function ResetKey(key, clearKeyCode) {
+export function ResetKey(key, clearKeyCode) {
     if (clearKeyCode === undefined) {
         clearKeyCode = false;
     }

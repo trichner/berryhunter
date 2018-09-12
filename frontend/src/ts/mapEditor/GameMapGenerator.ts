@@ -2,7 +2,6 @@
 
 import {Quadrants} from './Quadrants';
 import * as Resources from '../gameObjects/Resources';
-import Mob, * as Mobs from '../gameObjects/Mobs';
 import {executeRandomFunction, randomInt} from '../Utils';
 
 //noinspection UnnecessaryLocalVariableJS

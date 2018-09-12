@@ -1,6 +1,6 @@
 'use strict';
 
-export default class VitalSignBar {
+export class VitalSignBar {
     domElement;
     indicator;
     previousIndicator;

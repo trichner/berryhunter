@@ -4,7 +4,7 @@ import {BasicConfig as Constants} from '../config/Basic';
 import * as PIXI from 'pixi.js';
 
 
-export default class InjectedSVG extends PIXI.Sprite {
+export class InjectedSVG extends PIXI.Sprite {
     constructor(svgTexture, x, y, size, rotation?) {
         super(svgTexture);
 

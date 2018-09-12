@@ -1,11 +1,11 @@
 'use strict';
 
 import * as Game from '../Game';
-import GameObject from '../gameObjects/_GameObject';
+import {GameObject} from '../gameObjects/_GameObject';
 import * as Preloading from '../Preloading';
 import {isUndefined, randomInt} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
-import StatusEffect from './StatusEffect';
+import {StatusEffect} from './StatusEffect';
 
 function maxSize(mob) {
     return GraphicsConfig.mobs[mob].maxSize;
@@ -19,7 +19,7 @@ function file(mob) {
     return GraphicsConfig.mobs[mob].file;
 }
 
-export default class Mob extends GameObject {
+export class Mob extends GameObject {
     constructor(gameLayer, x, y, size, svg) {
         super(gameLayer, x, y, size, 0, svg);
         this.isMoveable = true;

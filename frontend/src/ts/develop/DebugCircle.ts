@@ -1,13 +1,13 @@
 'use strict';
 
 import * as Game from '../Game';
-import GameObject from '../gameObjects/_GameObject';
+import {GameObject} from '../gameObjects/_GameObject';
 import * as Develop from '../develop/_Develop';
 import * as PIXI from 'pixi.js';
 import {hasAABB} from './AABBs';
 
 
-export default class DebugCircle extends GameObject {
+export class DebugCircle extends GameObject {
     timeToLife: number;
 
     constructor(x, y, radius) {

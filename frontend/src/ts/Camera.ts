@@ -1,17 +1,17 @@
 'use strict';
 
 import * as Game from './Game';
-import Vehicle from './natureOfCode/arrive/vehicle';
+import {Vehicle} from './natureOfCode/arrive/vehicle';
 import * as Develop from './develop/_Develop';
-import Vector from './Vector';
-import Character from './gameObjects/Character';
+import {Vector} from './Vector';
+import {Character} from './gameObjects/Character';
 import * as Events from './Events';
 
 
 let Corners = [];
 let extraBoundary;
 
-export default class Camera {
+export class Camera {
     character: Character;
     offset: Vector;
     vehicle: Vehicle;

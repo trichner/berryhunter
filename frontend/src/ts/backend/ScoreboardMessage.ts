@@ -1,6 +1,6 @@
 'use strict';
 
-export default class ScoreboardMessage {
+export class ScoreboardMessage {
     players;
 
     /**

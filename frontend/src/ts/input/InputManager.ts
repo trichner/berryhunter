@@ -1,10 +1,10 @@
-import Keyboard from './keyboard/KeyboardManager';
-import Mouse from './mouse/MouseManager';
-import Pointer from './Pointer';
+import {KeyboardManager as Keyboard} from './keyboard/KeyboardManager';
+import {MouseManager as Mouse} from './mouse/MouseManager';
+import {Pointer} from './Pointer';
 
 //  Phaser.Input.InputManager
 
-export default class InputManager {
+export class InputManager {
 
     /**
      * [description]

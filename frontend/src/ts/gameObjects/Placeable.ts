@@ -1,11 +1,11 @@
 'use strict';
 
 import * as PIXI from 'pixi.js';
-import GameObject from '../gameObjects/_GameObject';
+import {GameObject} from '../gameObjects/_GameObject';
 import {randomRotation} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
 
-export default class Placeable extends GameObject {
+export class Placeable extends GameObject {
     item;
 
     constructor(placeableItem, x, y) {

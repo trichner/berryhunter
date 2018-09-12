@@ -1,4 +1,4 @@
-export default function ResetKeyCombo(combo) {
+export function ResetKeyCombo(combo) {
     combo.current = combo.keyCodes[0];
     combo.index = 0;
     combo.timeLastMatched = 0;

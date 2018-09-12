@@ -1,6 +1,6 @@
-import AdvanceKeyCombo from './AdvanceKeyCombo';
+import {AdvanceKeyCombo} from './AdvanceKeyCombo';
 
-export default function ProcessKeyCombo(event, combo) {
+export function ProcessKeyCombo(event, combo) {
     if (combo.matched) {
         return true;
     }

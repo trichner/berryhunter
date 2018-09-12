@@ -3,16 +3,16 @@
 import * as _ from 'lodash';
 import {isDefined} from '../Utils';
 import * as Game from '../Game';
-import DebugCircle from '../develop/DebugCircle';
-import GameObject from '../gameObjects/_GameObject';
-import Character from '../gameObjects/Character';
-import Placeable from '../gameObjects/Placeable';
-import Resource from '../gameObjects/Resources';
+import {DebugCircle} from '../develop/DebugCircle';
+import {GameObject} from '../gameObjects/_GameObject';
+import {Character} from '../gameObjects/Character';
+import {Placeable} from '../gameObjects/Placeable';
+import {Resource} from '../gameObjects/Resources';
 import * as Develop from '../develop/_Develop';
 import * as Equipment from '../items/Equipment';
 import {BerryhunterApi} from './BerryhunterApi';
 
-export default class GameMapWithBackend {
+export class GameMapWithBackend {
     radius: number;
     width: number;
     height: number;

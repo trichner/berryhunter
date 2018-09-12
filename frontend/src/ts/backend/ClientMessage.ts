@@ -5,7 +5,7 @@ import * as BackendConstants from './BackendConstants';
 import {flatbuffers} from 'flatbuffers';
 import {BerryhunterApi} from './BerryhunterApi';
 
-export default class ClientMessage {
+export class ClientMessage {
     builder;
 
     constructor(builder, type, body) {

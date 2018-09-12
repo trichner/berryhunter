@@ -1,10 +1,10 @@
 'use strict';
 
 import * as Game from './Game';
-import Vector from './Vector';
-import Camera from './Camera';
+import {Vector} from './Vector';
+import {Camera} from './Camera';
 
-export default class Spectator {
+export class Spectator {
     position: Vector;
     movementSpeed: number;
     camera: Camera;

@@ -3,7 +3,7 @@
 import * as Environment from '../Environment';
 import * as Preloading from '../Preloading';
 import {isDefined, makeRequest} from '../Utils';
-import GroundTexture from './GroundTexture';
+import {GroundTexture} from './GroundTexture';
 import * as GroundTextureTypes from './GroundTextureTypes';
 
 

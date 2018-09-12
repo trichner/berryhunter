@@ -1,13 +1,13 @@
 'use strict';
 
 import {isFunction} from '../Utils';
-import Items from '../items/Items';
-import SubIcon from './SubIcon';
+import {Items} from '../items/Items';
+import {SubIcon} from './SubIcon';
 import * as Game from '../Game';
 import {BasicConfig as Constants} from '../../config/Basic';
 
 
-export default class ClickableIcon {
+export class ClickableIcon {
     clickable = false;
     domElement;
     inProgress = false;

@@ -95,4 +95,4 @@ function validatePlaceable(item) {
     }
 })();
 
-export default Items;
+export {Items};

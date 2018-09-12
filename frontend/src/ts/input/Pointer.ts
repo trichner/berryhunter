@@ -1,4 +1,4 @@
-import Vector2 from '../Vector';
+import {Vector} from '../Vector';
 
 
 // DOM event button value:
@@ -11,7 +11,7 @@ import Vector2 from '../Vector';
 // For a mouse configured for left-handed use, the button actions are reversed. In this case, the values are read from
 // right to left.
 
-export default class Pointer {
+export class Pointer {
 
     /**
      * [description]
@@ -57,7 +57,7 @@ export default class Pointer {
      * @property {Phaser.Math.Vector2} position
      * @since 3.0.0
      */
-    position = new Vector2();
+    position = new Vector();
 
     /**
      * X coordinate of the Pointer when Button 1 (left button), or Touch, was pressed, used for dragging

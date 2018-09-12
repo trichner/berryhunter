@@ -1,4 +1,4 @@
-export default function ProcessKeyUp(key, event) {
+export function ProcessKeyUp(key, event) {
     key.originalEvent = event;
 
     if (key.preventDefault) {

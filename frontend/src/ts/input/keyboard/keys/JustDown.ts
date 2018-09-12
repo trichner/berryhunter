@@ -4,7 +4,7 @@
  * You can only call justDown once per key press. It will only return `true` once, until the Key is released and pressed down again.
  * This allows you to use it in situations where you want to check if this key is down without using a Signal, such as in a core game loop.
  */
-export default function JustDown(key) {
+export function JustDown(key) {
     let current = false;
 
     if (key.isDown) {

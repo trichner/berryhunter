@@ -10,7 +10,7 @@ import * as AutoFeed from '../AutoFeed';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 
 
-export default class InventorySlot {
+export class InventorySlot {
     inventory;
     index;
 

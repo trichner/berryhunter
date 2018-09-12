@@ -4,7 +4,7 @@ import * as PIXI from 'pixi.js';
 import {BasicConfig as Constants} from '../config/Basic';
 
 
-export default class NamedGroup extends PIXI.Container {
+export class NamedGroup extends PIXI.Container {
     constructor(name) {
         super();
 

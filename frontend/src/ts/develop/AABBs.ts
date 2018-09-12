@@ -1,6 +1,6 @@
 'use strict';
 
-import GameObject from '../gameObjects/_GameObject';
+import {GameObject} from '../gameObjects/_GameObject';
 import * as Develop from './_Develop';
 import {isDefined, isUndefined} from '../Utils';
 import * as PIXI from 'pixi.js';

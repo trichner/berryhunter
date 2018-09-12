@@ -1,17 +1,17 @@
 'use strict';
 
 import * as Game from './Game';
-import Character from './gameObjects/Character';
-import StatusEffect from './gameObjects/StatusEffect';
-import Controls from './Controls';
-import Camera from './Camera';
-import Inventory from './items/Inventory';
-import VitalSigns from './VitalSigns';
+import {Character} from './gameObjects/Character';
+import {StatusEffect} from './gameObjects/StatusEffect';
+import {Controls} from './Controls';
+import {Camera} from './Camera';
+import {Inventory} from './items/Inventory';
+import {VitalSigns} from './VitalSigns';
 import {isDefined} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 
-export default class Player {
+export class Player {
     craftProgress;
     character: Character;
     controls: Controls;

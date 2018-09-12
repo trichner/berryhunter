@@ -8,7 +8,7 @@ import * as PIXI from 'pixi.js';
 import {BasicConfig as Constants} from '../../config/Basic';
 import * as Text from '../Text';
 
-export default class QuadrantGrid {
+export class QuadrantGrid {
     static QUADRANT_SIZE = Constants.mapEditor.GRID_SPACING * Constants.mapEditor.FIELDS_IN_QUADRANT;
 
     gridLines;
