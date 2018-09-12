@@ -1,19 +1,18 @@
 'use strict';
 
 import * as PIXI from 'pixi.js';
-import * as Preloading from './Preloading';
 import * as MapEditor from './mapEditor/_MapEditor';
 import * as Backend from './backend/Backend';
 import GameMapWithBackend from './backend/GameMapWithBackend';
 import * as Develop from './develop/_Develop';
-import * as MiniMap from './MiniMap';
+import MiniMap from './MiniMap';
 import * as DayCycle from './DayCycle';
-import * as Player from './Player';
-import * as Spectator from './Spectator';
+import Player from './Player';
+import Spectator from './Spectator';
 import GameObject from './gameObjects/_GameObject';
 import * as UserInterface from './userInterface/UserInterface';
 import * as Chat from './Chat';
-import * as NamedGroup from './NamedGroup';
+import NamedGroup from './NamedGroup';
 import {BasicConfig as Constants} from '../config/Basic';
 import InputManager from './input/InputManager';
 import * as Events from './Events';
@@ -21,6 +20,11 @@ import * as GroundTexturePanel from './groundTextures/_Panel';
 import {isDefined} from './Utils';
 import Welcome from "./backend/Welcome";
 import * as Console from './Console';
+import Camera from './Camera';
+import VitalSigns from './VitalSigns';
+import * as Recipes from './items/Recipes';
+import * as Scoreboard from './scores/Scoreboard';
+import * as GroundTextureManager from './groundTextures/GroundTextureManager';
 
 
 export const States = {
@@ -32,12 +36,12 @@ export const States = {
 
 export let state = States.INITIALIZING;
 
-export let renderer;
+export let renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 export let width, height;
 export let centerX, centerY;
 export let layers;
 export let stage;
-export let cameraGroup;
+export let cameraGroup: PIXI.Container;
 
 export let map: GameMapWithBackend = null;
 export let miniMap: MiniMap = null;
@@ -194,25 +198,12 @@ export function setup() {
 
     createBackground();
 
-    setupPromises.push(Preloading.requireAsPromise([
-        'Camera',
-        'VitalSigns',
-        'items/Recipes',
-        'scores/Scoreboard',
-        'groundTextures/GroundTextureManager',
-    ]).then(function (dependencies) {
-        let Camera = dependencies[0];
-        let VitalSigns = dependencies[1];
-        let Recipes = dependencies[2];
-        let Scoreboard = dependencies[3];
-        let GroundTextureManager = dependencies[4];
 
-        Camera.setup();
+    Camera.setup();
         VitalSigns.setup(layers.overlays.vitalSignIndicators);
         Recipes.setup();
         Scoreboard.setup();
         GroundTextureManager.setup();
-    }));
 
 
     domElement = renderer.view;
@@ -289,15 +280,6 @@ export function setup() {
     Promise.all(setupPromises).then(function () {
         Events.triggerOneTime('gameSetup');
     });
-}
-
-
-export function relativeWidth(value) {
-    return value * width / 100;
-}
-
-export function relativeHeight(value) {
-    return value * height / 100;
 }
 
 export function loop(now) {

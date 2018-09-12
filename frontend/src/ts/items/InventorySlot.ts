@@ -7,7 +7,7 @@ import * as UserInterface from '../userInterface/UserInterface';
 import * as InventoryListeners from './InventoryListeners';
 import * as Events from '../Events';
 import * as AutoFeed from '../AutoFeed';
-import BerryhunterApi from './BerryhunterApi';
+import {BerryhunterApi} from '../backend/BerryhunterApi';
 
 
 export default class InventorySlot {
@@ -201,6 +201,10 @@ export default class InventorySlot {
     }
 }
 
+/**
+ *
+ * @param item
+ */
 function isItemClickable(item) {
     // See https://trello.com/c/Te1dzqKd#comment-5b565a43463c9537a185e364
     // switch (item.type) {

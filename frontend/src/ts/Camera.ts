@@ -4,7 +4,6 @@ import * as Game from './Game';
 import Vehicle from './natureOfCode/arrive/vehicle';
 import * as Develop from './develop/_Develop';
 import Vector from './Vector';
-import {} from './Utils';
 import Character from './gameObjects/Character';
 import * as Events from './Events';
 

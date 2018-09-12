@@ -1,7 +1,5 @@
 'use strict';
 
-const InventoryListeners = {};
-
 const registeredListeners = {};
 
 export function register(itemName, onChanceCallback) {

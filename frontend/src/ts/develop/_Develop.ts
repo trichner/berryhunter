@@ -7,7 +7,7 @@ import * as Preloading from '../Preloading';
 import {getUrlParameter, htmlToElement, isDefined, isUndefined, rad2deg} from '../Utils';
 import * as MapEditor from '../mapEditor/_MapEditor';
 import * as Console from '../Console';
-import * as ItemType from '../items/ItemType';
+import {ItemType} from '../items/ItemType';
 import {BasicConfig as Constants} from '../../config/Basic';
 import Items from '../items/Items';
 import {BerryhunterApi} from '../backend/BerryhunterApi';

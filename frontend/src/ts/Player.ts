@@ -9,7 +9,7 @@ import Inventory from './items/Inventory';
 import VitalSigns from './VitalSigns';
 import {isDefined} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
-import * as BerryhunterApi from './backend/BerryhunterApi';
+import {BerryhunterApi} from './backend/BerryhunterApi';
 
 export default class Player {
     craftProgress;

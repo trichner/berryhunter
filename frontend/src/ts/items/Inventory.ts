@@ -6,9 +6,9 @@ import {BasicConfig as Constants} from '../../config/Basic';
 import * as Recipes from './Recipes';
 import * as Crafting from './Crafting';
 import * as Equipment from './Equipment';
-import * as InventorySlot from './InventorySlot';
-import BerryhunterApi from './BerryhunterApi';
-import 'InventoryShortcuts';
+import InventorySlot from './InventorySlot';
+import {BerryhunterApi} from '../backend/BerryhunterApi';
+import './InventoryShortcuts';
 
 
 export default class Inventory {
@@ -64,7 +64,7 @@ export default class Inventory {
     activateSlot(slotIndex, equipmentSlot) {
         // 1st: Deactivate all other slots that match the same equipment slot
         for (let i = 0; i < this.slots.length; i++) {
-            let slot = this.slots[i];
+            let slot = this.slots[i] as InventorySlot;
             if (i !== slotIndex) {
                 if (slot.isFilled()) {
                     let itemEquipmentSlot = Equipment.Helper.getItemEquipmentSlot(slot.item);
@@ -91,7 +91,7 @@ export default class Inventory {
         }
     }
 
-    addItem(item, count) {
+    addItem(item, count?) {
         let isItemPresent = this.slots.some(function (slot) {
             if (slot.isFilled()) {
                 if (slot.item === item) {
@@ -101,7 +101,7 @@ export default class Inventory {
             }
         });
         if (!isItemPresent) {
-            this.slots.some(function (slot) {
+            this.slots.some(function (slot: InventorySlot) {
                 if (!slot.isFilled()) {
                     slot.setItem(item, count);
                     return true;
@@ -141,7 +141,7 @@ export default class Inventory {
      * @param equipmentSlot
      */
     unequipItem(item, equipmentSlot) {
-        this.slots.forEach(function (slot) {
+        this.slots.forEach(function (slot: InventorySlot) {
             if (slot.item === item) {
                 slot.deactivate();
             }

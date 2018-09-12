@@ -3,7 +3,7 @@
 import * as PIXI from 'pixi.js';
 import * as Ease from 'pixi-ease';
 import * as _ from 'lodash';
-import ExtendedColorMatrixFilter from '../ColorMatrixFilterExtension';
+import ExtendedColorMatrixFilter from '../ExtendedColorMatrixFilter';
 
 export default class StatusEffect {
     static Damaged = {id: 'Damaged', priority: 1};

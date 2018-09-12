@@ -1,6 +1,5 @@
 'use strict';
 
-// TODO vendor
 import * as PIXI from 'pixi.js';
 import {htmlToElement, isNumber, makeRequest} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
@@ -16,8 +15,8 @@ export function executePreload(requires) {
             .then(function () {
                 StartScreen.onDomReady();
 
-                requires.forEach(function (dependency) {
-                    requireAsPromise(dependency);
+                requires.forEach(function () {
+                    // requireAsPromise(dependency);
                 });
 
                 let loadCycle = 1;
@@ -57,13 +56,6 @@ export function executeSetup() {
         })();
     }
 
-export function requireAsPromise(dependency) {
-        return registerPreload(new Promise(function (resolve) {
-            require([dependency], function (dependency) {
-                resolve(dependency);
-            });
-        }));
-    }
 
 export function registerPreload(preloadingPromise) {
         preloadingPromise.then(function (data) {

@@ -3,7 +3,7 @@
 import * as PlayerName from '../../PlayerName';
 import {isDefined, preventInputPropagation} from '../../Utils';
 import * as Events from '../../Events';
-import {DetectBrowser} from '../../../../vendor/detect-browser-3.0.0';
+import * as DetectBrowser from 'detect-browser';
 
 
 let _progress = 0;
@@ -13,48 +13,51 @@ export let htmlFile = 'partials/startScreen.html';
 export let isDomReady = false;
 export let playerNameInput = null;
 
+let rootElement;
+let chromeWarning;
+
 export function onDomReady() {
-    this.rootElement = document.getElementById('startScreen');
+    rootElement = document.getElementById('startScreen');
 
-    preventInputPropagation(this.rootElement);
+    preventInputPropagation(rootElement);
 
-    this.playerNameInput = this.rootElement
+    playerNameInput = rootElement
         .getElementsByClassName('playerNameInput').item(0);
-    this.rootElement.getElementsByClassName('playerNameSubmit').item(0).disabled = false;
+    rootElement.getElementsByClassName('playerNameSubmit').item(0).disabled = false;
 
     loadingBar = document.getElementById('loadingBar');
 
-    this.isDomReady = true;
+    isDomReady = true;
 
     let startForm = document.getElementById('startForm');
     PlayerName.prepareForm(startForm, playerNameInput);
     PlayerName.fillInput(playerNameInput);
 
     // re-set progress to ensure the loading bar is synced.
-    this.progress = _progress;
+    progress(_progress);
 
-    this.chromeWarning = document.getElementById('chromeWarning');
+    chromeWarning = document.getElementById('chromeWarning');
 
     let browser = DetectBrowser.detect();
     if (browser.name !== 'chrome') {
-        this.chromeWarning.classList.remove('hidden');
+        chromeWarning.classList.remove('hidden');
         startForm.classList.add('hidden');
-        document.getElementById('continueAnywayButton').addEventListener('click', function (event) {
+        document.getElementById('continueAnywayButton').addEventListener('click', (event) => {
             event.preventDefault();
-            this.chromeWarning.classList.add('hidden');
+            chromeWarning.classList.add('hidden');
             startForm.classList.remove('hidden');
-        }.bind(this));
+        });
     }
 
-    Events.triggerOneTime('startScreen.domReady', this.rootElement)
+    Events.triggerOneTime('startScreen.domReady', rootElement)
 }
 
 export function show() {
-    this.rootElement.classList.remove('hidden');
+    rootElement.classList.remove('hidden');
 }
 
 export function hide() {
-    this.rootElement.classList.add('hidden');
+    rootElement.classList.add('hidden');
 }
 
 export function progress(value) {
@@ -71,30 +74,14 @@ function setProgress(value) {
         return;
     }
     _progress = value;
-    if (this.isDomReady) {
+    if (isDomReady) {
         loadingBar.style.width = (_progress * 100) + '%';
         if (_progress >= 1) {
-            let self = this;
-            Events.on('firstGameStateRendered', function () {
-                self.rootElement.classList.remove('loading');
-                self.rootElement.classList.add('finished');
-                // let loadingScreenElement = document.getElementById('loadingScreen');
-                // if (loadingScreenElement === null) {
-                // 	// Element was already removed
-                // 	return;
-                // }
-                self.rootElement.getElementsByClassName('playerNameSubmit').item(0).value = "Play";
+            Events.on('firstGameStateRendered', () => {
+                rootElement.classList.remove('loading');
+                rootElement.classList.add('finished');
+                rootElement.getElementsByClassName('playerNameSubmit').item(0).value = "Play";
             })
-
-            // loadingScreenElement.classList.add('finished');
-            //
-            // loadingScreenElement.addEventListener('animationend', function () {
-            // 	if (this.parentNode === null) {
-            // 		// Element was already removed
-            // 		return;
-            // 	}
-            // 	this.parentNode.removeChild(loadingScreenElement);
-            // });
         }
     }
 }

@@ -9,7 +9,7 @@ import {isDefined, makeRequest} from '../Utils';
 import * as Preloading from '../Preloading';
 import {ItemType} from './ItemType';
 import {BasicConfig as Constants} from '../../config/Basic';
-import * as Items from '../../config/Items';
+import {ItemsConfig as Items} from '../../config/Items';
 import * as Events from '../Events';
 import * as _ from 'lodash';
 
@@ -74,7 +74,7 @@ function validatePlaceable(item) {
             Preloading.registerPreload(makeRequest({
                 method: 'GET',
                 url: definitionPath + item.definition + '.json' + cacheBuster
-            }).then(itemDefinition => {
+            }).then((itemDefinition: any) => {
                 itemDefinition = JSON.parse(itemDefinition);
                 if (item.name !== itemDefinition.name) {
                     throw 'Loaded "' + item.definition + '.json" for item "' + item.name + '" but got "' + itemDefinition.name + '".';

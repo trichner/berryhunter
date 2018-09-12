@@ -1,6 +1,6 @@
 'use strict';
 
-import ExtendedColorMatrixFilter from './ColorMatrixFilterExtension';
+import ExtendedColorMatrixFilter from './ExtendedColorMatrixFilter';
 import * as Develop from './develop/_Develop';
 
 

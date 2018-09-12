@@ -106,7 +106,7 @@ export function setup() {
  */
 export function getCraftableRecipes(inventory) {
     let availableItems = {};
-    let maximumYield = Items.None.factors.yield;
+    let maximumYield = Items.None['factors'].yield;
     // FIXME IMPROVEMENT: associative inventory could be cached
     inventory.slots.forEach(function (slot) {
         if (slot.isFilled()) {

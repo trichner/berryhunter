@@ -1,8 +1,8 @@
 'use strict';
-import * as Game from './Game';
-import {BasicConfig as Constants} from '../config/Basic';
-import * as GameMapGenerator from './mapEditor/GameMapGenerator';
-import * as MapEditor from './mapEditor/_MapEditor';
+import * as Game from '../Game';
+import {BasicConfig as Constants} from '../../config/Basic';
+import * as GameMapGenerator from './GameMapGenerator';
+import * as MapEditor from './_MapEditor';
 
 export default class GameMap {
     width;

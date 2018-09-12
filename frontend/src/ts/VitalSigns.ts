@@ -123,7 +123,7 @@ export default class VitalSigns {
         });
     }
 
-    onDamageTaken(skipFadeIn) {
+    onDamageTaken(skipFadeIn = false) {
         // 300ms shows the damage indicator
         if (skipFadeIn) {
             this.damageIndicatorDuration = 420;

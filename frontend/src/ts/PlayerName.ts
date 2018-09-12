@@ -1,7 +1,7 @@
 'use strict';
 
 import * as NameGenerator from './NameGenerator';
-import * as Backend from './backend/backend';
+import * as Backend from './backend/Backend';
 
 
 const MAX_LENGTH = 20;

@@ -5,7 +5,7 @@ import * as MapEditor from '../mapEditor/_MapEditor';
 import {arraysEqual, isUndefined} from '../Utils';
 import Items from '../items/Items';
 import * as UserInterface from '../userInterface/UserInterface';
-import BerryhunterApi from './BerryhunterApi';
+import {BerryhunterApi} from '../backend/BerryhunterApi';
 
 
 //noinspection UnnecessaryLocalVariableJS

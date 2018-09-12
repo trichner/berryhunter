@@ -6,9 +6,7 @@
 
 import {getUrlParameter, isDefined} from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
-import * as GameMapGenerator from './GameMapGenerator';
 import QuadrantGrid from '../mapEditor/QuadrantGrid';
-import * as GameMap from '../GameMap';
 import * as Preloading from '../Preloading';
 import {Quadrants} from './Quadrants';
 import * as Mobs from '../gameObjects/Mobs';
@@ -17,7 +15,6 @@ import * as Develop from '../develop/_Develop';
 import * as Game from '../Game';
 import * as _ from 'lodash';
 import * as PIXI from 'pixi.js';
-import Placeable from '../gameObjects/Placeable';
 
 
 export function isActive() {

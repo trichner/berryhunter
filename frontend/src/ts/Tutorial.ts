@@ -3,7 +3,7 @@
 import * as Preloading from './Preloading';
 import * as Events from './Events';
 import {deg2rad, isFunction, dateDiff, dateDiffUnit} from './Utils';
-import * as BerryhunterApi from './backend/BerryhunterApi';
+import {BerryhunterApi} from './backend/BerryhunterApi';
 
 const LOCAL_STORAGE_KEY = 'tutorialCompleted';
 

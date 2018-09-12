@@ -5,7 +5,7 @@ import * as Events from './Events';
 import {GraphicsConfig} from '../config/Graphics';
 import {dateDiff, playCssAnimation} from './Utils';
 import * as _ from 'lodash';
-import BerryhunterApi from './BerryhunterApi';
+import {BerryhunterApi} from './backend/BerryhunterApi';
 
 export let activeInventorySlot = null;
 export let lastAutoFeed = Date.now();

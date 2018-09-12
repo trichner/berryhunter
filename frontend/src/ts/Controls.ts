@@ -9,7 +9,7 @@ import * as Backend from './backend/Backend';
 import * as Console from './Console';
 import * as Chat from './Chat';
 import {isUndefined, isDefined, TwoDimensional} from './Utils';
-import * as Tock from 'tocktimer';
+import Tock from 'tocktimer';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 
