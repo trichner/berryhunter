@@ -4,7 +4,8 @@
   "description": "Frontend for BerryHunter game",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "start": "webpack-dev-server --config webpack.dev.js"
+    "start": "webpack-dev-server --config webpack.dev.js",
+    "analyze": "webpack --config webpack.analysis.js"
   },
   "main": "game.js",
   "repository": "https://github.com/trichner/berryhunter",
@@ -16,6 +17,7 @@
     "@types/flatbuffers": "^1.9.0",
     "@types/pixi.js": "^4.8.0",
     "awesome-typescript-loader": "^5.2.0",
+    "circular-dependency-plugin": "^5.0.2",
     "clean-webpack-plugin": "^0.1.19",
     "core-js": "^2.5.7",
     "css-loader": "^1.0.0",

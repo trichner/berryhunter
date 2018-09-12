@@ -2,12 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
 	entry: './src/index.ts',
 	plugins: [
-		new CleanWebpackPlugin(['dist']),
 		new HtmlWebpackPlugin({
 			title: 'BerryHunter',
 			xhtml: true
