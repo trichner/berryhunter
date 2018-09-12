@@ -56,6 +56,19 @@ export function setup() {
 }
 
 export function afterSetup() {
+    // FIXME domElement = Game.domElement
+    // if (MapEditor.isActive()) {
+    //     domElement.addEventListener('blur', function () {
+    //         pause();
+    //     });
+    //     domElement.addEventListener('focus', function () {
+    //         if (started) {
+    //             play();
+    //         }
+    //     });
+    // }
+
+
     Game.pause();
 
     Game.createPlayer(0, Game.width / 2, Game.height / 2, 'Map Architect');

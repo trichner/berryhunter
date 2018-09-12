@@ -1,7 +1,6 @@
 'use strict';
 
 import * as PIXI from 'pixi.js';
-import * as MapEditor from './mapEditor/_MapEditor';
 import * as Backend from './backend/Backend';
 import GameMapWithBackend from './backend/GameMapWithBackend';
 import * as Develop from './develop/_Develop';
@@ -66,12 +65,6 @@ export function setup() {
     let setupPromises = [];
 
 
-    if (MapEditor.isActive()) {
-        /**
-         * @type PIXI.WebGLRenderer
-         */
-        renderer = MapEditor.setup();
-    } else {
         // Setup backend first, as this will take some time to connect.
         Backend.setup();
 
@@ -90,7 +83,6 @@ export function setup() {
         document.body.insertBefore(
             renderer.view,
             document.body.firstChild);
-    }
 
     width = renderer.width;
     height = renderer.height;
@@ -249,16 +241,7 @@ export function setup() {
             event.preventDefault();
         }
     });
-    if (MapEditor.isActive()) {
-        domElement.addEventListener('blur', function () {
-            pause();
-        });
-        domElement.addEventListener('focus', function () {
-            if (started) {
-                play();
-            }
-        });
-    }
+
 
     UserInterface.setup();
 
@@ -273,9 +256,6 @@ export function setup() {
         Develop.afterSetup();
     }
 
-    if (MapEditor.isActive()) {
-        MapEditor.afterSetup();
-    }
 
     Promise.all(setupPromises).then(function () {
         Events.triggerOneTime('gameSetup');
