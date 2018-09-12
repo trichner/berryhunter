@@ -1,7 +1,6 @@
 'use strict';
 
 import * as _ from 'lodash';
-import * as Game from '../Game';
 import {InjectedSVG} from '../InjectedSVG';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Vector} from '../Vector';
@@ -46,12 +45,12 @@ export class GameObject {
         this.show();
     }
 
-    static setup = function () {
+    static setup = function (game) {
         if (Constants.MOVEMENT_INTERPOLATION) {
-            Game.renderer.on('prerender', moveInterpolatedObjects);
+            game.renderer.on('prerender', moveInterpolatedObjects);
         }
         if (Constants.LIMIT_TURN_RATE) {
-            Game.renderer.on('prerender', applyTurnRate);
+            game.renderer.on('prerender', applyTurnRate);
         }
     };
 

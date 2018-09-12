@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Game from '../Game';
 import {GameObject} from './_GameObject';
 import * as PIXI from 'pixi.js';
 import {NamedGroup} from '../NamedGroup';
@@ -16,6 +15,11 @@ import {GraphicsConfig} from '../../config/Graphics';
 import * as Events from '../Events';
 import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 export class Character extends GameObject {
     static svg;

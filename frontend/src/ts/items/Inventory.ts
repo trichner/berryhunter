@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Game from '../Game';
 import {isDefined, isUndefined} from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
 import * as Recipes from './Recipes';
@@ -9,6 +8,12 @@ import * as Equipment from './Equipment';
 import {InventorySlot} from './InventorySlot';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import './InventoryShortcuts';
+import * as Events from "../Events";
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 
 export class Inventory {

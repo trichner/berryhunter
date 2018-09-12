@@ -1,11 +1,16 @@
 'use strict';
 
-import * as Game from '../Game';
-import {GameObject} from '../gameObjects/_GameObject';
+import {GameObject} from './_GameObject';
 import * as Preloading from '../Preloading';
 import {isUndefined, randomInt} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
 import {StatusEffect} from './StatusEffect';
+import * as Events from "../Events";
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 function maxSize(mob) {
     return GraphicsConfig.mobs[mob].maxSize;

@@ -1,7 +1,6 @@
 'use strict';
 
 import * as Events from '../Events';
-import * as Game from '../Game';
 import * as Utils from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
 import * as Console from '../Console';
@@ -34,30 +33,6 @@ export const States = {
 
 let state = States.DISCONNECTED;
 
-function setState(newState) {
-    state = newState;
-    // if (Utils.isDefined(SnapshotFactory.getLastGameState())) {
-    // 	Console.log('Tick ' + SnapshotFactory.getLastGameState().tick + ' > Backend State: ' + state);
-    // } else {
-    // 	Console.log('Pre Ticks > Backend State: ' + state);
-    // }
-    Console.log('Backend State: ' + state);
-
-    if (Develop.isActive()) {
-        switch (state) {
-            case States.DISCONNECTED:
-            case States.CONNECTING:
-                Develop.logWebsocketStatus(state, 'neutral');
-                break;
-            case States.ERROR:
-                Develop.logWebsocketStatus(state, 'bad');
-                break;
-            default:
-                Develop.logWebsocketStatus(state, 'good');
-        }
-    }
-}
-
 let firstGameStateReceived = false;
 let firstGameStateResolve;
 let firstGameStateReject;
@@ -65,11 +40,11 @@ let firstGameStateReject;
 let webSocket;
 let lastMessageReceivedTime;
 
-export function getState() {
-    return state;
-}
+let Game = null;
 
-export function setup() {
+export function setup(game) {
+    Game = game;
+
     BackendConstants.setup();
 
     new Promise(function (resolve, reject) {
@@ -114,6 +89,34 @@ export function setup() {
     }
 }
 
+export function getState() {
+    return state;
+}
+
+function setState(newState) {
+    state = newState;
+    // if (Utils.isDefined(SnapshotFactory.getLastGameState())) {
+    // 	Console.log('Tick ' + SnapshotFactory.getLastGameState().tick + ' > Backend State: ' + state);
+    // } else {
+    // 	Console.log('Pre Ticks > Backend State: ' + state);
+    // }
+    Console.log('Backend State: ' + state);
+
+    if (Develop.isActive()) {
+        switch (state) {
+            case States.DISCONNECTED:
+            case States.CONNECTING:
+                Develop.logWebsocketStatus(state, 'neutral');
+                break;
+            case States.ERROR:
+                Develop.logWebsocketStatus(state, 'bad');
+                break;
+            default:
+                Develop.logWebsocketStatus(state, 'good');
+        }
+    }
+}
+
 /**
  *
  * @param {ClientMessage} clientMessage
@@ -143,7 +146,7 @@ export function sendInputTick(inputObj) {
 }
 
 export function sendJoin(joinObj) {
-    Events.on('gameSetup', function () {
+    Events.on('game.setup', function () {
         send(ClientMessage.fromJoin(joinObj));
     });
 }
@@ -261,7 +264,7 @@ export function receive(message) {
             if (Develop.isActive()) {
                 Develop.logServerTick(gameState, timeSinceLastMessage);
             }
-            Events.on('gameSetup', function () {
+            Events.on('game.setup', function () {
                 receiveSnapshot(SnapshotFactory.newSnapshot(state, gameState));
             });
             break;

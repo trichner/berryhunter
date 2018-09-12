@@ -25,6 +25,8 @@ import * as Recipes from './items/Recipes';
 import * as Scoreboard from './scores/Scoreboard';
 import * as GroundTextureManager from './groundTextures/GroundTextureManager';
 
+// Assign all export in this file to a single variable to be passed into sub modules.
+import * as Game from './Game';
 
 export const States = {
     INITIALIZING: 'INITIALIZING',
@@ -65,24 +67,24 @@ export function setup() {
     let setupPromises = [];
 
 
-        // Setup backend first, as this will take some time to connect.
-        Backend.setup();
+    // Setup backend first, as this will take some time to connect.
+    Backend.setup(Game);
 
-        renderer = PIXI.autoDetectRenderer({
-            antialias: true,
-            backgroundColor: 0x006030
-        });
+    renderer = PIXI.autoDetectRenderer({
+        antialias: true,
+        backgroundColor: 0x006030
+    });
 
-        // Fullscreen
-        renderer.view.style.position = "absolute";
-        renderer.view.style.display = "block";
-        renderer.autoResize = true;
-        renderer.resize(window.innerWidth, window.innerHeight);
+    // Fullscreen
+    renderer.view.style.position = "absolute";
+    renderer.view.style.display = "block";
+    renderer.autoResize = true;
+    renderer.resize(window.innerWidth, window.innerHeight);
 
-        //Add the canvas to the HTML document
-        document.body.insertBefore(
-            renderer.view,
-            document.body.firstChild);
+    //Add the canvas to the HTML document
+    document.body.insertBefore(
+        renderer.view,
+        document.body.firstChild);
 
     width = renderer.width;
     height = renderer.height;
@@ -190,16 +192,14 @@ export function setup() {
 
     createBackground();
 
-
-    Camera.setup();
-        VitalSigns.setup(layers.overlays.vitalSignIndicators);
-        Recipes.setup();
-        Scoreboard.setup();
-        GroundTextureManager.setup();
-
+    Camera.setup(Game);
+    VitalSigns.setup(Game, layers.overlays.vitalSignIndicators);
+    Recipes.setup(Game);
+    Scoreboard.setup();
+    GroundTextureManager.setup();
 
     domElement = renderer.view;
-    GameObject.setup();
+    GameObject.setup(Game);
     DayCycle.setup(domElement, [
         layers.terrain.water,
         layers.terrain.ground,
@@ -243,22 +243,22 @@ export function setup() {
     });
 
 
-    UserInterface.setup();
+    UserInterface.setup(Game);
 
     /*
      * Initializing modules that require an initialized UI
      */
 
-    Chat.setup();
-    GroundTexturePanel.setup();
+    Chat.setup(Game);
+    GroundTexturePanel.setup(Game);
 
     if (Develop.isActive()) {
-        Develop.afterSetup();
+        Develop.afterSetup(Game);
     }
 
 
     Promise.all(setupPromises).then(function () {
-        Events.triggerOneTime('gameSetup');
+        Events.triggerOneTime('game.setup', Game);
     });
 }
 
@@ -308,7 +308,7 @@ export function createPlayer(id, x, y, name) {
     /**
      * @type Player
      */
-    player = new Player(id, x, y, name);
+    player = new Player(id, x, y, name, miniMap);
     player.init();
     state = States.PLAYING;
     Events.trigger('game.playing');
@@ -327,7 +327,7 @@ export function removePlayer() {
 }
 
 export function createSpectator(x, y) {
-    spectator = new Spectator(x, y);
+    spectator = new Spectator(Game, x, y);
 }
 
 export function startRendering(gameInformation: Welcome) {
@@ -337,7 +337,7 @@ export function startRendering(gameInformation: Welcome) {
     baseTexture.beginFill(0x006030);
     baseTexture.drawCircle(0, 0, gameInformation.mapRadius);
 
-    map = new GameMapWithBackend(gameInformation.mapRadius);
+    map = new GameMapWithBackend(Game, gameInformation.mapRadius);
     play();
     state = States.RENDERING;
     miniMap = new MiniMap(map.width, map.height);

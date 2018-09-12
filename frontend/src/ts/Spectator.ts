@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Game from './Game';
 import {Vector} from './Vector';
 import {Camera} from './Camera';
 
@@ -9,9 +8,9 @@ export class Spectator {
     movementSpeed: number;
     camera: Camera;
 
-    constructor(x, y) {
+    constructor(game, x, y) {
         this.position = new Vector(x, y);
-        this.movementSpeed = Math.max(Game.width, Game.height);
+        this.movementSpeed = Math.max(game.width, game.height);
         this.camera = new Camera(this);
     }
 

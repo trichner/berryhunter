@@ -6,7 +6,8 @@ import {clearNode, isUndefined, playCssAnimation} from '../Utils';
 import {ClickableIcon} from './ClickableIcon';
 import {ClickableCountableIcon} from './ClickableCountableIcon';
 import {VitalSignBar} from './VitalSignBar';
-import * as Game from '../Game';
+
+let Game = null;
 
 let rootElement;
 let cycleIcon;
@@ -27,7 +28,9 @@ Preloading.registerSVG('img/userInterface/cycle-icon.svg')
         cycleIcon = svgText;
     });
 
-export function setup() {
+export function setup(game) {
+    Game = game;
+
     setupCrafting();
 
     setupInventory();

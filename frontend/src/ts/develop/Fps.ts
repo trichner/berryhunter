@@ -1,13 +1,12 @@
 'use strict';
 
-import * as Game from '../Game';
 import * as Develop from './_Develop';
 
 
-export function setup() {
-    Game.renderer.on('prerender', this.update.bind(this));
+export function setup(game) {
+    game.renderer.on('prerender', this.update.bind(this, game));
 }
 
-export function update() {
-    Develop.logFPS(1000 / Game.timeDelta);
+export function update(game) {
+    Develop.logFPS(1000 / game.timeDelta);
 }

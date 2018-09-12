@@ -1,10 +1,15 @@
 'use strict';
 
-import * as Game from '../Game';
 import {GameObject} from '../gameObjects/_GameObject';
 import * as Develop from '../develop/_Develop';
 import * as PIXI from 'pixi.js';
 import {hasAABB} from './AABBs';
+import * as Events from "../Events";
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 
 export class DebugCircle extends GameObject {

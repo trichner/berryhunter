@@ -2,9 +2,9 @@
 
 import {isFunction} from './Utils';
 import * as UserInterface from './userInterface/UserInterface';
-import * as Game from './Game';
 import * as Backend from './backend/Backend';
 
+let Game = null;
 
 export const KEYS = [
     13 // ENTER key
@@ -13,7 +13,9 @@ export const KEYS = [
 let rootElement;
 let inputElement;
 
-export function setup() {
+export function setup(game) {
+    Game = game;
+
     rootElement = UserInterface.getChat();
     inputElement = rootElement.querySelector('#chatInput');
 

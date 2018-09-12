@@ -3,10 +3,15 @@
 /**
  * FIXME this class hasn't been updated for quite a while
  */
-import * as Game from '../Game';
 import * as PIXI from 'pixi.js';
 import {BasicConfig as Constants} from '../../config/Basic';
 import * as Text from '../Text';
+import * as Events from "../Events";
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 export class QuadrantGrid {
     static QUADRANT_SIZE = Constants.mapEditor.GRID_SPACING * Constants.mapEditor.FIELDS_IN_QUADRANT;

@@ -1,12 +1,17 @@
 'use strict';
 
-import * as Game from '../Game';
 import {GameObject} from './_GameObject';
 import * as Preloading from '../Preloading';
 import {isDefined, randomRotation, TwoDimensional} from '../Utils';
 import {InjectedSVG} from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as PIXI from 'pixi.js';
+import * as Events from "../Events";
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 export class Resource extends GameObject {
     capacity: number;

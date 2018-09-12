@@ -18,7 +18,7 @@ Events.on('game.playing', function (Game) {
     consoleCommands.character = Game.player.character;
 });
 
-Events.on('gameSetup', function (Game) {
+Events.on('game.setup', function (Game) {
     consoleCommands.pause = Game.pause;
     consoleCommands.play = Game.play;
 });

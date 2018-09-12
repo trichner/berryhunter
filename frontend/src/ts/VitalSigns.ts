@@ -1,13 +1,14 @@
 'use strict';
 
 import * as Preloading from './Preloading';
-import * as Game from './Game';
 import * as Events from './Events';
 import {isDefined, map} from './Utils';
 import * as UserInterface from './userInterface/UserInterface';
 import {InjectedSVG} from './InjectedSVG';
 import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/Basic';
+
+let Game = null;
 
 export class VitalSigns {
 
@@ -64,7 +65,9 @@ export class VitalSigns {
         Game.renderer.on('prerender', this.update, this);
     }
 
-    static setup(group) {
+    static setup(game, group) {
+        Game = game;
+
         let indicators = {
             damage: createIndicator(VitalSigns.damageIndicator.svg),
             // indicators.damage.visible = true;

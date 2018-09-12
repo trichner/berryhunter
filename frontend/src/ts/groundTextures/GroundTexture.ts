@@ -1,7 +1,12 @@
 'use strict';
 
 import {InjectedSVG} from '../InjectedSVG';
-import * as Game from '../Game';
+import * as Events from "../Events";
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 export class GroundTexture {
     parameters;

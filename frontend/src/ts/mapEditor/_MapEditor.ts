@@ -12,9 +12,14 @@ import {Quadrants} from './Quadrants';
 import * as Mobs from '../gameObjects/Mobs';
 import * as Resources from '../gameObjects/Resources';
 import * as Develop from '../develop/_Develop';
-import * as Game from '../Game';
 import * as _ from 'lodash';
 import * as PIXI from 'pixi.js';
+import * as Events from "../Events";
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 
 export function isActive() {

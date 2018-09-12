@@ -1,12 +1,12 @@
 'use strict';
 
-import * as Game from './Game';
 import {Vehicle} from './natureOfCode/arrive/vehicle';
 import * as Develop from './develop/_Develop';
 import {Vector} from './Vector';
 import {Character} from './gameObjects/Character';
 import * as Events from './Events';
 
+let Game = null;
 
 let Corners = [];
 let extraBoundary;
@@ -41,7 +41,9 @@ export class Camera {
         Game.renderer.on('prerender', this.updateListener);
     }
 
-    static setup() {
+    static setup(game) {
+        Game = game;
+
         extraBoundary = Math.min(Game.width, Game.height) / 2;
 
         for (let x = -1; x <= 1; x += 2) {

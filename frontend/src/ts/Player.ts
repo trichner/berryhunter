@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Game from './Game';
 import {Character} from './gameObjects/Character';
 import {StatusEffect} from './gameObjects/StatusEffect';
 import {Controls} from './Controls';
@@ -20,7 +19,7 @@ export class Player {
     vitalSigns: VitalSigns;
     craftableItems;
 
-    constructor(id, x, y, name) {
+    constructor(id, x, y, name, miniMap) {
         /**
          * Either <code>null</code> or number of seconds
          * remaining until the current craft is done.
@@ -34,7 +33,7 @@ export class Player {
         this.controls = new Controls(this.character, this.isCraftInProgress.bind(this));
 
         this.camera = new Camera(this.character);
-        Game.miniMap.add(this.character);
+        miniMap.add(this.character);
 
         this.inventory = new Inventory(this.character, this.isCraftInProgress.bind(this));
 

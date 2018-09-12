@@ -2,7 +2,6 @@
 
 import * as _ from 'lodash';
 import {isDefined} from '../Utils';
-import * as Game from '../Game';
 import {DebugCircle} from '../develop/DebugCircle';
 import {GameObject} from '../gameObjects/_GameObject';
 import {Character} from '../gameObjects/Character';
@@ -12,6 +11,8 @@ import * as Develop from '../develop/_Develop';
 import * as Equipment from '../items/Equipment';
 import {BerryhunterApi} from './BerryhunterApi';
 
+let Game = null;
+
 export class GameMapWithBackend {
     radius: number;
     width: number;
@@ -19,7 +20,8 @@ export class GameMapWithBackend {
 
     objects = {};
 
-    constructor(radius: number) {
+    constructor(game, radius: number) {
+        Game = game;
         this.radius = radius;
         this.width = 2 * radius;
         this.height = 2 * radius;

@@ -1,8 +1,13 @@
 'use strict';
-import * as Game from '../Game';
 import {BasicConfig as Constants} from '../../config/Basic';
 import * as GameMapGenerator from './GameMapGenerator';
 import * as MapEditor from './_MapEditor';
+import * as Events from "../Events";
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 export class GameMap {
     width;

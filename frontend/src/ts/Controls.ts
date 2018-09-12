@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Game from './Game';
 import * as Events from './Events';
 import {BasicConfig as Constants} from '../config/Basic';
 import * as Develop from './develop/_Develop';
@@ -12,6 +11,11 @@ import {isDefined, isUndefined, TwoDimensional} from './Utils';
 import Tock from 'tocktimer';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import {BerryhunterApi} from './backend/BerryhunterApi';
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 let consoleCooldown = 0;
 

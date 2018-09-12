@@ -1,11 +1,15 @@
 'use strict';
 
-import * as Game from './Game';
 import * as Events from './Events';
 import {GraphicsConfig} from '../config/Graphics';
 import {dateDiff, playCssAnimation} from './Utils';
 import * as _ from 'lodash';
 import {BerryhunterApi} from './backend/BerryhunterApi';
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 export let activeInventorySlot = null;
 export let lastAutoFeed = Date.now();

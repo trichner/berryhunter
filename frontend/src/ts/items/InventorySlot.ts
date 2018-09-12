@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Game from '../Game';
 import * as Equipment from '../items/Equipment';
 import {ItemType} from './ItemType';
 import * as UserInterface from '../userInterface/UserInterface';
@@ -8,6 +7,11 @@ import * as InventoryListeners from './InventoryListeners';
 import * as Events from '../Events';
 import * as AutoFeed from '../AutoFeed';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
 
 
 export class InventorySlot {

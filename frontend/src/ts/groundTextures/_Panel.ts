@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Game from '../Game';
 import * as Events from '../Events';
 import {Items} from '../items/Items';
 import * as Equipment from '../items/Equipment';
@@ -21,6 +20,7 @@ import * as GroundTextureManager from './GroundTextureManager';
 import {saveAs} from 'file-saver';
 import * as Console from '../Console';
 
+let Game = null;
 
 let active = false;
 
@@ -28,7 +28,8 @@ export function isActive() {
     return active;
 }
 
-export function setup() {
+export function setup(game) {
+    Game = game;
     if (!active) {
         return;
     }

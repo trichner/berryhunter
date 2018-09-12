@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Game from '../Game';
 import * as AABBs from './AABBs';
 import * as Fps from './Fps';
 import * as Preloading from '../Preloading';
@@ -12,7 +11,7 @@ import {BasicConfig as Constants} from '../../config/Basic';
 import {Items} from '../items/Items';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 
-
+let Game = null;
 let active = false;
 export let settings = {
     showAABBs: false,
@@ -206,8 +205,10 @@ function setupChart() {
 
 }
 
-export function afterSetup() {
-    Fps.setup();
+export function afterSetup(game) {
+    Game = game;
+
+    Fps.setup(game);
 }
 
 export function logValue(name, value) {

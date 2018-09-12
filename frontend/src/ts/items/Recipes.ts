@@ -1,10 +1,11 @@
 'use strict';
 
-import * as Game from '../Game';
 import {isDefined, isFunction} from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Placeable} from '../gameObjects/Placeable';
 import {Items} from '../items/Items';
+
+let Game = null;
 
 /**
  * Gets filled with all defined recipes
@@ -45,7 +46,9 @@ const Combinators = {
 /**
  * Read all recipes from the items that have been loaded with definitions.
  */
-export function setup() {
+export function setup(game) {
+    Game = game;
+
     for (let itemName in Items) {
         let item = Items[itemName];
 
