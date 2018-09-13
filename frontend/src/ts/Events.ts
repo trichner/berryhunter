@@ -1,6 +1,9 @@
 const oneTimeEvents = {};
 const registeredListeners = {};
 
+// TODO context muss an #on nicht an #trigger - da gibt's schließlich den payload
+// TODO remove callbacks as soon as triggerOnce was handled
+
 /**
  *
  * @param event event name to listen for

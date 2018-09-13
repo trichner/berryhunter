@@ -4,17 +4,23 @@ import * as PlayerName from '../../PlayerName';
 import {isDefined, preventInputPropagation} from '../../Utils';
 import * as Events from '../../Events';
 import * as DetectBrowser from 'detect-browser';
+import * as Preloading from "../../Preloading";
 
 
 let _progress = 0;
 let loadingBar = null;
 
-export let htmlFile = 'partials/startScreen.html';
-export let isDomReady = false;
+let htmlFile = 'partials/startScreen.html';
+let isDomReady = false;
 export let playerNameInput = null;
 
 let rootElement;
 let chromeWarning;
+
+Events.on('preloading.execute', () => {
+    Preloading.loadPartial(htmlFile)
+        .then(onDomReady);
+});
 
 export function onDomReady() {
     rootElement = document.getElementById('startScreen');
@@ -59,6 +65,8 @@ export function show() {
 export function hide() {
     rootElement.classList.add('hidden');
 }
+
+Events.on('preloading.progress', progress);
 
 export function progress(value) {
     if (isDefined(value)) {
