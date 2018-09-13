@@ -196,12 +196,12 @@ define([], function () {
 				maxSize: 300,
 			},
 			'Green Grass 1': {
-				file: 'Grass1',
+				file: 'grass1',
 				minSize: 180,
 				maxSize: 300,
 			},
 			'Green Grass 2': {
-				file: 'Grass2',
+				file: 'grass2',
 				minSize: 180,
 				maxSize: 300,
 			},
@@ -221,7 +221,7 @@ define([], function () {
 				maxSize: 200,
 			},
 			'Dark Pebble': {
-				file: 'darkpebble',
+				file: 'darkPebble',
 				minSize: 130,
 				maxSize: 200,
 			},
@@ -231,7 +231,7 @@ define([], function () {
 				maxSize: 100,
 			},
 			'Dark Rubble': {
-				file: 'darkrubble',
+				file: 'darkRubble',
 				minSize: 50,
 				maxSize: 100,
 			},
@@ -241,7 +241,7 @@ define([], function () {
 				maxSize: 140,
 			},
 			'Dark Puddle': {
-				file: 'darkpuddle',
+				file: 'darkPuddle',
 				minSize: 60,
 				maxSize: 140,
 			},
