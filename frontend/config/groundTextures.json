@@ -1,5 +1,277 @@
 [
   {
+    "type": "Green Grass 2",
+    "x": 1402,
+    "y": 1168,
+    "size": 180,
+    "rotation": 2.618,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": -386,
+    "y": 2039,
+    "size": 100,
+    "rotation": 2.618,
+    "flipped": "none"
+  },
+  {
+    "type": "Dark Green Grass 2",
+    "x": -402,
+    "y": -583,
+    "size": 180,
+    "rotation": 2.618,
+    "flipped": "none"
+  },
+  {
+    "type": "Dark Green Grass 2",
+    "x": 255,
+    "y": -1278,
+    "size": 180,
+    "rotation": 2.618,
+    "flipped": "none"
+  },
+  {
+    "type": "Dark Green Grass 2",
+    "x": 1163,
+    "y": -515,
+    "size": 180,
+    "rotation": 2.618,
+    "flipped": "none"
+  },
+  {
+    "type": "Puddle",
+    "x": -924,
+    "y": 1672,
+    "size": 110,
+    "rotation": 2.618,
+    "flipped": "none"
+  },
+  {
+    "type": "Green Grass 1",
+    "x": 1361,
+    "y": -1076,
+    "size": 290,
+    "rotation": 0.716,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Green Grass 1",
+    "x": 495,
+    "y": 621,
+    "size": 230,
+    "rotation": 3.142,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Green Grass 1",
+    "x": 1088,
+    "y": 152,
+    "size": 185,
+    "rotation": 2.705,
+    "flipped": "none"
+  },
+  {
+    "type": "Pebble",
+    "x": 386,
+    "y": -475,
+    "size": 135,
+    "rotation": 2.304,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Pebble",
+    "x": -121,
+    "y": -1504,
+    "size": 200,
+    "rotation": 2.618,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Pebble",
+    "x": 3,
+    "y": -1897,
+    "size": 180,
+    "rotation": 1.449,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Pebble",
+    "x": -976,
+    "y": -1661,
+    "size": 180,
+    "rotation": 0.611,
+    "flipped": "none"
+  },
+  {
+    "type": "Pebble",
+    "x": -990,
+    "y": -1227,
+    "size": 155,
+    "rotation": 3.718,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Pebble",
+    "x": -1204,
+    "y": -1020,
+    "size": 160,
+    "rotation": 4.573,
+    "flipped": "none"
+  },
+  {
+    "type": "Pebble",
+    "x": -1359,
+    "y": -818,
+    "size": 145,
+    "rotation": 5.288,
+    "flipped": "none"
+  },
+  {
+    "type": "Pebble",
+    "x": -1559,
+    "y": -946,
+    "size": 165,
+    "rotation": 0.541,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Pebble",
+    "x": -1482,
+    "y": 1427,
+    "size": 195,
+    "rotation": 2.147,
+    "flipped": "none"
+  },
+  {
+    "type": "Pebble",
+    "x": -1372,
+    "y": 1488,
+    "size": 185,
+    "rotation": 3.84,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Pebble",
+    "x": -1578,
+    "y": 1183,
+    "size": 165,
+    "rotation": 1.204,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Pebble",
+    "x": -1035,
+    "y": 1273,
+    "size": 170,
+    "rotation": 3.386,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Pebble",
+    "x": -1522,
+    "y": 445,
+    "size": 170,
+    "rotation": 5.742,
+    "flipped": "none"
+  },
+  {
+    "type": "Dark Stone Patch",
+    "x": -1449,
+    "y": -222,
+    "size": 280,
+    "rotation": 5.742,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Leaves",
+    "x": 873,
+    "y": -1109,
+    "size": 90,
+    "rotation": 3.77,
+    "flipped": "none"
+  },
+  {
+    "type": "Leaves",
+    "x": 1366,
+    "y": -1483,
+    "size": 55,
+    "rotation": 2.635,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Leaves",
+    "x": 1098,
+    "y": -1581,
+    "size": 80,
+    "rotation": 4.939,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Leaves",
+    "x": 1060,
+    "y": -1395,
+    "size": 85,
+    "rotation": 2.356,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": 1843,
+    "y": -702,
+    "size": 70,
+    "rotation": 1.78,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": 1643,
+    "y": -506,
+    "size": 90,
+    "rotation": 3.124,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": 1603,
+    "y": -366,
+    "size": 75,
+    "rotation": 5.76,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": 1668,
+    "y": -382,
+    "size": 75,
+    "rotation": 5.568,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": 1740,
+    "y": -447,
+    "size": 90,
+    "rotation": 5.061,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": 1839,
+    "y": -463,
+    "size": 85,
+    "rotation": 5.253,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Dark Stone Patch",
+    "x": 2021,
+    "y": 202,
+    "size": 280,
+    "rotation": 2.164,
+    "flipped": "none"
+  },
+  {
     "type": "Sand",
     "x": -992,
     "y": -2152,
@@ -766,5 +1038,485 @@
     "size": 195,
     "rotation": 1.885,
     "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": -105,
+    "y": 165,
+    "size": 75,
+    "rotation": 0.768,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": 105,
+    "y": 99,
+    "size": 80,
+    "rotation": 4.974,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": 52,
+    "y": 236,
+    "size": 80,
+    "rotation": 5.533,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": -8,
+    "y": 3,
+    "size": 85,
+    "rotation": 4.381,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": 8,
+    "y": 144,
+    "size": 85,
+    "rotation": 0.646,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": -96,
+    "y": 263,
+    "size": 80,
+    "rotation": 1.658,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": -196,
+    "y": 421,
+    "size": 85,
+    "rotation": 0.436,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": -74,
+    "y": 378,
+    "size": 80,
+    "rotation": 3.944,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": -371,
+    "y": 556,
+    "size": 75,
+    "rotation": 3.752,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": -245,
+    "y": 532,
+    "size": 90,
+    "rotation": 2.374,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": -342,
+    "y": 399,
+    "size": 75,
+    "rotation": 1.623,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": -316,
+    "y": 53,
+    "size": 90,
+    "rotation": 3.613,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": -190,
+    "y": 125,
+    "size": 100,
+    "rotation": 5.55,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": -32,
+    "y": -147,
+    "size": 80,
+    "rotation": 3.526,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": -4,
+    "y": -318,
+    "size": 80,
+    "rotation": 2.688,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": 263,
+    "y": -29,
+    "size": 85,
+    "rotation": 6.091,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": 267,
+    "y": 34,
+    "size": 85,
+    "rotation": 1.239,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": -207,
+    "y": 249,
+    "size": 100,
+    "rotation": 0.559,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Stone Patch",
+    "x": -749,
+    "y": -850,
+    "size": 180,
+    "rotation": 1.065,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Stone Patch",
+    "x": -659,
+    "y": -1404,
+    "size": 270,
+    "rotation": 0.716,
+    "flipped": "none"
+  },
+  {
+    "type": "Stone Patch",
+    "x": -383,
+    "y": -1712,
+    "size": 255,
+    "rotation": 5.253,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Stone Patch",
+    "x": -308,
+    "y": -1885,
+    "size": 250,
+    "rotation": 2.67,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Stone Patch",
+    "x": -269,
+    "y": -2176,
+    "size": 205,
+    "rotation": 1.152,
+    "flipped": "none"
+  },
+  {
+    "type": "Stone Patch",
+    "x": -159,
+    "y": -2010,
+    "size": 185,
+    "rotation": 3.84,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Stone Patch",
+    "x": -527,
+    "y": -2097,
+    "size": 185,
+    "rotation": 2.758,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": 468,
+    "y": -2042,
+    "size": 90,
+    "rotation": 1.536,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": 676,
+    "y": -1991,
+    "size": 85,
+    "rotation": 2.461,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": 773,
+    "y": -1873,
+    "size": 90,
+    "rotation": 6.161,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": 601,
+    "y": -1833,
+    "size": 90,
+    "rotation": 1.78,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": 513,
+    "y": -2006,
+    "size": 90,
+    "rotation": 0.559,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": 542,
+    "y": -1730,
+    "size": 90,
+    "rotation": 2.356,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": 534,
+    "y": -1593,
+    "size": 90,
+    "rotation": 5.288,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": 491,
+    "y": -1438,
+    "size": 85,
+    "rotation": 5.952,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Flowers",
+    "x": 621,
+    "y": -1734,
+    "size": 80,
+    "rotation": 5.882,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": 727,
+    "y": -1723,
+    "size": 80,
+    "rotation": 4.852,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Flowers",
+    "x": 303,
+    "y": -2093,
+    "size": 90,
+    "rotation": 5.899,
+    "flipped": "none"
+  },
+  {
+    "type": "Flowers",
+    "x": 172,
+    "y": -2094,
+    "size": 80,
+    "rotation": 0.541,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Stone Patch",
+    "x": 710,
+    "y": -708,
+    "size": 290,
+    "rotation": 2.88,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Stone Patch",
+    "x": -1348,
+    "y": 1375,
+    "size": 240,
+    "rotation": 4.59,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Dark Green Grass 2",
+    "x": -595,
+    "y": 1256,
+    "size": 190,
+    "rotation": 2.443,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Dark Green Grass 2",
+    "x": -247,
+    "y": 1389,
+    "size": 240,
+    "rotation": 5.044,
+    "flipped": "none"
+  },
+  {
+    "type": "Dark Green Grass 2",
+    "x": 153,
+    "y": 1528,
+    "size": 290,
+    "rotation": 5.358,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Dark Green Grass 2",
+    "x": -12,
+    "y": 1469,
+    "size": 240,
+    "rotation": 3.107,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Dark Green Grass 2",
+    "x": 606,
+    "y": 1151,
+    "size": 295,
+    "rotation": 5.568,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Dark Stone Patch",
+    "x": 1464,
+    "y": 589,
+    "size": 260,
+    "rotation": 3.595,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Leaves",
+    "x": 471,
+    "y": -726,
+    "size": 50,
+    "rotation": 5.917,
+    "flipped": "none"
+  },
+  {
+    "type": "Leaves",
+    "x": 771,
+    "y": -289,
+    "size": 70,
+    "rotation": 3.578,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Leaves",
+    "x": 785,
+    "y": 18,
+    "size": 50,
+    "rotation": 0.035,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Leaves",
+    "x": 935,
+    "y": 448,
+    "size": 65,
+    "rotation": 5.917,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Leaves",
+    "x": 307,
+    "y": 741,
+    "size": 50,
+    "rotation": 1.152,
+    "flipped": "none"
+  },
+  {
+    "type": "Leaves",
+    "x": 599,
+    "y": 1009,
+    "size": 60,
+    "rotation": 4.695,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Leaves",
+    "x": 388,
+    "y": 1625,
+    "size": 70,
+    "rotation": 0.663,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Leaves",
+    "x": -310,
+    "y": 1831,
+    "size": 90,
+    "rotation": 3.822,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Leaves",
+    "x": -740,
+    "y": 1495,
+    "size": 60,
+    "rotation": 5.707,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Leaves",
+    "x": -617,
+    "y": 1116,
+    "size": 75,
+    "rotation": 0.977,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Leaves",
+    "x": -668,
+    "y": 929,
+    "size": 65,
+    "rotation": 4.259,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Leaves",
+    "x": -932,
+    "y": 691,
+    "size": 75,
+    "rotation": 1.728,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Leaves",
+    "x": -1192,
+    "y": 495,
+    "size": 65,
+    "rotation": 4.294,
+    "flipped": "vertical"
+  },
+  {
+    "type": "Leaves",
+    "x": -942,
+    "y": 245,
+    "size": 90,
+    "rotation": 5.672,
+    "flipped": "horizontal"
+  },
+  {
+    "type": "Leaves",
+    "x": -1148,
+    "y": -51,
+    "size": 55,
+    "rotation": 5.096,
+    "flipped": "horizontal"
   }
 ]

@@ -185,70 +185,74 @@ define([], function () {
 		 * Contains information about types of ground textures that are available for placing.
 		 */
 		groundTextureTypes: {
-			'Grass, dark green': {
-				file: 'darkGreenGrass1',
-				minSize: 80,
+			'Dark Green Grass 1': {
+				file: 'darkGrass1',
+				minSize: 180,
 				maxSize: 300,
 			},
-			'Grass, light green': {
-				file: 'lightGreenGrass1',
-				minSize: 80,
+			'Dark Green Grass 2': {
+				file: 'darkGrass2',
+				minSize: 180,
 				maxSize: 300,
 			},
-			'Flowers1': {
-				file: 'flowers1',
-				minSize: 50,
-				maxSize: 100,
+			'Green Grass 1': {
+				file: 'Grass1',
+				minSize: 180,
+				maxSize: 300,
 			},
-			'Flowers2': {
-				file: 'flowers2',
-				minSize: 50,
-				maxSize: 100,
+			'Green Grass 2': {
+				file: 'Grass2',
+				minSize: 180,
+				maxSize: 300,
+			},
+			'Dark Stone Patch': {
+				file: 'darkStonePatch',
+				minSize: 130,
+				maxSize: 300,
 			},
 			'Stone Patch': {
-				file: 'stonePatch1',
-				minSize: 100,
+				file: 'stonePatch',
+				minSize: 130,
 				maxSize: 300,
 			},
-			// 'Grass, blade of grass': {
-			// 	file: 'grass1',
-			// 	minSize: 30,
-			// 	maxSize: 70,
-			// 	rotation: false,
-			// 	flipVertical: false,
-			// },
-			'Leaves, green': {
-				file: 'leaves1',
-				minSize: 30,
-				maxSize: 100,
+			'Pebble': {
+				file: 'pebble',
+				minSize: 130,
+				maxSize: 200,
 			},
-			// 'Mushrooms': {
-			// 	file: 'mushrooms1',
-			// 	minSize: 30,
-			// 	maxSize: 100,
-			// 	rotation: false,
-			// 	flipVertical: false,
-			// },
-			'Pebble1': {
-				file: 'pebble1',
-				minSize: 30,
-				maxSize: 100,
+			'Dark Pebble': {
+				file: 'darkpebble',
+				minSize: 130,
+				maxSize: 200,
 			},
-			'Pebble2': {
-				file: 'pebble2',
-				minSize: 30,
-				maxSize: 100,
-			},
-			// 'Puddle': {
-			// 	file: 'puddle1',
-			// 	minSize: 30,
-			// 	maxSize: 100,
-			// 	rotation: false,
-			// 	flipVertical: false,
-			// },
 			'Rubble': {
-				file: 'rubble1',
-				minSize: 30,
+				file: 'rubble',
+				minSize: 50,
+				maxSize: 100,
+			},
+			'Dark Rubble': {
+				file: 'darkrubble',
+				minSize: 50,
+				maxSize: 100,
+			},
+			'Puddle': {
+				file: 'puddle',
+				minSize: 60,
+				maxSize: 140,
+			},
+			'Dark Puddle': {
+				file: 'darkpuddle',
+				minSize: 60,
+				maxSize: 140,
+			},
+			'Flowers': {
+				file: 'flowers',
+				minSize: 70,
+				maxSize: 100,
+			},
+			'Leaves': {
+				file: 'leaves',
+				minSize: 50,
 				maxSize: 100,
 			},
 			'Sand': {
