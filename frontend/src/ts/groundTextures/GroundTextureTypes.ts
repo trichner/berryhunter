@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Environment from '../Environment';
 import * as Preloading from '../Preloading';
 import {GraphicsConfig} from '../../config/Graphics';
 
@@ -35,8 +34,7 @@ for (let type in GroundTextureTypes) {
      * Type is valid - preload the texture graphic
      */
     if (!hasError) {
-        groundTextureType.path = 'img/groundTextures/' + groundTextureType.file + '.svg' + Environment.getCacheBuster();
-        Preloading.registerGameObjectSVG(groundTextureType, groundTextureType.path, groundTextureType.maxSize);
+        Preloading.registerGameObjectSVG(groundTextureType, groundTextureType.file, groundTextureType.maxSize);
     }
 }
 

@@ -10,7 +10,7 @@ import {VitalSignBar} from './VitalSignBar';
 let Game = null;
 
 let rootElement;
-let cycleIcon;
+let cycleIcon = require('!svg-inline-loader?classPrefix!./cycle-icon.svg');
 
 let craftingElement;
 let craftableItemTemplate;
@@ -21,11 +21,6 @@ let vitalSignsBars;
 Preloading.renderPartial(require('./userInterface.html'), () => {
     rootElement = document.getElementById('gameUI');
 });
-
-Preloading.registerSVG('img/userInterface/cycle-icon.svg')
-    .then((svgText) => {
-        cycleIcon = svgText;
-    });
 
 export function setup(game) {
     Game = game;
@@ -125,7 +120,7 @@ export function displayAvailableCrafts(availableCrafts, onLeftClick) {
             clickableIcon.onLeftClick = function (event) {
                 onLeftClick.call(clickableIcon, event, recipe);
             };
-            clickableIcon.setIconGraphic(recipe.item.icon.path, true);
+            clickableIcon.setIconGraphic(recipe.item.icon.file, true);
             clickableIcon.addSubIcons(recipe.materials);
 
             recipe.clickableIcon = clickableIcon;

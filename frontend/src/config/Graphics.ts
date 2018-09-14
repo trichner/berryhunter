@@ -22,7 +22,7 @@ export const GraphicsConfig = {
 		 * SYNCED WITH BACKEND
 		 */
 		size: 30,
-		file: 'img/character.svg',
+        file: require('../img/character.svg'),
 
 		hands: {
 			fillColor: 0xf2a586,
@@ -30,7 +30,7 @@ export const GraphicsConfig = {
 		},
 
 		craftingIndicator: {
-			file: 'img/userInterface/crafting.svg',
+            file: require('../img/userInterface/crafting.svg'),
 			size: 20,
 			lineColor: 0xc9a741,
 			lineWidth: 5, //px
@@ -61,19 +61,19 @@ export const GraphicsConfig = {
 
 	mobs: {
 		dodo: {
-			file: 'img/dodo.svg',
+            file: require('../img/dodo.svg'),
 			minSize: 35,
 			maxSize: 45,
 		},
 
 		saberToothCat: {
-			file: 'img/saberToothCat.svg',
+            file: require('../img/saberToothCat.svg'),
 			minSize: 45,
 			maxSize: 60,
 		},
 
 		mammoth: {
-			file: 'img/mammoth.svg',
+            file: require('../img/mammoth.svg'),
 			minSize: 85,
 			maxSize: 100,
 		},
@@ -81,33 +81,33 @@ export const GraphicsConfig = {
 
 	resources: {
 		tree: {
-			spotFile: 'img/treeSpot.svg',
+            spotFile: require('../img/treeSpot.svg'),
 			maxSize: 120,
 
-			roundTreeFile: 'img/roundTree.svg',
-			deciduousTreeFile: 'img/deciduousTree.svg',
+            roundTreeFile: require('../img/roundTree.svg'),
+            deciduousTreeFile: require('../img/deciduousTree.svg'),
 		},
 
 		mineral: {
-			spotFile: 'img/stoneSpot.svg',
+            spotFile: require('../img/stoneSpot.svg'),
 			maxSize: 60,
 
-			stoneFile: 'img/stone.svg',
-			bronzeFile: 'img/bronze.svg',
-			ironFile: 'img/iron.svg',
-			titaniumFile: 'img/titanium.svg',
+            stoneFile: require('../img/stone.svg'),
+            bronzeFile: require('../img/bronze.svg'),
+            ironFile: require('../img/iron.svg'),
+            titaniumFile: require('../img/titanium.svg'),
 		},
 
 		berryBush: {
-			bushfile: 'img/berryBush.svg',
+            bushfile: require('../img/berryBush.svg'),
 			maxSize: 60,
 
-			berryFile: 'img/berry.svg',
+            berryFile: require('../img/berry.svg'),
 			berrySize: 6,
 		},
 
 		flower: {
-			file: 'img/flower.svg',
+            file: require('../img/flower.svg'),
 			maxSize: 20,
 		},
 	},
@@ -183,73 +183,73 @@ export const GraphicsConfig = {
 	 */
 	groundTextureTypes: {
 		'Grass, dark green': {
-			file: 'darkGreenGrass1',
+            file: require('../img/groundTextures/darkGreenGrass1.svg'),
 			minSize: 80,
 			maxSize: 300,
 		},
 		'Grass, light green': {
-			file: 'lightGreenGrass1',
+            file: require('../img/groundTextures/lightGreenGrass1.svg'),
 			minSize: 80,
 			maxSize: 300,
 		},
 		'Flowers1': {
-			file: 'flowers1',
+            file: require('../img/groundTextures/flowers1.svg'),
 			minSize: 50,
 			maxSize: 100,
 		},
 		'Flowers2': {
-			file: 'flowers2',
+            file: require('../img/groundTextures/flowers2.svg'),
 			minSize: 50,
 			maxSize: 100,
 		},
 		'Stone Patch': {
-			file: 'stonePatch1',
+            file: require('../img/groundTextures/stonePatch1.svg'),
 			minSize: 100,
 			maxSize: 300,
 		},
 		// 'Grass, blade of grass': {
-		// 	file: 'grass1',
+        // 	file: require('../img/groundTextures/grass1.svg'),
 		// 	minSize: 30,
 		// 	maxSize: 70,
 		// 	rotation: false,
 		// 	flipVertical: false,
 		// },
 		'Leaves, green': {
-			file: 'leaves1',
+            file: require('../img/groundTextures/leaves1.svg'),
 			minSize: 30,
 			maxSize: 100,
 		},
 		// 'Mushrooms': {
-		// 	file: 'mushrooms1',
+        // 	file: require('../img/groundTextures/mushrooms1.svg'),
 		// 	minSize: 30,
 		// 	maxSize: 100,
 		// 	rotation: false,
 		// 	flipVertical: false,
 		// },
 		'Pebble1': {
-			file: 'pebble1',
+            file: require('../img/groundTextures/pebble1.svg'),
 			minSize: 30,
 			maxSize: 100,
 		},
 		'Pebble2': {
-			file: 'pebble2',
+            file: require('../img/groundTextures/pebble2.svg'),
 			minSize: 30,
 			maxSize: 100,
 		},
 		// 'Puddle': {
-		// 	file: 'puddle1',
+        // 	file: require('../img/groundTextures/puddle1.svg'),
 		// 	minSize: 30,
 		// 	maxSize: 100,
 		// 	rotation: false,
 		// 	flipVertical: false,
 		// },
 		'Rubble': {
-			file: 'rubble1',
+            file: require('../img/groundTextures/rubble1.svg'),
 			minSize: 30,
 			maxSize: 100,
 		},
 		'Sand': {
-			file: 'sand1',
+            file: require('../img/groundTextures/sand1.svg'),
 			minSize: 150,
 			maxSize: 200,
 		},

@@ -129,7 +129,7 @@ export class InventorySlot {
 
         count = count || 1;
         this.item = item;
-        this.clickableIcon.setIconGraphic(item.icon.path, isItemClickable(item));
+        this.clickableIcon.setIconGraphic(item.icon.file, isItemClickable(item));
         if (AutoFeed.isItemSuitable(item)) {
             this.autoFeedToggle.classList.remove('hidden');
         } else {

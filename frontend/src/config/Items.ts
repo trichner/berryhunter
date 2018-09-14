@@ -6,20 +6,21 @@
  */
 import {ItemType} from '../ts/items/ItemType';
 import * as Equipment from '../ts/items/Equipment';
-//noinspection UnnecessaryLocalVariableJS
+
 /**
  * ItemName: {
  *      icon: {
- *          file: path relative to /frontend/img/items - '.svg' gets appended
+ *          file: require('./relative/path/to/file.svg)
  *          svg: injected, svg node loaded from file
  *      },
  *      graphic: {
- *          file: path relative to /frontend/img/items - '.svg' gets appended
+ *          file: require('./relative/path/to/file.svg)
  *          svg: injected, svg node loaded from file
  *          size: optional number, defaults to 100
  *          offsetX: optional number, defaults to 0
  *          offsetY: optional number, default to 0
  *      },
+ *      definition: require('./relative/path/to/item.json)
  *      type: ItemType,
  *      equipmentSlot: Equipment.Slots,
  *      placeable: { must be defined! contains configuration for placeables
@@ -41,68 +42,68 @@ import * as Equipment from '../ts/items/Equipment';
  */
 export const ItemsConfig = {
     None: {
-        definition: 'none',
+        definition: require('../../../api/items/none.json'),
     },
 
     /***********************************
      * TOOLS
      ***********************************/
     WoodClub: {
-        icon: {file: 'clubWoodIcon'},
+        icon: {file: require('../img/items/clubWoodIcon.svg')},
         graphic: {
-            file: 'clubWood',
+            file: require('../img/items/clubWood.svg'),
             size: 40,
             offsetX: 15
         },
-        definition: 'tools/wood-club',
+        definition: require('../../../api/items/tools/wood-club.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     StoneTool: {
-        icon: {file: 'toolStoneIcon'},
+        icon: {file: require('../img/items/toolStoneIcon.svg')},
         graphic: {
-            file: 'toolStone',
+            file: require('../img/items/toolStone.svg'),
             size: 30,
             offsetX: 10,
             offsetY: 0
         },
-        definition: 'tools/stone-tool',
+        definition: require('../../../api/items/tools/stone-tool.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     BronzeTool: {
-        icon: {file: 'toolBronzeIcon'},
+        icon: {file: require('../img/items/toolBronzeIcon.svg')},
         graphic: {
-            file: 'toolBronze',
+            file: require('../img/items/toolBronze.svg'),
             size: 30,
             offsetX: 10,
             offsetY: 2.5
         },
-        definition: 'tools/bronze-tool',
+        definition: require('../../../api/items/tools/bronze-tool.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     IronTool: {
-        icon: {file: 'toolIronIcon'},
+        icon: {file: require('../img/items/toolIronIcon.svg')},
         graphic: {
-            file: 'toolIron',
+            file: require('../img/items/toolIron.svg'),
             size: 30,
             offsetX: 10,
             offsetY: 2.5
         },
-        definition: 'tools/iron-tool',
+        definition: require('../../../api/items/tools/iron-tool.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     TitaniumTool: {
-        icon: {file: 'toolTitaniumIcon'},
+        icon: {file: require('../img/items/toolTitaniumIcon.svg')},
         graphic: {
-            file: 'toolTitanium',
+            file: require('../img/items/toolTitanium.svg'),
             size: 35,
             offsetX: 10,
             offsetY: 2.5
         },
-        definition: 'tools/titanium-tool',
+        definition: require('../../../api/items/tools/titanium-tool.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
@@ -111,46 +112,46 @@ export const ItemsConfig = {
      * WEAPONS
      ***********************************/
     StoneClub: {
-        icon: {file: 'clubStoneIcon'},
+        icon: {file: require('../img/items/clubStoneIcon.svg')},
         graphic: {
-            file: 'clubStone',
+            file: require('../img/items/clubStone.svg'),
             size: 40,
             offsetX: 15
         },
-        definition: 'swords/stone-club',
+        definition: require('../../../api/items/swords/stone-club.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     BronzeSword: {
-        icon: {file: 'swordBronzeIcon'},
+        icon: {file: require('../img/items/swordBronzeIcon.svg')},
         graphic: {
-            file: 'swordBronze',
+            file: require('../img/items/swordBronze.svg'),
             size: 40,
             offsetX: 15
         },
-        definition: 'swords/bronze-sword',
+        definition: require('../../../api/items/swords/bronze-sword.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     IronSword: {
-        icon: {file: 'swordIronIcon'},
+        icon: {file: require('../img/items/swordIronIcon.svg')},
         graphic: {
-            file: 'swordIron',
+            file: require('../img/items/swordIron.svg'),
             size: 40,
             offsetX: 15
         },
-        definition: 'swords/iron-sword',
+        definition: require('../../../api/items/swords/iron-sword.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     TitaniumSword: {
-        icon: {file: 'swordTitaniumIcon'},
+        icon: {file: require('../img/items/swordTitaniumIcon.svg')},
         graphic: {
-            file: 'swordTitanium',
+            file: require('../img/items/swordTitanium.svg'),
             size: 55,
             offsetX: 23
         },
-        definition: 'swords/titanium-sword',
+        definition: require('../../../api/items/swords/titanium-sword.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
@@ -159,46 +160,46 @@ export const ItemsConfig = {
      * Spears
      ***********************************/
     StoneSpear: {
-        icon: {file: 'spearStoneIcon'},
+        icon: {file: require('../img/items/spearStoneIcon.svg')},
         graphic: {
-            file: 'spearStone',
+            file: require('../img/items/spearStone.svg'),
             size: 60,
             offsetX: 15
         },
-        definition: 'spears/stone-spear',
+        definition: require('../../../api/items/spears/stone-spear.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     BronzeSpear: {
-        icon: {file: 'spearBronzeIcon'},
+        icon: {file: require('../img/items/spearBronzeIcon.svg')},
         graphic: {
-            file: 'spearBronze',
+            file: require('../img/items/spearBronze.svg'),
             size: 60,
             offsetX: 15
         },
-        definition: 'spears/bronze-spear',
+        definition: require('../../../api/items/spears/bronze-spear.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     IronSpear: {
-        icon: {file: 'spearIronIcon'},
+        icon: {file: require('../img/items/spearIronIcon.svg')},
         graphic: {
-            file: 'spearIron',
+            file: require('../img/items/spearIron.svg'),
             size: 60,
             offsetX: 15
         },
-        definition: 'spears/iron-spear',
+        definition: require('../../../api/items/spears/iron-spear.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
     TitaniumSpear: {
-        icon: {file: 'spearTitaniumIcon'},
+        icon: {file: require('../img/items/spearTitaniumIcon.svg')},
         graphic: {
-            file: 'spearTitanium',
+            file: require('../img/items/spearTitanium.svg'),
             size: 80,
             offsetX: 14
         },
-        definition: 'spears/titanium-spear',
+        definition: require('../../../api/items/spears/titanium-spear.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },
@@ -209,38 +210,38 @@ export const ItemsConfig = {
      * yet attackable.
      ***********************************/
     // StoneHammer: {
-    // 	icon: {file: 'hammerStoneIcon'},
+    // 	icon: {file: require('../img/items/hammerStoneIcon.svg')},
     // 	graphic: {
-    // 		file: 'hammerStone',
+    // 		file: require('../img/items/hammerStone.svg'),
     // 		size: 30,
     // 		offsetX: 10,
     // 		offsetY: -2.5
     // 	},
-    // 	definition: 'hammers/stone-hammer',
+    // 	definition: require('../../../api/items/hammers/stone-hammer.json'),
     // 	type: ItemType.EQUIPMENT,
     // 	equipmentSlot: Equipment.Slots.HAND
     // },
     // BronzeHammer: {
-    // 	icon: {file: 'hammerBronzeIcon'},
+    // 	icon: {file: require('../img/items/hammerBronzeIcon.svg')},
     // 	graphic: {
-    // 		file: 'hammerBronze',
+    // 		file: require('../img/items/hammerBronze.svg'),
     // 		size: 30,
     // 		offsetX: 10,
     // 		offsetY: -2.5
     // 	},
-    // 	definition: 'hammers/bronze-hammer',
+    // 	definition: require('../../../api/items/hammers/bronze-hammer.json'),
     // 	type: ItemType.EQUIPMENT,
     // 	equipmentSlot: Equipment.Slots.HAND
     // },
     // IronHammer: {
-    // 	icon: {file: 'hammerIronIcon'},
+    // 	icon: {file: require('../img/items/hammerIronIcon.svg')},
     // 	graphic: {
-    // 		file: 'hammerIron',
+    // 		file: require('../img/items/hammerIron.svg'),
     // 		size: 50,
     // 		offsetX: 10,
     // 		offsetY: -2.5
     // 	},
-    // 	definition: 'hammers/iron-hammer',
+    // 	definition: require('../../../api/items/hammers/iron-hammer.json'),
     // 	type: ItemType.EQUIPMENT,
     // 	equipmentSlot: Equipment.Slots.HAND
     // },
@@ -249,36 +250,36 @@ export const ItemsConfig = {
      * PLACEABLES
      ***********************************/
     Campfire: {
-        icon: {file: 'fireCampIcon'},
+        icon: {file: require('../img/items/fireCampIcon.svg')},
         graphic: {
-            file: 'fireCamp',
+            file: require('../img/items/fireCamp.svg'),
             size: 100
         },
-        definition: 'placeables/campfire',
+        definition: require('../../../api/items/placeables/campfire.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.campfire'
         }
     },
     BigCampfire: {
-        icon: {file: 'fireBigCampIcon'},
+        icon: {file: require('../img/items/fireBigCampIcon.svg')},
         graphic: {
-            file: 'fireBigCamp',
+            file: require('../img/items/fireBigCamp.svg'),
             size: 120
         },
-        definition: 'placeables/big-campfire',
+        definition: require('../../../api/items/placeables/big-campfire.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.campfire'
         }
     },
     Workbench: {
-        icon: {file: 'workbench'},
+        icon: {file: require('../img/items/workbench.svg')},
         graphic: {
-            file: 'workbench',
+            file: require('../img/items/workbench.svg'),
             size: 65
         },
-        definition: 'placeables/workbench',
+        definition: require('../../../api/items/placeables/workbench.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.workbench',
@@ -286,36 +287,36 @@ export const ItemsConfig = {
         }
     },
     Chest: {
-        icon: {file: 'chest'},
+        icon: {file: require('../img/items/chest.svg')},
         graphic: {
-            file: 'chest',
+            file: require('../img/items/chest.svg'),
             size: 35
         },
-        definition: 'placeables/chest',
+        definition: require('../../../api/items/placeables/chest.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.chest'
         }
     },
     BigChest: {
-        icon: {file: 'chestBig'},
+        icon: {file: require('../img/items/chestBig.svg')},
         graphic: {
-            file: 'chestBig',
+            file: require('../img/items/chestBig.svg'),
             size: 50
         },
-        definition: 'placeables/big-chest',
+        definition: require('../../../api/items/placeables/big-chest.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.chest'
         }
     },
     Furnace: {
-        icon: {file: 'furnaceIcon'},
+        icon: {file: require('../img/items/furnaceIcon.svg')},
         graphic: {
-            file: 'furnace',
+            file: require('../img/items/furnace.svg'),
             size: 180
         },
-        definition: 'placeables/furnace',
+        definition: require('../../../api/items/placeables/furnace.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.furnace',
@@ -323,12 +324,12 @@ export const ItemsConfig = {
         }
     },
     // Seeds: {
-    // 	icon: {file: 'seedIcon'},
+    // 	icon: {file: require('../img/items/seedIcon.svg')},
     // 	graphic: {
-    // 		file: '../berryBush',
+    // 		file: require('../img/items/../berryBush.svg'),
     // 		size: 42
     // 	},
-    // 	definition: 'placeables/seeds',
+    // 	definition: require('../../../api/items/placeables/seeds.json'),
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'resources.berryBush'
@@ -339,12 +340,12 @@ export const ItemsConfig = {
      * WALLS
      ***********************************/
     WoodWall: {
-        icon: {file: 'wallWood'},
+        icon: {file: require('../img/items/wallWood.svg')},
         graphic: {
-            file: 'wallWood',
+            file: require('../img/items/wallWood.svg'),
             size: 50
         },
-        definition: 'walls/wood-wall',
+        definition: require('../../../api/items/walls/wood-wall.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.walls',
@@ -353,12 +354,12 @@ export const ItemsConfig = {
         }
     },
     // WoodSpikyWall: {
-    // 	icon: {file: 'woodSpikyWall'},
+    // 	icon: {file: require('../img/items/woodSpikyWall.svg')},
     // 	graphic: {
-    // 		file: 'woodSpikyWall',
+    // 		file: require('../img/items/woodSpikyWall.svg'),
     // 		size: 63
     // 	},
-    // 	definition: 'walls/wood-spiky-wall',
+    // 	definition: require('../../../api/items/walls/wood-spiky-wall.json'),
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'placeables.spikyWalls',
@@ -367,12 +368,12 @@ export const ItemsConfig = {
     // 	}
     // },
     StoneWall: {
-        icon: {file: 'wallStone'},
+        icon: {file: require('../img/items/wallStone.svg')},
         graphic: {
-            file: 'wallStone',
+            file: require('../img/items/wallStone.svg'),
             size: 50
         },
-        definition: 'walls/stone-wall',
+        definition: require('../../../api/items/walls/stone-wall.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.walls',
@@ -381,12 +382,12 @@ export const ItemsConfig = {
         }
     },
     // StoneSpikyWall: {
-    // 	icon: {file: 'stoneSpikyWall'},
+    // 	icon: {file: require('../img/items/stoneSpikyWall.svg')},
     // 	graphic: {
-    // 		file: 'stoneSpikyWall',
+    // 		file: require('../img/items/stoneSpikyWall.svg'),
     // 		size: 63
     // 	},
-    // 	definition: 'walls/stone-spiky-wall',
+    // 	definition: require('../../../api/items/walls/stone-spiky-wall.json'),
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'placeables.spikyWalls',
@@ -395,12 +396,12 @@ export const ItemsConfig = {
     // 	}
     // },
     BronzeWall: {
-        icon: {file: 'wallBronze'},
+        icon: {file: require('../img/items/wallBronze.svg')},
         graphic: {
-            file: 'wallBronze',
+            file: require('../img/items/wallBronze.svg'),
             size: 50
         },
-        definition: 'walls/bronze-wall',
+        definition: require('../../../api/items/walls/bronze-wall.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.walls',
@@ -409,12 +410,12 @@ export const ItemsConfig = {
         }
     },
     // BronzeSpikyWall: {
-    // 	icon: {file: 'bronzeSpikyWall'},
+    // 	icon: {file: require('../img/items/bronzeSpikyWall.svg')},
     // 	graphic: {
-    // 		file: 'bronzeSpikyWall',
+    // 		file: require('../img/items/bronzeSpikyWall.svg'),
     // 		size: 63
     // 	},
-    // 	definition: 'walls/bronze-spiky-wall',
+    // 	definition: require('../../../api/items/walls/bronze-spiky-wall.json'),
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'placeables.spikyWalls',
@@ -426,7 +427,7 @@ export const ItemsConfig = {
         // TODO
         icon: {file: ''},
         graphic: {file: ''},
-        definition: 'walls/iron-wall',
+        definition: require('../../../api/items/walls/iron-wall.json'),
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'placeables.walls',
@@ -437,7 +438,7 @@ export const ItemsConfig = {
     // 	// TODO
     // 	icon: {file: ''},
     // 	graphic: {file: ''},
-    // 	definition: 'walls/iron-spiky-wall',
+    // 	definition: require('../../../api/items/walls/iron-spiky-wall.json'),
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'placeables.spikyWalls',
@@ -452,7 +453,7 @@ export const ItemsConfig = {
     // 	// TODO
     // 	icon: {file: ''},
     // 	graphic: {file: ''},
-    // 	definition: 'doors/wood-door',
+    // 	definition: require('../../../api/items/doors/wood-door.json'),
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'placeables.doors'
@@ -462,7 +463,7 @@ export const ItemsConfig = {
     // 	// TODO
     // 	icon: {file: ''},
     // 	graphic: {file: ''},
-    // 	definition: 'doors/stone-door',
+    // 	definition: require('../../../api/items/doors/stone-door.json'),
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'placeables.doors'
@@ -472,7 +473,7 @@ export const ItemsConfig = {
     // 	// TODO
     // 	icon: {file: ''},
     // 	graphic: {file: ''},
-    // 	definition: 'doors/bronze-door',
+    // 	definition: require('../../../api/items/doors/bronze-door.json'),
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'placeables.doors'
@@ -482,7 +483,7 @@ export const ItemsConfig = {
     // 	// TODO
     // 	icon: {file: ''},
     // 	graphic: {file: ''},
-    // 	definition: 'doors/iron-door',
+    // 	definition: require('../../../api/items/doors/iron-door.json'),
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'placeables.doors'
@@ -493,28 +494,28 @@ export const ItemsConfig = {
      * FOOD & HEALING
      ***********************************/
     Berry: {
-        icon: {file: 'berryIcon'},
-        definition: 'consumables/berry',
+        icon: {file: require('../img/items/berryIcon.svg')},
+        definition: require('../../../api/items/consumables/berry.json'),
         type: ItemType.CONSUMABLE
     },
     CookedMeat: {
-        icon: {file: 'meatCookedIcon'},
-        definition: 'consumables/cooked-meat',
+        icon: {file: require('../img/items/meatCookedIcon.svg')},
+        definition: require('../../../api/items/consumables/cooked-meat.json'),
         type: ItemType.CONSUMABLE
     },
     RawMeat: {
-        icon: {file: 'meatRawIcon'},
-        definition: 'consumables/raw-meat',
+        icon: {file: require('../img/items/meatRawIcon.svg')},
+        definition: require('../../../api/items/consumables/raw-meat.json'),
         type: ItemType.CONSUMABLE
     },
     BerryBowl: {
-        icon: {file: 'berryBowlIcon'},
-        definition: 'consumables/berry-bowl',
+        icon: {file: require('../img/items/berryBowlIcon.svg')},
+        definition: require('../../../api/items/consumables/berry-bowl.json'),
         type: ItemType.CONSUMABLE
     },
     Flower: {
-        icon: {file: 'flowerIcon'},
-        definition: 'consumables/flower',
+        icon: {file: require('../img/items/flowerIcon.svg')},
+        definition: require('../../../api/items/consumables/flower.json'),
         type: ItemType.CONSUMABLE
     },
 
@@ -522,33 +523,33 @@ export const ItemsConfig = {
      * RESOURCES
      ***********************************/
     Wood: {
-        icon: {file: 'woodIcon'},
-        definition: 'resources/wood',
+        icon: {file: require('../img/items/woodIcon.svg')},
+        definition: require('../../../api/items/resources/wood.json'),
         type: ItemType.RESOURCE
     },
     Stone: {
-        icon: {file: 'stoneIcon'},
-        definition: 'resources/stone',
+        icon: {file: require('../img/items/stoneIcon.svg')},
+        definition: require('../../../api/items/resources/stone.json'),
         type: ItemType.RESOURCE
     },
     Bronze: {
-        icon: {file: 'bronzeIcon'},
-        definition: 'resources/bronze',
+        icon: {file: require('../img/items/bronzeIcon.svg')},
+        definition: require('../../../api/items/resources/bronze.json'),
         type: ItemType.RESOURCE
     },
     Iron: {
-        icon: {file: 'ironIcon'},
-        definition: 'resources/iron',
+        icon: {file: require('../img/items/ironIcon.svg')},
+        definition: require('../../../api/items/resources/iron.json'),
         type: ItemType.RESOURCE
     },
     Titanium: {
-        icon: {file: 'titaniumIcon'},
-        definition: 'resources/titanium',
+        icon: {file: require('../img/items/titaniumIcon.svg')},
+        definition: require('../../../api/items/resources/titanium.json'),
         type: ItemType.RESOURCE
     },
     Feather: {
-        icon: {file: 'feather'},
-        definition: 'resources/feather',
+        icon: {file: require('../img/items/feather.svg')},
+        definition: require('../../../api/items/resources/feather.json'),
         type: ItemType.RESOURCE
     },
 
@@ -556,13 +557,13 @@ export const ItemsConfig = {
      * SPECIAL
      ***********************************/
     MysticWand: {
-        icon: {file: 'wandMysticIcon'},
+        icon: {file: require('../img/items/wandMysticIcon.svg')},
         graphic: {
-            file: 'wandMystic',
+            file: require('../img/items/wandMystic.svg'),
             size: 60,
             offsetX: 20
         },
-        definition: 'mystic-wand',
+        definition: require('../../../api/items/mystic-wand.json'),
         type: ItemType.EQUIPMENT,
         equipmentSlot: Equipment.Slots.HAND
     },

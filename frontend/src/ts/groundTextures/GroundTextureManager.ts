@@ -1,8 +1,6 @@
 'use strict';
 
-import * as Environment from '../Environment';
-import * as Preloading from '../Preloading';
-import {isDefined, makeRequest} from '../Utils';
+import {isDefined} from '../Utils';
 import {GroundTexture} from './GroundTexture';
 import * as GroundTextureTypes from './GroundTextureTypes';
 
@@ -62,14 +60,9 @@ export function getTextureCount() {
     return textures.length;
 }
 
-Preloading.registerPreload(makeRequest({
-    method: 'GET',
-    url: 'config/groundTextures.json' + Environment.getCacheBuster()
-}).then(function (groundTextures: any) {
-    groundTextures = JSON.parse(groundTextures);
+const groundTextures = require('../../config/groundTextures.json');
 
-    groundTextures.forEach(function (groundTexture) {
-        groundTexture.type = GroundTextureTypes[groundTexture.type];
-        placeTexture(groundTexture);
-    });
-}));
+groundTextures.forEach(function (groundTexture) {
+    groundTexture.type = GroundTextureTypes[groundTexture.type];
+    placeTexture(groundTexture);
+});

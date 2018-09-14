@@ -238,6 +238,6 @@ function createIndicator(svgGraphic) {
 }
 
 let indicatorSize = Math.max(window.innerWidth, window.innerHeight);
-Preloading.registerGameObjectSVG(VitalSigns.damageIndicator, 'img/overlays/damage.svg', indicatorSize);
-Preloading.registerGameObjectSVG(VitalSigns.hungerIndicator, 'img/overlays/hunger.svg', indicatorSize);
-Preloading.registerGameObjectSVG(VitalSigns.coldnessIndicator, 'img/overlays/coldness.svg', indicatorSize);
+Preloading.registerGameObjectSVG(VitalSigns.damageIndicator, require('../img/overlays/damage.svg'), indicatorSize);
+Preloading.registerGameObjectSVG(VitalSigns.hungerIndicator, require('../img/overlays/hunger.svg'), indicatorSize);
+Preloading.registerGameObjectSVG(VitalSigns.coldnessIndicator, require('../img/overlays/coldness.svg'), indicatorSize);

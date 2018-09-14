@@ -12,6 +12,7 @@
 			"scripthost"
 		],
 		"types": [
+          "webpack-env",
 			"node"
 		]
 	},
