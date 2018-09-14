@@ -1,0 +1,78 @@
+<div id="gameUI" class="hidden">
+    <div id="crafting">
+        <a class="craftableItem empty">
+            <div class="iconBackground">
+	            <img class="itemIcon"/>
+            </div>
+
+            <div class="subIcon primary">
+	            <img class="itemIcon"/>
+            </div>
+            <div class="subIconRow layout-row layout-align-space-around">
+                <div class="subIcon layout-column flex-33 hidden">
+	                <img class="itemIcon"/>
+                    <span class="count"></span>
+                </div>
+                <div class="subIcon layout-column flex-33 hidden">
+	                <img class="itemIcon"/>
+                    <span class="count"></span>
+                </div>
+                <div class="subIcon layout-column flex-33 hidden">
+	                <img class="itemIcon"/>
+                    <span class="count"></span>
+                </div>
+            </div>
+
+            <div class="progressOverlay hidden"></div>
+        </a>
+    </div>
+
+    <div id="minimap">
+        <div class="wrapper">
+            <!-- pixi.js instance here, to display minimap icons -->
+        </div>
+    </div>
+
+    <div id="vitalSigns" class="layout-column">
+        <div id="healthBar" class="bar flex">
+            <div class="previousIndicator"></div>
+            <div class="indicator"></div>
+        </div>
+        <div id="satietyBar" class="bar flex">
+            <div class="previousIndicator"></div>
+            <div class="indicator"></div>
+        </div>
+        <div id="bodyHeatBar" class="bar flex">
+            <div class="previousIndicator"></div>
+            <div class="indicator"></div>
+        </div>
+    </div>
+
+    <div id="inventory" class="layout-row">
+        <div class="inventorySlot">
+            <a class="autoFeedToggle hidden" href="#"></a>
+            <!-- States are:
+					- empty
+					- filled
+					- filled active -->
+            <a class="clickableItem empty">
+	            <img class="itemIcon"/>
+                <span class="count"></span>
+            </a>
+        </div>
+    </div>
+
+    <div id="chat" class="hidden">
+        <span id="chatInput" contenteditable="true"></span>
+    </div>
+
+	<div id="scoreboard" class="hidden">
+		<table>
+			<tr class="playerRow">
+				<td class="rank"></td>
+				<td class="name"></td>
+				<td class="score"></td>
+			</tr>
+		</table>
+	</div>
+</div>
