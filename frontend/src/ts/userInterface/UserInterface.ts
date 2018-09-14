@@ -18,10 +18,9 @@ let inventorySlots;
 
 let vitalSignsBars;
 
-Preloading.registerPartial('partials/userInterface.html')
-    .then(() => {
-        rootElement = document.getElementById('gameUI');
-    });
+Preloading.renderPartial(require('./userInterface.html'), () => {
+    rootElement = document.getElementById('gameUI');
+});
 
 Preloading.registerSVG('img/userInterface/cycle-icon.svg')
     .then((svgText) => {

@@ -105,15 +105,13 @@ function showNextStep() {
     }
 }
 
-Preloading.registerPartial('partials/tutorial.html')
-    .then(() => {
-        rootElement = document.getElementById('tutorial');
-        rootElement.addEventListener('transitionend', function (event) {
-            event.target.classList.remove('done');
-            showNextStep();
-        });
+Preloading.renderPartial(require('../partials/tutorial.html'), () => {
+    rootElement = document.getElementById('tutorial');
+    rootElement.addEventListener('transitionend', function (event) {
+        event.target.classList.remove('done');
+        showNextStep();
     });
-
+});
 
 Events.on('game.playing', function () {
     currentStage = -1;

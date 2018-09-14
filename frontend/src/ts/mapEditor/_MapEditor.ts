@@ -165,7 +165,7 @@ export function getMapDimensions() {
 
 
 if (isActive()) {
-    Preloading.registerPartial('partials/mapEditor.html');
+    Preloading.renderPartial(require('./mapEditor.html'));
 
     // TODO onAction
     // let placeableGameobject = new Placeable(

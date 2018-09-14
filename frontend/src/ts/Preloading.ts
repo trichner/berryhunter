@@ -84,39 +84,8 @@ export function registerGameObjectSVG(gameObjectClass, svgPath, maxSize) {
     );
 }
 
-export function registerPartial(htmlUrl) {
-    let preloadingPromise = loadPartial(htmlUrl);
-    registerPreload(preloadingPromise);
-    return preloadingPromise;
-}
-
-/**
- * USE WITH CAUTION. Only usable for components involved in loading.
- * @param htmlUrl
- * @returns {Promise}
- */
-export function loadPartial(htmlUrl) {
-    return makeRequest({
-        method: 'GET',
-        url: htmlUrl,
-    }).then(function (html) {
-        switch (document.readyState) {
-            case "interactive":
-            case "complete":
-                document.body.appendChild(htmlToElement(html));
-                return Promise.resolve();
-            case "loading":
-                return new Promise(function (resolve) {
-                    document.addEventListener("DOMContentLoaded", function () {
-                        document.body.appendChild(htmlToElement(html));
-                        resolve();
-                    });
-                });
-        }
-    });
-}
-
-export function renderPartial(html, onDomReady) {
+export function renderPartial(html, onDomReady = () => {
+}) {
     document.body.appendChild(htmlToElement(html));
     onDomReady();
 }

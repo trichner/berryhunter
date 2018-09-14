@@ -297,6 +297,5 @@ function randomizeInputs() {
 if (getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
     active = true;
 
-    Preloading.registerPartial('partials/groundTexturePanel.html')
-        .then(setupPanel);
+    Preloading.renderPartial(require('./groundTexturePanel.html'), setupPanel);
 }

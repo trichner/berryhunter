@@ -19,27 +19,24 @@ function onDomReady() {
 
     preventInputPropagation(rootElement);
 
-    this.rootElement.getElementsByClassName('playerForm').item(0)
+    rootElement.getElementsByClassName('playerForm').item(0)
         .addEventListener('animationend', function () {
             // As soon as the form is faded in, focus the input field
             playerNameInput.focus();
         });
 }
 
-Preloading.registerPartial('partials/endScreen.html')
-    .then(() => {
-        onDomReady();
-    });
+Preloading.renderPartial(require('./endScreen.html'), onDomReady);
 
 export function show() {
     PlayerName.fillInput(playerNameInput);
     Console.hide();
 
-    this.rootElement.classList.add('showing');
+    rootElement.classList.add('showing');
 }
 
 export function hide() {
-    this.rootElement.classList.remove('showing');
+    rootElement.classList.remove('showing');
 }
 
 let joinedAtDayTime;
