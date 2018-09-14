@@ -1,4 +1,4 @@
-import './css/index.less';
+import './less/index.less';
 import * as Preloading from './ts/Preloading';
 import * as Events from './ts/Events';
 
