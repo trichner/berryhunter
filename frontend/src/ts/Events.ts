@@ -4,7 +4,7 @@ import {isDefined} from "./Utils";
  * Will print a warning to the console when an event is
  * triggered where no listeners have been registered.
  */
-const WARN_ON_EMPTY_LISTENERS = true;
+const WARN_ON_EMPTY_LISTENERS = false;
 const warnedEvents = [];
 
 const oneTimeEvents = {};
@@ -50,6 +50,7 @@ function warnEmptyListeners(event) {
 }
 
 export function trigger(event, payload?) {
+    // console.info('Trigger ' + event);
     if (registeredListeners.hasOwnProperty(event)) {
         let listeners = registeredListeners[event];
         if (WARN_ON_EMPTY_LISTENERS && listeners.length === 0) {

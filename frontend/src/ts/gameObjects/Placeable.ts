@@ -1,7 +1,7 @@
 'use strict';
 
 import * as PIXI from 'pixi.js';
-import {GameObject} from '../gameObjects/_GameObject';
+import {GameObject} from './_GameObject';
 import {randomRotation} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
 

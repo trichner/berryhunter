@@ -102,7 +102,7 @@ export class ClickableIcon {
         Object.entries(materials).forEach((material) => {
             let itemName = material[0];
             let count = material[1];
-            let iconPath = Items[itemName].icon.path;
+            let iconPath = Items[itemName].icon.file;
 
             let domElement;
             if (!hasPrimary && count === 1) {

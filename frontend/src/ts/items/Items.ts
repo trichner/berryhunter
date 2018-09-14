@@ -27,7 +27,7 @@ function validatePlaceable(item) {
         throw 'Item "' + item.name + '" must define a property "layer" inside "placeable".';
     }
 
-    Events.on('game.setup', function (Game) {
+    Events.on('game.afterSetup', function (Game) {
         let layer = _.property(item.placeable.layer.split('.'))(Game.layers);
         if (!isDefined(layer)) {
             throw 'The defined layer "' + item.placeable.layer + '" in the item "' + item.name + '" is not valid layer. Check out Game.js for a definition of all game layers.';

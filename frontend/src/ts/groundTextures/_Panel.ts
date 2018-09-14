@@ -15,7 +15,7 @@ import {
     sortStrings
 } from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
-import * as GroundTextureTypes from './GroundTextureTypes';
+import {GroundTextureTypes} from './GroundTextureTypes';
 import * as GroundTextureManager from './GroundTextureManager';
 import {saveAs} from 'file-saver';
 import * as Console from '../Console';

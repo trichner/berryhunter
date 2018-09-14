@@ -127,7 +127,7 @@ export class GameObject {
     getPosition() {
         // Defensive copy
         // FIXME necessary?
-        return this.shape.position.clone();
+        return Vector.clone(this.shape.position);
     }
 
     getX() {
@@ -217,7 +217,7 @@ function moveInterpolatedObjects() {
                 movementInterpolatedObjects.delete(gameObject);
             } else {
                 gameObject.shape.position.copy(
-                    gameObject.shape.position.lerp(
+                    Vector.clone(gameObject.shape.position).lerp(
                         gameObject.desiredPosition,
                         elapsedTimePortion));
             }

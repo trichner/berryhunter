@@ -4,8 +4,8 @@ import * as BackendConstants from './BackendConstants';
 import * as Resources from '../gameObjects/Resources';
 import * as Mobs from '../gameObjects/Mobs';
 import {DebugCircle} from '../develop/DebugCircle';
-import * as Character from '../gameObjects/Character';
-import * as Placeable from '../gameObjects/Placeable';
+import {Character} from '../gameObjects/Character';
+import {Placeable} from '../gameObjects/Placeable';
 import {isFunction} from '../Utils';
 import {BerryhunterApi} from './BerryhunterApi';
 

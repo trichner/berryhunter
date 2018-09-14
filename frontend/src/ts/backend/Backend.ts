@@ -150,7 +150,7 @@ export function sendInputTick(inputObj) {
 }
 
 export function sendJoin(joinObj) {
-    Events.on('game.setup', function () {
+    Events.on('game.afterSetup', function () {
         send(ClientMessage.fromJoin(joinObj));
     });
 }
@@ -268,7 +268,7 @@ export function receive(message) {
             if (Develop.isActive()) {
                 Develop.logServerTick(gameState, timeSinceLastMessage);
             }
-            Events.on('game.setup', function () {
+            Events.on('game.afterSetup', function () {
                 receiveSnapshot(SnapshotFactory.newSnapshot(state, gameState));
             });
             break;

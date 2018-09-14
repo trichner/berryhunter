@@ -1,7 +1,7 @@
 'use strict';
 
 import * as PIXI from 'pixi.js';
-import {htmlToElement, isNumber, makeRequest} from './Utils';
+import {htmlToElement, isNumber} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
 import * as Events from './Events';
 
@@ -13,8 +13,8 @@ let executeResolve;
 
 export function executePreload() {
     return new Promise(function (resolve) {
-        Events.triggerOneTime('preloading.execute');
         executeResolve = resolve;
+        Events.triggerOneTime('preloading.execute');
     });
 }
 
@@ -48,21 +48,6 @@ export function registerPreload(preloadingPromise) {
     numberOfPromises++;
 
     return preloadingPromise;
-}
-
-export function registerSetup(setupPromise) {
-    return registerPreload(setupPromise);
-}
-
-/**
- * Create xhr promise to load svg
- * @param svgPath
- */
-export function registerSVG(svgPath) {
-    return registerPreload(makeRequest({
-        method: 'GET',
-        url: svgPath,
-    }));
 }
 
 export function registerGameObjectSVG(gameObjectClass, svgPath, maxSize) {

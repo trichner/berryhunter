@@ -41,3 +41,5 @@ for (let type in GroundTextureTypes) {
 if (hasError) {
     throw "There are erroneous GroundTextureType(s).";
 }
+
+export {GroundTextureTypes};

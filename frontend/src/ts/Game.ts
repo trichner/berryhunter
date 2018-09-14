@@ -69,6 +69,7 @@ export function setup() {
 
     // Setup backend first, as this will take some time to connect.
     Backend.setup(Game);
+    Events.triggerOneTime('game.setup', Game);
 
     renderer = PIXI.autoDetectRenderer({
         antialias: true,
@@ -258,7 +259,7 @@ export function setup() {
 
 
     Promise.all(setupPromises).then(function () {
-        Events.triggerOneTime('game.setup', Game);
+        Events.triggerOneTime('game.afterSetup', Game);
     });
 }
 
@@ -311,7 +312,7 @@ export function createPlayer(id, x, y, name) {
     player = new Player(id, x, y, name, miniMap);
     player.init();
     state = States.PLAYING;
-    Events.trigger('game.playing');
+    Events.trigger('game.playing', Game);
 }
 
 export function removePlayer() {
@@ -323,7 +324,7 @@ export function removePlayer() {
         map.clear();
     }
     state = States.RENDERING;
-    Events.trigger('game.death');
+    Events.trigger('game.death', Game);
 }
 
 export function createSpectator(x, y) {

@@ -2,7 +2,7 @@
 
 import {isDefined} from '../Utils';
 import {GroundTexture} from './GroundTexture';
-import * as GroundTextureTypes from './GroundTextureTypes';
+import {GroundTextureTypes} from './GroundTextureTypes';
 
 
 const textures = [];

@@ -55,7 +55,7 @@ export class ClientMessage {
 
 function marshalInput(builder, inputObj) {
     let action = null;
-    if (isDefined(inputObj.action)) {
+    if (inputObj.action !== null) {
         BerryhunterApi.Action.startAction(builder);
         if (inputObj.action.item === null) {
             BerryhunterApi.Action.addItem(builder, BackendConstants.NONE_ITEM_ID);
@@ -72,7 +72,7 @@ function marshalInput(builder, inputObj) {
         BerryhunterApi.Input.addAction(builder, action);
     }
 
-    if (isDefined(inputObj.movement)) {
+    if (inputObj.movement !== null) {
         BerryhunterApi.Input.addMovement(builder,
             BerryhunterApi.Vec2f.createVec2f(builder, inputObj.movement.x, inputObj.movement.y));
     }
