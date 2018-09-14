@@ -1,9 +1,9 @@
 'use strict';
 
-import * as Develop from './_Develop';
+let Develop = null;
 
-
-export function setup(game) {
+export function setup(game, develop) {
+    Develop = develop;
     game.renderer.on('prerender', this.update.bind(this, game));
 }
 

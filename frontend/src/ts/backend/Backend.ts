@@ -20,6 +20,10 @@ import * as UserInterface from '../userInterface/UserInterface';
 import {BerryhunterApi} from './BerryhunterApi';
 import {flatbuffers} from 'flatbuffers';
 
+// Assign all export in this file to a single variable to be passed into sub modules.
+import * as Backend from './Backend';
+
+let Game = null;
 
 export const States = {
     DISCONNECTED: 'DISCONNECTED',
@@ -39,8 +43,6 @@ let firstGameStateReject;
 
 let webSocket;
 let lastMessageReceivedTime;
-
-let Game = null;
 
 export function setup(game) {
     Game = game;
@@ -87,6 +89,8 @@ export function setup(game) {
     if (Develop.isActive()) {
         lastMessageReceivedTime = performance.now();
     }
+
+    Events.triggerOneTime('backend.setup', Backend);
 }
 
 export function getState() {

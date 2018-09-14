@@ -11,7 +11,6 @@ import * as Preloading from '../Preloading';
 import {Quadrants} from './Quadrants';
 import * as Mobs from '../gameObjects/Mobs';
 import * as Resources from '../gameObjects/Resources';
-import * as Develop from '../develop/_Develop';
 import * as _ from 'lodash';
 import * as PIXI from 'pixi.js';
 import * as Events from "../Events";
@@ -22,14 +21,19 @@ Events.on('game.setup', game => {
 });
 
 
+let active;
+let grid;
+let mapWidth;
+let mapHeight;
+
 export function isActive() {
-    if (typeof this.active !== 'undefined') {
-        return this.active;
+    if (typeof active !== 'undefined') {
+        return active;
     }
 
     let quadrantParameter = getUrlParameter(Constants.MODE_PARAMETERS.MAP_EDITOR);
-    this.active = isDefined(quadrantParameter);
-    return this.active;
+    active = isDefined(quadrantParameter);
+    return active;
 }
 
 export function setup() {
@@ -40,19 +44,20 @@ export function setup() {
 
     document.getElementById('drawingContainer').appendChild(renderer.view);
 
-    if (Develop.isActive()) {
-        Develop.logWebsocketStatus('Disabled', 'neutral');
-    }
+    // FIXME via Events or somethong
+    // if (Develop.isActive()) {
+    //     Develop.logWebsocketStatus('Disabled', 'neutral');
+    // }
 
     // Empty quadrants
     // Quadrants = [[]]; // FIXME
-    this.calculateMapDimensions();
+    calculateMapDimensions();
 
     // FIXME
     // GameMapGenerator.generate = GameMapGenerator.generateFromQuadrants;
 
-    document.getElementById('quadrantJson').addEventListener('input', this.tryRenderQuadrants);
-    document.getElementById('renderButton').addEventListener('click', this.tryRenderQuadrants);
+    document.getElementById('quadrantJson').addEventListener('input', tryRenderQuadrants);
+    document.getElementById('renderButton').addEventListener('click', tryRenderQuadrants);
 
     _.extend(window, Mobs);
     _.extend(window, Resources);
@@ -78,14 +83,14 @@ export function afterSetup() {
 
     Game.createPlayer(0, Game.width / 2, Game.height / 2, 'Map Architect');
 
-    this.grid = new QuadrantGrid(Game.width, Game.height);
+    grid = new QuadrantGrid(Game.width, Game.height);
 
     // TODO Events.on('camera.update')
     Game.player.camera.onUpdate = function (position) {
-        this.grid.cameraUpdate(position);
+        grid.cameraUpdate(position);
     }.bind(this);
 
-    this.tryRenderQuadrants();
+    tryRenderQuadrants();
 }
 
 export function tryRenderQuadrants() {
@@ -147,16 +152,16 @@ export function calculateMapDimensions() {
     // If there's no quadrant, at least render 1 empty quadrant
     let quadrantCount = Math.max(1, Quadrants.length);
     // TODO Quadranten möglichst quadratisch auslegen, statt alle in die Breite
-    this.mapWidth = QuadrantGrid.QUADRANT_SIZE * quadrantCount;
-    this.mapHeight = QuadrantGrid.QUADRANT_SIZE;
+    mapWidth = QuadrantGrid.QUADRANT_SIZE * quadrantCount;
+    mapHeight = QuadrantGrid.QUADRANT_SIZE;
 }
 
 export function getMapDimensions() {
     return {
-        width: this.mapWidth,
-        height: this.mapHeight,
+        width: mapWidth,
+        height: mapHeight,
     }
-};
+}
 
 
 if (isActive()) {

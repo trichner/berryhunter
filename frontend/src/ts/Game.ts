@@ -249,7 +249,7 @@ export function setup() {
      * Initializing modules that require an initialized UI
      */
 
-    Chat.setup(Game);
+    Chat.setup(Game, Backend);
     GroundTexturePanel.setup(Game);
 
     if (Develop.isActive()) {

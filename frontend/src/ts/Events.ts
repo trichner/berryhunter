@@ -1,15 +1,24 @@
+import {isDefined} from "./Utils";
+
+/**
+ * Will print a warning to the console when an event is
+ * triggered where no listeners have been registered.
+ */
+const WARN_ON_EMPTY_LISTENERS = true;
+const warnedEvents = [];
+
 const oneTimeEvents = {};
 const registeredListeners = {};
 
-// TODO context muss an #on nicht an #trigger - da gibt's schließlich den payload
 // TODO remove callbacks as soon as triggerOnce was handled
 
 /**
  *
  * @param event event name to listen for
  * @param callback may return true to be deleted as listener, e.g. (filtered) single execution callbacks
+ * @param context will be 'this' in the callback
  */
-export function on(event, callback) {
+export function on(event, callback, context?) {
     if (oneTimeEvents.hasOwnProperty(event)) {
         // One time event was already triggered - just execute
         // the callback with appropriate parameters and done
@@ -26,15 +35,30 @@ export function on(event, callback) {
         registeredListeners[event] = listeners;
     }
 
+    if (isDefined(context)) {
+        callback = callback.bind(context);
+    }
     listeners.push(callback);
 }
 
-export function trigger(event, payload?, context?) {
+function warnEmptyListeners(event) {
+    // make sure there's only 1 warning per event
+    if (!warnedEvents.includes(event)) {
+        console.warn('No listeners for event "' + event + '"!');
+        warnedEvents.push(event);
+    }
+}
+
+export function trigger(event, payload?) {
     if (registeredListeners.hasOwnProperty(event)) {
         let listeners = registeredListeners[event];
+        if (WARN_ON_EMPTY_LISTENERS && listeners.length === 0) {
+            warnEmptyListeners(event);
+            return;
+        }
         let indexToDelete = [];
         listeners.forEach(function (listener, index) {
-            if (listener.call(context, payload)) {
+            if (listener(payload)) {
                 indexToDelete.push(index);
             }
         });
@@ -42,10 +66,13 @@ export function trigger(event, payload?, context?) {
             listeners.splice(index, 1);
         })
 
+    } else if (WARN_ON_EMPTY_LISTENERS) {
+        warnEmptyListeners(event);
+        return;
     }
 }
 
-export function triggerOneTime(event, payload?, context?) {
+export function triggerOneTime(event, payload?) {
     if (oneTimeEvents.hasOwnProperty(event)) {
         console.warn('Multiple triggers of "' + event + '"!');
         return;
@@ -53,7 +80,8 @@ export function triggerOneTime(event, payload?, context?) {
 
     oneTimeEvents[event] = {
         payload: payload,
-        context: context
     };
-    this.trigger(event, payload, context);
+    trigger(event, payload);
+    // Delete all listeners of this one time event, as they won't ever be called again
+    delete registeredListeners[event];
 }

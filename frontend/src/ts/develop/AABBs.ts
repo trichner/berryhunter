@@ -1,9 +1,10 @@
 'use strict';
 
 import {GameObject} from '../gameObjects/_GameObject';
-import * as Develop from './_Develop';
 import {isDefined, isUndefined} from '../Utils';
 import * as PIXI from 'pixi.js';
+
+let Develop = null;
 
 export interface hasAABB {
     aabb: PIXI.Graphics;
@@ -13,7 +14,8 @@ export interface hasAABB {
     showAABB: () => void;
 }
 
-export function setup() {
+export function setup(develop) {
+    Develop = develop;
 
     /**
      *

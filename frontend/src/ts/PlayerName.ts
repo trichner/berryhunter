@@ -1,8 +1,12 @@
 'use strict';
 
 import * as NameGenerator from './NameGenerator';
-import * as Backend from './backend/Backend';
+import * as Events from "./Events";
 
+let Backend = null;
+Events.on('backend.setup', backend => {
+    Backend = backend;
+});
 
 const MAX_LENGTH = 20;
 

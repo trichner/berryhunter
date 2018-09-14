@@ -13,5 +13,5 @@ export function defaultStyle() {
 }
 
 export function style(additionalStyle) {
-    return _.extend(this.defaultStyle(), additionalStyle);
+    return _.extend(defaultStyle(), additionalStyle);
 }

@@ -11,6 +11,9 @@ import {BasicConfig as Constants} from '../../config/Basic';
 import {Items} from '../items/Items';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 
+// Assign all export in this file to a single variable to be passed into sub modules.
+import * as Develop from './_Develop';
+
 let Game = null;
 let active = false;
 export let settings = {
@@ -38,7 +41,7 @@ const logs = {
 
 export function setup() {
     active = true;
-    AABBs.setup();
+    AABBs.setup(Develop);
 
     setupDevelopPanel();
 }
@@ -208,7 +211,7 @@ function setupChart() {
 export function afterSetup(game) {
     Game = game;
 
-    Fps.setup(game);
+    Fps.setup(game, Develop);
 }
 
 export function logValue(name, value) {

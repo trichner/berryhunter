@@ -1,9 +1,13 @@
 'use strict';
 
 import * as Preloading from './Preloading';
+import * as Events from './Events';
 import {getUrlParameter, preventInputPropagation, resetFocus} from './Utils';
-import * as Backend from './backend/Backend';
 
+let Backend = null;
+Events.on('backend.setup', backend => {
+    Backend = backend;
+});
 
 export const KEYS = [
     220, // ^ for german keyboards
