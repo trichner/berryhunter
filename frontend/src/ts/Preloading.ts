@@ -84,8 +84,7 @@ export function registerGameObjectSVG(gameObjectClass, svgPath, maxSize) {
     );
 }
 
-export function renderPartial(html, onDomReady = () => {
-}) {
+export function renderPartial(html, onDomReady = () => {}) {
     document.body.appendChild(htmlToElement(html));
     onDomReady();
 }
