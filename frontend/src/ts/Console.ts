@@ -31,6 +31,8 @@ let commandInput;
 let historyElement;
 let startTime;
 
+Preloading.renderPartial(require('../partials/console.html'), onDomReady);
+
 function onDomReady() {
     rootElement = document.getElementById('console');
     commandInput = document.getElementById('console_command');
@@ -112,8 +114,3 @@ export function toggle() {
 export function isOpen() {
     return _isOpen;
 }
-
-Preloading.registerPartial('partials/console.html')
-    .then(() => {
-        onDomReady();
-    });

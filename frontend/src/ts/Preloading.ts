@@ -116,5 +116,7 @@ export function loadPartial(htmlUrl) {
     });
 }
 
-
-
+export function renderPartial(html, onDomReady) {
+    document.body.appendChild(htmlToElement(html));
+    onDomReady();
+}

@@ -10,7 +10,7 @@ import * as Preloading from "../../Preloading";
 let _progress = 0;
 let loadingBar = null;
 
-let htmlFile = 'partials/startScreen.html';
+const htmlFile = require('./startScreen.html');
 let isDomReady = false;
 export let playerNameInput = null;
 
@@ -18,8 +18,7 @@ let rootElement;
 let chromeWarning;
 
 Events.on('preloading.execute', () => {
-    Preloading.loadPartial(htmlFile)
-        .then(onDomReady);
+    Preloading.renderPartial(htmlFile, onDomReady);
 });
 
 export function onDomReady() {
