@@ -77,7 +77,7 @@ func bootServer(h http.HandlerFunc, port int, path string, dev bool) {
 
 	if dev {
 		log.Print("Using development server.")
-		http.Handle("/", http.FileServer(http.Dir("./../frontend")))
+		http.Handle("/", http.FileServer(http.Dir("./../frontend/dist")))
 	}
 	// start server
 	go http.ListenAndServe(addr, nil)
