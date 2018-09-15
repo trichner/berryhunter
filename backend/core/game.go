@@ -4,11 +4,13 @@ import (
 	"engo.io/ecs"
 	"fmt"
 	"github.com/google/flatbuffers/go"
+	"github.com/trichner/berryhunter/backend/cfg"
 	"github.com/trichner/berryhunter/backend/codec"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/items/mobs"
 	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/model/client"
+	"github.com/trichner/berryhunter/backend/model/constant"
 	"github.com/trichner/berryhunter/backend/model/spectator"
 	"github.com/trichner/berryhunter/backend/net"
 	"github.com/trichner/berryhunter/backend/phy"
@@ -19,11 +21,9 @@ import (
 	"github.com/trichner/berryhunter/backend/sys/statuseffects"
 	"log"
 	"net/http"
+	"sort"
 	"sync/atomic"
 	"time"
-	"sort"
-	"github.com/trichner/berryhunter/backend/model/constant"
-	"github.com/trichner/berryhunter/backend/cfg"
 )
 
 type entitiesMap map[uint64]model.BasicEntity
@@ -97,7 +97,7 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	m := sys.NewMobSystem(g)
 	g.AddSystem(m)
 
-	f := heater.New()
+	f := heater.New(gc.ColdFractionDayPerS, gc.HeatFractionPerS)
 	g.AddSystem(f)
 
 	preu := sys.NewPreUpdateSystem()

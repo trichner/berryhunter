@@ -11,9 +11,10 @@ type Config struct {
 		Path string `json:"path"`
 	} `json:"server"`
 	Game struct {
-		ColdFractionNightPerS   float32 `json:"coldFractionNightPerSecond"`
-		ColdFractionRestingPerS float32 `json:"coldFractionRestingPerSecond"`
-		Player struct {
+		ColdFractionDayPerS   float32 `json:"coldFractionDayPerSecond"`
+		ColdFractionNightPerS float32 `json:"coldFractionNightPerSecond"`
+		HeatFractionPerS      float32 `json:"heatFractionPerSecond"`
+		Player                struct {
 			FreezingDamageTickFraction float32 `json:"freezingDamageTickFraction"`
 			StarveDamageTickFraction   float32 `json:"starveDamageTickFraction"`
 			SatietyLossTickFraction    float32 `json:"satietyLossTickFraction"`
