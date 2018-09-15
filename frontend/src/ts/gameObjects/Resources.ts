@@ -48,9 +48,9 @@ export class Tree extends Resource {
     resourceSpotTexture: InjectedSVG;
 
     constructor(x, y, size, svg) {
-        super(Game.layers.resources.trees, x, y, size + GraphicsConfig.character.size, randomRotation(), svg);
+        super(Game.layers.resources.trees, x, y, size * 1.8 + GraphicsConfig.character.size, 0, svg);
 
-        this.resourceSpotTexture = new InjectedSVG(Tree.resourceSpot.svg, x, y, this.size, this.rotation);
+        this.resourceSpotTexture = new InjectedSVG(Tree.resourceSpot.svg, x, y, this.size * 0.7, randomRotation());
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
     }
 

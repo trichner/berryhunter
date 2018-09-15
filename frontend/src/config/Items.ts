@@ -77,7 +77,7 @@ export const ItemsConfig = {
             file: require('../img/items/toolBronze.svg'),
             size: 30,
             offsetX: 10,
-            offsetY: 2.5
+            offsetY: 1.25
         },
         definition: require('../../../api/items/tools/bronze-tool.json'),
         type: ItemType.EQUIPMENT,
@@ -89,7 +89,7 @@ export const ItemsConfig = {
             file: require('../img/items/toolIron.svg'),
             size: 30,
             offsetX: 10,
-            offsetY: 2.5
+            offsetY: 1.25
         },
         definition: require('../../../api/items/tools/iron-tool.json'),
         type: ItemType.EQUIPMENT,
@@ -100,8 +100,8 @@ export const ItemsConfig = {
         graphic: {
             file: require('../img/items/toolTitanium.svg'),
             size: 35,
-            offsetX: 10,
-            offsetY: 2.5
+            offsetX: 12,
+            offsetY: 1.25
         },
         definition: require('../../../api/items/tools/titanium-tool.json'),
         type: ItemType.EQUIPMENT,
