@@ -3,6 +3,7 @@ package cmd
 import (
 	"engo.io/ecs"
 	"fmt"
+	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
 	"log"
@@ -111,6 +112,15 @@ var commands = map[string]Command{
 
 		return nil
 	},
+	"VALIDATE": func(g model.Game, p model.PlayerEntity, arg *string) error {
+
+		builder := flatbuffers.NewBuilder(32)
+		acceptMsg := codec.ValidTokenMessageFlatbufMarshal(builder)
+		builder.Finish(acceptMsg)
+		p.Client().SendMessage(builder.FinishedBytes())
+		return nil
+	},
+
 }
 
 type CommandSystem struct {

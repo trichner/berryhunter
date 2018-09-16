@@ -160,7 +160,11 @@ table Scoreboard {
   players:[ScoreboardPlayer];
 }
 
-union ServerMessageBody { Welcome, GameState, Accept, Obituary, EntityMessage, Scoreboard }
+table ValidToken {
+    // nothing to send with it, purely for signaling
+}
+
+union ServerMessageBody { Welcome, GameState, Accept, Obituary, EntityMessage, Scoreboard, ValidToken }
 table ServerMessage { body:ServerMessageBody; }
 
 root_type ServerMessage;
