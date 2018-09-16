@@ -1,12 +1,12 @@
-package main
+package dao
 
 // sudo docker run --rm --name mariadb -it -p 127.0.0.1:3306:3306 -e MYSQL_ROOT_PASSWORD=root mariadb:latest
 import (
 	"context"
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
-import _ "github.com/jinzhu/gorm/dialects/sqlite"
 
 type Player struct {
 	Uuid string `db:"uuid"`
@@ -38,6 +38,10 @@ func (p *playerDao) FindPlayers(ctx context.Context) ([]Player, error) {
 
 func (p *playerDao) UpsertPlayer(ctx context.Context, pl Player) error {
 	tx := mustTx(ctx)
+
+	if len(pl.Uuid) <= 0 {
+		return fmt.Errorf("invalid player UUID: " + pl.Uuid)
+	}
 
 	//uid := uuid.New().String()
 	_, err := tx.ExecContext(ctx,`

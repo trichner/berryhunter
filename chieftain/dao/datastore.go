@@ -1,4 +1,4 @@
-package main
+package dao
 
 import (
 	"context"
@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS player (
   uuid VARCHAR(64) NOT NULL UNIQUE,
   name VARCHAR(1024) NOT NULL DEFAULT '',
   score BIGINT(64) NOT NULL DEFAULT 0
-  -- UNIQUE KEY (uuid)
 )`
 
 type TransactifiedFunc func(ctx context.Context) error
