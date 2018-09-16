@@ -353,3 +353,15 @@ function createBackground() {
 }
 
 Events.on('modulesLoaded', setup);
+
+window.onbeforeunload = function (event) {
+    // Only ask for confirmation if the user is in-game
+    if (state !== States.PLAYING) {
+        return;
+    }
+
+    let dialogText = 'Do you want to leave this game? You\'re progress will be lost.';
+    event.preventDefault();
+    event.returnValue = dialogText;
+    return dialogText;
+};
