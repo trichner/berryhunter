@@ -4,7 +4,8 @@ import * as PlayerName from '../../PlayerName';
 import {isDefined, preventInputPropagation} from '../../Utils';
 import * as Events from '../../Events';
 import * as DetectBrowser from 'detect-browser';
-import * as Preloading from "../../Preloading";
+import * as Preloading from '../../Preloading';
+import * as Credits from './Credits';
 
 
 let _progress = 0;
@@ -54,7 +55,9 @@ export function onDomReady() {
         });
     }
 
-    Events.triggerOneTime('startScreen.domReady', rootElement)
+    Credits.setup();
+
+    Events.triggerOneTime('startScreen.domReady', rootElement);
 }
 
 export function show() {

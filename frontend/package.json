@@ -4,7 +4,7 @@
   "description": "Frontend for BerryHunter game",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "start": "webpack-dev-server --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js --open-page \"?token=plz&local&port=2000\"",
     "analyze": "webpack --config webpack.analysis.js"
   },
   "main": "game.js",
