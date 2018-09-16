@@ -12,7 +12,7 @@ module.exports = {
 		}),
 		new FaviconsWebpackPlugin({
 			// Your source logo
-			logo: './src/img/logo.png',
+			logo: './src/img/logo.svg',
 			// favicon background color (see https://github.com/haydenbleasel/favicons#usage)
 			background: '#fff',
 			// favicon app title (see https://github.com/haydenbleasel/favicons#usage)
