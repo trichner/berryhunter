@@ -33,6 +33,7 @@ let rootElement;
 let commandInput;
 let historyElement;
 let startTime;
+let scheduledMessages = [];
 
 Events.on('backend.validToken', function () {
     // Only load the console once the token was confirmed as valid
@@ -61,6 +62,9 @@ function onDomReady() {
 
     startTime = Date.now();
     domReady = true;
+
+    // Log messages that were scheduled
+    scheduledMessages.forEach(log);
 }
 
 function onCommand(command) {
@@ -86,8 +90,9 @@ function milliseconds2string(ms) {
     return (ms / 1000).toFixed(2);
 }
 
-export function log(string) {
+export function log(message) {
     if (!domReady) {
+        scheduledMessages.push(message);
         return;
     }
 
@@ -98,7 +103,7 @@ export function log(string) {
         historyElement.innerHTML += '<br />';
     }
     historyElement.innerHTML += prefix;
-    historyElement.innerHTML += string;
+    historyElement.innerHTML += message;
     historyElement.scrollTop = historyElement.scrollHeight;
 }
 

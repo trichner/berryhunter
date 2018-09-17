@@ -312,7 +312,7 @@ export function logClientTick(inputObj) {
     logValue('clientTick', inputObj.tick);
 
     let movementStr = '';
-    if (isDefined(inputObj.movement)) {
+    if (inputObj.movement !== null) {
         switch (inputObj.movement.x) {
             case 1:
                 switch (inputObj.movement.y) {
@@ -366,7 +366,7 @@ export function logClientTick(inputObj) {
         document.getElementById('develop_input_rotation').textContent = '';
     }
 
-    if (isDefined(inputObj.action)) {
+    if (inputObj.action !== null) {
         if (inputObj.action.item === null) {
             document.getElementById('develop_input_action_item').textContent = 'None';
         } else {
