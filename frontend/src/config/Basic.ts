@@ -7,7 +7,7 @@ export const BasicConfig = {
 	 * Contains all available query parameter that modify the behavior of the game
 	 */
 	MODE_PARAMETERS: {
-        // MAP_EDITOR: 'map-editor',
+        MAP_EDITOR: 'map-editor',
 		LOCAL_SERVER: 'local',
 		SERVER_PORT: 'port',
 		DEVELOPMENT: 'develop',
