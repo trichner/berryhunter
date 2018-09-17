@@ -27,6 +27,9 @@ let mapWidth;
 let mapHeight;
 
 export function isActive() {
+    // FIXME deactivated until fixed
+    return false;
+
     if (typeof active !== 'undefined') {
         return active;
     }

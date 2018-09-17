@@ -3,6 +3,8 @@
 import * as Preloading from './Preloading';
 import * as Events from './Events';
 import {getUrlParameter, preventInputPropagation, resetFocus} from './Utils';
+import {BasicConfig as Constants} from "../config/Basic";
+import {setup} from "./develop/_Develop";
 
 let Backend = null;
 Events.on('backend.setup', backend => {
@@ -25,13 +27,17 @@ const FILTERED_KEYCODES = [
 ];
 
 let token = getUrlParameter('token');
+let domReady = false;
 let _isOpen = false;
 let rootElement;
 let commandInput;
 let historyElement;
 let startTime;
 
-Preloading.renderPartial(require('../partials/console.html'), onDomReady);
+Events.on('backend.validToken', function () {
+    // Only load the console once the token was confirmed as valid
+    Preloading.renderPartial(require('../partials/console.html'), onDomReady);
+});
 
 function onDomReady() {
     rootElement = document.getElementById('console');
@@ -54,6 +60,7 @@ function onDomReady() {
     });
 
     startTime = Date.now();
+    domReady = true;
 }
 
 function onCommand(command) {
@@ -80,6 +87,10 @@ function milliseconds2string(ms) {
 }
 
 export function log(string) {
+    if (!domReady) {
+        return;
+    }
+
     let prefix = milliseconds2string(Date.now() - startTime);
     prefix = '[' + prefix + 's] ';
 
@@ -92,12 +103,20 @@ export function log(string) {
 }
 
 export function show() {
+    if (!domReady) {
+        return;
+    }
+
     rootElement.classList.add('showing');
     commandInput.focus();
     _isOpen = true;
 }
 
 export function hide() {
+    if (!domReady) {
+        return;
+    }
+
     rootElement.classList.remove('showing');
     resetFocus();
     _isOpen = false;

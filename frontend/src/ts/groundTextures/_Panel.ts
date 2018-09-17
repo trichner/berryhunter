@@ -29,10 +29,24 @@ export function isActive() {
 }
 
 export function setup(game) {
+    if (!active) {
+        return;
+    }
+
+}
+
+// FIXME TOKEN Panel setup
+Events.on('game.playing', function (game) {
     Game = game;
     if (!active) {
         return;
     }
+
+    if (getUrlParameter('token')) {
+        Console.log('GroundTexturePanel activated - try to grant MysticWand');
+        Console.run('give MysticWand');
+    }
+
     if (getUrlParameter('token')) {
         Console.log('GroundTexturePanel activated - try to activate GODMODE now.');
         Console.run('GOD');
@@ -60,17 +74,6 @@ export function setup(game) {
             placeTexture({x, y});
         }
     });
-}
-
-Events.on('game.playing', function () {
-    if (!active) {
-        return;
-    }
-
-    if (getUrlParameter('token')) {
-        Console.log('GroundTexturePanel activated - try to grant MysticWand');
-        Console.run('give MysticWand');
-    }
 });
 
 function stopPropagation(event) {
@@ -294,8 +297,10 @@ function randomizeInputs() {
     }
 }
 
-if (getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
-    active = true;
+Events.on('backend.validToken', function () {
+    if (getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
+        active = true;
 
-    Preloading.renderPartial(require('./groundTexturePanel.html'), setupPanel);
-}
+        Preloading.renderPartial(require('./groundTexturePanel.html'), setupPanel);
+    }
+});

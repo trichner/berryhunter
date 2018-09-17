@@ -10,6 +10,7 @@ import {ItemType} from '../items/ItemType';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Items} from '../items/Items';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
+import * as Events from '../Events';
 
 // Assign all export in this file to a single variable to be passed into sub modules.
 import * as Develop from './_Develop';
@@ -48,23 +49,23 @@ export function setup() {
 
 export function setupDevelopPanel() {
     Preloading.renderPartial(require('./developPanel.html'), function () {
-            let developPanel = document.getElementById('developPanel');
-            // Capture inputs to prevent game actions while acting in develop panel
-            ['click', 'pointerdown', 'mousedown', 'keyup', 'keydown']
-                .forEach(function (eventName) {
-                    developPanel.addEventListener(eventName, function (event) {
-                        event.stopPropagation();
-                    })
-                });
+        let developPanel = document.getElementById('developPanel');
+        // Capture inputs to prevent game actions while acting in develop panel
+        ['click', 'pointerdown', 'mousedown', 'keyup', 'keydown']
+            .forEach(function (eventName) {
+                developPanel.addEventListener(eventName, function (event) {
+                    event.stopPropagation();
+                })
+            });
 
-            setupToggleButtons();
+        setupToggleButtons();
 
-            setupItemAdding();
+        setupItemAdding();
 
-            setupTickSampler();
+        setupTickSampler();
 
-            setupChart();
-        });
+        setupChart();
+    });
 }
 
 export function setupToggleButtons() {
@@ -423,6 +424,17 @@ export function logWebsocketStatus(text, status) {
     webSocketCell.classList.add(status);
 }
 
-if (getUrlParameter(Constants.MODE_PARAMETERS.DEVELOPMENT)) {
-    setup();
-}
+Events.on('backend.stateChange', function (Backend) {
+    if (Backend.getState() === Backend.States.WELCOMED) {
+        Backend.sendCommand(Console.run('validate'));
+    }
+
+    // Only validate once - remove this listener after execution
+    return true;
+});
+
+Events.on('backend.validToken', function () {
+    if (getUrlParameter(Constants.MODE_PARAMETERS.DEVELOPMENT)) {
+        setup();
+    }
+});
