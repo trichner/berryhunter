@@ -28,31 +28,16 @@ export function isActive() {
     return active;
 }
 
-export function setup(game) {
-    if (!active) {
-        return;
-    }
-
-}
-
-// FIXME TOKEN Panel setup
 Events.on('game.playing', function (game) {
     Game = game;
     if (!active) {
         return;
     }
 
-    if (getUrlParameter('token')) {
-        Console.log('GroundTexturePanel activated - try to grant MysticWand');
-        Console.run('give MysticWand');
-    }
-
-    if (getUrlParameter('token')) {
-        Console.log('GroundTexturePanel activated - try to activate GODMODE now.');
-        Console.run('GOD');
-    } else {
-        alert('WARNING: Missing token, can not activate god mode.')
-    }
+    Console.log('GroundTexturePanel activated - try to activate GODMODE now.');
+    Console.run('GOD');
+    Console.log('GroundTexturePanel activated - try to grant MysticWand');
+    Console.run('give MysticWand');
 
     Game.renderer.on('prerender', function () {
         if (Game.state === Game.States.PLAYING) {

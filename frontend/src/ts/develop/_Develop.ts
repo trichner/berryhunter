@@ -426,11 +426,11 @@ export function logWebsocketStatus(text, status) {
 
 Events.on('backend.stateChange', function (Backend) {
     if (Backend.getState() === Backend.States.WELCOMED) {
-        Backend.sendCommand(Console.run('validate'));
-    }
+        Console.run('validate');
 
-    // Only validate once - remove this listener after execution
-    return true;
+        // Only validate once - remove this listener after execution
+        return true;
+    }
 });
 
 Events.on('backend.validToken', function () {
