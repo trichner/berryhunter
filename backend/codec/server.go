@@ -45,10 +45,10 @@ func ObituaryMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOf
 	return ServerMessageWrapFlatbufMarshal(builder, accept, BerryhunterApi.ServerMessageBodyObituary)
 }
 
-func ValidTokenMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
+func PongMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 
-	BerryhunterApi.ValidTokenStart(builder)
-	validToken := BerryhunterApi.ValidTokenEnd(builder)
+	BerryhunterApi.PongStart(builder)
+	validToken := BerryhunterApi.PongEnd(builder)
 
-	return ServerMessageWrapFlatbufMarshal(builder, validToken, BerryhunterApi.ServerMessageBodyValidToken)
+	return ServerMessageWrapFlatbufMarshal(builder, validToken, BerryhunterApi.ServerMessageBodyPong)
 }

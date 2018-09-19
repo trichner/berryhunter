@@ -3,24 +3,24 @@
 package BerryhunterApi
 
 const (
-	ServerMessageBodyNONE          = 0
-	ServerMessageBodyWelcome       = 1
-	ServerMessageBodyGameState     = 2
-	ServerMessageBodyAccept        = 3
-	ServerMessageBodyObituary      = 4
+	ServerMessageBodyNONE = 0
+	ServerMessageBodyWelcome = 1
+	ServerMessageBodyGameState = 2
+	ServerMessageBodyAccept = 3
+	ServerMessageBodyObituary = 4
 	ServerMessageBodyEntityMessage = 5
-	ServerMessageBodyScoreboard    = 6
-	ServerMessageBodyValidToken    = 7
+	ServerMessageBodyScoreboard = 6
+	ServerMessageBodyPong = 7
 )
 
 var EnumNamesServerMessageBody = map[int]string{
-	ServerMessageBodyNONE:          "NONE",
-	ServerMessageBodyWelcome:       "Welcome",
-	ServerMessageBodyGameState:     "GameState",
-	ServerMessageBodyAccept:        "Accept",
-	ServerMessageBodyObituary:      "Obituary",
-	ServerMessageBodyEntityMessage: "EntityMessage",
-	ServerMessageBodyScoreboard:    "Scoreboard",
-	ServerMessageBodyValidToken:    "ValidToken",
+	ServerMessageBodyNONE:"NONE",
+	ServerMessageBodyWelcome:"Welcome",
+	ServerMessageBodyGameState:"GameState",
+	ServerMessageBodyAccept:"Accept",
+	ServerMessageBodyObituary:"Obituary",
+	ServerMessageBodyEntityMessage:"EntityMessage",
+	ServerMessageBodyScoreboard:"Scoreboard",
+	ServerMessageBodyPong:"Pong",
 }
 
