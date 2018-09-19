@@ -1,9 +1,9 @@
 'use strict';
 
-import * as Preloading from './Preloading';
-import * as Events from './Events';
-import {deg2rad, isFunction, dateDiff, dateDiffUnit} from './Utils';
-import {BerryhunterApi} from './backend/BerryhunterApi';
+import * as Preloading from '../Preloading';
+import * as Events from '../Events';
+import {deg2rad, isFunction, dateDiff, dateDiffUnit} from '../Utils';
+import {BerryhunterApi} from '../backend/BerryhunterApi';
 
 const LOCAL_STORAGE_KEY = 'tutorialCompleted';
 
@@ -105,7 +105,7 @@ function showNextStep() {
     }
 }
 
-Preloading.renderPartial(require('../partials/tutorial.html'), () => {
+Preloading.renderPartial(require('./tutorial.html'), () => {
     rootElement = document.getElementById('tutorial');
     rootElement.addEventListener('transitionend', function (event) {
         event.target.classList.remove('done');

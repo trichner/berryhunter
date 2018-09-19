@@ -10,6 +10,7 @@ import './ts/AutoFeed';
 import './ts/BrowserConsole';
 import './ts/Controls';
 import './ts/Game';
+import './ts/tutorial/Tutorial';
 import './ts/backend/Backend';
 import './ts/develop/_Develop';
 import './ts/develop/DebugCircle';
