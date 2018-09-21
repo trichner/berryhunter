@@ -426,7 +426,7 @@ export function logWebsocketStatus(text, status) {
 
 Events.on('backend.stateChange', function (Backend) {
     if (Backend.getState() === Backend.States.WELCOMED) {
-        Console.run('validate');
+        Console.run('ping ');
 
         // Only validate once - remove this listener after execution
         return true;

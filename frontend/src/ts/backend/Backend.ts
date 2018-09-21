@@ -277,7 +277,7 @@ export function receive(message) {
             let scoreboardMessage = new ScoreboardMessage(serverMessage.body(new BerryhunterApi.Scoreboard()));
             Scoreboard.updateFromBackend(scoreboardMessage);
             break;
-        case BerryhunterApi.ServerMessageBody.ValidToken:
+        case BerryhunterApi.ServerMessageBody.Pong:
             Events.triggerOneTime('backend.validToken', Backend);
             break;
         default:

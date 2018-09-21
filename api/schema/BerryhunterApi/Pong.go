@@ -3,7 +3,7 @@
 package BerryhunterApi
 
 import (
-	"github.com/google/flatbuffers/go"
+	flatbuffers "github.com/google/flatbuffers/go"
 )
 
 type Pong struct {
