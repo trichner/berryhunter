@@ -6,6 +6,7 @@ import * as Events from '../../Events';
 import * as DetectBrowser from 'detect-browser';
 import * as Preloading from '../../Preloading';
 import * as Credits from './Credits';
+import {Rating} from "../../rating/Rating";
 
 
 let _progress = 0;
@@ -56,6 +57,9 @@ export function onDomReady() {
     }
 
     Credits.setup();
+
+    // TODO korrekt anpassen für Startseite, socialMedia = false
+    new Rating(rootElement.querySelector('.userRating'), true);
 
     Events.triggerOneTime('startScreen.domReady', rootElement);
 }

@@ -1,0 +1,100 @@
+.userRating {
+	.star {
+		color: white;
+		display: inline-block; // TODO mit floats oder so
+		cursor: pointer;
+
+		> .filled {
+			display: none;
+		}
+
+		&.hover,
+		&.selected {
+			> .empty {
+				display: none;
+			}
+			> .filled {
+				display: block;
+			}
+		}
+
+		&.selected {
+			color: gold;
+		}
+	}
+
+	.feedbackContainer {
+		margin: 0.5rem 0;
+	}
+
+	.feedbackText {
+		box-sizing: border-box;
+		width: 100%;
+		resize: vertical;
+		max-height: 8em;
+		min-height: 72px;
+
+		font: inherit;
+		font-size: 1.5rem;
+		line-height: 1;
+		color: white;
+
+		background: none;
+		border: none;
+		border-left: 1px solid white;
+		margin-left: 1px;
+		padding: 2px 6px;
+
+		&:focus {
+			outline: none;
+			border-left: 2px solid #e37313;
+			margin-left: 0;
+		}
+
+		&::selection {
+			background-color: #e37313;
+		}
+	}
+
+	.submitContainer {
+		overflow: hidden; // contain the right floated button
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+		color: rgba(255, 255, 255, 0.57); // TODO abgleichen mit offiziellen Farben
+	}
+
+	.buttonContainer {
+		float: right;
+		margin-left: 1rem;
+	}
+
+	.submitButton {
+		background: #e37313;
+		color: white;
+		border-radius: 0.7vh;
+		padding: 0.5rem;
+		line-height: 1;
+		font: inherit;
+		font-size: 2rem;
+		width: 5em;
+		font-variant: none;
+		cursor: pointer;
+
+		border: 2px outset rgb(221, 221, 221); // Chrome default style, for all browsers
+
+		&:active {
+			border-style: inset;
+		}
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	.socialMediaContainer {
+		> p {
+			margin: 0;
+			margin-bottom: 0.5em;
+		}
+	}
+}
