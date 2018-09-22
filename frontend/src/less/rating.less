@@ -61,6 +61,21 @@
 		font-size: 1.5rem;
 		margin-bottom: 1rem;
 		color: rgba(255, 255, 255, 0.57); // TODO abgleichen mit offiziellen Farben
+
+		> .errorText {
+			display: none;
+			color: crimson;
+		}
+
+		&.hasError {
+			> .helpText {
+				display: none;
+			}
+
+			> .errorText {
+				display: block;
+			}
+		}
 	}
 
 	.buttonContainer {
@@ -89,6 +104,11 @@
 		&:focus {
 			outline: none;
 		}
+	}
+
+	.successContainer {
+		color: limegreen;
+		margin: 1rem 0;
 	}
 
 	.socialMediaContainer {

@@ -1,16 +1,22 @@
+import {makeRequest} from "../Utils";
+import * as _ from 'lodash';
+
 let html = require('./rating.html');
 
 export class Rating {
+    private ratingContainer: Element;
     private socialMediaContainer: Element;
     private feedbackContainer: Element;
     private feedbackText: HTMLTextAreaElement;
     private submitContainer: Element;
+    private successContainer: Element;
     private rating: number = 0;
 
     constructor(parentElement: Element, showSocialMedia: boolean) {
         parentElement.innerHTML = html;
 
-        this.initRatingContainer(parentElement.querySelector('.ratingContainer'));
+        this.ratingContainer = parentElement.querySelector('.ratingContainer');
+        this.initRatingContainer(this.ratingContainer);
 
         this.socialMediaContainer = parentElement.querySelector('.socialMediaContainer');
         this.socialMediaContainer.classList.toggle('hidden', !showSocialMedia);
@@ -19,8 +25,9 @@ export class Rating {
         this.feedbackText = this.feedbackContainer.querySelector('.feedbackText') as HTMLTextAreaElement;
 
         this.submitContainer = parentElement.querySelector('.submitContainer');
-
         this.initSubmit();
+
+        this.successContainer = parentElement.querySelector('.successContainer');
     }
 
     initRatingContainer(ratingContainer: Element) {
@@ -54,23 +61,6 @@ export class Rating {
                 this.onRating();
             });
         });
-
-        // ratingContainer.addEventListener('mouseleave', (event: Event) => {
-        //     for (let i = 0; i < starElements.length; i++) {
-        //         starElements[i].classList.remove('hover');
-        //     }
-        // });
-    }
-
-    initSubmit() {
-        this.submitContainer.querySelector('.submitButton').addEventListener('click', (event: Event) => {
-            event.preventDefault();
-
-            let feedback = {
-                rating: this.rating,
-                text: this.feedbackText.value
-            }
-        })
     }
 
     onRating() {
@@ -79,5 +69,56 @@ export class Rating {
 
         this.feedbackText.focus();
     }
+
+    initSubmit() {
+        this.submitContainer.querySelector('.submitButton').addEventListener('click', (event: Event) => {
+            event.preventDefault();
+
+            let feedback: UserFeedback = {
+                rating: this.rating,
+                text: this.feedbackText.value
+            };
+
+            this.sendUserFeedback(feedback);
+        })
+    }
+
+    sendUserFeedback(feedback: UserFeedback) {
+        let parameters = {
+            'entry.1823206010': feedback.rating,
+            'entry.959385503': feedback.text,
+            'entry.2052218940': undefined, // Desired feature as 'Feature 1', 'Feature 2', ...
+        };
+        makeRequest({
+            method: 'POST',
+            url: 'https://docs.google.com/forms/d/e/1FAIpQLSfqC2NiJxMfWPNdbrfuOO0ibeLZBO44UIyZI1svp_otVog4sQ/formResponse',
+            params: parameters,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).then(() => {
+            // won't happen because of CORS
+        }).catch(response => {
+            if (_.isObject(response) && response.status === 0) {
+                // All good, CORS just blocked the response but the server got the user feedback
+                this.onSuccess()
+                return;
+            }
+
+            this.submitContainer.classList.add('hasError');
+        });
+    }
+
+    onSuccess() {
+        this.ratingContainer.classList.add('hidden');
+        this.feedbackContainer.classList.add('hidden');
+        this.submitContainer.classList.add('hidden');
+
+        this.successContainer.classList.remove('hidden');
+    }
 }
 
+interface UserFeedback {
+    rating: number;
+    text: string;
+}
