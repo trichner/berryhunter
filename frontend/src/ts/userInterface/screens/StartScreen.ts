@@ -58,9 +58,6 @@ export function onDomReady() {
 
     Credits.setup();
 
-    // TODO korrekt anpassen für Startseite, socialMedia = false
-    new Rating(rootElement.querySelector('.userRating'), true);
-
     Events.triggerOneTime('startScreen.domReady', rootElement);
 }
 

@@ -1,25 +1,52 @@
 .userRating {
+	.ratingContainer {
+		position: relative;
+	}
+
+	.starContainer {
+		position: absolute;
+		left: 50%;
+		bottom: 0;
+		transform: translateX(-50%);
+	}
+
 	.star {
 		color: white;
 		display: inline-block; // TODO mit floats oder so
 		cursor: pointer;
+		padding: 0 8px;
 
-		> .filled {
+		> .icon {
+			height: 32px;
+			width: 32px;
+			display: block;
+			color: white;
+
+			> svg {
+				width: 100%;
+				height: 100%;
+				fill: currentColor;
+			}
+		}
+
+		> .filledStar {
 			display: none;
 		}
 
 		&.hover,
 		&.selected {
-			> .empty {
+			> .emptyStar {
 				display: none;
 			}
-			> .filled {
+			> .filledStar {
 				display: block;
 			}
 		}
 
 		&.selected {
-			color: gold;
+			> .icon {
+				color: #FFC400;
+			}
 		}
 	}
 

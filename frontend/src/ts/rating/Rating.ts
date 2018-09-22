@@ -2,6 +2,8 @@ import {makeRequest} from "../Utils";
 import * as _ from 'lodash';
 
 let html = require('./rating.html');
+let emptyStarIcon = require('!svg-inline-loader!./img/emptyStar.svg');
+let filledStarIcon = require('!svg-inline-loader!./img/filledStar.svg');
 
 export class Rating {
     private ratingContainer: Element;
@@ -31,12 +33,19 @@ export class Rating {
     }
 
     initRatingContainer(ratingContainer: Element) {
+        ratingContainer.querySelectorAll('.icon.emptyStar').forEach(element => {
+            element.innerHTML = emptyStarIcon;
+        });
+        ratingContainer.querySelectorAll('.icon.filledStar').forEach(element => {
+            element.innerHTML = filledStarIcon;
+        });
+
         let starElements: HTMLElement[] = [];
         let handleHover = (event: Event, isHovering: boolean) => {
-            // if (this.rating > 0){
-            //     return;
-            // }
-            // event.currentTarget refers to the element that this handler was bound to while event.target is the actual element that triggered the event
+            /* event.currentTarget refers to the element that this
+             * handler was bound to while event.target is the actual
+             * element that triggered the event.
+             */
             let starElement: HTMLElement = event.currentTarget as HTMLElement;
             let value: number = parseInt(starElement.dataset.value);
             for (let i = 0; i < value; i++) {
@@ -101,7 +110,7 @@ export class Rating {
         }).catch(response => {
             if (_.isObject(response) && response.status === 0) {
                 // All good, CORS just blocked the response but the server got the user feedback
-                this.onSuccess()
+                this.onSuccess();
                 return;
             }
 
