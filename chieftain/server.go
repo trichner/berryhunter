@@ -1,13 +1,16 @@
 package main
 
+// Read here: https://github.com/denji/golang-tls
+
 import (
 	"context"
 	"crypto/tls"
+	"github.com/trichner/berryhunter/chieftain/framer"
 	"log"
 	"net"
 )
 
-type FrameHandler func(ctx context.Context, f Framer) error
+type FrameHandler func(ctx context.Context, f framer.Framer) error
 
 func ListenTls(laddr, certFile, keyFile string, fh FrameHandler) error {
 
@@ -45,7 +48,7 @@ func ListenTls(laddr, certFile, keyFile string, fh FrameHandler) error {
 
 func handleConnection(conn net.Conn, fh FrameHandler) error {
 
-	framer, err := NewFramer(conn)
+	framer, err := framer.NewFramer(conn)
 	if err != nil {
 		return err
 	}
