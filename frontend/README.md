@@ -8,7 +8,6 @@
 ### All Systems
 
 1. `$ yarn install`
-2. `$ yarn run build`
 
 ### Run for development
 
