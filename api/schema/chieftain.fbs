@@ -1,0 +1,17 @@
+namespace ChieftainApi;
+
+table ScoreboardPlayer {
+    uuid:string;
+    name:string;
+    score:ulong;
+}
+
+table Scoreboard {
+  players:[ScoreboardPlayer];
+}
+
+union ClientMessageBody { Scoreboard }
+table ClientMessage { body:ClientMessageBody; }
+
+root_type ClientMessage;
+
