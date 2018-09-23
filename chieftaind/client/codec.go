@@ -53,7 +53,8 @@ func ScoreBoardMarshal(w *Scoreboard) []byte {
 	ChieftainApi.ScoreboardAddPlayers(builder, players)
 	scoreboard := ChieftainApi.ScoreboardEnd(builder)
 
-	clientMessageWrapFlatbufMarshal(builder, scoreboard, ChieftainApi.ClientMessageBodyScoreboard)
+	msg := clientMessageWrapFlatbufMarshal(builder, scoreboard, ChieftainApi.ClientMessageBodyScoreboard)
+	builder.Finish(msg)
 
 	return builder.FinishedBytes()
 }
