@@ -23,6 +23,12 @@ func Config(conf *cfg.Config) Configuration {
 		g.PlayerConfig.StarveDamageTickFraction = conf.Game.Player.StarveDamageTickFraction
 		g.PlayerConfig.WalkingSpeedPerTick = conf.Game.Player.WalkingSpeedPerTick
 
+		if conf.Chieftain != nil {
+			ctn := &cfg.ChieftainConfig{}
+			ctn.Addr = conf.Chieftain.Addr
+			g.ChieftainConfig = ctn
+		}
+
 		return nil
 	}
 }

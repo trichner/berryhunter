@@ -33,7 +33,6 @@ func Connect(addr string) (*Client, error){
 	return ConnectWithDialer(d)
 }
 
-//func Connect(addr string) (*Client, error) {
 func ConnectWithDialer(d Dialer) (*Client, error){
 
 	c := &Client{

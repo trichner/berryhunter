@@ -12,10 +12,15 @@ type ScoreboardSystem struct {
 	players []model.PlayerEntity
 	clients []model.ClientEntity
 	g                model.Game
+	chieftain client.Client
 }
 
 func NewScoreboardSystem(g model.Game) *ScoreboardSystem {
 
+	ccfg := g.Config().ChieftainConfig
+	if ccfg != nil {
+		c := client.Connect(ccfg)
+	}
 	return &ScoreboardSystem{g: g}
 }
 

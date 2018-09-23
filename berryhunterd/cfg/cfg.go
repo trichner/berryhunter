@@ -10,6 +10,9 @@ type Config struct {
 		Port int    `json:"port"`
 		Path string `json:"path"`
 	} `json:"server"`
+	Chieftain *struct {
+		Addr string `json:"addr"`
+	} `json:"chieftain,omitempty"`
 	Game struct {
 		ColdFractionDayPerS   float32 `json:"coldFractionDayPerSecond"`
 		ColdFractionNightPerS float32 `json:"coldFractionNightPerSecond"`
