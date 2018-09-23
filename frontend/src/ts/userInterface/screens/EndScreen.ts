@@ -7,6 +7,7 @@ import {preventInputPropagation} from '../../Utils';
 import * as Events from '../../Events';
 import * as DayCycle from '../../DayCycle';
 import * as SnapshotFactory from '../../backend/SnapshotFactory';
+import {Rating} from "../../rating/Rating";
 
 let rootElement;
 let playerNameInput;
@@ -24,6 +25,8 @@ function onDomReady() {
             // As soon as the form is faded in, focus the input field
             playerNameInput.focus();
         });
+
+    new Rating(rootElement.querySelector('.userRating'), true);
 }
 
 Preloading.renderPartial(require('./endScreen.html'), onDomReady);

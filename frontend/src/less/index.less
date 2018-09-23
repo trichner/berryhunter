@@ -225,9 +225,6 @@ code {
 }
 
 .playerForm {
-	position: relative;
-	top: 35%;
-	transform: translateY(-50%);
 	width: 50vw;
 	margin: 0 auto;
 
@@ -287,6 +284,10 @@ code {
 			border-bottom: 2px solid #e37313;
 			margin-bottom: 0;
 		}
+
+		&::selection {
+			background-color: #e37313;
+		}
 	}
 
 }
@@ -299,3 +300,4 @@ code {
 @import "endScreen";
 @import "console";
 @import "tutorial";
+@import "rating";
