@@ -7,6 +7,7 @@ let filledStarIcon = require('!svg-inline-loader!./img/filledStar.svg');
 
 export class Rating {
     private ratingContainer: Element;
+    private ratingTooltips: Element[] = [];
     private socialMediaContainer: Element;
     private feedbackContainer: Element;
     private feedbackText: HTMLTextAreaElement;
@@ -51,6 +52,17 @@ export class Rating {
             for (let i = 0; i < value; i++) {
                 starElements[i].classList.toggle('hover', isHovering);
             }
+
+            this.ratingTooltips[value].classList.toggle('hidden', !isHovering);
+            if (this.rating > 0) {
+                if (!isHovering) {
+                    // Make sure the tooltip of the selected value stays visible
+                    this.ratingTooltips[this.rating].classList.remove('hidden');
+                } else if (this.rating !== value) {
+                    // Hide the tooltip of the selected value when another value is hovered
+                    this.ratingTooltips[this.rating].classList.add('hidden');
+                }
+            }
         };
         ratingContainer.querySelectorAll('.star').forEach((starElement: HTMLElement) => {
             starElements.push(starElement);
@@ -70,6 +82,11 @@ export class Rating {
                 this.onRating();
             });
         });
+
+        ratingContainer.querySelectorAll('.tooltip > span').forEach((tooltip: HTMLElement) => {
+            let value: number = parseInt(tooltip.dataset.value);
+            this.ratingTooltips[value] = tooltip;
+        })
     }
 
     onRating() {
@@ -124,6 +141,8 @@ export class Rating {
         this.submitContainer.classList.add('hidden');
 
         this.successContainer.classList.remove('hidden');
+        this.socialMediaContainer.querySelector('.default').classList.add('hidden');
+        this.socialMediaContainer.querySelector('.submitted').classList.remove('hidden');
     }
 }
 

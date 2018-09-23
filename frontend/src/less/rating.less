@@ -8,11 +8,18 @@
 		left: 50%;
 		bottom: 0;
 		transform: translateX(-50%);
+
+		> .tooltip {
+			position: absolute;
+			left: 100%;
+			margin-left: 16px;
+			color: rgba(255, 255, 255, 0.7);
+			white-space: nowrap;
+		}
 	}
 
 	.star {
 		color: white;
-		display: inline-block; // TODO mit floats oder so
 		cursor: pointer;
 		padding: 0 8px;
 
@@ -87,7 +94,7 @@
 		overflow: hidden; // contain the right floated button
 		font-size: 1.5rem;
 		margin-bottom: 1rem;
-		color: rgba(255, 255, 255, 0.57); // TODO abgleichen mit offiziellen Farben
+		color: rgba(255, 255, 255, 0.7);
 
 		> .errorText {
 			display: none;
@@ -135,7 +142,7 @@
 
 	.successContainer {
 		color: limegreen;
-		margin: 1rem 0;
+		margin-bottom: 1rem;
 	}
 
 	.socialMediaContainer {

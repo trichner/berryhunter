@@ -1,29 +1,35 @@
-<div class="ratingContainer">
+<div class="ratingContainer layout-row layout-align-space-between">
 	<label>Rate the game:</label>
 	<div class="starContainer layout-row">
 		<!-- Weiß wenn leer oder on hover | gold wenn geklickt -->
-		<div class="star" data-value="1">
+		<div class="star" data-value="1" style="transform: rotate(72deg)">
 			<i class="icon emptyStar"></i>
 			<i class="icon filledStar"></i>
 		</div>
-		<div class="star" data-value="2">
+		<div class="star" data-value="2" style="transform: rotate(144deg)">
 			<i class="icon emptyStar"></i>
 			<i class="icon filledStar"></i>
 		</div>
-		<div class="star" data-value="3">
+		<div class="star" data-value="3" style="transform: rotate(0deg)">
 			<i class="icon emptyStar"></i>
 			<i class="icon filledStar"></i>
 		</div>
-		<div class="star" data-value="4">
+		<div class="star" data-value="4" style="transform: rotate(288deg)">
 			<i class="icon emptyStar"></i>
 			<i class="icon filledStar"></i>
 		</div>
-		<div class="star" data-value="5">
+		<div class="star" data-value="5" style="transform: rotate(216deg)">
 			<i class="icon emptyStar"></i>
 			<i class="icon filledStar"></i>
 		</div>
+		<span class="tooltip">
+			<span data-value="1" class="hidden">Awful game</span>
+			<span data-value="2" class="hidden">Bad game</span>
+			<span data-value="3" class="hidden">Okay game</span>
+			<span data-value="4" class="hidden">Cool game</span>
+			<span data-value="5" class="hidden">New favorite game</span>
+		</span>
 	</div>
-
 </div>
 
 <div class="feedbackContainer hidden">
@@ -52,7 +58,8 @@
 </div>
 
 <div class="socialMediaContainer hidden">
-	<p>Or message us on our social media channels:</p>
+	<p class="default">Or message us on our social media channels:</p>
+	<p class="submitted hidden">Follow us for updates:</p>
 	<div>
 		<!-- Social media links here. Maybe shared with start screen? -->
 	</div>

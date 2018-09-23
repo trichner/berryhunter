@@ -26,7 +26,6 @@ function onDomReady() {
             playerNameInput.focus();
         });
 
-    // TODO korrekt anpassen für Startseite, socialMedia = false
     new Rating(rootElement.querySelector('.userRating'), true);
 }
 
