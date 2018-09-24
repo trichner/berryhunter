@@ -125,7 +125,7 @@ export class GameMapWithBackend {
             if (entity.currentAction) {
                 switch (entity.currentAction.actionType) {
                     case BerryhunterApi.ActionType.Primary:
-                        character.action();
+                        character.action(entity.currentAction.ticksRemaining);
                         character.progressHitAnimation(entity.currentAction.ticksRemaining);
                         break;
                     default:

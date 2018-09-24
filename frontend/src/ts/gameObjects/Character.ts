@@ -2,9 +2,10 @@
 
 import {GameObject} from './_GameObject';
 import * as PIXI from 'pixi.js';
+import * as Ease from 'pixi-ease';
 import {NamedGroup} from '../NamedGroup';
 import {BasicConfig as Constants} from '../../config/Basic';
-import {isDefined, sq} from '../Utils';
+import {isDefined} from '../Utils';
 import * as MapEditor from '../mapEditor/_MapEditor';
 import * as Equipment from '../items/Equipment';
 import {InjectedSVG} from '../InjectedSVG';
@@ -24,7 +25,7 @@ Events.on('game.setup', game => {
 export class Character extends GameObject {
     static svg;
     static craftingIndicator = {svg: undefined};
-    static hitAnimationFrameDuration: number = 15;
+    static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks;
 
 
     name: string;
@@ -45,8 +46,8 @@ export class Character extends GameObject {
 
     leftHand;
     rightHand;
-
-    actionAnimationFrame: number;
+    private animation: Ease.list;
+    private updateFn: () => void;
 
     constructor(id, x, y, name, isPlayerCharacter) {
         super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2, Character.svg);
@@ -125,6 +126,13 @@ export class Character extends GameObject {
         }, this);
 
         Game.renderer.on('prerender', this.update, this);
+
+        this.animation = new Ease.list({noTicker: true});
+        const ticker = PIXI.ticker.shared;
+        this.updateFn = () => {
+            this.animation.update(ticker.deltaTime * 16.66);
+        };
+        ticker.add(this.updateFn);
     }
 
     initShape(svg, x, y, size, rotation) {
@@ -235,64 +243,41 @@ export class Character extends GameObject {
         this.movePosition(moveVec);
     }
 
-    action() {
+    action(remainingTicks = Character.hitAnimationFrameDuration) {
         if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
+            this.animateAction(this.rightHand, 'stab', remainingTicks);
             this.currentAction = 'PLACING';
             return Character.hitAnimationFrameDuration;
         }
 
         this.currentAction = 'MAIN';
+        this.animateAction(this.rightHand, 'swing', remainingTicks);
         return Character.hitAnimationFrameDuration;
     }
 
-    altAction() {
+    altAction(remainingTicks = Character.hitAnimationFrameDuration) {
         if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
             this.currentAction = false;
             return 0;
         }
 
         this.currentAction = 'ALT';
+        this.animateAction(this.leftHand, 'swing', remainingTicks);
         return Character.hitAnimationFrameDuration;
     }
 
-    progressHitAnimation(animationFrame) {
-        this.actionAnimationFrame = animationFrame;
+    private animateAction(hand, type, remainingTicks) {
+        animateAction.call(this, hand, type, this.animation, remainingTicks, () => {
+            this.currentAction = false;
+        });
     }
 
-    animate(type, animationFrame) {
-        animateAction.call(this, this.rightHand, type, animationFrame);
+    progressHitAnimation(animationFrame) {
+        // NOOP
     }
 
     update() {
         let timeDelta = Game.timeDelta;
-        if (this.currentAction) {
-            let hand;
-            switch (this.currentAction) {
-                case 'MAIN':
-                case 'PLACING':
-                    hand = this.rightHand;
-                    break;
-                case 'ALT':
-                    hand = this.leftHand;
-                    break;
-            }
-
-            const maxOffset = this.size * 0.4;
-            let offset;
-            if (this.actionAnimationFrame > 0.7 * Character.hitAnimationFrameDuration) {
-                offset = sq((Character.hitAnimationFrameDuration + 1 - this.actionAnimationFrame)) /
-                    sq(0.3 * Character.hitAnimationFrameDuration) * maxOffset;
-            } else if (this.actionAnimationFrame > 0.6 * Character.hitAnimationFrameDuration) {
-                offset = maxOffset;
-            } else {
-                offset = this.actionAnimationFrame / (0.6 * Character.hitAnimationFrameDuration) * maxOffset;
-            }
-            hand.position.x = hand.originalTranslation.x + offset;
-
-            if (this.actionAnimationFrame <= 1) {
-                this.currentAction = false;
-            }
-        }
 
         this.messages = this.messages.filter((message) => {
             message.timeToLife -= timeDelta;
@@ -427,6 +412,7 @@ export class Character extends GameObject {
     remove() {
         this.hide();
         Game.renderer.off('prerender', this.update, this);
+        PIXI.ticker.shared.remove(this.updateFn);
     }
 }
 

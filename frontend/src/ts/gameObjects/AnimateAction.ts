@@ -6,19 +6,17 @@ import * as Ease from 'pixi-ease';
 
 const animationCfg = GraphicsConfig.character.actionAnimation;
 
-const types = {
+export const types = {
     swing: undefined,
     stab: undefined,
 };
 
-export function animateAction(hand, type, animation, animationFrame, onDone) {
+export function animateAction(hand, type: ('swing' | 'stab'), animation, animationFrame = animationCfg.backendTicks, onDone = () => {
+}) {
     if (!this.isPlayerCharacter) {
         console.log('start action animation at frame ' + animationFrame);
     }
 
-    if (isUndefined(animationFrame)) {
-        animationFrame = animationCfg.backendTicks;
-    }
     let slowmo = 1;
     let overallDuration = animationCfg.duration * slowmo;
     let forwardDuration = overallDuration * animationCfg.relativeDurationForward;
