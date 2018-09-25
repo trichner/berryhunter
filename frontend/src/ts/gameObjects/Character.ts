@@ -262,13 +262,21 @@ export class Character extends GameObject {
         }
 
         this.currentAction = 'ALT';
-        this.animateAction(this.leftHand, 'swing', remainingTicks);
+        this.animateAction(this.leftHand, 'swing', remainingTicks, true);
         return Character.hitAnimationFrameDuration;
     }
 
-    private animateAction(hand, type, remainingTicks) {
-        animateAction.call(this, hand, type, this.animation, remainingTicks, () => {
-            this.currentAction = false;
+    private animateAction(hand, type: 'swing' | 'stab', remainingTicks: number, mirrored: boolean = false) {
+        animateAction({
+            size: this.size,
+            hand,
+            type,
+            animation: this.animation,
+            animationFrame: remainingTicks,
+            onDone: () => {
+                this.currentAction = false;
+            },
+            mirrored
         });
     }
 
