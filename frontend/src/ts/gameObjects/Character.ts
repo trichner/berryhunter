@@ -16,6 +16,7 @@ import {GraphicsConfig} from '../../config/Graphics';
 import * as Events from '../Events';
 import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
+import {Animation} from "../Animation";
 
 let Game = null;
 Events.on('game.setup', game => {
@@ -46,8 +47,6 @@ export class Character extends GameObject {
 
     leftHand;
     rightHand;
-    private animation: Ease.list;
-    private updateFn: () => void;
 
     constructor(id, x, y, name, isPlayerCharacter) {
         super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2, Character.svg);
@@ -126,13 +125,6 @@ export class Character extends GameObject {
         }, this);
 
         Game.renderer.on('prerender', this.update, this);
-
-        this.animation = new Ease.list({noTicker: true});
-        const ticker = PIXI.ticker.shared;
-        this.updateFn = () => {
-            this.animation.update(ticker.deltaTime * 16.66);
-        };
-        ticker.add(this.updateFn);
     }
 
     initShape(svg, x, y, size, rotation) {
@@ -271,7 +263,7 @@ export class Character extends GameObject {
             size: this.size,
             hand,
             type,
-            animation: this.animation,
+            animation: new Animation(),
             animationFrame: remainingTicks,
             onDone: () => {
                 this.currentAction = false;
@@ -420,7 +412,6 @@ export class Character extends GameObject {
     remove() {
         this.hide();
         Game.renderer.off('prerender', this.update, this);
-        PIXI.ticker.shared.remove(this.updateFn);
     }
 }
 

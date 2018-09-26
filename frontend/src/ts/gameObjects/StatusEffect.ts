@@ -1,9 +1,9 @@
 'use strict';
 
 import * as PIXI from 'pixi.js';
-import * as Ease from 'pixi-ease';
 import * as _ from 'lodash';
 import {ExtendedColorMatrixFilter} from '../ExtendedColorMatrixFilter';
+import {Animation} from "../Animation";
 
 export class StatusEffect {
     static Damaged = {id: 'Damaged', priority: 1};
@@ -78,12 +78,7 @@ export class StatusEffect {
         this.colorMatrix.enabled = true;
         this.colorMatrix.alpha = this.startAlpha;
 
-        let animation = new Ease.list({noTicker: true});
-        const ticker = PIXI.ticker.shared;
-        this.updateFn = function () {
-            animation.update(ticker.deltaTime * 16.66);
-        };
-        ticker.add(this.updateFn);
+        let animation = new Animation();
         let to = animation.to(
             this.colorMatrix,
             {alpha: this.endAlpha},

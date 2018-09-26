@@ -2,8 +2,8 @@
 
 import {deg2rad} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
-import * as Ease from 'pixi-ease';
 import * as _ from 'lodash';
+import {Animation} from "../Animation";
 
 const animationCfg = GraphicsConfig.character.actionAnimation;
 
@@ -18,7 +18,7 @@ export const types = {
     stab: undefined,
 };
 
-export function animateAction(options: { hand: Hand, type?: 'swing' | 'stab', animation: Ease.list, animationFrame?: number, onDone?: () => any, size: number, mirrored?: boolean }) {
+export function animateAction(options: { hand: Hand, type?: 'swing' | 'stab', animation: Animation, animationFrame?: number, onDone?: () => any, size: number, mirrored?: boolean }) {
     options = _.merge({
         mirrored: false,
         type: 'stab',
@@ -69,7 +69,7 @@ types.swing = function (options, overallDuration, forwardDuration, start) {
     ).time = start;
 
     options.animation.on('done', function () {
-        let animation = new Ease.list();
+        let animation = new Animation();
         let duration = overallDuration - forwardDuration;
         start = Math.max(0, start - forwardDuration);
         animation.to(
@@ -122,7 +122,7 @@ types.stab = function (options, overallDuration, forwardDuration, start) {
     ).time = start;
 
     options.animation.on('done', function () {
-        let animation = new Ease.list();
+        let animation = new Animation();
         let duration = overallDuration - forwardDuration;
         start = Math.max(0, start - forwardDuration);
         animation.to(
