@@ -26,7 +26,7 @@ Events.on('game.setup', game => {
 export class Character extends GameObject {
     static svg;
     static craftingIndicator = {svg: undefined};
-    static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks;
+    static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
 
 
     name: string;

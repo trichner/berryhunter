@@ -22,12 +22,9 @@ export function animateAction(options: { hand: Hand, type?: 'swing' | 'stab', an
     options = _.merge({
         mirrored: false,
         type: 'stab',
-        animationFrame: GraphicsConfig.character.actionAnimation.backendTicks,
+        animationFrame: GraphicsConfig.character.actionAnimation.backendTicks - 1,
         onDone: () => {}
     }, options);
-    if (!this.isPlayerCharacter) {
-        console.log('start action animation at frame ' + options.animationFrame);
-    }
 
     let slowmo = 1;
     let overallDuration = animationCfg.duration * slowmo;
