@@ -32,7 +32,7 @@ export function checkChangedVitalSign(payload) {
     // This is mainly to prevent the auto feed being triggered more than once before
     // there is an update in satiety from the backend
     let now = Date.now();
-    if (dateDiff(now, this.lastAutoFeed) < 500) {
+    if (dateDiff(now, lastAutoFeed) < 500) {
         return;
     }
 
@@ -43,7 +43,7 @@ export function checkChangedVitalSign(payload) {
     let satiety = payload.newValue.relative;
     // Definitely eat something if the satiety is completely gone
     if (satiety === 0) {
-        this.eat(now);
+        eat(now);
         return;
     }
 
@@ -53,24 +53,24 @@ export function checkChangedVitalSign(payload) {
     }
 
     // Wait with eating until the food can have the maximum effect
-    if (satiety + this.getFoodFactor() > 1.0) {
+    if (satiety + getFoodFactor() > 1.0) {
         return;
     }
 
-    this.eat(now);
+    eat(now);
 }
 
 export function eat(now) {
     if (Game.player.controls.onInventoryAction(
-        this.activeInventorySlot.item,
+        activeInventorySlot.item,
         BerryhunterApi.ActionType.ConsumeItem)) {
-        playCssAnimation(this.activeInventorySlot.domElement, 'eating');
-        this.lastAutoFeed = now;
+        playCssAnimation(activeInventorySlot.domElement, 'eating');
+        lastAutoFeed = now;
     }
 }
 
 export function getFoodFactor() {
-    return this.activeInventorySlot.item.factors.food;
+    return activeInventorySlot.item.factors.food;
 }
 
 Events.on('autoFeed.activate', activate);
