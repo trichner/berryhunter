@@ -15,7 +15,7 @@ export const Helper = {
     getItemEquipmentSlot: function (item) {
         switch (item.type) {
             case ItemType.EQUIPMENT:
-                return item.equipmentSlot;
+                return item.equipment.slot;
             case ItemType.PLACEABLE:
                 return Slots.PLACEABLE;
         }

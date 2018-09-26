@@ -22,8 +22,11 @@ import * as Equipment from '../ts/items/Equipment';
  *      },
  *      definition: require('./relative/path/to/item.json)
  *      type: ItemType,
- *      equipmentSlot: Equipment.Slots,
- *      placeable: { must be defined! contains configuration for placeables
+ *      equipment: {  must be defined if type == EQUIPMENT! contains configuration for equipment
+ *          slot: Equipment.Slots,
+ *          animation: 'stab' | 'swing'
+ *      },
+ *      placeable: { must be defined if type == PLACEBALE! contains configuration for placeables
  *          layer: string, defines the layer this placeable is part of.
  *                 See Game.js for defined layers
  *          multiPlacing: optional boolean, default false
@@ -43,6 +46,9 @@ import * as Equipment from '../ts/items/Equipment';
 export const ItemsConfig = {
     None: {
         definition: require('../../../api/items/none.json'),
+        equipment: {
+            animation: 'swing'
+        }
     },
 
     /***********************************
@@ -57,7 +63,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/tools/wood-club.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
     StoneTool: {
         icon: {file: require('../img/items/toolStoneIcon.svg')},
@@ -69,7 +78,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/tools/stone-tool.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
     BronzeTool: {
         icon: {file: require('../img/items/toolBronzeIcon.svg')},
@@ -81,7 +93,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/tools/bronze-tool.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
     IronTool: {
         icon: {file: require('../img/items/toolIronIcon.svg')},
@@ -93,7 +108,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/tools/iron-tool.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
     TitaniumTool: {
         icon: {file: require('../img/items/toolTitaniumIcon.svg')},
@@ -105,7 +123,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/tools/titanium-tool.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
 
     /***********************************
@@ -120,7 +141,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/swords/stone-club.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
     BronzeSword: {
         icon: {file: require('../img/items/swordBronzeIcon.svg')},
@@ -131,7 +155,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/swords/bronze-sword.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
     IronSword: {
         icon: {file: require('../img/items/swordIronIcon.svg')},
@@ -142,7 +169,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/swords/iron-sword.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
     TitaniumSword: {
         icon: {file: require('../img/items/swordTitaniumIcon.svg')},
@@ -153,7 +183,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/swords/titanium-sword.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
 
     /***********************************
@@ -168,7 +201,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/spears/stone-spear.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'stab'
+        }
     },
     BronzeSpear: {
         icon: {file: require('../img/items/spearBronzeIcon.svg')},
@@ -179,7 +215,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/spears/bronze-spear.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'stab'
+        }
     },
     IronSpear: {
         icon: {file: require('../img/items/spearIronIcon.svg')},
@@ -190,7 +229,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/spears/iron-spear.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'stab'
+        }
     },
     TitaniumSpear: {
         icon: {file: require('../img/items/spearTitaniumIcon.svg')},
@@ -201,7 +243,10 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/spears/titanium-spear.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'stab'
+        }
     },
 
     /***********************************
@@ -219,7 +264,9 @@ export const ItemsConfig = {
     // 	},
     // 	definition: require('../../../api/items/hammers/stone-hammer.json'),
     // 	type: ItemType.EQUIPMENT,
-    // 	equipmentSlot: Equipment.Slots.HAND
+    // 	equipment:    // {slot: Equipment.Slots.HAND,
+    // animation: 'swing'
+    // }
     // },
     // BronzeHammer: {
     // 	icon: {file: require('../img/items/hammerBronzeIcon.svg')},
@@ -231,7 +278,9 @@ export const ItemsConfig = {
     // 	},
     // 	definition: require('../../../api/items/hammers/bronze-hammer.json'),
     // 	type: ItemType.EQUIPMENT,
-    // 	equipmentSlot: Equipment.Slots.HAND
+    // 	equipment:    // {slot: Equipment.Slots.HAND,
+    // animation: 'swing'
+    // }
     // },
     // IronHammer: {
     // 	icon: {file: require('../img/items/hammerIronIcon.svg')},
@@ -243,7 +292,9 @@ export const ItemsConfig = {
     // 	},
     // 	definition: require('../../../api/items/hammers/iron-hammer.json'),
     // 	type: ItemType.EQUIPMENT,
-    // 	equipmentSlot: Equipment.Slots.HAND
+    // 	equipment:    // {slot: Equipment.Slots.HAND,
+    // animation: 'swing'
+    // }
     // },
 
     /***********************************
@@ -565,6 +616,9 @@ export const ItemsConfig = {
         },
         definition: require('../../../api/items/mystic-wand.json'),
         type: ItemType.EQUIPMENT,
-        equipmentSlot: Equipment.Slots.HAND
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
     },
 };

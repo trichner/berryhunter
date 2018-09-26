@@ -17,6 +17,7 @@ import * as Events from '../Events';
 import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
 import {Animation} from "../Animation";
+import {Items} from '../items/Items';
 
 let Game = null;
 Events.on('game.setup', game => {
@@ -235,7 +236,16 @@ export class Character extends GameObject {
         this.movePosition(moveVec);
     }
 
-    action(remainingTicks = Character.hitAnimationFrameDuration) {
+    getEquippedItemAnimationType() {
+        let equippedItem = this.getEquippedItem(Equipment.Slots.HAND);
+        if (equippedItem === null) {
+            equippedItem = Items.None;
+        }
+
+        return equippedItem.equipment.animation;
+    }
+
+    action(remainingTicks?: number) {
         if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
             this.animateAction(this.rightHand, 'stab', remainingTicks);
             this.currentAction = 'PLACING';
@@ -243,22 +253,22 @@ export class Character extends GameObject {
         }
 
         this.currentAction = 'MAIN';
-        this.animateAction(this.rightHand, 'swing', remainingTicks);
+        this.animateAction(this.rightHand, this.getEquippedItemAnimationType(), remainingTicks);
         return Character.hitAnimationFrameDuration;
     }
 
-    altAction(remainingTicks = Character.hitAnimationFrameDuration) {
+    altAction(remainingTicks?: number) {
         if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
             this.currentAction = false;
             return 0;
         }
 
         this.currentAction = 'ALT';
-        this.animateAction(this.leftHand, 'swing', remainingTicks, true);
+        this.animateAction(this.leftHand, this.getEquippedItemAnimationType(), remainingTicks, true);
         return Character.hitAnimationFrameDuration;
     }
 
-    private animateAction(hand, type: 'swing' | 'stab', remainingTicks: number, mirrored: boolean = false) {
+    private animateAction(hand, type: 'swing' | 'stab', remainingTicks?: number, mirrored: boolean = false) {
         animateAction({
             size: this.size,
             hand,
