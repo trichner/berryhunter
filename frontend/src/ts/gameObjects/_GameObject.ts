@@ -22,8 +22,8 @@ export class GameObject {
     rotateOnPositioning: boolean = false;
     visibleOnMinimap: boolean = true;
     shape;
-    statusEffects;
-    activeStatusEffect = null;
+    statusEffects: { [key: string]: StatusEffect };
+    activeStatusEffect: StatusEffect = null;
 
     desiredPosition: Vector;
     desireTimestamp;
@@ -39,9 +39,6 @@ export class GameObject {
         const args = Array.prototype.splice.call(arguments, 5);
         this.shape = this.initShape.apply(this, [svg, x, y, size, rotation].concat(args));
         this.statusEffects = this.createStatusEffects();
-        for (let statusEffect in this.statusEffects) {
-            this.statusEffects[statusEffect].id = statusEffect;
-        }
         this.show();
     }
 
@@ -170,7 +167,7 @@ export class GameObject {
         this.layer.removeChild(this.shape);
     }
 
-    updateStatusEffects(newStatusEffects) {
+    updateStatusEffects(newStatusEffects: StatusEffect[]) {
         if (!_.isArray(newStatusEffects) || newStatusEffects.length === 0) {
             if (this.activeStatusEffect !== null) {
                 this.activeStatusEffect.hide();
@@ -178,9 +175,9 @@ export class GameObject {
             }
         } else {
             newStatusEffects = StatusEffect.sortByPriority(newStatusEffects);
-            let newStatusEffect = newStatusEffects.find(function (newStatusEffect) {
-                return this.statusEffects.hasOwnProperty(newStatusEffect.id);
-            }, this);
+            let newStatusEffect = newStatusEffects.find(
+                newStatusEffect => this.statusEffects.hasOwnProperty(newStatusEffect.id)
+            );
             if (isDefined(newStatusEffect)) {
                 if (this.activeStatusEffect === null) {
                     // No effect running, run one

@@ -1,9 +1,13 @@
 'use strict';
 
-import * as PIXI from 'pixi.js';
 import * as _ from 'lodash';
 import {ExtendedColorMatrixFilter} from '../ExtendedColorMatrixFilter';
 import {Animation} from "../Animation";
+
+interface Definition {
+    id: string;
+    priority: number;
+}
 
 export class StatusEffect {
     static Damaged = {id: 'Damaged', priority: 1};
@@ -13,13 +17,17 @@ export class StatusEffect {
     static Starving = {id: 'Starving', priority: 5};
     static Regenerating = {id: 'Regenerating', priority: 6};
 
+    readonly id: string;
+    readonly priority: number;
+
     showing: boolean = false;
     colorMatrix: ExtendedColorMatrixFilter;
     startAlpha: number;
     endAlpha: number;
-    updateFn: () => void;
 
-    constructor(gameObjectShape, red, green, blue, startAlpha, endAlpha) {
+    constructor(definition: Definition, gameObjectShape, red, green, blue, startAlpha, endAlpha) {
+        this.id = definition.id;
+        this.priority = definition.priority;
 
         this.colorMatrix = new ExtendedColorMatrixFilter();
         this.colorMatrix.flood(red, green, blue, 1);
@@ -43,26 +51,26 @@ export class StatusEffect {
 
     static forDamaged(gameObjectShape) {
         // #BF153A old Health Bar dark red?
-        return new StatusEffect(gameObjectShape, 191, 21, 58, 0.8, 0.0);
+        return new StatusEffect(StatusEffect.Damaged, gameObjectShape, 191, 21, 58, 0.8, 0.0);
     }
 
     static forDamagedOverTime(gameObjectShape) {
         // #BF153A old Health Bar dark red?
-        return new StatusEffect(gameObjectShape, 191, 21, 58, 0.8, 0.2);
+        return new StatusEffect(StatusEffect.DamagedAmbient, gameObjectShape, 191, 21, 58, 0.8, 0.2);
     }
 
     static forFreezing(gameObjectShape) {
         // #1E7A1E
-        return new StatusEffect(gameObjectShape, 18, 87, 153, 0.4, 0.8);
+        return new StatusEffect(StatusEffect.Freezing, gameObjectShape, 18, 87, 153, 0.4, 0.8);
     }
 
     static forStarving(gameObjectShape) {
         // #125799
-        return new StatusEffect(gameObjectShape, 30, 120, 30, 0.2, 0.8);
+        return new StatusEffect(StatusEffect.Starving, gameObjectShape, 30, 120, 30, 0.2, 0.8);
     }
 
     static sortByPriority(statusEffects) {
-        return statusEffects.sort(function (a, b) {
+        return statusEffects.sort(function (a: StatusEffect, b: StatusEffect) {
             return a.priority - b.priority;
         });
     };
@@ -109,7 +117,6 @@ export class StatusEffect {
 
     forceHide() {
         this.showing = false;
-        PIXI.ticker.shared.remove(this.updateFn);
         this.colorMatrix.enabled = false;
     }
 }
