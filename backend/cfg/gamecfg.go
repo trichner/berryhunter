@@ -11,10 +11,10 @@ type GameConfig struct {
 	ItemRegistry items.Registry
 	MobRegistry  mobs.Registry
 
-	ColdFractionNightPerS   float32
-	ColdFractionRestingPerS float32
-
-	PlayerConfig PlayerConfig
+	ColdFractionNightPerS float32
+	ColdFractionDayPerS   float32
+	HeatFractionPerS      float32;
+	PlayerConfig          PlayerConfig
 }
 
 type PlayerConfig struct {

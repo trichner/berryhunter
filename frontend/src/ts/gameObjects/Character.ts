@@ -4,7 +4,7 @@ import {GameObject} from './_GameObject';
 import * as PIXI from 'pixi.js';
 import {NamedGroup} from '../NamedGroup';
 import {BasicConfig as Constants} from '../../config/Basic';
-import {isDefined, sq} from '../Utils';
+import {isDefined} from '../Utils';
 import * as MapEditor from '../mapEditor/_MapEditor';
 import * as Equipment from '../items/Equipment';
 import {InjectedSVG} from '../InjectedSVG';
@@ -15,6 +15,8 @@ import {GraphicsConfig} from '../../config/Graphics';
 import * as Events from '../Events';
 import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
+import {Animation} from "../Animation";
+import {Items} from '../items/Items';
 
 let Game = null;
 Events.on('game.setup', game => {
@@ -24,16 +26,19 @@ Events.on('game.setup', game => {
 export class Character extends GameObject {
     static svg;
     static craftingIndicator = {svg: undefined};
-    static hitAnimationFrameDuration: number = 15;
+    static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
 
 
     name: string;
     nameElement;
     isPlayerCharacter: boolean;
     movementSpeed: number;
+
     currentAction;
     equipmentSlotGroups;
     equippedItems;
+    useLeftHand: boolean = false;
+
     actualShape;
 
     // Contains PIXI.Containers that will mirror this characters position
@@ -45,8 +50,6 @@ export class Character extends GameObject {
 
     leftHand;
     rightHand;
-
-    actionAnimationFrame: number;
 
     constructor(id, x, y, name, isPlayerCharacter) {
         super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2, Character.svg);
@@ -235,13 +238,32 @@ export class Character extends GameObject {
         this.movePosition(moveVec);
     }
 
-    action() {
+    getEquippedItemAnimationType() {
+        let equippedItem = this.getEquippedItem(Equipment.Slots.HAND);
+        if (equippedItem === null) {
+            equippedItem = Items.None;
+        }
+
+        return equippedItem.equipment.animation;
+    }
+
+    action(remainingTicks?: number) {
         if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
+            this.animateAction(this.rightHand, 'stab', remainingTicks);
             this.currentAction = 'PLACING';
             return Character.hitAnimationFrameDuration;
         }
 
-        this.currentAction = 'MAIN';
+        // If nothing is equipped (= action with bare hand), use the boolean `useLeftHand`
+        // to alternate between left and right punches
+        if (this.getEquippedItem(Equipment.Slots.HAND) === null && this.useLeftHand) {
+            this.currentAction = 'ALT';
+            this.animateAction(this.leftHand, this.getEquippedItemAnimationType(), remainingTicks, true);
+        } else {
+            this.currentAction = 'MAIN';
+            this.animateAction(this.rightHand, this.getEquippedItemAnimationType(), remainingTicks);
+        }
+        this.useLeftHand = !this.useLeftHand;
         return Character.hitAnimationFrameDuration;
     }
 
@@ -250,49 +272,24 @@ export class Character extends GameObject {
             this.currentAction = false;
             return 0;
         }
-
-        this.currentAction = 'ALT';
-        return Character.hitAnimationFrameDuration;
     }
 
-    progressHitAnimation(animationFrame) {
-        this.actionAnimationFrame = animationFrame;
-    }
-
-    animate(type, animationFrame) {
-        animateAction.call(this, this.rightHand, type, animationFrame);
+    private animateAction(hand, type: 'swing' | 'stab', remainingTicks?: number, mirrored: boolean = false) {
+        animateAction({
+            size: this.size,
+            hand,
+            type,
+            animation: new Animation(),
+            animationFrame: remainingTicks,
+            onDone: () => {
+                this.currentAction = false;
+            },
+            mirrored
+        });
     }
 
     update() {
         let timeDelta = Game.timeDelta;
-        if (this.currentAction) {
-            let hand;
-            switch (this.currentAction) {
-                case 'MAIN':
-                case 'PLACING':
-                    hand = this.rightHand;
-                    break;
-                case 'ALT':
-                    hand = this.leftHand;
-                    break;
-            }
-
-            const maxOffset = this.size * 0.4;
-            let offset;
-            if (this.actionAnimationFrame > 0.7 * Character.hitAnimationFrameDuration) {
-                offset = sq((Character.hitAnimationFrameDuration + 1 - this.actionAnimationFrame)) /
-                    sq(0.3 * Character.hitAnimationFrameDuration) * maxOffset;
-            } else if (this.actionAnimationFrame > 0.6 * Character.hitAnimationFrameDuration) {
-                offset = maxOffset;
-            } else {
-                offset = this.actionAnimationFrame / (0.6 * Character.hitAnimationFrameDuration) * maxOffset;
-            }
-            hand.position.x = hand.originalTranslation.x + offset;
-
-            if (this.actionAnimationFrame <= 1) {
-                this.currentAction = false;
-            }
-        }
 
         this.messages = this.messages.filter((message) => {
             message.timeToLife -= timeDelta;

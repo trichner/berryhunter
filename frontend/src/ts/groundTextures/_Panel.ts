@@ -28,17 +28,16 @@ export function isActive() {
     return active;
 }
 
-export function setup(game) {
+Events.on('game.playing', function (game) {
     Game = game;
     if (!active) {
         return;
     }
-    if (getUrlParameter('token')) {
-        Console.log('GroundTexturePanel activated - try to activate GODMODE now.');
-        Console.run('GOD');
-    } else {
-        alert('WARNING: Missing token, can not activate god mode.')
-    }
+
+    Console.log('GroundTexturePanel activated - try to activate GODMODE now.');
+    Console.run('GOD');
+    Console.log('GroundTexturePanel activated - try to grant MysticWand');
+    Console.run('give MysticWand');
 
     Game.renderer.on('prerender', function () {
         if (Game.state === Game.States.PLAYING) {
@@ -60,17 +59,6 @@ export function setup(game) {
             placeTexture({x, y});
         }
     });
-}
-
-Events.on('game.playing', function () {
-    if (!active) {
-        return;
-    }
-
-    if (getUrlParameter('token')) {
-        Console.log('GroundTexturePanel activated - try to grant MysticWand');
-        Console.run('give MysticWand');
-    }
 });
 
 function stopPropagation(event) {
@@ -294,8 +282,10 @@ function randomizeInputs() {
     }
 }
 
-if (getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
-    active = true;
+Events.on('backend.validToken', function () {
+    if (getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
+        active = true;
 
-    Preloading.renderPartial(require('./groundTexturePanel.html'), setupPanel);
-}
+        Preloading.renderPartial(require('./groundTexturePanel.html'), setupPanel);
+    }
+});

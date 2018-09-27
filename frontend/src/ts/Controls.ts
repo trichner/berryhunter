@@ -11,6 +11,7 @@ import {isDefined, isUndefined, TwoDimensional} from './Utils';
 import * as Tock from 'tocktimer';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import {BerryhunterApi} from './backend/BerryhunterApi';
+import {Character} from "./gameObjects/Character";
 
 let Game = null;
 Events.on('game.setup', game => {
@@ -36,11 +37,16 @@ class Keys {
     }
 }
 
+interface Action {
+    item,
+    actionType: BerryhunterApi.ActionType
+}
+
 export class Controls {
-    isCraftInProgress;
-    character;
-    lastX;
-    lastY;
+    isCraftInProgress: () => boolean;
+    character: Character;
+    lastX: number;
+    lastY: number;
 
     upKeys = new Keys(KeyCodes.W, KeyCodes.UP);
     downKeys = new Keys(KeyCodes.S, KeyCodes.DOWN);
@@ -49,10 +55,10 @@ export class Controls {
     actionKeys = new Keys(KeyCodes.E, KeyCodes.SPACE);
     altActionKeys = new Keys(KeyCodes.Q, KeyCodes.SHIFT);
     pauseKeys = new Keys(KeyCodes.P);
-    hitAnimationTick;
-    clock;
-    inventoryAction;
-    updateTime;
+    hitAnimationTick: number = 0;
+    clock: Tock;
+    inventoryAction: Action;
+    updateTime: number;
 
     /**
      * @param {Character} character
@@ -67,9 +73,6 @@ export class Controls {
             this.lastY = character.getY();
         }
 
-
-        this.hitAnimationTick = false;
-
         this.clock = new Tock({
             interval: Constants.INPUT_TICKRATE,
             callback: this.update.bind(this),
@@ -81,7 +84,7 @@ export class Controls {
         window.addEventListener('keydown', Controls.handleFunctionKeys);
     }
 
-    static handleFunctionKeys(event) {
+    static handleFunctionKeys(event: KeyboardEvent) {
         if (Chat.isOpen()) {
             return;
         }
@@ -175,11 +178,10 @@ export class Controls {
             movement.x += 1;
         }
 
-        let action = null;
+        let action: Action = null;
         if (this.hitAnimationTick) {
             // Make sure tick 0 gets passed to the character to finish animation
             this.hitAnimationTick--;
-            this.character.progressHitAnimation(this.hitAnimationTick);
         } else {
             if (isDefined(this.inventoryAction)) {
                 action = this.inventoryAction;
@@ -189,9 +191,9 @@ export class Controls {
                     // Don't check for actions
                 } else if (this.actionKeys.isDown || inputManager.activePointer.leftButtonDown()) {
                     this.hitAnimationTick = this.character.action();
-                    this.character.progressHitAnimation(this.hitAnimationTick);
                     switch (this.character.currentAction) {
                         case 'MAIN':
+                        case 'ALT':
                             action = {
                                 item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
                                 actionType: BerryhunterApi.ActionType.Primary
@@ -211,12 +213,8 @@ export class Controls {
                             break;
                     }
                 } else if (this.altActionKeys.isDown || inputManager.activePointer.rightButtonDown()) {
+                    // Alt Action is only cancelling an equipped placeable - not need to report to backend
                     this.hitAnimationTick = this.character.altAction();
-                    this.character.progressHitAnimation(this.hitAnimationTick);
-                    action = {
-                        item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
-                        actionType: BerryhunterApi.ActionType.Primary
-                    };
                 }
             }
         }

@@ -2,10 +2,10 @@ package heater
 
 import (
 	"engo.io/ecs"
-	"github.com/trichner/berryhunter/backend/model"
-	"log"
 	"github.com/trichner/berryhunter/backend/minions"
+	"github.com/trichner/berryhunter/backend/model"
 	"github.com/trichner/berryhunter/backend/model/vitals"
+	"log"
 )
 
 type playerMap map[ecs.BasicEntity]*temperatureEntity
@@ -19,11 +19,17 @@ type HeaterSystem struct {
 	heaters         []model.Heater
 	players         playerMap
 	baseTemperature uint32
+	coolPerTick     uint32
+	heatPerTick     uint32
 }
 
-func New() *HeaterSystem {
+func New(coldFractionDayPerS float32, heatFractionPerS float32) *HeaterSystem {
+	coolPerTick := vitals.FractionToAbsPerTick(coldFractionDayPerS)
+	heatPerTick := vitals.FractionToAbsPerTick(heatFractionPerS)
 	return &HeaterSystem{
-		players: make(playerMap),
+		players:     make(playerMap),
+		coolPerTick: coolPerTick,
+		heatPerTick: heatPerTick,
 	}
 }
 
@@ -63,21 +69,19 @@ func (f *HeaterSystem) Update(dt float32) {
 	// apply heat to player
 	for _, t := range f.players {
 
-		//FIXME HARDCODED
-
 		if t.player.IsGod() {
 			continue
 		}
 
 		// are we freezing?
 		if t.temperature < f.baseTemperature {
-			bt := t.player.VitalSigns().BodyTemperature.SubFraction(0.0005)
+			bt := t.player.VitalSigns().BodyTemperature.Sub(f.coolPerTick)
 			t.player.VitalSigns().BodyTemperature = bt
 			continue
 		}
 
 		// we are warm, just fine
-		bt := t.player.VitalSigns().BodyTemperature.AddFraction(0.005)
+		bt := t.player.VitalSigns().BodyTemperature.Add(f.heatPerTick)
 		t.player.VitalSigns().BodyTemperature = bt
 	}
 

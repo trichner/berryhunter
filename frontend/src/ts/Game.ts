@@ -15,7 +15,6 @@ import {NamedGroup} from './NamedGroup';
 import {BasicConfig as Constants} from '../config/Basic';
 import {InputManager} from './input/InputManager';
 import * as Events from './Events';
-import * as GroundTexturePanel from './groundTextures/_Panel';
 import {isDefined} from './Utils';
 import {Welcome} from "./backend/Welcome";
 import * as Console from './Console';
@@ -63,9 +62,7 @@ export let player;
 
 export function setup() {
 
-
     let setupPromises = [];
-
 
     // Setup backend first, as this will take some time to connect.
     Backend.setup(Game);
@@ -251,7 +248,6 @@ export function setup() {
      */
 
     Chat.setup(Game, Backend);
-    GroundTexturePanel.setup(Game);
 
     if (Develop.isActive()) {
         Develop.afterSetup(Game);
@@ -353,3 +349,34 @@ function createBackground() {
 }
 
 Events.on('modulesLoaded', setup);
+
+/*
+ * Make sure the body can be focused.
+ */
+document.body.tabIndex = 0;
+
+
+let developEnabled = false;
+Events.on('backend.validToken', function () {
+    developEnabled = true;
+});
+
+/*
+ * https://trello.com/c/aq5lqJB7/289-schutz-gegen-versehentliches-verlassen-des-spiels
+ */
+window.onbeforeunload = function (event) {
+    // Only ask for confirmation if the user is in-game
+    if (state !== States.PLAYING) {
+        return;
+    }
+
+    // Don't bother developers with confirmations
+    if (developEnabled) {
+        return;
+    }
+
+    let dialogText = 'Do you want to leave this game? You\'re progress will be lost.';
+    event.preventDefault();
+    event.returnValue = dialogText;
+    return dialogText;
+};

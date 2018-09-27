@@ -11,6 +11,7 @@ import (
 	"github.com/trichner/berryhunter/backend/phy"
 	"github.com/trichner/berryhunter/backend/codec"
 	"github.com/trichner/berryhunter/backend/minions"
+	"github.com/google/flatbuffers/go"
 )
 
 var commands = map[string]Command{
@@ -48,6 +49,12 @@ var commands = map[string]Command{
 		}
 
 		log.Println(msg)
+
+
+		builder := flatbuffers.NewBuilder(32)
+		acceptMsg := codec.PongMessageFlatbufMarshal(builder)
+		builder.Finish(acceptMsg)
+		p.Client().SendMessage(builder.FinishedBytes())
 
 		return nil
 	},

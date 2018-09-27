@@ -10,7 +10,7 @@ import {VitalSignBar} from './VitalSignBar';
 let Game = null;
 
 let rootElement;
-let cycleIcon = require('!svg-inline-loader?classPrefix!./cycle-icon.svg');
+let cycleIcon = require('!svg-inline-loader!./cycle-icon.svg');
 
 let craftingElement;
 let craftableItemTemplate;

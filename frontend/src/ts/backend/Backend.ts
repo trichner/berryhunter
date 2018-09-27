@@ -19,7 +19,6 @@ import * as EndScreen from '../userInterface/screens/EndScreen';
 import * as UserInterface from '../userInterface/UserInterface';
 import {BerryhunterApi} from './BerryhunterApi';
 import {flatbuffers} from 'flatbuffers';
-
 // Assign all export in this file to a single variable to be passed into sub modules.
 import * as Backend from './Backend';
 
@@ -119,6 +118,8 @@ function setState(newState) {
                 Develop.logWebsocketStatus(state, 'good');
         }
     }
+
+    Events.trigger('backend.stateChange', Backend);
 }
 
 /**
@@ -275,6 +276,9 @@ export function receive(message) {
         case BerryhunterApi.ServerMessageBody.Scoreboard:
             let scoreboardMessage = new ScoreboardMessage(serverMessage.body(new BerryhunterApi.Scoreboard()));
             Scoreboard.updateFromBackend(scoreboardMessage);
+            break;
+        case BerryhunterApi.ServerMessageBody.Pong:
+            Events.triggerOneTime('backend.validToken', Backend);
             break;
         default:
             if (Develop.isActive()) {

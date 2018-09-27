@@ -11,7 +11,8 @@ type Configuration func(g *cfg.GameConfig) error
 func Config(conf *cfg.Config) Configuration {
 	return func(g *cfg.GameConfig) error {
 		g.ColdFractionNightPerS = conf.Game.ColdFractionNightPerS
-		g.ColdFractionRestingPerS = conf.Game.ColdFractionRestingPerS
+		g.ColdFractionDayPerS = conf.Game.ColdFractionDayPerS
+		g.HeatFractionPerS = conf.Game.HeatFractionPerS;
 
 		g.PlayerConfig.FreezingDamageTickFraction = conf.Game.Player.FreezingDamageTickFraction
 		g.PlayerConfig.HealthGainSatietyLossTickFraction = conf.Game.Player.HealthGainSatietyLossTickFraction

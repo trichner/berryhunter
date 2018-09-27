@@ -1,54 +1,61 @@
 'use strict';
 
-import {deg2rad, isUndefined} from '../Utils';
+import {deg2rad} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
-import * as Ease from 'pixi-ease';
+import * as _ from 'lodash';
+import {Animation} from "../Animation";
 
 const animationCfg = GraphicsConfig.character.actionAnimation;
 
-const types = {
+interface Hand {
+    x: number;
+    y: number;
+    originalTranslation: { x: number, y: number }
+}
+
+export const types = {
     swing: undefined,
     stab: undefined,
 };
 
-export function animateAction(hand, type, animation, animationFrame, onDone) {
-    if (!this.isPlayerCharacter) {
-        console.log('start action animation at frame ' + animationFrame);
-    }
+export function animateAction(options: { hand: Hand, type?: 'swing' | 'stab', animation: Animation, animationFrame?: number, onDone?: () => any, size: number, mirrored?: boolean }) {
+    options = _.merge({
+        mirrored: false,
+        type: 'stab',
+        animationFrame: GraphicsConfig.character.actionAnimation.backendTicks - 1,
+        onDone: () => {}
+    }, options);
 
-    if (isUndefined(animationFrame)) {
-        animationFrame = animationCfg.backendTicks;
-    }
     let slowmo = 1;
     let overallDuration = animationCfg.duration * slowmo;
     let forwardDuration = overallDuration * animationCfg.relativeDurationForward;
-    let start = overallDuration * (1 - (animationFrame + 1) / animationCfg.backendTicks);
-    types[type].call(this, hand, animation, overallDuration, forwardDuration, start, onDone);
+    let start = overallDuration * (1 - (options.animationFrame + 1) / animationCfg.backendTicks);
+    types[options.type](options, overallDuration, forwardDuration, start);
 }
 
-types.swing = function (hand, animation, overallDuration, forwardDuration, start, onDone) {
-    animation.to(
-        hand,
+types.swing = function (options, overallDuration, forwardDuration, start) {
+    options.animation.to(
+        options.hand,
         {
-            x: hand.originalTranslation.x + this.size * 0.6,
+            x: options.hand.originalTranslation.x + options.size * 0.6,
         },
         forwardDuration,
         {
             ease: 'easeOutCirc',
         },
     ).time = start;
-    animation.to(
-        hand,
+    options.animation.to(
+        options.hand,
         {
-            y: hand.originalTranslation.y - this.size * 0.6,
+            y: options.hand.originalTranslation.y + options.size * (options.mirrored ? +0.6 : -0.6),
         },
         forwardDuration,
         {
             ease: 'easeInCirc',
         },
     ).time = start;
-    animation.to(
-        hand,
+    options.animation.to(
+        options.hand,
         {
             rotation: deg2rad(-45),
         },
@@ -58,14 +65,14 @@ types.swing = function (hand, animation, overallDuration, forwardDuration, start
         },
     ).time = start;
 
-    animation.on('done', function () {
-        let animation = new Ease.list();
+    options.animation.on('done', function () {
+        let animation = new Animation();
         let duration = overallDuration - forwardDuration;
         start = Math.max(0, start - forwardDuration);
         animation.to(
-            hand,
+            options.hand,
             {
-                x: hand.originalTranslation.x,
+                x: options.hand.originalTranslation.x,
             },
             duration,
             {
@@ -73,9 +80,9 @@ types.swing = function (hand, animation, overallDuration, forwardDuration, start
             },
         ).time = start;
         animation.to(
-            hand,
+            options.hand,
             {
-                y: hand.originalTranslation.y,
+                y: options.hand.originalTranslation.y,
             },
             duration,
             {
@@ -83,7 +90,7 @@ types.swing = function (hand, animation, overallDuration, forwardDuration, start
             },
         ).time = start;
         animation.to(
-            hand,
+            options.hand,
             {
                 rotation: 0,
             },
@@ -94,16 +101,16 @@ types.swing = function (hand, animation, overallDuration, forwardDuration, start
         ).time = start;
 
         animation.on('done', function () {
-            onDone();
+            options.onDone();
         });
     });
 };
 
-types.stab = function (hand, animation, overallDuration, forwardDuration, start, onDone) {
-    animation.to(
-        hand,
+types.stab = function (options, overallDuration, forwardDuration, start) {
+    options.animation.to(
+        options.hand,
         {
-            x: hand.originalTranslation.x + this.size * 0.4,
+            x: options.hand.originalTranslation.x + options.size * 0.4,
         },
         forwardDuration,
         {
@@ -111,14 +118,14 @@ types.stab = function (hand, animation, overallDuration, forwardDuration, start,
         },
     ).time = start;
 
-    animation.on('done', function () {
-        let animation = new Ease.list();
+    options.animation.on('done', function () {
+        let animation = new Animation();
         let duration = overallDuration - forwardDuration;
         start = Math.max(0, start - forwardDuration);
         animation.to(
-            hand,
+            options.hand,
             {
-                x: hand.originalTranslation.x,
+                x: options.hand.originalTranslation.x,
             },
             duration,
             {
@@ -127,7 +134,7 @@ types.stab = function (hand, animation, overallDuration, forwardDuration, start,
         ).time = start;
 
         animation.on('done', function () {
-            onDone();
+            options.onDone();
         });
     });
 };

@@ -4,7 +4,7 @@
   "description": "Frontend for BerryHunter game",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "start": "webpack-dev-server --config webpack.dev.js",
+    "start": "webpack-dev-server --config webpack.dev.js --open-page \"?token=plz&local&port=2000\"",
     "analyze": "webpack --config webpack.analysis.js"
   },
   "main": "game.js",
@@ -24,6 +24,7 @@
   "devDependencies": {
     "@types/file-saver": "^1.3.0",
     "@types/flatbuffers": "^1.9.0",
+    "@types/lodash": "^4.14.116",
     "@types/node": "^10.9.4",
     "@types/pixi.js": "^4.8.0",
     "@types/webpack-env": "^1.13.6",

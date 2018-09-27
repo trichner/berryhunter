@@ -43,7 +43,7 @@ export const GraphicsConfig = {
              * Should be synchronized with the value below,
              * but is purely used for a smooth client side animation.
              */
-            duration: 300,
+            duration: 500,
 
             /**
              * How much of the animation is forward - the rest is reversing.
@@ -55,7 +55,7 @@ export const GraphicsConfig = {
              * How many ticks will the backend communicate an action in progress
              * SYNCED WITH BACKEND
              */
-            backendTicks: 10,
+            backendTicks: 15,
         },
     },
 
