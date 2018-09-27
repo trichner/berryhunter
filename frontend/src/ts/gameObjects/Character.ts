@@ -2,7 +2,6 @@
 
 import {GameObject} from './_GameObject';
 import * as PIXI from 'pixi.js';
-import * as Ease from 'pixi-ease';
 import {NamedGroup} from '../NamedGroup';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {isDefined} from '../Utils';
@@ -34,9 +33,12 @@ export class Character extends GameObject {
     nameElement;
     isPlayerCharacter: boolean;
     movementSpeed: number;
+
     currentAction;
     equipmentSlotGroups;
     equippedItems;
+    useLeftHand: boolean = false;
+
     actualShape;
 
     // Contains PIXI.Containers that will mirror this characters position
@@ -252,20 +254,24 @@ export class Character extends GameObject {
             return Character.hitAnimationFrameDuration;
         }
 
-        this.currentAction = 'MAIN';
-        this.animateAction(this.rightHand, this.getEquippedItemAnimationType(), remainingTicks);
+        // If nothing is equipped (= action with bare hand), use the boolean `useLeftHand`
+        // to alternate between left and right punches
+        if (this.getEquippedItem(Equipment.Slots.HAND) === null && this.useLeftHand) {
+            this.currentAction = 'ALT';
+            this.animateAction(this.leftHand, this.getEquippedItemAnimationType(), remainingTicks, true);
+        } else {
+            this.currentAction = 'MAIN';
+            this.animateAction(this.rightHand, this.getEquippedItemAnimationType(), remainingTicks);
+        }
+        this.useLeftHand = !this.useLeftHand;
         return Character.hitAnimationFrameDuration;
     }
 
-    altAction(remainingTicks?: number) {
+    altAction() {
         if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
             this.currentAction = false;
             return 0;
         }
-
-        this.currentAction = 'ALT';
-        this.animateAction(this.leftHand, this.getEquippedItemAnimationType(), remainingTicks, true);
-        return Character.hitAnimationFrameDuration;
     }
 
     private animateAction(hand, type: 'swing' | 'stab', remainingTicks?: number, mirrored: boolean = false) {
@@ -280,10 +286,6 @@ export class Character extends GameObject {
             },
             mirrored
         });
-    }
-
-    progressHitAnimation(animationFrame) {
-        // NOOP
     }
 
     update() {
