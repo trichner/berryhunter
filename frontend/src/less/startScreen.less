@@ -81,9 +81,8 @@
 			text-align: center;
 		}
 
-		&.center-right {
-			right: 1rem;
-			text-align: center;
+		&.right {
+			right: 0;
 		}
 
 		&.bottom {
@@ -94,6 +93,21 @@
 
 		> p {
 			margin: 0.5rem 0;
+		}
+	}
+
+	> .socialMediaContainer {
+		padding: 0;
+
+		> .socialLink {
+			margin-right: 8px;
+
+			> .socialIcon {
+				width: 48px;
+				height: 48px;
+			}
+
+			// TODO icons sollten nach oben jumpen so wie der expand link der leaderboard leiste
 		}
 	}
 }

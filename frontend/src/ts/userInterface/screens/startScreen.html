@@ -26,9 +26,9 @@
 	<form id="startForm" class="playerForm layout-column">
 		<div class="inputContainer layout-row">
 			<input class="playerNameInput flex"
-				   placeholder="Some Name"
-				   maxlength="20"
-				   tabindex="0" autofocus/>
+			       placeholder="Some Name"
+			       maxlength="20"
+			       tabindex="0" autofocus/>
 		</div>
 		<div class="submitContainer">
 			<input type="submit" value="Loading..." class="playerNameSubmit" disabled="disabled"/>
@@ -37,6 +37,7 @@
 	</form>
 
 	<div class="infoContainer center bottom">
+		<!-- @formatter:off -->
 		<p>A game by
 			<a href="http://rza.io" target="_blank">Raoul Zander</a> <small>(Frontend)</small>,
 			<a href="http://trichner.ch" target="_blank">Thomas Richner</a> <small>(Master Coder)</small>
@@ -50,6 +51,7 @@
 				<a href="#" id="showCredits">Full credits.</a>
 			</small>
 		</p>
+		<!-- formatter:on -->
 	</div>
 
 	<a href="#" id="closeCredits" class="hidden">X</a>
@@ -57,12 +59,18 @@
 		<!-- Filled via JS -->
 	</div>
 
-	<div class="infoContainer center-right bottom layout-row">
-		<a href="http://twitter.com/BerryHunterGame" target="_blank" title="Follow us on Twitter">
-			<img src="./twitter.png" alt="Twitter"/>
+	<div class="socialMediaContainer infoContainer bottom right layout-row">
+		<a class="socialLink" href="http://twitter.com/BerryHunterGame"
+		   target="_blank" title="Follow us on Twitter">
+			<img class="socialIcon" src="./twitter.png" alt="Twitter"/>
 		</a>
-		<a href="http://www.instagram.com/berryhuntergame/" target="_blank" title="Follow us on Instagram">
-			<img src="./instagram.png" alt="Instagram"/>
+		<a class="socialLink" href="http://www.instagram.com/berryhuntergame/"
+		   target="_blank" title="Follow us on Instagram">
+			<img class="socialIcon" src="./instagram.png" alt="Instagram"/>
+		</a>
+		<a class="socialLink" href="https://www.facebook.com/berry.hunter.3576"
+		   target="_blank" title="Follow us on Facebook">
+			<img class="socialIcon" src="./facebook.png" alt="Facebook"/>
 		</a>
 	</div>
 
