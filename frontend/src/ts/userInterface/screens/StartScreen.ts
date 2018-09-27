@@ -1,7 +1,7 @@
 'use strict';
 
 import * as PlayerName from '../../PlayerName';
-import {isDefined, preventInputPropagation} from '../../Utils';
+import {isDefined, preventInputPropagation, smoothHoverAnimation} from '../../Utils';
 import * as Events from '../../Events';
 import * as DetectBrowser from 'detect-browser';
 import * as Preloading from '../../Preloading';
@@ -55,6 +55,10 @@ export function onDomReady() {
             startForm.classList.remove('hidden');
         });
     }
+
+    rootElement.querySelectorAll('.socialLink').forEach(element => {
+        smoothHoverAnimation(element, 0.3);
+    });
 
     Credits.setup();
 

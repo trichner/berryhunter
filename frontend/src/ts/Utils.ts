@@ -358,3 +358,32 @@ export function playCssAnimation(element, animationClass) {
         element.classList.add(animationClass)
     });
 }
+
+/**
+ *
+ * @param {HTMLElement} element
+ * @param {number} animationDuration in seconds
+ * @param {boolean} alternating default = true
+ */
+export function smoothHoverAnimation(element: HTMLElement, animationDuration: number, alternating: boolean = true) {
+    let mouseOverElement = false;
+    element.addEventListener('mouseenter', () => {
+        element.classList.add('hover');
+        mouseOverElement = true;
+    });
+
+    element.addEventListener('mouseleave', () => {
+        mouseOverElement = false;
+    });
+
+    element.addEventListener('animationiteration', (event: AnimationEvent) => {
+        let iterations = event.elapsedTime / animationDuration;
+        if (alternating && iterations % 2 !== 0) {
+            // Ignore alternating iterations
+            return;
+        }
+        if (!mouseOverElement) {
+            element.classList.remove('hover');
+        }
+    });
+}

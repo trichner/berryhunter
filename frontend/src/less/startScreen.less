@@ -97,18 +97,36 @@
 	}
 
 	> .socialMediaContainer {
-		padding: 0;
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
 
 		> .socialLink {
 			margin-right: 8px;
+
+			&:last-of-type {
+				margin-right: 0;
+			}
+
+			&.hover {
+				> .socialIcon {
+					animation: socialLink-bounce 300ms infinite alternate ease-out;
+				}
+			}
 
 			> .socialIcon {
 				width: 48px;
 				height: 48px;
 			}
-
-			// TODO icons sollten nach oben jumpen so wie der expand link der leaderboard leiste
 		}
+	}
+}
+
+@keyframes socialLink-bounce {
+	0% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(-75%);
 	}
 }
 
