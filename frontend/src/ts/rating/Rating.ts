@@ -1,4 +1,4 @@
-import {makeRequest} from "../Utils";
+import {makeRequest, smoothHoverAnimation} from "../Utils";
 import * as _ from 'lodash';
 
 let html = require('./rating.html');
@@ -23,6 +23,9 @@ export class Rating {
 
         this.socialMediaContainer = parentElement.querySelector('.socialMediaContainer');
         this.socialMediaContainer.classList.toggle('hidden', !showSocialMedia);
+        this.socialMediaContainer.querySelectorAll('.socialLink').forEach((element) => {
+            smoothHoverAnimation(element, 0.3);
+        });
 
         this.feedbackContainer = parentElement.querySelector('.feedbackContainer');
         this.feedbackText = this.feedbackContainer.querySelector('.feedbackText') as HTMLTextAreaElement;

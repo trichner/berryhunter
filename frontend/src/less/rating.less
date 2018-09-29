@@ -150,5 +150,29 @@
 			margin: 0;
 			margin-bottom: 0.5em;
 		}
+
+		.socialLink {
+			margin: 0 8px;
+
+			&.hover {
+				> .socialIcon {
+					animation: socialLink-rating-bounce 300ms infinite alternate ease-out;
+				}
+			}
+
+			> .socialIcon {
+				width: 48px;
+				height: 48px;
+			}
+		}
+	}
+}
+
+@keyframes socialLink-rating-bounce {
+	0% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(-40%);
 	}
 }

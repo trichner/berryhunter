@@ -49,7 +49,15 @@ module.exports = {
 			// All files with a '.ts' extension will be handled by 'awesome-typescript-loader'.
 			{test: /\.ts$/, loader: 'awesome-typescript-loader'},
 
-			{test: /\.html$/, loader: 'html-loader'},
+			{
+				test: /\.html$/,
+				use: [{
+					loader: 'html-loader',
+					options: {
+						interpolate: 'require' // used to require other html partials inside of html
+					}
+				}]
+			},
 
 			// All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
 			{enforce: 'pre', test: /\.js$/, loader: 'source-map-loader'},

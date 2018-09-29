@@ -365,7 +365,7 @@ export function playCssAnimation(element, animationClass) {
  * @param {number} animationDuration in seconds
  * @param {boolean} alternating default = true
  */
-export function smoothHoverAnimation(element: HTMLElement, animationDuration: number, alternating: boolean = true) {
+export function smoothHoverAnimation(element: Element, animationDuration: number, alternating: boolean = true) {
     let mouseOverElement = false;
     element.addEventListener('mouseenter', () => {
         element.classList.add('hover');
