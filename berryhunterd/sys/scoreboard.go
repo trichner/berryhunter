@@ -1,27 +1,39 @@
 package sys
 
 import (
+	"encoding/binary"
 	"engo.io/ecs"
 	"github.com/google/flatbuffers/go"
+	"github.com/google/uuid"
 	"github.com/trichner/berryhunter/berryhunterd/codec"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
 	"github.com/trichner/berryhunter/berryhunterd/model"
+	"github.com/trichner/berryhunter/chieftaind/client"
+	"log"
 )
 
 type ScoreboardSystem struct {
 	players []model.PlayerEntity
 	clients []model.ClientEntity
 	g                model.Game
-	chieftain client.Client
+	chieftain *client.Client
 }
 
 func NewScoreboardSystem(g model.Game) *ScoreboardSystem {
 
 	ccfg := g.Config().ChieftainConfig
+	var c *client.Client
+
 	if ccfg != nil {
-		c := client.Connect(ccfg)
+		var err error
+		if c, err = client.Connect(ccfg.Addr);err!=nil {
+			log.Printf("cannot reach chieftain: %s\n", err)
+		}
+	}else{
+		log.Println("no chieftain configuration, skipping")
 	}
-	return &ScoreboardSystem{g: g}
+
+	return &ScoreboardSystem{g: g, chieftain:c}
 }
 
 func (*ScoreboardSystem) Priority() int {
@@ -55,6 +67,31 @@ func (d *ScoreboardSystem) Update(dt float32) {
 	for _, c := range d.clients {
 		c.Client().SendMessage(builder.FinishedBytes())
 	}
+
+}
+
+func (d *ScoreboardSystem) updateChieftain(){
+	 players := make([]client.Player,0, len(d.players))
+
+	 for _, p := range d.players {
+	 	players = append(players, client.Player{
+	 		Name:p.Name(),
+	 		Uuid:id2uuid(p.Basic().ID()),
+	 		Score:uint(p.Stats().BirthTick), //TODO will overflow
+	 	})
+	 }
+
+	 s := client.Scoreboard(players)
+	 d.chieftain.Write(&s)
+}
+
+var uuidNs = uuid.Must(uuid.NewRandom())
+func id2uuid(id uint64) string {
+
+	idBytes := make([]byte, 8)
+	binary.BigEndian.PutUint64(idBytes, id)
+
+	return uuid.NewSHA1(uuidNs, idBytes).String()
 }
 
 func (d *ScoreboardSystem) Remove(e ecs.BasicEntity) {
