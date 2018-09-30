@@ -68,6 +68,7 @@ func (d *ScoreboardSystem) Update(dt float32) {
 		c.Client().SendMessage(builder.FinishedBytes())
 	}
 
+	d.updateChieftain()
 }
 
 func (d *ScoreboardSystem) updateChieftain(){
