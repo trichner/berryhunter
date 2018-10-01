@@ -8,6 +8,7 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 
 module.exports = env => {
+	env = {} || env;
 	return merge(common, {
 		mode: 'development',
 		devtool: 'eval-source-map',

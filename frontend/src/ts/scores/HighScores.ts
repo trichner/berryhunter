@@ -1,11 +1,13 @@
 'use strict';
 
 import * as Events from '../Events';
-import {isUndefined} from '../Utils';
+import {isUndefined, randomInt, random, smoothHoverAnimation} from '../Utils';
+import * as NameGenerator from '../NameGenerator';
 
-
-export let isRendered = false;
+let rootElement: HTMLElement;
+let isRendered = false;
 let startScreenElement;
+let elements = {};
 
 export const categories = [
     'alltime',
@@ -16,64 +18,72 @@ export const categories = [
 ];
 
 export function updateFromBackend(highScores) {
-    if (isUndefined(this.startScreenElement)) {
+    if (isUndefined(startScreenElement)) {
         // Start screen is not yet loaded - ignore high scores
         return;
     }
 
-    if (!this.isRendered) {
-        this.isRendered = true;
-        this.show();
+    if (!isRendered) {
+        isRendered = true;
+        show();
     }
 
-    this.categories.forEach(function (category) {
+    categories.forEach((category) => {
         if (!highScores.hasOwnProperty(category)) {
             return;
         }
 
         let highScore = highScores[category][0];
-        this.elements[category].playerName.textContent = highScore.playerName;
-        this.elements[category].score.textContent = highScore.score;
-    }, this);
+        elements[category].playerName.textContent = highScore.playerName;
+        elements[category].score.textContent = highScore.score;
+    });
 }
 
 export function show() {
-    this.rootElement = document.getElementById('highScores');
-    this.rootElement.classList.add('loaded');
+    rootElement = document.getElementById('highScores');
+    rootElement.classList.add('loaded');
+    smoothHoverAnimation(rootElement, 0.8);
 
-    this.elements = {};
-    this.categories.forEach(function (category) {
-        this.elements[category] = {
-            playerName: this.rootElement.querySelector('.highscore.' + category + ' > .playerName'),
-            score: this.rootElement.querySelector('.highscore.' + category + ' > .value'),
+    categories.forEach((category) => {
+        elements[category] = {
+            playerName: rootElement.querySelector('.highscore.' + category + ' > .playerName'),
+            score: rootElement.querySelector('.highscore.' + category + ' > .value'),
         }
-    }, this);
+    });
 }
 
 Events.on('startScreen.domReady', function (domElement) {
     startScreenElement = domElement;
 });
 
-// let mockHighScores = {};
-// require(['NameGenerator'], function (NameGenerator) {
-// 	let absoluteHighScore = Utils.randomInt(60000, 300000);
-//
-// 	HighScores.categories.forEach(function (category) {
-//
-// 		mockHighScores[category] = [{
-// 			playerName: NameGenerator.generate(),
-// 			score: absoluteHighScore
-// 		}];
-//
-// 		absoluteHighScore *= Utils.random(0.5, 0.8);
-// 		absoluteHighScore = Math.round(absoluteHighScore);
-// 	});
-//
-// 	setInterval(function () {
-// 		HighScores.updateFromBackend(mockHighScores);
-//
-// 		HighScores.categories.forEach(function (category) {
-// 			mockHighScores[category][0].score += Utils.randomInt(1, 18);
-// 		});
-// 	}, 500);
-// });
+function mockHighScoresFromBackend() {
+
+    let mockHighScores = {};
+    let absoluteHighScore = randomInt(60000, 300000);
+
+    categories.forEach(function (category) {
+
+        mockHighScores[category] = [{
+            playerName: NameGenerator.generate(),
+            score: absoluteHighScore
+        }];
+
+        absoluteHighScore *= random(0.5, 0.8);
+        absoluteHighScore = Math.round(absoluteHighScore);
+    });
+
+    setInterval(function () {
+        updateFromBackend(mockHighScores);
+
+        categories.forEach(function (category) {
+            mockHighScores[category][0].score += randomInt(1, 18);
+        });
+    }, 500);
+}
+
+const showMock = false;
+if (showMock) {
+    mockHighScoresFromBackend();
+} else {
+    document.getElementById('highScores').classList.add('hidden');
+}
