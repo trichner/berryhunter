@@ -1,7 +1,7 @@
 'use strict';
 
 import * as Events from '../Events';
-import {isUndefined, randomInt, random, smoothHoverAnimation} from '../Utils';
+import {isUndefined, random, randomInt, smoothHoverAnimation} from '../Utils';
 import * as NameGenerator from '../NameGenerator';
 
 let rootElement: HTMLElement;
@@ -54,6 +54,13 @@ export function show() {
 
 Events.on('startScreen.domReady', function (domElement) {
     startScreenElement = domElement;
+
+    const showMock = false;
+    if (showMock) {
+        mockHighScoresFromBackend();
+    } else {
+        document.getElementById('highScores').classList.add('hidden');
+    }
 });
 
 function mockHighScoresFromBackend() {
@@ -79,11 +86,4 @@ function mockHighScoresFromBackend() {
             mockHighScores[category][0].score += randomInt(1, 18);
         });
     }, 500);
-}
-
-const showMock = false;
-if (showMock) {
-    mockHighScoresFromBackend();
-} else {
-    document.getElementById('highScores').classList.add('hidden');
 }
