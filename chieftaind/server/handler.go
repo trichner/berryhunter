@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"log"
 	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"github.com/trichner/berryhunter/chieftaind/framer"
@@ -73,6 +74,7 @@ func (c *ConnHandler) handleFrames(ctx context.Context, f framer.Framer) error {
 
 func (c *ConnHandler) handleMessage(ctx context.Context, bytes []byte) error {
 
+	log.Printf("new message")
 	msg := ChieftainApi.GetRootAsClientMessage(bytes, 0)
 	switch msg.BodyType() {
 	case ChieftainApi.ClientMessageBodyScoreboard:

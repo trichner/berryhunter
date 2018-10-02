@@ -7,6 +7,7 @@ import (
 	"crypto/tls"
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"github.com/trichner/berryhunter/chieftaind/framer"
+	"io"
 	"log"
 )
 
@@ -44,9 +45,12 @@ func (srv *Server) ListenTls(laddr, certFile, keyFile string) error {
 			log.Println(err)
 			continue
 		}
+		log.Printf("client connected %s", conn.RemoteAddr())
 		go func() {
 			err := HandleConn(srv.store, srv.playerDao, conn)
-			if err != nil {
+			if err == io.EOF {
+				log.Printf("client disconnected %s", conn.RemoteAddr())
+			}else if err != nil {
 				log.Println(err)
 			}
 		}()
