@@ -4,7 +4,7 @@
   "type": "MOB",
   "factors": {
     "vulnerability": 5.0,
-    "speed": 0.8,
+    "speed": 0.6,
     "deltaPhi": 0.1,
     "turnRate": 0.1
   },

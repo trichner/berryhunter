@@ -103,7 +103,7 @@ export const GraphicsConfig = {
             maxSize: 60,
 
             berryFile: require('../img/berry.svg'),
-            berrySize: 6,
+            berrySize: 7,
         },
 
         flower: {
