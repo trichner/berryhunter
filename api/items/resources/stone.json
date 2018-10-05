@@ -8,8 +8,8 @@
     "capacity": 45
   },
   "body": {
-    "minRadius": 0.3,
-    "maxRadius": 0.8,
+    "minRadius": 0.2,
+    "maxRadius": 0.5,
     "solid": true
   }
 }

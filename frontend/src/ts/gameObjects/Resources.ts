@@ -100,9 +100,9 @@ export class Mineral extends Resource {
 
     constructor(x, y, size, svg) {
         // Due to the shadow in the mineral graphics, those should not be randomly rotated
-        super(Game.layers.resources.minerals, x, y, size, 0, svg);
+        super(Game.layers.resources.minerals, x, y, size * 1.1 + GraphicsConfig.character.size, 0, svg);
 
-        this.resourceSpotTexture = new InjectedSVG(Mineral.resourceSpot.svg, x, y, this.size, this.rotation);
+        this.resourceSpotTexture = new InjectedSVG(Mineral.resourceSpot.svg, x, y, this.size * 0.7, this.rotation);
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
     }
 
@@ -207,7 +207,7 @@ export class BerryBush extends Resource {
     berries;
 
     constructor(x, y, size) {
-        super(Game.layers.resources.berryBush, x, y, size, randomRotation(), BerryBush.svg);
+        super(Game.layers.resources.berryBush, x, y, size, 0, BerryBush.svg);
     }
 
     initShape(svg, x, y, size, rotation) {

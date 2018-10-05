@@ -90,7 +90,7 @@ export const GraphicsConfig = {
 
         mineral: {
             spotFile: require('../img/stoneSpot.svg'),
-            maxSize: 60,
+            maxSize: 142,
 
             stoneFile: require('../img/stone.svg'),
             bronzeFile: require('../img/bronze.svg'),
