@@ -81,6 +81,13 @@
 			text-align: center;
 		}
 
+		&.middle {
+			top: 50%;
+			transform: translateY(-50%);
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
 		&.right {
 			right: 0;
 		}
@@ -101,10 +108,12 @@
 		padding-bottom: 0.5rem;
 
 		> .socialLink {
-			margin-right: 8px;
+			&.twitter {
+				margin-bottom: 2px;
+			}
 
-			&:last-of-type {
-				margin-right: 0;
+			&.instagram {
+				margin-bottom: 8px;
 			}
 
 			&.hover {
@@ -123,10 +132,10 @@
 
 @keyframes socialLink-bounce {
 	0% {
-		transform: translateY(0);
+		transform: translateX(0);
 	}
 	100% {
-		transform: translateY(-75%);
+		transform: translateX(-75%);
 	}
 }
 
