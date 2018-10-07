@@ -3,6 +3,9 @@
     "port": 2000,
     "path": "/game"
   },
+  "chieftain": {
+    "addr":"127.0.0.1:3443"
+  },
   "game": {
     "coldFractionNightPerSecond": 0.01,
     "coldFractionRestingPerSecond": 0.01,
