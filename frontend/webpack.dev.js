@@ -8,7 +8,13 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 
 module.exports = env => {
-	env = {} || env;
+	// Define default environment
+	if (typeof env === "undefined") {
+		env = {
+			port: 80
+		}
+	}
+
 	return merge(common, {
 		mode: 'development',
 		devtool: 'eval-source-map',
@@ -16,7 +22,7 @@ module.exports = env => {
 			contentBase: path.resolve(__dirname, 'dist'),
 			// Activate Hot Module Replacement (HMR)
 			hot: true,
-			port: env.port || 80
+			port: env.port
 		},
 	});
 };
