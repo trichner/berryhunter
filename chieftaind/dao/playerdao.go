@@ -19,6 +19,7 @@ type Player struct {
 type PlayerDao interface {
 	UpsertPlayer(ctx context.Context, p Player) error
 	FindPlayers(ctx context.Context) ([]Player, error)
+	FindTopPlayers(ctx context.Context, limit int) ([]Player, error)
 }
 
 type playerDao struct {
@@ -33,6 +34,13 @@ func (p *playerDao) FindPlayers(ctx context.Context) ([]Player, error) {
 	tx := mustTx(ctx)
 	players := []Player{}
 	err := tx.Select(&players, "SELECT * FROM player ORDER BY score DESC")
+	return players, err
+}
+
+func (p *playerDao) FindTopPlayers(ctx context.Context, limit int) ([]Player, error) {
+	tx := mustTx(ctx)
+	players := []Player{}
+	err := tx.Select(&players, "SELECT * FROM player ORDER BY score DESC LIMIT ?", limit)
 	return players, err
 }
 
