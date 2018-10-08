@@ -38,6 +38,16 @@
 		transform: translate(-50%, -50%);
 	}
 
+	.startFormToggle {
+		> .switch {
+			margin-right: 12px;
+		}
+	}
+
+	.optionsContainer {
+		margin-bottom: 16px;
+	}
+
 	&.loading {
 		#hunter {
 			opacity: 0;
@@ -100,6 +110,24 @@
 
 		> p {
 			margin: 0.5rem 0;
+		}
+	}
+
+	> .menu {
+		a {
+			padding: 0.5rem 0.75rem;
+			font-size: 1.8rem;
+			transition: color 0.18s;
+
+			&:link {
+				text-decoration: none;
+			}
+
+			&:hover,
+			&:active,
+			&:focus {
+				color: #e37313;
+			}
 		}
 	}
 

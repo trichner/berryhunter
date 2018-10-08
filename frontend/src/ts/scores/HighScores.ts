@@ -42,7 +42,11 @@ export function updateFromBackend(highScores) {
 export function show() {
     rootElement = document.getElementById('highScores');
     rootElement.classList.add('loaded');
-    smoothHoverAnimation(rootElement, 0.8);
+    smoothHoverAnimation(rootElement, {animationDuration: 0.8});
+    smoothHoverAnimation(
+        document.querySelector('a[href="#highScores"]'),
+        {applyClassTo: rootElement, animationDuration: 0.8});
+
 
     categories.forEach((category) => {
         elements[category] = {
@@ -60,6 +64,7 @@ Events.on('startScreen.domReady', function (domElement) {
         mockHighScoresFromBackend();
     } else {
         document.getElementById('highScores').classList.add('hidden');
+        document.querySelector('a[href="#highScores"]').classList.add('hidden');
     }
 });
 

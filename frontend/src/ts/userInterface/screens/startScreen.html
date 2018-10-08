@@ -30,28 +30,35 @@
 			       maxlength="20"
 			       tabindex="0" autofocus/>
 		</div>
+		<div class="optionsContainer layout-row layout-align-space-around-center">
+			<div class="layout-row layout-align-center-end startFormToggle">
+				<div class="switch">
+					<input type="checkbox" id="tutorialToggle">
+					<label><i></i></label>
+					<span></span>
+				</div>
+				<label for="tutorialToggle">Tutorial</label>
+			</div>
+			<div class="layout-row layout-align-center-end startFormToggle">
+				<div class="switch">
+					<input type="checkbox" id="fullscreenToggle">
+					<label><i></i></label>
+					<span></span>
+				</div>
+				<label for="fullscreenToggle">Fullscreen</label>
+			</div>
+		</div>
 		<div class="submitContainer">
 			<input type="submit" value="Loading..." class="playerNameSubmit" disabled="disabled"/>
 			<div id="loadingBar"></div>
 		</div>
 	</form>
 
-	<div class="infoContainer center bottom">
-		<!-- @formatter:off -->
-		<p>A game by
-			<a href="http://rza.io" target="_blank">Raoul Zander</a> <small>(Frontend)</small>,
-			<a href="http://trichner.ch" target="_blank">Thomas Richner</a> <small>(Master Coder)</small>
-			and Xyck <small>(Graphics)</small>.
-		</p>
-		<p class="contain-floats">
-			<small class="left">Special thanks to
-				<a href="https://www.linkedin.com/in/sebastian-galli-936438122/">S. Galli</a>, L. Velten and Dangku.
-			</small>
-			<small class="right">
-				<a href="#" id="showCredits">Full credits.</a>
-			</small>
-		</p>
-		<!-- formatter:on -->
+	<div class="menu infoContainer center bottom layout-row">
+		<a href="#highScores">Leaderboard</a>
+		<a href="http://berryhunter.wikia.com" target="_blank">Wiki</a>
+		<a href="#credits">Credits</a>
+		<!--<a href="http://iogames.space/" target="_blank">More IO-Games</a>-->
 	</div>
 
 	<a href="#" id="closeCredits" class="hidden">X</a>

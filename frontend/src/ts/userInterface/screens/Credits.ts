@@ -17,7 +17,7 @@ export function setup() {
     startForm = document.getElementById('startForm');
     closeButton = document.getElementById('closeCredits');
 
-    document.getElementById('showCredits').addEventListener('click', event => {
+    document.querySelector('a[href="#credits"]').addEventListener('click', event => {
         event.preventDefault();
         event.stopPropagation();
 

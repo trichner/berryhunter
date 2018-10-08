@@ -24,7 +24,7 @@ export class Rating {
         this.socialMediaContainer = parentElement.querySelector('.socialMediaContainer');
         this.socialMediaContainer.classList.toggle('hidden', !showSocialMedia);
         this.socialMediaContainer.querySelectorAll('.socialLink').forEach((element) => {
-            smoothHoverAnimation(element, 0.3);
+            smoothHoverAnimation(element, {animationDuration: 0.3});
         });
 
         this.feedbackContainer = parentElement.querySelector('.feedbackContainer');

@@ -57,7 +57,7 @@ export function onDomReady() {
     }
 
     rootElement.querySelectorAll('.socialLink').forEach(element => {
-        smoothHoverAnimation(element, 0.3);
+        smoothHoverAnimation(element, {animationDuration: 0.3});
     });
 
     Credits.setup();
