@@ -67,6 +67,13 @@
 		#splashScreen {
 			opacity: 0;
 		}
+
+      #betaStamp {
+        display: block;
+        animation:
+                stamp1 5.5s cubic-bezier(0,1.18,0,0.99);
+                //stamp2 3.5s;
+      }
 	}
 
 	> .infoContainer {
@@ -158,6 +165,26 @@
 	}
 }
 
+@keyframes stamp1 {
+  0% {
+    transform: translate(-50%, -50%) rotate(-38deg) scale(2);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-38deg) scale(1);
+  }
+}
+
+@keyframes stamp2 {
+  0% {
+    filter: blur(20px);
+    opacity: 0;
+  }
+  100% {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
 @keyframes socialLink-bounce {
 	0% {
 		transform: translateX(0);
@@ -243,6 +270,19 @@
 	border-radius: 0.7vh;
 
 	transition: opacity @splashScreenAnimation;
+}
+
+#betaStamp {
+	position: absolute;
+	top: 100%;
+	left: 100%;
+	transform: translate(-50%, -50%) rotate(-38deg);
+
+	display: none;
+
+	> img {
+		width: 34vw;
+	}
 }
 
 #credits {
