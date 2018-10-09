@@ -37,7 +37,7 @@ export function onDomReady() {
     isDomReady = true;
 
     let startForm = document.getElementById('startForm');
-    PlayerName.prepareForm(startForm, playerNameInput);
+    PlayerName.prepareForm(startForm, playerNameInput, 'start');
     PlayerName.fillInput(playerNameInput);
 
     // re-set progress to ensure the loading bar is synced.

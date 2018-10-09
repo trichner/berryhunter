@@ -16,7 +16,7 @@ function onDomReady() {
     rootElement = document.getElementById('endScreen');
     playerNameInput = rootElement.getElementsByClassName('playerNameInput').item(0);
 
-    PlayerName.prepareForm(document.getElementById('endForm'), playerNameInput);
+    PlayerName.prepareForm(document.getElementById('endForm'), playerNameInput, 'end');
 
     preventInputPropagation(rootElement);
 

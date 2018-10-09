@@ -46,7 +46,7 @@ export let cameraGroup: PIXI.Container;
 export let map: GameMapWithBackend = null;
 export let miniMap: MiniMap = null;
 
-export let domElement;
+export let domElement: HTMLCanvasElement;
 export let input;
 
 // TODO merge with GameState?
@@ -77,7 +77,7 @@ export function setup() {
     renderer.view.style.position = "absolute";
     renderer.view.style.display = "block";
     renderer.autoResize = true;
-    renderer.resize(window.innerWidth, window.innerHeight);
+    resizeToWindow();
 
     //Add the canvas to the HTML document
     document.body.insertBefore(
@@ -235,7 +235,7 @@ export function setup() {
 
     // Disable context menu on right click to use the right click ingame
     document.body.addEventListener('contextmenu', function (event) {
-        if (event.target === domElement || domElement.contains(event.target)) {
+        if (event.target === domElement || domElement.contains(event.target as Node)) {
             event.preventDefault();
         }
     });
@@ -257,6 +257,10 @@ export function setup() {
     Promise.all(setupPromises).then(function () {
         Events.triggerOneTime('game.afterSetup', Game);
     });
+}
+
+export function resizeToWindow() {
+    renderer.resize(window.innerWidth, window.innerHeight);
 }
 
 export function loop(now) {

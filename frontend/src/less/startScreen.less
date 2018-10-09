@@ -70,9 +70,8 @@
 
       #betaStamp {
         display: block;
-        animation:
-                stamp1 5.5s cubic-bezier(0,1.18,0,0.99);
-                //stamp2 3.5s;
+        animation: stamp1 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045),
+        stamp2 0.5s ease-in-out;
       }
 	}
 
@@ -279,9 +278,10 @@
 	transform: translate(-50%, -50%) rotate(-38deg);
 
 	display: none;
+	pointer-events: none;
 
 	> img {
-		width: 34vw;
+		width: 40vh;
 	}
 }
 

@@ -2,6 +2,7 @@
 
 import * as NameGenerator from './NameGenerator';
 import * as Events from "./Events";
+import {Account} from "./Account";
 
 let Backend = null;
 Events.on('backend.setup', backend => {
@@ -10,9 +11,9 @@ Events.on('backend.setup', backend => {
 
 const MAX_LENGTH = 20;
 
-export function get() {
+function get() {
     let playerName = {
-        name: localStorage.getItem('playerName'),
+        name: Account.playerName,
         suggestion: NameGenerator.generate(),
         fromStorage: true,
     };
@@ -23,21 +24,23 @@ export function get() {
     return playerName;
 }
 
-export function set(name) {
-    localStorage.setItem('playerName', name);
+function set(name) {
+    Account.playerName = name;
 }
 
-export function remove() {
-    localStorage.removeItem('playerName');
+function remove() {
+    Account.playerName = null;
 }
 
-export function prepareForm(formElement, inputElement) {
-    inputElement.setAttribute('maxlength', this.MAX_LENGTH);
-    formElement.addEventListener('submit', onSubmit.bind(this, inputElement));
+export function prepareForm(formElement, inputElement, screen: ('start' | 'end')) {
+    inputElement.setAttribute('maxlength', MAX_LENGTH);
+    formElement.addEventListener('submit', (event) => {
+        onSubmit(event, inputElement, screen);
+    });
 }
 
 export function fillInput(inputElement) {
-    let playerName = this.get();
+    let playerName = get();
     inputElement.setAttribute('placeholder', playerName.suggestion);
     if (playerName.fromStorage) {
         inputElement.value = playerName.name;
@@ -60,22 +63,24 @@ export function hash(name, max) {
 }
 
 
-function onSubmit(inputElement, event) {
+function onSubmit(event, inputElement, screen) {
     event.preventDefault();
 
     let name = inputElement.value;
     if (!name) {
         name = inputElement.getAttribute('placeholder');
-        this.remove();
+        remove();
     } else {
         // Only save the name if its not generated
-        this.set(name);
+        set(name);
     }
-    name = name.substr(0, this.MAX_LENGTH);
+    name = name.substr(0, MAX_LENGTH);
 
 
     Backend.sendJoin({
         playerName: name
     });
+
+    Events.trigger('game.join', screen);
 }
 

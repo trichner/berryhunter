@@ -4,8 +4,7 @@ import * as Preloading from '../Preloading';
 import * as Events from '../Events';
 import {deg2rad, isFunction, dateDiff, dateDiffUnit} from '../Utils';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
-
-const LOCAL_STORAGE_KEY = 'tutorialCompleted';
+import {Account} from "../Account";
 
 
 // Ginos Vorschlag: Alle Tutorials als (animierte) Icons
@@ -79,7 +78,7 @@ function showNextStep() {
     currentStage++;
     if (stages.length <= currentStage) {
         // Last step was shown
-        localStorage.setItem(LOCAL_STORAGE_KEY, String(Date.now()));
+        Account.tutorialCompleted = Date.now();
         return;
     }
 
@@ -116,15 +115,14 @@ Preloading.renderPartial(require('./tutorial.html'), () => {
 Events.on('game.playing', function () {
     currentStage = -1;
 
-    let lastCompleted: any = localStorage.getItem(LOCAL_STORAGE_KEY);
+    let lastCompleted: any = Account.tutorialCompleted;
     if (lastCompleted !== null) {
-        lastCompleted = parseInt(lastCompleted, 10);
         // more than 14 days difference?
         if (dateDiff(Date.now(), lastCompleted, dateDiffUnit.days) > 14) {
             showNextStep();
         } else {
             // Set the tutorial as completed for today, to only show tutorials after inactivity
-            localStorage.setItem(LOCAL_STORAGE_KEY, String(Date.now()));
+            Account.tutorialCompleted = Date.now();
         }
     } else {
         // Tutorial was never completed yet

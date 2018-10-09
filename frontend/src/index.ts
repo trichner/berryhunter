@@ -9,6 +9,7 @@ import 'core-js';
 import './ts/AutoFeed';
 import './ts/BrowserConsole';
 import './ts/Controls';
+import './ts/FullScreen';
 import './ts/Game';
 import './ts/tutorial/Tutorial';
 import './ts/backend/Backend';
