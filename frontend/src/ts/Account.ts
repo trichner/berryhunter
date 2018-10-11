@@ -38,7 +38,8 @@ function getBoolean(key: string): boolean {
 }
 
 function getInt(key: string): number {
-    return parseInt(getString(key), 10);
+    let value = getString(key);
+    return value === null ? null : parseInt(value, 10);
 }
 
 function setValue(key: string, value: any) {

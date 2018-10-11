@@ -2,7 +2,7 @@
 
 import * as Preloading from '../Preloading';
 import * as Events from '../Events';
-import {deg2rad, isFunction, dateDiff, dateDiffUnit} from '../Utils';
+import {deg2rad, isFunction} from '../Utils';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import {Account} from "../Account";
 
@@ -112,20 +112,17 @@ Preloading.renderPartial(require('./tutorial.html'), () => {
     });
 });
 
+let tutorialToggle: HTMLInputElement;
+
+Events.on('startScreen.domReady', () => {
+    tutorialToggle = document.getElementById('tutorialToggle') as HTMLInputElement;
+    tutorialToggle.checked = false;
+});
+
 Events.on('game.playing', function () {
     currentStage = -1;
 
-    let lastCompleted: any = Account.tutorialCompleted;
-    if (lastCompleted !== null) {
-        // more than 14 days difference?
-        if (dateDiff(Date.now(), lastCompleted, dateDiffUnit.days) > 14) {
-            showNextStep();
-        } else {
-            // Set the tutorial as completed for today, to only show tutorials after inactivity
-            Account.tutorialCompleted = Date.now();
-        }
-    } else {
-        // Tutorial was never completed yet
+    if (tutorialToggle.checked) {
         showNextStep();
     }
 });
