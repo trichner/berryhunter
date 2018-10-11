@@ -39,8 +39,20 @@
 	}
 
 	.startFormToggle {
+		cursor: pointer;
+
 		> .switch {
 			margin-right: 12px;
+		}
+
+		> label {
+			transition: color 0.18s;
+		}
+
+		&:hover {
+			> label {
+				color: #e37313;
+			}
 		}
 	}
 

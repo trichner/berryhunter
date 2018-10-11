@@ -3,7 +3,6 @@ import * as Events from "./Events";
 import {Account} from "./Account";
 
 let fullscreenToggle: HTMLInputElement;
-let gameDomElement: HTMLCanvasElement;
 let resizeToWindow: () => void;
 
 Events.on('startScreen.domReady', () => {
@@ -13,7 +12,6 @@ Events.on('startScreen.domReady', () => {
 
 
 Events.on('game.afterSetup', (Game) => {
-    gameDomElement = Game.domElement;
     resizeToWindow = Game.resizeToWindow;
 });
 
@@ -22,7 +20,7 @@ Events.on('game.join', (screen) => {
         let fullScreenToggled = fullscreenToggle.checked;
         Account.fullScreen = fullScreenToggled;
         if (fullScreenToggled) {
-            fscreen.requestFullscreen(gameDomElement);
+            fscreen.requestFullscreen(document.body);
         }
     }
 });
