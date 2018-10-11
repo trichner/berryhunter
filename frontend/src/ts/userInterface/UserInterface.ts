@@ -160,10 +160,10 @@ export function getMinimapContainer() {
  *
  * @return {Element}
  */
-export function getChat() {
+export function getChat(): HTMLElement {
     return document.getElementById('chat');
 }
 
-export function getScoreboard() {
+export function getScoreboard(): HTMLElement {
     return document.getElementById('scoreboard');
 }

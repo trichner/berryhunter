@@ -10,8 +10,8 @@ export const KEYS = [
     13 // ENTER key
 ];
 
-let rootElement;
-let inputElement;
+let rootElement: HTMLElement;
+let inputElement: HTMLInputElement;
 
 export function setup(game, backend) {
     Game = game;
@@ -49,13 +49,13 @@ export function showMessage(entityId, message) {
 let _isOpen = false;
 
 export function show() {
-    this.rootElement.classList.remove('hidden');
-    this.inputElement.focus();
+    rootElement.classList.remove('hidden');
+    inputElement.focus();
     _isOpen = true;
 }
 
 export function hide() {
-    this.rootElement.classList.add('hidden');
+    rootElement.classList.add('hidden');
     _isOpen = false;
 }
 
