@@ -160,49 +160,46 @@ export class VitalSigns {
             if (this.damageIndicatorDuration < 0) {
                 this.hideIndicator('damage');
             } else {
+                this.hideIndicator('hunger');
+                this.hideIndicator('coldness');
                 this.showIndicator('damage', getDamageOpacity(this.damageIndicatorDuration));
             }
         } else {
+            let indicatorVisible = false;
             let relativeSatiety = this.satiety / VitalSigns.MAXIMUM_VALUES.satiety;
-            let relativeBodyHeat = this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat;
-            let lowestVitalSign, indicatorToShow;
-
-            if (relativeSatiety < relativeBodyHeat) {
-                indicatorToShow = 'hunger';
-                lowestVitalSign = relativeSatiety;
-            } else {
-                indicatorToShow = 'coldness';
-                lowestVitalSign = relativeBodyHeat;
+            if (this.showIndicatorBelowThreshold(relativeSatiety, 'hunger')) {
+                indicatorVisible = true;
             }
 
-            if (lowestVitalSign < GraphicsConfig.vitalSigns.overlayThreshold) {
-                let opacity = 1 - (lowestVitalSign / GraphicsConfig.vitalSigns.overlayThreshold);
-                this.showIndicator(indicatorToShow, opacity);
-            } else {
+            let relativeBodyHeat = this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat;
+            if (this.showIndicatorBelowThreshold(relativeBodyHeat, 'coldness')){
+                indicatorVisible = true;
+            }
+
+            if (!indicatorVisible) {
                 this.hideIndicator('hunger');
                 this.hideIndicator('coldness');
             }
         }
     }
 
-    showIndicator(indicatorName, opacity) {
-        if (this.currentIndicator !== indicatorName) {
-            this.currentIndicator = indicatorName;
-            Object.values(this.indicators).forEach(function (indicator: { visible: boolean }) {
-                indicator.visible = false;
-            });
-            this.indicators[indicatorName].visible = true;
+    private showIndicatorBelowThreshold(relativeVitalSign: number, indicator: string){
+        if (relativeVitalSign < GraphicsConfig.vitalSigns.overlayThreshold) {
+            let opacity = 1 - (relativeVitalSign / GraphicsConfig.vitalSigns.overlayThreshold);
+            this.showIndicator(indicator, opacity);
+            return true;
         }
 
+        this.hideIndicator(indicator);
+        return false;
+    }
+
+    showIndicator(indicatorName, opacity) {
+        this.indicators[indicatorName].visible = true;
         this.indicators[indicatorName].alpha = opacity;
     }
 
     hideIndicator(indicatorName) {
-        if (this.currentIndicator !== indicatorName) {
-            return;
-        }
-
-        this.currentIndicator = undefined;
         this.indicators[indicatorName].visible = false;
     }
 
