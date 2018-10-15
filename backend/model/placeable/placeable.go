@@ -12,6 +12,7 @@ import (
 )
 
 var _ = model.PlaceableEntity(&Placeable{})
+type PlaceableID uint64
 
 type Placeable struct {
 	model.BaseEntity
@@ -145,12 +146,9 @@ func (p *Placeable) Angle() float32 {
 	return phy.Vec2f{-1, 0}.AngleBetween(p.heading)
 }
 
-
-
-//func (p *Placeable) PlaceableID() placeable.PlaceableID {
-//    //is this set up?
-//	return p.definition.ID
-//}
+func (p *Placeable) PlaceableID() placeables.PlaceableID {
+	return p.definition.ID
+}
 
 
 func (p *Placeable) PlayerHitsWith(m model.PlayerEntity, item items.Item) {

@@ -49,6 +49,18 @@ type Factors struct {
 	Capacity             int
 }
 
+type PlaceableID uint64
+
+type PlaceableDefinition struct {
+	ID      PlaceableID
+	Name    string
+	Type    string
+	Factors Factors
+//	Drops   Drops
+	Body Body
+//	Generator Generator
+}
+
 type Body struct {
 	Radius float32
 	Solid  bool
