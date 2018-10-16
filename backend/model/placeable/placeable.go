@@ -5,26 +5,26 @@ import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/backend/items"
 	"github.com/trichner/berryhunter/backend/model"
-	"github.com/trichner/berryhunter/backend/model/vitals" //is this necessary or is it covered by the one above? probably not necessary
+	"github.com/trichner/berryhunter/backend/model/vitals"
 	"github.com/trichner/berryhunter/backend/phy"
 	"log"
 	"math"
 )
 
 var _ = model.PlaceableEntity(&Placeable{})
-type PlaceableID uint64
+
+//type PlaceableID uint64
 
 type Placeable struct {
 	model.BaseEntity
-	item items.Item
-    health  vitals.VitalSign
-    definition *placeables.PlaceableDefinition
+	item       items.Item
+	health     vitals.VitalSign
+	definition *items.ItemDefinition
 
 	radiator      *model.HeatRadiator
 	ticksLeft     int
 	statusEffects model.StatusEffects
 }
-
 
 func (p *Placeable) Update(dt float32) bool {
 	p.ticksLeft -= 1
@@ -34,18 +34,19 @@ func (p *Placeable) Update(dt float32) bool {
 		p.ticksLeft = 0
 	}
 
-	for c := range auraCollisions {
-		p, ok := c.Shape().UserData.(model.PlayerEntity)
-		if ok {
-			if p.IsGod() {
-				continue
-			}
-			if p.definition.Factors.DamageFraction != 0 {
-				h := p.VitalSigns().Health.SubFraction(p.definition.Factors.DamageFraction)
-				p.VitalSigns().Health = h
-			}
-		}
-	}
+	// will be required later to some capacity
+	//	for c := range auraCollisions {
+	//		p, ok := c.Shape().UserData.(model.PlayerEntity)
+	//		if ok {
+	//			if p.IsGod() {
+	//				continue
+	//			}
+	//			if p.definition.Factors.DamageFraction != 0 {
+	//				h := p.VitalSigns().Health.SubFraction(p.definition.Factors.DamageFraction)
+	//				p.VitalSigns().Health = h
+	//			}
+	//		}
+	//	}
 
 	return p.health > 0
 }
@@ -65,15 +66,13 @@ func (p *Placeable) SetPosition(pos phy.Vec2f) {
 	}
 }
 
-
 func (p *Placeable) Bodies() model.Bodies {
 	b := p.BaseEntity.Bodies()
 	if p.radiator != nil {
-		b = append(b, p.radiator.Body)
+		return append(b, p.radiator.Body)
 	}
-	return b
+    return b
 }
-
 
 func (p *Placeable) Item() items.Item {
 	return p.item
@@ -83,22 +82,20 @@ func (p *Placeable) StatusEffects() *model.StatusEffects {
 	return &p.statusEffects
 }
 
-
-//func NewMob(d *mobs.MobDefinition) *Mob {
-//entityType, ok := types[d.Name]
 func NewPlaceable(item items.Item) (*Placeable, error) {
-
-	if item.ItemDefinition == nil {
+    d := item.ItemDefinition
+    
+	if d == nil {
 		return nil, fmt.Errorf("No resource provided.")
 	}
 
-	if item.ItemDefinition.Body == nil {
+	if d.Body == nil {
 		return nil, fmt.Errorf("ItemDefinition is missing body property.")
 	}
 
 	body := phy.NewCircle(phy.VEC2F_ZERO, item.Body.Radius)
 	if item.Body.Solid {
-		body.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerViewportCollision)
+		body.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerActionCollision | model.LayerViewportCollision)
 	} else {
 		body.Shape().Layer = int(model.LayerViewportCollision)
 		body.Shape().IsSensor = true
@@ -131,9 +128,9 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	p := &Placeable{
 		BaseEntity:    base,
 		item:          item,
-		radiator:      radiator,
         health:        vitals.Max,
-        definition:    d,
+		definition:    d,
+		radiator:      radiator,
 		ticksLeft:     ticksLeft,
 		statusEffects: model.NewStatusEffects(),
 	}
@@ -141,19 +138,18 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	return p, nil
 }
 
-func (p *Placeable) Angle() float32 {
-	// Does this control the angle its hit at or the angle it moves at?
-	return phy.Vec2f{-1, 0}.AngleBetween(p.heading)
+// did you mean this wasnt necessary?
+//func (p *Placeable) PlaceableID() placeables.PlaceableID {
+//	return p.definition.ID
+//}
+
+func (p *Placeable) Health() vitals.VitalSign {
+	return p.health
 }
 
-func (p *Placeable) PlaceableID() placeables.PlaceableID {
-	return p.definition.ID
-}
-
-
-func (p *Placeable) PlayerHitsWith(m model.PlayerEntity, item items.Item) {
+func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	log.Printf("🎯")
-
+    
 	vulnerability := p.definition.Factors.Vulnerability
 	if vulnerability == 0 {
 		vulnerability = 1
@@ -164,11 +160,11 @@ func (p *Placeable) PlayerHitsWith(m model.PlayerEntity, item items.Item) {
 		p.health = p.health.SubFraction(dmgFraction)
 		p.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
 
-		 //is it dead?
-		if p.health <= 0 {
-			for _, i := range p.definition.Drops {
-				m.Inventory().AddItem(i)
-			}
-		}
+		// can be reused, when drops are set for placeables
+//		if p.health <= 0 {
+//			for _, i := range p.definition.Drops {
+//				player.Inventory().AddItem(i)
+//			}
+//		}
 	}
 }

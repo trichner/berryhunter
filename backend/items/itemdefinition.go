@@ -33,6 +33,7 @@ type Recipe struct {
 }
 
 type Factors struct {
+    Vulnerability  float32
 	Food            float32
 	Damage          float32
 	StructureDamage float32
@@ -47,18 +48,6 @@ type Factors struct {
 	// Resource
 	ReplenishProbability float32
 	Capacity             int
-}
-
-type PlaceableID uint64
-
-type PlaceableDefinition struct {
-	ID      PlaceableID
-	Name    string
-	Type    string
-	Factors Factors
-//	Drops   Drops
-	Body Body
-//	Generator Generator
 }
 
 type Body struct {
@@ -96,6 +85,7 @@ type itemDefinition struct {
 	Type string `json:"type"`
 	Name string `json:"name"`
 	Factors struct {
+        Vulnerability   float32 `json:"vulnerability"`
 		Food            float32 `json:"food"`
 		Damage          float32 `json:"damage"`
 		StructureDamage float32 `json:"structureDamage"`
@@ -200,16 +190,17 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		Name: i.Name,
 		Slot: slot,
 		Factors: Factors{
-			Food:                 i.Factors.Food,
-			Damage:               i.Factors.Damage,
-			StructureDamage:      i.Factors.StructureDamage,
-			Yield:                i.Factors.Yield,
-			MinYield:             i.Factors.MinYield,
-			HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
-			HeatRadius:           i.Factors.HeatRadius,
-			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
-			ReplenishProbability: i.Factors.ReplenishProbabilityPerS / constant.TicksPerSecond,
-			Capacity:             i.Factors.Capacity,
+                Food:                 i.Factors.Food,
+                Vulnerability:        i.Factors.Vulnerability,
+                Damage:               i.Factors.Damage,
+                StructureDamage:      i.Factors.StructureDamage,
+                Yield:                i.Factors.Yield,
+                MinYield:             i.Factors.MinYield,
+                HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
+                HeatRadius:           i.Factors.HeatRadius,
+                DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
+                ReplenishProbability: i.Factors.ReplenishProbabilityPerS / constant.TicksPerSecond,
+                Capacity:             i.Factors.Capacity,
 		},
 		Recipe: recipe,
 		Body:   body,
