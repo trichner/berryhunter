@@ -70,7 +70,6 @@ export class VitalSigns {
 
         let indicators = {
             damage: createIndicator(VitalSigns.damageIndicator.svg),
-            // indicators.damage.visible = true;
             hunger: createIndicator(VitalSigns.hungerIndicator.svg),
             coldness: createIndicator(VitalSigns.coldnessIndicator.svg),
         };
@@ -196,7 +195,7 @@ export class VitalSigns {
 
     showIndicator(indicatorName, opacity) {
         this.indicators[indicatorName].visible = true;
-        this.indicators[indicatorName].alpha = opacity;
+        this.indicators[indicatorName].filters[0].alpha = opacity;
     }
 
     hideIndicator(indicatorName) {
@@ -230,6 +229,7 @@ function createIndicator(svgGraphic) {
     indicatorSprite.width = window.innerWidth;
     indicatorSprite.height = window.innerHeight;
     indicatorSprite.visible = false;
+    indicatorSprite.filters = [ new PIXI.filters.AlphaFilter()];
 
     return indicatorSprite;
 }
