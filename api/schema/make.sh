@@ -6,6 +6,6 @@ flatc --go *.fbs
 
 echo "Building JavaScript bindings."
 rm -rf "./js"
-flatc --ts --gen-all --no-fb-import --no-ts-reexport -o js/ berryhunterApi.fbs
+flatc --ts --gen-all --no-fb-import --no-ts-reexport -o js/ berryhunter.fbs
 
 echo "Bindings updated."

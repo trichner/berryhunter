@@ -11,6 +11,7 @@ import (
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/chieftaind/client"
 	"log"
+	"time"
 )
 
 type ScoreboardSystem struct {
@@ -90,15 +91,20 @@ func (d *ScoreboardSystem) updateChieftain() {
 
 //var uuidNs = uuid.Must(uuid.NewRandom())
 
+var serverId = time.Now().UnixNano()
+
 func id2uuid(id uint64) string {
 
 	idBytes := make([]byte, 8)
-	binary.BigEndian.PutUint64(idBytes, id)
+	binary.LittleEndian.PutUint64(idBytes, id)
 
-	idStr := ""
-	idStr = hex.EncodeToString(idBytes[:6])
-//	return uuid.NewSHA1(uuidNs, idBytes).String()
-	return fmt.Sprintf("c3fea9f7-26b9-4719-b585-%s", idStr)
+	serverBytes := make([]byte, 8)
+	binary.LittleEndian.PutUint64(serverBytes, uint64(serverId))
+
+	idStr := hex.EncodeToString(idBytes)
+	serverStr := hex.EncodeToString(serverBytes)
+
+	return fmt.Sprintf("1v%s%s", serverStr, idStr)
 }
 
 func (d *ScoreboardSystem) Remove(e ecs.BasicEntity) {
