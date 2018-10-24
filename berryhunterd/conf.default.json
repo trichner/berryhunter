@@ -1,0 +1,24 @@
+{
+  "server": {
+    "port": 2000,
+    "path": "/game"
+  },
+  "chieftain": {
+    "addr":"127.0.0.1:3443"
+  },
+  "game": {
+    "coldFractionDayPerSecond": 0.015,
+    "coldFractionNightPerSecond": 0.025,
+    "heatFractionPerSecond": 0.15,
+    "player": {
+      "freezingDamageTickFraction": 0.001,
+      "starveDamageTickFraction": 0.001,
+      "satietyLossTickFraction": 0.0002,
+      "healthGainSatietyThreshold": 0.5,
+      "healthGainTemperatureThreshold": 0.5,
+      "healthGainTick": 0.0006,
+      "healthGainSatietyLossTickFraction": 0.0002,
+      "walkingSpeedPerTick": 0.055
+    }
+  }
+}

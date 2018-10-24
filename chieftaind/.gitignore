@@ -1,0 +1,3 @@
+*.db
+server.crt
+server.key
