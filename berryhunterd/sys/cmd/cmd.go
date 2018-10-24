@@ -3,14 +3,15 @@ package cmd
 import (
 	"engo.io/ecs"
 	"fmt"
-	"github.com/trichner/berryhunter/backend/items"
-	"github.com/trichner/berryhunter/backend/model"
+	"github.com/google/flatbuffers/go"
+	"github.com/trichner/berryhunter/berryhunterd/codec"
+	"github.com/trichner/berryhunter/berryhunterd/items"
+	"github.com/trichner/berryhunter/berryhunterd/minions"
+	"github.com/trichner/berryhunter/berryhunterd/model"
+	"github.com/trichner/berryhunter/berryhunterd/phy"
 	"log"
 	"strconv"
 	"strings"
-	"github.com/trichner/berryhunter/backend/phy"
-	"github.com/trichner/berryhunter/backend/codec"
-	"github.com/trichner/berryhunter/backend/minions"
 )
 
 var commands = map[string]Command{
