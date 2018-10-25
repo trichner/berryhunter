@@ -6,7 +6,6 @@ import * as Events from '../../Events';
 import * as DetectBrowser from 'detect-browser';
 import * as Preloading from '../../Preloading';
 import * as Credits from './Credits';
-import {Rating} from "../../rating/Rating";
 
 
 let _progress = 0;
@@ -46,7 +45,8 @@ export function onDomReady() {
     chromeWarning = document.getElementById('chromeWarning');
 
     let browser = DetectBrowser.detect();
-    if (browser.name !== 'chrome') {
+    const supportedBrowsers = ['chrome', 'firefox'];
+    if (!supportedBrowsers.includes(browser.name)) {
         chromeWarning.classList.remove('hidden');
         startForm.classList.add('hidden');
         document.getElementById('continueAnywayButton').addEventListener('click', (event) => {
