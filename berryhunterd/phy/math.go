@@ -189,3 +189,9 @@ func NewRotMat2f(alpha float32) Mat2f {
 		c, -s, s, c,
 	}
 }
+
+// Lerp returns a linear interpolated value between a and b
+// at a given time 0 <= t <= 1
+func Lerp(a, b Vec2f, t float32) Vec2f {
+	return a.Mult(1 - t).Add(b.Mult(t))
+}

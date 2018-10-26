@@ -5,11 +5,12 @@ import (
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/items/mobs"
 	"github.com/trichner/berryhunter/berryhunterd/model"
+	"github.com/trichner/berryhunter/berryhunterd/model/ai"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
 	"log"
-	"math/rand"
 	"math"
+	"math/rand"
 )
 
 var _ = model.MobEntity(&Mob{})
@@ -22,7 +23,7 @@ var types = func() map[string]model.EntityType {
 	return t
 }()
 
-func NewMob(d *mobs.MobDefinition) *Mob {
+func NewMob(d *mobs.MobDefinition, pos phy.Vec2f) *Mob {
 	entityType, ok := types[d.Name]
 	if !ok {
 		log.Fatalf("Mob type not found: %d/%s", d.ID, d.Name)
@@ -48,8 +49,9 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 		wanderAcceleration: phy.Vec2f{d.Factors.TurnRate, 0},
 		wanderDeltaPhi:     2 * math.Pi * d.Factors.DeltaPhi,
 		// TODO use walkingSpeedPerTick from global config
-		velocity:           0.055 * d.Factors.Speed,
-		statusEffects:      model.NewStatusEffects(),
+		velocity:      0.055 * d.Factors.Speed,
+		statusEffects: model.NewStatusEffects(),
+		behaviour:     newMobAi(d, pos, rand.New(rand.NewSource(int64(base.Basic().ID())))),
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -70,6 +72,8 @@ type Mob struct {
 	wanderAcceleration phy.Vec2f
 	wanderDeltaPhi     float32
 	velocity           float32
+
+	behaviour *ai.AI
 
 	statusEffects model.StatusEffects
 }
@@ -112,9 +116,13 @@ func (m *Mob) Update(dt float32) bool {
 	// - calculate collision response on 'horizon' circle and use as 'desired' heading
 
 	// wandering
-	m.heading, m.wanderAcceleration = wander(m.heading, m.wanderAcceleration, m.wanderDeltaPhi, m.rand)
-	pos := m.Position().Add(m.heading.Mult(m.velocity))
-	m.SetPosition(pos)
+	//m.heading, m.wanderAcceleration = wander(m.heading, m.wanderAcceleration, m.wanderDeltaPhi, m.rand)
+	//pos := m.Position().Add(m.heading.Mult(m.velocity))
+	//m.setPosition(pos)
+
+	m.behaviour.Next()
+	m.setPosition(m.behaviour.Position())
+	m.heading = m.behaviour.Velocity()
 
 	return m.health > 0
 }
@@ -141,7 +149,7 @@ func wander(heading, acceleration phy.Vec2f, deltaPhi float32, r *rand.Rand) (ne
 	return h.Normalize(), acceleration
 }
 
-func (m *Mob) SetPosition(p phy.Vec2f) {
+func (m *Mob) setPosition(p phy.Vec2f) {
 	m.Body.SetPosition(p)
 	m.damageAura.SetPosition(p)
 }

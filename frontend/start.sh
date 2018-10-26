@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yarn run start --env.port=2001
+exec yarn run start --env.port=2001
