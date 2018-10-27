@@ -1,0 +1,29 @@
+FROM golang:1.11 AS go_builder
+
+ENV GOPATH=/go
+WORKDIR /go/src/github.com/trichner/berryhunter/
+
+COPY common/ common/
+COPY chieftaind/ chieftaind/
+COPY api/ api/
+
+WORKDIR /go/src/github.com/trichner/berryhunter/chieftaind/
+RUN go get -d -v
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o chieftaind .
+
+# ---- actual image
+FROM alpine:latest
+
+#ARG CONF=berryhunterd/conf.docker.json
+
+WORKDIR /root/
+
+# copy backend together
+WORKDIR /root/
+COPY --from=go_builder /go/src/github.com/trichner/berryhunter/chieftaind/chieftaind .
+#COPY $CONF conf.json
+
+EXPOSE 3443
+EXPOSE 3080
+
+CMD ["./chieftaind"]

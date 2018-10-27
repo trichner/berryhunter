@@ -1,0 +1,3 @@
+k8s/
+**/node_modules/
+webhooks/
