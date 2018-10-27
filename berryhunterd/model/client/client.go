@@ -1,6 +1,7 @@
 package client
 
 import (
+	"github.com/google/uuid"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/berryhunterd/codec"
 	"github.com/trichner/berryhunter/berryhunterd/model"
@@ -16,6 +17,11 @@ type client struct {
 	inputs chan *model.PlayerInput
 	cheats chan *model.Cheat
 	chat   chan *model.ChatMessage
+	uuid   uuid.UUID
+}
+
+func (c *client) UUID() uuid.UUID {
+	return c.uuid
 }
 
 func (c *client) NextInput() *model.PlayerInput {
@@ -109,6 +115,7 @@ func NewClient(c *net.Client) model.Client {
 		joins:  make(chan *model.Join, 2),
 		cheats: make(chan *model.Cheat, 2),
 		chat:   make(chan *model.ChatMessage, 2),
+		uuid:   uuid.New(),
 	}
 
 	c.OnMessage(func(client *net.Client, bytes []byte) {

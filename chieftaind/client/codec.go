@@ -6,9 +6,9 @@ import (
 )
 
 type Player struct {
-	Uuid string
+	Uuid  string
 	Name  string
-	Score uint
+	Score uint64
 }
 
 type Scoreboard []Player
@@ -21,7 +21,7 @@ func clientMessageWrapFlatbufMarshal(builder *flatbuffers.Builder, body flatbuff
 	return ChieftainApi.ClientMessageEnd(builder)
 }
 
-func playerMarshal(builder *flatbuffers.Builder, p *Player) flatbuffers.UOffsetT{
+func playerMarshal(builder *flatbuffers.Builder, p *Player) flatbuffers.UOffsetT {
 
 	uuid := builder.CreateString(p.Uuid)
 	name := builder.CreateString(p.Name)
@@ -29,7 +29,7 @@ func playerMarshal(builder *flatbuffers.Builder, p *Player) flatbuffers.UOffsetT
 	ChieftainApi.ScoreboardPlayerStart(builder)
 	ChieftainApi.ScoreboardPlayerAddUuid(builder, uuid)
 	ChieftainApi.ScoreboardPlayerAddName(builder, name)
-	ChieftainApi.ScoreboardPlayerAddScore(builder, uint64(p.Score))
+	ChieftainApi.ScoreboardPlayerAddScore(builder, p.Score)
 	return ChieftainApi.ScoreboardPlayerEnd(builder)
 }
 

@@ -5,23 +5,24 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestNewPlayerDao(t *testing.T) {
 
-
 	p1 := Player{
-		Uuid:  "df8299c1-eb30-462d-9a86-ec7f8d2bca82",
-		Name:  "Jimmy Belair",
-		Score: 10,
+		Uuid:    "df8299c1-eb30-462d-9a86-ec7f8d2bca82",
+		Name:    "Jimmy Belair",
+		Score:   10,
+		Updated: time.Now().Unix(),
 	}
 
 	p2 := Player{
-		Uuid:  "06cb0e74-7ab9-407b-9bf0-a138335b807a",
-		Name:  "Bob Eiger",
-		Score: 11,
+		Uuid:    "06cb0e74-7ab9-407b-9bf0-a138335b807a",
+		Name:    "Bob Eiger",
+		Score:   11,
+		Updated: time.Now().Unix(),
 	}
-
 
 	ds, err := NewDataStore()
 	assert.NoError(t, err)

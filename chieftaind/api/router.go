@@ -7,6 +7,7 @@ import (
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"log"
 	"net/http"
+	"time"
 )
 
 func NewRouter(ds dao.DataStore, p dao.PlayerDao) http.Handler {
@@ -50,17 +51,21 @@ func GetScoreboardHandler(pdao dao.PlayerDao) http.HandlerFunc {
 func mapPlayersToDto(players []dao.Player) []playerDto {
 	jsonPlayers := make([]playerDto, 0, len(players))
 	for _, p := range players {
+
+		t := time.Unix(p.Updated, 0).UTC().Format(time.RFC3339)
 		jsonPlayers = append(jsonPlayers, playerDto{
-			Uuid:  p.Uuid,
-			Name:  p.Name,
-			Score: p.Score,
+			Uuid:    p.Uuid,
+			Name:    p.Name,
+			Score:   p.Score,
+			Updated: t,
 		})
 	}
 	return jsonPlayers
 }
 
 type playerDto struct {
-	Uuid  string `json:"uuid"`
-	Name  string `json:"name"`
-	Score uint   `json:"score"`
+	Uuid    string `json:"uuid"`
+	Name    string `json:"name"`
+	Score   uint   `json:"score"`
+	Updated string `json:"updated"`
 }

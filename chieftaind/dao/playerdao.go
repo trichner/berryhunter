@@ -14,6 +14,8 @@ type Player struct {
 
 	Name  string `db:"name"`
 	Score uint   `db:"score"`
+
+	Updated int64 `db:"updated"`
 }
 
 type PlayerDao interface {
@@ -52,10 +54,10 @@ func (p *playerDao) UpsertPlayer(ctx context.Context, pl Player) error {
 	}
 
 	//uid := uuid.New().String()
-	_, err := tx.ExecContext(ctx,`
-			INSERT INTO player (uuid, name, score) VALUES ($1, $2, $3)
-			ON CONFLICT(uuid) DO UPDATE SET name=$2, score=$3
-			`, pl.Uuid, pl.Name, pl.Score)
+	_, err := tx.ExecContext(ctx, `
+			INSERT INTO player (uuid, name, score, updated) VALUES ($1, $2, $3, $4)
+			ON CONFLICT(uuid) DO UPDATE SET name=$2, score=$3, updated=$4
+			`, pl.Uuid, pl.Name, pl.Score, pl.Updated)
 	return err
 }
 

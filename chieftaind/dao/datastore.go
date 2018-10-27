@@ -10,19 +10,19 @@ CREATE TABLE IF NOT EXISTS player (
   id INTEGER PRIMARY KEY, -- no AUTO_INCREMENT necessary in sqlite3
   uuid VARCHAR(64) NOT NULL UNIQUE,
   name VARCHAR(1024) NOT NULL DEFAULT '',
-  score BIGINT(64) NOT NULL DEFAULT 0
+  score BIGINT(64) NOT NULL DEFAULT 0,
+  updated INTEGER NOT NULL DEFAULT 0
 )`
 
 type TransactifiedFunc func(ctx context.Context) error
 
 type DataStore interface {
-
 	Transact(ctx context.Context, t TransactifiedFunc) error
 	Close() error
 }
 
-
 type ctxKey int
+
 const txKey = ctxKey(0)
 
 type dataStore struct {
@@ -31,7 +31,7 @@ type dataStore struct {
 
 func NewDataStore() (DataStore, error) {
 
-	db, err := sqlx.Connect("sqlite3", "./test.db")
+	db, err := sqlx.Connect("sqlite3", "./chieftain.db")
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,6 @@ func (d *dataStore) Transact(ctx context.Context, t TransactifiedFunc) (err erro
 	err = t(ctx)
 	return
 }
-
 
 func (d *dataStore) Close() error {
 	return d.db.Close()

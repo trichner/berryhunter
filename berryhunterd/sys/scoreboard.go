@@ -71,7 +71,7 @@ func (d *ScoreboardSystem) Update(dt float32) {
 		c.Client().SendMessage(builder.FinishedBytes())
 	}
 
-	//d.updateChieftain()
+	d.updateChieftain()
 }
 
 func (d *ScoreboardSystem) updateChieftain() {
@@ -80,8 +80,8 @@ func (d *ScoreboardSystem) updateChieftain() {
 	for _, p := range d.players {
 		players = append(players, client.Player{
 			Name:  p.Name(),
-			Uuid:  id2uuid(p.Basic().ID()),
-			Score: uint(p.Stats().BirthTick), //TODO will overflow
+			Uuid:  p.Client().UUID().String(),
+			Score: uint64(d.g.Ticks() - p.Stats().BirthTick), //TODO will overflow
 		})
 	}
 

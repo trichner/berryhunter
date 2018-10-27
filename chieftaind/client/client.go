@@ -10,7 +10,7 @@ import (
 )
 
 type Client struct {
-	tx chan *Scoreboard
+	tx   chan *Scoreboard
 	done chan struct{}
 }
 
@@ -20,24 +20,24 @@ type Conn interface {
 
 type Dialer func() (Conn, error)
 
-func Connect(addr string) (*Client, error){
+func Connect(addr string) (*Client, error) {
 
 	conf := &tls.Config{
 		//TODO(Thomas) for debugging...
 		InsecureSkipVerify: true,
 	}
 
-	d := func() (Conn, error){
+	d := func() (Conn, error) {
 		return tls.Dial("tcp", addr, conf)
 	}
 	return ConnectWithDialer(d)
 }
 
-func ConnectWithDialer(d Dialer) (*Client, error){
+func ConnectWithDialer(d Dialer) (*Client, error) {
 
 	c := &Client{
-		tx:make(chan *Scoreboard, 128),
-		done:make(chan struct{}),
+		tx:   make(chan *Scoreboard, 128),
+		done: make(chan struct{}),
 	}
 
 	go func() {
@@ -69,13 +69,13 @@ func (c *Client) Write(s *Scoreboard) {
 // Close closes the connection, may panic if already closed!
 func (c *Client) Close() error {
 	close(c.tx)
-	<- c.done
+	<-c.done
 	return nil
 }
 
 type frameHandler func(f framer.Framer) error
 
-func connect(d Dialer,  fh frameHandler) {
+func connect(d Dialer, fh frameHandler) {
 
 	conn, err := d()
 	if err != nil {

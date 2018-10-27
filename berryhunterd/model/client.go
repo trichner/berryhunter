@@ -1,5 +1,7 @@
 package model
 
+import "github.com/google/uuid"
+
 // Client is the interface representing the underlying
 // connection to a player/client.
 type Client interface {
@@ -25,4 +27,7 @@ type Client interface {
 
 	// Close closes the connection and disconnects the client
 	Close()
+
+	// UUID returns the id of the connected user
+	UUID() uuid.UUID
 }
