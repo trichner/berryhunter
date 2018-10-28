@@ -43,7 +43,7 @@
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.0",
     "svg-inline-loader": "^0.8.0",
-    "typescript": "^3.0.1",
+    "typescript": "3.0.x",
     "url-loader": "^1.1.1",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
