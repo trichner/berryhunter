@@ -3,6 +3,7 @@ FROM node:latest AS builder
 # load dependencies for cacheability
 WORKDIR /app/frontend/
 COPY frontend/package.json .
+COPY frontend/yarn.lock .
 RUN yarn install
 
 # copy sources
