@@ -1,0 +1,33 @@
+{
+  "id": 9,
+  "name": "IronTool",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.05,
+    "yield": 5
+  },
+  "recipe": {
+    "craftTimeInSeconds": 30,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 110
+      },
+      {
+        "item": "Bronze",
+        "count": 60
+      },
+      {
+        "item": "Iron",
+        "count": 30
+      },
+      {
+        "item": "BronzeTool",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": 15,
+  "name": "IronSpear",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.15,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 30,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 250
+      },
+      {
+        "item": "Feather",
+        "count": 5
+      },
+      {
+        "item": "Iron",
+        "count": 50
+      },
+      {
+        "item": "BronzeSpear",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

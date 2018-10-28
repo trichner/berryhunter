@@ -1,0 +1,29 @@
+{
+  "id": 13,
+  "name": "StoneSpear",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.05,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 15,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 80
+      },
+      {
+        "item": "Stone",
+        "count": 20
+      },
+      {
+        "item": "WoodClub",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

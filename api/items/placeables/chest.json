@@ -1,0 +1,33 @@
+{
+  "name": "Chest",
+  "id": 22,
+  "type": "PLACEABLE",
+  "factors": {
+    "vulnerability": 5.0,
+    "capacity": 1
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 60
+      },
+      {
+        "item": "Stone",
+        "count": 20
+      },
+      {
+        "item": "Bronze",
+        "count": 10
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  },
+  "body": {
+    "solid": false,
+    "radius": 0.292
+  }
+}

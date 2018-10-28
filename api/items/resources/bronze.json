@@ -1,0 +1,15 @@
+{
+  "id": 4,
+  "name": "Bronze",
+  "type": "RESOURCE",
+  "factors": {
+    "replenishProbabilityPerSecond": 0.4,
+    "minimumYield": 2,
+    "capacity": 30
+  },
+  "body": {
+    "minRadius": 0.2,
+    "maxRadius": 0.4,
+    "solid": true
+  }
+}

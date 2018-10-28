@@ -1,0 +1,25 @@
+{
+  "id": 2,
+  "name": "Mammoth",
+  "type": "MOB",
+  "factors": {
+    "vulnerability": 0.5,
+    "damageFraction": 0.001,
+    "speed": 0.2,
+    "deltaPhi": 0.1,
+    "turnRate": 0.04
+  },
+  "drops": [
+    {
+      "item": "RawMeat",
+      "count": 3
+    }
+  ],
+  "body": {
+    "radius": 0.5,
+    "damageRadius": 0.85
+  },
+  "generator": {
+    "weight": 20
+  }
+}

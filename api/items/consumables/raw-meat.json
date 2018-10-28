@@ -1,0 +1,8 @@
+{
+  "name": "RawMeat",
+  "id": 26,
+  "type": "CONSUMABLE",
+  "factors": {
+    "food": 0.1
+  }
+}

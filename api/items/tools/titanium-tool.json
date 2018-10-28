@@ -1,0 +1,33 @@
+{
+  "id": 48,
+  "name": "TitaniumTool",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.08,
+    "yield": 6
+  },
+  "recipe": {
+    "craftTimeInSeconds": 50,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 120
+      },
+      {
+        "item": "Iron",
+        "count": 40
+      },
+      {
+        "item": "Titanium",
+        "count": 30
+      },
+      {
+        "item": "IronTool",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": 11,
+  "name": "BronzeSword",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.1,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 20,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 80
+      },
+      {
+        "item": "Stone",
+        "count": 60
+      },
+      {
+        "item": "Bronze",
+        "count": 50
+      },
+      {
+        "item": "StoneClub",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

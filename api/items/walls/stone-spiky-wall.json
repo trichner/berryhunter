@@ -1,0 +1,29 @@
+{
+  "name": "StoneSpikyWall",
+  "id": 33,
+  "type": "PLACEABLE",
+  "factors": {
+    "vulnerability": 0.01,
+    "damagePerSecond": 0.10
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Stone",
+        "count": 35
+      },
+      {
+        "item": "StoneWall",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  },
+  "body": {
+    "solid": true,
+    "radius": 0.417
+  }
+}

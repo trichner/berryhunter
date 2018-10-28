@@ -1,0 +1,33 @@
+{
+  "id": 12,
+  "name": "IronSword",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.15,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 40,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 120
+      },
+      {
+        "item": "Bronze",
+        "count": 80
+      },
+      {
+        "item": "Iron",
+        "count": 50
+      },
+      {
+        "item": "BronzeSword",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

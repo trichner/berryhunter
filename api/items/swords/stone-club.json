@@ -1,0 +1,29 @@
+{
+  "id": 10,
+  "name": "StoneClub",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.05,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 15,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 60
+      },
+      {
+        "item": "Stone",
+        "count": 30
+      },
+      {
+        "item": "WoodClub",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

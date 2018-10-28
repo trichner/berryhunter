@@ -1,0 +1,26 @@
+{
+  "name": "BerryBowl",
+  "id": 28,
+  "type": "CONSUMABLE",
+  "factors": {
+    "food": 1.0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Berry",
+        "count": 5
+      },
+      {
+        "item": "Wood",
+        "count": 10
+      }
+    ],
+    "tools": [
+      "Campfire",
+      "BigCampfire",
+      "Furnace"
+    ]
+  }
+}

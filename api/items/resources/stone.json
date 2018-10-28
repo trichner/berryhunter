@@ -1,0 +1,15 @@
+{
+  "id": 3,
+  "name": "Stone",
+  "type": "RESOURCE",
+  "factors": {
+    "replenishProbabilityPerSecond": 0.5,
+    "minimumYield": 1,
+    "capacity": 45
+  },
+  "body": {
+    "minRadius": 0.2,
+    "maxRadius": 0.5,
+    "solid": true
+  }
+}

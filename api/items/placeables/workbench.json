@@ -1,0 +1,25 @@
+{
+  "name": "Workbench",
+  "id": 21,
+  "type": "PLACEABLE",
+  "factors": {
+    "vulnerability": 0.01
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 40
+      },
+      {
+        "item": "Stone",
+        "count": 20
+      }
+    ]
+  },
+  "body": {
+    "solid": false,
+    "radius": 0.542
+  }
+}

@@ -1,0 +1,4 @@
+*.db
+server.crt
+server.key
+chieftaind

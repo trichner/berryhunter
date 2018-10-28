@@ -1,0 +1,33 @@
+{
+  "id": 14,
+  "name": "BronzeSpear",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.1,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 20,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 120
+      },
+      {
+        "item": "Stone",
+        "count": 50
+      },
+      {
+        "item": "Bronze",
+        "count": 40
+      },
+      {
+        "item": "StoneSpear",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

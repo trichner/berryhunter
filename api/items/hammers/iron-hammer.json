@@ -1,0 +1,34 @@
+{
+  "id": 18,
+  "name": "IronHammer",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.10,
+    "structureDamage": 5,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 30,
+    "materials": [
+      {
+        "item": "Stone",
+        "count": 200
+      },
+      {
+        "item": "Bronze",
+        "count": 150
+      },
+      {
+        "item": "Iron",
+        "count": 80
+      },
+      {
+        "item": "BronzeHammer",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

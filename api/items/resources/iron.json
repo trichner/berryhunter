@@ -1,0 +1,15 @@
+{
+  "id": 5,
+  "name": "Iron",
+  "type": "RESOURCE",
+  "factors": {
+    "replenishProbabilityPerSecond": 0.3,
+    "minimumYield": 3,
+    "capacity": 20
+  },
+  "body": {
+    "minRadius": 0.2,
+    "maxRadius": 0.3,
+    "solid": true
+  }
+}

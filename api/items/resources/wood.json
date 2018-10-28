@@ -1,0 +1,15 @@
+{
+  "id": 2,
+  "name": "Wood",
+  "type": "RESOURCE",
+  "factors": {
+    "replenishProbabilityPerSecond": 0.6,
+    "minimumYield": 0,
+    "capacity": 50
+  },
+  "body": {
+    "minRadius": 0.40,
+    "maxRadius": 1.0,
+    "solid": true
+  }
+}

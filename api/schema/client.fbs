@@ -1,24 +1,33 @@
 include "common.fbs";
 
-namespace DeathioApi;
-
-enum Item: ubyte {
-	Fist = 0,
-	WoodClub,
-	StoneTool,
-	BronzeTool,
-	IronTool
-}
+namespace BerryhunterApi;
 
 table Action {
-	item:Item;
+	item:ubyte;
+	actionType:ActionType = Primary;
 }
 
 table Input {
-  tick:ulong;
-  movement:Vec2f;
-  rotation:float;
-  action:Action;
+    tick:ulong;
+    movement:Vec2f;
+    rotation:float;
+    action:Action;
 }
 
-root_type Input;
+table Join {
+    player_name:string;
+}
+
+table Cheat {
+    token:string;
+    command:string;
+}
+
+table ChatMessage {
+    message:string;
+}
+
+union ClientMessageBody { Input, Join, Cheat, ChatMessage }
+table ClientMessage { body:ClientMessageBody; }
+
+root_type ClientMessage;

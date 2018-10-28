@@ -1,0 +1,34 @@
+{
+  "id": 17,
+  "name": "BronzeHammer",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.08,
+    "structureDamage": 4,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 20,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 160
+      },
+      {
+        "item": "Stone",
+        "count": 120
+      },
+      {
+        "item": "Bronze",
+        "count": 80
+      },
+      {
+        "item": "StoneHammer",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+#endScreen {
+	display: none;
+
+	background-color: @backgroundColor;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	opacity: 0;
+
+	&.showing {
+		display: block;
+
+		@fadeInScreenDuration: 0.5s;
+		@fadeInTitleDuration: 5s;
+
+		animation: endScreen-fadeIn @fadeInScreenDuration forwards ease-in-out;
+
+		.title {
+			animation: endScreen-fadeIn @fadeInTitleDuration (@fadeInScreenDuration / 2) forwards ease-in-out,
+			endScreen-title (@fadeInTitleDuration / 2) (@fadeInScreenDuration / 2) forwards ease-in-out;
+		}
+
+		> .obituary {
+			animation: endScreen-fadeIn 2s ((@fadeInTitleDuration + @fadeInScreenDuration) / 3) forwards ease-in-out;
+		}
+
+		> .playerForm {
+			animation: endScreen-fadeIn 0.18s ((@fadeInTitleDuration + @fadeInScreenDuration) / 2) forwards ease-in-out;
+		}
+	}
+
+	> .titleContainer {
+		margin-top: 12vh;
+		background-color: @backgroundColor;
+		height: 22vh; // use height so that the font can appear from
+		// the middle without resizing the background
+	}
+
+	.title {
+		text-align: center;
+		margin: 0;
+
+		position: relative;
+		top: 50%;
+		transform: translateY(-57%); // Fix line positioning inside container
+
+		font-size: 19.5vh;
+		color: black;
+		text-shadow: rgb(255, 0, 37) 5px 0 0, rgb(255, 0, 37) 4.9px 1px 0, rgb(255, 0, 37) 4.6px 1.95px 0, rgb(255, 0, 37) 4.13333px 2.81667px 0, rgb(255, 0, 37) 3.48333px 3.58333px 0, rgb(255, 0, 37) 2.7px 4.2px 0, rgb(255, 0, 37) 1.81667px 4.66667px 0, rgb(255, 0, 37) 0.85px 4.93333px 0, rgb(255, 0, 37) -0.15px 5px 0, rgb(255, 0, 37) -1.13333px 4.86667px 0, rgb(255, 0, 37) -2.08333px 4.55px 0, rgb(255, 0, 37) -2.95px 4.05px 0, rgb(255, 0, 37) -3.68333px 3.38333px 0, rgb(255, 0, 37) -4.28333px 2.58333px 0, rgb(255, 0, 37) -4.71667px 1.66667px 0, rgb(255, 0, 37) -4.95px 0.7px 0, rgb(255, 0, 37) -4.98333px -0.3px 0, rgb(255, 0, 37) -4.83333px -1.28333px 0, rgb(255, 0, 37) -4.48333px -2.21667px 0, rgb(255, 0, 37) -3.95px -3.06667px 0, rgb(255, 0, 37) -3.26667px -3.78333px 0, rgb(255, 0, 37) -2.45px -4.35px 0, rgb(255, 0, 37) -1.53333px -4.75px 0, rgb(255, 0, 37) -0.566667px -4.96667px 0, rgb(255, 0, 37) 0.433333px -4.98333px 0, rgb(255, 0, 37) 1.41667px -4.8px 0, rgb(255, 0, 37) 2.35px -4.41667px 0, rgb(255, 0, 37) 3.16667px -3.86667px 0, rgb(255, 0, 37) 3.88333px -3.15px 0, rgb(255, 0, 37) 4.43333px -2.31667px 0, rgb(255, 0, 37) 4.8px -1.4px 0, rgb(255, 0, 37) 4.98333px -0.416667px 0;
+
+		opacity: 0;
+	}
+
+	> .obituary {
+		margin: 2rem 0;
+
+		color: white;
+		font-size: 2rem;
+		text-align: center;
+
+		opacity: 0;
+	}
+
+	> .playerForm {
+		opacity: 0;
+	}
+
+	.playerNameSubmit {
+		background-color: #e37313;
+	}
+
+	.userRating {
+		box-sizing: border-box;
+		margin-top: 1rem;
+	}
+}
+
+@keyframes endScreen-fadeIn {
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes endScreen-title {
+	to {
+		font-size: 23vh;
+	}
+}

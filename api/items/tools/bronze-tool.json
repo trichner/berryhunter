@@ -1,0 +1,33 @@
+{
+  "id": 8,
+  "name": "BronzeTool",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.03,
+    "yield": 4
+  },
+  "recipe": {
+    "craftTimeInSeconds": 20,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 60
+      },
+      {
+        "item": "Stone",
+        "count": 40
+      },
+      {
+        "item": "Bronze",
+        "count": 30
+      },
+      {
+        "item": "StoneTool",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

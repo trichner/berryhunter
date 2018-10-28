@@ -1,0 +1,28 @@
+{
+  "name": "IronWall",
+  "id": 35,
+  "type": "PLACEABLE",
+  "factors": {
+    "vulnerability": 0.01
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Iron",
+        "count": 20
+      },
+      {
+        "item": "BronzeWall",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  },
+  "body": {
+    "solid": true,
+    "radius": 0.417
+  }
+}

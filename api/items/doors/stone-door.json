@@ -1,0 +1,20 @@
+{
+  "name": "StoneDoor",
+  "id": 38,
+  "type": "PLACEABLE",
+  "factors": {
+    "vulnerability": 0.1
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Stone",
+        "count": 60
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

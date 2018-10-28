@@ -1,0 +1,94 @@
+<section>
+	<div id="developPanel">
+		<div class="toolbar">
+			<a href="#developPanel" class="minimize-button">Minimize</a>
+			<a href="#" class="maximize-button">Maximize</a>
+		</div>
+		<div id="develop_chartContainer"></div>
+		<table>
+			<tbody>
+			<tr>
+				<th>FPS</th>
+				<td id="develop_fps" colspan="2"></td>
+			</tr>
+			<tr>
+				<th>Websocket</th>
+				<td id="develop_webSocket" colspan="2"></td>
+			</tr>
+			<tr>
+				<th>Time</th>
+				<td id="develop_timeOfDay" colspan="2"></td>
+			</tr>
+
+			<tr class="separatorRow">
+				<th><!-- Placeholder --></th>
+				<th>Server</th>
+				<th>Client</th>
+			</tr>
+
+			<tr>
+				<th>Tick</th>
+				<td id="develop_serverTick"></td>
+				<td id="develop_clientTick"></td>
+			</tr>
+			<tr>
+				<th>Tick Rate</th>
+				<td id="develop_serverTickRate"></td>
+				<td id="develop_clientTickRate"></td>
+			</tr>
+			<tr>
+				<th>Messages</th>
+				<td>
+					<button id="develop_showServerTick" class="actionButton">
+						Show next<br/>GameState
+					</button>
+				</td>
+				<td>
+					<h3>Last send Input</h3>
+					<dl class="flatList">
+						<dt>Movement</dt>
+						<dd id="develop_input_movement"></dd>
+						<dt>Rotation</dt>
+						<dd id="develop_input_rotation"></dd>
+						<dt>Action</dt>
+						<dd id="develop_input_action_type"
+							style="clear: left; /* Force new line for actions */"></dd>
+						<dd id="develop_input_action_item"></dd>
+					</dl>
+				</td>
+			</tr>
+			<tr>
+				<th>Settings</th>
+				<td colspan="2">
+					<button class="toggleButton" data-setting="cameraBoundaries">
+						<span class="label">Cam Boundaries</span>
+						<span class="state"></span>
+					</button>
+					<!-- FIXME AABBs don't work with pixi.js yet -->
+					<!--<button class="toggleButton" data-setting="showAABBs">
+						<span class="label">AABBs</span>
+						<span class="state"></span>
+					</button>-->
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<div>
+			<select id="develop_itemSelect"></select>
+			<input id="develop_itemCount" type="number" step="1" value="1" min="1"/>
+			<button id="develop_itemAdd" class="actionButton">Add Item<span class="plural-only">s</span></button>
+		</div>
+	</div>
+
+	<div id="serverTickPopup" class="hidden layout-column">
+		<header>
+			<h2>Current Server Tick</h2>
+		</header>
+		<pre class="flex"><code id="serverTickOutput"></code></pre>
+		<footer>
+			<button id="develop_closeServerTickPopup" class="actionButton">
+				Close
+			</button>
+		</footer>
+	</div>
+</section>

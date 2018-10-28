@@ -1,0 +1,18 @@
+{
+  "id": 6,
+  "name": "WoodClub",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.02,
+    "yield": 2
+  },
+  "recipe": {
+    "craftTimeInSeconds": 5,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 10
+      }
+    ]
+  }
+}

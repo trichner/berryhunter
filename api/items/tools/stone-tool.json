@@ -1,0 +1,29 @@
+{
+  "id": 7,
+  "name": "StoneTool",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage":0.02,
+    "yield": 3
+  },
+  "recipe": {
+    "craftTimeInSeconds": 15,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 60
+      },
+      {
+        "item": "Stone",
+        "count": 20
+      },
+      {
+        "item": "WoodClub",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

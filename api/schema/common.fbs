@@ -1,3 +1,4 @@
+namespace BerryhunterApi;
 
 struct Vec3f {
   x:float;
@@ -8,4 +9,14 @@ struct Vec3f {
 struct Vec2f {
   x:float;
   y:float;
+}
+
+enum ActionType: ubyte {
+    Primary = 0,
+    CraftItem,
+    EquipItem,
+    UnequipItem,
+    DropItem,
+    PlaceItem,
+    ConsumeItem
 }

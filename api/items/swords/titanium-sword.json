@@ -1,0 +1,33 @@
+{
+  "id": 47,
+  "name": "TitaniumSword",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.4,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 50,
+    "materials": [
+      {
+        "item": "Bronze",
+        "count": 100
+      },
+      {
+        "item": "Iron",
+        "count": 60
+      },
+      {
+        "item": "Titanium",
+        "count": 40
+      },
+      {
+        "item": "IronSword",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  }
+}

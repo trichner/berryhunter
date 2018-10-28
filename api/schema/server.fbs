@@ -1,6 +1,6 @@
 include "common.fbs";
 
-namespace DeathioApi;
+namespace BerryhunterApi;
 
 enum EntityType : ushort {
   DebugCircle = 0,
@@ -11,7 +11,22 @@ enum EntityType : ushort {
   Stone,
   Bronze,
   Iron,
-  BerryBush
+  BerryBush,
+  Dodo,
+  SaberToothCat,
+  Mammoth,
+  Placeable,
+  Titanium,
+  Flower
+}
+
+enum StatusEffect : ushort {
+  Damaged = 0,
+  Yielded,
+  Freezing,
+  Starving,
+  Regenerating,
+  DamagedAmbient
 }
 
 struct AABB {
@@ -19,19 +34,138 @@ struct AABB {
   upper:Vec2f;
 }
 
-table Entity {
+struct ItemStack {
+  item:ubyte;
+  count:uint;
+  slot:ubyte;
+}
+
+struct OngoingAction {
+    ticks_remaining:ushort;
+    action_type:ActionType;
+    item:ubyte;
+}
+
+// Workaround to make vector of union possible
+union AnyEntity { Character, Mob, Resource, Placeable }
+table Entity { e:AnyEntity; }
+
+table Resource {
   id:ulong;
+  entity_type:EntityType;
+  status_effects:[StatusEffect];
+
   pos:Vec2f;
   radius:ushort;
-  rotation:float;
-  type:EntityType;
+
+  capacity:ubyte;
+  stock:ubyte;
+
   aabb:AABB;
 }
 
+table Placeable {
+  id:ulong;
+  entity_type:EntityType;
+  status_effects:[StatusEffect];
+
+  pos:Vec2f;
+  radius:ushort;
+  item:ubyte;
+
+  aabb:AABB;
+}
+
+table Mob {
+  id:ulong;
+  entity_type:EntityType;
+  status_effects:[StatusEffect];
+
+  pos:Vec2f;
+  radius:ushort;
+  rotation:float;
+
+  aabb:AABB;
+
+  mob_id:ushort;
+}
+
+table Character {
+  id:ulong;
+  entity_type:EntityType;
+  status_effects:[StatusEffect];
+
+  pos:Vec2f;
+  radius:ushort;
+
+  rotation:float;
+  is_hit:bool = false;
+
+  current_action:OngoingAction;
+
+  name:string;
+
+  equipment:[ubyte];
+
+  health:uint;
+  satiety:uint;
+  body_temperature:uint;
+
+  aabb:AABB;
+}
+
+table Spectator {
+  id:ulong;
+  pos:Vec2f;
+}
+
+union Player { Character, Spectator }
+
 table GameState {
   tick:ulong;
-  player_id:ulong;
+
+  // character or spectator
+  player:Player;
+
+  inventory:[ItemStack];
+
   entities:[Entity];
 }
 
-root_type GameState;
+table Welcome {
+  server_name:string;
+  map_radius:float;
+}
+
+table Accept {
+    // nothing to send with it, purely for signaling
+}
+
+table Obituary {
+    // nothing to send with it, purely for signaling
+    // maybe killer? or stats?
+}
+
+table EntityMessage {
+    entity_id:ulong;
+    message:string;
+}
+
+table ScoreboardPlayer {
+    name:string;
+    score:ulong;
+}
+
+table Scoreboard {
+  players:[ScoreboardPlayer];
+}
+
+table Pong {
+    // nothing to send with it, purely for signaling
+}
+
+union ServerMessageBody { Welcome, GameState, Accept, Obituary, EntityMessage, Scoreboard, Pong }
+table ServerMessage { body:ServerMessageBody; }
+
+root_type ServerMessage;
+

@@ -1,0 +1,27 @@
+{
+  "name": "Seeds",
+  "id": 41,
+  "type": "PLACEABLE",
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Berry",
+        "count": 3
+      },
+      {
+        "item": "Wood",
+        "count": 20
+      }
+    ],
+    "tools": [
+      "Campfire",
+      "BigCampfire",
+      "Furnace"
+    ]
+  },
+  "body": {
+    "solid": false,
+    "radius": 0.35
+  }
+}

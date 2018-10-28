@@ -1,0 +1,25 @@
+{
+  "id": 3,
+  "name": "SaberToothCat",
+  "type": "MOB",
+  "factors": {
+    "vulnerability": 0.667,
+    "damageFraction": 0.003,
+    "speed": 0.5,
+    "deltaPhi": 0.1,
+    "turnRate": 0.1
+  },
+  "drops": [
+    {
+      "item": "RawMeat",
+      "count": 2
+    }
+  ],
+  "body": {
+    "radius": 0.35,
+    "damageRadius": 0.5
+  },
+  "generator": {
+    "weight": 15
+  }
+}

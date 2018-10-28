@@ -1,0 +1,28 @@
+{
+  "name": "StoneWall",
+  "id": 30,
+  "type": "PLACEABLE",
+  "factors": {
+    "vulnerability": 0.01
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Stone",
+        "count": 20
+      },
+      {
+        "item": "WoodWall",
+        "count": 1
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  },
+  "body": {
+    "solid": true,
+    "radius": 0.417
+  }
+}

@@ -1,2 +1,3 @@
-# death-io
-Project Death.io
+# Berryhunter
+
+Repo for the most awesome berry-hunting experience.

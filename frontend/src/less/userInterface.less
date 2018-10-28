@@ -1,0 +1,441 @@
+#gameUI {
+	&.hidden {
+		display: block;
+		visibility: hidden;
+	}
+
+	* {
+		box-sizing: border-box;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+
+		&::selection {
+			background: none;
+		}
+	}
+}
+
+#minimap {
+	width: 15vw;
+	height: 15vw;
+
+	position: absolute;
+	bottom: 0;
+	left: 0;
+
+	background-color: fade(Cornsilk, 50%);
+	border: 0.3vw solid fade(Cornsilk, 50%);
+	background-clip: content-box; // don't let the background mix with the border
+
+	margin-bottom: 0.3vw;
+	margin-left: 0.3vw;
+
+	border-radius: 50%;
+
+	> .wrapper {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+	}
+}
+
+@uiElementHeight: 7vh;
+@slotSize: @uiElementHeight;
+
+@backgroundColorDark: @backgroundColor;
+@backgroundColorMedium: rgba(64, 64, 64, 0.6);
+@backgroundColorLight: rgba(255, 255, 255, 0.6);
+
+#inventory {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+
+	&.overfilled {
+		> .inventorySlot {
+			animation: red-flash 700ms ease-in-out;
+		}
+	}
+
+	> .inventorySlot {
+		position: relative;
+
+		&.activeAutoFeed {
+			> .autoFeedToggle {
+				background-color: fade(limegreen, 60%);
+
+				> svg * {
+					fill: white;
+				}
+			}
+
+			> .clickableItem {
+				border: 2px solid limegreen;
+			}
+		}
+
+		&.eating {
+			> .clickableItem {
+				animation: green-flash 700ms ease-in-out;
+			}
+		}
+
+		> .autoFeedToggle {
+			position: absolute;
+			bottom: 100%;
+			left: 50%;
+			margin-left: -18px;
+
+			padding: 6px;
+			width: 36px;
+			height: 36px;
+
+			border-radius: (0.1 * @slotSize);
+			background-color: @backgroundColorMedium;
+
+			> svg {
+				max-width: 100%;
+				max-height: 100%;
+
+				* {
+					fill: limegreen;
+				}
+			}
+		}
+	}
+}
+
+@keyframes red-flash {
+	40%, 60% {
+		background-color: crimson;
+	}
+}
+
+@keyframes green-flash {
+	40%, 60% {
+		background-color: limegreen;
+	}
+}
+
+.clickableItem,
+.craftableItem {
+	border-radius: 10%;
+	width: @slotSize;
+	height: @slotSize;
+	color: white;
+	font-size: (0.25 * @slotSize);
+	margin: (0.1 * @slotSize);
+	text-decoration: none;
+	display: block;
+
+	overflow: hidden;
+	z-index: 1; // Fixes the ignored overflow:hidden of the children
+
+	// Contain absolutely positioned elements like counts and progress bars
+	position: relative;
+}
+
+.clickableItem {
+	padding: (0.1 * @slotSize);
+
+	&.empty {
+		background-color: @backgroundColorDark;
+		pointer-events: none;
+
+		> .itemIcon {
+			display: none;
+		}
+	}
+
+	&.filled {
+		background-color: @backgroundColorMedium;
+	}
+
+	&.clickable {
+		cursor: pointer;
+	}
+
+	&.active {
+		background-color: @backgroundColorLight;
+	}
+
+	> .count {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+	}
+
+	> .itemIcon {
+		width: 100%;
+		display: block;
+	}
+}
+
+#crafting {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.craftableItem {
+	float: left;
+
+	&.newLine {
+		clear: left;
+	}
+
+	> .iconBackground {
+		padding: (0.1 * @slotSize);
+		width: 100%;
+		height: 100%;
+	}
+
+	&.empty {
+		> .iconBackground {
+			background-color: @backgroundColorDark;
+
+			> .itemIcon {
+				display: none;
+			}
+		}
+		pointer-events: none;
+	}
+
+	&.filled {
+		cursor: pointer;
+
+		> .iconBackground {
+			background-color: @backgroundColorMedium;
+		}
+	}
+
+	&.active {
+		> .iconBackground {
+			background-color: @backgroundColorLight;
+		}
+	}
+
+	.itemIcon {
+		width: 100%;
+	}
+
+	> .subIcon.primary,
+	> .subIconRow {
+		display: none;
+	}
+
+	> .subIcon.primary {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 33.333%;
+
+		background-color: @backgroundColorMedium;
+
+		> .itemIcon {
+			display: block;
+		}
+	}
+
+	> .subIconRow {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+
+		background-color: @backgroundColorMedium;
+
+		> .subIcon {
+			position: relative;
+			font-size: 11px;
+
+			> .itemIcon {
+				display: block;
+				margin: 0 auto 20%;
+			}
+
+			> .count {
+				text-align: right;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				overflow: hidden;
+			}
+		}
+	}
+
+	&.hinted {
+		cursor: default;
+
+		> .iconBackground {
+			background-color: @backgroundColorDark;
+
+			> .itemIcon {
+				display: block;
+				width: 80%;
+				opacity: 0.7;
+			}
+		}
+
+		// there's an icon in the top left corner
+		&.upgrade {
+			> .iconBackground {
+				-webkit-mask-image: url('../img/userInterface/hintedCraftMask_upgrade.svg');
+				mask-image: url('../img/userInterface/hintedCraftMask_upgrade.svg');
+				-webkit-mask-size: 100% 100%;
+				mask-size: 100% 100%;
+
+				> .itemIcon {
+					margin-left: auto;
+					margin-top: 20%;
+				}
+			}
+
+			> .subIcon.primary {
+				display: block;
+			}
+		}
+
+		// there are icons in bottom row
+		&.withIngredients {
+			> .iconBackground {
+				-webkit-mask-image: url('../img/userInterface/hintedCraftMask_ingredients.svg');
+				mask-image: url('../img/userInterface/hintedCraftMask_ingredients.svg');
+				-webkit-mask-size: 100% 100%;
+				mask-size: 100% 100%;
+
+				> .itemIcon {
+					margin: 0 auto;
+				}
+			}
+
+			> .subIconRow {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+			}
+		}
+
+		&.upgrade.withIngredients {
+			> .iconBackground {
+				-webkit-mask-image: url('../img/userInterface/hintedCraftMask2.svg');
+				mask-image: url('../img/userInterface/hintedCraftMask2.svg');
+				-webkit-mask-size: 100% 100%;
+				mask-size: 100% 100%;
+
+				> .itemIcon {
+					margin-right: 0;
+					margin-left: auto;
+				}
+			}
+		}
+	}
+
+	&.inProgress {
+		cursor: default;
+	}
+
+	> .progressOverlay {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+
+		background-color: rgba(255, 255, 0, 0.5);
+	}
+}
+
+#vitalSigns {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 22vw;
+	height: 12vh;
+
+	> .bar {
+		margin: (0.1 * @uiElementHeight);
+		position: relative;
+		z-index: 1;
+
+		> .indicator,
+		> .previousIndicator {
+			height: 100%;
+		}
+
+		> .previousIndicator {
+			background-color: rgba(255, 255, 255, 0.7);
+			position: absolute;
+			z-index: -1;
+		}
+	}
+}
+
+#healthBar {
+	background-color: #840D25;
+
+	> .indicator {
+		background-color: crimson;
+	}
+}
+
+#satietyBar {
+	background-color: #1E7A1E;
+
+	> .indicator {
+		background-color: limegreen;
+	}
+}
+
+#bodyHeatBar {
+	background-color: #125799;
+
+	> .indicator {
+		background-color: dodgerblue;
+	}
+}
+
+#chat {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -1.3px * (30 + 16));
+
+	background-color: @backgroundColor;
+
+	padding: (0.1 * @slotSize);
+	border-radius: (0.1 * @slotSize);
+
+	min-height: 1.3em;
+}
+
+#chatInput {
+	display: block;
+	min-width: 1em;
+	color: white;
+	text-align: center;
+
+	&:focus {
+		box-shadow: none;
+		outline: none;
+	}
+}
+
+#scoreboard {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: @backgroundColor;
+	margin: (0.1 * @uiElementHeight);
+	padding: (0.1 * @uiElementHeight);
+	border-radius: (0.1 * @uiElementHeight);
+
+	color: white;
+	font-size: 0.7em;
+	line-height: 1.4;
+}

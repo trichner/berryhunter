@@ -1,0 +1,34 @@
+{
+  "name": "Furnace",
+  "id": 24,
+  "type": "PLACEABLE",
+  "factors": {
+    "heatPerSecond": 0.06,
+    "heatRadius": 1.35,
+    "vulnerability": 0.01
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 150
+      },
+      {
+        "item": "Stone",
+        "count": 100
+      },
+      {
+        "item": "Bronze",
+        "count": 50
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  },
+  "body": {
+    "solid": true,
+    "radius": 0.5
+  }
+}

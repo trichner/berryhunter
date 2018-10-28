@@ -1,0 +1,24 @@
+{
+  "name": "WoodWall",
+  "id": 29,
+  "type": "PLACEABLE",
+  "factors": {
+    "vulnerability": 0.01
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 20
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  },
+  "body": {
+    "solid": true,
+    "radius": 0.417
+  }
+}
