@@ -6,7 +6,7 @@ services:
             - berryhunterd
             - chieftaind
             - web
-        volume:
+        volumes:
             - "./cfg/edge/Caddyfile:/app/Caddyfile"
         ports:
             - "443:443"
@@ -15,7 +15,7 @@ services:
         depends_on:
             - chieftaind
             - web
-        volume:
+        volumes:
             - "./cfg/berryhunterd/conf.json:/root/berryhunterd/conf.json"
         ports:
             - "127.0.0.1:2000:80"
