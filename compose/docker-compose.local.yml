@@ -13,12 +13,10 @@ services:
         depends_on:
             - chieftaind
             - web
+        ports:
+            - "127.0.0.1:2000:80"
     web:
         image: berryhunter-web
-    berryhunterd:
-        image: berryhunterd
-        ports:
-            - "127.0.0.1:2000:2000"
     chieftaind:
         image: chieftaind
         ports:
