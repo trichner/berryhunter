@@ -1,0 +1,25 @@
+version: '3'
+services:
+    edge-proxy:
+        image: berryhunter-edge
+        depends_on:
+            - berryhunterd
+            - chieftaind
+            - web
+        ports:
+            - "127.0.0.1:2015:2015"
+    berryhunterd:
+        image: berryhunterd
+        depends_on:
+            - chieftaind
+            - web
+    web:
+        image: berryhunter-web
+    berryhunterd:
+        image: berryhunterd
+        ports:
+            - "127.0.0.1:2000:2000"
+    chieftaind:
+        image: chieftaind
+        ports:
+            - "127.0.0.1:3080:3080"

@@ -1,0 +1,14 @@
+local.berryhunter.io {
+
+    log /dev/stdout
+    tls self_signed
+
+    proxy /game berryhunterd:80/game {
+        transparent
+    }
+
+    proxy / web:80/ {
+        websocket
+        transparent
+    }
+}

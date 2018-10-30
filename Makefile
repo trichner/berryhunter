@@ -1,6 +1,6 @@
 
 
-TARGET=berryhunterd chieftaind berryhunter-web
+TARGET=berryhunterd chieftaind berryhunter-web berryhunter-edge
 TARGET_BUILD=$(addsuffix .build, $(TARGET))
 TARGET_TAG=$(addsuffix .tag, $(TARGET))
 TARGET_PUSH=$(addsuffix .push, $(TARGET))
