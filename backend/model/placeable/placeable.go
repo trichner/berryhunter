@@ -11,8 +11,6 @@ import (
         "math"
 )
 
-var _ = model.PlaceableEntity(&Placeable{})
-
 type Placeable struct {
         model.BaseEntity
         item       items.Item
@@ -34,9 +32,8 @@ func (p *Placeable) Update(dt float32) bool {
 }
 
 func (p *Placeable) Decayed() bool {
-        return p.ticksLeft <= 0
+        return p.ticksLeft <= 0 || p.health <= 0
 }
-
 func (p *Placeable) HeatRadiation() *model.HeatRadiator {
         return p.radiator
 }
