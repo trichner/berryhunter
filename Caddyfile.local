@@ -1,7 +1,7 @@
 local.berryhunter.io {
 
     log /dev/stdout
-    tls self_signed
+    tls off
 
     proxy /game berryhunterd:80/ {
         transparent
