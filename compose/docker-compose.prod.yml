@@ -1,22 +1,26 @@
 version: '3'
 services:
     edge:
-        image: berryhunter-edge
+        image: gcr.io/trichner-212015/berryhunter-edge
         depends_on:
             - berryhunterd
             - chieftaind
             - web
+        volume:
+            - "./cfg/edge/Caddyfile:/app/Caddyfile"
         ports:
-            - "127.0.0.1:2015:2015"
+            - "443:443"
     berryhunterd:
-        image: berryhunterd
+        image: gcr.io/trichner-212015/berryhunterd
         depends_on:
             - chieftaind
             - web
+        volume:
+            - "./cfg/berryhunterd/conf.json:/root/berryhunterd/conf.json"
         ports:
             - "127.0.0.1:2000:80"
     web:
-        image: berryhunter-web
+        image: gcr.io/trichner-212015/berryhunter-web
     chieftaind:
         image: chieftaind
         ports:
