@@ -61,7 +61,8 @@ export function setup(game) {
         if (serverPort) {
             url = 'ws://' + window.location.hostname + ':' + serverPort + '/game';
         } else {
-            url = 'ws://' + window.location.host + '/game';
+            //TODO(Raoul) use protocol according to current proto
+            url = 'wss://' + window.location.host + '/game';
         }
     } else {
         url = Constants.BACKEND.REMOTE_URL;

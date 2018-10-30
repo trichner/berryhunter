@@ -5,6 +5,7 @@ local.berryhunter.io {
 
     proxy /game berryhunterd:80/ {
         transparent
+        websocket
     }
 
     proxy /chieftain chieftaind:3080/ {
@@ -13,7 +14,6 @@ local.berryhunter.io {
     }
 
     proxy / web:80/ {
-        websocket
         transparent
     }
 }
