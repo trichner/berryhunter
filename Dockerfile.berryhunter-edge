@@ -1,0 +1,10 @@
+FROM mini/base
+
+RUN apk add --update bash
+RUN curl https://getcaddy.com | bash -s personal
+
+WORKDIR /app
+COPY Caddyfile.local Caddyfile
+
+EXPOSE 2015
+CMD caddy

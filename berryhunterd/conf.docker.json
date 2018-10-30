@@ -3,8 +3,8 @@
     "port": 80,
     "path": "/game"
   },
-  "//chieftain": {
-    "addr":"127.0.0.1:3443"
+  "chieftain": {
+    "addr":"chieftaind:3443"
   },
   "game": {
     "coldFractionDayPerSecond": 0.015,

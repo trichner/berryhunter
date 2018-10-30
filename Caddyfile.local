@@ -3,8 +3,13 @@ local.berryhunter.io {
     log /dev/stdout
     tls self_signed
 
-    proxy /game berryhunterd:80/game {
+    proxy /game berryhunterd:80/ {
         transparent
+    }
+
+    proxy /chieftain chieftaind:3080/ {
+        transparent
+        without /chieftain
     }
 
     proxy / web:80/ {

@@ -34,10 +34,12 @@ WORKDIR /root/
 COPY api/items/ api/items/
 COPY api/mobs/ api/mobs/
 
+
 # copy backend together
 WORKDIR /root/berryhunterd
+COPY berryhunterd/docker-start.sh start.sh
 COPY --from=go_builder /go/src/github.com/trichner/berryhunter/berryhunterd/berryhunterd .
 COPY $CONF conf.json
 
 EXPOSE 80
-CMD ["./berryhunterd"]
+CMD ["./start.sh"]

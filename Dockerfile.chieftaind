@@ -9,18 +9,14 @@ COPY api/ api/
 
 WORKDIR /go/src/github.com/trichner/berryhunter/chieftaind/
 RUN go get -d -v
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o chieftaind .
-
-# ---- actual image
-FROM alpine:latest
-
-#ARG CONF=berryhunterd/conf.docker.json
-
-WORKDIR /root/
+RUN go build -a -o chieftaind .
 
 # copy backend together
 WORKDIR /root/
-COPY --from=go_builder /go/src/github.com/trichner/berryhunter/chieftaind/chieftaind .
+RUN /go/src/github.com/trichner/berryhunter/chieftaind/server/genkey.sh
+RUN mv /go/src/github.com/trichner/berryhunter/chieftaind/chieftaind .
+
+#COPY --from=go_builder /go/src/github.com/trichner/berryhunter/chieftaind/chieftaind .
 #COPY $CONF conf.json
 
 EXPOSE 3443
