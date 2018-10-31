@@ -62,12 +62,11 @@ export function setup(game) {
             wsProtocol = 'wss:';
         }
 
-        let serverPort = Utils.getUrlParameter(Constants.MODE_PARAMETERS.SERVER_PORT);
-        if (serverPort) {
-            url = wsProtocol + '//' + window.location.hostname + ':' + serverPort + '/game';
-        } else {
-            url = wsProtocol + '//' + window.location.host + '/game';
-        }
+        let domain = 'local.berryhunter.io'; // window.location.hostname;
+        let serverPort = Utils.defaultFor(
+            Utils.getUrlParameter(Constants.MODE_PARAMETERS.SERVER_PORT),
+            window.location.port);
+        url = wsProtocol + '//' + domain + ':' + serverPort + '/game';
     } else {
         url = Constants.BACKEND.REMOTE_URL;
     }
