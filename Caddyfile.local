@@ -16,4 +16,6 @@ local.berryhunter.io {
     proxy / web:80/ {
         transparent
     }
+
+    cors /chieftain http://localhost:2001 http://localhost
 }

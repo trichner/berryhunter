@@ -1,7 +1,7 @@
 FROM mini/base
 
 RUN apk add --update bash
-RUN curl https://getcaddy.com | bash -s personal
+RUN curl https://getcaddy.com | bash -s personal http.cors
 
 WORKDIR /app
 COPY Caddyfile.local Caddyfile
