@@ -94,7 +94,7 @@ export function getUrlParameter(sParam) {
     }
 }
 
-export function clearNode(node) {
+export function clearNode(node: Node) {
     while (node.firstChild) {
         node.removeChild(node.firstChild);
     }
@@ -365,20 +365,29 @@ export function playCssAnimation(element, animationClass) {
  * @param {number} options.animationDuration in seconds
  * @param {boolean} options.alternating default = true
  */
-export function smoothHoverAnimation(element: Element, options?: { applyClassTo?: Element, animationDuration?: number }) {
-    let {animationDuration, applyClassTo} = options;
-
-    applyClassTo = defaultFor(applyClassTo, element);
+export function smoothHoverAnimation(element: Element, options?: { additionalHoverElement?: Element, animationDuration?: number }) {
+    let {animationDuration, additionalHoverElement} = options;
 
     let mouseOverElement = false;
     element.addEventListener('mouseenter', () => {
-        applyClassTo.classList.add('hover');
+        element.classList.add('hover');
         mouseOverElement = true;
     });
+    if (isDefined(additionalHoverElement)){
+        additionalHoverElement.addEventListener('mouseenter', () => {
+            element.classList.add('hover');
+            mouseOverElement = true;
+        });
+    }
 
     element.addEventListener('mouseleave', () => {
         mouseOverElement = false;
     });
+    if (isDefined(additionalHoverElement)){
+        additionalHoverElement.addEventListener('mouseleave', () => {
+            mouseOverElement = false;
+        });
+    }
 
     element.addEventListener('animationiteration', (event: AnimationEvent) => {
         if (animationDuration) {
@@ -389,7 +398,7 @@ export function smoothHoverAnimation(element: Element, options?: { applyClassTo?
             }
         }
         if (!mouseOverElement) {
-            applyClassTo.classList.remove('hover');
+            element.classList.remove('hover');
         }
     });
 }
