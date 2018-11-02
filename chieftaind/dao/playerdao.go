@@ -22,6 +22,7 @@ type PlayerDao interface {
 	UpsertPlayer(ctx context.Context, p Player) error
 	FindPlayers(ctx context.Context) ([]Player, error)
 	FindTopPlayers(ctx context.Context, limit int) ([]Player, error)
+	FindPlayerByUuid(ctx context.Context, uuid string) (Player, error)
 }
 
 type playerDao struct {
@@ -39,6 +40,14 @@ func (p *playerDao) FindPlayers(ctx context.Context) ([]Player, error) {
 	return players, err
 }
 
+func (p *playerDao) FindPlayerByUuid(ctx context.Context, uuid string) (Player, error) {
+	tx := mustTx(ctx)
+	player := Player{}
+
+	err := tx.Get(&player, "SELECT * FROM player WHERE uuid = ?", uuid)
+	return player, err
+}
+
 func (p *playerDao) FindTopPlayers(ctx context.Context, limit int) ([]Player, error) {
 	tx := mustTx(ctx)
 	players := []Player{}
@@ -53,7 +62,6 @@ func (p *playerDao) UpsertPlayer(ctx context.Context, pl Player) error {
 		return fmt.Errorf("invalid player UUID: " + pl.Uuid)
 	}
 
-	//uid := uuid.New().String()
 	_, err := tx.ExecContext(ctx, `
 			INSERT INTO player (uuid, name, score, updated) VALUES ($1, $2, $3, $4)
 			ON CONFLICT(uuid) DO UPDATE SET name=$2, score=$3, updated=$4
