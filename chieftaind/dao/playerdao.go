@@ -22,6 +22,7 @@ type PlayerDao interface {
 	UpsertPlayer(ctx context.Context, p Player) error
 	FindPlayers(ctx context.Context) ([]Player, error)
 	FindTopPlayers(ctx context.Context, limit int) ([]Player, error)
+	FindTopPlayersInPeriod(ctx context.Context, limit int, period string) ([]Player, error)
 	FindPlayerByUuid(ctx context.Context, uuid string) (Player, error)
 }
 
@@ -49,6 +50,13 @@ func (p *playerDao) FindPlayerByUuid(ctx context.Context, uuid string) (Player, 
 }
 
 func (p *playerDao) FindTopPlayers(ctx context.Context, limit int) ([]Player, error) {
+	tx := mustTx(ctx)
+	players := []Player{}
+	err := tx.Select(&players, "SELECT * FROM player ORDER BY score DESC LIMIT ?", limit)
+	return players, err
+}
+
+func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, period string) ([]Player, error) {
 	tx := mustTx(ctx)
 	players := []Player{}
 	err := tx.Select(&players, "SELECT * FROM player ORDER BY score DESC LIMIT ?", limit)

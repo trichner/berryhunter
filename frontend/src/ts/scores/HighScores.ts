@@ -105,7 +105,7 @@ function open() {
         element.classList.add('hidden');
     });
 
-    loadScores().then(populateLeaderboard);
+    loadScoreboard().then(populateLeaderboard);
 }
 
 function close() {
@@ -123,7 +123,7 @@ Events.on('startScreen.domReady', function (domElement) {
     if (showMock) {
         mockHighScoresFromBackend();
     } else {
-        loadScores().then(updateFromBackend);
+        loadHighScores().then(updateFromBackend);
     }
 });
 
@@ -159,23 +159,38 @@ function mockHighScoresFromBackend() {
     }, 500);
 }
 
-function loadScores(){
+function loadScoreboard(){
     return makeRequest({
         method: 'GET',
         url: Urls.database + '/scoreboard'
-    }).then((response: string) => {
-        // Example response: [{"uuid":"c38a8700-365f-4fdc-ad3f-81be7b0e4faa","name":"Arnold Hardrock","score":2066,"updated":"2018-10-30T13:47:24Z"}]
-        let highScores = JSON.parse(response);
+    }).then(mapScores);
+}
 
-        let mappedHighScores = {};
-        mappedHighScores[categories[0]] = highScores.map(highScore => {
+function loadHighScores(){
+    return makeRequest({
+        method: 'GET',
+        url: Urls.database + '/highscores'
+    }).then(mapScores);
+}
+
+function mapScores(response: string) {
+    // Example response: [{"uuid":"c38a8700-365f-4fdc-ad3f-81be7b0e4faa","name":"Arnold Hardrock","score":2066,"updated":"2018-10-30T13:47:24Z"}]
+    let highScores = JSON.parse(response);
+
+    let mappedHighScores = {};
+    categories.forEach((category) => {
+        if (!highScores.hasOwnProperty(category)) {
+            return;
+        }
+
+        mappedHighScores[category] = highScores[category].map(highScore => {
             return {
                 playerName: highScore.name,
                 score: highScore.score,
                 date: moment(highScore.updated, 'YYYY-MM-DD[T]HH:mm:ssZ')
             }
         });
-
-        return mappedHighScores;
     });
+
+    return mappedHighScores;
 }
