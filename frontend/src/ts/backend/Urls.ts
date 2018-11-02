@@ -16,7 +16,7 @@ const developmentPort = '2015';
  */
 function getUrl(protocol: string, path: string) {
     let security = '';
-    if (window.location.protocol === 'https') {
+    if (window.location.protocol === 'https:') {
         security = 's';
     }
 
