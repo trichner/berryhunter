@@ -2,7 +2,6 @@
 
 import * as Events from '../Events';
 import * as Utils from '../Utils';
-import {BasicConfig as Constants} from '../../config/Basic';
 import * as Console from '../Console';
 import * as Develop from '../develop/_Develop';
 import * as BackendConstants from './BackendConstants';
@@ -19,6 +18,7 @@ import * as EndScreen from '../userInterface/screens/EndScreen';
 import * as UserInterface from '../userInterface/UserInterface';
 import {BerryhunterApi} from './BerryhunterApi';
 import {flatbuffers} from 'flatbuffers';
+import * as Urls from './Urls';
 // Assign all export in this file to a single variable to be passed into sub modules.
 import * as Backend from './Backend';
 
@@ -55,23 +55,8 @@ export function setup(game) {
         Events.triggerOneTime('firstGameStateRendered');
     });
 
-    let url;
-    if (Utils.getUrlParameter(Constants.MODE_PARAMETERS.LOCAL_SERVER)) {
-        let wsProtocol = 'ws:';
-        if (window.location.protocol === 'https:'){
-            wsProtocol = 'wss:';
-        }
-
-        let domain = 'local.berryhunter.io'; // window.location.hostname;
-        let serverPort = Utils.defaultFor(
-            Utils.getUrlParameter(Constants.MODE_PARAMETERS.SERVER_PORT),
-            window.location.port);
-        url = wsProtocol + '//' + domain + ':' + serverPort + '/game';
-    } else {
-        url = Constants.BACKEND.REMOTE_URL;
-    }
     setState(States.CONNECTING);
-    webSocket = new WebSocket(url);
+    webSocket = new WebSocket(Urls.gameServer);
 
     webSocket.binaryType = 'arraybuffer';
 
