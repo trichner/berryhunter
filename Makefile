@@ -4,7 +4,7 @@ TARGET=berryhunterd chieftaind berryhunter-web berryhunter-edge
 TARGET_BUILD=$(addsuffix .build, $(TARGET))
 TARGET_TAG=$(addsuffix .tag, $(TARGET))
 TARGET_PUSH=$(addsuffix .push, $(TARGET))
-TAG?=latest
+TAG?="r$(shell git rev-parse HEAD | head -c 7)"
 
 all: $(TARGET_BUILD)
 
