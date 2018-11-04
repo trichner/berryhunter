@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/trichner/berryhunter/chieftaind/service"
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"log"
 	"net/http"
@@ -36,57 +37,40 @@ func NewRouter(ds dao.DataStore, p dao.PlayerDao) http.Handler {
 func GetHighScoresHandler(pdao dao.PlayerDao) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		p, err := pdao.FindTopPlayers(r.Context(), 1)
+		scores, err := service.GetScoresPerPeriod(r.Context(), pdao, 1);
 		if err != nil {
 			w.WriteHeader(500)
 			return
 		}
-		jsonPlayers := mapPlayersToDto(p)
 
 		je := json.NewEncoder(w)
-		je.Encode(jsonPlayers)
+		je.Encode(mapScoresToDto(scores))
 	}
 }
 
 func GetScoreboardHandler(pdao dao.PlayerDao) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		const limit = 10
-
-		scores := scoresDto{}
-
-		p, err := pdao.FindTopPlayersInPeriod(r.Context(), limit, "24 hours")
+		scores, err := service.GetScoresPerPeriod(r.Context(), pdao, 10);
 		if err != nil {
 			w.WriteHeader(500)
 			return
 		}
-		scores.Daily = mapPlayersToDto(p)
-
-		p, err = pdao.FindTopPlayersInPeriod(r.Context(), limit, "7 days")
-		if err != nil {
-			w.WriteHeader(500)
-			return
-		}
-		scores.Weekly = mapPlayersToDto(p)
-
-		p, err = pdao.FindTopPlayersInPeriod(r.Context(), limit, "30 days")
-		if err != nil {
-			w.WriteHeader(500)
-			return
-		}
-		scores.Monthly = mapPlayersToDto(p)
-
-		p, err = pdao.FindTopPlayers(r.Context(), limit)
-		if err != nil {
-			w.WriteHeader(500)
-			return
-		}
-		scores.Alltime = mapPlayersToDto(p)
 
 		je := json.NewEncoder(w)
-		je.Encode(scores)
+		je.Encode(mapScoresToDto(scores))
 	}
+}
+
+func mapScoresToDto(scores service.Scores) scoresDto {
+	jsonScores := scoresDto{}
+
+	jsonScores.Daily = mapPlayersToDto(scores.Daily)
+	jsonScores.Weekly = mapPlayersToDto(scores.Weekly)
+	jsonScores.Monthly = mapPlayersToDto(scores.Monthly)
+	jsonScores.Alltime = mapPlayersToDto(scores.Alltime)
+
+	return jsonScores
 }
 
 func mapPlayersToDto(players []dao.Player) []playerDto {
