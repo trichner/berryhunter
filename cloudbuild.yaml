@@ -48,10 +48,10 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['tag', 'gcr.io/$PROJECT_ID/chieftaind:r$SHORT_SHA', 'gcr.io/$PROJECT_ID/chieftaind:latest']
 # ---- web
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA', '-f', 'Dockerfile.berryhunter-web', '.']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['tag', 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA', 'gcr.io/$PROJECT_ID/berryhunter-web:latest']
+#- name: 'gcr.io/cloud-builders/docker'
+#  args: ['build', '-t', 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA', '-f', 'Dockerfile.berryhunter-web', '.']
+#- name: 'gcr.io/cloud-builders/docker'
+#  args: ['tag', 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA', 'gcr.io/$PROJECT_ID/berryhunter-web:latest']
 # ---- edge
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/berryhunter-edge:r$SHORT_SHA', '-f', 'Dockerfile.berryhunter-edge', '.']
@@ -62,7 +62,7 @@ images:
 - 'gcr.io/$PROJECT_ID/berryhunterd:latest'
 - 'gcr.io/$PROJECT_ID/chieftaind:r$SHORT_SHA'
 - 'gcr.io/$PROJECT_ID/chieftaind:latest'
-- 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA'
-- 'gcr.io/$PROJECT_ID/berryhunter-web:latest'
+#- 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA'
+#- 'gcr.io/$PROJECT_ID/berryhunter-web:latest'
 - 'gcr.io/$PROJECT_ID/berryhunter-edge:r$SHORT_SHA'
 - 'gcr.io/$PROJECT_ID/berryhunter-edge:latest'
