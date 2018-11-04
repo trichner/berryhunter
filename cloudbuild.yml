@@ -1,0 +1,39 @@
+# Decrypt the file containing the key
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file=id_github.com.enc
+  - --plaintext-file=/root/.ssh/id_github.com
+  - --location=global
+  - --keyring=berryhunter
+  - --key=github-credentials
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Set up git with key and domain.
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    chmod 600 /root/.ssh/id_github.com
+    cat <<EOF >/root/.ssh/config
+    Hostname github.com
+    IdentityFile /root/.ssh/id_github.com
+    EOF
+    mv known_hosts /root/.ssh/known_hosts
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Use git clone.
+- name: 'gcr.io/cloud-builders/git'
+  args:
+  - clone
+  - git@github.com:trichner/berryhunter
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
