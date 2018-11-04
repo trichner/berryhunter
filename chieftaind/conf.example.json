@@ -1,0 +1,5 @@
+{
+  "apiAddr":":3443",
+  "restAddr":":3080",
+  "dataDir":"./"
+}
