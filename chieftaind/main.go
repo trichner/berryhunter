@@ -31,7 +31,7 @@ func main() {
 		log.Fatalf("cannot boot chieftain: %s", err)
 	}
 
-	addr := "127.0.0.1:3443"
+	addr := ":3443"
 	log.Printf("chieftain listening on %s", addr)
 
 	wg.Add(1)
@@ -45,7 +45,7 @@ func main() {
 	// boot HTTP server
 	wg.Add(1)
 
-	apiAddr := "127.0.0.1:3080"
+	apiAddr := ":3080"
 	log.Printf("api listening on %s/scoreboard", apiAddr)
 	go func() {
 		r := api.NewRouter(dataStore, playerStore)

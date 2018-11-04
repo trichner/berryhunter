@@ -1,0 +1,242 @@
+#highScores { // top row on start screen
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  background-color: @backgroundColor;
+  color: white;
+
+  padding: 1rem;
+
+  transform: translateY(-100%);
+  transition: transform @splashScreenAnimation;
+
+  &.loaded {
+    transform: translateY(0);
+  }
+
+  &.open {
+    bottom: 0;
+
+    > .highScoreOverview {
+      display: none;
+    }
+  }
+
+  &:not(.open) > .highScoreDetails {
+    display: none;
+  }
+}
+
+.highScoreOverview {
+  line-height: 0.7;
+  cursor: pointer;
+
+  &.hover {
+    .icon.expand {
+      animation: jump 300ms alternate infinite ease-in-out;
+    }
+  }
+}
+
+@keyframes jump {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(40%);
+  }
+}
+
+.highScoreOverview {
+  > h3 {
+    margin: 0;
+
+    font-weight: normal;
+
+    font-size: 1.5rem;
+    line-height: 0.75rem;
+    letter-spacing: 0.06em;
+  }
+
+  .icon.expand {
+    height: 0.9em;
+    margin-bottom: -7px;
+    margin-top: -2px;
+    margin-left: 0.5rem;
+  }
+
+  > .highscore {
+    margin-left: 1rem;
+    font-size: 1.25rem;
+
+    > h4 {
+      margin: -0.4rem 0.5rem -0.6rem 0;
+      padding: 0.4rem 1rem 0.6rem;
+      font-size: inherit;
+      font-weight: normal;
+      color: black;
+      border-top-left-radius: 1.125rem;
+      border-bottom-left-radius: 1.125rem;
+    }
+
+    > .playerName {
+      margin: -0.4rem 0.5rem -0.6rem 0;
+      padding: 0.4rem 0.5rem 0.6rem 0;
+      border-right: 2px solid currentColor;
+    }
+  }
+
+  > .alltime {
+    color: #FFC400; // Material Design Amber A400
+
+    > h4 {
+      background-color: #FFC400; // Material Design Amber A400
+    }
+  }
+
+  > .monthly {
+    color: #FF1744; // Material Design Red A400
+
+    > h4 {
+      background-color: #FF1744; // Material Design Amber A400
+    }
+  }
+
+  > .weekly {
+    color: #00B0FF; // Material Design Light Blue A400
+
+    > h4 {
+      background-color: #00B0FF; // Material Design Amber A400
+    }
+  }
+
+  > .daily {
+    color: #76FF03; // Material Design Light Green A400
+
+    > h4 {
+      background-color: #76FF03; // Material Design Amber A400
+    }
+  }
+
+  > .current {
+    color: white;
+
+    > h4 {
+      background-color: white;
+    }
+  }
+}
+
+#closeLeaderboard {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  color: white;
+  text-decoration: none;
+}
+
+.highScoreDetails {
+  > h2 {
+    margin: 0;
+    margin-bottom: 3rem;
+
+    text-align: center;
+
+    > .berryhunter {
+      display: block;
+      color: #e37313;
+      text-shadow: rgb(255, 255, 255) 3px 0 0, rgb(255, 255, 255) 2.83487px 0.981584px 0, rgb(255, 255, 255) 2.35766px 1.85511px 0, rgb(255, 255, 255) 1.62091px 2.52441px 0, rgb(255, 255, 255) 0.705713px 2.91581px 0, rgb(255, 255, 255) -0.287171px 2.98622px 0, rgb(255, 255, 255) -1.24844px 2.72789px 0, rgb(255, 255, 255) -2.07227px 2.16926px 0, rgb(255, 255, 255) -2.66798px 1.37182px 0, rgb(255, 255, 255) -2.96998px 0.42336px 0, rgb(255, 255, 255) -2.94502px -0.571704px 0, rgb(255, 255, 255) -2.59586px -1.50383px 0, rgb(255, 255, 255) -1.96093px -2.27041px 0, rgb(255, 255, 255) -1.11013px -2.78704px 0, rgb(255, 255, 255) -0.137119px -2.99686px 0, rgb(255, 255, 255) 0.850987px -2.87677px 0, rgb(255, 255, 255) 1.74541px -2.43999px 0, rgb(255, 255, 255) 2.44769px -1.73459px 0, rgb(255, 255, 255) 2.88051px -0.838247px 0;
+    }
+  }
+
+  > .highscore {
+    > caption {
+      padding: 0.4rem 1rem 0.6rem;
+      font-size: 2rem;
+      font-weight: normal;
+      color: black;
+      border-top-left-radius: 1.125rem;
+      border-top-right-radius: 1.125rem;
+    }
+
+    > tbody > tr {
+      > td {
+        padding-right: 1rem;
+        line-height: 1.5;
+      }
+
+      > td:first-of-type {
+        padding-left: 1rem;
+      }
+    }
+  }
+
+
+  > .alltime {
+    color: #FFC400; // Material Design Amber A400
+
+    > caption {
+      background-color: #FFC400; // Material Design Amber A400
+    }
+  }
+
+  > .monthly {
+    color: #FF1744; // Material Design Amber A400
+
+    > caption {
+      background-color: #FF1744; // Material Design Amber A400
+    }
+  }
+
+  > .weekly {
+    color: #00B0FF; // Material Design Amber A400
+
+    > caption {
+      background-color: #00B0FF; // Material Design Amber A400
+    }
+  }
+
+  > .daily {
+    color: #76FF03; // Material Design Amber A400
+
+    > caption {
+      background-color: #76FF03; // Material Design Amber A400
+    }
+  }
+}
+
+/*
+ * Hide categories in the top depending on browser width.
+ */
+@media (max-width: 540px) {
+  .highScoreOverview > .alltime {
+    display: none;
+  }
+}
+
+@media (max-width: 864px) {
+  .highScoreOverview > .current {
+    display: none;
+  }
+}
+
+@media (max-width: 1188px) {
+  .highScoreOverview > .daily {
+    display: none;
+  }
+}
+
+@media (max-width: 1512px) {
+  .highScoreOverview > .weekly {
+    display: none;
+  }
+}
+
+@media (max-width: 1836px) {
+  .highScoreOverview > .monthly {
+    display: none;
+  }
+}

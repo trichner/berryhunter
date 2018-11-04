@@ -1,0 +1,13 @@
+FROM mini/base
+
+RUN apk add --update bash
+RUN curl https://getcaddy.com | bash -s personal http.cors
+
+WORKDIR /app
+COPY Caddyfile.local Caddyfile
+
+EXPOSE 2015
+EXPOSE 443
+EXPOSE 80
+
+CMD ["caddy", "-agree"]
