@@ -22,4 +22,4 @@ TBD
 - there's a race condition between chieftaind and berryhunterd. If berryhunterd starts before chieftaind is up, it will crash. **Solution:** Shut down docker-compose (CTRL+C) and run `./up.sh` again.
 
 
-:)
+:V
