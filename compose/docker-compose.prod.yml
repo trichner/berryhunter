@@ -8,6 +8,9 @@ services:
             - web
         volumes:
             - "./cfg/edge/Caddyfile:/app/Caddyfile"
+            - "caddy-data:/data"
+        environment:
+            - "CADDYPATH=/data"
         ports:
             - "443:443"
             - "80:80"
@@ -26,3 +29,9 @@ services:
         image: gcr.io/trichner-212015/chieftaind
         ports:
             - "127.0.0.1:3080:3080"
+        volumes:
+            - "chieftain-data:/data"
+
+volumes:
+  caddy-data:
+  chieftain-data:

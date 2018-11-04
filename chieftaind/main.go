@@ -7,6 +7,7 @@ import (
 	"github.com/trichner/berryhunter/chieftaind/server"
 	"log"
 	"net/http"
+	"path"
 	"sync"
 )
 
@@ -26,7 +27,7 @@ func main() {
 		log.Fatalf("cannot boot chieftain: %s", err)
 	}
 
-	dataStore, err := dao.NewDataStore(config.DataDir + "/chieftain.db")
+	dataStore, err := dao.NewDataStore(path.Join(config.DataDir, "chieftain.db"))
 	if err != nil {
 		log.Fatalf("cannot boot chieftain: %s", err)
 	}
