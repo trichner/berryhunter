@@ -6,7 +6,9 @@ TARGET_TAG=$(addsuffix .tag, $(TARGET))
 TARGET_PUSH=$(addsuffix .push, $(TARGET))
 TAG?="r$(shell git rev-parse HEAD | head -c 7)"
 
-all: $(TARGET_BUILD)
+all: build
+
+build: $(TARGET_BUILD)
 
 tag: $(TARGET_TAG)
 

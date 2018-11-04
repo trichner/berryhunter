@@ -7,4 +7,7 @@ WORKDIR /app
 COPY Caddyfile.local Caddyfile
 
 EXPOSE 2015
-CMD caddy
+EXPOSE 443
+EXPOSE 80
+
+CMD ["caddy", "-agree"]

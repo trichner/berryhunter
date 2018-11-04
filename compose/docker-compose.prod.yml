@@ -10,6 +10,7 @@ services:
             - "./cfg/edge/Caddyfile:/app/Caddyfile"
         ports:
             - "443:443"
+            - "80:80"
     berryhunterd:
         image: gcr.io/trichner-212015/berryhunterd
         depends_on:
@@ -22,6 +23,6 @@ services:
     web:
         image: gcr.io/trichner-212015/berryhunter-web
     chieftaind:
-        image: chieftaind
+        image: gcr.io/trichner-212015/chieftaind
         ports:
             - "127.0.0.1:3080:3080"
