@@ -18,11 +18,19 @@ type Player struct {
 	Updated int64 `db:"updated"`
 }
 
+type RollingPeriod string;
+
+const (
+	OneDay   RollingPeriod = "24 hours"
+	OneWeek  RollingPeriod = "7 days"
+	OneMonth RollingPeriod = "30 days"
+)
+
 type PlayerDao interface {
 	UpsertPlayer(ctx context.Context, p Player) error
 	FindPlayers(ctx context.Context) ([]Player, error)
 	FindTopPlayers(ctx context.Context, limit int) ([]Player, error)
-	FindTopPlayersInPeriod(ctx context.Context, limit int, period string) ([]Player, error)
+	FindTopPlayersInPeriod(ctx context.Context, limit int, period RollingPeriod) ([]Player, error)
 	FindPlayerByUuid(ctx context.Context, uuid string) (Player, error)
 }
 
@@ -56,7 +64,7 @@ func (p *playerDao) FindTopPlayers(ctx context.Context, limit int) ([]Player, er
 	return players, err
 }
 
-func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, period string) ([]Player, error) {
+func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, period RollingPeriod) ([]Player, error) {
 	tx := mustTx(ctx)
 	players := []Player{}
 	err := tx.Select(&players, "SELECT * FROM player ORDER BY score DESC LIMIT ?", limit)
