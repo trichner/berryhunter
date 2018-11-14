@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
 	"github.com/trichner/berryhunter/chieftaind/dao"
@@ -100,18 +99,14 @@ func (c *ConnHandler) handleScoreboard(ctx context.Context, s *ChieftainApi.Scor
 		// 1. find entry with uuid
 		p, err := c.playerDao.FindPlayerByUuid(ctx, string(player.Uuid()))
 
-		switch err {
-		case sql.ErrNoRows:
-			// All good - player is not there yet
-			break
-		case nil:
-			// 2. player exists and already has a higher score - nothing to do here
-			if p.Score >= uint(player.Score()) {
-				return nil
-			}
-			break
-		default:
+		if err != nil {
 			return err
+		}
+
+		// 2. player exists and already has a higher score in the db
+		if p != nil && p.Score >= uint(player.Score()) {
+			// nothing to do here
+			return nil
 		}
 
 		// 3. store new score

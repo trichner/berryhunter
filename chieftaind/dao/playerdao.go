@@ -3,6 +3,7 @@ package dao
 // sudo docker run --rm --name mariadb -it -p 127.0.0.1:3306:3306 -e MYSQL_ROOT_PASSWORD=root mariadb:latest
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
@@ -18,7 +19,7 @@ type Player struct {
 	Updated int64 `db:"updated"`
 }
 
-type RollingPeriod string;
+type RollingPeriod string
 
 const (
 	OneDay   RollingPeriod = "24 hours"
@@ -31,7 +32,7 @@ type PlayerDao interface {
 	FindPlayers(ctx context.Context) ([]Player, error)
 	FindTopPlayers(ctx context.Context, limit int) ([]Player, error)
 	FindTopPlayersInPeriod(ctx context.Context, limit int, period RollingPeriod) ([]Player, error)
-	FindPlayerByUuid(ctx context.Context, uuid string) (Player, error)
+	FindPlayerByUuid(ctx context.Context, uuid string) (*Player, error)
 }
 
 type playerDao struct {
@@ -49,12 +50,15 @@ func (p *playerDao) FindPlayers(ctx context.Context) ([]Player, error) {
 	return players, err
 }
 
-func (p *playerDao) FindPlayerByUuid(ctx context.Context, uuid string) (Player, error) {
+func (p *playerDao) FindPlayerByUuid(ctx context.Context, uuid string) (*Player, error) {
 	tx := mustTx(ctx)
 	player := Player{}
 
 	err := tx.Get(&player, "SELECT * FROM player WHERE uuid = ?", uuid)
-	return player, err
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return &player, err
 }
 
 func (p *playerDao) FindTopPlayers(ctx context.Context, limit int) ([]Player, error) {
@@ -67,7 +71,8 @@ func (p *playerDao) FindTopPlayers(ctx context.Context, limit int) ([]Player, er
 func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, period RollingPeriod) ([]Player, error) {
 	tx := mustTx(ctx)
 	players := []Player{}
-	err := tx.Select(&players, "SELECT * FROM player ORDER BY score DESC LIMIT ?", limit)
+	modifier := "-" + period
+	err := tx.Select(&players, "SELECT * FROM player WHERE updated >= date('now', '?') ORDER BY score DESC LIMIT ?", modifier, limit)
 	return players, err
 }
 
