@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/trichner/berryhunter/chieftaind/service"
 	"github.com/trichner/berryhunter/chieftaind/dao"
+	"github.com/trichner/berryhunter/chieftaind/service"
 	"log"
 	"net/http"
 	"time"
@@ -62,7 +62,7 @@ func GetScoreboardHandler(pdao dao.PlayerDao) http.HandlerFunc {
 	}
 }
 
-func mapScoresToDto(scores service.Scores) scoresDto {
+func mapScoresToDto(scores *service.Scores) scoresDto {
 	jsonScores := scoresDto{}
 
 	jsonScores.Daily = mapPlayersToDto(scores.Daily)
