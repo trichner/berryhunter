@@ -39,6 +39,7 @@ func GetHighScoresHandler(pdao dao.PlayerDao) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		scores, err := service.GetScoresPerPeriod(r.Context(), pdao, 1);
 		if err != nil {
+			log.Printf("Error while serving high scores: %s\n", err)
 			w.WriteHeader(500)
 			return
 		}
@@ -53,6 +54,7 @@ func GetScoreboardHandler(pdao dao.PlayerDao) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		scores, err := service.GetScoresPerPeriod(r.Context(), pdao, 10);
 		if err != nil {
+			log.Printf("Error while serving scoreboard: %s\n", err)
 			w.WriteHeader(500)
 			return
 		}

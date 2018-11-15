@@ -27,6 +27,10 @@ const (
 	OneMonth RollingPeriod = "30 days"
 )
 
+func (period RollingPeriod) String() string {
+	return string(period)
+}
+
 type PlayerDao interface {
 	UpsertPlayer(ctx context.Context, p Player) error
 	FindPlayers(ctx context.Context) ([]Player, error)
@@ -71,8 +75,14 @@ func (p *playerDao) FindTopPlayers(ctx context.Context, limit int) ([]Player, er
 func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, period RollingPeriod) ([]Player, error) {
 	tx := mustTx(ctx)
 	players := []Player{}
-	modifier := "-" + period
-	err := tx.Select(&players, "SELECT * FROM player WHERE updated >= date('now', '?') ORDER BY score DESC LIMIT ?", modifier, limit)
+	modifier := "-" + period.String()
+	err := tx.Select(&players,
+		`SELECT * 
+				FROM player 
+				WHERE datetime(updated, 'unixepoch') >= datetime('now', ?) 
+				ORDER BY score DESC 
+				LIMIT ?`,
+				modifier, limit)
 	return players, err
 }
 
