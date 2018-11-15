@@ -4,6 +4,8 @@
   left: 0;
   right: 0;
 
+  z-index: 100; // on top of other screens
+
   background-color: @backgroundColor;
   color: white;
 
@@ -39,6 +41,7 @@
     }
   }
 }
+// interrupt .highScoreOverview for keyframes
 
 @keyframes jump {
   from {
@@ -49,6 +52,7 @@
   }
 }
 
+// continue .highScoreOverview
 .highScoreOverview {
   > h3 {
     margin: 0;
@@ -139,6 +143,8 @@
 }
 
 .highScoreDetails {
+  overflow: auto;
+
   > h2 {
     margin: 0;
     margin-bottom: 3rem;
@@ -152,7 +158,15 @@
     }
   }
 
-  > .highscore {
+  table.highscore {
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+    width: 448px;
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+
     > caption {
       padding: 0.4rem 1rem 0.6rem;
       font-size: 2rem;
@@ -175,7 +189,7 @@
   }
 
 
-  > .alltime {
+  table.alltime {
     color: #FFC400; // Material Design Amber A400
 
     > caption {
@@ -183,7 +197,7 @@
     }
   }
 
-  > .monthly {
+  table.monthly {
     color: #FF1744; // Material Design Amber A400
 
     > caption {
@@ -191,7 +205,7 @@
     }
   }
 
-  > .weekly {
+  table.weekly {
     color: #00B0FF; // Material Design Amber A400
 
     > caption {
@@ -199,7 +213,7 @@
     }
   }
 
-  > .daily {
+  table.daily {
     color: #76FF03; // Material Design Amber A400
 
     > caption {

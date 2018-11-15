@@ -1,30 +1,57 @@
 'use strict';
 
-import * as Events from '../Events';
-import {clearNode, isUndefined, makeRequest, random, randomInt, smoothHoverAnimation} from '../Utils';
+import {clearNode, isDefined, makeRequest, random, randomInt, smoothHoverAnimation} from '../Utils';
 import * as NameGenerator from '../NameGenerator';
 import * as Urls from '../backend/Urls';
 import * as moment from 'moment';
+import * as Preloading from "../Preloading";
+import * as Events from '../Events';
+
+// TODO cleanup: Benennungen, Reihenfolge
 
 let rootElement: HTMLElement;
 let elementsToHide: NodeList;
-let leaderboardTable: HTMLElement;
+let leaderboardTables: Map<string, HTMLElement>;
 let templateRow: HTMLElement;
 let isRendered = false;
-let startScreenElement;
+let domReady = true;
 let elements = {};
+let pendingTimeout: number;
 
 export const categories = [
     'alltime',
     'monthly',
     'weekly',
     'daily',
-    'current',
+    //  'current',
 ];
 
+const htmlFile = require('./highScores.html');
+
+
+Preloading.renderPartial(htmlFile, onDomReady);
+
+function onDomReady() {
+    domReady = true;
+
+    const showMock = false;
+    if (showMock) {
+        mockHighScoresFromBackend();
+    } else {
+        (function update() {
+            loadHighScores().then((highScores) => {
+                updateFromBackend(highScores);
+
+                pendingTimeout = window.setTimeout(update, 2000);
+            });
+        })();
+    }
+}
+
+
 export function updateFromBackend(highScores) {
-    if (isUndefined(startScreenElement)) {
-        // Start screen is not yet loaded - ignore high scores
+    if (!domReady) {
+        // html is not yet loaded - ignore high scores
         return;
     }
 
@@ -50,19 +77,20 @@ export function populateLeaderboard(highScores) {
             return;
         }
 
-        clearNode(leaderboardTable);
+        let table = leaderboardTables.get(category);
+        clearNode(table);
 
         let limit = Math.min(highScores[category].length, 10);
         for (let i = 0; i < limit; i++) {
             let highScore = highScores[category][i];
 
             let newRow = templateRow.cloneNode(true) as HTMLElement;
-            newRow.querySelector('.rank').textContent = '#' + (i +1);
+            newRow.querySelector('.rank').textContent = '#' + (i + 1);
             newRow.querySelector('.date').textContent = highScore.date.format('DD.MM.YYYY');
             newRow.querySelector('.playerName').textContent = highScore.playerName;
             newRow.querySelector('.score').textContent = highScore.score;
 
-            leaderboardTable.appendChild(newRow);
+            table.appendChild(newRow);
         }
     });
 }
@@ -74,8 +102,14 @@ export function show() {
     elementsToHide = document.querySelectorAll('.hideForLeaderboard');
     document.getElementById('closeLeaderboard').addEventListener('click', close);
 
-    leaderboardTable = document.querySelector('.highScoreDetails > .highscore > tbody');
-    templateRow = leaderboardTable.removeChild(leaderboardTable.querySelector('.templateRow'));
+    leaderboardTables = new Map();
+    categories.forEach(category => {
+        let selector = '.highScoreDetails .highscore.' + category + ' > tbody';
+        leaderboardTables.set(category, document.querySelector(selector));
+    });
+
+    let table = leaderboardTables.get('alltime');
+    templateRow = table.removeChild(table.querySelector('.templateRow'));
     templateRow.classList.remove('templateRow')
 
     let overviewElement = rootElement.querySelector('.highScoreOverview');
@@ -101,7 +135,7 @@ export function show() {
 function open() {
     rootElement.classList.add('open');
 
-    elementsToHide.forEach((element : Element) => {
+    elementsToHide.forEach((element: Element) => {
         element.classList.add('hidden');
     });
 
@@ -111,21 +145,10 @@ function open() {
 function close() {
     rootElement.classList.remove('open');
 
-    elementsToHide.forEach((element : Element) => {
+    elementsToHide.forEach((element: Element) => {
         element.classList.remove('hidden');
     });
 }
-
-Events.on('startScreen.domReady', function (domElement) {
-    startScreenElement = domElement;
-
-    const showMock = false;
-    if (showMock) {
-        mockHighScoresFromBackend();
-    } else {
-        loadHighScores().then(updateFromBackend);
-    }
-});
 
 function mockHighScoresFromBackend() {
 
@@ -134,7 +157,7 @@ function mockHighScoresFromBackend() {
 
     categories.forEach(function (category) {
 
-        if (category !== 'alltime'){
+        if (category !== 'alltime') {
             return;
         }
 
@@ -151,7 +174,7 @@ function mockHighScoresFromBackend() {
         updateFromBackend(mockHighScores);
 
         categories.forEach(function (category) {
-            if (category !== 'alltime'){
+            if (category !== 'alltime') {
                 return;
             }
             mockHighScores[category][0].score += randomInt(1, 18);
@@ -159,19 +182,22 @@ function mockHighScoresFromBackend() {
     }, 500);
 }
 
-function loadScoreboard(){
+function loadScoreboard() {
     return makeRequest({
         method: 'GET',
         url: Urls.database + '/scoreboard'
     }).then(mapScores);
 }
 
-function loadHighScores(){
+function loadHighScores() {
     return makeRequest({
         method: 'GET',
         url: Urls.database + '/highscores'
     }).then(mapScores);
 }
+
+// // TODO remove me
+let score = 1000000;
 
 function mapScores(response: string) {
     // Example response: [{"uuid":"c38a8700-365f-4fdc-ad3f-81be7b0e4faa","name":"Arnold Hardrock","score":2066,"updated":"2018-10-30T13:47:24Z"}]
@@ -190,7 +216,30 @@ function mapScores(response: string) {
                 date: moment(highScore.updated, 'YYYY-MM-DD[T]HH:mm:ssZ')
             }
         });
+
+        // // TODO remove me
+        while (mappedHighScores[category].length < 10) {
+            mappedHighScores[category].push({
+                playerName: "Dummy",
+                score: score,
+                date: moment()
+            });
+        }
+        score *= 1.10;
     });
 
     return mappedHighScores;
 }
+
+Events.on(Events.GAME_PLAYING, () => {
+    // Hide scores
+    // TODO do nothing while game runs
+    if (isDefined(pendingTimeout)) {
+        window.clearTimeout(pendingTimeout);
+    }
+});
+
+Events.on(Events.GAME_DEATH, () => {
+    // Show scores
+    // start timeout loop again
+});
