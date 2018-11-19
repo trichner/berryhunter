@@ -1,20 +1,25 @@
 'use strict';
 
-import {clearNode, isDefined, makeRequest, random, randomInt, smoothHoverAnimation} from '../Utils';
+import {
+    clearNode,
+    formatInt,
+    isDefined,
+    isUndefined,
+    makeRequest,
+    random,
+    randomInt,
+    smoothHoverAnimation
+} from '../Utils';
 import * as NameGenerator from '../NameGenerator';
 import * as Urls from '../backend/Urls';
 import * as moment from 'moment';
 import * as Preloading from "../Preloading";
 import * as Events from '../Events';
 
-// TODO cleanup: Benennungen, Reihenfolge
-
 let rootElement: HTMLElement;
 let elementsToHide: NodeList;
 let leaderboardTables: Map<string, HTMLElement>;
 let templateRow: HTMLElement;
-let isRendered = false;
-let domReady = true;
 let elements = {};
 let pendingTimeout: number;
 
@@ -26,39 +31,123 @@ export const categories = [
     //  'current',
 ];
 
+interface HighScoresDTO {
+    alltime: HighScoreDTO[];
+    monthly: HighScoreDTO[];
+    weekly: HighScoreDTO[];
+    daily: HighScoreDTO[];
+}
+
+interface HighScoreDTO {
+    // e.g. "c38a8700-365f-4fdc-ad3f-81be7b0e4faa"
+    uuid: string;
+
+    name: string;
+
+    score: number;
+
+    // e.g. "2018-10-30T13:47:24Z"
+    updated: string;
+}
+
 const htmlFile = require('./highScores.html');
-
-
 Preloading.renderPartial(htmlFile, onDomReady);
 
 function onDomReady() {
-    domReady = true;
+    rootElement = document.getElementById('highScores');
 
-    const showMock = false;
-    if (showMock) {
-        mockHighScoresFromBackend();
-    } else {
-        (function update() {
-            loadHighScores().then((highScores) => {
-                updateFromBackend(highScores);
+    initDom();
+    show();
+}
 
-                pendingTimeout = window.setTimeout(update, 2000);
-            });
-        })();
+function initDom() {
+    // FIXME das kann erst geladen werden, wenn alle anderen Screen geladen sind
+    elementsToHide = document.querySelectorAll('.hideForLeaderboard');
+    document.getElementById('closeLeaderboard').addEventListener('click', close);
+
+    leaderboardTables = new Map();
+    categories.forEach(category => {
+        let selector = '.highScoreDetails .highscore.' + category + ' > tbody';
+        leaderboardTables.set(category, document.querySelector(selector));
+    });
+
+    let table = leaderboardTables.get('alltime');
+    templateRow = table.removeChild(table.querySelector('.templateRow'));
+    templateRow.classList.remove('templateRow');
+
+    categories.forEach((category) => {
+        elements[category] = {
+            playerName: rootElement.querySelector('.highscore.' + category + ' > .playerName'),
+            score: rootElement.querySelector('.highscore.' + category + ' > .value'),
+        }
+    });
+}
+
+Events.on('startScreen.domReady', ()  =>{
+    let overviewElement = rootElement.querySelector('.highScoreOverview');
+    let menuItem = document.querySelector('a[href="#highScores"]');
+    smoothHoverAnimation(
+        overviewElement,
+        {
+            animationDuration: 0.3,
+            additionalHoverElement: menuItem
+        });
+
+    overviewElement.addEventListener('click', open);
+    menuItem.addEventListener('click', open);
+});
+
+function open() {
+    rootElement.classList.add('open');
+
+    elementsToHide.forEach((element: Element) => {
+        element.classList.add('hidden');
+    });
+
+    loadScoreboard().then(populateScoreboards);
+}
+
+function close() {
+    rootElement.classList.remove('open');
+
+    elementsToHide.forEach((element: Element) => {
+        element.classList.remove('hidden');
+    });
+}
+
+function show() {
+    rootElement.classList.remove('hidden');
+    (function update() {
+        loadHighScores().then((highScores) => {
+            populateHighScores(highScores);
+
+            pendingTimeout = window.setTimeout(update, 2000);
+        });
+    })();
+}
+
+function hide() {
+    rootElement.classList.add('hidden');
+    rootElement.classList.remove('loaded');
+    if (isDefined(pendingTimeout)) {
+        window.clearTimeout(pendingTimeout);
     }
 }
 
+function loadHighScores() {
+    return makeRequest({
+        method: 'GET',
+        url: Urls.database + '/highscores'
+    }).then(mapScores);
+}
 
-export function updateFromBackend(highScores) {
-    if (!domReady) {
+export function populateHighScores(highScores) {
+    if (isUndefined(rootElement)) {
         // html is not yet loaded - ignore high scores
         return;
     }
 
-    if (!isRendered) {
-        isRendered = true;
-        show();
-    }
+    rootElement.classList.add('loaded');
 
     categories.forEach((category) => {
         if (!highScores.hasOwnProperty(category)) {
@@ -67,11 +156,18 @@ export function updateFromBackend(highScores) {
 
         let highScore = highScores[category][0];
         elements[category].playerName.textContent = highScore.playerName;
-        elements[category].score.textContent = highScore.score;
+        elements[category].score.textContent = formatInt(highScore.score);
     });
 }
 
-export function populateLeaderboard(highScores) {
+function loadScoreboard() {
+    return makeRequest({
+        method: 'GET',
+        url: Urls.database + '/scoreboard'
+    }).then(mapScores);
+}
+
+function populateScoreboards(highScores) {
     categories.forEach((category) => {
         if (!highScores.hasOwnProperty(category)) {
             return;
@@ -86,69 +182,54 @@ export function populateLeaderboard(highScores) {
 
             let newRow = templateRow.cloneNode(true) as HTMLElement;
             newRow.querySelector('.rank').textContent = '#' + (i + 1);
-            newRow.querySelector('.date').textContent = highScore.date.format('DD.MM.YYYY');
+            if (category == 'daily'){
+                newRow.querySelector('.date').textContent = highScore.date.format('HH:mm');
+            } else {
+                newRow.querySelector('.date').textContent = highScore.date.format('DD.MM.YYYY');
+            }
             newRow.querySelector('.playerName').textContent = highScore.playerName;
-            newRow.querySelector('.score').textContent = highScore.score;
+            newRow.querySelector('.score').textContent = formatInt(highScore.score);
 
             table.appendChild(newRow);
         }
     });
 }
 
-export function show() {
-    rootElement = document.getElementById('highScores');
-    rootElement.classList.add('loaded');
+// TODO remove me
+// let score = 1000000;
 
-    elementsToHide = document.querySelectorAll('.hideForLeaderboard');
-    document.getElementById('closeLeaderboard').addEventListener('click', close);
+function mapScores(response: string) {
 
-    leaderboardTables = new Map();
-    categories.forEach(category => {
-        let selector = '.highScoreDetails .highscore.' + category + ' > tbody';
-        leaderboardTables.set(category, document.querySelector(selector));
-    });
+    let highScores: HighScoresDTO = JSON.parse(response);
 
-    let table = leaderboardTables.get('alltime');
-    templateRow = table.removeChild(table.querySelector('.templateRow'));
-    templateRow.classList.remove('templateRow')
+    let mappedHighScores = {};
+    categories.forEach((category) => {
+        if (!highScores.hasOwnProperty(category)) {
+            return;
+        }
 
-    let overviewElement = rootElement.querySelector('.highScoreOverview');
-    let menuItem = document.querySelector('a[href="#highScores"]');
-    smoothHoverAnimation(
-        overviewElement,
-        {
-            animationDuration: 0.3,
-            additionalHoverElement: menuItem
+        mappedHighScores[category] = highScores[category].map((highScore: HighScoreDTO) => {
+            return {
+                playerName: highScore.name,
+                score: highScore.score,
+                date: moment(highScore.updated, 'YYYY-MM-DD[T]HH:mm:ssZ')
+            }
         });
 
-    overviewElement.addEventListener('click', open);
-    menuItem.addEventListener('click', open);
-
-    categories.forEach((category) => {
-        elements[category] = {
-            playerName: rootElement.querySelector('.highscore.' + category + ' > .playerName'),
-            score: rootElement.querySelector('.highscore.' + category + ' > .value'),
-        }
-    });
-}
-
-function open() {
-    rootElement.classList.add('open');
-
-    elementsToHide.forEach((element: Element) => {
-        element.classList.add('hidden');
+        // TODO remove me
+        // while (mappedHighScores[category].length < 10) {
+        //     mappedHighScores[category].push({
+        //         playerName: "Dummy",
+        //         score: score,
+        //         date: moment()
+        //     });
+        // }
+        // score *= 1.10;
     });
 
-    loadScoreboard().then(populateLeaderboard);
+    return mappedHighScores;
 }
 
-function close() {
-    rootElement.classList.remove('open');
-
-    elementsToHide.forEach((element: Element) => {
-        element.classList.remove('hidden');
-    });
-}
 
 function mockHighScoresFromBackend() {
 
@@ -171,7 +252,7 @@ function mockHighScoresFromBackend() {
     });
 
     setInterval(function () {
-        updateFromBackend(mockHighScores);
+        populateHighScores(mockHighScores);
 
         categories.forEach(function (category) {
             if (category !== 'alltime') {
@@ -182,64 +263,10 @@ function mockHighScoresFromBackend() {
     }, 500);
 }
 
-function loadScoreboard() {
-    return makeRequest({
-        method: 'GET',
-        url: Urls.database + '/scoreboard'
-    }).then(mapScores);
-}
-
-function loadHighScores() {
-    return makeRequest({
-        method: 'GET',
-        url: Urls.database + '/highscores'
-    }).then(mapScores);
-}
-
-// // TODO remove me
-let score = 1000000;
-
-function mapScores(response: string) {
-    // Example response: [{"uuid":"c38a8700-365f-4fdc-ad3f-81be7b0e4faa","name":"Arnold Hardrock","score":2066,"updated":"2018-10-30T13:47:24Z"}]
-    let highScores = JSON.parse(response);
-
-    let mappedHighScores = {};
-    categories.forEach((category) => {
-        if (!highScores.hasOwnProperty(category)) {
-            return;
-        }
-
-        mappedHighScores[category] = highScores[category].map(highScore => {
-            return {
-                playerName: highScore.name,
-                score: highScore.score,
-                date: moment(highScore.updated, 'YYYY-MM-DD[T]HH:mm:ssZ')
-            }
-        });
-
-        // // TODO remove me
-        while (mappedHighScores[category].length < 10) {
-            mappedHighScores[category].push({
-                playerName: "Dummy",
-                score: score,
-                date: moment()
-            });
-        }
-        score *= 1.10;
-    });
-
-    return mappedHighScores;
-}
-
 Events.on(Events.GAME_PLAYING, () => {
-    // Hide scores
-    // TODO do nothing while game runs
-    if (isDefined(pendingTimeout)) {
-        window.clearTimeout(pendingTimeout);
-    }
+    hide();
 });
 
-Events.on(Events.GAME_DEATH, () => {
-    // Show scores
-    // start timeout loop again
+Events.on(Events.ENDSCREEN_SHOWN, () => {
+    show();
 });
