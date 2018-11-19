@@ -5,28 +5,40 @@ import (
 	"github.com/trichner/berryhunter/chieftaind/dao"
 )
 
-func GetScoresPerPeriod(ctx context.Context, pdao dao.PlayerDao, limit int) (*Scores, error) {
+type ScoreService interface {
+	ScoresPerPeriod(ctx context.Context, limit int) (*Scores, error)
+}
+
+type scoreService struct {
+	pdao dao.PlayerDao
+}
+
+func NewScoreService(pdao dao.PlayerDao) (ScoreService, error) {
+	return &scoreService{pdao}, nil
+}
+
+func (s *scoreService) ScoresPerPeriod(ctx context.Context, limit int) (*Scores, error) {
 	scores := &Scores{}
 
-	p, err := pdao.FindTopPlayersInPeriod(ctx, limit, dao.OneDay)
+	p, err := s.pdao.FindTopPlayersInPeriod(ctx, limit, dao.OneDay)
 	if err != nil {
 		return scores, err
 	}
 	scores.Daily = p
 
-	p, err = pdao.FindTopPlayersInPeriod(ctx, limit, dao.OneWeek)
+	p, err = s.pdao.FindTopPlayersInPeriod(ctx, limit, dao.OneWeek)
 	if err != nil {
 		return scores, err
 	}
 	scores.Weekly = p
 
-	p, err = pdao.FindTopPlayersInPeriod(ctx, limit, dao.OneMonth)
+	p, err = s.pdao.FindTopPlayersInPeriod(ctx, limit, dao.OneMonth)
 	if err != nil {
 		return scores, err
 	}
 	scores.Monthly = p
 
-	p, err = pdao.FindTopPlayers(ctx, limit)
+	p, err = s.pdao.FindTopPlayers(ctx, limit)
 	if err != nil {
 		return scores, err
 	}

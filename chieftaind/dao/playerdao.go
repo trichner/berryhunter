@@ -19,17 +19,13 @@ type Player struct {
 	Updated int64 `db:"updated"`
 }
 
-type RollingPeriod string
+type RollingPeriod int
 
 const (
-	OneDay   RollingPeriod = "24 hours"
-	OneWeek  RollingPeriod = "7 days"
-	OneMonth RollingPeriod = "30 days"
+	OneDay RollingPeriod = iota
+	OneWeek
+	OneMonth
 )
-
-func (period RollingPeriod) String() string {
-	return string(period)
-}
 
 type PlayerDao interface {
 	UpsertPlayer(ctx context.Context, p Player) error
@@ -75,7 +71,17 @@ func (p *playerDao) FindTopPlayers(ctx context.Context, limit int) ([]Player, er
 func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, period RollingPeriod) ([]Player, error) {
 	tx := mustTx(ctx)
 	players := []Player{}
-	modifier := "-" + period.String()
+	var modifier string
+	switch period {
+	case OneDay:
+		modifier = "-24 hours"
+		break;
+	case OneWeek:
+		modifier = "-7 days"
+		break;
+	case OneMonth:
+		modifier = "-30 days"
+	}
 	err := tx.Select(&players,
 		`SELECT * 
 				FROM player 

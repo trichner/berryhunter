@@ -11,10 +11,10 @@ import (
 	"time"
 )
 
-func NewRouter(ds dao.DataStore, p dao.PlayerDao) http.Handler {
+func NewRouter(ds dao.DataStore, s service.ScoreService) http.Handler {
 	router := mux.NewRouter()
-	router.HandleFunc("/highscores", GetHighScoresHandler(p)).Methods("GET")
-	router.HandleFunc("/scoreboard", GetScoreboardHandler(p)).Methods("GET")
+	router.HandleFunc("/highscores", GetHighScoresHandler(s)).Methods("GET")
+	router.HandleFunc("/scoreboard", GetScoreboardHandler(s)).Methods("GET")
 
 	router.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -34,10 +34,10 @@ func NewRouter(ds dao.DataStore, p dao.PlayerDao) http.Handler {
 	return router
 }
 
-func GetHighScoresHandler(pdao dao.PlayerDao) http.HandlerFunc {
+func GetHighScoresHandler(s service.ScoreService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		scores, err := service.GetScoresPerPeriod(r.Context(), pdao, 1);
+		scores, err := s.ScoresPerPeriod(r.Context(), 1);
 		if err != nil {
 			log.Printf("Error while serving high scores: %s\n", err)
 			w.WriteHeader(500)
@@ -49,10 +49,10 @@ func GetHighScoresHandler(pdao dao.PlayerDao) http.HandlerFunc {
 	}
 }
 
-func GetScoreboardHandler(pdao dao.PlayerDao) http.HandlerFunc {
+func GetScoreboardHandler(s service.ScoreService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		scores, err := service.GetScoresPerPeriod(r.Context(), pdao, 10);
+		scores, err := s.ScoresPerPeriod(r.Context(), 10);
 		if err != nil {
 			log.Printf("Error while serving scoreboard: %s\n", err)
 			w.WriteHeader(500)
