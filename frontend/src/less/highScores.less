@@ -1,8 +1,14 @@
-#highScores { // top row on start screen
+#highScores {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  box-sizing: border-box;
 
   z-index: 100; // on top of other screens
 
@@ -29,9 +35,15 @@
   &:not(.open) > .highScoreDetails {
     display: none;
   }
+
+  * {
+    box-sizing: border-box;
+  }
 }
 
-.highScoreOverview {
+.highScoreOverview { // top row on start screen
+  flex: 1;
+
   line-height: 0.7;
   cursor: pointer;
 
@@ -53,7 +65,7 @@
 }
 
 // continue .highScoreOverview
-.highScoreOverview {
+.highScoreOverview { // top row on start screen
   > h3 {
     margin: 0;
 
@@ -143,25 +155,65 @@
 }
 
 .highScoreDetails {
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 
-  > h2 {
-    margin: 0;
+  justify-content: center;
+  align-items: center;
+
+  overflow-y: auto;
+
+  > header {
     margin-bottom: 3rem;
 
-    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+
+    font-size: 10vw;
 
     > .berryhunter {
-      display: block;
+      margin: 0;
+      font-size: inherit;
+
       color: #e37313;
       text-shadow: rgb(255, 255, 255) 3px 0 0, rgb(255, 255, 255) 2.83487px 0.981584px 0, rgb(255, 255, 255) 2.35766px 1.85511px 0, rgb(255, 255, 255) 1.62091px 2.52441px 0, rgb(255, 255, 255) 0.705713px 2.91581px 0, rgb(255, 255, 255) -0.287171px 2.98622px 0, rgb(255, 255, 255) -1.24844px 2.72789px 0, rgb(255, 255, 255) -2.07227px 2.16926px 0, rgb(255, 255, 255) -2.66798px 1.37182px 0, rgb(255, 255, 255) -2.96998px 0.42336px 0, rgb(255, 255, 255) -2.94502px -0.571704px 0, rgb(255, 255, 255) -2.59586px -1.50383px 0, rgb(255, 255, 255) -1.96093px -2.27041px 0, rgb(255, 255, 255) -1.11013px -2.78704px 0, rgb(255, 255, 255) -0.137119px -2.99686px 0, rgb(255, 255, 255) 0.850987px -2.87677px 0, rgb(255, 255, 255) 1.74541px -2.43999px 0, rgb(255, 255, 255) 2.44769px -1.73459px 0, rgb(255, 255, 255) 2.88051px -0.838247px 0;
     }
+
+    > .leaderboard {
+      margin: 0;
+      font-size: inherit;
+    }
   }
+
+  > .tableContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tableGroup {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+// 120rem is exactly the full width of 4 tables with 3 margins and the padding of the highScoreDetails
+@media (min-width: 120rem) {
+  .tableGroup + .tableGroup {
+    margin-left: 2rem;
+  }
+}
+
+.highScoreDetails {
 
   table.highscore {
     margin-left: 2rem;
     margin-bottom: 2rem;
-    width: 448px;
+    width: 28rem;
 
     &:first-of-type {
       margin-left: 0;
@@ -226,7 +278,15 @@
   }
 
   td.score {
-    text-align: right;
+    text-align: right; // numbers are right aligned for better comparability
+    white-space: nowrap; // don't break up numbers
+  }
+
+  td.playerName { // make sure long names don't break the layout
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 195px;
+    text-overflow: ellipsis;
   }
 }
 
@@ -257,7 +317,8 @@
   }
 }
 
-/*
+/* Same media queries, but taking .current into account
+
 @media (max-width: 864px) {
   .highScoreOverview > .current {
     display: none;

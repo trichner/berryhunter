@@ -83,7 +83,7 @@ function initDom() {
     });
 }
 
-Events.on('startScreen.domReady', ()  =>{
+Events.on('startScreen.domReady', () => {
     let overviewElement = rootElement.querySelector('.highScoreOverview');
     let menuItem = document.querySelector('a[href="#highScores"]');
     smoothHoverAnimation(
@@ -156,7 +156,7 @@ export function populateHighScores(highScores) {
 
         let highScore = highScores[category][0];
         elements[category].playerName.textContent = highScore.playerName;
-        elements[category].score.textContent = formatInt(highScore.score);
+        elements[category].score.textContent = formatNumber(highScore.score);
     });
 }
 
@@ -182,21 +182,35 @@ function populateScoreboards(highScores) {
 
             let newRow = templateRow.cloneNode(true) as HTMLElement;
             newRow.querySelector('.rank').textContent = '#' + (i + 1);
-            if (category == 'daily'){
+            if (category == 'daily') {
                 newRow.querySelector('.date').textContent = highScore.date.format('HH:mm');
             } else {
                 newRow.querySelector('.date').textContent = highScore.date.format('DD.MM.YYYY');
             }
             newRow.querySelector('.playerName').textContent = highScore.playerName;
-            newRow.querySelector('.score').textContent = formatInt(highScore.score);
+            newRow.querySelector('.score').textContent = formatNumber(highScore.score);
 
             table.appendChild(newRow);
         }
     });
 }
 
+// TODO use this method ingame for the scoreboard, too
+const multipliers = ['', 'K', 'M', 'B', 'T'];
+function formatNumber(x: number): string {
+
+    let kExp:  number = 0;
+
+    while (x >= 10 * 1000 && kExp < multipliers.length - 1) {
+        kExp++;
+        x /= 1000;
+    }
+
+    return formatInt(Math.floor(x)) + ' ' + multipliers[kExp];
+}
+
 // TODO remove me
-// let score = 1000000;
+let score = 10 * 1000;
 
 function mapScores(response: string) {
 
@@ -217,14 +231,14 @@ function mapScores(response: string) {
         });
 
         // TODO remove me
-        // while (mappedHighScores[category].length < 10) {
-        //     mappedHighScores[category].push({
-        //         playerName: "Dummy",
-        //         score: score,
-        //         date: moment()
-        //     });
-        // }
-        // score *= 1.10;
+        while (mappedHighScores[category].length < 10) {
+            mappedHighScores[category].push({
+                playerName: "Dummy",
+                score: score,
+                date: moment()
+            });
+        }
+        score *= 1.10;
     });
 
     return mappedHighScores;

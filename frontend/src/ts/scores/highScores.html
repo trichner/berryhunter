@@ -1,5 +1,5 @@
-<div id="highScores" class="layout-column">
-	<div class="highScoreOverview layout-row">
+<div id="highScores">
+	<div class="highScoreOverview">
 		<h3 class="layout-row">
 			High Scores
 			<img src="../userInterface/screens/expand.svg" class="icon expand"/>
@@ -31,46 +31,54 @@
         </div> -->
 	</div>
 
-	layout-align-center-center entfernen?
-	<div class="highScoreDetails layout-column layout-align-center-center flex-100">
+	<div class="highScoreDetails">
 		<a href="#" id="closeLeaderboard">X</a>
 
-		<h2>
-			<span class="berryhunter">BerryHunter</span>
-			<span class="leaderboard">Top 10</span>
-		</h2>
+		<header>
+			<h2 class="berryhunter">
+				BerryHunter
+			</h2>
+			<!-- TODO define spacer for small gap instead of space -->
+			<span class="spacer"></span>
+			<h3 class="leaderboard">
+				Top<span class="spacer"></span>10
+			</h3>
+		</header>
 
-		<div class="layout-row">
-			<table class="highscore alltime">
-				<caption>All time</caption>
-				<tbody>
-				<tr class="templateRow">
-					<!-- Rows are copied and filled in JS -->
-					<td class="rank"></td>
-					<td class="date"></td>
-					<td class="playerName"></td>
-					<td class="score"></td>
-				</tr>
-				</tbody>
-			</table>
+		<div class="tableContainer">
+			<div class="tableGroup">
+				<table class="highscore alltime">
+					<caption>All time</caption>
+					<tbody>
+					<tr class="templateRow">
+						<!-- Rows are copied and filled in JS -->
+						<td class="rank"></td>
+						<td class="date"></td>
+						<td class="playerName"></td>
+						<td class="score"></td>
+					</tr>
+					</tbody>
+				</table>
 
-			<table class="highscore monthly">
-				<caption>Monthly</caption>
-				<tbody>
-				</tbody>
-			</table>
+				<table class="highscore monthly">
+					<caption>Monthly</caption>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="tableGroup">
+				<table class="highscore weekly">
+					<caption>Weekly</caption>
+					<tbody>
+					</tbody>
+				</table>
 
-			<table class="highscore weekly">
-				<caption>Weekly</caption>
-				<tbody>
-				</tbody>
-			</table>
-
-			<table class="highscore daily">
-				<caption>Daily</caption>
-				<tbody>
-				</tbody>
-			</table>
+				<table class="highscore daily">
+					<caption>Daily</caption>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

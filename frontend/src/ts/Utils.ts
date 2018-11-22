@@ -373,7 +373,7 @@ export function smoothHoverAnimation(element: Element, options?: { additionalHov
         element.classList.add('hover');
         mouseOverElement = true;
     });
-    if (isDefined(additionalHoverElement)){
+    if (isDefined(additionalHoverElement)) {
         additionalHoverElement.addEventListener('mouseenter', () => {
             element.classList.add('hover');
             mouseOverElement = true;
@@ -383,7 +383,7 @@ export function smoothHoverAnimation(element: Element, options?: { additionalHov
     element.addEventListener('mouseleave', () => {
         mouseOverElement = false;
     });
-    if (isDefined(additionalHoverElement)){
+    if (isDefined(additionalHoverElement)) {
         additionalHoverElement.addEventListener('mouseleave', () => {
             mouseOverElement = false;
         });
@@ -403,6 +403,13 @@ export function smoothHoverAnimation(element: Element, options?: { additionalHov
     });
 }
 
-export function formatInt(x) {
+/**
+ * Formats numbers in groups
+ *
+ * 1000    --> "1 000"
+ * 432738  --> "432 738"
+ * 4432738 --> "4 432 738"
+ */
+export function formatInt(x: number): string {
     return x.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
