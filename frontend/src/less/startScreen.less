@@ -174,18 +174,6 @@
 			}
 		}
 	}
-
-	&.leaderboardVisible {
-		.hideForLeaderboard {
-			display: none;
-		}
-	}
-
-	&.creditsVisible {
-		.hideForCredits {
-			display: none;
-		}
-	}
 }
 
 @keyframes stamp1 {
@@ -386,6 +374,12 @@
 
 	&.hidden {
 		display: none; // enforce global rule as id rule display: block takes priority
+	}
+}
+
+body.creditsVisible {
+	.hideForCredits {
+		visibility: hidden; // use visibility to not trigger animations
 	}
 }
 

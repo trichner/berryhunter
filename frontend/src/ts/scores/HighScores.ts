@@ -93,14 +93,14 @@ Events.on('startScreen.domReady', () => {
 
 function open() {
     rootElement.classList.add('open');
-    Events.trigger('leaderboard.visibilityChanged', true);
+    document.body.classList.add('leaderboardVisible');
 
     loadScoreboard().then(populateScoreboards);
 }
 
 function close() {
     rootElement.classList.remove('open');
-    Events.trigger('leaderboard.visibilityChanged', false);
+    document.body.classList.remove('leaderboardVisible');
 }
 
 function show() {

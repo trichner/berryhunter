@@ -37,7 +37,7 @@ export function setup() {
 
 
 function setVisibility(isVisible: boolean) {
-    Events.trigger('credits.visibilityChanged', isVisible);
+    document.body.classList.toggle('creditsVisible', isVisible);
 
     rootElement.classList.toggle('hidden', !isVisible);
     closeButton.classList.toggle('hidden', !isVisible);
