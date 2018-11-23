@@ -1,48 +1,49 @@
 <div id="highScores">
 	<div class="highScoreOverview">
-		<h3 class="layout-row">
+		<h3>
 			High Scores
 			<img src="../userInterface/screens/expand.svg" class="icon expand"/>
 		</h3>
-		<div class="highscore alltime layout-row flex">
-			<h4>All time</h4>
-			<span class="playerName"></span>
-			<data value="" class="value"></data>
+		<div class="highscoresGroup">
+			<div class="highscore alltime">
+				<h4>All time</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div>
+			<div class="highscore monthly">
+				<h4>Monthly</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div>
+			<div class="highscore weekly">
+				<h4>Weekly</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div>
+			<div class="highscore daily">
+				<h4>Daily</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div>
+			<!-- <div class="highscore current">
+				<h4>Now</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div> -->
 		</div>
-		<div class="highscore monthly layout-row flex">
-			<h4>Monthly</h4>
-			<span class="playerName"></span>
-			<data value="" class="value"></data>
-		</div>
-		<div class="highscore weekly layout-row flex">
-			<h4>Weekly</h4>
-			<span class="playerName"></span>
-			<data value="" class="value"></data>
-		</div>
-		<div class="highscore daily layout-row flex">
-			<h4>Daily</h4>
-			<span class="playerName"></span>
-			<data value="" class="value"></data>
-		</div>
-		<!-- <div class="highscore current layout-row flex">
-            <h4>Now</h4>
-            <span class="playerName"></span>
-            <data value="" class="value"></data>
-        </div> -->
 	</div>
 
 	<div class="highScoreDetails">
 		<a href="#" id="closeLeaderboard">X</a>
 
 		<header>
-			<h2 class="berryhunter">
-				BerryHunter
-			</h2>
-			<!-- TODO define spacer for small gap instead of space -->
-			<span class="spacer"></span>
 			<h3 class="leaderboard">
 				Top<span class="spacer"></span>10
 			</h3>
+			<span class="spacer"></span>
+			<h2 class="berryhunter">
+				BerryHunters
+			</h2>
 		</header>
 
 		<div class="tableContainer">

@@ -2,7 +2,7 @@
 
 import {
     clearNode,
-    formatInt,
+    formatIntWithAbbreviation,
     isDefined,
     isUndefined,
     makeRequest,
@@ -61,8 +61,6 @@ function onDomReady() {
 }
 
 function initDom() {
-    // FIXME das kann erst geladen werden, wenn alle anderen Screen geladen sind
-    elementsToHide = document.querySelectorAll('.hideForLeaderboard');
     document.getElementById('closeLeaderboard').addEventListener('click', close);
 
     leaderboardTables = new Map();
@@ -78,7 +76,7 @@ function initDom() {
     categories.forEach((category) => {
         elements[category] = {
             playerName: rootElement.querySelector('.highscore.' + category + ' > .playerName'),
-            score: rootElement.querySelector('.highscore.' + category + ' > .value'),
+            score: rootElement.querySelector('.highscore.' + category + ' > .score'),
         }
     });
 }
@@ -95,6 +93,8 @@ Events.on('startScreen.domReady', () => {
 
     overviewElement.addEventListener('click', open);
     menuItem.addEventListener('click', open);
+
+    elementsToHide = document.querySelectorAll('.hideForLeaderboard');
 });
 
 function open() {
@@ -156,7 +156,7 @@ export function populateHighScores(highScores) {
 
         let highScore = highScores[category][0];
         elements[category].playerName.textContent = highScore.playerName;
-        elements[category].score.textContent = formatNumber(highScore.score);
+        elements[category].score.textContent = formatIntWithAbbreviation(highScore.score);
     });
 }
 
@@ -188,26 +188,14 @@ function populateScoreboards(highScores) {
                 newRow.querySelector('.date').textContent = highScore.date.format('DD.MM.YYYY');
             }
             newRow.querySelector('.playerName').textContent = highScore.playerName;
-            newRow.querySelector('.score').textContent = formatNumber(highScore.score);
+            newRow.querySelector('.score').textContent = formatIntWithAbbreviation(highScore.score);
 
             table.appendChild(newRow);
         }
     });
 }
 
-// TODO use this method ingame for the scoreboard, too
-const multipliers = ['', 'K', 'M', 'B', 'T'];
-function formatNumber(x: number): string {
 
-    let kExp:  number = 0;
-
-    while (x >= 10 * 1000 && kExp < multipliers.length - 1) {
-        kExp++;
-        x /= 1000;
-    }
-
-    return formatInt(Math.floor(x)) + ' ' + multipliers[kExp];
-}
 
 // TODO remove me
 let score = 10 * 1000;
@@ -233,7 +221,7 @@ function mapScores(response: string) {
         // TODO remove me
         while (mappedHighScores[category].length < 10) {
             mappedHighScores[category].push({
-                playerName: "Dummy",
+                playerName: "Dummy Extralong Name the Third",
                 score: score,
                 date: moment()
             });

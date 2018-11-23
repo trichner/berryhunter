@@ -1726,10 +1726,6 @@ flatbuffers@^1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/flatbuffers/-/flatbuffers-1.9.0.tgz#e1ef5267deaab4872c08dbca56a936d6dbc27ecd"
 
-flexboxgrid@^6.3.1:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/flexboxgrid/-/flexboxgrid-6.3.1.tgz#e99898afc07b7047722bb81a958a5fba4d4e20fd"
-
 flush-write-stream@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/flush-write-stream/-/flush-write-stream-1.0.3.tgz#c5d586ef38af6097650b49bc41b55fabb19f35bd"
