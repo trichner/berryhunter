@@ -6,18 +6,14 @@ import {
     isDefined,
     isUndefined,
     makeRequest,
-    random,
-    randomInt,
     smoothHoverAnimation
 } from '../Utils';
-import * as NameGenerator from '../NameGenerator';
 import * as Urls from '../backend/Urls';
 import * as moment from 'moment';
 import * as Preloading from "../Preloading";
 import * as Events from '../Events';
 
 let rootElement: HTMLElement;
-let elementsToHide: NodeList;
 let leaderboardTables: Map<string, HTMLElement>;
 let templateRow: HTMLElement;
 let elements = {};
@@ -93,26 +89,18 @@ Events.on('startScreen.domReady', () => {
 
     overviewElement.addEventListener('click', open);
     menuItem.addEventListener('click', open);
-
-    elementsToHide = document.querySelectorAll('.hideForLeaderboard');
 });
 
 function open() {
     rootElement.classList.add('open');
-
-    elementsToHide.forEach((element: Element) => {
-        element.classList.add('hidden');
-    });
+    Events.trigger('leaderboard.visibilityChanged', true);
 
     loadScoreboard().then(populateScoreboards);
 }
 
 function close() {
     rootElement.classList.remove('open');
-
-    elementsToHide.forEach((element: Element) => {
-        element.classList.remove('hidden');
-    });
+    Events.trigger('leaderboard.visibilityChanged', false);
 }
 
 function show() {
@@ -196,10 +184,6 @@ function populateScoreboards(highScores) {
 }
 
 
-
-// TODO remove me
-let score = 10 * 1000;
-
 function mapScores(response: string) {
 
     let highScores: HighScoresDTO = JSON.parse(response);
@@ -217,52 +201,9 @@ function mapScores(response: string) {
                 date: moment(highScore.updated, 'YYYY-MM-DD[T]HH:mm:ssZ')
             }
         });
-
-        // TODO remove me
-        while (mappedHighScores[category].length < 10) {
-            mappedHighScores[category].push({
-                playerName: "Dummy Extralong Name the Third",
-                score: score,
-                date: moment()
-            });
-        }
-        score *= 1.10;
     });
 
     return mappedHighScores;
-}
-
-
-function mockHighScoresFromBackend() {
-
-    let mockHighScores = {};
-    let absoluteHighScore = randomInt(60000, 300000);
-
-    categories.forEach(function (category) {
-
-        if (category !== 'alltime') {
-            return;
-        }
-
-        mockHighScores[category] = [{
-            playerName: NameGenerator.generate(),
-            score: absoluteHighScore
-        }];
-
-        absoluteHighScore *= random(0.5, 0.8);
-        absoluteHighScore = Math.round(absoluteHighScore);
-    });
-
-    setInterval(function () {
-        populateHighScores(mockHighScores);
-
-        categories.forEach(function (category) {
-            if (category !== 'alltime') {
-                return;
-            }
-            mockHighScores[category][0].score += randomInt(1, 18);
-        });
-    }, 500);
 }
 
 Events.on(Events.GAME_PLAYING, () => {

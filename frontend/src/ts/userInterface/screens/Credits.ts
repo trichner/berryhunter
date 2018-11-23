@@ -1,9 +1,9 @@
+import * as Events from "../../Events";
+
 const html: string = require('./credits.html');
 
 let startScreenElement: HTMLElement;
 let rootElement: HTMLElement;
-let headerElement: HTMLElement;
-let startForm: HTMLElement;
 let closeButton: HTMLElement;
 
 let visible = false;
@@ -13,8 +13,6 @@ export function setup() {
     rootElement = document.getElementById('credits');
     rootElement.innerHTML = html;
 
-    headerElement = document.querySelector('#startScreen > header');
-    startForm = document.getElementById('startForm');
     closeButton = document.getElementById('closeCredits');
 
     document.querySelector('a[href="#credits"]').addEventListener('click', event => {
@@ -29,7 +27,8 @@ export function setup() {
             return;
         }
 
-        // Hide the credits if a user clicks outside
+        // Hide the credits if a user clicks outside. This also works with
+        // the close button, as it's not nested inside the credits
         if (!rootElement.contains(event.target as Node)) {
             setVisibility(false);
         }
@@ -38,8 +37,7 @@ export function setup() {
 
 
 function setVisibility(isVisible: boolean) {
-    headerElement.classList.toggle('hidden', isVisible);
-    startForm.classList.toggle('hidden', isVisible);
+    Events.trigger('credits.visibilityChanged', isVisible);
 
     rootElement.classList.toggle('hidden', !isVisible);
     closeButton.classList.toggle('hidden', !isVisible);

@@ -104,3 +104,11 @@ function setProgress(value) {
 function getProgress() {
     return progress;
 }
+
+Events.on('leaderboard.visibilityChanged', (isOpen: boolean) => {
+    rootElement.classList.toggle('leaderboardVisible', isOpen);
+});
+
+Events.on('credits.visibilityChanged', (isOpen: boolean) => {
+    rootElement.classList.toggle('creditsVisible', isOpen);
+});

@@ -1,9 +1,8 @@
 <div id="startScreen" class="loading">
-	<!-- TODO Introduce classes "leaderboardVisible" to hide "hideForLeaderboard". Same for credits -->
 	<!-- TODO include splashscreen.jpg in Markup to make it load faster? -->
 	<div id="splashScreen"></div>
 
-	<header class="layout-row hideForLeaderboard">
+	<header class="layout-row hideForLeaderboard hideForCredits">
 		<img id="hunter" src="./hunter.png"/>
 		<h1>BerryHunter</h1>
 	</header>
@@ -24,7 +23,7 @@
 		</div>
 	</div>
 
-	<form id="startForm" class="playerForm layout-column hideForLeaderboard">
+	<form id="startForm" class="playerForm layout-column hideForLeaderboard hideForCredits">
 		<div class="inputContainer layout-row">
 			<input class="playerNameInput flex"
 			       placeholder="Some Name"
@@ -64,8 +63,8 @@
 		<a href="http://iogames.space/" target="_blank">More IO-Games</a>
 	</div>
 
-	<a href="#" id="closeCredits" class="hidden">X</a>
-	<div id="credits" class="infoContainer center hidden">
+	<a href="#" id="closeCredits" class="hidden hideForLeaderboard">X</a>
+	<div id="credits" class="infoContainer center hidden hideForLeaderboard">
 		<!-- Filled via JS -->
 	</div>
 
