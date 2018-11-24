@@ -26,7 +26,7 @@ spec:
         app: berryhunterd-app
     spec:
       containers:
-      - image: gcr.io/trichner-212015/berryhunterd:latest
+      - image: gcr.io/trichner-212015/berryhunterd:branch-develop
         name: berryhunterd
         ports:
         - containerPort: 80
