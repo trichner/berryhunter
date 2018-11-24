@@ -2,11 +2,13 @@ package main
 
 import (
 	"github.com/trichner/berryhunter/chieftaind/api"
+	"github.com/trichner/berryhunter/chieftaind/cfg"
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"github.com/trichner/berryhunter/chieftaind/server"
 	"github.com/trichner/berryhunter/chieftaind/service"
 	"log"
 	"net/http"
+	"path"
 	"sync"
 )
 
@@ -14,12 +16,19 @@ func main() {
 
 	log.Printf("booting chieftain")
 
+	confFile := "conf.json"
+	log.Printf("loading configuration from : %s", confFile)
+	config, err := cfg.ReadConfig(confFile)
+	if err != nil {
+		log.Fatalf("cannot read config: %s", err)
+	}
+
 	playerStore, err := dao.NewPlayerDao()
 	if err != nil {
 		log.Fatalf("cannot boot chieftain: %s", err)
 	}
 
-	dataStore, err := dao.NewDataStore()
+	dataStore, err := dao.NewDataStore(path.Join(config.DataDir, "chieftain.db"))
 	if err != nil {
 		log.Fatalf("cannot boot chieftain: %s", err)
 	}
@@ -37,7 +46,7 @@ func main() {
 		log.Fatalf("cannot boot chieftain: %s", err)
 	}
 
-	addr := ":3443"
+	addr := config.ApiAddr
 	log.Printf("chieftain listening on %s", addr)
 
 	wg.Add(1)
@@ -51,11 +60,11 @@ func main() {
 	// boot HTTP server
 	wg.Add(1)
 
-	apiAddr := ":3080"
-	log.Printf("api listening on %s/scoreboard", apiAddr)
+	restAddr := config.RestAddr
+	log.Printf("rest api listening on %s/scoreboard", restAddr)
 	go func() {
 		r := api.NewRouter(dataStore, scoreService)
-		err := http.ListenAndServe(apiAddr, r)
+		err := http.ListenAndServe(restAddr, r)
 		if err != nil {
 			log.Fatalf("cannot boot api: %s", err)
 		}

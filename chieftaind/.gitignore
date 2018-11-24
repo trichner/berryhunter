@@ -2,4 +2,5 @@
 server.crt
 server.key
 chieftaind
+conf.json
 chieftaind.exe

@@ -29,9 +29,9 @@ type dataStore struct {
 	db *sqlx.DB
 }
 
-func NewDataStore() (DataStore, error) {
+func NewDataStore(dbfile string) (DataStore, error) {
 
-	db, err := sqlx.Connect("sqlite3", "./chieftain.db")
+	db, err := sqlx.Connect("sqlite3", dbfile)
 	if err != nil {
 		return nil, err
 	}

@@ -6,3 +6,5 @@ frontend/death-io.sublime-workspace
 *.log
 backend/backend.exe
 backend/conf.json
+id_berryhunter-ci
+node_modules/
