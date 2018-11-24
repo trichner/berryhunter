@@ -68,8 +68,6 @@ steps:
 #- name: 'gcr.io/cloud-builders/docker'
 #  args: ['tag', 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA', 'gcr.io/$PROJECT_ID/berryhunter-web:branch-$BRANCH_NAME']
 # ---- edge
-substitions:
-
 images:
 - 'gcr.io/$PROJECT_ID/berryhunterd:rev-$SHORT_SHA'
 - 'gcr.io/$PROJECT_ID/berryhunterd:branch-$BRANCH_NAME'
