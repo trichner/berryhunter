@@ -94,6 +94,22 @@ func (c *ConnHandler) handleScoreboard(ctx context.Context, s *ChieftainApi.Scor
 	player := &ChieftainApi.ScoreboardPlayer{}
 	for i := 0; i < s.PlayersLength(); i++ {
 		s.Players(player, i)
+
+		// Logic
+		// 1. find entry with uuid
+		p, err := c.playerDao.FindPlayerByUuid(ctx, string(player.Uuid()))
+
+		if err != nil {
+			return err
+		}
+
+		// 2. player exists and already has a higher score in the db
+		if p != nil && p.Score >= uint(player.Score()) {
+			// nothing to do here
+			return nil
+		}
+
+		// 3. store new score
 		c.playerDao.UpsertPlayer(ctx, dao.Player{
 			Uuid:    string(player.Uuid()),
 			Name:    string(player.Name()),

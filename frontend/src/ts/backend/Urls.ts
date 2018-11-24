@@ -37,7 +37,7 @@ let _database: string;
 
 if (getUrlParameter(Constants.MODE_PARAMETERS.NO_DOCKER)) {
     _gameServer = 'ws://localhost:2000/game';
-    _database = 'http://localhost/chieftain';
+    _database = '/chieftain';
 } else {
     _gameServer = getUrl('ws', 'game');
     _database = getUrl('http', 'chieftain');
