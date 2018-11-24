@@ -60,6 +60,7 @@ export function setup(game) {
          */
         if (item.isCrafted && item.icon.file) {
             let recipe = {
+                id: item.id,
                 name: itemName,
                 item: item,
                 craftingTime: item.recipe.craftTimeInSeconds,
