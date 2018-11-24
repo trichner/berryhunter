@@ -82,12 +82,16 @@ export class Player {
         if (entity.currentAction) {
             switch (entity.currentAction.actionType) {
                 case BerryhunterApi.ActionType.CraftItem:
-                    if (!this.isCraftInProgress()) {
-                        throw "Invalid State: Received craftItem action, but no crafting is in progress.";
+                    let recipe = entity.currentAction.item.recipe;
+                    let craftIcon = recipe.clickableIcon;
+                    if (this.isCraftInProgress()) {
+                        let ticksRemaining = entity.currentAction.ticksRemaining;
+                        this.craftProgress.remainingTicks = ticksRemaining;
+                        craftIcon.updateProgress(ticksRemaining);
+                    } else {
+                        craftIcon.startProgress(recipe.craftingTime);
+                        this.startCraftProgress(recipe.craftingTime);
                     }
-                    let ticksRemaining = entity.currentAction.ticksRemaining;
-                    this.craftProgress.remainingTicks = ticksRemaining;
-                    entity.currentAction.item.recipe.clickableIcon.updateProgress(ticksRemaining);
                     break;
             }
         }
