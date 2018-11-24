@@ -86,3 +86,8 @@ export function triggerOneTime(event, payload?) {
     // Delete all listeners of this one time event, as they won't ever be called again
     delete registeredListeners[event];
 }
+
+export const GAME_SETUP = 'game.setup';
+export const GAME_PLAYING = 'game.playing';
+export const GAME_DEATH = 'game.death';
+export const ENDSCREEN_SHOWN = 'endscreen.shown';

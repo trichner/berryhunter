@@ -1,7 +1,7 @@
 'use strict';
 
 import * as UserInterface from '../userInterface/UserInterface';
-import {isDefined, isUndefined, clearNode} from '../Utils';
+import {clearNode, formatIntWithAbbreviation, isDefined, isUndefined} from '../Utils';
 
 let domElement;
 let playerRowTemplate;
@@ -53,7 +53,7 @@ export function updateFromBackend(scoreboardMessage) {
     for (let i = 0; i < players.length; i++) {
         rows[i].name.textContent = players[i].name;
         if (players[i].score !== 0) {
-            rows[i].score.textContent = players[i].score;
+            rows[i].score.textContent = formatIntWithAbbreviation(players[i].score);
         }
     }
 }

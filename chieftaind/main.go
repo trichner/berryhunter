@@ -5,6 +5,7 @@ import (
 	"github.com/trichner/berryhunter/chieftaind/cfg"
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"github.com/trichner/berryhunter/chieftaind/server"
+	"github.com/trichner/berryhunter/chieftaind/service"
 	"log"
 	"net/http"
 	"path"
@@ -28,6 +29,11 @@ func main() {
 	}
 
 	dataStore, err := dao.NewDataStore(path.Join(config.DataDir, "chieftain.db"))
+	if err != nil {
+		log.Fatalf("cannot boot chieftain: %s", err)
+	}
+
+	scoreService, err := service.NewScoreService(playerStore)
 	if err != nil {
 		log.Fatalf("cannot boot chieftain: %s", err)
 	}
@@ -57,8 +63,8 @@ func main() {
 	restAddr := config.RestAddr
 	log.Printf("rest api listening on %s/scoreboard", restAddr)
 	go func() {
-		r := api.NewRouter(dataStore, playerStore)
-		err := http.ListenAndServe(restAddr, r)
+		r := api.NewRouter(dataStore, scoreService)
+		err := http.ListenAndServe(apiAddr, r)
 		if err != nil {
 			log.Fatalf("cannot boot api: %s", err)
 		}

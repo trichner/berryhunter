@@ -373,7 +373,7 @@ export function smoothHoverAnimation(element: Element, options?: { additionalHov
         element.classList.add('hover');
         mouseOverElement = true;
     });
-    if (isDefined(additionalHoverElement)){
+    if (isDefined(additionalHoverElement)) {
         additionalHoverElement.addEventListener('mouseenter', () => {
             element.classList.add('hover');
             mouseOverElement = true;
@@ -383,7 +383,7 @@ export function smoothHoverAnimation(element: Element, options?: { additionalHov
     element.addEventListener('mouseleave', () => {
         mouseOverElement = false;
     });
-    if (isDefined(additionalHoverElement)){
+    if (isDefined(additionalHoverElement)) {
         additionalHoverElement.addEventListener('mouseleave', () => {
             mouseOverElement = false;
         });
@@ -401,4 +401,37 @@ export function smoothHoverAnimation(element: Element, options?: { additionalHov
             element.classList.remove('hover');
         }
     });
+}
+
+/**
+ * Formats numbers in groups
+ *
+ * 1000    --> "1 000"
+ * 432738  --> "432 738"
+ * 4432738 --> "4 432 738"
+ */
+export function formatInt(x: number): string {
+    return x.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+/**
+ * Formats numbers in groups with abbreviations
+ *
+ * 1000     -->   "1 000"
+ * 10000    -->    "10 K"
+ * 432738   -->   "432 K"
+ * 4432738  --> "4 432 K"
+ * 54432738 -->    "54 M"
+ */
+const multipliers = ['', 'K', 'M', 'B', 'T'];
+export function formatIntWithAbbreviation(x: number): string {
+
+    let kExp:  number = 0;
+
+    while (x >= 10 * 1000 && kExp < multipliers.length - 1) {
+        kExp++;
+        x /= 1000;
+    }
+
+    return formatInt(Math.floor(x)) + ' ' + multipliers[kExp];
 }
