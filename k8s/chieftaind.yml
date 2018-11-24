@@ -43,13 +43,13 @@ spec:
         readinessProbe:
           httpGet:
             path: /
-            port: 80
+            port: 3080
           initialDelaySeconds: 5
           periodSeconds: 3
         livenessProbe:
           httpGet:
             path: /
-            port: 80
+            port: 3080
           initialDelaySeconds: 5
           periodSeconds: 3
       volumes:

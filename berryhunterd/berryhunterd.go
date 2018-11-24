@@ -78,6 +78,11 @@ func bootServer(h http.HandlerFunc, port int, path string, dev bool) {
 	if dev {
 		log.Print("Using development server.")
 		http.Handle("/", http.FileServer(http.Dir("./../frontend/dist")))
+	} else {
+		// 'ping' endpoint for liveness probe
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(204)
+		})
 	}
 	// start server
 	go http.ListenAndServe(addr, nil)

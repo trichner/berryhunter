@@ -15,6 +15,7 @@ func NewRouter(ds dao.DataStore, s service.ScoreService) http.Handler {
 	router := mux.NewRouter()
 	router.HandleFunc("/highscores", GetHighScoresHandler(s)).Methods("GET")
 	router.HandleFunc("/scoreboard", GetScoreboardHandler(s)).Methods("GET")
+	router.HandleFunc("/", GetPing()).Methods("GET")
 
 	router.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +33,12 @@ func NewRouter(ds dao.DataStore, s service.ScoreService) http.Handler {
 	})
 
 	return router
+}
+
+func GetPing() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(204)
+	}
 }
 
 func GetHighScoresHandler(s service.ScoreService) http.HandlerFunc {
