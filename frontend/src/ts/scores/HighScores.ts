@@ -1,7 +1,7 @@
 'use strict';
 
 import {
-    clearNode,
+    clearNode, formatInt,
     formatIntWithAbbreviation,
     isDefined,
     isUndefined,
@@ -98,7 +98,9 @@ function open() {
     loadScoreboard().then(populateScoreboards);
 }
 
-function close() {
+function close(event: Event) {
+    event.preventDefault();
+
     rootElement.classList.remove('open');
     document.body.classList.remove('leaderboardVisible');
 }
@@ -143,8 +145,11 @@ export function populateHighScores(highScores) {
         }
 
         let highScore = highScores[category][0];
-        elements[category].playerName.textContent = highScore.playerName;
-        elements[category].score.textContent = formatIntWithAbbreviation(highScore.score);
+        displayValueWithTitle(elements[category].playerName, highScore.playerName);
+        displayValueWithTitle(
+            elements[category].score,
+            formatIntWithAbbreviation(highScore.score),
+            formatInt(highScore.score));
     });
 }
 
@@ -175,12 +180,23 @@ function populateScoreboards(highScores) {
             } else {
                 newRow.querySelector('.date').textContent = highScore.date.format('DD.MM.YYYY');
             }
-            newRow.querySelector('.playerName').textContent = highScore.playerName;
-            newRow.querySelector('.score').textContent = formatIntWithAbbreviation(highScore.score);
+            displayValueWithTitle(newRow.querySelector('.playerName'), highScore.playerName);
+            displayValueWithTitle(
+                newRow.querySelector('.score'),
+                formatIntWithAbbreviation(highScore.score),
+                formatInt(highScore.score));
 
             table.appendChild(newRow);
         }
     });
+}
+
+function displayValueWithTitle(element: Element, value: string, title?: string) {
+    if (isUndefined(title)) {
+        title = value;
+    }
+    element.textContent = value;
+    element.setAttribute('title', title);
 }
 
 

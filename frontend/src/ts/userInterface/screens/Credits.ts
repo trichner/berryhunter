@@ -22,7 +22,7 @@ export function setup() {
         setVisibility(true);
     });
 
-    startScreenElement.addEventListener('click', event => {
+    startScreenElement.addEventListener('click', (event: Event) => {
         if (!visible) {
             return;
         }
@@ -30,6 +30,7 @@ export function setup() {
         // Hide the credits if a user clicks outside. This also works with
         // the close button, as it's not nested inside the credits
         if (!rootElement.contains(event.target as Node)) {
+            event.preventDefault();
             setVisibility(false);
         }
     });
