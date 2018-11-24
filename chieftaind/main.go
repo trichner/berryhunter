@@ -8,20 +8,16 @@ import (
 	"github.com/trichner/berryhunter/chieftaind/service"
 	"log"
 	"net/http"
+	"os"
 	"path"
+	"strings"
 	"sync"
 )
 
 func main() {
 
 	log.Printf("booting chieftain")
-
-	confFile := "conf.json"
-	log.Printf("loading configuration from : %s", confFile)
-	config, err := cfg.ReadConfig(confFile)
-	if err != nil {
-		log.Fatalf("cannot read config: %s", err)
-	}
+	config := loadConf()
 
 	playerStore, err := dao.NewPlayerDao()
 	if err != nil {
@@ -72,4 +68,17 @@ func main() {
 
 	log.Printf("boot successful, all systems nominal")
 	wg.Wait()
+}
+
+func loadConf() *cfg.Config{
+
+	configFile := strings.TrimSpace(os.Getenv("CHIEFTAIND_CONF"))
+	if configFile == "" {
+		configFile = "./conf.json"
+	}
+	config, err := cfg.ReadConfig(configFile)
+	if err != nil {
+		log.Panicf("Cannot read config '%s':%v", configFile, err)
+	}
+	return config
 }

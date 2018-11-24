@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: berryhunter-svc
+  name: berryhunterd-svc
 spec:
   ports:
   - port: 80
@@ -12,7 +12,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: berryhunter-deployment
+  name: berryhunterd-deployment
 spec:
   replicas: 1
   selector:
@@ -26,7 +26,7 @@ spec:
         app: berryhunterd-app
     spec:
       containers:
-      - image: gcr.io/trichner-212015/berryhunterd:rev-b3f02b6
+      - image: gcr.io/trichner-212015/berryhunterd:latest
         name: berryhunterd
         ports:
         - containerPort: 80
@@ -51,12 +51,12 @@ spec:
       volumes:
       - name: cfg-volume
         configMap:
-          name: berryhunter-cfgmap
+          name: berryhunterd-cfgmap
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: berryhunter-cfgmap
+  name: berryhunterd-cfgmap
 data:
   conf.json: |-
     {
