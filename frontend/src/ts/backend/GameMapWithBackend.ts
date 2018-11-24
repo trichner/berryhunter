@@ -87,10 +87,7 @@ export class GameMapWithBackend {
         }
 
         if (entity.type === Character) {
-            /**
-             * @type {Character}
-             */
-            let character = gameObject;
+            let character: Character = gameObject;
 
             /**
              * Handle equipment
@@ -126,7 +123,6 @@ export class GameMapWithBackend {
                 switch (entity.currentAction.actionType) {
                     case BerryhunterApi.ActionType.Primary:
                         character.action(entity.currentAction.ticksRemaining);
-                        character.progressHitAnimation(entity.currentAction.ticksRemaining);
                         break;
                     default:
                         let actionTypeKnown = false;

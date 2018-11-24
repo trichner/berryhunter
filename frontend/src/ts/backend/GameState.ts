@@ -167,9 +167,6 @@ function unmarshalEntity(entity, eType) {
     if (isFunction(entity.statusEffectsLength) &&
         isFunction(entity.statusEffects)) {
         result.statusEffects = unmarshalStatusEffects(entity.statusEffectsLength(), entity.statusEffects.bind(entity));
-        // if (result.statusEffects.length) {
-        // 	console.log((result.name || '') + ' [' + id + '] ' + result.statusEffects.map(e => e.id));
-        // }
     }
 
     return result

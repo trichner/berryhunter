@@ -37,6 +37,7 @@ export class Character extends GameObject {
     currentAction;
     equipmentSlotGroups;
     equippedItems;
+    lastRemainingTicks: number = 0;
     useLeftHand: boolean = false;
 
     actualShape;
@@ -248,6 +249,14 @@ export class Character extends GameObject {
     }
 
     action(remainingTicks?: number) {
+        if (isDefined(remainingTicks)) {
+            if (this.lastRemainingTicks >= remainingTicks) {
+                this.lastRemainingTicks = remainingTicks;
+                return; // nothing to do - just let the animation roll
+            }
+            this.lastRemainingTicks = remainingTicks;
+        }
+
         if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
             this.animateAction(this.rightHand, 'stab', remainingTicks);
             this.currentAction = 'PLACING';

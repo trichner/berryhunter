@@ -51,9 +51,6 @@ export class GameMap {
                 y > endY ||
                 y < startY);
         });
-        console.log(containedObjects.length + ' objects within ' +
-            '[(' + startX.toFixed(0) + '/' + startY.toFixed(0) + ')' +
-            '/(' + endX.toFixed(0) + '/' + endY.toFixed(0) + ')] .');
         return containedObjects;
     };
 
