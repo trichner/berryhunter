@@ -64,7 +64,7 @@ func main() {
 	log.Printf("rest api listening on %s/scoreboard", restAddr)
 	go func() {
 		r := api.NewRouter(dataStore, scoreService)
-		err := http.ListenAndServe(apiAddr, r)
+		err := http.ListenAndServe(restAddr, r)
 		if err != nil {
 			log.Fatalf("cannot boot api: %s", err)
 		}
