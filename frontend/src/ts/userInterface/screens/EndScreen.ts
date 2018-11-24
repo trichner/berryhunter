@@ -22,6 +22,7 @@ function onDomReady() {
 
     rootElement.getElementsByClassName('playerForm').item(0)
         .addEventListener('animationend', function () {
+            Events.trigger(Events.ENDSCREEN_SHOWN);
             // As soon as the form is faded in, focus the input field
             playerNameInput.focus();
         });

@@ -23,7 +23,6 @@ import {VitalSigns} from './VitalSigns';
 import * as Recipes from './items/Recipes';
 import * as Scoreboard from './scores/Scoreboard';
 import * as GroundTextureManager from './groundTextures/GroundTextureManager';
-
 // Assign all export in this file to a single variable to be passed into sub modules.
 import * as Game from './Game';
 
@@ -66,7 +65,7 @@ export function setup() {
 
     // Setup backend first, as this will take some time to connect.
     Backend.setup(Game);
-    Events.triggerOneTime('game.setup', Game);
+    Events.triggerOneTime(Events.GAME_SETUP, Game);
 
     renderer = PIXI.autoDetectRenderer({
         antialias: true,
@@ -312,7 +311,7 @@ export function createPlayer(id, x, y, name) {
     player = new Player(id, x, y, name, miniMap);
     player.init();
     state = States.PLAYING;
-    Events.trigger('game.playing', Game);
+    Events.trigger(Events.GAME_PLAYING, Game);
 }
 
 export function removePlayer() {
@@ -324,7 +323,7 @@ export function removePlayer() {
         map.clear();
     }
     state = States.RENDERING;
-    Events.trigger('game.death', Game);
+    Events.trigger(Events.GAME_DEATH, Game);
 }
 
 export function createSpectator(x, y) {

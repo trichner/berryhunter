@@ -20,9 +20,3 @@ or
 `$ yarn run build`
 or
 `$ build.bat`
-
-## Unklar
-
-- `/dist/` einchecken oder nicht? Kann man das automatisiert bei GitHub haben?
-  - pro: Gino könnte ohne irgendwas zu installieren das frontend ausführen
-  - contra: Gino müsste eh demnächst mal Docker verwenden, und docker muss den ganzen Frontend build übernehmen

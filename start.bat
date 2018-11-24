@@ -1,6 +1,8 @@
 @echo off
 
-start /d "backend" backend.exe
+start /d "chieftaind" chieftaind.exe
+
+start /d "berryhunterd" berryhunterd.exe
 
 cd frontend
 

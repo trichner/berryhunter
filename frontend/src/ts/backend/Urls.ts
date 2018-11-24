@@ -1,3 +1,6 @@
+import {getUrlParameter} from "../Utils";
+import {BasicConfig as Constants} from "../../config/Basic";
+
 function getHostname() {
     let hostname = window.location.hostname;
     if (hostname === 'localhost') {
@@ -29,5 +32,16 @@ function getUrl(protocol: string, path: string) {
     return protocol + security + '://' + getHostname() + port + '/' + path;
 }
 
-export const gameServer: string = getUrl('ws', 'game');
-export const database: string = getUrl('http', 'chieftain');
+let _gameServer: string;
+let _database: string;
+
+if (getUrlParameter(Constants.MODE_PARAMETERS.NO_DOCKER)) {
+    _gameServer = 'ws://localhost:2000/game';
+    _database = '/chieftain';
+} else {
+    _gameServer = getUrl('ws', 'game');
+    _database = getUrl('http', 'chieftain');
+}
+
+export const gameServer = _gameServer;
+export const database = _database;

@@ -9,11 +9,10 @@ const common = require('./webpack.common.js');
 
 module.exports = env => {
 	// Define default environment
-	if (typeof env === "undefined") {
-		env = {
-			port: 80
-		}
-	}
+	env = merge({
+		port: 80,
+		proxy: false
+	}, env);
 
 	return merge(common, {
 		mode: 'development',
@@ -22,7 +21,13 @@ module.exports = env => {
 			contentBase: path.resolve(__dirname, 'dist'),
 			// Activate Hot Module Replacement (HMR)
 			hot: true,
-			port: env.port
+			port: env.port,
+			proxy: env.proxy ? {
+				'/chieftain': {
+					target: 'http://localhost:3080',
+					pathRewrite: {'^/chieftain': ''}
+				}
+			} : {},
 		},
 	});
 };

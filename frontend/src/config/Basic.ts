@@ -8,10 +8,9 @@ export const BasicConfig = {
 	 */
 	MODE_PARAMETERS: {
         MAP_EDITOR: 'map-editor',
-		LOCAL_SERVER: 'local',
-		SERVER_PORT: 'port',
 		DEVELOPMENT: 'develop',
 		GROUND_TEXTURE_EDITOR: 'textures',
+        NO_DOCKER: 'no-docker'
 	},
 	/**
 	 * If custom graphic containers should be used, that are named.
