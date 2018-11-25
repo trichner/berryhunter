@@ -21,6 +21,7 @@ func Config(conf *cfg.Config) Configuration {
 		g.PlayerConfig.HealthGainTick = conf.Game.Player.HealthGainTick
 		g.PlayerConfig.SatietyLossTickFraction = conf.Game.Player.SatietyLossTickFraction
 		g.PlayerConfig.StarveDamageTickFraction = conf.Game.Player.StarveDamageTickFraction
+		g.PlayerConfig.FreezingStarveDamageTickFraction = conf.Game.Player.FreezingStarveDamageTickFraction
 		g.PlayerConfig.WalkingSpeedPerTick = conf.Game.Player.WalkingSpeedPerTick
 
 		if conf.Chieftain != nil {

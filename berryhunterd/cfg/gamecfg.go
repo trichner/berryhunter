@@ -25,9 +25,10 @@ type ChieftainConfig struct {
 
 type PlayerConfig struct {
 	// tickwise loss
-	FreezingDamageTickFraction float32
-	StarveDamageTickFraction   float32
-	SatietyLossTickFraction    float32
+	FreezingDamageTickFraction       float32
+	StarveDamageTickFraction         float32
+	FreezingStarveDamageTickFraction float32
+	SatietyLossTickFraction          float32
 
 	// constants for gaining health
 	HealthGainTick                    float32
