@@ -4,39 +4,43 @@ metadata:
   name: chieftaind-svc
 spec:
   ports:
-  - name: http-rest
-    port: 3080
   - name: tls-api
     port: 3443
+  - name: http-rest
+    port: 3080
   selector:
     app: chieftaind-app
   clusterIP: None
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: chieftaind-deployment
+  name: chieftaind
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: chieftaind-app
-  strategy:
-    type: Recreate
+  serviceName: chieftaind
+  replicas: 1
   template:
     metadata:
       labels:
         app: chieftaind-app
     spec:
+      terminationGracePeriodSeconds: 10
       containers:
-      - image: gcr.io/trichner-212015/chieftaind:branch-develop
-        name: chieftaind
+      - name: chieftaind
+        image: gcr.io/trichner-212015/chieftaind:rev-c2cf726
         ports:
-        - containerPort: 3080
-        - containerPort: 3443
+        - name: http-rest
+          containerPort: 3080
+        - name: tls-api
+          containerPort: 3443
         volumeMounts:
-        - mountPath: /etc/chieftaind/
-          name: cfg-volume
+        - name: chieftaind-data
+          mountPath: /data
+        - name: cfg-volume
+          mountPath: /etc/chieftaind/
         env:
           - name: CHIEFTAIND_CONF
             value: /etc/chieftaind/conf.json
@@ -53,9 +57,18 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 3
       volumes:
-      - name: cfg-volume
-        configMap:
-          name: chieftaind-cfgmap
+        - name: cfg-volume
+          configMap:
+            name: chieftaind-cfgmap
+  volumeClaimTemplates:
+  - metadata:
+      name: chieftaind-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 5Gi
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -66,5 +79,5 @@ data:
     {
       "apiAddr":":3443",
       "restAddr":":3080",
-      "dataDir":"./"
+      "dataDir":"/data"
     }

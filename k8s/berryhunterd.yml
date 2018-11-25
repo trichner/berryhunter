@@ -12,7 +12,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: berryhunterd-deployment
+  name: berryhunterd
 spec:
   replicas: 1
   selector:
@@ -26,7 +26,7 @@ spec:
         app: berryhunterd-app
     spec:
       containers:
-      - image: gcr.io/trichner-212015/berryhunterd:branch-develop
+      - image: gcr.io/trichner-212015/berryhunterd:rev-c2cf726
         name: berryhunterd
         ports:
         - containerPort: 80
@@ -63,6 +63,9 @@ data:
       "server": {
         "port": 80,
         "path": "/game"
+      },
+      "chieftain": {
+        "addr":"chieftaind-svc:3443"
       },
       "game": {
         "coldFractionNightPerSecond": 0.025,
