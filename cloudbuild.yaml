@@ -1,35 +1,4 @@
 steps:
-# ---- checkout private repo
-#- name: 'gcr.io/cloud-builders/gcloud'
-#  args:
-#  - kms
-#  - decrypt
-#  - --ciphertext-file=id_berryhunter-ci.enc
-#  - --plaintext-file=/root/.ssh/id_berryhunter-ci
-#  - --location=global
-#  - --keyring=berryhunter
-#  - --key=github-credentials
-#  volumes:
-#  - name: 'ssh'
-#    path: /root/.ssh
-#
-## Set up git with key and domain.
-#- name: 'gcr.io/cloud-builders/git'
-#  entrypoint: 'bash'
-#  args:
-#  - '-c'
-#  - |
-#    chmod 600 /root/.ssh/id_berryhunter-ci
-#    cat <<EOF >/root/.ssh/config
-#    Hostname github.com
-#    IdentityFile /root/.ssh/id_berryhunter-ci
-#    EOF
-#    mv known_hosts /root/.ssh/known_hosts
-#  volumes:
-#  - name: 'ssh'
-#    path: /root/.ssh
-
-# ---- berryhunterd
 - id: build_berryhunterd
   name: 'gcr.io/cloud-builders/docker'
   entrypoint: bash
@@ -62,18 +31,23 @@ steps:
         -t gcr.io/$PROJECT_ID/berryhunter-edge:rev-$SHORT_SHA \
         -t gcr.io/$PROJECT_ID/berryhunter-edge:branch-$BRANCH_NAME \
         -f Dockerfile.berryhunter-edge .   
-# ---- web
-#- name: 'gcr.io/cloud-builders/docker'
-#  args: ['build', '-t', 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA', '-f', 'Dockerfile.berryhunter-web', '.']
-#- name: 'gcr.io/cloud-builders/docker'
-#  args: ['tag', 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA', 'gcr.io/$PROJECT_ID/berryhunter-web:branch-$BRANCH_NAME']
-# ---- edge
+
+- id: build_berryhunter_web
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: bash
+  args: 
+    - -c
+    - |
+      docker build \
+        -t gcr.io/$PROJECT_ID/berryhunter-web:rev-$SHORT_SHA \
+        -t gcr.io/$PROJECT_ID/berryhunter-web:branch-$BRANCH_NAME \
+        -f Dockerfile.berryhunter-web . 
 images:
 - 'gcr.io/$PROJECT_ID/berryhunterd:rev-$SHORT_SHA'
 - 'gcr.io/$PROJECT_ID/berryhunterd:branch-$BRANCH_NAME'
 - 'gcr.io/$PROJECT_ID/chieftaind:rev-$SHORT_SHA'
 - 'gcr.io/$PROJECT_ID/chieftaind:branch-$BRANCH_NAME'
-#- 'gcr.io/$PROJECT_ID/berryhunter-web:r$SHORT_SHA'
-#- 'gcr.io/$PROJECT_ID/berryhunter-web:branch-$BRANCH_NAME'
 - 'gcr.io/$PROJECT_ID/berryhunter-edge:rev-$SHORT_SHA'
 - 'gcr.io/$PROJECT_ID/berryhunter-edge:branch-$BRANCH_NAME'
+- 'gcr.io/$PROJECT_ID/berryhunter-web:rev-$SHORT_SHA'
+- 'gcr.io/$PROJECT_ID/berryhunter-web:branch-$BRANCH_NAME'
