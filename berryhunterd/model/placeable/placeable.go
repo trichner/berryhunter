@@ -5,7 +5,9 @@ import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/model"
+	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
+	"log"
 	"math"
 )
 
@@ -15,6 +17,7 @@ type Placeable struct {
 	model.BaseEntity
 	item items.Item
 
+	health        vitals.VitalSign
 	radiator      *model.HeatRadiator
 	ticksLeft     int
 	statusEffects model.StatusEffects
@@ -30,7 +33,7 @@ func (p *Placeable) Update(dt float32) {
 }
 
 func (p *Placeable) Decayed() bool {
-	return p.ticksLeft <= 0
+	return p.ticksLeft <= 0 || p.health <= 0
 }
 
 func (p *Placeable) HeatRadiation() *model.HeatRadiator {
@@ -72,7 +75,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 
 	body := phy.NewCircle(phy.VEC2F_ZERO, item.Body.Radius)
 	if item.Body.Solid {
-		body.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerViewportCollision)
+		body.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerActionCollision | model.LayerViewportCollision)
 	} else {
 		body.Shape().Layer = int(model.LayerViewportCollision)
 		body.Shape().IsSensor = true
@@ -105,10 +108,25 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	p := &Placeable{
 		BaseEntity:    base,
 		item:          item,
+		health:        vitals.Max,
 		radiator:      radiator,
 		ticksLeft:     ticksLeft,
 		statusEffects: model.NewStatusEffects(),
 	}
 	p.Body.Shape().UserData = p
 	return p, nil
+}
+
+func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
+	log.Printf("💥")
+	vulnerability := p.item.Factors.Vulnerability
+	if vulnerability == 0 {
+		vulnerability = 1
+	}
+
+	dmgFraction := item.Factors.StructureDamage * vulnerability
+	if dmgFraction > 0 {
+		p.health = p.health.SubFraction(dmgFraction)
+		p.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
+	}
 }

@@ -41,8 +41,9 @@ type Factors struct {
 	DurationInTicks int
 
 	// Placeable/Heater
-	HeatPerTick uint32
-	HeatRadius  float32
+	HeatPerTick   uint32
+	HeatRadius    float32
+	Vulnerability float32
 
 	// Resource
 	ReplenishProbability float32
@@ -80,9 +81,9 @@ type Item struct {
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
-	ID   int    `json:"id"`
-	Type string `json:"type"`
-	Name string `json:"name"`
+	ID      int    `json:"id"`
+	Type    string `json:"type"`
+	Name    string `json:"name"`
 	Factors struct {
 		Food            float32 `json:"food"`
 		Damage          float32 `json:"damage"`
@@ -92,6 +93,7 @@ type itemDefinition struct {
 		DurationInS     int     `json:"durationInSeconds"`
 		HeatPerSecond   float32 `json:"heatPerSecond"`
 		HeatRadius      float32 `json:"heatRadius"`
+		Vulnerability   float32 `json:"vulnerability"`
 
 		ReplenishProbabilityPerS float32 `json:"replenishProbabilityPerSecond"`
 		Capacity                 int     `json:"capacity"`
@@ -195,6 +197,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			MinYield:             i.Factors.MinYield,
 			HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
 			HeatRadius:           i.Factors.HeatRadius,
+			Vulnerability:        i.Factors.Vulnerability,
 			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
 			ReplenishProbability: i.Factors.ReplenishProbabilityPerS / constant.TicksPerSecond,
 			Capacity:             i.Factors.Capacity,
