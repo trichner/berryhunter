@@ -251,51 +251,67 @@ export const ItemsConfig = {
 
     /***********************************
      * HAMMERS
-     * Deactivated, as placeables are not
-     * yet attackable.
      ***********************************/
-    // StoneHammer: {
-    // 	icon: {file: require('../img/items/hammerStoneIcon.svg')},
-    // 	graphic: {
-    // 		file: require('../img/items/hammerStone.svg'),
-    // 		size: 30,
-    // 		offsetX: 10,
-    // 		offsetY: -2.5
-    // 	},
-    // 	definition: require('../../../api/items/hammers/stone-hammer.json'),
-    // 	type: ItemType.EQUIPMENT,
-    // 	equipment:    // {slot: Equipment.Slots.HAND,
-    // animation: 'swing'
-    // }
-    // },
-    // BronzeHammer: {
-    // 	icon: {file: require('../img/items/hammerBronzeIcon.svg')},
-    // 	graphic: {
-    // 		file: require('../img/items/hammerBronze.svg'),
-    // 		size: 30,
-    // 		offsetX: 10,
-    // 		offsetY: -2.5
-    // 	},
-    // 	definition: require('../../../api/items/hammers/bronze-hammer.json'),
-    // 	type: ItemType.EQUIPMENT,
-    // 	equipment:    // {slot: Equipment.Slots.HAND,
-    // animation: 'swing'
-    // }
-    // },
-    // IronHammer: {
-    // 	icon: {file: require('../img/items/hammerIronIcon.svg')},
-    // 	graphic: {
-    // 		file: require('../img/items/hammerIron.svg'),
-    // 		size: 50,
-    // 		offsetX: 10,
-    // 		offsetY: -2.5
-    // 	},
-    // 	definition: require('../../../api/items/hammers/iron-hammer.json'),
-    // 	type: ItemType.EQUIPMENT,
-    // 	equipment:    // {slot: Equipment.Slots.HAND,
-    // animation: 'swing'
-    // }
-    // },
+    WoodHammer: {
+        icon: {file: require('../img/items/hammerWoodIcon.svg')},
+        graphic: {
+            file: require('../img/items/hammerWood.svg'),
+            size: 30,
+            offsetX: 10,
+            offsetY: 0
+        },
+        definition: require('../../../api/items/hammers/wood-hammer.json'),
+        type: ItemType.EQUIPMENT,
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
+    },
+    StoneHammer: {
+        icon: {file: require('../img/items/hammerStoneIcon.svg')},
+        graphic: {
+            file: require('../img/items/hammerStone.svg'),
+            size: 30,
+            offsetX: 10,
+            offsetY: -2.5
+        },
+        definition: require('../../../api/items/hammers/stone-hammer.json'),
+        type: ItemType.EQUIPMENT,
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
+    },
+    BronzeHammer: {
+        icon: {file: require('../img/items/hammerBronzeIcon.svg')},
+        graphic: {
+            file: require('../img/items/hammerBronze.svg'),
+            size: 30,
+            offsetX: 10,
+            offsetY: -2.5
+        },
+        definition: require('../../../api/items/hammers/bronze-hammer.json'),
+        type: ItemType.EQUIPMENT,
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
+    },
+    IronHammer: {
+        icon: {file: require('../img/items/hammerIronIcon.svg')},
+        graphic: {
+            file: require('../img/items/hammerIron.svg'),
+            size: 50,
+            offsetX: 10,
+            offsetY: -2.5
+        },
+        definition: require('../../../api/items/hammers/iron-hammer.json'),
+        type: ItemType.EQUIPMENT,
+        equipment: {
+            slot: Equipment.Slots.HAND,
+            animation: 'swing'
+        }
+    },
 
     /***********************************
      * PLACEABLES

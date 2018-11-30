@@ -4,6 +4,7 @@ import * as PIXI from 'pixi.js';
 import {GameObject} from './_GameObject';
 import {randomRotation} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
+import {StatusEffect} from "./StatusEffect";
 
 export class Placeable extends GameObject {
     item;
@@ -33,5 +34,12 @@ export class Placeable extends GameObject {
         shape.drawCircle(0, 0, this.size * miniMapCfg.sizeFactor);
 
         return shape;
+    }
+
+    createStatusEffects() {
+        return {
+            Damaged: StatusEffect.forDamaged(this.shape),
+            DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape)
+        }
     }
 }
