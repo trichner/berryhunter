@@ -145,11 +145,16 @@ export function populateHighScores(highScores) {
         }
 
         let highScore = highScores[category][0];
-        displayValueWithTitle(elements[category].playerName, highScore.playerName);
-        displayValueWithTitle(
-            elements[category].score,
-            formatIntWithAbbreviation(highScore.score),
-            formatInt(highScore.score));
+        if (isDefined(highScore)) {
+            displayValueWithTitle(elements[category].playerName, highScore.playerName);
+            displayValueWithTitle(
+                elements[category].score,
+                formatIntWithAbbreviation(highScore.score),
+                formatInt(highScore.score));
+        } else {
+            displayValueWithTitle(elements[category].playerName, '---', 'No scores in period');
+            displayValueWithTitle(elements[category].score, '---', 'No scores in period');
+        }
     });
 }
 
