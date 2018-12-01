@@ -190,7 +190,7 @@ export function setup() {
     createBackground();
 
     Camera.setup(Game);
-    VitalSigns.setup(Game, layers.overlays.vitalSignIndicators);
+    VitalSigns.setup(Game, layers.overlays.vitalSignIndicators, setupPromises);
     Recipes.setup(Game);
     Scoreboard.setup();
     GroundTextureManager.setup();

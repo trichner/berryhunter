@@ -65,7 +65,7 @@ export class VitalSigns {
         Game.renderer.on('prerender', this.update, this);
     }
 
-    static setup(game, group) {
+    static setup(game, group, setupPromises: Promise<any>[]) {
         Game = game;
 
         let indicators = {
@@ -81,6 +81,12 @@ export class VitalSigns {
             indicators.coldness
         );
         group.position.set(Game.width / 2, Game.height / 2);
+
+        // TODO alle transparenzen rendern
+        setupPromises.push( new Promise((resolve) => {
+            game.renderer.TextureManager.updateTexture(indicators.coldness.texture);
+            resolve();
+        }));
     };
 
     setHealth(health) {
