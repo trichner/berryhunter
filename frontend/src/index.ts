@@ -27,6 +27,7 @@ import './ts/items/InventorySlot';
 import './ts/items/Items';
 import './ts/scores/HighScores';
 import './ts/userInterface/ClickableIcon';
+import './ts/userInterface/screens/Changelog';
 import './ts/userInterface/screens/EndScreen';
 import './ts/userInterface/screens/StartScreen';
 

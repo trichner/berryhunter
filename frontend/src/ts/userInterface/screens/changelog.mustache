@@ -1,0 +1,22 @@
+<div id="changelog">
+	<h2>Changelog</h2>
+
+	{{#.}}
+		<section class="version">
+			<h3 class="codename">{{codename}}</h3>
+			<time datetime="{{datetime}}" class="releaseDate">{{dateFormatted}}</time>
+
+			{{#categories}}
+				<article class="changelogCategory">
+					<h4 class="category">{{name}}</h4>
+
+					<ul>
+						{{#changes}}
+							<li class="change">{{description}}</li>
+						{{/changes}}
+					</ul>
+				</article>
+			{{/categories}}
+		</section>
+	{{/.}}
+</div>
