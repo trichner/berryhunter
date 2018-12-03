@@ -7,7 +7,6 @@ spec:
   - port: 80
   selector:
     app: berryhunterd-app
-  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -26,7 +25,7 @@ spec:
         app: berryhunterd-app
     spec:
       containers:
-      - image: gcr.io/trichner-212015/berryhunterd:rev-c2cf726
+      - image: gcr.io/berryhunter-io/berryhunterd:rev-210107f
         name: berryhunterd
         ports:
         - containerPort: 80

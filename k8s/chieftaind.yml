@@ -10,7 +10,6 @@ spec:
     port: 3080
   selector:
     app: chieftaind-app
-  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -30,7 +29,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: chieftaind
-        image: gcr.io/trichner-212015/chieftaind:rev-c2cf726
+        image: gcr.io/berryhunter-io/chieftaind:rev-210107f
         ports:
         - name: http-rest
           containerPort: 3080
