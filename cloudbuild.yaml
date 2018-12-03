@@ -7,7 +7,6 @@ steps:
     - |
       docker build \
         -t gcr.io/$PROJECT_ID/berryhunterd:rev-$SHORT_SHA \
-        -t gcr.io/$PROJECT_ID/berryhunterd:branch-$BRANCH_NAME \
         -f Dockerfile.berryhunterd .
 
 - id: build_chieftaind
@@ -18,7 +17,6 @@ steps:
     - |
       docker build \
         -t gcr.io/$PROJECT_ID/chieftaind:rev-$SHORT_SHA \
-        -t gcr.io/$PROJECT_ID/chieftaind:branch-$BRANCH_NAME \
         -f Dockerfile.chieftaind .
 
 - id: build_berryhunter_edge
@@ -29,7 +27,6 @@ steps:
     - |
       docker build \
         -t gcr.io/$PROJECT_ID/berryhunter-edge:rev-$SHORT_SHA \
-        -t gcr.io/$PROJECT_ID/berryhunter-edge:branch-$BRANCH_NAME \
         -f Dockerfile.berryhunter-edge .   
 
 - id: build_berryhunter_web
@@ -40,14 +37,9 @@ steps:
     - |
       docker build \
         -t gcr.io/$PROJECT_ID/berryhunter-web:rev-$SHORT_SHA \
-        -t gcr.io/$PROJECT_ID/berryhunter-web:branch-$BRANCH_NAME \
         -f Dockerfile.berryhunter-web . 
 images:
 - 'gcr.io/$PROJECT_ID/berryhunterd:rev-$SHORT_SHA'
-- 'gcr.io/$PROJECT_ID/berryhunterd:branch-$BRANCH_NAME'
 - 'gcr.io/$PROJECT_ID/chieftaind:rev-$SHORT_SHA'
-- 'gcr.io/$PROJECT_ID/chieftaind:branch-$BRANCH_NAME'
 - 'gcr.io/$PROJECT_ID/berryhunter-edge:rev-$SHORT_SHA'
-- 'gcr.io/$PROJECT_ID/berryhunter-edge:branch-$BRANCH_NAME'
 - 'gcr.io/$PROJECT_ID/berryhunter-web:rev-$SHORT_SHA'
-- 'gcr.io/$PROJECT_ID/berryhunter-web:branch-$BRANCH_NAME'
