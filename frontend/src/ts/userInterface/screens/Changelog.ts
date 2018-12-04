@@ -11,6 +11,7 @@ const changelogs = requireAll(require.context('../../../../../changelog', false,
 const template = require('raw-loader!./changelog.mustache');
 
 function mapChangelogs(changelogs) {
+    // TODO sort changelogs by date descending
     return changelogs.map((changelog) => {
         let categories = {};
         changelog.changes.forEach((change) => {

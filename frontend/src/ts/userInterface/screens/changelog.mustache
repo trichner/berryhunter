@@ -6,13 +6,25 @@
 			<h3 class="codename">{{codename}}</h3>
 			<time datetime="{{datetime}}" class="releaseDate">{{dateFormatted}}</time>
 
+			{{#description}}
+				<p>{{description}}</p>
+			{{/description}}
+
 			{{#categories}}
 				<article class="changelogCategory">
 					<h4 class="category">{{name}}</h4>
 
 					<ul>
 						{{#changes}}
-							<li class="change">{{description}}</li>
+							<li class="change">
+								<span>{{description}}</span>
+								<!-- TODO -->
+								{{#explanation}}
+									<span class="explanation">[?]
+										<span class="tooltip">{{explanation}}</span>
+									</span>
+								{{/explanation}}
+							</li>
 						{{/changes}}
 					</ul>
 				</article>
