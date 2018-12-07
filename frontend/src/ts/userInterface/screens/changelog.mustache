@@ -1,9 +1,24 @@
-<h2>Changelog</h2>
+<div class="background"></div>
+<header>
+	<h2 class="berryhunter">
+		BerryHunter
+	</h2>
+	<span class="spacer"></span>
+	<h3 class="changelog">
+		Changelog
+	</h3>
+</header>
 
 {{#.}}
 	<section class="version">
-		<h3 class="codename">{{codename}}</h3>
-		<time datetime="{{datetime}}" class="releaseDate">{{dateFormatted}}</time>
+		<header>
+			<h3 class="update">
+				Update
+				<span class="codename">{{{codename}}}</span>
+			</h3>
+			<time datetime="{{datetime}}" class="releaseDate">{{dateFormatted}}</time>
+		</header>
+
 
 		{{#description}}
 			<p>{{description}}</p>

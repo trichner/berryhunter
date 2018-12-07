@@ -38,10 +38,10 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
         });
         let mdate = moment(changelog.date, 'DD.MM.YYYY');
         return {
-            codename: changelog.codename,
+            codename: prepareCodename(changelog.codename),
             date: mdate,
             datetime: mdate.format('YYYY-MM-DD'),
-            dateFormatted: mdate.format('L'),
+            dateFormatted: mdate.format('DD.MM.YYYY'),
             categories: Array.from(categories.values())
         };
     });
@@ -52,6 +52,10 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
     });
 
     return mapped;
+}
+
+function prepareCodename(codename: string): string {
+    return codename.replace(/ /g, '<span class="spacer"></span>');
 }
 
 function newCategories(): Map<string, ChangeCategoryVO> {

@@ -326,17 +326,16 @@
 		background-color: @backgroundColor;
 		text-align: left !important;
 		padding: 0 !important;
-
-		> h2 {
-			background-color: black;
-			margin: 0;
-			padding: 0.5rem 0.5rem 1rem;
-			box-sizing: border-box;
-		}
 	}
 }
 
 #credits {
+	> h2 {
+		background-color: black;
+		margin: 0;
+		padding: 0.5rem 0.5rem 1rem;
+		box-sizing: border-box;
+	}
 
 	> section {
 		float: left;
@@ -389,26 +388,92 @@ body.creditsVisible {
 }
 
 #changelog {
-	> .version {
-		margin: 0 1rem;
+	position: relative;
+	background: none !important; // background is applied via .background child
 
-		> h3 {
+	// Use a container to hold the background image to apply opacity
+	> .background {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		min-height: 100%;
+		// height will be set in JS according to parent.scrollHeight
+		z-index: -1;
+
+		background-position: center 0;
+		background-image: url(./background/changelog.jpg);
+		background-color: #0D0E0F;
+		background-repeat: repeat-y;
+		background-size: 100% auto;
+
+		opacity: 0.8;
+	}
+
+	> header {
+		margin-top: 2rem;
+		margin-bottom: 3rem;
+
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: baseline;
+		flex-shrink: 0; // prevent element from shrinking
+
+		font-size: 140px;
+
+		> .berryhunter {
+			margin: 0;
+			font-size: inherit;
+
 			color: #e37313;
-			margin-bottom: 0;
-			margin-top: 3rem;
+			text-shadow: rgb(255, 255, 255) 3px 0 0, rgb(255, 255, 255) 2.83487px 0.981584px 0, rgb(255, 255, 255) 2.35766px 1.85511px 0, rgb(255, 255, 255) 1.62091px 2.52441px 0, rgb(255, 255, 255) 0.705713px 2.91581px 0, rgb(255, 255, 255) -0.287171px 2.98622px 0, rgb(255, 255, 255) -1.24844px 2.72789px 0, rgb(255, 255, 255) -2.07227px 2.16926px 0, rgb(255, 255, 255) -2.66798px 1.37182px 0, rgb(255, 255, 255) -2.96998px 0.42336px 0, rgb(255, 255, 255) -2.94502px -0.571704px 0, rgb(255, 255, 255) -2.59586px -1.50383px 0, rgb(255, 255, 255) -1.96093px -2.27041px 0, rgb(255, 255, 255) -1.11013px -2.78704px 0, rgb(255, 255, 255) -0.137119px -2.99686px 0, rgb(255, 255, 255) 0.850987px -2.87677px 0, rgb(255, 255, 255) 1.74541px -2.43999px 0, rgb(255, 255, 255) 2.44769px -1.73459px 0, rgb(255, 255, 255) 2.88051px -0.838247px 0;
+		}
+
+		> .changelog {
+			margin: 0;
+			font-size: inherit;
+		}
+	}
+
+	> .version {
+		> header {
+			padding: 1rem;
+			padding-top: 2rem;
+			background: black;
+		}
+
+		.update {
+			margin: 0;
+			margin-bottom: 1rem;
+			text-transform: uppercase;
+			font-size: 110px;
+			line-height: 0.85;
+			letter-spacing: 2px;
+
+			> .codename {
+				color: #e37313;
+			}
 		}
 
 		&:first-of-type {
-			> h3 {
-				margin-top: 1rem;
+			.codename {
 			}
 		}
 
 		&:not(:first-of-type) {
-			> h3 {
-				//border-top: 1px solid #a6a6a6;
+			.codename {
 			}
 		}
+	}
+
+	.releaseDate {
+		letter-spacing: 1px;
+	}
+
+	.changelogCategory {
+		margin: 0 1rem;
 	}
 }
 
