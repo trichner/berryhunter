@@ -4,112 +4,112 @@
   "description": "Thank you for playing the Beta Version of BerryHunter!",
   "changes": [
     {
-      "category": "Highlight",
+      "category": "highlight",
       "description": "Everything placed in the map by players can also be destroyed by players.",
       "trelloId": "c/PFQYgFMG"
     },
     {
-      "category": "Bug Fix",
+      "category": "bugFix",
       "description": "It's now possible to start crafts while walking.",
       "trelloId": "c/4eUHJmUO"
     },
     {
-      "category": "Bug Fix",
+      "category": "bugFix",
       "description": "Crafting could get stuck before it even started, requiring the player to re-join the game.",
       "trelloId": "c/URPL4LDR"
     },
     {
-      "category": "Highlight",
+      "category": "highlight",
       "description": "Scores are used to show high scores and top 10 leaderboards across 4 time periods.",
       "trelloId": "c/z7nLwWOA"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "The tutorial will not be displayed automatically anymore but instead players can choose to enable it.",
       "trelloId": "c/aPdox9g1"
     },
     {
-      "category": "Feature",
+      "category": "feature",
       "description": "Players can start the game now in full screen mode.",
       "trelloId": "c/JWkS878Y"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "Start screen got a new and improved layout.",
       "trelloId": "c/1jdY7yD7"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "Multiple icons have been reworked: stone, bronze, iron, titanium.",
       "trelloId": "c/zNfAQ6dl"
     },
     {
-      "category": "Feature",
+      "category": "feature",
       "description": "All our social media accounts are linked on both start and end screen.",
       "trelloId": "c/jUjerd4R"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "Attack and hit animations have been reworked. There are now both swings and stabs.",
       "trelloId": "c/n5sIIkaz"
     },
     {
-      "category": "Feature",
+      "category": "feature",
       "description": "Player can rate their game experience at the end of each game.",
       "trelloId": "c/QI060zVu"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "Most graphics have been improved with shadows.",
       "trelloId": "c/3oATB9fP"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "Ground textures have been redesigned and reworked.",
       "trelloId": "c/YQu5FmJ6"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "Damage, freezing and starving overlays have been reworked.",
       "trelloId": "c/wikb4LLi"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "We got a new logo!",
       "trelloId": "c/lNKZjKgz"
     },
     {
-      "category": "Feature",
+      "category": "feature",
       "description": "A warning is now shown when you try to navigate away from an active game.",
       "trelloId": "c/aq5lqJB7"
     },
     {
-      "category": "Feature",
+      "category": "feature",
       "description": "Credits for used resources are shown.",
       "trelloId": "c/RLXOw4P3"
     },
     {
-      "category": "Bug Fix",
+      "category": "bugFix",
       "description": "Chat messages and crafting progress could get stuck when a player died.",
       "trelloId": "c/qllk5JWV"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "Inventory size increased to 9.",
       "trelloId": "c/Io9IkWb3"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "Visibility of chat messages, especially during the night.",
       "trelloId": "c/8LH9CZ6S"
     },
     {
-      "category": "Improvement",
+      "category": "improvement",
       "description": "Tutorial visibility and wording.",
       "trelloId": "c/h7235NRV"
     },
     {
-      "category": "Feature",
+      "category": "feature",
       "description": "Mobs show when they are damaged. Players show both damage and freezing.",
       "trelloId": [
         "c/0fpmujP9",
