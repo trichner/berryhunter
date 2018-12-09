@@ -1,0 +1,53 @@
+steps:
+- id: build_berryhunterd
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: bash
+  args: 
+    - -c
+    - |
+      docker build \
+        -t gcr.io/$PROJECT_ID/berryhunterd:rev-$SHORT_SHA \
+        -t gcr.io/$PROJECT_ID/berryhunterd:latest \
+        -f Dockerfile.berryhunterd .
+
+- id: build_chieftaind
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: bash
+  args: 
+    - -c
+    - |
+      docker build \
+        -t gcr.io/$PROJECT_ID/chieftaind:rev-$SHORT_SHA \
+        -t gcr.io/$PROJECT_ID/chieftaind:latest \
+        -f Dockerfile.chieftaind .
+
+- id: build_berryhunter_edge
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: bash
+  args: 
+    - -c
+    - |
+      docker build \
+        -t gcr.io/$PROJECT_ID/berryhunter-edge:rev-$SHORT_SHA \
+        -t gcr.io/$PROJECT_ID/berryhunter-edge:latest \
+        -f Dockerfile.berryhunter-edge .   
+
+- id: build_berryhunter_web
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: bash
+  args: 
+    - -c
+    - |
+      docker build \
+        -t gcr.io/$PROJECT_ID/berryhunter-web:rev-$SHORT_SHA \
+        -t gcr.io/$PROJECT_ID/berryhunter-web:latest \
+        -f Dockerfile.berryhunter-web . 
+images:
+- 'gcr.io/$PROJECT_ID/berryhunterd:rev-$SHORT_SHA'
+- 'gcr.io/$PROJECT_ID/berryhunterd:latest'
+- 'gcr.io/$PROJECT_ID/chieftaind:rev-$SHORT_SHA'
+- 'gcr.io/$PROJECT_ID/chieftaind:latest'
+- 'gcr.io/$PROJECT_ID/berryhunter-edge:rev-$SHORT_SHA'
+- 'gcr.io/$PROJECT_ID/berryhunter-edge:latest'
+- 'gcr.io/$PROJECT_ID/berryhunter-web:rev-$SHORT_SHA'
+- 'gcr.io/$PROJECT_ID/berryhunter-web:latest'
