@@ -10,6 +10,7 @@ RUN yarn install
 WORKDIR /app/
 COPY frontend/ frontend/
 COPY api/ api/
+COPY changelog/ changelog/
 
 # build frontend
 WORKDIR /app/frontend/
