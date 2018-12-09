@@ -97,17 +97,38 @@ data:
           dns googlecloud
         }
     
-        proxy /game berryhunterd-svc:80 {
+        proxy /game berryhunterd-dev-svc:80 {
           websocket
           transparent
         }
     
-        proxy /chieftain chieftaind-svc:3080 {
+        proxy /chieftain chieftaind-dev-svc:3080 {
           without /chieftain
             transparent
         }
     
         proxy / web-svc:80/ {
+          transparent
+        }
+    }
+
+    berryhunter.io {
+        
+        tls {
+          dns googlecloud
+        }
+    
+        proxy /game berryhunterd-prod-svc:80 {
+          websocket
+          transparent
+        }
+    
+        proxy /chieftain chieftaind-prod-svc:3080 {
+          without /chieftain
+            transparent
+        }
+    
+        proxy / web-prod-svc:80/ {
           transparent
         }
     }

@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: web-svc
+  name: web-prod-svc
 spec:
   ports:
   - port: 80
   selector:
     app: web-app
+    stage: prod
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -17,15 +18,17 @@ spec:
   selector:
     matchLabels:
       app: web-app
+      stage: prod
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: web-app
+        stage: prod
     spec:
       containers:
-      - image: gcr.io/berryhunter-io/berryhunter-web:rev-210107f
+      - image: gcr.io/berryhunter-io/berryhunter-web:latest
         name: web
         ports:
         - containerPort: 80
