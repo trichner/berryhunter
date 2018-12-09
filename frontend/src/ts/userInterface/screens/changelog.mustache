@@ -22,9 +22,12 @@
 				</header>
 
 
-				{{#description}}
-					<p>{{description}}</p>
-				{{/description}}
+				<article class="description">
+					{{#description}}
+						<p>{{{description}}}</p>
+					{{/description}}
+					{{{descriptionHtml}}}
+				</article>
 
 				{{#categories}}
 					<article class="changelogCategory">
