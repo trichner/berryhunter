@@ -1,7 +1,12 @@
 {
   "date": "31.12.2019",
   "codename": "Open Beta",
-  "description": "Thank you for playing the Beta Version of BerryHunter!",
+  "descriptionHtml": [
+    "<p class=\"warn\">This is an unfinished version of BerryHunter</p>",
+    "<p>Anything may be changed at any time without warning!</p>",
+    "<p class=\"help\">As you find bugs or have suggestions for the game,<br />let us know via our social media channels on the right</p>",
+    "<p class=\"offset\">Thank you very much for playing the Beta Version of BerryHunter!</p>"
+  ],
   "changes": [
     {
       "category": "feature",

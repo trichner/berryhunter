@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import {isUndefined} from '../../Utils';
 import * as Events from '../../Events';
 import {createStartScreenPanel} from "./ScreenUtil";
+import {isArray} from "util";
 
 function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);
@@ -47,6 +48,8 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
             date: mdate,
             datetime: mdate.format('YYYY-MM-DD'),
             dateFormatted: mdate.format('DD.MM.YYYY'),
+            description: changelog.description,
+            descriptionHtml: prepareDescriptionHtml(changelog.descriptionHtml),
             categories: Array.from(categories.values())
         };
     });
@@ -61,6 +64,18 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
 
 function prepareCodename(codename: string): string {
     return codename.replace(/ /g, '<span class="spacer"></span>');
+}
+
+function prepareDescriptionHtml(descriptionHtml: string | string[]) {
+    if (isUndefined(descriptionHtml)) {
+        return undefined;
+    }
+
+    if (Array.isArray(descriptionHtml)) {
+        return descriptionHtml.join('\n');
+    }
+
+    return descriptionHtml;
 }
 
 function newCategories(): Map<string, ChangeCategoryVO> {
@@ -85,13 +100,14 @@ function newCategory(categories: Map<string, ChangeCategoryVO>, key: string, nam
 interface ChangelogJSON {
     date: string,
     codename: string,
-    describtion?: string,
+    description?: string,
+    descriptionHtml?: string | string[],
     changes: ChangeJSON[]
 }
 
 interface ChangeJSON {
     category: string,
-    describtion: string,
+    description: string,
     trelloId: string | string[]
 }
 
@@ -100,6 +116,8 @@ interface ChangelogVO {
     date: moment.Moment,
     datetime: string,
     dateFormatted: string,
+    description?: string,
+    descriptionHtml?: string,
     categories: ChangeCategoryVO[]
 }
 
@@ -110,6 +128,6 @@ interface ChangeCategoryVO {
 
 interface ChangeVO {
     category: string,
-    describtion: string,
+    description: string,
     trelloId: string | string[]
 }

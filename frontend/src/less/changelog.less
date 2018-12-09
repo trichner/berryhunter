@@ -59,6 +59,30 @@
 			.codename {
 			}
 		}
+
+		> .description {
+			margin: 0.4em 1rem;
+			padding-left: 21px; // same indention as list items below
+			font-size: 1.15em;
+			color: rgba(255, 255, 255, 0.9);
+
+			> p {
+				margin: 0.6em 0;
+			}
+
+			> .warn {
+				color: #FF1744; // Material Design Red A400
+				opacity: 0.9;
+			}
+
+			> .help {
+				color: rgba(255, 255, 255, 0.6);
+			}
+
+			> .offset {
+				margin-top: 1.2em;
+			}
+		}
 	}
 
 	.releaseDate {
@@ -76,6 +100,7 @@
 	.category {
 		font-weight: normal;
 		margin-bottom: 0;
+		text-transform: uppercase;
 	}
 }
 
