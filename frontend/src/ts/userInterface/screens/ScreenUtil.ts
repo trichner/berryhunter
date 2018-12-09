@@ -20,7 +20,7 @@ export function createStartScreenPanel(
             closeButton.style.left = rootElement.getBoundingClientRect().right + 'px';
 
             if (backgroundContainer !== null) {
-                backgroundContainer.style.height = rootElement.scrollHeight + "px";
+                backgroundContainer.style.height = backgroundContainer.parentElement.scrollHeight + "px";
             }
         }
         visible = isVisible;

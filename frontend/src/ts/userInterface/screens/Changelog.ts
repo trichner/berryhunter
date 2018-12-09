@@ -15,7 +15,7 @@ Events.on('startScreen.domReady', setup);
 
 function setup() {
     createStartScreenPanel(
-        document.getElementById('changelog'),
+        document.getElementById('changelogContainer'),
         renderChangelogs(mapChangelogs(changelogs)),
         'closeChangelog',
         'changelogVisible',
@@ -36,6 +36,11 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
             }
             category.changes.push(change);
         });
+        for (let [name, category] of categories) {
+            if (category.changes.length === 0) {
+                categories.delete(name);
+            }
+        }
         let mdate = moment(changelog.date, 'DD.MM.YYYY');
         return {
             codename: prepareCodename(changelog.codename),

@@ -80,11 +80,13 @@
 			opacity: 0;
 		}
 
-      #betaStamp {
-        display: block;
-        animation: stamp1 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045),
-        stamp2 0.5s ease-in-out;
-      }
+		#betaStamp {
+			visibility: visible; // use visibility instead of display to enable transitions
+
+			transform: translate(-50%, -50%) rotate(-38deg) scale(1);
+			filter: blur(0);
+			opacity: 1;
+		}
 	}
 
 	> .infoContainer {
@@ -195,26 +197,6 @@
 	}
 }
 
-@keyframes stamp1 {
-  0% {
-    transform: translate(-50%, -50%) rotate(-38deg) scale(2);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(-38deg) scale(1);
-  }
-}
-
-@keyframes stamp2 {
-  0% {
-    filter: blur(20px);
-    opacity: 0;
-  }
-  100% {
-    filter: blur(0);
-    opacity: 1;
-  }
-}
-
 @keyframes socialLink-bounce {
 	0% {
 		transform: translateX(0);
@@ -306,180 +288,90 @@
 	position: absolute;
 	top: 100%;
 	left: 100%;
-	transform: translate(-50%, -50%) rotate(-38deg);
+	transform: translate(-50%, -50%) rotate(-38deg) scale(2);
+	filter: blur(20px);
+	opacity: 0;
 
-	display: none;
-	//pointer-events: none;
+	visibility: hidden; // use visibility instead of display to enable transitions
+
+	transition: transform 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045),
+	filter 0.5s ease-in-out,
+	opacity 0.5s ease-in-out;
+
+	&.hover {
+		animation: betaStamp-pulse 450ms infinite alternate ease-in;
+	}
 
 	> img {
+		display: block;
 		width: 40vh;
+	}
+}
+
+@keyframes betaStamp-pulse {
+	to {
+		transform: translate(-50%, -50%) rotate(-38deg) scale(1.05);
 	}
 }
 
 #startScreen {
 	> .panel {
+		position: absolute;
 		top: 10%;
 		bottom: 106px; // enough space for the bottom info container
+		left: 50%;
+		transform: translateX(-50%);
+
+		// make sure the child is fully stretched
+		display: flex;
+		justify-items: stretch;
+		align-content: stretch;
+
 		max-width: 100%;
 		width: 960px;
-		overflow: auto;
-		background-color: @backgroundColor;
-		text-align: left !important;
-		padding: 0 !important;
-	}
-}
+		overflow: hidden;
 
-#credits {
-	> h2 {
-		background-color: black;
-		margin: 0;
-		padding: 0.5rem 0.5rem 1rem;
-		box-sizing: border-box;
-	}
+		border-radius: 0.7vh;
+		color: white;
 
-	> section {
-		float: left;
-		width: 100%;
-		clear: both;
-
-		> p {
-			float: left;
-			width: 100%;
-			clear: both;
-			background-color: black;
-			margin: 0;
-			padding: 0.5rem;
-			box-sizing: border-box;
+		&.hidden {
+			display: none;
 		}
 
-		> .graphic {
-			float: left;
-			width: 6rem;
-			margin: 0.5rem;
-			padding: 0.5rem;
-			background-color: rgb(0, 96, 48);
-			border-radius: 0.6rem;
+		.simplebar-scrollbar:before {
+			background-color: white;
+		}
 
-			&.multi {
-				width: 9rem;
-			}
+		.simplebar-track .simplebar-scrollbar.simplebar-visible:before {
+			opacity: 0.7;
+		}
 
-			> img {
-				display: block;
-				width: 3.75rem;
-				margin: 0 auto;
-			}
+		// Use a container to hold the background image to apply opacity
+		.background {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			min-height: 100%;
+			// height will be set in JS according to parent.scrollHeight
+			z-index: -1;
 
-			> .multi {
-				text-align: center;
+			background-position: center 0;
+			background-image: url(./background/changelog.jpg);
+			background-color: #0D0E0F;
+			background-repeat: repeat-y;
+			background-size: 100% auto;
 
-				> img {
-					width: 3.75rem;
-				}
-			}
+			opacity: 0.8;
+		}
+
+		a:link,
+		a:visited,
+		a:hover,
+		a:active,
+		a:focus {
+			color: inherit;
 		}
 	}
 }
-
-body.creditsVisible {
-	.hideForCredits {
-		visibility: hidden; // use visibility to not trigger animations
-	}
-}
-
-#changelog {
-	position: relative;
-	background: none !important; // background is applied via .background child
-
-	// Use a container to hold the background image to apply opacity
-	> .background {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		min-height: 100%;
-		// height will be set in JS according to parent.scrollHeight
-		z-index: -1;
-
-		background-position: center 0;
-		background-image: url(./background/changelog.jpg);
-		background-color: #0D0E0F;
-		background-repeat: repeat-y;
-		background-size: 100% auto;
-
-		opacity: 0.8;
-	}
-
-	> header {
-		margin-top: 2rem;
-		margin-bottom: 3rem;
-
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: baseline;
-		flex-shrink: 0; // prevent element from shrinking
-
-		font-size: 140px;
-
-		> .berryhunter {
-			margin: 0;
-			font-size: inherit;
-
-			color: #e37313;
-			text-shadow: rgb(255, 255, 255) 3px 0 0, rgb(255, 255, 255) 2.83487px 0.981584px 0, rgb(255, 255, 255) 2.35766px 1.85511px 0, rgb(255, 255, 255) 1.62091px 2.52441px 0, rgb(255, 255, 255) 0.705713px 2.91581px 0, rgb(255, 255, 255) -0.287171px 2.98622px 0, rgb(255, 255, 255) -1.24844px 2.72789px 0, rgb(255, 255, 255) -2.07227px 2.16926px 0, rgb(255, 255, 255) -2.66798px 1.37182px 0, rgb(255, 255, 255) -2.96998px 0.42336px 0, rgb(255, 255, 255) -2.94502px -0.571704px 0, rgb(255, 255, 255) -2.59586px -1.50383px 0, rgb(255, 255, 255) -1.96093px -2.27041px 0, rgb(255, 255, 255) -1.11013px -2.78704px 0, rgb(255, 255, 255) -0.137119px -2.99686px 0, rgb(255, 255, 255) 0.850987px -2.87677px 0, rgb(255, 255, 255) 1.74541px -2.43999px 0, rgb(255, 255, 255) 2.44769px -1.73459px 0, rgb(255, 255, 255) 2.88051px -0.838247px 0;
-		}
-
-		> .changelog {
-			margin: 0;
-			font-size: inherit;
-		}
-	}
-
-	> .version {
-		> header {
-			padding: 1rem;
-			padding-top: 2rem;
-			background: black;
-		}
-
-		.update {
-			margin: 0;
-			margin-bottom: 1rem;
-			text-transform: uppercase;
-			font-size: 110px;
-			line-height: 0.85;
-			letter-spacing: 2px;
-
-			> .codename {
-				color: #e37313;
-			}
-		}
-
-		&:first-of-type {
-			.codename {
-			}
-		}
-
-		&:not(:first-of-type) {
-			.codename {
-			}
-		}
-	}
-
-	.releaseDate {
-		letter-spacing: 1px;
-	}
-
-	.changelogCategory {
-		margin: 0 1rem;
-	}
-}
-
-body.changelogVisible {
-	.hideForChangelog {
-		visibility: hidden; // use visibility to not trigger animations
-	}
-}
-

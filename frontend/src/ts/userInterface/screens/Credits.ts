@@ -8,7 +8,7 @@ let closeButton: HTMLElement;
 
 
 export function setup() {
-    rootElement = document.getElementById('credits');
+    rootElement = document.getElementById('creditsContainer');
     createStartScreenPanel(
         rootElement,
         html,

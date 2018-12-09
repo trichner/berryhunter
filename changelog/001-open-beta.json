@@ -1,8 +1,13 @@
 {
-  "date": "01.01.2019",
+  "date": "31.12.2019",
   "codename": "Open Beta",
   "description": "Thank you for playing the Beta Version of BerryHunter!",
   "changes": [
+    {
+      "category": "feature",
+      "description": "We introduced a changelog, listing all changes per game update starting with this version.",
+      "trelloId": "c/TSCHnUsf"
+    },
     {
       "category": "highlight",
       "description": "Everything placed in the map by players can also be destroyed by players.",
