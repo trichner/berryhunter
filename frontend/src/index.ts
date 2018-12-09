@@ -5,6 +5,9 @@ import * as Events from './ts/Events';
 // Import shims for ES5, ES6, ES7
 import 'core-js';
 
+// Custom scrollbars for panels. CSS is included via index.less
+import 'simplebar';
+
 // Import all modules that listen for Events to ensure the listeners are actually registered
 import './ts/AutoFeed';
 import './ts/BrowserConsole';
@@ -27,6 +30,7 @@ import './ts/items/InventorySlot';
 import './ts/items/Items';
 import './ts/scores/HighScores';
 import './ts/userInterface/ClickableIcon';
+import './ts/userInterface/screens/Changelog';
 import './ts/userInterface/screens/EndScreen';
 import './ts/userInterface/screens/StartScreen';
 

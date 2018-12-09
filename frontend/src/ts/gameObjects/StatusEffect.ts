@@ -4,18 +4,18 @@ import * as _ from 'lodash';
 import {ExtendedColorMatrixFilter} from '../ExtendedColorMatrixFilter';
 import {Animation} from "../Animation";
 
-interface Definition {
+export interface StatusEffectDefinition {
     id: string;
     priority: number;
 }
 
-export class StatusEffect {
-    static Damaged = {id: 'Damaged', priority: 1};
-    static DamagedAmbient = {id: 'DamagedAmbient', priority: 2};
-    static Yielded = {id: 'Yielded', priority: 3};
-    static Freezing = {id: 'Freezing', priority: 4};
-    static Starving = {id: 'Starving', priority: 5};
-    static Regenerating = {id: 'Regenerating', priority: 6};
+export class StatusEffect implements StatusEffectDefinition {
+    static Damaged: StatusEffectDefinition = {id: 'Damaged', priority: 1};
+    static DamagedAmbient: StatusEffectDefinition = {id: 'DamagedAmbient', priority: 2};
+    static Yielded: StatusEffectDefinition = {id: 'Yielded', priority: 3};
+    static Freezing: StatusEffectDefinition = {id: 'Freezing', priority: 4};
+    static Starving: StatusEffectDefinition = {id: 'Starving', priority: 5};
+    static Regenerating: StatusEffectDefinition = {id: 'Regenerating', priority: 6};
 
     readonly id: string;
     readonly priority: number;
@@ -25,7 +25,7 @@ export class StatusEffect {
     startAlpha: number;
     endAlpha: number;
 
-    constructor(definition: Definition, gameObjectShape, red, green, blue, startAlpha, endAlpha) {
+    private constructor(definition: StatusEffectDefinition, gameObjectShape, red, green, blue, startAlpha, endAlpha) {
         this.id = definition.id;
         this.priority = definition.priority;
 
@@ -69,8 +69,8 @@ export class StatusEffect {
         return new StatusEffect(StatusEffect.Starving, gameObjectShape, 30, 120, 30, 0.2, 0.8);
     }
 
-    static sortByPriority(statusEffects) {
-        return statusEffects.sort(function (a: StatusEffect, b: StatusEffect) {
+    static sortByPriority(statusEffects: StatusEffectDefinition[]): StatusEffectDefinition[] {
+        return statusEffects.sort(function (a: StatusEffectDefinition, b: StatusEffectDefinition) {
             return a.priority - b.priority;
         });
     };

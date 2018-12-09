@@ -1,0 +1,27 @@
+{
+  "id": 49,
+  "name": "WoodHammer",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.02,
+    "structureDamage": 2,
+    "yield": 0
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 20
+      },
+      {
+        "item": "Stone",
+        "count": 5
+      },
+      {
+        "item": "WoodClub",
+        "count": 1
+      }
+    ]
+  }
+}

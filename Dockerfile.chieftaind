@@ -1,0 +1,25 @@
+FROM golang:1.11 AS go_builder
+
+ENV GOPATH=/go
+WORKDIR /go/src/github.com/trichner/berryhunter/
+
+COPY common/ common/
+COPY chieftaind/ chieftaind/
+COPY api/ api/
+
+WORKDIR /go/src/github.com/trichner/berryhunter/chieftaind/
+RUN go get -d -v
+RUN go build -a -o chieftaind .
+
+# copy backend together
+WORKDIR /root/
+RUN /go/src/github.com/trichner/berryhunter/chieftaind/server/genkey.sh
+RUN mv /go/src/github.com/trichner/berryhunter/chieftaind/chieftaind .
+
+#COPY --from=go_builder /go/src/github.com/trichner/berryhunter/chieftaind/chieftaind .
+#COPY $CONF conf.json
+
+EXPOSE 3443
+EXPOSE 3080
+
+CMD ["./chieftaind"]

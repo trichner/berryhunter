@@ -7,6 +7,7 @@ import {DebugCircle} from '../develop/DebugCircle';
 import {Character} from '../gameObjects/Character';
 import {Placeable} from '../gameObjects/Placeable';
 import {isFunction} from '../Utils';
+import {StatusEffectDefinition} from '../gameObjects/StatusEffect'
 import {BerryhunterApi} from './BerryhunterApi';
 
 export class Spectator {
@@ -167,9 +168,6 @@ function unmarshalEntity(entity, eType) {
     if (isFunction(entity.statusEffectsLength) &&
         isFunction(entity.statusEffects)) {
         result.statusEffects = unmarshalStatusEffects(entity.statusEffectsLength(), entity.statusEffects.bind(entity));
-        // if (result.statusEffects.length) {
-        // 	console.log((result.name || '') + ' [' + id + '] ' + result.statusEffects.map(e => e.id));
-        // }
     }
 
     return result
@@ -233,12 +231,12 @@ function unmarshalItem(itemId) {
     return BackendConstants.itemLookupTable[itemId];
 }
 
-function unmarshalStatusEffects(length, getter) {
-    let statusEffects = [];
+function unmarshalStatusEffects(length, getter): StatusEffectDefinition[] {
+    let definitions: StatusEffectDefinition[] = [];
 
     for (let i = 0; i < length; ++i) {
-        statusEffects.push(BackendConstants.statusEffectLookupTable[getter(i)]);
+        definitions.push(BackendConstants.statusEffectLookupTable[getter(i)]);
     }
 
-    return statusEffects;
+    return definitions;
 }

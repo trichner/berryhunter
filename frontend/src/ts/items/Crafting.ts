@@ -73,13 +73,9 @@ function onCraftIconLeftClick(event, recipe) {
             return;
         }
 
-        let actionAllowed = Game.player.controls
+        Game.player.controls
             .onInventoryAction(
                 recipe.item,
                 BerryhunterApi.ActionType.CraftItem);
-        if (actionAllowed) {
-            this.startProgress(recipe.craftingTime);
-            Game.player.startCraftProgress(recipe.craftingTime);
-        }
     }
 }

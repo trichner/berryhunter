@@ -5,14 +5,17 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/trichner/berryhunter/chieftaind/dao"
+	"github.com/trichner/berryhunter/chieftaind/service"
 	"log"
 	"net/http"
 	"time"
 )
 
-func NewRouter(ds dao.DataStore, p dao.PlayerDao) http.Handler {
+func NewRouter(ds dao.DataStore, s service.ScoreService) http.Handler {
 	router := mux.NewRouter()
-	router.HandleFunc("/scoreboard", GetScoreboardHandler(p)).Methods("GET")
+	router.HandleFunc("/highscores", GetHighScoresHandler(s)).Methods("GET")
+	router.HandleFunc("/scoreboard", GetScoreboardHandler(s)).Methods("GET")
+	router.HandleFunc("/", GetPing()).Methods("GET")
 
 	router.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -32,20 +35,51 @@ func NewRouter(ds dao.DataStore, p dao.PlayerDao) http.Handler {
 	return router
 }
 
-func GetScoreboardHandler(pdao dao.PlayerDao) http.HandlerFunc {
+func GetPing() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(204)
+	}
+}
+
+func GetHighScoresHandler(s service.ScoreService) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		p, err := pdao.FindTopPlayers(r.Context(), 100)
+		scores, err := s.ScoresPerPeriod(r.Context(), 1);
 		if err != nil {
+			log.Printf("Error while serving high scores: %s\n", err)
 			w.WriteHeader(500)
 			return
 		}
-		jsonPlayers := mapPlayersToDto(p)
 
 		je := json.NewEncoder(w)
-		je.Encode(jsonPlayers)
+		je.Encode(mapScoresToDto(scores))
 	}
+}
+
+func GetScoreboardHandler(s service.ScoreService) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		scores, err := s.ScoresPerPeriod(r.Context(), 10);
+		if err != nil {
+			log.Printf("Error while serving scoreboard: %s\n", err)
+			w.WriteHeader(500)
+			return
+		}
+
+		je := json.NewEncoder(w)
+		je.Encode(mapScoresToDto(scores))
+	}
+}
+
+func mapScoresToDto(scores *service.Scores) scoresDto {
+	jsonScores := scoresDto{}
+
+	jsonScores.Daily = mapPlayersToDto(scores.Daily)
+	jsonScores.Weekly = mapPlayersToDto(scores.Weekly)
+	jsonScores.Monthly = mapPlayersToDto(scores.Monthly)
+	jsonScores.Alltime = mapPlayersToDto(scores.Alltime)
+
+	return jsonScores
 }
 
 func mapPlayersToDto(players []dao.Player) []playerDto {
@@ -61,6 +95,13 @@ func mapPlayersToDto(players []dao.Player) []playerDto {
 		})
 	}
 	return jsonPlayers
+}
+
+type scoresDto struct {
+	Daily	[]playerDto `json:"daily"`
+	Weekly	[]playerDto `json:"weekly"`
+	Monthly	[]playerDto `json:"monthly"`
+	Alltime	[]playerDto `json:"alltime"`
 }
 
 type playerDto struct {

@@ -1,0 +1,21 @@
+local.berryhunter.io {
+
+    log /dev/stdout
+    tls off
+
+    proxy /game berryhunterd:80/ {
+        transparent
+        websocket
+    }
+
+    proxy /chieftain chieftaind:3080/ {
+        transparent
+        without /chieftain
+    }
+
+    proxy / web:80/ {
+        transparent
+    }
+
+    cors /chieftain http://localhost:2001 http://localhost
+}

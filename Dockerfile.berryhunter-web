@@ -1,0 +1,22 @@
+FROM node:latest AS builder
+
+# load dependencies for cacheability
+WORKDIR /app/frontend/
+COPY frontend/package.json .
+COPY frontend/yarn.lock .
+RUN yarn install
+
+# copy sources
+WORKDIR /app/
+COPY frontend/ frontend/
+COPY api/ api/
+
+# build frontend
+WORKDIR /app/frontend/
+RUN yarn build
+
+# ---- actual image
+FROM nginx:latest
+
+WORKDIR /usr/share/nginx/html
+COPY --from=builder /app/frontend/dist/ .

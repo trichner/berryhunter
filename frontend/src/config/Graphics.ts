@@ -55,7 +55,7 @@ export const GraphicsConfig = {
              * How many ticks will the backend communicate an action in progress
              * SYNCED WITH BACKEND
              */
-            backendTicks: 15,
+            backendTicks: 10,
         },
     },
 

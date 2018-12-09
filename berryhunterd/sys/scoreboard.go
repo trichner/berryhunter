@@ -75,6 +75,9 @@ func (d *ScoreboardSystem) Update(dt float32) {
 }
 
 func (d *ScoreboardSystem) updateChieftain() {
+	if d.chieftain == nil {
+		return
+	}
 	players := make([]client.Player, 0, len(d.players))
 
 	for _, p := range d.players {

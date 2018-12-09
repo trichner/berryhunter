@@ -1,0 +1,51 @@
+<div id="changelog" data-simplebar>
+	<div class="background"></div>
+	<div id="changelogContent">
+		<header>
+			<h2 class="berryhunter">
+				BerryHunter
+			</h2>
+			<span class="spacer"></span>
+			<h3 class="changelog">
+				Changelog
+			</h3>
+		</header>
+
+		{{#.}}
+			<section class="version">
+				<header>
+					<h3 class="update">
+						Update
+						<span class="codename">{{{codename}}}</span>
+					</h3>
+					<time datetime="{{datetime}}" class="releaseDate">{{dateFormatted}}</time>
+				</header>
+
+
+				{{#description}}
+					<p>{{description}}</p>
+				{{/description}}
+
+				{{#categories}}
+					<article class="changelogCategory">
+						<h4 class="category">{{name}}</h4>
+
+						<ul>
+							{{#changes}}
+								<li class="change">
+									<span>{{description}}</span>
+									<!-- TODO -->
+									{{#explanation}}
+										<span class="explanation">[?]
+										<span class="tooltip">{{explanation}}</span>
+									</span>
+									{{/explanation}}
+								</li>
+							{{/changes}}
+						</ul>
+					</article>
+				{{/categories}}
+			</section>
+		{{/.}}
+	</div>
+</div>

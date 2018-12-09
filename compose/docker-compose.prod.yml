@@ -1,0 +1,37 @@
+version: '3'
+services:
+    edge:
+        image: gcr.io/trichner-212015/berryhunter-edge
+        depends_on:
+            - berryhunterd
+            - chieftaind
+            - web
+        volumes:
+            - "./cfg/edge/Caddyfile:/app/Caddyfile"
+            - "caddy-data:/data"
+        environment:
+            - "CADDYPATH=/data"
+        ports:
+            - "443:443"
+            - "80:80"
+    berryhunterd:
+        image: gcr.io/trichner-212015/berryhunterd
+        depends_on:
+            - chieftaind
+            - web
+        volumes:
+            - "./cfg/berryhunterd/conf.json:/root/berryhunterd/conf.json"
+        ports:
+            - "127.0.0.1:2000:80"
+    web:
+        image: gcr.io/trichner-212015/berryhunter-web
+    chieftaind:
+        image: gcr.io/trichner-212015/chieftaind
+        ports:
+            - "127.0.0.1:3080:3080"
+        volumes:
+            - "chieftain-data:/data"
+
+volumes:
+  caddy-data:
+  chieftain-data:

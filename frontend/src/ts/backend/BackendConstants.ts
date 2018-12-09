@@ -1,7 +1,7 @@
 'use strict';
 
 import {Items} from '../items/Items';
-import {StatusEffect} from '../gameObjects/StatusEffect';
+import {StatusEffect, StatusEffectDefinition} from '../gameObjects/StatusEffect';
 import {BerryhunterApi} from './BerryhunterApi';
 
 
@@ -17,7 +17,7 @@ function initializeItemLookupTable() {
     }
 }
 
-export const statusEffectLookupTable = [];
+export const statusEffectLookupTable: StatusEffectDefinition[] = [];
 
 function initializeStatusEffectLookupTable() {
     for (let statusEffect in BerryhunterApi.StatusEffect) {

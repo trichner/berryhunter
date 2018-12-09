@@ -1,0 +1,113 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: edge-svc
+spec:
+  ports:
+  - name: http
+    port: 80
+  - name: https
+    port: 443
+  selector:
+    app: edge-app
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: edge
+spec:
+  selector:
+    matchLabels:
+      app: edge-app
+  serviceName: edge
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: edge-app
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: edge
+        image: gcr.io/berryhunter-io/caddy:latest
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+        volumeMounts:
+        - name: edge-data
+          mountPath: /data
+        - name: cfg-volume
+          mountPath: /etc/Caddyfile
+          subPath: Caddyfile
+        - name: clouddns-serviceaccount
+          mountPath: "/etc/clouddns-serviceaccount.json"
+          subPath: clouddns-serviceaccount.json
+          readOnly: true
+        env:
+          - name: CADDYPATH
+            value: /data
+          - name: ACME_AGREE
+            value: 'true'
+          - name: GCE_PROJECT
+            value: trichner-212015
+          - name: GCE_DOMAIN
+            value: develop.berryhunter.io
+          - name: GCE_SERVICE_ACCOUNT_FILE
+            value: /etc/clouddns-serviceaccount.json
+        readinessProbe:
+          tcpSocket:
+            port: 443
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 20
+        livenessProbe:
+          tcpSocket:
+            port: 443
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          failureThreshold: 3
+      volumes:
+        - name: cfg-volume
+          configMap:
+            name: edge-cfgmap
+        - name: clouddns-serviceaccount
+          secret:
+            secretName: clouddns-serviceaccount
+  volumeClaimTemplates:
+  - metadata:
+      name: edge-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: edge-cfgmap
+data:
+  Caddyfile: |-
+    dev.berryhunter.io {
+        
+        tls {
+          dns googlecloud
+        }
+    
+        proxy /game berryhunterd-svc:80 {
+          websocket
+          transparent
+        }
+    
+        proxy /chieftain chieftaind-svc:3080 {
+          without /chieftain
+            transparent
+        }
+    
+        proxy / web-svc:80/ {
+          transparent
+        }
+    }

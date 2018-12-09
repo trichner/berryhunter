@@ -15,7 +15,7 @@ const htmlFile = require('./startScreen.html');
 let isDomReady = false;
 export let playerNameInput = null;
 
-let rootElement;
+let rootElement: HTMLElement;
 let chromeWarning;
 
 Events.on('preloading.execute', () => {
@@ -29,7 +29,8 @@ export function onDomReady() {
 
     playerNameInput = rootElement
         .getElementsByClassName('playerNameInput').item(0);
-    rootElement.getElementsByClassName('playerNameSubmit').item(0).disabled = false;
+    let playerNameSubmit: HTMLInputElement = rootElement.querySelector('.playerNameSubmit');
+    playerNameSubmit.disabled = false;
 
     loadingBar = document.getElementById('loadingBar');
 
@@ -59,6 +60,10 @@ export function onDomReady() {
     rootElement.querySelectorAll('.socialLink').forEach(element => {
         smoothHoverAnimation(element, {animationDuration: 0.3});
     });
+
+    smoothHoverAnimation(
+        rootElement.querySelector('#betaStamp'),
+        {animationDuration: 0.45});
 
     Credits.setup();
 
@@ -95,8 +100,9 @@ function setProgress(value) {
             Events.on('firstGameStateRendered', () => {
                 rootElement.classList.remove('loading');
                 rootElement.classList.add('finished');
-                rootElement.getElementsByClassName('playerNameSubmit').item(0).value = "Play";
-            })
+                let playerNameSubmit: HTMLInputElement = rootElement.querySelector('.playerNameSubmit');
+                playerNameSubmit.value = "Play";
+            });
         }
     }
 }

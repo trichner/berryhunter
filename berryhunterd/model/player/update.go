@@ -62,6 +62,15 @@ func (p *player) updateVitalSigns(dt float32) {
 		p.addHealthFraction(-healthFraction)
 		p.statusEffects.Add(model.StatusEffectStarving)
 	}
+
+	// Are we both starving and freezing?
+	if vitalSigns.BodyTemperature <= 0 && vitalSigns.Satiety.Fraction() <= 0 {
+		healthFraction := c.FreezingStarveDamageTickFraction
+		// Reduce damage by amount already dealt by both freezing and starving
+		healthFraction -= c.FreezingDamageTickFraction
+		healthFraction -= c.StarveDamageTickFraction
+		p.addHealthFraction(-healthFraction)
+	}
 }
 
 func (p *player) addHealthFraction(fraction float32) {

@@ -2,7 +2,7 @@
 	<!-- TODO include splashscreen.jpg in Markup to make it load faster? -->
 	<div id="splashScreen"></div>
 
-	<header class="layout-row">
+	<header class="layout-row hideForLeaderboard hideForCredits hideForChangelog">
 		<img id="hunter" src="./hunter.png"/>
 		<h1>BerryHunter</h1>
 	</header>
@@ -23,7 +23,7 @@
 		</div>
 	</div>
 
-	<form id="startForm" class="playerForm layout-column">
+	<form id="startForm" class="playerForm layout-column hideForLeaderboard hideForCredits hideForChangelog">
 		<div class="inputContainer layout-row">
 			<input class="playerNameInput flex"
 			       placeholder="Some Name"
@@ -56,51 +56,25 @@
 		<a href="#changelog" id="betaStamp"><img src="./betaStamp.svg" /></a>
 	</form>
 
-	<div class="menu infoContainer center bottom layout-row">
-		<a href="#highScores">Leaderboard</a>
+	<div class="menu infoContainer center bottom layout-row hideForLeaderboard">
+		<a href="#highScores">Top 10</a>
 		<a href="http://berryhunter.wikia.com" target="_blank">Wiki</a>
 		<a href="#credits">Credits</a>
+		<a href="#changelog">Changelog</a>
 		<a href="http://iogames.space/" target="_blank">More IO-Games</a>
 	</div>
 
-	<a href="#" id="closeCredits" class="hidden">X</a>
-	<div id="credits" class="infoContainer center hidden">
+	<a href="#" id="closeCredits" class="closeButton hidden hideForLeaderboard hideForChangelog">X</a>
+	<div id="creditsContainer" class="panel hidden hideForLeaderboard">
+		<!-- Filled via JS -->
+	</div>
+
+	<a href="#" id="closeChangelog" class="closeButton hidden hideForLeaderboard hideForCredits">X</a>
+	<div id="changelogContainer" class="panel hidden hideForLeaderboard">
 		<!-- Filled via JS -->
 	</div>
 
 	<div class="socialMediaContainer infoContainer middle right layout-column">
 		${require('./socialMedia.html')}
-	</div>
-
-	<div id="highScores">
-		<h3 class="cell">
-			High Scores
-			<img src="./expand.svg" class="icon expand"/>
-		</h3>
-		<div class="cell highscore alltime">
-			<h4>Alltime</h4>
-			<span class="playerName"></span>
-			<data value="" class="value"></data>
-		</div>
-		<div class="cell highscore monthly">
-			<h4>Monthly</h4>
-			<span class="playerName"></span>
-			<data value="" class="value"></data>
-		</div>
-		<div class="cell highscore weekly">
-			<h4>Weekly</h4>
-			<span class="playerName"></span>
-			<data value="" class="value"></data>
-		</div>
-		<div class="cell highscore daily">
-			<h4>Daily</h4>
-			<span class="playerName"></span>
-			<data value="" class="value"></data>
-		</div>
-		<div class="cell highscore current">
-			<h4>Current Game</h4>
-			<span class="playerName"></span>
-			<data value="" class="value"></data>
-		</div>
 	</div>
 </div>

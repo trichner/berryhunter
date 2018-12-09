@@ -5,7 +5,7 @@ import {InjectedSVG} from '../InjectedSVG';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Vector} from '../Vector';
 import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../Utils';
-import {StatusEffect} from './StatusEffect';
+import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
 
 
 let movementInterpolatedObjects = new Set();
@@ -167,34 +167,39 @@ export class GameObject {
         this.layer.removeChild(this.shape);
     }
 
-    updateStatusEffects(newStatusEffects: StatusEffect[]) {
+    updateStatusEffects(newStatusEffects: StatusEffectDefinition[]) {
         if (!_.isArray(newStatusEffects) || newStatusEffects.length === 0) {
-            if (this.activeStatusEffect !== null) {
-                this.activeStatusEffect.hide();
-                this.activeStatusEffect = null;
-            }
+            this.hideActiveStatusEffect();
         } else {
             newStatusEffects = StatusEffect.sortByPriority(newStatusEffects);
+            // Get the first (=highest priority) status effect that's supported by this GameObject
             let newStatusEffect = newStatusEffects.find(
                 newStatusEffect => this.statusEffects.hasOwnProperty(newStatusEffect.id)
             );
             if (isDefined(newStatusEffect)) {
                 if (this.activeStatusEffect === null) {
                     // No effect running, run one
-                    this.activeStatusEffect = this.statusEffects[newStatusEffect.id];
-                    this.activeStatusEffect.show();
+                    this.showStatusEffect(newStatusEffect.id);
                 } else if (this.activeStatusEffect.id !== newStatusEffect.id) {
                     this.activeStatusEffect.forceHide();
-                    this.activeStatusEffect = this.statusEffects[newStatusEffect.id];
-                    this.activeStatusEffect.show();
+                    this.showStatusEffect(newStatusEffect.id);
                 }
             } else {
-                if (this.activeStatusEffect !== null) {
-                    this.activeStatusEffect.hide();
-                    this.activeStatusEffect = null;
-                }
+                this.hideActiveStatusEffect();
             }
         }
+    }
+
+    private hideActiveStatusEffect() {
+        if (this.activeStatusEffect !== null) {
+            this.activeStatusEffect.hide();
+            this.activeStatusEffect = null;
+        }
+    }
+
+    private showStatusEffect(statusEffectid: string) {
+        this.activeStatusEffect = this.statusEffects[statusEffectid];
+        this.activeStatusEffect.show();
     }
 }
 

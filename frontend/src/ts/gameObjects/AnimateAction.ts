@@ -110,7 +110,7 @@ types.stab = function (options, overallDuration, forwardDuration, start) {
     options.animation.to(
         options.hand,
         {
-            x: options.hand.originalTranslation.x + options.size * 0.4,
+            x: options.hand.originalTranslation.x + options.size * 0.5,
         },
         forwardDuration,
         {

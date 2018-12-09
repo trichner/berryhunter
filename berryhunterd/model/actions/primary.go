@@ -8,7 +8,7 @@ import (
 func NewPrimary(i items.Item, p model.PlayerEntity) *Primary {
 	a := &Primary{baseAction: baseAction{item: i, p: p}}
 
-	a.ticks = 15 // 500ms cooldown
+	a.ticks = 10 // 500ms cooldown
 	return a
 }
 

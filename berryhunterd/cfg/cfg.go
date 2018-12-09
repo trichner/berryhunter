@@ -18,9 +18,10 @@ type Config struct {
 		ColdFractionNightPerS float32 `json:"coldFractionNightPerSecond"`
 		HeatFractionPerS      float32 `json:"heatFractionPerSecond"`
 		Player                struct {
-			FreezingDamageTickFraction float32 `json:"freezingDamageTickFraction"`
-			StarveDamageTickFraction   float32 `json:"starveDamageTickFraction"`
-			SatietyLossTickFraction    float32 `json:"satietyLossTickFraction"`
+			FreezingDamageTickFraction       float32 `json:"freezingDamageTickFraction"`
+			StarveDamageTickFraction         float32 `json:"starveDamageTickFraction"`
+			FreezingStarveDamageTickFraction float32 `json:"freezingStarveDamageTickFraction"`
+			SatietyLossTickFraction          float32 `json:"satietyLossTickFraction"`
 
 			// constants for gaining health
 			HealthGainTick                    float32 `json:"healthGainTick"`

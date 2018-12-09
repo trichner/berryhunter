@@ -1,0 +1,365 @@
+#highScores {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  box-sizing: border-box;
+
+  z-index: 100; // on top of other screens
+
+  background-color: @backgroundColor;
+  color: white;
+
+  transform: translateY(-100%);
+  transition: transform @splashScreenAnimation;
+
+  &.loaded {
+    transform: translateY(0);
+  }
+
+  &.open {
+    bottom: 0;
+
+    > .highScoreOverview {
+      display: none;
+    }
+  }
+
+  &:not(.open) > .highScoreDetails {
+    display: none;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .playerName { // make sure long names don't break the layout
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 195px;
+    text-overflow: ellipsis;
+  }
+}
+
+.highScoreOverview { // top row on start screen
+  display: flex;
+  justify-content: stretch;
+  flex: 1;
+
+  padding: 1rem;
+
+  line-height: 0.7;
+  cursor: pointer;
+
+  &.hover {
+    .icon.expand {
+      animation: jump 300ms alternate infinite ease-in-out;
+    }
+  }
+}
+// interrupt .highScoreOverview for keyframes
+
+@keyframes jump {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(40%);
+  }
+}
+
+// continue .highScoreOverview
+.highScoreOverview { // top row on start screen
+  > h3 {
+    display: flex;
+    margin: 0;
+
+    font-weight: normal;
+
+    font-size: 1.5rem;
+    line-height: 0.75rem;
+    letter-spacing: 0.06em;
+  }
+
+  .icon.expand {
+    height: 0.9em;
+    margin-bottom: -7px;
+    margin-top: -2px;
+    margin-left: 0.5rem;
+  }
+
+  > .highscoresGroup {
+    display: flex;
+    justify-content: space-around;
+    flex: 1;
+
+    > .highscore {
+      display: flex;
+      margin-left: 1rem;
+      font-size: 1.25rem;
+
+      > h4 {
+        margin: -0.4rem 0.5rem -0.6rem 0;
+        padding: 0.4rem 1rem 0.6rem;
+        font-size: inherit;
+        font-weight: normal;
+        color: black;
+        border-top-left-radius: 1.125rem;
+        border-bottom-left-radius: 1.125rem;
+      }
+
+      > .playerName {
+        margin: -0.4rem 0.5rem -0.6rem 0;
+        padding: 0.4rem 0.5rem 0.6rem 0;
+        border-right: 2px solid currentColor;
+      }
+    }
+
+    > .alltime {
+      color: #FFC400; // Material Design Amber A400
+
+      > h4 {
+        background-color: #FFC400; // Material Design Amber A400
+      }
+    }
+
+    > .monthly {
+      color: #FF1744; // Material Design Red A400
+
+      > h4 {
+        background-color: #FF1744; // Material Design Amber A400
+      }
+    }
+
+    > .weekly {
+      color: #00B0FF; // Material Design Light Blue A400
+
+      > h4 {
+        background-color: #00B0FF; // Material Design Amber A400
+      }
+    }
+
+    > .daily {
+      color: #76FF03; // Material Design Light Green A400
+
+      > h4 {
+        background-color: #76FF03; // Material Design Amber A400
+      }
+    }
+
+    > .current {
+      color: white;
+
+      > h4 {
+        background-color: white;
+      }
+    }
+  }
+}
+
+/*
+ * Hide categories in the top depending on browser width.
+ */
+@media (max-width: 540px) {
+  .highScoreOverview > .highscoresGroup > .alltime {
+    display: none;
+  }
+}
+
+@media (max-width: 864px) {
+  .highScoreOverview > .highscoresGroup > .daily {
+    display: none;
+  }
+}
+
+@media (max-width: 1188px) {
+  .highScoreOverview > .highscoresGroup > .weekly {
+    display: none;
+  }
+}
+
+@media (max-width: 1512px) {
+  .highScoreOverview > .highscoresGroup > .monthly {
+    display: none;
+  }
+}
+
+/* Same media queries, but taking .current into account
+
+@media (max-width: 864px) {
+  .highScoreOverview > .current {
+    display: none;
+  }
+}
+
+@media (max-width: 1188px) {
+  .highScoreOverview > .daily {
+    display: none;
+  }
+}
+
+@media (max-width: 1512px) {
+  .highScoreOverview > .weekly {
+    display: none;
+  }
+}
+
+@media (max-width: 1836px) {
+  .highScoreOverview > .monthly {
+    display: none;
+  }
+}
+*/
+
+#closeLeaderboard {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+
+  font-size: 3rem;
+  color: white;
+  text-decoration: none;
+}
+
+.highScoreDetails {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  justify-content: center;
+  align-items: center;
+
+  padding: 1rem;
+
+  overflow-y: auto;
+
+  > header {
+    margin-bottom: 3rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+    flex-shrink: 0; // prevent element from shrinking
+
+    font-size: 10vw;
+
+    > .berryhunter {
+      margin: 0;
+      font-size: inherit;
+
+      color: #e37313;
+      text-shadow: rgb(255, 255, 255) 3px 0 0, rgb(255, 255, 255) 2.83487px 0.981584px 0, rgb(255, 255, 255) 2.35766px 1.85511px 0, rgb(255, 255, 255) 1.62091px 2.52441px 0, rgb(255, 255, 255) 0.705713px 2.91581px 0, rgb(255, 255, 255) -0.287171px 2.98622px 0, rgb(255, 255, 255) -1.24844px 2.72789px 0, rgb(255, 255, 255) -2.07227px 2.16926px 0, rgb(255, 255, 255) -2.66798px 1.37182px 0, rgb(255, 255, 255) -2.96998px 0.42336px 0, rgb(255, 255, 255) -2.94502px -0.571704px 0, rgb(255, 255, 255) -2.59586px -1.50383px 0, rgb(255, 255, 255) -1.96093px -2.27041px 0, rgb(255, 255, 255) -1.11013px -2.78704px 0, rgb(255, 255, 255) -0.137119px -2.99686px 0, rgb(255, 255, 255) 0.850987px -2.87677px 0, rgb(255, 255, 255) 1.74541px -2.43999px 0, rgb(255, 255, 255) 2.44769px -1.73459px 0, rgb(255, 255, 255) 2.88051px -0.838247px 0;
+    }
+
+    > .leaderboard {
+      margin: 0;
+      font-size: inherit;
+    }
+  }
+
+  > .tableContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tableGroup {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+// 120rem is exactly the full width of 4 tables with 3 margins and the padding of the highScoreDetails
+@media (min-width: 120rem) {
+  .tableGroup + .tableGroup {
+    margin-left: 2rem;
+  }
+}
+
+.highScoreDetails {
+
+  table.highscore {
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+    width: 28rem;
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+
+    > caption {
+      padding: 0.4rem 1rem 0.6rem;
+      font-size: 2rem;
+      font-weight: normal;
+      color: black;
+      border-top-left-radius: 1.125rem;
+      border-top-right-radius: 1.125rem;
+    }
+
+    > tbody > tr {
+      > td {
+        padding-right: 1rem;
+        line-height: 1.5;
+      }
+
+      > td:first-of-type {
+        padding-left: 1rem;
+      }
+    }
+  }
+
+
+  table.alltime {
+    color: #FFC400; // Material Design Amber A400
+
+    > caption {
+      background-color: #FFC400; // Material Design Amber A400
+    }
+  }
+
+  table.monthly {
+    color: #FF1744; // Material Design Amber A400
+
+    > caption {
+      background-color: #FF1744; // Material Design Amber A400
+    }
+  }
+
+  table.weekly {
+    color: #00B0FF; // Material Design Amber A400
+
+    > caption {
+      background-color: #00B0FF; // Material Design Amber A400
+    }
+  }
+
+  table.daily {
+    color: #76FF03; // Material Design Amber A400
+
+    > caption {
+      background-color: #76FF03; // Material Design Amber A400
+    }
+  }
+
+  td.date {
+    text-align: center;
+  }
+
+  td.score {
+    text-align: right; // numbers are right aligned for better comparability
+    white-space: nowrap; // don't break up numbers
+  }
+}
+
+body.leaderboardVisible {
+	.hideForLeaderboard {
+		visibility: hidden; // use visibility to not trigger animations
+	}
+}
