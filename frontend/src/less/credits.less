@@ -1,0 +1,57 @@
+#creditsContent {
+	> h2 {
+		background-color: black;
+		margin: 0;
+		padding: 0.5rem 0.5rem 1rem;
+		box-sizing: border-box;
+	}
+
+	> section {
+		float: left;
+		width: 100%;
+		clear: both;
+
+		> p {
+			float: left;
+			width: 100%;
+			clear: both;
+			background-color: black;
+			margin: 0;
+			padding: 0.5rem;
+			box-sizing: border-box;
+		}
+
+		> .graphic {
+			float: left;
+			width: 6rem;
+			margin: 0.5rem;
+			padding: 0.5rem;
+			background-color: rgb(0, 96, 48);
+			border-radius: 0.6rem;
+
+			&.multi {
+				width: 9rem;
+			}
+
+			> img {
+				display: block;
+				width: 3.75rem;
+				margin: 0 auto;
+			}
+
+			> .multi {
+				text-align: center;
+
+				> img {
+					width: 3.75rem;
+				}
+			}
+		}
+	}
+}
+
+body.creditsVisible {
+	.hideForCredits {
+		visibility: hidden; // use visibility to not trigger animations
+	}
+}
