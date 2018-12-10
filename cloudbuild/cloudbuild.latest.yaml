@@ -1,5 +1,6 @@
 steps:
 - id: build_berryhunterd
+  waitFor: ['-']
   name: 'gcr.io/cloud-builders/docker'
   entrypoint: bash
   args: 
@@ -11,6 +12,7 @@ steps:
         -f Dockerfile.berryhunterd .
 
 - id: build_chieftaind
+  waitFor: ['-']
   name: 'gcr.io/cloud-builders/docker'
   entrypoint: bash
   args: 
@@ -22,6 +24,7 @@ steps:
         -f Dockerfile.chieftaind .
 
 - id: build_berryhunter_edge
+  waitFor: ['-']
   name: 'gcr.io/cloud-builders/docker'
   entrypoint: bash
   args: 
@@ -33,6 +36,7 @@ steps:
         -f Dockerfile.berryhunter-edge .   
 
 - id: build_berryhunter_web
+  waitFor: ['-']
   name: 'gcr.io/cloud-builders/docker'
   entrypoint: bash
   args: 
