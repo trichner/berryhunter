@@ -87,6 +87,10 @@ func (m *Mob) MobID() mobs.MobID {
 	return m.definition.ID
 }
 
+func (m *Mob) MobDefinition() *mobs.MobDefinition {
+	return m.definition
+}
+
 func (m *Mob) Update(dt float32) bool {
 
 	auraCollisions := m.damageAura.Collisions()
@@ -150,6 +154,10 @@ func (m *Mob) Angle() float32 {
 	// FIXME the angle has to be set when the position is updated
 	// => That's where you're wrong kiddo. Vector arithmetic ftw!
 	return phy.Vec2f{-1, 0}.AngleBetween(m.heading)
+}
+
+func (m *Mob) SetAngle(a float32) {
+	m.heading = phy.NewPolarVec2f(1, a).Mult(-1);
 }
 
 func (m *Mob) Health() vitals.VitalSign {
