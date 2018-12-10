@@ -2,7 +2,7 @@
 
 import {deg2rad} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
-import * as _ from 'lodash';
+import _merge = require('lodash/merge');
 import {Animation} from "../Animation";
 
 const animationCfg = GraphicsConfig.character.actionAnimation;
@@ -19,7 +19,7 @@ export const types = {
 };
 
 export function animateAction(options: { hand: Hand, type?: 'swing' | 'stab', animation: Animation, animationFrame?: number, onDone?: () => any, size: number, mirrored?: boolean }) {
-    options = _.merge({
+    options = _merge({
         mirrored: false,
         type: 'stab',
         animationFrame: GraphicsConfig.character.actionAnimation.backendTicks - 1,

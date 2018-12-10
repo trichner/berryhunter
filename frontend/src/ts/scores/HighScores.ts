@@ -9,7 +9,7 @@ import {
     smoothHoverAnimation
 } from '../Utils';
 import * as Urls from '../backend/Urls';
-import * as moment from 'moment';
+import * as moment from 'moment-mini';
 import * as Preloading from "../Preloading";
 import * as Events from '../Events';
 

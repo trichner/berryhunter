@@ -1,6 +1,5 @@
 'use strict';
 
-import * as _ from 'lodash';
 import {ExtendedColorMatrixFilter} from '../ExtendedColorMatrixFilter';
 import {Animation} from "../Animation";
 
@@ -37,7 +36,7 @@ export class StatusEffect implements StatusEffectDefinition {
         this.startAlpha = startAlpha;
         this.endAlpha = endAlpha;
 
-        if (_.isArray(gameObjectShape.filters)) {
+        if (Array.isArray(gameObjectShape.filters)) {
             // filters are returned as copy
             let filters = gameObjectShape.filters;
             // so we modify the copy
