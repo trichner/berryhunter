@@ -5,7 +5,6 @@ import * as PIXI from 'pixi.js';
 import {NamedGroup} from '../NamedGroup';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {isDefined} from '../Utils';
-import * as MapEditor from '../mapEditor/_MapEditor';
 import * as Equipment from '../items/Equipment';
 import {InjectedSVG} from '../InjectedSVG';
 import * as Preloading from '../Preloading';
@@ -226,17 +225,6 @@ export class Character extends GameObject {
         shape.drawCircle(0, 0, this.size * miniMapCfg.sizeFactor);
 
         return shape;
-    }
-
-    move(movement) {
-        if (!MapEditor.isActive()) {
-            return;
-        }
-        let moveVec = new Vector().copy(movement);
-
-        moveVec.setLength(this.movementSpeed);
-
-        this.movePosition(moveVec);
     }
 
     getEquippedItemAnimationType() {
