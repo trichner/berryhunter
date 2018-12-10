@@ -1,30 +1,30 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: web-prod-svc
+  name: web-prod
 spec:
   ports:
   - port: 80
   selector:
-    app: web-app
+    app: web
     stage: prod
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
+  name: web-prod
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web-app
+      app: web
       stage: prod
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: web-app
+        app: web
         stage: prod
     spec:
       containers:
