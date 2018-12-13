@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+// const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
 	entry: './src/index.ts',
@@ -9,28 +9,28 @@ module.exports = {
 			title: 'BerryHunter',
 			xhtml: true
 		}),
-		new FaviconsWebpackPlugin({
-			// Your source logo
-			logo: './src/img/logo.svg',
-			// favicon background color (see https://github.com/haydenbleasel/favicons#usage)
-			background: '#fff',
-			// favicon app title (see https://github.com/haydenbleasel/favicons#usage)
-			title: 'BerryHunter',
-
-			// which icons should be generated (see https://github.com/haydenbleasel/favicons#usage)
-			icons: {
-				android: true,
-				appleIcon: true,
-				appleStartup: true,
-				coast: false,
-				favicons: true,
-				firefox: false,
-				opengraph: true,
-				twitter: true,
-				yandex: true,
-				windows: false
-			}
-		}),
+		// new FaviconsWebpackPlugin({
+		// 	// Your source logo
+		// 	logo: './src/img/logo.svg',
+		// 	// favicon background color (see https://github.com/haydenbleasel/favicons#usage)
+		// 	background: '#fff',
+		// 	// favicon app title (see https://github.com/haydenbleasel/favicons#usage)
+		// 	title: 'BerryHunter',
+		//
+		// 	// which icons should be generated (see https://github.com/haydenbleasel/favicons#usage)
+		// 	icons: {
+		// 		android: true,
+		// 		appleIcon: true,
+		// 		appleStartup: true,
+		// 		coast: false,
+		// 		favicons: true,
+		// 		firefox: false,
+		// 		opengraph: true,
+		// 		twitter: true,
+		// 		yandex: true,
+		// 		windows: false
+		// 	}
+		// }),
 	],
 
 	resolve: {
