@@ -1,7 +1,6 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+// const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
 	entry: './src/index.ts',
@@ -32,12 +31,7 @@ module.exports = {
 		// 		windows: false
 		// 	}
 		// }),
-		new webpack.HotModuleReplacementPlugin()
 	],
-	output: {
-		filename: 'index.js',
-		path: path.resolve(__dirname, 'dist')
-	},
 
 	resolve: {
 		// Add '.ts' as resolvable extensions.
@@ -54,7 +48,8 @@ module.exports = {
 				use: [{
 					loader: 'html-loader',
 					options: {
-						interpolate: 'require' // used to require other html partials inside of html
+						interpolate: 'require', // used to require other html partials inside of html
+						minimize: true,
 					}
 				}]
 			},
@@ -86,9 +81,8 @@ module.exports = {
 		]
 	},
 
-	// When importing a module whose path matches one of the following, just
-	// assume a corresponding global variable exists and use that instead.
-	// This is important because it allows us to avoid bundling all of our
-	// dependencies, which allows browsers to cache those libraries between builds.
-	externals: {}
+	output: {
+		filename: '[name].[contenthash].js',
+		path: path.resolve(__dirname, 'dist')
+	},
 };
