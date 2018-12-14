@@ -6,7 +6,8 @@
     "build": "webpack --config webpack.prod.js",
     "start": "webpack-dev-server --config webpack.dev.js",
     "analyze": "webpack --config webpack.analysis.js",
-    "visualize": "webpack  --config webpack.visualize.js"
+    "visualize": "webpack  --config webpack.visualize.js",
+    "favicon": "node create-favicons.js"
   },
   "main": "game.js",
   "repository": "https://github.com/trichner/berryhunter",
@@ -38,7 +39,8 @@
     "clean-webpack-plugin": "^0.1.19",
     "core-js": "^2.5.7",
     "css-loader": "^1.0.0",
-    "favicons-webpack-plugin": "^0.0.9",
+    "del": "^3.0.0",
+    "favicons": "^5.3.0",
     "file-loader": "^2.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
