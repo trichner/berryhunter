@@ -27,7 +27,9 @@ func main() {
 
 	// new game
 	var radius float32 = 20
+	rnd := rand.New(rand.NewSource(0xDEADBEEF + 7))
 	g, err := core.NewGameWith(
+		rnd,
 		core.Config(config),
 		core.Registries(registry, mobs),
 		core.Tokens(tokens),
@@ -38,7 +40,6 @@ func main() {
 	}
 
 	// populate game
-	rnd := rand.New(rand.NewSource(0xDEADBEEF + 7))
 	entities := gen.Generate(g.Items(), rnd, radius)
 	for _, e := range entities {
 		g.AddEntity(e)
@@ -97,8 +98,8 @@ func newRandomMobEntity(mobList []*mobs.MobDefinition, rnd *rand.Rand, radius fl
 	selected := wc.Choose(rnd).(*mobs.MobDefinition)
 
 	m := mob.NewMob(selected)
-	x := newRandomCoordinate(radius)
-	y := newRandomCoordinate(radius)
+	x := float32(0); //newRandomCoordinate(radius)
+	y := float32(0); //newRandomCoordinate(radius)
 	for (x * x + y * y > radius * radius) {
 		x = newRandomCoordinate(radius)
 		y = newRandomCoordinate(radius)

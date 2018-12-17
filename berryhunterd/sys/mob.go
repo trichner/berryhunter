@@ -5,6 +5,7 @@ import (
 	"github.com/trichner/berryhunter/berryhunterd/items/mobs"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/mob"
+	"github.com/trichner/berryhunter/berryhunterd/wrand"
 	"log"
 	"math/rand"
 )
@@ -12,10 +13,11 @@ import (
 type MobSystem struct {
 	mobs []model.MobEntity
 	game model.Game
+	rnd  *rand.Rand
 }
 
-func NewMobSystem(g model.Game) *MobSystem {
-	return &MobSystem{game: g}
+func NewMobSystem(g model.Game, rnd *rand.Rand) *MobSystem {
+	return &MobSystem{game: g, rnd: rnd}
 }
 
 func (n *MobSystem) Priority() int {
@@ -36,18 +38,16 @@ func (n *MobSystem) Update(dt float32) {
 		alive := mob.Update(dt)
 		if !alive {
 			n.game.RemoveEntity(mob.Basic())
-			n.RespawnMob(mob.MobDefinition())
+			n.respawnMob(mob.MobDefinition())
 		}
 	}
 }
 
-func (n *MobSystem) RespawnMob(d *mobs.MobDefinition) {
+func (n *MobSystem) respawnMob(d *mobs.MobDefinition) {
 	m := mob.NewMob(d)
 
-	randomMob := *n.randomMob(d.ID)
-	if (randomMob == nil) {
-		log.Printf("Can't find random mob with id: %d. New mob will be spawned at 0/0.", d.ID)
-	} else {
+	randomMob := n.randomMob(d.ID)
+	if randomMob != nil {
 		m.SetPosition(randomMob.Position())
 		m.SetAngle(randomMob.Angle())
 	}
@@ -55,17 +55,19 @@ func (n *MobSystem) RespawnMob(d *mobs.MobDefinition) {
 	n.game.AddEntity(m)
 }
 
-func (n *MobSystem) randomMob(id mobs.MobID) *model.MobEntity {
-	var current model.MobEntity = nil;
-	var count int = 0;
-	for _, entity := range n.mobs {
-		count++;
-		if (rand.Intn(count) == 0) {
-			current = entity;
+func (n *MobSystem) randomMob(id mobs.MobID) model.MobEntity {
+	choices := []wrand.Choice{}
+	for _, m := range n.mobs {
+		if (m.MobID() == id) {
+			choices = append(choices, wrand.Choice{Weight: 1, Choice: m})
 		}
 	}
-
-	return &current;
+	wc := wrand.NewWeightedChoice(choices)
+	selected := wc.Choose(n.rnd)
+	if selected == nil {
+		return nil
+	}
+	return selected.(model.MobEntity)
 }
 
 func (n *MobSystem) Remove(b ecs.BasicEntity) {
