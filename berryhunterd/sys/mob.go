@@ -16,7 +16,8 @@ type MobSystem struct {
 	rnd  *rand.Rand
 }
 
-func NewMobSystem(g model.Game, rnd *rand.Rand) *MobSystem {
+func NewMobSystem(g model.Game, seed int64) *MobSystem {
+	rnd := rand.New(rand.NewSource(seed))
 	return &MobSystem{game: g, rnd: rnd}
 }
 
@@ -58,7 +59,7 @@ func (n *MobSystem) respawnMob(d *mobs.MobDefinition) {
 func (n *MobSystem) randomMob(id mobs.MobID) model.MobEntity {
 	choices := []wrand.Choice{}
 	for _, m := range n.mobs {
-		if (m.MobID() == id) {
+		if m.MobID() == id {
 			choices = append(choices, wrand.Choice{Weight: 1, Choice: m})
 		}
 	}
