@@ -8,6 +8,7 @@ import (
 
 type ScoreService interface {
 	ScoresPerPeriod(ctx context.Context, limit int) (*Scores, error)
+	UpdateScores(ctx context.Context, scoreBoard ScoreBoard) (error)
 }
 
 type scoreService struct {
@@ -19,7 +20,7 @@ func NewScoreService(pdao dao.PlayerDao) (ScoreService, error) {
 }
 
 func (s *scoreService) UpdateScores(ctx context.Context, scoreBoard ScoreBoard) (error) {
-	for _, player := range scoreBoard.players {
+	for _, player := range scoreBoard.Players {
 
 		// Logic
 		// 1. find entry with uuid
@@ -84,5 +85,5 @@ type Scores struct {
 }
 
 type ScoreBoard struct {
-	players   []dao.Player `json:"players"`
+	Players []dao.Player `json:"players"`
 }

@@ -13,7 +13,7 @@ import (
 
 func NewRouter(ds dao.DataStore, s service.ScoreService) http.Handler {
 	router := mux.NewRouter()
-	router.HandleFunc("/scoreboard", GetScoreboardHandler(s)).Methods("POST")
+	router.HandleFunc("/scoreboard", PostScoreBoardHandler(s)).Methods("POST")
 
 	router.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -39,32 +39,47 @@ func PostScoreBoardHandler(scoreService service.ScoreService) http.HandlerFunc {
 
 		jd := json.NewDecoder(r.Body)
 
-		var scoreBoard scoresDto
+		var scoreBoard scoreBoardDto
 		if err := jd.Decode(&scoreBoard); err != nil {
 			w.WriteHeader(400)
 			return
 		}
 
-		scoreService.U
+		if err := scoreService.UpdateScores(r.Context(), mapScoreBoardDtoToScoreBoard(scoreBoard)); err != nil {
+			w.WriteHeader(500)
+			return
+		}
 
+		w.WriteHeader(204)
 	}
 }
 
-type scoresDto struct {
-	players	[]playerDto `json:"players"`
+type scoreBoardDto struct {
+	players []playerDto `json:"players"`
 }
 
 type playerDto struct {
-	Uuid    string `json:"uuid"`
-	Name    string `json:"name"`
-	Score   uint   `json:"score"`
+	Uuid  string `json:"uuid"`
+	Name  string `json:"name"`
+	Score uint   `json:"score"`
+}
+
+func mapScoreBoardDtoToScoreBoard(dto scoreBoardDto) service.ScoreBoard {
+
+	players := make([]dao.Player,0, len(dto.players))
+	for _, playerDto := range dto.players {
+		players = append(players, mapPlayerDtoToPlayer(playerDto))
+	}
+	return service.ScoreBoard{
+		Players:players,
+	}
 }
 
 func mapPlayerDtoToPlayer(dto playerDto) dao.Player {
 	return dao.Player{
-		Uuid:dto.Uuid,
-		Name:dto.Name,
-		Score:dto.Score,
+		Uuid:    dto.Uuid,
+		Name:    dto.Name,
+		Score:   dto.Score,
 		Updated: time.Now().Unix(),
 	}
 }
