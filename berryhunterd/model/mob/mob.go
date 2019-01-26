@@ -157,7 +157,7 @@ func (m *Mob) Angle() float32 {
 }
 
 func (m *Mob) SetAngle(a float32) {
-	m.heading = phy.NewPolarVec2f(1, a).Mult(-1);
+	m.heading = phy.NewRotMat2f(a).Mult(phy.Vec2f{-1, 0});
 }
 
 func (m *Mob) Health() vitals.VitalSign {
