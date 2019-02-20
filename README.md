@@ -21,6 +21,10 @@ Repo for the most awesome berry-hunting experience.
 
 #### Perquisites
 
+**To compile Go-libraries**
+
+- Install any C++ Compiler
+
 **For chieftaind**
 
 - Install go
