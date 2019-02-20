@@ -28,7 +28,7 @@ Repo for the most awesome berry-hunting experience.
     - Add `C:\Program Files\OpenSSL-Win64\bin` (or whatever the installation path is) to your PATH variable
 - Install required certificates:
     1. `cd chieftaind`
-    2. `server/genkey.bat`
+    2. `server\genkey.bat`
     3. The following error message can be safely ignored:
   ```
   Can't load ./.rnd into RNG
@@ -52,7 +52,7 @@ Repo for the most awesome berry-hunting experience.
 - Run build.bat in project root
 - every project part (chieftaind, berryhunterd, frontend) has it's own build.bat, too. In case you only want to build a specific part.
 
-#### Build everything
+#### Run everything
 
 - Run start.bat in project root
 - every project part (chieftaind, berryhunterd, frontend) has it's own start.bat, too. In case you only want to build a specific part.
