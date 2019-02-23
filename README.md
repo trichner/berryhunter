@@ -23,7 +23,11 @@ Repo for the most awesome berry-hunting experience.
 
 **To compile Go-libraries**
 
-- Install any C++ Compiler
+- Install tdm64-gcc
+(http://tdm-gcc.tdragon.net/download)
+	- Create
+	- 32bit and 64 bit
+	- Type of install: TDM-GCC recommended, C/C++
 
 **For chieftaind**
 
@@ -39,12 +43,15 @@ Repo for the most awesome berry-hunting experience.
   6656:error:2406F079:random number generator:RAND_load_file:Cannot open file:crypto\
   rand\randfile.c:88:Filename=./.rnd
   ```
+- Create `conf.json` from `conf.example.json`
 
 **For berryhunderd**
 
 - Install go
+- Install git
 - Create `conf.json` from `conf.default.json`
 - Create `tokens.list` from `tokens.example.list`
+- Switch tag from engo.io/esc to v1.0.1 `git checkout tags/v1.0.1`
 
 **For frontend**
 
