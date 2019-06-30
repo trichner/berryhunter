@@ -1,6 +1,6 @@
 'use strict';
 
-import * as _ from 'lodash';
+import _clone = require('lodash/clone');
 import {isDefined} from '../Utils';
 import {DebugCircle} from '../develop/DebugCircle';
 import {GameObject} from '../gameObjects/_GameObject';
@@ -92,7 +92,7 @@ export class GameMapWithBackend {
             /**
              * Handle equipment
              */
-            let slotsToHandle = _.clone(Equipment.Slots);
+            let slotsToHandle = _clone(Equipment.Slots);
             delete slotsToHandle.PLACEABLE;
 
             if (isDefined(entity.equipment)) {
@@ -142,13 +142,13 @@ export class GameMapWithBackend {
             }
         }
 
-        if (_.isArray(entity.statusEffects)) {
+        if (Array.isArray(entity.statusEffects)) {
             gameObject.updateStatusEffects(entity.statusEffects);
         }
     };
 
     newSnapshot(entities) {
-        let removedObjects = _.clone(this.objects);
+        let removedObjects = _clone(this.objects);
         entities.forEach((entity) => {
             delete removedObjects[entity.id];
         });

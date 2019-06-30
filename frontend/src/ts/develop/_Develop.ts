@@ -4,7 +4,6 @@ import * as AABBs from './AABBs';
 import * as Fps from './Fps';
 import * as Preloading from '../Preloading';
 import {getUrlParameter, htmlToElement, isDefined, isUndefined, rad2deg} from '../Utils';
-import * as MapEditor from '../mapEditor/_MapEditor';
 import * as Console from '../Console';
 import {ItemType} from '../items/ItemType';
 import {BasicConfig as Constants} from '../../config/Basic';
@@ -149,14 +148,7 @@ export function setupItemAdding() {
     itemAdd.addEventListener('click', function () {
         let item = (document.getElementById('develop_itemSelect') as HTMLInputElement).value;
         let count = itemCount.value;
-        if (MapEditor.isActive()) {
-            Game.player.inventory.addItem(
-                Items[item],
-                parseInt(count),
-            );
-        } else {
-            Console.run('GIVE ' + item + ' ' + count);
-        }
+        Console.run('GIVE ' + item + ' ' + count);
     });
 }
 
@@ -185,11 +177,6 @@ let showNextGameState = false;
 
 function setupTickSampler() {
     let showServerTick = document.getElementById('develop_showServerTick');
-
-    if (MapEditor.isActive()) {
-        showServerTick.style.display = 'none';
-        return;
-    }
 
     showServerTick.addEventListener('click', function () {
         let serverTickPopup = document.getElementById('serverTickPopup');

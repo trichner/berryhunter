@@ -1,5 +1,5 @@
 import {makeRequest, smoothHoverAnimation} from "../Utils";
-import * as _ from 'lodash';
+import _isObject = require('lodash/isObject');
 
 let html = require('./rating.html');
 let emptyStarIcon = require('!svg-inline-loader!./img/emptyStar.svg');
@@ -128,7 +128,7 @@ export class Rating {
         }).then(() => {
             // won't happen because of CORS
         }).catch(response => {
-            if (_.isObject(response) && response.status === 0) {
+            if (_isObject(response) && response.status === 0) {
                 // All good, CORS just blocked the response but the server got the user feedback
                 this.onSuccess();
                 return;

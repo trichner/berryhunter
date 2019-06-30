@@ -3,7 +3,7 @@
 import * as Events from './Events';
 import {GraphicsConfig} from '../config/Graphics';
 import {dateDiff, playCssAnimation} from './Utils';
-import * as _ from 'lodash';
+import _isObject = require('lodash/isObject');
 import {BerryhunterApi} from './backend/BerryhunterApi';
 
 let Game = null;
@@ -78,7 +78,7 @@ Events.on('autoFeed.deactivate', deactivate);
 Events.on('vitalSign.change', checkChangedVitalSign);
 
 export function isItemSuitable(item) {
-    if (!_.isObject(item.factors)) {
+    if (!_isObject(item.factors)) {
         return false;
     }
 

@@ -1,5 +1,5 @@
 import * as Mustache from 'mustache';
-import * as moment from 'moment';
+import * as moment from 'moment-mini';
 import {isUndefined} from '../../Utils';
 import * as Events from '../../Events';
 import {createStartScreenPanel} from "./ScreenUtil";

@@ -3,7 +3,7 @@ package sys
 import (
 	"encoding/binary"
 	"encoding/hex"
-	"engo.io/ecs"
+	"github.com/EngoEngine/ecs"
 	"fmt"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/berryhunterd/codec"

@@ -4,7 +4,8 @@ TARGET=berryhunterd chieftaind berryhunter-web berryhunter-edge
 TARGET_BUILD=$(addsuffix .build, $(TARGET))
 TARGET_TAG=$(addsuffix .tag, $(TARGET))
 TARGET_PUSH=$(addsuffix .push, $(TARGET))
-TAG?="r$(shell git rev-parse HEAD | head -c 7)"
+TAG?="rev-$(shell git rev-parse HEAD | head -c 7)"
+DOCKER_REPO="gcr.io/berryhunter-io"
 
 all: build
 
@@ -22,11 +23,11 @@ $(TARGET_BUILD) : %.build:
 .PHONY: $(TARGET_TAG)
 $(TARGET_TAG) : %.tag:
 	@echo tagging $*
-	@docker tag $* gcr.io/trichner-212015/$*:$(TAG)
+	@docker tag $* $(DOCKER_REPO)/$*:$(TAG)
 
 .PHONY: $(TARGET_PUSH)
 $(TARGET_PUSH) : %.push: %.tag
 	@echo pushing $*
-	@docker push gcr.io/trichner-212015/$*:$(TAG)
+	@docker push $(DOCKER_REPO)/$*:$(TAG)
 
 .PHONY: berryhunterd chieftaind berryhunter-web all

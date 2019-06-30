@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"engo.io/ecs"
+	"github.com/EngoEngine/ecs"
 	"fmt"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/berryhunterd/codec"
@@ -115,6 +115,20 @@ var commands = map[string]Command{
 		}else{
 			p.SetGodmode(true)
 		}
+
+		return nil
+	},
+	"STARVE": func(g model.Game, p model.PlayerEntity, arg *string) error {
+
+		h := p.VitalSigns().Satiety
+		p.VitalSigns().Satiety = h.SubFraction(1.0)
+
+		return nil
+	},
+	"FREEZE": func(g model.Game, p model.PlayerEntity, arg *string) error {
+
+		h := p.VitalSigns().BodyTemperature
+		p.VitalSigns().BodyTemperature = h.SubFraction(1.0)
 
 		return nil
 	},

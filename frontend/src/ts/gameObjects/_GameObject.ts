@@ -1,6 +1,5 @@
 'use strict';
 
-import * as _ from 'lodash';
 import {InjectedSVG} from '../InjectedSVG';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Vector} from '../Vector';
@@ -168,7 +167,7 @@ export class GameObject {
     }
 
     updateStatusEffects(newStatusEffects: StatusEffectDefinition[]) {
-        if (!_.isArray(newStatusEffects) || newStatusEffects.length === 0) {
+        if (!Array.isArray(newStatusEffects) || newStatusEffects.length === 0) {
             this.hideActiveStatusEffect();
         } else {
             newStatusEffects = StatusEffect.sortByPriority(newStatusEffects);

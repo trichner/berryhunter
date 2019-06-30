@@ -1,5 +1,6 @@
-FROM golang:1.11 AS go_builder
+FROM golang:1.12 AS go_builder
 
+ENV GO111MODULE=on
 ENV GOPATH=/go
 WORKDIR /go/src/github.com/trichner/berryhunter/
 

@@ -1,8 +1,6 @@
 'use strict';
 
-import * as MapEditor from '../mapEditor/_MapEditor';
 import {arraysEqual, isUndefined} from '../Utils';
-import {Items} from '../items/Items';
 import * as UserInterface from '../userInterface/UserInterface';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import * as Events from "../Events";
@@ -12,8 +10,6 @@ Events.on('game.setup', game => {
     Game = game;
 });
 
-
-//noinspection UnnecessaryLocalVariableJS
 export let displayedCrafts = [];
 
 export function displayAvailableCrafts(availableCrafts) {
@@ -25,7 +21,7 @@ export function displayAvailableCrafts(availableCrafts) {
     }
 
     // Add to the list of available (=rendered) crafts the currently displayed crafts that are in progress
-    // https://trello.com/c/oT8FLSHZ
+    // Fix for https://trello.com/c/oT8FLSHZ
     availableCrafts = availableCrafts.concat(this.displayedCrafts.filter(function (recipe) {
         if (isUndefined(recipe.clickableIcon)) {
             return false;
@@ -54,28 +50,17 @@ function onCraftIconLeftClick(event, recipe) {
         return;
     }
 
-    if (MapEditor.isActive()) {
-        for (let material in recipe.materials) {
-            //noinspection JSUnfilteredForInLoop
-            Game.player.inventory.removeItem(
-                Items[material],
-                recipe.materials[material],
-            );
-        }
-        Game.player.inventory.addItem(recipe.item);
-    } else {
-        if (Game.player.isCraftInProgress()) {
-            return;
-        }
-
-        if (!Game.player.inventory.canFitCraft(recipe.item, recipe.materials)) {
-            UserInterface.flashInventory();
-            return;
-        }
-
-        Game.player.controls
-            .onInventoryAction(
-                recipe.item,
-                BerryhunterApi.ActionType.CraftItem);
+    if (Game.player.isCraftInProgress()) {
+        return;
     }
+
+    if (!Game.player.inventory.canFitCraft(recipe.item, recipe.materials)) {
+        UserInterface.flashInventory();
+        return;
+    }
+
+    Game.player.controls
+        .onInventoryAction(
+            recipe.item,
+            BerryhunterApi.ActionType.CraftItem);
 }

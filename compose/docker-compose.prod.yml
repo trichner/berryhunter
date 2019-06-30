@@ -1,7 +1,7 @@
 version: '3'
 services:
     edge:
-        image: gcr.io/trichner-212015/berryhunter-edge
+        image: gcr.io/berryhunter-io/berryhunter-edge
         depends_on:
             - berryhunterd
             - chieftaind
@@ -15,7 +15,7 @@ services:
             - "443:443"
             - "80:80"
     berryhunterd:
-        image: gcr.io/trichner-212015/berryhunterd
+        image: gcr.io/berryhunter-io/berryhunterd
         depends_on:
             - chieftaind
             - web
@@ -24,9 +24,9 @@ services:
         ports:
             - "127.0.0.1:2000:80"
     web:
-        image: gcr.io/trichner-212015/berryhunter-web
+        image: gcr.io/berryhunter-io/berryhunter-web
     chieftaind:
-        image: gcr.io/trichner-212015/chieftaind
+        image: gcr.io/berryhunter-io/chieftaind
         ports:
             - "127.0.0.1:3080:3080"
         volumes:

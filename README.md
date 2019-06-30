@@ -21,6 +21,14 @@ Repo for the most awesome berry-hunting experience.
 
 #### Perquisites
 
+**To compile Go-libraries**
+
+- Install tdm64-gcc
+(http://tdm-gcc.tdragon.net/download)
+	- Create
+	- 32bit and 64 bit
+	- Type of install: TDM-GCC recommended, C/C++
+
 **For chieftaind**
 
 - Install go
@@ -28,19 +36,22 @@ Repo for the most awesome berry-hunting experience.
     - Add `C:\Program Files\OpenSSL-Win64\bin` (or whatever the installation path is) to your PATH variable
 - Install required certificates:
     1. `cd chieftaind`
-    2. `server/genkey.bat`
+    2. `server\genkey.bat`
     3. The following error message can be safely ignored:
   ```
   Can't load ./.rnd into RNG
   6656:error:2406F079:random number generator:RAND_load_file:Cannot open file:crypto\
   rand\randfile.c:88:Filename=./.rnd
   ```
+- Create `conf.json` from `conf.example.json`
 
 **For berryhunderd**
 
 - Install go
+- Install git
 - Create `conf.json` from `conf.default.json`
 - Create `tokens.list` from `tokens.example.list`
+- Switch tag from engo.io/esc to v1.0.1 `git checkout tags/v1.0.1`
 
 **For frontend**
 
@@ -52,7 +63,7 @@ Repo for the most awesome berry-hunting experience.
 - Run build.bat in project root
 - every project part (chieftaind, berryhunterd, frontend) has it's own build.bat, too. In case you only want to build a specific part.
 
-#### Build everything
+#### Run everything
 
 - Run start.bat in project root
 - every project part (chieftaind, berryhunterd, frontend) has it's own start.bat, too. In case you only want to build a specific part.
