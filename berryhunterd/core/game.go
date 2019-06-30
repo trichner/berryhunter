@@ -1,7 +1,7 @@
 package core
 
 import (
-	"engo.io/ecs"
+	"github.com/EngoEngine/ecs"
 	"fmt"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/berryhunterd/cfg"

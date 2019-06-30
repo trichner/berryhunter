@@ -1,7 +1,7 @@
 package core
 
 import (
-	"engo.io/ecs"
+	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/actions"

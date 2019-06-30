@@ -1,14 +1,14 @@
 package heater
 
 import (
-	"engo.io/ecs"
+	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"log"
 )
 
-type playerMap map[ecs.BasicEntity]*temperatureEntity
+type playerMap map[uint64]*temperatureEntity
 
 type temperatureEntity struct {
 	player      model.PlayerEntity
@@ -45,7 +45,7 @@ func (h *HeaterSystem) New(w *ecs.World) {
 }
 
 func (f *HeaterSystem) AddPlayer(p model.PlayerEntity) {
-	f.players[p.Basic()] = &temperatureEntity{player: p}
+	f.players[p.Basic().ID()] = &temperatureEntity{player: p}
 }
 
 func (f *HeaterSystem) AddHeater(h model.Heater) {
@@ -102,7 +102,7 @@ func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 		if !ok {
 			continue
 		}
-		t := f.players[p.Basic()]
+		t := f.players[p.Basic().ID()]
 		if t == nil {
 			log.Panicf("😱 Player not found in system, not added?")
 		}
@@ -120,5 +120,5 @@ func (f *HeaterSystem) Remove(b ecs.BasicEntity) {
 	}
 
 	// remove from players
-	delete(f.players, b)
+	delete(f.players, b.ID())
 }
