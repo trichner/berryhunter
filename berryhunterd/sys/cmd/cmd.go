@@ -118,6 +118,20 @@ var commands = map[string]Command{
 
 		return nil
 	},
+	"STARVE": func(g model.Game, p model.PlayerEntity, arg *string) error {
+
+		h := p.VitalSigns().Satiety
+		p.VitalSigns().Satiety = h.SubFraction(1.0)
+
+		return nil
+	},
+	"FREEZE": func(g model.Game, p model.PlayerEntity, arg *string) error {
+
+		h := p.VitalSigns().BodyTemperature
+		p.VitalSigns().BodyTemperature = h.SubFraction(1.0)
+
+		return nil
+	},
 }
 
 type CommandSystem struct {
