@@ -1,0 +1,97 @@
+// Package p contains a Pub/Sub Cloud Function.
+package chieftainsub
+
+import (
+	"context"
+	"fmt"
+	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
+	"github.com/trichner/berryhunter/common/fbutil"
+	"log"
+	"github.com/trichner/berryhunter/chieftaind/dao"
+	"time"
+)
+
+// PubSubMessage is the payload of a Pub/Sub event. Please refer to the docs for
+// additional information regarding Pub/Sub events.
+type PubSubMessage struct {
+	Data []byte `json:"data"`
+}
+
+var cloudDataStore = initDatastore()
+var playerDao = initPlayerDao()
+
+
+func UpdateScoreboardSubscriber(ctx context.Context, m PubSubMessage) error {
+	bytes := m.Data
+
+	err := cloudDataStore.Transact(ctx, func(ctx context.Context) error {
+		log.Printf("rx message")
+		msg := ChieftainApi.GetRootAsClientMessage(bytes, 0)
+		switch msg.BodyType() {
+		case ChieftainApi.ClientMessageBodyScoreboard:
+			s := &ChieftainApi.Scoreboard{}
+			if err := fbutil.UnwrapUnion(msg, s); err != nil {
+				return err
+			}
+			return handleScoreboard(ctx, s)
+		}
+
+		return fmt.Errorf("unknown ClientMessage type: %d", msg.BodyType())
+	})
+
+	return err
+}
+
+func handleScoreboard(ctx context.Context, s *ChieftainApi.Scoreboard) error {
+
+	player := &ChieftainApi.ScoreboardPlayer{}
+	for i := 0; i < s.PlayersLength(); i++ {
+		s.Players(player, i)
+
+		// Logic
+		// 1. find entry with uuid
+		p, err := playerDao.FindPlayerByUuid(ctx, string(player.Uuid()))
+
+		if err != nil {
+			return err
+		}
+
+		// 2. player exists and already has a higher score in the db
+		if p != nil && p.Score >= uint(player.Score()) {
+			// nothing to do here
+			continue
+		}
+
+		// 3. store new score
+		err = playerDao.UpsertPlayer(ctx, dao.Player{
+			Uuid:    string(player.Uuid()),
+			Name:    string(player.Name()),
+			Score:   uint(player.Score()),
+			Updated: time.Now().Unix(),
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func initDatastore() DataStore {
+
+	dataStore, err := NewCloudDataStore()
+	if err != nil {
+		log.Fatalf("cannot init cloudStore: %s", err)
+	}
+
+	return dataStore
+}
+
+func initPlayerDao() dao.PlayerDao {
+
+	playerStore, err := dao.NewPlayerDao()
+	if err != nil {
+		log.Fatalf("cannot init playerDao: %s", err)
+	}
+	return playerStore
+}
