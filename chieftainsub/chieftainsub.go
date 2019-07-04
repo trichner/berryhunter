@@ -5,9 +5,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
+	"github.com/trichner/berryhunter/chieftaind/dao"
 	"github.com/trichner/berryhunter/common/fbutil"
 	"log"
-	"github.com/trichner/berryhunter/chieftaind/dao"
 	"time"
 )
 

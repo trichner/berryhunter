@@ -20,7 +20,13 @@ type GameConfig struct {
 }
 
 type ChieftainConfig struct {
-	Addr string
+	Addr *string
+	PubSubConfig *PubSubConfig
+}
+
+type PubSubConfig struct {
+	ProjectId string
+	TopicId	string
 }
 
 type PlayerConfig struct {

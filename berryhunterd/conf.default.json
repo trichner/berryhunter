@@ -4,7 +4,11 @@
     "path": "/game"
   },
   "chieftain": {
-    "addr":"127.0.0.1:3443"
+    "addr":"127.0.0.1:3443",
+    "pubsub": {
+      "projectId":"berryhunter-io",
+      "topicId":"scoreboard-updates"
+    }
   },
   "game": {
     "coldFractionDayPerSecond": 0.00017,
