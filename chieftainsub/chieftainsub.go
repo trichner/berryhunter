@@ -7,6 +7,7 @@ import (
 	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"github.com/trichner/berryhunter/common/fbutil"
+	"io/ioutil"
 	"log"
 	"time"
 )
@@ -22,6 +23,16 @@ var playerDao dao.PlayerDao
 
 // called once by GoogleCloudFunction runtime
 func init() {
+
+	files, err := ioutil.ReadDir("/cloudsql/")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, f := range files {
+		log.Println(f.Name())
+	}
+
 	cloudDataStore = initDatastore()
 	playerDao = initPlayerDao()
 }

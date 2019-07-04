@@ -65,7 +65,8 @@ func NewCloudDataStore() (DataStore, error) {
 		connectionName = os.Getenv("MYSQL_INSTANCE_CONNECTION_NAME")
 		dbUser         = os.Getenv("MYSQL_USER")
 		dbPassword     = os.Getenv("MYSQL_PASSWORD")
-		dsn            = fmt.Sprintf("%s:%s@unix(/cloudsql/%s)/", dbUser, dbPassword, connectionName)
+		dbSchema       = os.Getenv("MYSQL_SCHEMA")
+		dsn            = fmt.Sprintf("%s:%s@unix(/cloudsql/%s)/%s", dbUser, dbPassword, connectionName, dbSchema)
 	)
 
 		var err error
