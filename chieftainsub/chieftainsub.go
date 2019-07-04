@@ -17,9 +17,14 @@ type PubSubMessage struct {
 	Data []byte `json:"data"`
 }
 
-var cloudDataStore = initDatastore()
-var playerDao = initPlayerDao()
+var cloudDataStore DataStore
+var playerDao dao.PlayerDao
 
+// called once by GoogleCloudFunction runtime
+func init() {
+	cloudDataStore = initDatastore()
+	playerDao = initPlayerDao()
+}
 
 func UpdateScoreboardSubscriber(ctx context.Context, m PubSubMessage) error {
 	bytes := m.Data
