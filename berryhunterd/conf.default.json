@@ -11,8 +11,8 @@
     }
   },
   "game": {
-    "coldFractionDayPerSecond": 0.00017,
-    "coldFractionNightPerSecond": 0.00133,
+    "coldFractionDayPerSecond": 0.005,
+    "coldFractionNightPerSecond": 0.04,
     "heatFractionPerSecond": 0.04,
     "player": {
       "freezingDamageTickFraction": 0.001,
