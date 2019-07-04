@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: chieftaind-svc
+  name: chieftaind-dev
 spec:
   ports:
   - name: tls-api
@@ -9,22 +9,25 @@ spec:
   - name: http-rest
     port: 3080
   selector:
-    app: chieftaind-app
+    app: chieftaind
+    stage: dev
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: chieftaind
+  name: chieftaind-dev
 spec:
   selector:
     matchLabels:
-      app: chieftaind-app
+      app: chieftaind
+      stage: dev
   serviceName: chieftaind
   replicas: 1
   template:
     metadata:
       labels:
-        app: chieftaind-app
+        app: chieftaind
+        stage: dev
     spec:
       terminationGracePeriodSeconds: 10
       containers:
@@ -58,10 +61,10 @@ spec:
       volumes:
         - name: cfg-volume
           configMap:
-            name: chieftaind-cfgmap
+            name: chieftaind-dev-cfgmap
   volumeClaimTemplates:
   - metadata:
-      name: chieftaind-data
+      name: data
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: standard
@@ -72,7 +75,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: chieftaind-cfgmap
+  name: chieftaind-dev-cfgmap
 data:
   conf.json: |-
     {
