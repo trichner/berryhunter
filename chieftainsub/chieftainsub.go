@@ -7,7 +7,6 @@ import (
 	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"github.com/trichner/berryhunter/common/fbutil"
-	"io/ioutil"
 	"log"
 	"time"
 )
@@ -24,21 +23,17 @@ var playerDao dao.PlayerDao
 // called once by GoogleCloudFunction runtime
 func init() {
 
-	files, err := ioutil.ReadDir("/cloudsql/")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, f := range files {
-		log.Println(f.Name())
-	}
-
+	log.Println("initialising...")
 	cloudDataStore = initDatastore()
 	playerDao = initPlayerDao()
 }
 
 func UpdateScoreboardSubscriber(ctx context.Context, m PubSubMessage) error {
+
 	bytes := m.Data
+
+	log.Printf("rx message with length: %d", len(m.Data))
+	log.Printf("rx message with string: %s", string(m.Data))
 
 	err := cloudDataStore.Transact(ctx, func(ctx context.Context) error {
 		log.Printf("rx message")
@@ -95,6 +90,7 @@ func handleScoreboard(ctx context.Context, s *ChieftainApi.Scoreboard) error {
 
 func initDatastore() DataStore {
 
+	log.Println("initialising datastore")
 	dataStore, err := NewCloudDataStore()
 	if err != nil {
 		log.Fatalf("cannot init cloudStore: %s", err)
@@ -105,6 +101,7 @@ func initDatastore() DataStore {
 
 func initPlayerDao() dao.PlayerDao {
 
+	log.Println("initialising playerdao")
 	playerStore, err := dao.NewPlayerDao()
 	if err != nil {
 		log.Fatalf("cannot init playerDao: %s", err)
