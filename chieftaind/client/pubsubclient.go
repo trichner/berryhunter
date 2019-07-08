@@ -13,7 +13,9 @@ type ScoreboardUpdateClient interface {
 }
 
 type pubSubClient struct {
-	topic *pubsub.Topic
+	topic   *pubsub.Topic
+	results chan *pubsub.PublishResult
+	done    chan struct{}
 }
 
 func NewPubSubClient(projectId string, topicId string) (ScoreboardUpdateClient, error) {
@@ -27,20 +29,44 @@ func NewPubSubClient(projectId string, topicId string) (ScoreboardUpdateClient, 
 	log.Printf("getting topic %s", topicId)
 	topic := client.TopicInProject(topicId, projectId)
 
-	return &pubSubClient{
-		topic: topic,
-	}, nil
+	c := &pubSubClient{
+		topic:   topic,
+		results: make(chan *pubsub.PublishResult, 128),
+		done:    make(chan struct{}),
+	}
+
+	go func() {
+
+		// write pump
+		for {
+			r, ok := <-c.results
+			if !ok {
+				break
+			}
+			id, err := r.Get(context.Background())
+			log.Printf("sent pubsub scoreboard with id '%s'", id)
+			if err != nil {
+				log.Printf("failed to send pubsub message: %s", err)
+			}
+		}
+
+		close(c.done)
+	}()
+
+	return c, nil
 }
 
 func (c *pubSubClient) Write(s *Scoreboard) {
 	pubsubMessage := &pubsub.Message{
-		Data:ScoreBoardMarshal(s),
+		Data: ScoreBoardMarshal(s),
 	}
-	c.topic.Publish(context.Background(), pubsubMessage)
+	c.results <- c.topic.Publish(context.Background(), pubsubMessage)
 }
 
 // Close closes the connection, may panic if already closed!
 func (c *pubSubClient) Close() error {
 	c.topic.Stop()
+	close(c.results)
+	<- c.done
 	return nil
 }
