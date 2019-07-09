@@ -3,10 +3,10 @@ package dao
 import (
 	"context"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"log"
 	"os"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 const mysqlSchema = `
@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS player (
 )`
 
 type ctxKeyCloudStore int
-
 const txKeyCloudStore = ctxKeyCloudStore(0)
 
 type cloudDataStore struct {
@@ -46,6 +45,15 @@ func (d *cloudDataStore) Transact(ctx context.Context, t TransactifiedFunc) (err
 	return
 }
 
+func (d *cloudDataStore) Tx(ctx context.Context) (*sqlx.Tx, error) {
+
+	tx, ok := ctx.Value(txKey).(*sqlx.Tx)
+	if !ok {
+		return nil, fmt.Errorf("no transaction found")
+	}
+	return tx, nil
+}
+
 func (d *cloudDataStore) Close() error {
 	return d.db.Close()
 }
@@ -62,15 +70,15 @@ func NewCloudDataStore() (DataStore, error) {
 		dsn            = fmt.Sprintf("%s:%s@unix(/cloudsql/%s)/%s", dbUser, dbPassword, connectionName, dbSchema)
 	)
 
-		var err error
-		db, err = sqlx.Open("mysql", dsn)
-		if err != nil {
-			log.Fatalf("Could not open db: %v", err)
-		}
+	var err error
+	db, err = sqlx.Open("mysql", dsn)
+	if err != nil {
+		log.Fatalf("Could not open db: %v", err)
+	}
 
-		// Only allow 1 connection to the database to avoid overloading it.
-		db.SetMaxIdleConns(1)
-		db.SetMaxOpenConns(1)
+	// Only allow 1 connection to the database to avoid overloading it.
+	db.SetMaxIdleConns(1)
+	db.SetMaxOpenConns(1)
 
 	// exec the schema or fail; multi-statement Exec behavior varies between
 	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
@@ -80,4 +88,3 @@ func NewCloudDataStore() (DataStore, error) {
 		db: db,
 	}, nil
 }
-

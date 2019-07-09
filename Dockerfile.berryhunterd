@@ -29,6 +29,8 @@ FROM alpine:latest
 
 ARG CONF=berryhunterd/conf.docker.json
 
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+
 WORKDIR /root/
 
 # copy api definitions

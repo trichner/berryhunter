@@ -25,7 +25,7 @@ func init() {
 
 	log.Println("initialising...")
 	cloudDataStore = initDatastore()
-	playerDao = initPlayerDao()
+	playerDao = initPlayerDao(cloudDataStore)
 }
 
 func UpdateScoreboardSubscriber(ctx context.Context, m PubSubMessage) error {
@@ -99,10 +99,10 @@ func initDatastore() dao.DataStore {
 	return dataStore
 }
 
-func initPlayerDao() dao.PlayerDao {
+func initPlayerDao(store DataStore) dao.PlayerDao {
 
 	log.Println("initialising playerdao")
-	playerStore, err := dao.NewPlayerDao()
+	playerStore, err := dao.NewPlayerDao(store)
 	if err != nil {
 		log.Fatalf("cannot init playerDao: %s", err)
 	}

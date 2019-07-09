@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -18,8 +19,10 @@ type TransactifiedFunc func(ctx context.Context) error
 
 type DataStore interface {
 	Transact(ctx context.Context, t TransactifiedFunc) error
+	Tx(ctx context.Context) (*sqlx.Tx, error)
 	Close() error
 }
+
 
 type ctxKey int
 
@@ -63,6 +66,15 @@ func (d *dataStore) Transact(ctx context.Context, t TransactifiedFunc) (err erro
 	}()
 	err = t(ctx)
 	return
+}
+
+func (d *dataStore) Tx(ctx context.Context) (*sqlx.Tx, error) {
+
+	tx, ok := ctx.Value(txKey).(*sqlx.Tx)
+	if !ok {
+		return nil, fmt.Errorf("no transaction found")
+	}
+	return tx, nil
 }
 
 func (d *dataStore) Close() error {

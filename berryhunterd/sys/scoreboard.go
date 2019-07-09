@@ -83,11 +83,14 @@ func (d *ScoreboardSystem) Update(dt float32) {
 		c.Client().SendMessage(builder.FinishedBytes())
 	}
 
-	//d.updateChieftain()
+	d.updateChieftain()
 }
 
 func (d *ScoreboardSystem) updateChieftain() {
 	if d.chieftain == nil {
+		return
+	}
+	if len(d.players) == 0 {
 		return
 	}
 	players := make([]client.Player, 0, len(d.players))
