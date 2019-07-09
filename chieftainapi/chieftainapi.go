@@ -2,7 +2,6 @@ package chieftainapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"github.com/trichner/berryhunter/chieftaind/service"
 	"log"
@@ -10,24 +9,53 @@ import (
 	"time"
 )
 
-var mux = newMux()
-var scoreBoardService =
+var mux = newMux(initScoreSerivce())
 
 // HelloGet is an HTTP Cloud Function.
-func HelloGet(w http.ResponseWriter, r *http.Request) {
+func Get(w http.ResponseWriter, r *http.Request) {
 	mux.ServeHTTP(w, r)
 }
 
-func newMux() *http.ServeMux {
+func newMux(service service.ScoreService) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/highscores", GetHighScoresHandler(s))
-	mux.HandleFunc("/scoreboard", GetScoreboardHandler(s))
+	mux.HandleFunc("/highscores", GetHighScoresHandler(service))
+	mux.HandleFunc("/scoreboard", GetScoreboardHandler(service))
 
 	return mux
 }
 
-func initScoreSerivce() {
+func initScoreSerivce() service.ScoreService {
 
+	dataStore := initDatastore()
+	playerDao := initPlayerDao(dataStore)
+
+	service, err := service.NewScoreService(playerDao)
+	if err != nil {
+		log.Fatalf("cannot init scoreService: %s", err)
+	}
+
+	return service
+}
+
+func initDatastore() dao.DataStore {
+
+	log.Println("initialising datastore")
+	dataStore, err := dao.NewCloudDataStore()
+	if err != nil {
+		log.Fatalf("cannot init cloudStore: %s", err)
+	}
+
+	return dataStore
+}
+
+func initPlayerDao(store dao.DataStore) dao.PlayerDao {
+
+	log.Println("initialising playerdao")
+	playerStore, err := dao.NewPlayerDao(store)
+	if err != nil {
+		log.Fatalf("cannot init playerDao: %s", err)
+	}
+	return playerStore
 }
 
 func GetHighScoresHandler(s service.ScoreService) http.HandlerFunc {

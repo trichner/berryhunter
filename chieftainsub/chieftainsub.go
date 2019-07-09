@@ -99,7 +99,7 @@ func initDatastore() dao.DataStore {
 	return dataStore
 }
 
-func initPlayerDao(store DataStore) dao.PlayerDao {
+func initPlayerDao(store dao.DataStore) dao.PlayerDao {
 
 	log.Println("initialising playerdao")
 	playerStore, err := dao.NewPlayerDao(store)

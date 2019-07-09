@@ -1,8 +1,6 @@
 module github.com/trichner/berryhunter/chieftainsub
 
 require (
-	github.com/go-sql-driver/mysql v1.4.0
-	github.com/jmoiron/sqlx v1.2.0
 	github.com/trichner/berryhunter/api/schema/ChieftainApi v0.0.0-00010101000000-000000000000
 	github.com/trichner/berryhunter/chieftaind v0.0.0-00010101000000-000000000000
 	github.com/trichner/berryhunter/common/fbutil v0.0.0-00010101000000-000000000000
