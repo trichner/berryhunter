@@ -90,6 +90,9 @@ func (d *ScoreboardSystem) updateChieftain() {
 	if d.chieftain == nil {
 		return
 	}
+	if len(d.players) == 0 {
+		return
+	}
 	players := make([]client.Player, 0, len(d.players))
 
 	for _, p := range d.players {
