@@ -103,7 +103,7 @@ func (p *playerDao) UpsertPlayer(ctx context.Context, pl Player) error {
 
 	_, err := tx.ExecContext(ctx, `
 			INSERT INTO player (uuid, name, score, updated) VALUES ($1, $2, $3, $4)
-			ON CONFLICT(uuid) DO UPDATE SET name=$2, score=$3, updated=$4
+			ON DUPLICATE KEY UPDATE name=$2, score=$3, updated=$4
 			`, pl.Uuid, pl.Name, pl.Score, pl.Updated)
 	return err
 }
