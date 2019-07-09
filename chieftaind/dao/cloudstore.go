@@ -1,4 +1,4 @@
-package chieftainsub
+package dao
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const schema = `
+const mysqlSchema = `
 CREATE TABLE IF NOT EXISTS player (
   id INTEGER PRIMARY KEY AUTO_INCREMENT,
   uuid VARCHAR(64) NOT NULL UNIQUE,
@@ -18,27 +18,20 @@ CREATE TABLE IF NOT EXISTS player (
   updated INTEGER NOT NULL DEFAULT 0
 )`
 
-type TransactifiedFunc func(ctx context.Context) error
+type ctxKeyCloudStore int
 
-type DataStore interface {
-	Transact(ctx context.Context, t TransactifiedFunc) error
-	Close() error
-}
+const txKeyCloudStore = ctxKeyCloudStore(0)
 
-type ctxKey int
-
-const txKey = ctxKey(0)
-
-type dataStore struct {
+type cloudDataStore struct {
 	db *sqlx.DB
 }
 
-func (d *dataStore) Transact(ctx context.Context, t TransactifiedFunc) (err error) {
+func (d *cloudDataStore) Transact(ctx context.Context, t TransactifiedFunc) (err error) {
 	tx, err := d.db.BeginTxx(ctx, nil)
 	if err != nil {
 		return
 	}
-	ctx = context.WithValue(ctx, txKey, tx)
+	ctx = context.WithValue(ctx, txKeyCloudStore, tx)
 	defer func() {
 		if p := recover(); p != nil {
 			tx.Rollback()
@@ -53,7 +46,7 @@ func (d *dataStore) Transact(ctx context.Context, t TransactifiedFunc) (err erro
 	return
 }
 
-func (d *dataStore) Close() error {
+func (d *cloudDataStore) Close() error {
 	return d.db.Close()
 }
 
@@ -81,9 +74,9 @@ func NewCloudDataStore() (DataStore, error) {
 
 	// exec the schema or fail; multi-statement Exec behavior varies between
 	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
-	db.MustExec(schema)
+	db.MustExec(mysqlSchema)
 
-	return &dataStore{
+	return &cloudDataStore{
 		db: db,
 	}, nil
 }
