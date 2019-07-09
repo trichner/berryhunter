@@ -17,7 +17,7 @@ type PubSubMessage struct {
 	Data []byte `json:"data"`
 }
 
-var cloudDataStore DataStore
+var cloudDataStore dao.DataStore
 var playerDao dao.PlayerDao
 
 // called once by GoogleCloudFunction runtime
@@ -88,10 +88,10 @@ func handleScoreboard(ctx context.Context, s *ChieftainApi.Scoreboard) error {
 	return nil
 }
 
-func initDatastore() DataStore {
+func initDatastore() dao.DataStore {
 
 	log.Println("initialising datastore")
-	dataStore, err := NewCloudDataStore()
+	dataStore, err := dao.NewCloudDataStore()
 	if err != nil {
 		log.Fatalf("cannot init cloudStore: %s", err)
 	}

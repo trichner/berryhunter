@@ -1,4 +1,4 @@
-module cloudfunction
+module github.com/trichner/berryhunter/chieftainsub
 
 require (
 	github.com/go-sql-driver/mysql v1.4.0
