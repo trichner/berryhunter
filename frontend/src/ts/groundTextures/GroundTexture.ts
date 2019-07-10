@@ -8,6 +8,10 @@ Events.on('game.setup', game => {
     Game = game;
 });
 
+export class Parameters {
+    // TODO
+}
+
 export class GroundTexture {
     parameters;
     graphic;
@@ -21,7 +25,7 @@ export class GroundTexture {
             this.parameters.type.svg,
             this.parameters.x,
             this.parameters.y,
-            this.parameters.size,
+            this.parameters.size / 3,
             this.parameters.rotation);
 
         switch (this.parameters.flipped.toLowerCase()) {

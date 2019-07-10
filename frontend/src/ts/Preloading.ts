@@ -50,7 +50,7 @@ export function registerPreload(preloadingPromise) {
     return preloadingPromise;
 }
 
-export function registerGameObjectSVG(gameObjectClass, svgPath, maxSize) {
+export function registerGameObjectSVG(gameObjectClass: { svg: PIXI.Texture }, svgPath, maxSize) {
     return registerPreload(
         new Promise(function (resolve, reject) {
             let sourceScale = 1;
@@ -58,10 +58,18 @@ export function registerGameObjectSVG(gameObjectClass, svgPath, maxSize) {
                 // Scale sourceScale according to the maximum required graphic size
                 sourceScale = sourceScale * (2 * maxSize) / Constants.GRAPHIC_BASE_SIZE;
             }
-            gameObjectClass.svg = PIXI.Texture.fromImage(svgPath, undefined, undefined, sourceScale);
-            gameObjectClass.svg.baseTexture.on('loaded', function () {
-                resolve(gameObjectClass.svg);
+            gameObjectClass.svg = PIXI.Texture.from(svgPath, {
+                resourceOptions: {
+                    scale: sourceScale
+                }
             });
+            if (gameObjectClass.svg.baseTexture.valid) {
+                resolve(gameObjectClass.svg);
+            } else {
+                gameObjectClass.svg.baseTexture.on('loaded', function () {
+                    resolve(gameObjectClass.svg);
+                });
+            }
             gameObjectClass.svg.baseTexture.on('error', function () {
                 reject("Error loading texture '" + svgPath + "'");
             });

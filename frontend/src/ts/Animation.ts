@@ -5,20 +5,20 @@ import _merge = require('lodash/merge');
 
 export class Animation extends Ease.list {
     private updateFn: () => void;
-    private ticker: PIXI.ticker.Ticker;
+    private ticker: PIXI.Ticker;
 
     /**
      * Helper list for multiple animations
      * @param {object} [options]
-     * @param {PIXI.ticker} [options.ticker=PIXI.ticker.shared] use this PIXI.ticker for the list
+     * @param {PIXI.Ticker} [options.ticker=PIXI.Ticker.shared] use this PIXI.ticker for the list
      * @param {boolean} [options.autoDestroy=true] whether or not the animation function should be automatically removed once it's done.
      *
      * @event List#done(List) final animation completed in the list
      * @event List#each(elapsed, List) each update after eases are updated
      */
-    constructor(options: { ticker?: PIXI.ticker.Ticker, autoDestroy?: boolean } = {}) {
+    constructor(options: { ticker?: PIXI.Ticker, autoDestroy?: boolean } = {}) {
         super(_merge(options, {noTicker: true}));
-        this.ticker = options.ticker || PIXI.ticker.shared;
+        this.ticker = options.ticker || PIXI.Ticker.shared;
         this.updateFn = () => {
             // @ts-ignore update is a bit weirdly defined in Ease.list
             this.update(this.ticker.deltaTime * 16.66);

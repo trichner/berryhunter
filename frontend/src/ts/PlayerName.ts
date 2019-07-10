@@ -5,7 +5,7 @@ import * as Events from "./Events";
 import {Account} from "./Account";
 
 let Backend = null;
-Events.on('backend.setup', backend => {
+Events.on(Events.BACKEND_SETUP, backend => {
     Backend = backend;
 });
 

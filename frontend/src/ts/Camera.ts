@@ -89,7 +89,7 @@ export class Camera {
         let position = Vector.clone(this.position);
         position.negate();
         position.add(this.offset);
-        Game.cameraGroup.position.copy(position);
+        Game.cameraGroup.position.set(position.x, position.y);
 
         Events.trigger('camera.update', position);
     }

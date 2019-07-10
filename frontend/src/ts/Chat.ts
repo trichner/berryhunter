@@ -4,7 +4,6 @@ import {isFunction} from './Utils';
 import * as UserInterface from './userInterface/UserInterface';
 
 let Game = null;
-let Backend = null;
 
 export const KEYS = [
     13 // ENTER key
@@ -13,9 +12,8 @@ export const KEYS = [
 let rootElement: HTMLElement;
 let inputElement: HTMLInputElement;
 
-export function setup(game, backend) {
+export function setup(game) {
     Game = game;
-    Backend = backend;
 
     rootElement = UserInterface.getChat();
     inputElement = rootElement.querySelector('#chatInput');
@@ -26,13 +24,15 @@ export function setup(game, backend) {
         event.stopPropagation();
 
         if (KEYS.indexOf(event.which) !== -1) {
-            Backend.sendChatMessage({
-                message: inputElement.textContent
+            import('./backend/Backend').then(Backend => {
+                Backend.sendChatMessage({
+                    message: inputElement.textContent
+                });
+                Game.player.character.say(inputElement.textContent);
+                inputElement.textContent = '';
+                hide();
+                Game.domElement.focus();
             });
-            Game.player.character.say(inputElement.textContent);
-            inputElement.textContent = '';
-            hide();
-            Game.domElement.focus();
             event.preventDefault();
             event.stopPropagation();
         }

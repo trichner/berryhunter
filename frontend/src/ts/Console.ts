@@ -3,13 +3,6 @@
 import * as Preloading from './Preloading';
 import * as Events from './Events';
 import {getUrlParameter, preventInputPropagation, resetFocus} from './Utils';
-import {BasicConfig as Constants} from "../config/Basic";
-import {setup} from "./develop/_Develop";
-
-let Backend = null;
-Events.on('backend.setup', backend => {
-    Backend = backend;
-});
 
 export const KEYS = [
     220, // ^ for german keyboards
@@ -27,6 +20,7 @@ const FILTERED_KEYCODES = [
 ];
 
 let token = getUrlParameter('token');
+let hasValidToken = false;
 let domReady = false;
 let _isOpen = false;
 let rootElement;
@@ -38,6 +32,7 @@ let scheduledMessages = [];
 Events.on('backend.validToken', function () {
     // Only load the console once the token was confirmed as valid
     Preloading.renderPartial(require('../partials/console.html'), onDomReady);
+    hasValidToken = true;
 });
 
 function onDomReady() {
@@ -56,7 +51,7 @@ function onDomReady() {
     document.getElementById('console').addEventListener('submit', function (event) {
         event.preventDefault();
 
-        onCommand(commandInput.value);
+        run(commandInput.value);
         commandInput.value = '';
     });
 
@@ -67,23 +62,54 @@ function onDomReady() {
     scheduledMessages.forEach(log);
 }
 
-function onCommand(command) {
+export function run(command, force: boolean = false) {
+    onCommand(command, force);
+}
+
+function onCommand(command, force: boolean) {
     log(command);
-    if (token) {
-        Backend.sendCommand({
-            command: command,
-            token: token,
+
+    if (hasValidToken || force) {
+        if (handleCommandLocally(command)) {
+            return;
+        }
+
+        import('./backend/Backend').then(Backend => {
+            Backend.sendCommand({
+                command: command,
+                token: token,
+            });
         });
     } else {
         if (!_isOpen) {
             show();
         }
-        log('ERROR: URL parameter "token" is not defined!');
+        if (!token) {
+            log('ERROR: URL parameter "token" is not defined!');
+        } else {
+            log('ERROR: Defined token is not valid!');
+        }
     }
 }
 
-export function run(command) {
-    onCommand(command);
+function handleCommandLocally(command: string) {
+    if (!command) return;
+
+    let args: string[] = command.split(' ');
+
+    if (args.length < 1) return;
+
+    let cmd: string = args[0].toUpperCase();
+
+    switch (cmd) {
+        case 'OVERLAYS':
+            import('./develop/OverlayTester').then(OverlayTester => OverlayTester.toggle());
+            return true;
+        case 'HIDEOL':
+            import('./develop/OverlayTester').then(OverlayTester => OverlayTester.hideAll());
+
+    }
+    return false;
 }
 
 function milliseconds2string(ms) {

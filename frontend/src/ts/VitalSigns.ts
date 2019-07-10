@@ -7,6 +7,7 @@ import * as UserInterface from './userInterface/UserInterface';
 import {InjectedSVG} from './InjectedSVG';
 import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/Basic';
+import * as PIXI from 'pixi.js';
 
 let Game = null;
 
@@ -37,7 +38,6 @@ export class VitalSigns {
     uiBars;
     indicators;
     damageIndicatorDuration: number;
-    currentIndicator: string;
 
     constructor() {
         this.health = VitalSigns.MAXIMUM_VALUES.health;

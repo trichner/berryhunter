@@ -5,7 +5,7 @@ import {BasicConfig as Constants} from '../../config/Basic';
 import {Vector} from '../Vector';
 import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../Utils';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
-
+import * as PIXI from 'pixi.js';
 
 let movementInterpolatedObjects = new Set();
 let rotatingObjects = new Set();
@@ -20,7 +20,7 @@ export class GameObject {
     isMoveable: boolean = false;
     rotateOnPositioning: boolean = false;
     visibleOnMinimap: boolean = true;
-    shape;
+    shape: PIXI.Container;
     statusEffects: { [key: string]: StatusEffect };
     activeStatusEffect: StatusEffect = null;
 
@@ -207,20 +207,16 @@ function moveInterpolatedObjects() {
     let now = performance.now();
 
     movementInterpolatedObjects.forEach(
-        /**
-         *
-         * @param {GameObject} gameObject
-         */
-        function (gameObject) {
+        function (gameObject: GameObject) {
             let elapsedTimePortion = (now - gameObject.desireTimestamp) / Constants.SERVER_TICKRATE;
             if (elapsedTimePortion >= 1) {
-                gameObject.shape.position.copy(gameObject.desiredPosition);
+                gameObject.shape.position.set(gameObject.desiredPosition.x, gameObject.desiredPosition.y);
                 movementInterpolatedObjects.delete(gameObject);
             } else {
-                gameObject.shape.position.copy(
-                    Vector.clone(gameObject.shape.position).lerp(
-                        gameObject.desiredPosition,
-                        elapsedTimePortion));
+                let newPosition = Vector.clone(gameObject.shape.position).lerp(
+                    gameObject.desiredPosition,
+                    elapsedTimePortion);
+                gameObject.shape.position.set(newPosition.x, newPosition.y);
             }
         });
 }

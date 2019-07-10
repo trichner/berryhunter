@@ -78,7 +78,7 @@ export function setup(game) {
         lastMessageReceivedTime = performance.now();
     }
 
-    Events.triggerOneTime('backend.setup', Backend);
+    Events.triggerOneTime(Events.BACKEND_SETUP, Backend);
 }
 
 export function getState() {

@@ -35,7 +35,7 @@ export const States = {
 
 export let state = States.INITIALIZING;
 
-export let renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
+export let renderer: PIXI.Renderer;
 export let width, height;
 export let centerX, centerY;
 export let layers;
@@ -57,7 +57,7 @@ export let timeDelta;
 let _lastFrame;
 
 export let spectator;
-export let player;
+export let player: Player;
 
 export function setup() {
 
@@ -246,7 +246,7 @@ export function setup() {
      * Initializing modules that require an initialized UI
      */
 
-    Chat.setup(Game, Backend);
+    Chat.setup(Game);
 
     if (Develop.isActive()) {
         Develop.afterSetup(Game);

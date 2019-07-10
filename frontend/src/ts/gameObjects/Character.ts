@@ -42,7 +42,7 @@ export class Character extends GameObject {
     actualShape;
 
     // Contains PIXI.Containers that will mirror this characters position
-    followGroups;
+    followGroups: PIXI.Container[];
 
     messages;
     messagesGroup;
@@ -124,7 +124,7 @@ export class Character extends GameObject {
         }
 
         this.followGroups.forEach(function (group) {
-            group.position.copy(this.shape.position);
+            group.position.copyFrom(this.shape.position);
         }, this);
 
         Game.renderer.on('prerender', this.update, this);
@@ -189,8 +189,10 @@ export class Character extends GameObject {
         let handShape = new PIXI.Graphics();
         group.addChild(handShape);
         handShape.beginFill(GraphicsConfig.character.hands.fillColor);
-        handShape.lineColor = GraphicsConfig.character.hands.lineColor;
-        handShape.lineWidth = 0.212 * 0.6; // relative to size
+        handShape.lineStyle(
+            0.212 * 0.6, // relative to size
+            GraphicsConfig.character.hands.lineColor
+        );
         handShape.drawCircle(0, 0, this.size * 0.2);
 
         group['originalTranslation'] = Vector.clone(group.position);
@@ -298,7 +300,7 @@ export class Character extends GameObject {
         });
 
         this.followGroups.forEach(function (group) {
-            group.position.copy(this.shape.position);
+            group.position.copyFrom(this.shape.position);
         }, this);
 
         if (this.isPlayerCharacter) {

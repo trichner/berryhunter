@@ -91,3 +91,4 @@ export const GAME_SETUP = 'game.setup';
 export const GAME_PLAYING = 'game.playing';
 export const GAME_DEATH = 'game.death';
 export const ENDSCREEN_SHOWN = 'endscreen.shown';
+export const BACKEND_SETUP = 'backend.setup';
