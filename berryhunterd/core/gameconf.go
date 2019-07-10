@@ -12,7 +12,6 @@ func Config(conf *cfg.Config) Configuration {
 	return func(g *cfg.GameConfig) error {
 		g.ColdFractionNightPerS = conf.Game.ColdFractionNightPerS
 		g.ColdFractionDayPerS = conf.Game.ColdFractionDayPerS
-		g.HeatFractionPerS = conf.Game.HeatFractionPerS
 
 		g.PlayerConfig.FreezingDamageTickFraction = conf.Game.Player.FreezingDamageTickFraction
 		g.PlayerConfig.HealthGainSatietyLossTickFraction = conf.Game.Player.HealthGainSatietyLossTickFraction

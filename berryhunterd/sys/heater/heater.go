@@ -4,7 +4,6 @@ import (
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
 	"github.com/trichner/berryhunter/berryhunterd/model"
-	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"log"
 )
 
@@ -18,18 +17,11 @@ type temperatureEntity struct {
 type HeaterSystem struct {
 	heaters         []model.Heater
 	players         playerMap
-	baseTemperature uint32
-	coolPerTick     uint32
-	heatPerTick     uint32
 }
 
-func New(coldFractionDayPerS float32, heatFractionPerS float32) *HeaterSystem {
-	coolPerTick := vitals.FractionToAbsPerTick(coldFractionDayPerS)
-	heatPerTick := vitals.FractionToAbsPerTick(heatFractionPerS)
+func New() *HeaterSystem {
 	return &HeaterSystem{
 		players:     make(playerMap),
-		coolPerTick: coolPerTick,
-		heatPerTick: heatPerTick,
 	}
 }
 
@@ -40,8 +32,6 @@ func (*HeaterSystem) Priority() int {
 func (h *HeaterSystem) New(w *ecs.World) {
 
 	log.Println("HeaterSystem nominal")
-	//FIXME HARDCODED
-	h.baseTemperature = vitals.FractionToAbsPerTick(0.04)
 }
 
 func (f *HeaterSystem) AddPlayer(p model.PlayerEntity) {
@@ -69,19 +59,8 @@ func (f *HeaterSystem) Update(dt float32) {
 	// apply heat to player
 	for _, t := range f.players {
 
-		if t.player.IsGod() {
-			continue
-		}
-
-		// are we freezing?
-		if t.temperature < f.baseTemperature {
-			bt := t.player.VitalSigns().BodyTemperature.Sub(f.coolPerTick)
-			t.player.VitalSigns().BodyTemperature = bt
-			continue
-		}
-
-		// we are warm, just fine
-		bt := t.player.VitalSigns().BodyTemperature.Add(f.heatPerTick)
+		// depending on the heaters around, increase the body temperature
+		bt := t.player.VitalSigns().BodyTemperature.Add(t.temperature)
 		t.player.VitalSigns().BodyTemperature = bt
 	}
 

@@ -20,7 +20,6 @@ type Config struct {
 	Game struct {
 		ColdFractionDayPerS   float32 `json:"coldFractionDayPerSecond"`
 		ColdFractionNightPerS float32 `json:"coldFractionNightPerSecond"`
-		HeatFractionPerS      float32 `json:"heatFractionPerSecond"`
 		Player                struct {
 			FreezingDamageTickFraction       float32 `json:"freezingDamageTickFraction"`
 			StarveDamageTickFraction         float32 `json:"starveDamageTickFraction"`

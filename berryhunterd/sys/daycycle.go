@@ -13,12 +13,19 @@ type DayCycleSystem struct {
 	g                model.Game
 	cycleTicks       uint64
 	nightCoolPerTick uint32
+	dayCoolPerTick uint32
 }
 
-func NewDayCycleSystem(g model.Game, cycleTicks uint64, coldFractionNightPerS float32) *DayCycleSystem {
+func NewDayCycleSystem(g model.Game, cycleTicks uint64, coldFractionNightPerS float32,
+	coldFractionDayPerS float32) *DayCycleSystem {
 
-	coolPerTick := vitals.FractionToAbsPerTick(coldFractionNightPerS)
-	return &DayCycleSystem{g: g, cycleTicks: cycleTicks, nightCoolPerTick: coolPerTick}
+	nightCoolPerTick := vitals.FractionToAbsPerTick(coldFractionNightPerS)
+	dayCoolPerTick := vitals.FractionToAbsPerTick(coldFractionDayPerS)
+	return &DayCycleSystem{
+		g:                g,
+		cycleTicks:       cycleTicks,
+		nightCoolPerTick: nightCoolPerTick,
+		dayCoolPerTick:   dayCoolPerTick}
 }
 
 func (*DayCycleSystem) Priority() int {
@@ -32,16 +39,19 @@ func (d *DayCycleSystem) AddPlayer(e model.PlayerEntity) {
 func (d *DayCycleSystem) Update(dt float32) {
 
 	// is it night?
+	c := d.dayCoolPerTick
 	if d.g.Ticks()%d.cycleTicks > d.cycleTicks/2 {
+		c = d.nightCoolPerTick
+	}
 
-		// adjust body temp
-		for _, p := range d.players {
-			 if p.IsGod() {
-				continue;
-			}
-			t := p.VitalSigns().BodyTemperature.Sub(d.nightCoolPerTick)
-			p.VitalSigns().BodyTemperature = t
+	// adjust body temp
+	for _, p := range d.players {
+		if p.IsGod() {
+			continue;
 		}
+
+		t := p.VitalSigns().BodyTemperature.Sub(c)
+		p.VitalSigns().BodyTemperature = t
 	}
 }
 
