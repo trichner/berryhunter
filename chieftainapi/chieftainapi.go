@@ -1,6 +1,7 @@
 package chieftainapi
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/trichner/berryhunter/chieftaind/dao"
 	"github.com/trichner/berryhunter/chieftaind/service"
@@ -9,11 +10,22 @@ import (
 	"time"
 )
 
-var mux = newMux(initScoreSerivce())
+var dataStore = initDatastore()
+var playerDao = initPlayerDao(dataStore)
+var scoreService = initScoreSerivce()
+var mux = newMux(scoreService)
 
-// HelloGet is an HTTP Cloud Function.
-func Get(w http.ResponseWriter, r *http.Request) {
-	mux.ServeHTTP(w, r)
+// CloudFunction entrypoint
+func Mux(w http.ResponseWriter, r *http.Request) {
+		err := dataStore.Transact(r.Context(), func(ctx context.Context) error {
+			r = r.WithContext(ctx)
+			mux.ServeHTTP(w, r)
+			return nil
+		})
+		if err != nil {
+			log.Printf("cannot handle: %s\n", err)
+			w.WriteHeader(500)
+		}
 }
 
 func newMux(service service.ScoreService) *http.ServeMux {
