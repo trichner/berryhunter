@@ -8,3 +8,5 @@ backend/backend.exe
 backend/conf.json
 id_berryhunter-ci
 node_modules/
+berryhunter.sublime-project
+berryhunter.sublime-workspace

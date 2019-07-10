@@ -1,9 +1,19 @@
 import {getUrlParameter} from "../Utils";
 import {BasicConfig as Constants} from "../../config/Basic";
 
+function isLocalhost(hostname: string) {
+    switch (hostname) {
+        case 'localhost':
+        case '127.0.0.1':
+            return true;
+    }
+
+    return false;
+}
+
 function getHostname() {
     let hostname = window.location.hostname;
-    if (hostname === 'localhost') {
+    if (isLocalhost(hostname)) {
         return 'local.berryhunter.io';
     }
 
@@ -40,7 +50,11 @@ if (getUrlParameter(Constants.MODE_PARAMETERS.NO_DOCKER)) {
     _database = '/chieftain';
 } else {
     _gameServer = getUrl('ws', 'game');
-    _database = getUrl('http', 'chieftain');
+    if (isLocalhost(window.location.hostname)) {
+        _database = getUrl('http', 'chieftain');
+    } else {
+        _database = 'https://europe-west1-berryhunter-io.cloudfunctions.net/chieftain-api'; 
+    }
 }
 
 export const gameServer = _gameServer;
