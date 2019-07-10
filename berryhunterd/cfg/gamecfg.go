@@ -13,7 +13,6 @@ type GameConfig struct {
 
 	ColdFractionNightPerS float32
 	ColdFractionDayPerS   float32
-	HeatFractionPerS      float32
 
 	PlayerConfig    PlayerConfig
 	ChieftainConfig *ChieftainConfig
