@@ -19,12 +19,12 @@ func main() {
 	log.Printf("booting chieftain")
 	config := loadConf()
 
-	playerStore, err := dao.NewPlayerDao()
+	dataStore, err := dao.NewDataStore(path.Join(config.DataDir, "chieftain.db"))
 	if err != nil {
 		log.Fatalf("cannot boot chieftain: %s", err)
 	}
 
-	dataStore, err := dao.NewDataStore(path.Join(config.DataDir, "chieftain.db"))
+	playerStore, err := dao.NewPlayerDao(dataStore)
 	if err != nil {
 		log.Fatalf("cannot boot chieftain: %s", err)
 	}

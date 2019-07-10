@@ -54,10 +54,13 @@ export const BasicConfig = {
 		 */
 		FIELDS_IN_QUADRANT: 8,
 	},
+
+	// TODO unused, can be deleted?
 	BACKEND: {
 		LOCAL_URL: 'ws://localhost:2000/game',
 		REMOTE_URL: 'wss://berryhunter.io/game',
 	},
+	
 	/**
 	 * Milliseconds between input sampling ticks.
 	 *
