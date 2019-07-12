@@ -27,7 +27,10 @@ func main() {
 
 	// new game
 	var radius float32 = 20
+	var seed int64 = 0xDEADBEEF + 7
+	rnd := rand.New(rand.NewSource(seed))
 	g, err := core.NewGameWith(
+		rnd.Int63(),
 		core.Config(config),
 		core.Registries(registry, mobs),
 		core.Tokens(tokens),
@@ -38,7 +41,6 @@ func main() {
 	}
 
 	// populate game
-	rnd := rand.New(rand.NewSource(0xDEADBEEF+7)) // 3?
 	entities := gen.Generate(g.Items(), rnd, radius)
 	for _, e := range entities {
 		g.AddEntity(e)

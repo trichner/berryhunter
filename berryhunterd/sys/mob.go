@@ -1,18 +1,24 @@
 package sys
 
 import (
+	"github.com/trichner/berryhunter/berryhunterd/items/mobs"
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/berryhunterd/model"
+	"github.com/trichner/berryhunter/berryhunterd/model/mob"
+	"github.com/trichner/berryhunter/berryhunterd/wrand"
 	"log"
+	"math/rand"
 )
 
 type MobSystem struct {
 	mobs []model.MobEntity
 	game model.Game
+	rnd  *rand.Rand
 }
 
-func NewMobSystem(g model.Game) *MobSystem {
-	return &MobSystem{game: g}
+func NewMobSystem(g model.Game, seed int64) *MobSystem {
+	rnd := rand.New(rand.NewSource(seed))
+	return &MobSystem{game: g, rnd: rnd}
 }
 
 func (n *MobSystem) Priority() int {
@@ -33,8 +39,36 @@ func (n *MobSystem) Update(dt float32) {
 		alive := mob.Update(dt)
 		if !alive {
 			n.game.RemoveEntity(mob.Basic())
+			n.respawnMob(mob.MobDefinition())
 		}
 	}
+}
+
+func (n *MobSystem) respawnMob(d *mobs.MobDefinition) {
+	m := mob.NewMob(d)
+
+	randomMob := n.randomMob(d.ID)
+	if randomMob != nil {
+		m.SetPosition(randomMob.Position())
+		m.SetAngle(randomMob.Angle())
+	}
+
+	n.game.AddEntity(m)
+}
+
+func (n *MobSystem) randomMob(id mobs.MobID) model.MobEntity {
+	choices := []wrand.Choice{}
+	for _, m := range n.mobs {
+		if m.MobID() == id {
+			choices = append(choices, wrand.Choice{Weight: 1, Choice: m})
+		}
+	}
+	wc := wrand.NewWeightedChoice(choices)
+	selected := wc.Choose(n.rnd)
+	if selected == nil {
+		return nil
+	}
+	return selected.(model.MobEntity)
 }
 
 func (n *MobSystem) Remove(b ecs.BasicEntity) {
