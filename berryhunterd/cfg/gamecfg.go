@@ -13,14 +13,19 @@ type GameConfig struct {
 
 	ColdFractionNightPerS float32
 	ColdFractionDayPerS   float32
-	HeatFractionPerS      float32
 
 	PlayerConfig    PlayerConfig
 	ChieftainConfig *ChieftainConfig
 }
 
 type ChieftainConfig struct {
-	Addr string
+	Addr *string
+	PubSubConfig *PubSubConfig
+}
+
+type PubSubConfig struct {
+	ProjectId string
+	TopicId	string
 }
 
 type PlayerConfig struct {

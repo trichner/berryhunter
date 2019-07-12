@@ -1,8 +1,8 @@
 package sys
 
 import (
-	"engo.io/ecs"
 	"github.com/trichner/berryhunter/berryhunterd/items/mobs"
+	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/mob"
 	"github.com/trichner/berryhunter/berryhunterd/wrand"

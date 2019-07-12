@@ -11,12 +11,15 @@ type Config struct {
 		Path string `json:"path"`
 	} `json:"server"`
 	Chieftain *struct {
-		Addr string `json:"addr"`
+		Addr *string `json:"addr"`
+		PubSub *struct {
+			ProjectId string `json:"projectId"`
+			TopicId string `json:"topicId"`
+		} `json:"pubSub,omitempty"`
 	} `json:"chieftain,omitempty"`
 	Game struct {
 		ColdFractionDayPerS   float32 `json:"coldFractionDayPerSecond"`
 		ColdFractionNightPerS float32 `json:"coldFractionNightPerSecond"`
-		HeatFractionPerS      float32 `json:"heatFractionPerSecond"`
 		Player                struct {
 			FreezingDamageTickFraction       float32 `json:"freezingDamageTickFraction"`
 			StarveDamageTickFraction         float32 `json:"starveDamageTickFraction"`

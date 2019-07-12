@@ -3,8 +3,8 @@ package sys
 import (
 	"encoding/binary"
 	"encoding/hex"
-	"engo.io/ecs"
 	"fmt"
+	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/berryhunterd/codec"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
@@ -18,20 +18,32 @@ type ScoreboardSystem struct {
 	players   []model.PlayerEntity
 	clients   []model.ClientEntity
 	g         model.Game
-	chieftain *client.Client
+	chieftain client.ScoreboardUpdateClient
 }
 
 func NewScoreboardSystem(g model.Game) *ScoreboardSystem {
 
 	ccfg := g.Config().ChieftainConfig
-	var c *client.Client
+	var c client.ScoreboardUpdateClient
 
-	if ccfg != nil {
+	if ccfg != nil && ccfg.Addr != nil {
 		var err error
-		if c, err = client.Connect(ccfg.Addr); err != nil {
-			log.Printf("cannot reach chieftain: %s\n", err)
+		addr := *ccfg.Addr
+		c, err = client.Connect(addr)
+		if err != nil {
+			log.Printf("cannot reach chieftain at %s: %s\n", addr, err)
+		} else {
+			log.Println("🏆 connected to chieftain via Socket")
 		}
-		log.Println("🏆 connected to chieftain")
+	} else if ccfg != nil && ccfg.PubSubConfig != nil {
+		ps := ccfg.PubSubConfig
+		var err error
+		c, err = client.NewPubSubClient(ps.ProjectId, ps.TopicId);
+		if err != nil {
+			log.Printf("cannot reach chieftain: %s\n", err)
+		} else {
+			log.Println("🏆 connected to chieftain via PubSub")
+		}
 	} else {
 		log.Println("no chieftain configuration, skipping")
 	}
@@ -76,6 +88,9 @@ func (d *ScoreboardSystem) Update(dt float32) {
 
 func (d *ScoreboardSystem) updateChieftain() {
 	if d.chieftain == nil {
+		return
+	}
+	if len(d.players) == 0 {
 		return
 	}
 	players := make([]client.Player, 0, len(d.players))

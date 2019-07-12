@@ -29,20 +29,28 @@ func (p *player) updateVitalSigns(dt float32) {
 
 	c := p.config
 
-	// are we freezing?
-	if vitalSigns.BodyTemperature <= 0 {
-		healthFraction := c.FreezingDamageTickFraction
-		p.addHealthFraction(-healthFraction)
-		p.statusEffects.Add(model.StatusEffectFreezing)
-	}
-
 	// satiety
 	s := vitalSigns.Satiety
 	satietyFraction := c.SatietyLossTickFraction
 	vitalSigns.Satiety = s.SubFraction(satietyFraction)
 
+	// Are we both starving and freezing?
+	if vitalSigns.BodyTemperature <= 0 && vitalSigns.Satiety.Fraction() <= 0 {
+		p.addHealthFraction(-c.FreezingStarveDamageTickFraction)
+		return;
+	}
+
+	// are we freezing?
+	if vitalSigns.BodyTemperature <= 0 {
+		healthFraction := c.FreezingDamageTickFraction
+		p.addHealthFraction(-healthFraction)
+		p.statusEffects.Add(model.StatusEffectFreezing)
+		return;
+	}
+
 	// heal if satiety and temperature are high enough
-	if vitalSigns.Satiety.Fraction() > c.HealthGainSatietyThreshold && vitalSigns.BodyTemperature.Fraction() > c.HealthGainTemperatureThreshold {
+	if vitalSigns.Satiety.Fraction() > c.HealthGainSatietyThreshold &&
+		vitalSigns.BodyTemperature.Fraction() > c.HealthGainTemperatureThreshold {
 
 		if vitalSigns.Health != vitals.Max {
 
@@ -61,15 +69,6 @@ func (p *player) updateVitalSigns(dt float32) {
 		healthFraction := c.StarveDamageTickFraction
 		p.addHealthFraction(-healthFraction)
 		p.statusEffects.Add(model.StatusEffectStarving)
-	}
-
-	// Are we both starving and freezing?
-	if vitalSigns.BodyTemperature <= 0 && vitalSigns.Satiety.Fraction() <= 0 {
-		healthFraction := c.FreezingStarveDamageTickFraction
-		// Reduce damage by amount already dealt by both freezing and starving
-		healthFraction -= c.FreezingDamageTickFraction
-		healthFraction -= c.StarveDamageTickFraction
-		p.addHealthFraction(-healthFraction)
 	}
 }
 

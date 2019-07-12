@@ -2,7 +2,7 @@
 # This script updates the backend and restarts it
 
 # Shutdown old backend
-screen -S backend -X quit
+screen -S berryhunterd -X quit
 
 # Panic on error
 set -e
@@ -10,11 +10,32 @@ set -e
 # Get changes
 git pull
 
-# Rebuild backend binary
-pushd ./backend/
+# Rebuild chieftain binary
+#pushd ./chieftaind/
+#
+#export GOPATH="/home/ubuntu/go"
+#go get
+#go build -a
+#
+#popd
 
+# Rebuild backend binary
+pushd ./berryhunterd/
+
+export GOPATH="/home/ubuntu/go"
 go get
-go build
+go build -a
+
+popd
+
+# rebuild frontend
+pushd ./frontend/
+
+yarn
+yarn build
+
+popd
 
 # Start backend
-screen -dmS backend ./backend
+pushd ./berryhunterd/
+screen -dmSL berryhunterd ./berryhunterd

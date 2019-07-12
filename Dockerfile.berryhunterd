@@ -1,5 +1,6 @@
-FROM golang:1.11 AS go_builder
+FROM golang:1.12 AS go_builder
 
+ENV GO111MODULE=on
 ENV GOPATH=/go
 WORKDIR /go/src/github.com/trichner/berryhunter/
 
@@ -27,6 +28,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -o berryhunterd .
 FROM alpine:latest
 
 ARG CONF=berryhunterd/conf.docker.json
+
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 
 WORKDIR /root/
 

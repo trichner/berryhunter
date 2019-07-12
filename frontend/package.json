@@ -5,7 +5,9 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "start": "webpack-dev-server --config webpack.dev.js",
-    "analyze": "webpack --config webpack.analysis.js"
+    "analyze": "webpack --config webpack.analysis.js",
+    "visualize": "webpack  --config webpack.visualize.js",
+    "favicon": "node create-favicons.js"
   },
   "main": "game.js",
   "repository": "https://github.com/trichner/berryhunter",
@@ -17,8 +19,8 @@
     "file-saver": "^1.3.8",
     "flatbuffers": "^1.9.0",
     "fscreen": "^1.0.2",
-    "lodash": "^4.17.10",
-    "moment": "^2.22.2",
+    "lodash": "^4.17.11",
+    "moment-mini": "^2.22.1",
     "mustache": "^3.0.1",
     "pixi-ease": "^1.1.2",
     "pixi.js": "^4.8.2",
@@ -37,21 +39,25 @@
     "clean-webpack-plugin": "^0.1.19",
     "core-js": "^2.5.7",
     "css-loader": "^1.0.0",
-    "favicons-webpack-plugin": "^0.0.9",
+    "del": "^3.0.0",
+    "favicons": "^5.3.0",
     "file-loader": "^2.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
+    "mini-css-extract-plugin": "^0.5.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
     "raw-loader": "^0.5.1",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.0",
     "svg-inline-loader": "^0.8.0",
     "typescript": "3.0.x",
     "url-loader": "^1.1.1",
-    "webpack": "^4.17.1",
-    "webpack-cli": "^3.1.0",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.7",
-    "webpack-merge": "^4.1.4"
+    "webpack-merge": "^4.1.5",
+    "webpack-visualizer-plugin": "^0.1.11"
   }
 }

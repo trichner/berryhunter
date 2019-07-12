@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chieftaind-prod
+spec:
+  ports:
+  - name: tls-api
+    port: 3443
+  - name: http-rest
+    port: 3080
+  selector:
+    app: chieftaind
+    stage: prod
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: chieftaind-prod
+spec:
+  selector:
+    matchLabels:
+      app: chieftaind
+      stage: prod
+  serviceName: chieftaind
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: chieftaind
+        stage: prod
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: chieftaind
+        image: gcr.io/berryhunter-io/chieftaind:latest
+        ports:
+        - name: http-rest
+          containerPort: 3080
+        - name: tls-api
+          containerPort: 3443
+        volumeMounts:
+        - name: chieftaind-prod-data
+          mountPath: /data
+        - name: cfg-volume
+          mountPath: /etc/chieftaind/
+        env:
+          - name: CHIEFTAIND_CONF
+            value: /etc/chieftaind/conf.json
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3080
+          initialDelaySeconds: 5
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3080
+          initialDelaySeconds: 5
+          periodSeconds: 3
+      volumes:
+        - name: cfg-volume
+          configMap:
+            name: chieftaind-prod-cfgmap
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chieftaind-prod-cfgmap
+data:
+  conf.json: |-
+    {
+      "apiAddr":":3443",
+      "restAddr":":3080",
+      "dataDir":"/data"
+    }

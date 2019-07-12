@@ -1,6 +1,6 @@
 'use strict';
 
-import * as _ from 'lodash';
+import _extend = require('lodash/extend');
 
 export function defaultStyle() {
     return {
@@ -13,5 +13,5 @@ export function defaultStyle() {
 }
 
 export function style(additionalStyle) {
-    return _.extend(defaultStyle(), additionalStyle);
+    return _extend(defaultStyle(), additionalStyle);
 }

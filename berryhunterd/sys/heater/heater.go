@@ -1,14 +1,13 @@
 package heater
 
 import (
-	"engo.io/ecs"
+	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
 	"github.com/trichner/berryhunter/berryhunterd/model"
-	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"log"
 )
 
-type playerMap map[ecs.BasicEntity]*temperatureEntity
+type playerMap map[uint64]*temperatureEntity
 
 type temperatureEntity struct {
 	player      model.PlayerEntity
@@ -18,18 +17,11 @@ type temperatureEntity struct {
 type HeaterSystem struct {
 	heaters         []model.Heater
 	players         playerMap
-	baseTemperature uint32
-	coolPerTick     uint32
-	heatPerTick     uint32
 }
 
-func New(coldFractionDayPerS float32, heatFractionPerS float32) *HeaterSystem {
-	coolPerTick := vitals.FractionToAbsPerTick(coldFractionDayPerS)
-	heatPerTick := vitals.FractionToAbsPerTick(heatFractionPerS)
+func New() *HeaterSystem {
 	return &HeaterSystem{
 		players:     make(playerMap),
-		coolPerTick: coolPerTick,
-		heatPerTick: heatPerTick,
 	}
 }
 
@@ -40,12 +32,10 @@ func (*HeaterSystem) Priority() int {
 func (h *HeaterSystem) New(w *ecs.World) {
 
 	log.Println("HeaterSystem nominal")
-	//FIXME HARDCODED
-	h.baseTemperature = vitals.FractionToAbsPerTick(0.04)
 }
 
 func (f *HeaterSystem) AddPlayer(p model.PlayerEntity) {
-	f.players[p.Basic()] = &temperatureEntity{player: p}
+	f.players[p.Basic().ID()] = &temperatureEntity{player: p}
 }
 
 func (f *HeaterSystem) AddHeater(h model.Heater) {
@@ -69,19 +59,8 @@ func (f *HeaterSystem) Update(dt float32) {
 	// apply heat to player
 	for _, t := range f.players {
 
-		if t.player.IsGod() {
-			continue
-		}
-
-		// are we freezing?
-		if t.temperature < f.baseTemperature {
-			bt := t.player.VitalSigns().BodyTemperature.Sub(f.coolPerTick)
-			t.player.VitalSigns().BodyTemperature = bt
-			continue
-		}
-
-		// we are warm, just fine
-		bt := t.player.VitalSigns().BodyTemperature.Add(f.heatPerTick)
+		// depending on the heaters around, increase the body temperature
+		bt := t.player.VitalSigns().BodyTemperature.Add(t.temperature)
 		t.player.VitalSigns().BodyTemperature = bt
 	}
 
@@ -102,7 +81,7 @@ func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 		if !ok {
 			continue
 		}
-		t := f.players[p.Basic()]
+		t := f.players[p.Basic().ID()]
 		if t == nil {
 			log.Panicf("😱 Player not found in system, not added?")
 		}
@@ -120,5 +99,5 @@ func (f *HeaterSystem) Remove(b ecs.BasicEntity) {
 	}
 
 	// remove from players
-	delete(f.players, b)
+	delete(f.players, b.ID())
 }

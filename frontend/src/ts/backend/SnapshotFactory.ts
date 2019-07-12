@@ -1,7 +1,7 @@
 'use strict';
 
 import {nearlyEqual, isDefined} from '../Utils';
-import * as _ from 'lodash';
+import _clone = require('lodash/clone');
 
 
 let lastGameState;
@@ -12,7 +12,7 @@ export function newSnapshot(backendState, gameState) {
         snapshot = {};
         snapshot.tick = gameState.tick;
 
-        snapshot.player = _.clone(gameState.player);
+        snapshot.player = _clone(gameState.player);
 
         if (backendState === 'PLAYING' &&
             !lastGameState.player.isSpectator &&

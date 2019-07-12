@@ -1,6 +1,6 @@
 /**
- * Webpack Configuration used to build a
- * PRODUCTIVE DEPLOYMENT
+ * Webpack Configuration used to
+ * ANALYZE THE PROJECT
  */
 
 const merge = require('webpack-merge');

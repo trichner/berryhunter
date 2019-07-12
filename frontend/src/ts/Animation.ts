@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as Ease from 'pixi-ease';
 import {defaultFor} from './Utils';
-import * as _ from 'lodash';
+import _merge = require('lodash/merge');
 
 export class Animation extends Ease.list {
     private updateFn: () => void;
@@ -17,7 +17,7 @@ export class Animation extends Ease.list {
      * @event List#each(elapsed, List) each update after eases are updated
      */
     constructor(options: { ticker?: PIXI.ticker.Ticker, autoDestroy?: boolean } = {}) {
-        super(_.merge(options, {noTicker: true}));
+        super(_merge(options, {noTicker: true}));
         this.ticker = options.ticker || PIXI.ticker.shared;
         this.updateFn = () => {
             // @ts-ignore update is a bit weirdly defined in Ease.list

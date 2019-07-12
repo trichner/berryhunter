@@ -12,7 +12,6 @@ func Config(conf *cfg.Config) Configuration {
 	return func(g *cfg.GameConfig) error {
 		g.ColdFractionNightPerS = conf.Game.ColdFractionNightPerS
 		g.ColdFractionDayPerS = conf.Game.ColdFractionDayPerS
-		g.HeatFractionPerS = conf.Game.HeatFractionPerS;
 
 		g.PlayerConfig.FreezingDamageTickFraction = conf.Game.Player.FreezingDamageTickFraction
 		g.PlayerConfig.HealthGainSatietyLossTickFraction = conf.Game.Player.HealthGainSatietyLossTickFraction
@@ -27,6 +26,12 @@ func Config(conf *cfg.Config) Configuration {
 		if conf.Chieftain != nil {
 			ctn := &cfg.ChieftainConfig{}
 			ctn.Addr = conf.Chieftain.Addr
+			if conf.Chieftain.PubSub != nil {
+				ps := &cfg.PubSubConfig{}
+				ps.ProjectId = conf.Chieftain.PubSub.ProjectId
+				ps.TopicId = conf.Chieftain.PubSub.TopicId
+				ctn.PubSubConfig = ps
+			}
 			g.ChieftainConfig = ctn
 		}
 

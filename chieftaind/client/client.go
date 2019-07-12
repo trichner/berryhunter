@@ -20,7 +20,7 @@ type Conn interface {
 
 type Dialer func() (Conn, error)
 
-func Connect(addr string) (*Client, error) {
+func Connect(addr string) (ScoreboardUpdateClient, error) {
 
 	conf := &tls.Config{
 		//TODO(Thomas) for debugging...
@@ -33,7 +33,7 @@ func Connect(addr string) (*Client, error) {
 	return ConnectWithDialer(d)
 }
 
-func ConnectWithDialer(d Dialer) (*Client, error) {
+func ConnectWithDialer(d Dialer) (ScoreboardUpdateClient, error) {
 
 	c := &Client{
 		tx:   make(chan *Scoreboard, 128),

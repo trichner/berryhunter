@@ -1,7 +1,7 @@
 package core
 
 import (
-	"engo.io/ecs"
+	"github.com/EngoEngine/ecs"
 	"fmt"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/berryhunterd/cfg"
@@ -101,7 +101,7 @@ func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
 	m := sys.NewMobSystem(g, rnd.Int63())
 	g.AddSystem(m)
 
-	f := heater.New(gc.ColdFractionDayPerS, gc.HeatFractionPerS)
+	f := heater.New()
 	g.AddSystem(f)
 
 	preu := sys.NewPreUpdateSystem()
@@ -128,7 +128,7 @@ func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
 	d := sys.NewDecaySystem(g)
 	g.AddSystem(d)
 
-	dayCycle := sys.NewDayCycleSystem(g, constant.DayNightCyleTicks, gc.ColdFractionNightPerS)
+	dayCycle := sys.NewDayCycleSystem(g, constant.DayNightCyleTicks, gc.ColdFractionNightPerS, gc.ColdFractionDayPerS)
 	g.AddSystem(dayCycle)
 
 	sb := sys.NewScoreboardSystem(g)
