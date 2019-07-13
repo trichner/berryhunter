@@ -151,32 +151,6 @@
 		}
 	}
 
-	> .socialMediaContainer {
-		padding-top: 0.5rem;
-		padding-bottom: 0.5rem;
-
-		> .socialLink {
-			&.twitter {
-				margin-bottom: 2px;
-			}
-
-			&.instagram {
-				margin-bottom: 8px;
-			}
-
-			&.hover {
-				> .socialIcon {
-					animation: socialLink-bounce 300ms infinite alternate ease-out;
-				}
-			}
-
-			> .socialIcon {
-				width: 48px;
-				height: 48px;
-			}
-		}
-	}
-
 	> .closeButton {
 		position: absolute;
 		display: block;
@@ -220,8 +194,7 @@
 
 #hunter {
 	height: 60vh;
-	transition: all @splashScreenAnimation;
-	transition-property: visibility, opacity;
+	transition: opacity @splashScreenAnimation;
 }
 
 #chromeWarning {

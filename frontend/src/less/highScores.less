@@ -239,6 +239,7 @@
   overflow-y: auto;
 
   > header {
+    margin-top: auto; // Vertical centering with the margin-top of social media icons
     margin-bottom: 3rem;
 
     display: flex;
@@ -266,28 +267,15 @@
   > .tableContainer {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
 
-  .tableGroup {
-    display: flex;
-    flex-direction: row;
-  }
-}
+    margin-bottom: 2rem;
 
-// 120rem is exactly the full width of 4 tables with 3 margins and the padding of the highScoreDetails
-@media (min-width: 120rem) {
-  .tableGroup + .tableGroup {
-    margin-left: 2rem;
+    overflow-x: auto;
+    max-width: 100%;
   }
-}
-
-.highScoreDetails {
 
   table.highscore {
     margin-left: 2rem;
-    margin-bottom: 2rem;
     width: 28rem;
 
     &:first-of-type {
@@ -356,10 +344,18 @@
     text-align: right; // numbers are right aligned for better comparability
     white-space: nowrap; // don't break up numbers
   }
+
+  .socialMediaContainer {
+    margin-top: auto; // push container to the bottom
+  }
 }
 
 body.leaderboardVisible {
-	.hideForLeaderboard {
-		visibility: hidden; // use visibility to not trigger animations
-	}
+  .hideForLeaderboard {
+    visibility: hidden; // use visibility to not trigger animations
+  }
+
+  #betaStamp {
+    display: none;
+  }
 }

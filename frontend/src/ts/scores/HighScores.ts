@@ -6,6 +6,7 @@ import {
     isDefined,
     isUndefined,
     makeRequest,
+    preventInputPropagation,
     smoothHoverAnimation
 } from '../Utils';
 import * as Urls from '../backend/Urls';
@@ -57,6 +58,8 @@ function onDomReady() {
 }
 
 function initDom() {
+    preventInputPropagation(rootElement);
+
     document.getElementById('closeLeaderboard').addEventListener('click', close);
 
     leaderboardTables = new Map();
@@ -74,6 +77,10 @@ function initDom() {
             playerName: rootElement.querySelector('.highscore.' + category + ' > .playerName'),
             score: rootElement.querySelector('.highscore.' + category + ' > .score'),
         }
+    });
+
+    rootElement.querySelectorAll('.socialLink').forEach((element) => {
+        smoothHoverAnimation(element, {animationDuration: 0.3});
     });
 }
 

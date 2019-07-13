@@ -1,0 +1,50 @@
+.socialMediaContainer {
+
+	&.horizontal {
+		> p {
+			margin: 0;
+			margin-bottom: 0.5em;
+		}
+
+		.socialLink {
+			margin: 0 8px;
+
+			&.hover {
+				> .socialIcon {
+					animation: socialLink-rating-bounce 300ms infinite alternate ease-out;
+				}
+			}
+
+			> .socialIcon {
+				width: 48px;
+				height: 48px;
+			}
+		}
+	}
+
+	&.vertical {
+		padding-top: 0.5rem;
+		padding-bottom: 0.5rem;
+
+		> .socialLink {
+			&.twitter {
+				margin-bottom: 2px;
+			}
+
+			&.instagram {
+				margin-bottom: 8px;
+			}
+
+			&.hover {
+				> .socialIcon {
+					animation: socialLink-bounce 300ms infinite alternate ease-out;
+				}
+			}
+
+			> .socialIcon {
+				width: 48px;
+				height: 48px;
+			}
+		}
+	}
+}

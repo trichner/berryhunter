@@ -403,6 +403,9 @@ export function smoothHoverAnimation(element: Element, options?: { additionalHov
     });
 }
 
+const GROUP_SEPARATOR = '\u2005';
+const multipliers = ['', 'K', 'M', 'B', 'T'];
+
 /**
  * Formats numbers in groups
  *
@@ -411,7 +414,7 @@ export function smoothHoverAnimation(element: Element, options?: { additionalHov
  * 4432738 --> "4 432 738"
  */
 export function formatInt(x: number): string {
-    return x.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return x.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, GROUP_SEPARATOR);
 }
 
 /**
@@ -423,7 +426,6 @@ export function formatInt(x: number): string {
  * 4432738  --> "4 432 K"
  * 54432738 -->    "54 M"
  */
-const multipliers = ['', 'K', 'M', 'B', 'T'];
 export function formatIntWithAbbreviation(x: number): string {
 
     let kExp:  number = 0;
@@ -433,5 +435,5 @@ export function formatIntWithAbbreviation(x: number): string {
         x /= 1000;
     }
 
-    return formatInt(Math.floor(x)) + ' ' + multipliers[kExp];
+    return formatInt(Math.floor(x)) + GROUP_SEPARATOR + multipliers[kExp];
 }
