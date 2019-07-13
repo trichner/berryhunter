@@ -114,13 +114,20 @@ function close(event: Event) {
 
 function show() {
     rootElement.classList.remove('hidden');
-    (function update() {
-        loadHighScores().then((highScores) => {
-            populateHighScores(highScores);
 
-            pendingTimeout = window.setTimeout(update, 2000);
-        });
-    })();
+    // TODO reduced load on DB server. As long as there's no "current"
+    //  category it doesn't make sense to keep reloading the scores.
+    // (function update() {
+    //     loadHighScores().then((highScores) => {
+    //         populateHighScores(highScores);
+    //
+    //         pendingTimeout = window.setTimeout(update, 2000);
+    //     });
+    // })();
+
+    loadHighScores().then((highScores) => {
+        populateHighScores(highScores);
+    });
 }
 
 function hide() {

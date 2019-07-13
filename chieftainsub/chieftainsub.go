@@ -78,7 +78,7 @@ func handleScoreboard(ctx context.Context, s *ChieftainApi.Scoreboard) error {
 			Uuid:    string(player.Uuid()),
 			Name:    string(player.Name()),
 			Score:   uint(player.Score()),
-			Updated: time.Now().Unix(),
+			Updated: dao.ConvertTime(time.Now()),
 		})
 		if err != nil {
 			return err

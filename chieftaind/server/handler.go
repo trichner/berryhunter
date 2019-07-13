@@ -114,7 +114,7 @@ func (c *ConnHandler) handleScoreboard(ctx context.Context, s *ChieftainApi.Scor
 			Uuid:    string(player.Uuid()),
 			Name:    string(player.Name()),
 			Score:   uint(player.Score()),
-			Updated: time.Now().Unix(),
+			Updated: dao.ConvertTime(time.Now()),
 		})
 	}
 

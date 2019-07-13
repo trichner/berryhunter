@@ -14,14 +14,14 @@ func TestNewPlayerDao(t *testing.T) {
 		Uuid:    "df8299c1-eb30-462d-9a86-ec7f8d2bca82",
 		Name:    "Jimmy Belair",
 		Score:   10,
-		Updated: time.Now().Unix(),
+		Updated: ConvertTime(time.Now()),
 	}
 
 	p2 := Player{
 		Uuid:    "06cb0e74-7ab9-407b-9bf0-a138335b807a",
 		Name:    "Bob Eiger",
 		Score:   11,
-		Updated: time.Now().Unix(),
+		Updated: ConvertTime(time.Now()),
 	}
 
 	ds, err := NewDataStore()
