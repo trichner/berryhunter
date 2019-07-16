@@ -67,7 +67,12 @@ function onDomReady() {
     scheduledMessages.forEach(log);
 }
 
-function onCommand(command) {
+function onCommand(command: string) {
+    // Ignore empty commands
+    if (!command || !command.trim()) {
+        return;
+    }
+
     log(command);
     if (token) {
         Backend.sendCommand({
