@@ -1,0 +1,32 @@
+{
+  "name": "WorkbenchConstruction",
+  "id": 50,
+  "type": "PLACEABLE",
+  "factors": {
+    "vulnerability": 0.01
+  },
+  "recipe": {
+    "craftTimeInSeconds": 15,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 80
+      },
+      {
+        "item": "Stone",
+        "count": 10
+      },
+      {
+        "item": "Bronze",
+        "count": 20
+      }
+    ],
+    "tools": [
+      "Workbench"
+    ]
+  },
+  "body": {
+    "solid": false,
+    "radius": 0.542
+  }
+}

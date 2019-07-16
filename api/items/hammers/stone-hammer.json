@@ -19,12 +19,12 @@
         "count": 50
       },
       {
-        "item": "WoodClub",
+        "item": "WoodHammer",
         "count": 1
       }
     ],
     "tools": [
-      "Workbench"
+      "WorkbenchConstruction"
     ]
   }
 }
