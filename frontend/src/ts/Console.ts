@@ -2,9 +2,7 @@
 
 import * as Preloading from './Preloading';
 import * as Events from './Events';
-import {getUrlParameter, preventInputPropagation, resetFocus} from './Utils';
-import {BasicConfig as Constants} from "../config/Basic";
-import {setup} from "./develop/_Develop";
+import {clearNode, getUrlParameter, preventInputPropagation, resetFocus} from './Utils';
 
 let Backend = null;
 Events.on('backend.setup', backend => {
@@ -26,14 +24,18 @@ const FILTERED_KEYCODES = [
     'Û'.charCodeAt(0),
 ];
 
+const MAX_HISTORY_LENGTH = 15;
+
 let token = getUrlParameter('token');
 let domReady = false;
 let _isOpen = false;
-let rootElement;
-let commandInput;
-let historyElement;
-let startTime;
+let rootElement: HTMLElement;
+let commandInput: HTMLInputElement;
+let historyElement: HTMLElement;
+let startTime: number;
 let scheduledMessages = [];
+let commandHistory: string[];
+let consoleSuggestions: HTMLDataListElement;
 
 Events.on('backend.validToken', function () {
     // Only load the console once the token was confirmed as valid
@@ -42,8 +44,9 @@ Events.on('backend.validToken', function () {
 
 function onDomReady() {
     rootElement = document.getElementById('console');
-    commandInput = document.getElementById('console_command');
+    commandInput = document.getElementById('console_command') as HTMLInputElement;
     historyElement = document.getElementById('console_history');
+    consoleSuggestions = document.getElementById('console_suggestions') as HTMLDataListElement;
 
     commandInput.addEventListener('keypress', function (event) {
         if (FILTERED_KEYCODES.indexOf(event.which) !== -1) {
@@ -56,7 +59,7 @@ function onDomReady() {
     document.getElementById('console').addEventListener('submit', function (event) {
         event.preventDefault();
 
-        onCommand(commandInput.value);
+        onCommand(commandInput.value, false);
         commandInput.value = '';
     });
 
@@ -65,14 +68,40 @@ function onDomReady() {
 
     // Log messages that were scheduled
     scheduledMessages.forEach(log);
+
+    commandHistory = readCommandHistory();
+    clearSuggestions();
+    populateSuggestions(commandHistory);
 }
 
-function onCommand(command: string) {
+function populateSuggestions(suggestions: string[]) {
+    suggestions.forEach(suggestion => {
+        let suggestionOption = document.createElement('option') as HTMLOptionElement;
+        suggestionOption.value = suggestion;
+        // Insert new options on top to have to last command first
+        consoleSuggestions.insertBefore(suggestionOption, consoleSuggestions.firstChild);
+    });
+}
+
+function clearSuggestions() {
+    clearNode(consoleSuggestions)
+}
+
+function onCommand(command: string, isAutoCommand: boolean) {
     // Ignore empty commands
-    if (!command || !command.trim()) {
+    if (!command) {
         return;
     }
 
+    command = command.trim();
+
+    if (command.length === 0) {
+        return;
+    }
+
+    if (!isAutoCommand) {
+        storeInHistory(command);
+    }
     log(command);
     if (token) {
         Backend.sendCommand({
@@ -87,12 +116,54 @@ function onCommand(command: string) {
     }
 }
 
-export function run(command) {
-    onCommand(command);
+export function run(command: string, isAutoCommand: boolean = true) {
+    onCommand(command, isAutoCommand);
 }
 
 function milliseconds2string(ms) {
     return (ms / 1000).toFixed(2);
+}
+
+function storeInHistory(command: string) {
+    let listNeedsRebuild = false;
+
+    // Limit the lists length
+    if (commandHistory.length > MAX_HISTORY_LENGTH) {
+        commandHistory.shift();
+        listNeedsRebuild = true;
+    }
+
+    // Remove duplicates from list
+    let indexOf = commandHistory.indexOf(command);
+    if (indexOf !== -1) {
+        commandHistory.splice(indexOf, 1);
+        listNeedsRebuild = true;
+    }
+
+    commandHistory.push(command);
+
+    if (listNeedsRebuild) {
+        clearSuggestions();
+        populateSuggestions(commandHistory);
+    } else {
+        populateSuggestions([command]);
+    }
+
+    writeCommandHistory(commandHistory);
+}
+
+function readCommandHistory(): string[] {
+    commandHistory = [];
+    let storedItem = localStorage.getItem('consoleHistory');
+    if (storedItem === null) {
+        return [];
+    }
+
+    return JSON.parse(storedItem);
+}
+
+function writeCommandHistory(history: string[]) {
+    localStorage.setItem('consoleHistory', JSON.stringify(history));
 }
 
 export function log(message) {

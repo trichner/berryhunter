@@ -2,7 +2,8 @@
 
 import {isFunction} from './Utils';
 import * as UserInterface from './userInterface/UserInterface';
-import * as Console from '../Console';
+import * as Console from './Console';
+import * as Events from './Events';
 
 let Game = null;
 let Backend = null;
@@ -30,7 +31,7 @@ export function setup(game, backend) {
         if (KEYS.indexOf(event.which) !== -1) {
             let message = inputElement.textContent;
             if (hasValidToken && message.startsWith('#')) {
-                Console.run(message.substring(1));
+                Console.run(message.substring(1), false);
                 return;
             }
 
