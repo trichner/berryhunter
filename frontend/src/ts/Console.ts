@@ -2,17 +2,14 @@
 
 import * as Preloading from './Preloading';
 import * as Events from './Events';
-import {clearNode, getUrlParameter, preventInputPropagation, resetFocus} from './Utils';
+import {clearNode, getUrlParameter, isFunction, preventInputPropagation, resetFocus} from './Utils';
 
 let Backend = null;
 Events.on('backend.setup', backend => {
     Backend = backend;
 });
 
-export const KEYS = [
-    220, // ^ for german keyboards
-    192, // ` for US keyboards
-];
+export const KEY_CODE = 'Backquote';
 
 const FILTERED_KEYCODES = [
     '^'.charCodeAt(0),
@@ -26,6 +23,10 @@ const FILTERED_KEYCODES = [
 
 const MAX_HISTORY_LENGTH = 15;
 
+const LOCAL_COMMAND_HANDLERS: { [key: string]: (parameters: string[]) => void } = {
+    'define': handleDefine
+};
+
 let token = getUrlParameter('token');
 let domReady = false;
 let _isOpen = false;
@@ -36,6 +37,7 @@ let startTime: number;
 let scheduledMessages = [];
 let commandHistory: string[];
 let consoleSuggestions: HTMLDataListElement;
+let macros: { [key: string]: string[] } = {};
 
 Events.on('backend.validToken', function () {
     // Only load the console once the token was confirmed as valid
@@ -54,7 +56,7 @@ function onDomReady() {
         }
     });
 
-    preventInputPropagation(commandInput, KEYS);
+    preventInputPropagation(commandInput, KEY_CODE);
 
     document.getElementById('console').addEventListener('submit', function (event) {
         event.preventDefault();
@@ -72,6 +74,9 @@ function onDomReady() {
     commandHistory = readCommandHistory();
     clearSuggestions();
     populateSuggestions(commandHistory);
+
+    macros = readMacros();
+    createMacroHandlers(macros);
 }
 
 function populateSuggestions(suggestions: string[]) {
@@ -85,6 +90,10 @@ function populateSuggestions(suggestions: string[]) {
 
 function clearSuggestions() {
     clearNode(consoleSuggestions)
+}
+
+export function run(command: string, isAutoCommand: boolean = true) {
+    onCommand(command, isAutoCommand);
 }
 
 function onCommand(command: string, isAutoCommand: boolean) {
@@ -104,10 +113,12 @@ function onCommand(command: string, isAutoCommand: boolean) {
     }
     log(command);
     if (token) {
-        Backend.sendCommand({
-            command: command,
-            token: token,
-        });
+        if (!tryRunLocally(command)) {
+            Backend.sendCommand({
+                command: command,
+                token: token,
+            });
+        }
     } else {
         if (!_isOpen) {
             show();
@@ -116,8 +127,70 @@ function onCommand(command: string, isAutoCommand: boolean) {
     }
 }
 
-export function run(command: string, isAutoCommand: boolean = true) {
-    onCommand(command, isAutoCommand);
+function tryRunLocally(command: string): boolean {
+
+    let tokens = command.split(' ');
+
+    let handler = LOCAL_COMMAND_HANDLERS[tokens[0]];
+    if (isFunction(handler)) {
+        handler(tokens.slice(1));
+        return true;
+    }
+
+    return false;
+}
+
+function handleDefine(parameters: string[]): void {
+    if (parameters.length < 2) {
+        log('ERROR: Missing parameters. define macro syntax is `define macroName command1; command2; ...`');
+        return;
+    }
+    let macroName = parameters[0];
+    let commands = parameters
+        .slice(1) // second parameter and following
+        .join(' ') // restore original input
+        .split(';') // separate commands by semicolon
+        .filter(command => command) // remove empty
+        .map(command => command.trim()) // trim all commands
+        .filter(command => command); // remove possible new empties
+
+    if (commands.length === 0) {
+        log('ERROR: Missing commands. define macro syntax is `define macroName command1; command2; ...`');
+        return;
+    }
+
+
+    if (macros.hasOwnProperty(macroName)) {
+        log('Updated macro "' + macroName + '" to ' + commands);
+    } else {
+        log('Defined macro "' + macroName + '" to ' + commands);
+    }
+
+    macros[macroName] = commands;
+    createMacroHandler(macroName);
+
+    writeMacros(macros);
+}
+
+function handleMacro(macroName: string) {
+    let commands: string[] = macros[macroName];
+    commands.forEach(command => {
+        // It's an autoCommand as we don't want parts of a macro
+        // to appear in the history (the macro itself will be recorded)
+        onCommand(command, true);
+    });
+}
+
+function createMacroHandlers(macros: { [key: string]: string[] }) {
+    for (const macroName in macros) {
+        createMacroHandler(macroName);
+    }
+}
+
+function createMacroHandler(macroName: string) {
+    LOCAL_COMMAND_HANDLERS[macroName] = () => {
+        handleMacro(macroName);
+    };
 }
 
 function milliseconds2string(ms) {
@@ -153,7 +226,6 @@ function storeInHistory(command: string) {
 }
 
 function readCommandHistory(): string[] {
-    commandHistory = [];
     let storedItem = localStorage.getItem('consoleHistory');
     if (storedItem === null) {
         return [];
@@ -164,6 +236,19 @@ function readCommandHistory(): string[] {
 
 function writeCommandHistory(history: string[]) {
     localStorage.setItem('consoleHistory', JSON.stringify(history));
+}
+
+function readMacros(): { [key: string]: string[] } {
+    let storedMacros = JSON.parse(localStorage.getItem('consoleMacros'));
+    if (storedMacros === null) {
+        return {};
+    }
+
+    return storedMacros;
+}
+
+function writeMacros(macros: { [key: string]: string[] }) {
+    localStorage.setItem('consoleMacros', JSON.stringify(macros));
 }
 
 export function log(message) {

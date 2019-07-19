@@ -32,13 +32,13 @@ export function setup(game, backend) {
             let message = inputElement.textContent;
             if (hasValidToken && message.startsWith('#')) {
                 Console.run(message.substring(1), false);
-                return;
+            } else {
+                Backend.sendChatMessage({
+                    message: message
+                });
+                Game.player.character.say(message);
             }
 
-            Backend.sendChatMessage({
-                message: message
-            });
-            Game.player.character.say(message);
             inputElement.textContent = '';
             hide();
             Game.domElement.focus();
