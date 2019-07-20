@@ -89,7 +89,7 @@ export class Controls {
             return;
         }
 
-        if (Console.KEYS.indexOf(event.which) !== -1) {
+        if (Console.KEY_CODE === event.code) {
             if (consoleCooldown > 0) {
                 consoleCooldown--;
             } else {

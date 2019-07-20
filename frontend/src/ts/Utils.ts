@@ -1,5 +1,7 @@
 'use strict';
 
+import _isString = require('lodash/isString');
+
 /*
  http://stackoverflow.com/a/3885844
  */
@@ -318,13 +320,22 @@ export function preventInputPropagation(element, ignoredKeys?) {
         }
     }
 
+    function preventCodeInputPropagation(event) {
+        if (ignoredKeys !== event.code) {
+            event.stopPropagation();
+        }
+    }
+
     function preventInputPropagation(event) {
         event.stopPropagation();
     }
 
-    if (isDefined(ignoredKeys)) {
+    if (Array.isArray(ignoredKeys)) {
         element.addEventListener('keydown', preventKeyInputPropagation);
         element.addEventListener('keyup', preventKeyInputPropagation);
+    } else if (_isString(ignoredKeys)) {
+        element.addEventListener('keydown', preventCodeInputPropagation);
+        element.addEventListener('keyup', preventCodeInputPropagation);
     } else {
         element.addEventListener('keydown', preventInputPropagation);
         element.addEventListener('keyup', preventInputPropagation);
