@@ -2,9 +2,12 @@
 
 import {isFunction} from './Utils';
 import * as UserInterface from './userInterface/UserInterface';
+import * as Console from './Console';
+import * as Events from './Events';
 
 let Game = null;
 let Backend = null;
+let hasValidToken: boolean = false;
 
 export const KEYS = [
     13 // ENTER key
@@ -26,10 +29,16 @@ export function setup(game, backend) {
         event.stopPropagation();
 
         if (KEYS.indexOf(event.which) !== -1) {
-            Backend.sendChatMessage({
-                message: inputElement.textContent
-            });
-            Game.player.character.say(inputElement.textContent);
+            let message = inputElement.textContent;
+            if (hasValidToken && message.startsWith('#')) {
+                Console.run(message.substring(1), false);
+            } else {
+                Backend.sendChatMessage({
+                    message: message
+                });
+                Game.player.character.say(message);
+            }
+
             inputElement.textContent = '';
             hide();
             Game.domElement.focus();
@@ -62,3 +71,7 @@ export function hide() {
 export function isOpen() {
     return _isOpen;
 }
+
+Events.on('backend.validToken', function () {
+    hasValidToken = true;
+});

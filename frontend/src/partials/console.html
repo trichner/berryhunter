@@ -4,8 +4,10 @@
 		<span class="s"></span>
 		<span class="layout-row">
 			<span style="margin-right: 0.4em;">&gt;</span>
-			<input id="console_command" class="flex" />
+			<input id="console_command" class="flex" autocomplete="off" spellcheck="false" list="console_suggestions"/>
 			<input type="submit" value="" class="hidden"/>
 		</span>
 	</label>
+
+    <datalist id="console_suggestions"></datalist>
 </form>

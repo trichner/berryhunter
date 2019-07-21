@@ -353,30 +353,46 @@ export const ItemsConfig = {
             visibleOnMinimap: true
         }
     },
-    Chest: {
-        icon: {file: require('../img/items/chest.svg')},
+    WorkbenchConstruction: {
+        icon: {file: require('../img/items/workbenchConstruction.svg')},
         graphic: {
-            file: require('../img/items/chest.svg'),
-            size: 35
+            file: require('../img/items/workbenchConstruction.svg'),
+            size: 65
         },
-        definition: require('../../../api/items/placeables/chest.json'),
+        definition: require('../../../api/items/placeables/workbench-construction.json'),
         type: ItemType.PLACEABLE,
         placeable: {
-            layer: 'placeables.chest'
+            layer: 'placeables.workbench',
+            visibleOnMinimap: true
         }
     },
-    BigChest: {
-        icon: {file: require('../img/items/chestBig.svg')},
-        graphic: {
-            file: require('../img/items/chestBig.svg'),
-            size: 50
-        },
-        definition: require('../../../api/items/placeables/big-chest.json'),
-        type: ItemType.PLACEABLE,
-        placeable: {
-            layer: 'placeables.chest'
-        }
-    },
+
+    // TODO Needs an actual function
+    // Chest: {
+    //     icon: {file: require('../img/items/chest.svg')},
+    //     graphic: {
+    //         file: require('../img/items/chest.svg'),
+    //         size: 35
+    //     },
+    //     definition: require('../../../api/items/placeables/chest.json'),
+    //     type: ItemType.PLACEABLE,
+    //     placeable: {
+    //         layer: 'placeables.chest'
+    //     }
+    // },
+    // BigChest: {
+    //     icon: {file: require('../img/items/chestBig.svg')},
+    //     graphic: {
+    //         file: require('../img/items/chestBig.svg'),
+    //         size: 50
+    //     },
+    //     definition: require('../../../api/items/placeables/big-chest.json'),
+    //     type: ItemType.PLACEABLE,
+    //     placeable: {
+    //         layer: 'placeables.chest'
+    //     }
+    // },
+
     Furnace: {
         icon: {file: require('../img/items/furnaceIcon.svg')},
         graphic: {
@@ -390,6 +406,8 @@ export const ItemsConfig = {
             visibleOnMinimap: true
         }
     },
+
+    // TODO Needs an actual function
     // Seeds: {
     // 	icon: {file: require('../img/items/seedIcon.svg')},
     // 	graphic: {

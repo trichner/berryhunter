@@ -6,7 +6,7 @@
     "vulnerability": 0.01
   },
   "recipe": {
-    "craftTimeInSeconds": 10,
+    "craftTimeInSeconds": 7,
     "materials": [
       {
         "item": "Wood",
@@ -14,7 +14,7 @@
       }
     ],
     "tools": [
-      "Workbench"
+      "WorkbenchConstruction"
     ]
   },
   "body": {

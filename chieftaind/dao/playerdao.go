@@ -46,6 +46,10 @@ func NewPlayerDao(store DataStore) (PlayerDao, error) {
 	return &playerDao{store:store}, nil
 }
 
+func ConvertTime(t time.Time) int64 {
+	return t.Unix()
+}
+
 func (p *playerDao) FindPlayers(ctx context.Context) ([]Player, error) {
 	tx := p.mustTx(ctx)
 	players := []Player{}
@@ -87,7 +91,7 @@ func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, perio
 		now = now.AddDate(0,0,-30)
 	}
 
-	sinceDate := now.Format(time.RFC3339)
+	sinceDate := ConvertTime(now)
 	err := tx.Select(&players,
 		`SELECT * 
 				FROM player 

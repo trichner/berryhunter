@@ -15,10 +15,18 @@ var playerDao = initPlayerDao(dataStore)
 var scoreService = initScoreSerivce()
 var mux = newMux(scoreService)
 
+
+const mediaTypeApplicationJson = "application/json"
+
 // CloudFunction entrypoint
 func Mux(w http.ResponseWriter, r *http.Request) {
 		err := dataStore.Transact(r.Context(), func(ctx context.Context) error {
 			r = r.WithContext(ctx)
+
+
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "GET")
+
 			mux.ServeHTTP(w, r)
 			return nil
 		})
@@ -80,8 +88,15 @@ func GetHighScoresHandler(s service.ScoreService) http.HandlerFunc {
 			return
 		}
 
+		w.Header().Set("Content-Type", mediaTypeApplicationJson)
+		w.WriteHeader(http.StatusOK)
+
 		je := json.NewEncoder(w)
-		je.Encode(mapScoresToDto(scores))
+		err = je.Encode(mapScoresToDto(scores))
+		if err != nil {
+			log.Printf("Error while serving high scores: %s\n", err)
+			w.WriteHeader(500)
+		}
 	}
 }
 
@@ -94,6 +109,9 @@ func GetScoreboardHandler(s service.ScoreService) http.HandlerFunc {
 			w.WriteHeader(500)
 			return
 		}
+
+		w.Header().Set("Content-Type", mediaTypeApplicationJson)
+		w.WriteHeader(http.StatusOK)
 
 		je := json.NewEncoder(w)
 		je.Encode(mapScoresToDto(scores))

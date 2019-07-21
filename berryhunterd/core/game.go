@@ -20,6 +20,7 @@ import (
 	"github.com/trichner/berryhunter/berryhunterd/sys/heater"
 	"github.com/trichner/berryhunter/berryhunterd/sys/statuseffects"
 	"log"
+	"math/rand"
 	"net/http"
 	"sort"
 	"sync/atomic"
@@ -46,7 +47,7 @@ type game struct {
 // assert game implements its interface
 var _ = model.Game(&game{})
 
-func NewGameWith(conf ...Configuration) (model.Game, error) {
+func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
 
 	gc := &cfg.GameConfig{
 		Radius: 20,
@@ -80,6 +81,9 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	builder.Finish(welcomeMsg)
 	g.welcomeMsg = builder.FinishedBytes()
 
+	//---- create rnd to generate deterministic seeds for systems
+	rnd := rand.New(rand.NewSource(seed))
+
 	//---- setup systems
 	p := sys.NewPhysicsSystem()
 	g.AddSystem(p)
@@ -94,7 +98,7 @@ func NewGameWith(conf ...Configuration) (model.Game, error) {
 	i := NewInputSystem(g)
 	g.AddSystem(i)
 
-	m := sys.NewMobSystem(g)
+	m := sys.NewMobSystem(g, rnd.Int63())
 	g.AddSystem(m)
 
 	f := heater.New()

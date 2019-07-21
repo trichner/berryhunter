@@ -6,6 +6,7 @@ import {
     isDefined,
     isUndefined,
     makeRequest,
+    preventInputPropagation,
     smoothHoverAnimation
 } from '../Utils';
 import * as Urls from '../backend/Urls';
@@ -57,6 +58,8 @@ function onDomReady() {
 }
 
 function initDom() {
+    preventInputPropagation(rootElement);
+
     document.getElementById('closeLeaderboard').addEventListener('click', close);
 
     leaderboardTables = new Map();
@@ -74,6 +77,10 @@ function initDom() {
             playerName: rootElement.querySelector('.highscore.' + category + ' > .playerName'),
             score: rootElement.querySelector('.highscore.' + category + ' > .score'),
         }
+    });
+
+    rootElement.querySelectorAll('.socialLink').forEach((element) => {
+        smoothHoverAnimation(element, {animationDuration: 0.3});
     });
 }
 
@@ -107,13 +114,20 @@ function close(event: Event) {
 
 function show() {
     rootElement.classList.remove('hidden');
-    (function update() {
-        loadHighScores().then((highScores) => {
-            populateHighScores(highScores);
 
-            pendingTimeout = window.setTimeout(update, 2000);
-        });
-    })();
+    // TODO reduced load on DB server. As long as there's no "current"
+    //  category it doesn't make sense to keep reloading the scores.
+    // (function update() {
+    //     loadHighScores().then((highScores) => {
+    //         populateHighScores(highScores);
+    //
+    //         pendingTimeout = window.setTimeout(update, 2000);
+    //     });
+    // })();
+
+    loadHighScores().then((highScores) => {
+        populateHighScores(highScores);
+    });
 }
 
 function hide() {
