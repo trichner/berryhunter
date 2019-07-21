@@ -12,6 +12,19 @@ import {ISvgContainer} from "./ISvgContainer";
 let Game = null;
 
 const OPACITY_STEPS = 32;
+const htmlFile = require('../partials/vitalSigns.html');
+let rootElement: HTMLElement;
+
+Events.on('preloading.execute', () => {
+    Preloading.renderPartial(htmlFile, onDomReady);
+});
+
+export function onDomReady() {
+    rootElement = document.getElementById('vitalSignsOverlay');
+    // Move the overlay under the game UI
+    rootElement.remove();
+    document.body.insertBefore(rootElement, UserInterface.getRootElement());
+}
 
 export class VitalSigns {
 
@@ -176,7 +189,7 @@ export class VitalSigns {
             }
 
             let relativeBodyHeat = this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat;
-            if (this.showIndicatorBelowThreshold(relativeBodyHeat, 'coldness')){
+            if (this.showIndicatorBelowThreshold(relativeBodyHeat, 'coldness')) {
                 indicatorVisible = true;
             }
 
@@ -187,7 +200,7 @@ export class VitalSigns {
         }
     }
 
-    private showIndicatorBelowThreshold(relativeVitalSign: number, indicator: string){
+    private showIndicatorBelowThreshold(relativeVitalSign: number, indicator: string) {
         if (relativeVitalSign < GraphicsConfig.vitalSigns.overlayThreshold) {
             let opacity = 1 - (relativeVitalSign / GraphicsConfig.vitalSigns.overlayThreshold);
             this.showIndicator(indicator, opacity);
@@ -202,14 +215,12 @@ export class VitalSigns {
         // Round opacity to 1 of X steps
         opacity = Math.ceil(opacity * OPACITY_STEPS) / OPACITY_STEPS;
 
-        this.indicators[indicatorName].visible = true;
-        if (this.indicators[indicatorName].filters[0].alpha !== opacity) {
-            this.indicators[indicatorName].filters[0].alpha = opacity;
-        }
+        rootElement.classList.remove('hidden');
+        rootElement.style.opacity = opacity;
     }
 
     hideIndicator(indicatorName) {
-        this.indicators[indicatorName].visible = false;
+        rootElement.classList.add('hidden');
     }
 
     destroy() {

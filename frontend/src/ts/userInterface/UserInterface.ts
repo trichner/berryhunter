@@ -79,6 +79,10 @@ export function hide() {
     Game.miniMap.stop();
 }
 
+export function getRootElement() {
+    return rootElement;
+}
+
 const CRAFTABLES_NEW_LINES = [
     [],
     [1],

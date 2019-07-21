@@ -5,7 +5,7 @@ import {StatusEffect} from './gameObjects/StatusEffect';
 import {Controls} from './Controls';
 import {Camera} from './Camera';
 import {Inventory} from './items/Inventory';
-import {VitalSigns} from './VitalSigns';
+import {VitalSigns} from './VitalSignsHtml';
 import {isDefined} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
 import {BerryhunterApi} from './backend/BerryhunterApi';

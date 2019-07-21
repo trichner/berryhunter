@@ -1,0 +1,83 @@
+'use strict';
+
+import {BasicConfig as Constants} from '../../config/Basic';
+import {isFunction} from "../Utils";
+import {VitalSigns} from "../VitalSignsHtml";
+import {GraphicsConfig} from "../../config/Graphics";
+import * as Console from '../Console';
+
+let currentValue = GraphicsConfig.vitalSigns.overlayThreshold;
+let intervalID: number = 0;
+let updateVitalSignsFn;
+
+export function start() {
+    Console.run('GOD');
+    // Simulate server
+    intervalID = window.setInterval(
+        update,
+        Constants.SERVER_TICKRATE
+    );
+
+    import('../Game').then(Game => {
+
+        updateVitalSignsFn = Game.player.vitalSigns.updateFromBackend.bind(Game.player.vitalSigns);
+        Game.player.vitalSigns.updateFromBackend = () => {
+        };
+    });
+}
+
+export function stop() {
+    clearInterval(intervalID);
+    intervalID = 0;
+
+    if (isFunction(updateVitalSignsFn)) {
+        import('../Game').then(Game => {
+
+            Game.player.vitalSigns.updateFromBackend = updateVitalSignsFn;
+        });
+    }
+}
+
+export function toggle() {
+    if (intervalID == 0) {
+        stop();
+        start();
+    } else {
+        stop();
+    }
+}
+
+export function hideAll() {
+    showPercentage(100);
+}
+
+export function showPercentage(percent) {
+    stop();
+
+    import('../Game').then(Game => {
+        updateVitalSignsFn = Game.player.vitalSigns.updateFromBackend.bind(Game.player.vitalSigns);
+        Game.player.vitalSigns.updateFromBackend = () => {
+        };
+
+        let backendValues = {};
+        ['satiety', 'bodyHeat'].forEach((vitalSign) => {
+            backendValues[vitalSign] = VitalSigns.MAXIMUM_VALUES[vitalSign] * percent / 100;
+        });
+
+        updateVitalSignsFn(backendValues);
+    });
+}
+
+function update() {
+    let backendValues = {};
+
+    ['satiety', 'bodyHeat'].forEach((vitalSign) => {
+        backendValues[vitalSign] = VitalSigns.MAXIMUM_VALUES[vitalSign] * currentValue;
+    });
+
+    updateVitalSignsFn(backendValues);
+    currentValue -= 0.001;
+    if (currentValue < 0) {
+        currentValue = GraphicsConfig.vitalSigns.overlayThreshold + 0.001;
+    }
+}
