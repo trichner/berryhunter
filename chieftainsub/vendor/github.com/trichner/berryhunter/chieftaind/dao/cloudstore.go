@@ -47,7 +47,7 @@ func (d *cloudDataStore) Transact(ctx context.Context, t TransactifiedFunc) (err
 
 func (d *cloudDataStore) Tx(ctx context.Context) (*sqlx.Tx, error) {
 
-	tx, ok := ctx.Value(txKey).(*sqlx.Tx)
+	tx, ok := ctx.Value(txKeyCloudStore).(*sqlx.Tx)
 	if !ok {
 		return nil, fmt.Errorf("no transaction found")
 	}
