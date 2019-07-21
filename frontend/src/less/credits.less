@@ -1,9 +1,18 @@
 #creditsContent {
 	> h2 {
+      float: left;
+      width: 100%;
+      clear: both;
+
 		background-color: black;
 		margin: 0;
+      margin-top: 2rem;
 		padding: 0.5rem 0.5rem 1rem;
 		box-sizing: border-box;
+
+      &:first-child {
+        margin-top: 0;
+      }
 	}
 
 	> section {
@@ -11,14 +20,18 @@
 		width: 100%;
 		clear: both;
 
-		> p {
+
+      > p, ul {
 			float: left;
 			width: 100%;
 			clear: both;
 			background-color: black;
 			margin: 0;
+        box-sizing: border-box;
+      }
+
+      > p {
 			padding: 0.5rem;
-			box-sizing: border-box;
 		}
 
 		> .graphic {
