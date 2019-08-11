@@ -2,7 +2,7 @@
 
 import {BasicConfig as Constants} from '../../config/Basic';
 import {isFunction} from "../Utils";
-import {VitalSigns} from "../VitalSignsHtml";
+import {VitalSigns} from "../VitalSigns";
 import {GraphicsConfig} from "../../config/Graphics";
 import * as Console from '../Console';
 

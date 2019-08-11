@@ -19,7 +19,7 @@ import {isDefined} from './Utils';
 import {Welcome} from "./backend/Welcome";
 import * as Console from './Console';
 import {Camera} from './Camera';
-import {VitalSigns} from './VitalSignsHtml';
+import {VitalSigns} from './VitalSigns';
 import * as Recipes from './items/Recipes';
 import * as Scoreboard from './scores/Scoreboard';
 import * as GroundTextureManager from './groundTextures/GroundTextureManager';
