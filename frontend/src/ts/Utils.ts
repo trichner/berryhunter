@@ -448,3 +448,13 @@ export function formatIntWithAbbreviation(x: number): string {
 
     return formatInt(Math.floor(x)) + GROUP_SEPARATOR + multipliers[kExp];
 }
+
+/**
+ * 5 --> 4
+ * 1920 --> 2048
+ * @param value
+ * @return the closest power of 2 (1, 2, 4, 8, 16, ... 1024, 2048, 4096)
+ */
+export function roundToNearestPowOfTwo(value: number): number {
+    return Math.pow(2, Math.round(Math.log2(value)));
+}

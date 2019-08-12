@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"github.com/EngoEngine/ecs"
 	"fmt"
+	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
+	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/berryhunterd/codec"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
@@ -49,7 +50,6 @@ var commands = map[string]Command{
 		}
 
 		log.Println(msg)
-
 
 		builder := flatbuffers.NewBuilder(32)
 		acceptMsg := codec.PongMessageFlatbufMarshal(builder)
@@ -99,7 +99,7 @@ var commands = map[string]Command{
 
 		y, err := strconv.ParseInt(argv[1], 10, 64)
 		if err != nil {
-			return fmt.Errorf("Cannot parse argument Y: %s", err)
+			return fmt.Errorf("cannot parse argument Y: %s", err)
 		}
 
 		xf := float32(x / codec.Points2px)
@@ -112,7 +112,7 @@ var commands = map[string]Command{
 
 		if arg != nil && *arg == "off" {
 			p.SetGodmode(false)
-		}else{
+		} else {
 			p.SetGodmode(true)
 		}
 
@@ -129,6 +129,25 @@ var commands = map[string]Command{
 
 		h := p.VitalSigns().BodyTemperature
 		p.VitalSigns().BodyTemperature = h.SubFraction(1.0)
+
+		return nil
+	},
+	"DAMAGE": func(g model.Game, p model.PlayerEntity, arg *string) error {
+
+		if arg == nil || len(*arg) == 0 {
+			return fmt.Errorf("no argument, usage: 'DAMAGE <percentage>'")
+		}
+
+		dmg, err := strconv.ParseUint(*arg, 10, 64)
+		if err != nil {
+			return err
+		}
+
+		dmgf := float32(dmg) / 100.0
+
+		h := p.VitalSigns().Health
+		p.VitalSigns().Health = h.SubFraction(dmgf)
+		p.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
 
 		return nil
 	},
