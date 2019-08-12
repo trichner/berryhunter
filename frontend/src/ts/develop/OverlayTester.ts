@@ -19,7 +19,6 @@ export function start() {
     );
 
     import('../Game').then(Game => {
-
         updateVitalSignsFn = Game.player.vitalSigns.updateFromBackend.bind(Game.player.vitalSigns);
         Game.player.vitalSigns.updateFromBackend = () => {
         };
@@ -81,3 +80,29 @@ function update() {
         currentValue = GraphicsConfig.vitalSigns.overlayThreshold + 0.001;
     }
 }
+
+function handleConsoleCommands(parameters: string[]): void {
+    let subCommand = 'toggle';
+
+    if (parameters.length >= 1) {
+        subCommand = parameters[0].toLowerCase();
+    }
+
+    switch (subCommand) {
+        case 'toggle':
+            toggle();
+            break;
+        case 'hide':
+            hideAll();
+            break;
+        default:
+            if (subCommand.match(/^\d+$/)) {
+                let percent = parseInt(subCommand);
+                showPercentage(percent);
+                break;
+            }
+            Console.logError('Unknown overlay command "' + subCommand + '"');
+    }
+}
+
+Console.registerLocalCommandHandler('overlays', handleConsoleCommands);

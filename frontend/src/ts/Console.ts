@@ -25,7 +25,6 @@ const MAX_HISTORY_LENGTH = 15;
 
 const LOCAL_COMMAND_HANDLERS: { [key: string]: (parameters: string[]) => void } = {
     'define': handleDefine,
-    'overlays': handleOverlays,
     'list': handleList
 };
 
@@ -92,6 +91,10 @@ function populateSuggestions(suggestions: string[]) {
 
 function clearSuggestions() {
     clearNode(consoleSuggestions)
+}
+
+export function registerLocalCommandHandler(command: string, handler: (parameters: string[]) => void) {
+    LOCAL_COMMAND_HANDLERS[command] = handler;
 }
 
 export function run(command: string, isAutoCommand: boolean = true) {
@@ -203,30 +206,6 @@ function createMacroHandler(macroName: string) {
     };
 }
 
-function handleOverlays(parameters: string[]): void {
-    let subCommand = 'toggle';
-
-    if (parameters.length >= 1) {
-        subCommand = parameters[0].toLowerCase();
-    }
-
-    switch (subCommand) {
-        case 'toggle':
-            import('./develop/OverlayTester').then(OverlayTester => OverlayTester.toggle());
-            break;
-        case 'hide':
-            import('./develop/OverlayTester').then(OverlayTester => OverlayTester.hideAll());
-            break;
-        default:
-            if (subCommand.match(/^\d+$/)) {
-                let percent = parseInt(subCommand);
-                import('./develop/OverlayTester').then(OverlayTester => OverlayTester.showPercentage(percent));
-                break;
-            }
-            logError('Unknown overlay command "' + subCommand + '"');
-    }
-}
-
 function handleList(parameters: string[]) {
 
     if (parameters.length === 0) {
@@ -309,7 +288,7 @@ function writeMacros(macros: { [key: string]: string[] }) {
     localStorage.setItem('consoleMacros', JSON.stringify(macros));
 }
 
-function logError(message) {
+export function logError(message) {
     log('ERROR: ' + message);
 }
 
