@@ -33,7 +33,7 @@ export class MiniMap {
          */
         this.trackedGameObjects = [];
 
-        let container = UserInterface.getMinimapContainer();
+        let container = UserInterface.getMiniMapContainer();
 
         this.width = container.clientWidth;
         this.height = container.clientHeight;
@@ -108,7 +108,6 @@ export class MiniMap {
 
         this.registeredGameObjectIds.push(gameObject.id);
 
-        // Position each icon relative to its position on the real map.
         const minimapIcon = gameObject.createMinimapIcon();
         if (gameObject.constructor.name === 'Character') {
             this.playerGroup.addChild(minimapIcon);
@@ -116,6 +115,7 @@ export class MiniMap {
             this.iconGroup.addChild(minimapIcon);
         }
 
+        // Position each icon relative to its position on the real map.
         let x = gameObject.getX() * this.scale;
         let y = gameObject.getY() * this.scale;
         minimapIcon.position.set(x, y);

@@ -79,6 +79,7 @@ export class GameMapWithBackend {
 
             if (gameObject.visibleOnMinimap) {
                 Game.miniMap.add(gameObject);
+                Game.largeMap.add(gameObject);
             }
 
             if (Develop.isActive()) {

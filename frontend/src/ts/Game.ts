@@ -25,6 +25,7 @@ import * as Scoreboard from './scores/Scoreboard';
 import * as GroundTextureManager from './groundTextures/GroundTextureManager';
 // Assign all export in this file to a single variable to be passed into sub modules.
 import * as Game from './Game';
+import {LargeMap} from "./LargeMap";
 
 export const States = {
     INITIALIZING: 'INITIALIZING',
@@ -44,6 +45,7 @@ export let cameraGroup: PIXI.Container;
 
 export let map: GameMapWithBackend = null;
 export let miniMap: MiniMap = null;
+export let largeMap: LargeMap = null;
 
 export let domElement: HTMLCanvasElement;
 export let input;
@@ -308,7 +310,7 @@ export function createPlayer(id, x, y, name) {
     /**
      * @type Player
      */
-    player = new Player(id, x, y, name, miniMap);
+    player = new Player(id, x, y, name, miniMap, largeMap);
     player.init();
     state = States.PLAYING;
     Events.trigger(Events.GAME_PLAYING, Game);
@@ -320,6 +322,7 @@ export function removePlayer() {
     player = undefined;
     if (Constants.CLEAR_MINIMAP_ON_DEATH) {
         miniMap.clear();
+        largeMap.clear();
         map.clear();
     }
     state = States.RENDERING;
@@ -341,6 +344,7 @@ export function startRendering(gameInformation: Welcome) {
     play();
     state = States.RENDERING;
     miniMap = new MiniMap(map.width, map.height);
+    largeMap = new LargeMap(map.width, map.height);
 }
 
 function createBackground() {

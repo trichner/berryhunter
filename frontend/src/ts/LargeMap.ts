@@ -33,10 +33,12 @@ export class LargeMap {
          */
         this.trackedGameObjects = [];
 
-        let container = UserInterface.getMinimapContainer();
+        let container = UserInterface.getLargeMapContainer();
 
-        this.width = container.clientWidth;
         this.height = container.clientHeight;
+        // height will be read out from HTML and also used for width to create a circle in a square
+        // noinspection JSSuspiciousNameCombination
+        this.width = this.height;
 
         this.renderer = PIXI.autoDetectRenderer({
             width: this.width,
@@ -60,7 +62,7 @@ export class LargeMap {
             this.height / 2
         );
 
-        const sizeFactorRelatedToMapSize = 2;
+        const sizeFactorRelatedToMapSize = 1;
         this.scale = this.width / this.mapWidth;
         this.iconSizeFactor = this.scale * sizeFactorRelatedToMapSize;
 
@@ -105,27 +107,28 @@ export class LargeMap {
             // The object is already on the miniMap
             return;
         }
-
+8
         this.registeredGameObjectIds.push(gameObject.id);
 
-        // Position each icon relative to its position on the real map.
-        const minimapIcon = gameObject.createMinimapIcon();
+        // TODO create GameObjectShapes instead of Icons
+        const largeMapIcon = gameObject.createMinimapIcon();
         if (gameObject.constructor.name === 'Character') {
-            this.playerGroup.addChild(minimapIcon);
+            this.playerGroup.addChild(largeMapIcon);
         } else {
-            this.iconGroup.addChild(minimapIcon);
+            this.iconGroup.addChild(largeMapIcon);
         }
 
+        // Position each icon relative to its position on the real map.
         let x = gameObject.getX() * this.scale;
         let y = gameObject.getY() * this.scale;
-        minimapIcon.position.set(x, y);
-        minimapIcon.scale.set(this.iconSizeFactor);
+        largeMapIcon.position.set(x, y);
+        largeMapIcon.scale.set(this.iconSizeFactor);
 
         if (gameObject.isMoveable) {
-            gameObject.minimapIcon = minimapIcon;
+            gameObject.largeMapIcon = largeMapIcon;
             this.trackedGameObjects.push(gameObject);
         }
-        return minimapIcon;
+        return largeMapIcon;
     }
 
     clear() {
@@ -139,7 +142,7 @@ export class LargeMap {
 
 function update() {
     this.trackedGameObjects.forEach(gameObject => {
-        gameObject.minimapIcon.position.x = gameObject.getX() * this.scale;
-        gameObject.minimapIcon.position.y = gameObject.getY() * this.scale;
+        gameObject.largeMapIcon.position.x = gameObject.getX() * this.scale;
+        gameObject.largeMapIcon.position.y = gameObject.getY() * this.scale;
     });
 }
