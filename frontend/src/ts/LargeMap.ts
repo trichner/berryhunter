@@ -3,7 +3,7 @@
 import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
 
-export class MiniMap {
+export class LargeMap {
     mapWidth;
     mapHeight;
     registeredGameObjectIds;

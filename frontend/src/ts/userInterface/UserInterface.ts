@@ -157,7 +157,7 @@ export function getVitalSignBar(vitalSign: string): VitalSignBar {
  * @return {Element}
  */
 export function getMinimapContainer() {
-    return document.querySelector('#minimap > .wrapper');
+    return document.querySelector('#miniMap > .wrapper');
 }
 
 /**

@@ -32,7 +32,7 @@ import * as Equipment from '../ts/items/Equipment';
  *          multiPlacing: optional boolean, default false
  *                        after placenment item stays equipped
  *          visibleOnMinimap: optional boolean, default false
- *                            If true, a minimap icon is created for this placeable.
+ *                            If true, a miniMap icon is created for this placeable.
  *                            The looks have to be defined in:
  *                            GraphicsConfig.miniMap.icons.<itemName>
  *          directions: optional boolean|number.
