@@ -70,12 +70,22 @@ export class GameObject {
      * @param x
      * @param y
      */
-    createShape(x, y) {
+    createShape(x, y): PIXI.Container {
         console.error('createShape not implemented for ' + this.constructor.name);
+        return null;
     }
 
-    createMinimapIcon() {
+    createMinimapIcon(): PIXI.DisplayObject {
         console.error('createMinimapIcon not implemented for ' + this.constructor.name);
+        return null;
+    }
+
+    createLargeMapIcon(): PIXI.Container {
+        if (this.getRotationShape() instanceof InjectedSVG) {
+            return new InjectedSVG(this.getRotationShape().texture , this.getX(), this.getY(), this.size, this.rotation);
+        } else {
+            return this.createShape(this.getX(), this.getY())
+        }
     }
 
     setPosition(x, y) {

@@ -220,6 +220,10 @@ export class BerryBush extends Resource {
         return group;
     }
 
+    getRotationShape(): any {
+        return this.actualShape;
+    }
+
     createMinimapIcon() {
         let shape = new PIXI.Graphics();
         let miniMapCfg = GraphicsConfig.miniMap.icons.berryBush;
@@ -229,7 +233,13 @@ export class BerryBush extends Resource {
         return shape;
     }
 
-    onStockChange(numberOfBerries) {
+    createLargeMapIcon(): PIXI.Container {
+        let largeMapIcon = super.createLargeMapIcon();
+        BerryBush.createBerries(largeMapIcon, this.size, this.capacity, this.capacity);
+        return largeMapIcon;
+    }
+
+    onStockChange(numberOfBerries: number) {
         if (isDefined(this.berries)) {
             this.berries.parent.removeChild(this.berries);
         }
@@ -237,18 +247,22 @@ export class BerryBush extends Resource {
         this.berries = new PIXI.Container();
         this.shape.addChild(this.berries);
 
-        for (let i = 0; i < this.capacity; i++) {
+        BerryBush.createBerries(this.berries, this.size, this.capacity, numberOfBerries);
+    }
+
+    static createBerries(parentContainer: PIXI.Container, size: number, capacity: number, numberOfBerries: number){
+        for (let i = 0; i < capacity; i++) {
             if (i >= numberOfBerries) {
                 break;
             }
 
             let berry = new InjectedSVG(
                 BerryBush.berry.svg,
-                (Math.cos(Math.PI * 2 / this.capacity * i) * this.size * 0.3),
-                (Math.sin(Math.PI * 2 / this.capacity * i) * this.size * 0.3),
+                (Math.cos(Math.PI * 2 / capacity * i) * size * 0.3),
+                (Math.sin(Math.PI * 2 / capacity * i) * size * 0.3),
                 berryBushCfg.berrySize
             );
-            this.berries.addChild(berry);
+            parentContainer.addChild(berry);
         }
     }
 }

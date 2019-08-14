@@ -34,7 +34,7 @@ export class DebugCircle extends GameObject {
         }, this);
     }
 
-    createShape(x, y) {
+    createShape(x, y): PIXI.Container {
         let circle = new PIXI.Graphics();
         circle.lineColor = 0xFFFF00;
         circle.lineWidth = Develop.settings.linewidth;

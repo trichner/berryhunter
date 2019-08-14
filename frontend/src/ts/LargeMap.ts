@@ -110,8 +110,7 @@ export class LargeMap {
 8
         this.registeredGameObjectIds.push(gameObject.id);
 
-        // TODO create GameObjectShapes instead of Icons
-        const largeMapIcon = gameObject.createMinimapIcon();
+        const largeMapIcon = gameObject.createLargeMapIcon();
         if (gameObject.constructor.name === 'Character') {
             this.playerGroup.addChild(largeMapIcon);
         } else {
@@ -122,7 +121,7 @@ export class LargeMap {
         let x = gameObject.getX() * this.scale;
         let y = gameObject.getY() * this.scale;
         largeMapIcon.position.set(x, y);
-        largeMapIcon.scale.set(this.iconSizeFactor);
+        largeMapIcon.scale.set(largeMapIcon.scale.x * this.iconSizeFactor);
 
         if (gameObject.isMoveable) {
             gameObject.largeMapIcon = largeMapIcon;
@@ -142,6 +141,7 @@ export class LargeMap {
 
 function update() {
     this.trackedGameObjects.forEach(gameObject => {
+        // TODO Rotation des largeMapIcons anpassen
         gameObject.largeMapIcon.position.x = gameObject.getX() * this.scale;
         gameObject.largeMapIcon.position.y = gameObject.getY() * this.scale;
     });

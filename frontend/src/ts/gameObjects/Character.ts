@@ -227,6 +227,12 @@ export class Character extends GameObject {
         return shape;
     }
 
+    createLargeMapIcon(): PIXI.Container {
+        const largeMapScale = 3;
+        let injectedSvg: InjectedSVG  = this.actualShape.getChildAt(0);
+        return new InjectedSVG(injectedSvg.texture , this.getX(), this.getY(), this.size * largeMapScale, this.rotation);
+    }
+
     getEquippedItemAnimationType() {
         let equippedItem = this.getEquippedItem(Equipment.Slots.HAND);
         if (equippedItem === null) {
