@@ -19,7 +19,7 @@ Repo for the most awesome berry-hunting experience.
 
 ### Windows Environment
 
-#### Perquisites
+#### Prerequisites
 
 **To compile Go-libraries**
 

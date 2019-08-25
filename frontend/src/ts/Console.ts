@@ -24,7 +24,8 @@ const FILTERED_KEYCODES = [
 const MAX_HISTORY_LENGTH = 15;
 
 const LOCAL_COMMAND_HANDLERS: { [key: string]: (parameters: string[]) => void } = {
-    'define': handleDefine
+    'define': handleDefine,
+    'list': handleList
 };
 
 let token = getUrlParameter('token');
@@ -92,6 +93,10 @@ function clearSuggestions() {
     clearNode(consoleSuggestions)
 }
 
+export function registerLocalCommandHandler(command: string, handler: (parameters: string[]) => void) {
+    LOCAL_COMMAND_HANDLERS[command] = handler;
+}
+
 export function run(command: string, isAutoCommand: boolean = true) {
     onCommand(command, isAutoCommand);
 }
@@ -123,13 +128,14 @@ function onCommand(command: string, isAutoCommand: boolean) {
         if (!_isOpen) {
             show();
         }
-        log('ERROR: URL parameter "token" is not defined!');
+        logError('URL parameter "token" is not defined!');
     }
 }
 
 function tryRunLocally(command: string): boolean {
 
     let tokens = command.split(' ');
+    tokens[0] = tokens[0].toLowerCase();
 
     let handler = LOCAL_COMMAND_HANDLERS[tokens[0]];
     if (isFunction(handler)) {
@@ -140,9 +146,15 @@ function tryRunLocally(command: string): boolean {
     return false;
 }
 
+function unifyCommandCase(command: string): string {
+    let tokens = command.split(' ');
+    tokens[0] = tokens[0].toLowerCase();
+    return tokens.join(' ');
+}
+
 function handleDefine(parameters: string[]): void {
     if (parameters.length < 2) {
-        log('ERROR: Missing parameters. define macro syntax is `define macroName command1; command2; ...`');
+        logError('Missing parameters. define macro syntax is `define macroName command1; command2; ...`');
         return;
     }
     let macroName = parameters[0];
@@ -152,10 +164,11 @@ function handleDefine(parameters: string[]): void {
         .split(';') // separate commands by semicolon
         .filter(command => command) // remove empty
         .map(command => command.trim()) // trim all commands
-        .filter(command => command); // remove possible new empties
+        .filter(command => command) // remove possible new empties
+        .map(command => unifyCommandCase(command)); // all basic commands in lower case
 
     if (commands.length === 0) {
-        log('ERROR: Missing commands. define macro syntax is `define macroName command1; command2; ...`');
+        logError('Missing commands. define macro syntax is `define macroName command1; command2; ...`');
         return;
     }
 
@@ -193,6 +206,27 @@ function createMacroHandler(macroName: string) {
     };
 }
 
+function handleList(parameters: string[]) {
+
+    if (parameters.length === 0) {
+        logError('Missing parameter.');
+    }
+
+    let subCommand = parameters[0].toLowerCase();
+    switch (subCommand) {
+        case 'macro':
+        case 'macros':
+            handleListMacros();
+            break;
+    }
+}
+
+function handleListMacros() {
+    for (const [macroName, commands] of Object.entries(macros)) {
+        log(macroName + ' => ' + commands);
+    }
+}
+
 function milliseconds2string(ms) {
     return (ms / 1000).toFixed(2);
 }
@@ -205,6 +239,9 @@ function storeInHistory(command: string) {
         commandHistory.shift();
         listNeedsRebuild = true;
     }
+
+    // Adjust command to be lower case
+    command = unifyCommandCase(command);
 
     // Remove duplicates from list
     let indexOf = commandHistory.indexOf(command);
@@ -249,6 +286,10 @@ function readMacros(): { [key: string]: string[] } {
 
 function writeMacros(macros: { [key: string]: string[] }) {
     localStorage.setItem('consoleMacros', JSON.stringify(macros));
+}
+
+export function logError(message) {
+    log('ERROR: ' + message);
 }
 
 export function log(message) {

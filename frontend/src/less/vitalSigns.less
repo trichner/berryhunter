@@ -1,0 +1,88 @@
+/* ============================================================================
+ * Vital Sign Bars in UI
+ */
+
+#vitalSigns {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 22vw;
+  height: 12vh;
+
+  > .bar {
+    margin: (0.1 * @uiElementHeight);
+    position: relative;
+    z-index: 1;
+
+    > .indicator,
+    > .previousIndicator {
+      height: 100%;
+    }
+
+    > .previousIndicator {
+      background-color: rgba(255, 255, 255, 0.7);
+      position: absolute;
+      z-index: -1;
+    }
+  }
+}
+
+#healthBar {
+  background-color: #840D25;
+
+  > .indicator {
+    background-color: crimson;
+  }
+}
+
+#satietyBar {
+  background-color: #1E7A1E;
+
+  > .indicator {
+    background-color: limegreen;
+  }
+}
+
+#bodyHeatBar {
+  background-color: #125799;
+
+  > .indicator {
+    background-color: dodgerblue;
+  }
+}
+
+/* ============================================================================
+ * Vital Sign overlays in HTML
+ */
+
+#vitalSignsOverlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+
+  > .overlay {
+    width: 100%;
+    height: 100%; // only works if the SVGs have `preserveAspectRatio="none"`
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  > .damage {
+    opacity: 0;
+    transition-property: opacity;
+    // Fade out times
+    transition-duration: 280ms;
+    transition-delay: 140ms;
+
+    &.active {
+      opacity: 1;
+      // Fade in times
+      transition-duration: 80ms;
+      transition-delay: 0ms;
+    }
+  }
+}

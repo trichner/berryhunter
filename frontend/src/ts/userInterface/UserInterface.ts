@@ -16,7 +16,7 @@ let craftingElement;
 let craftableItemTemplate;
 let inventorySlots;
 
-let vitalSignsBars;
+let vitalSignsBars: { [key: string]: VitalSignBar };
 
 Preloading.renderPartial(require('./userInterface.html'), () => {
     rootElement = document.getElementById('gameUI');
@@ -77,6 +77,10 @@ export function show() {
 export function hide() {
     rootElement.classList.add('hidden');
     Game.miniMap.stop();
+}
+
+export function getRootElement() {
+    return rootElement;
 }
 
 const CRAFTABLES_NEW_LINES = [
@@ -144,7 +148,7 @@ export function getInventorySlot(slotIndex: number): ClickableCountableIcon {
     return inventorySlots[slotIndex];
 }
 
-export function getVitalSignBar(vitalSign) {
+export function getVitalSignBar(vitalSign: string): VitalSignBar {
     return vitalSignsBars[vitalSign];
 }
 

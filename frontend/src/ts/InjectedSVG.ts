@@ -5,7 +5,7 @@ import * as PIXI from 'pixi.js';
 
 
 export class InjectedSVG extends PIXI.Sprite {
-    constructor(svgTexture, x, y, size, rotation?) {
+    constructor(svgTexture: PIXI.Texture, x, y, size, rotation?) {
         super(svgTexture);
 
         size = size || (Constants.GRAPHIC_BASE_SIZE / 2);
