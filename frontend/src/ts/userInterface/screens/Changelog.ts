@@ -3,7 +3,6 @@ import * as moment from 'moment-mini';
 import {isUndefined} from '../../Utils';
 import * as Events from '../../Events';
 import {createStartScreenPanel} from "./ScreenUtil";
-import {isArray} from "util";
 
 function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);
