@@ -58,6 +58,20 @@ label[for] {
 	cursor: pointer;
 }
 
+a {
+	&:link,
+	&:visited {
+		color: inherit;
+		text-decoration: underline;
+	}
+
+	&:hover,
+	&:active,
+	&:focus {
+		text-decoration: none;
+	}
+}
+
 .layout, .layout-column, .layout-row {
 	box-sizing: border-box;
 	display: -webkit-box;
@@ -224,6 +238,15 @@ label[for] {
 
 .contain-floats {
 	overflow: hidden;
+}
+
+.warn {
+	color: #FF1744; // Material Design Red A400
+	opacity: 0.9;
+}
+
+.help {
+	color: rgba(255, 255, 255, 0.6);
 }
 
 :not(.plural) > .plural-only {

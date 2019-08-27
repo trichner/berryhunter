@@ -75,3 +75,7 @@ export function isOpen() {
 Events.on('backend.validToken', function () {
     hasValidToken = true;
 });
+
+Events.on(Events.GAME_DEATH, () => {
+    hide();
+});

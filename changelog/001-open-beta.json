@@ -9,6 +9,65 @@
   ],
   "changes": [
     {
+      "category": "improvement",
+      "description": "Fixed performance issues with damage, freezing and starving overlays.",
+      "trelloId": "c/XHNzicng"
+    },
+    {
+      "category": "bugFix",
+      "description": "Damage, freezing and starving overlays where not filling out the whole screen when playing in fullscreen mode.",
+      "trelloId": "c/BCLlWJjw"
+    },
+    {
+      "category": "improvement",
+      "description": "Added section about the authors to credits screen.",
+      "trelloId": "c/5SvfMUen"
+    },
+    {
+      "category": "improvement",
+      "description": "Improved caching and reduced number of file downloads before the game starts.",
+      "trelloId": [
+        "c/oMja915P",
+        "c/sPSzWW1u",
+        "c/il3c3lnm"
+      ]
+    },
+    {
+      "category": "improvement",
+      "description": "Hammers and walls are now crafted at their own 'siege workbench' that can be crafted from the regular workbench.",
+      "trelloId": "c/HldpVweO"
+    },
+    {
+      "category": "bugFix",
+      "description": "Fixed high score tables layout to work on most resolutions.",
+      "trelloId": "c/UttQkdYt"
+    },
+    {
+      "category": "highlight",
+      "description": "Mobs respawn at anothers mob position once they die.",
+      "trelloId": "c/ZZOP3dSQ"
+    },
+    {
+      "category": "bugFix",
+      "description": "Characters that where both freezing and starving would not die until they took damage from another source.",
+      "trelloId": "c/sLo3vtxt/"
+    },
+    {
+      "category": "feature",
+      "description": "Added link to Discord server in our social media section.",
+      "trelloId": "c/SKKuEO6X"
+    },
+    {
+      "category": "improvement",
+      "description": "Finalized heat and coldness mechanics.",
+      "trelloId": "c/QMZQJ3wF"
+    },
+    {
+      "category": "improvement",
+      "description": "New twitter icon.",
+      "trelloId": "c/AsEIO02d"
+    },
+    {
       "category": "feature",
       "description": "We introduced a changelog, listing all changes per game update starting with this version.",
       "trelloId": "c/TSCHnUsf"
@@ -30,7 +89,7 @@
     },
     {
       "category": "highlight",
-      "description": "Scores are used to show high scores and top 10 leaderboards across 4 time periods.",
+      "description": "Scores are used to show high scores and top 10 leader boards across four time periods.",
       "trelloId": "c/z7nLwWOA"
     },
     {

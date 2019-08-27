@@ -58,8 +58,8 @@ export let playing;
 export let timeDelta;
 let _lastFrame;
 
-export let spectator;
-export let player;
+export let spectator: Spectator;
+export let player: Player;
 
 export function setup() {
 

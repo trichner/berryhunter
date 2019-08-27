@@ -30,6 +30,11 @@ export class GameObject {
     desiredRotation: number;
     desiredRotationTimestamp;
 
+    /**
+     * Set by MiniMap if this is a tracked (= moveable) GameObject
+     */
+    minimapIcon: PIXI.Container;
+
     constructor(gameLayer, x, y, size, rotation, svg) {
         this.layer = gameLayer;
         this.size = size;
@@ -71,13 +76,11 @@ export class GameObject {
      * @param y
      */
     createShape(x, y): PIXI.Container {
-        console.error('createShape not implemented for ' + this.constructor.name);
-        return null;
+        throw 'createShape not implemented for ' + this.constructor.name;
     }
 
     createMinimapIcon(): PIXI.DisplayObject {
-        console.error('createMinimapIcon not implemented for ' + this.constructor.name);
-        return null;
+        throw 'createMinimapIcon not implemented for ' + this.constructor.name;
     }
 
     createLargeMapIcon(): PIXI.Container {

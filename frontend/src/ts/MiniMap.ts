@@ -2,6 +2,12 @@
 
 import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
+import {GameObject} from "./gameObjects/_GameObject";
+
+export enum Layer {
+    CHARACTER,
+    OTHER
+}
 
 export class MiniMap {
     mapWidth;
@@ -98,9 +104,8 @@ export class MiniMap {
 
     /**
      * Adds the icon of the object to the map.
-     * @param gameObject
      */
-    add(gameObject) {
+    add(gameObject: GameObject, layer: Layer) {
         if (this.registeredGameObjectIds.indexOf(gameObject.id) !== -1) {
             // The object is already on the miniMap
             return;
@@ -109,10 +114,14 @@ export class MiniMap {
         this.registeredGameObjectIds.push(gameObject.id);
 
         const minimapIcon = gameObject.createMinimapIcon();
-        if (gameObject.constructor.name === 'Character') {
-            this.playerGroup.addChild(minimapIcon);
-        } else {
-            this.iconGroup.addChild(minimapIcon);
+        switch (layer) {
+            case Layer.CHARACTER:
+                console.log('Add character to minimap');
+                this.playerGroup.addChild(minimapIcon);
+                break;
+            case Layer.OTHER:
+                this.iconGroup.addChild(minimapIcon);
+                break;
         }
 
         // Position each icon relative to its position on the real map.

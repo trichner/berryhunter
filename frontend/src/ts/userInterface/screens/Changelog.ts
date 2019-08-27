@@ -1,9 +1,8 @@
 import * as Mustache from 'mustache';
 import * as moment from 'moment-mini';
-import {isUndefined} from '../../Utils';
+import {isDefined, isUndefined} from '../../Utils';
 import * as Events from '../../Events';
 import {createStartScreenPanel} from "./ScreenUtil";
-import {isArray} from "util";
 
 function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);
@@ -27,6 +26,18 @@ function renderChangelogs(changelogs: ChangelogVO[]): string {
     return Mustache.render(template, changelogs);
 }
 
+function validateTrelloId(trelloId: string | string[]) {
+    if (Array.isArray(trelloId)) {
+        trelloId.forEach(validateTrelloId);
+        return;
+    }
+
+    // TrelloId is a single string
+    if (!trelloId.match(/c\/[0-9a-zA-Z]{8}/)) {
+        console.warn('Trello Id "' + trelloId + '" appears to be invalid. It should look like "c/aBcD1234".');
+    }
+}
+
 function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
     let mapped: ChangelogVO[] = changelogs.map((changelog) => {
         let categories = newCategories();
@@ -36,6 +47,10 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
                 throw 'Unknown change category "' + change.category + '"';
             }
             category.changes.push(change);
+
+            if (isDefined(change.trelloId)) {
+                validateTrelloId(change.trelloId);
+            }
         });
         for (let [name, category] of categories) {
             if (category.changes.length === 0) {
