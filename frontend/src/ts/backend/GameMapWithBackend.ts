@@ -10,6 +10,7 @@ import {Resource} from '../gameObjects/Resources';
 import * as Develop from '../develop/_Develop';
 import * as Equipment from '../items/Equipment';
 import {BerryhunterApi} from './BerryhunterApi';
+import {Layer} from "../MiniMap";
 
 let Game = null;
 
@@ -78,7 +79,7 @@ export class GameMapWithBackend {
             gameObject.id = entity.id;
 
             if (gameObject.visibleOnMinimap) {
-                Game.miniMap.add(gameObject);
+                Game.miniMap.add(gameObject, Layer.OTHER);
             }
 
             if (Develop.isActive()) {

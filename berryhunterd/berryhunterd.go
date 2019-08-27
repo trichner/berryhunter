@@ -27,7 +27,9 @@ func main() {
 
 	// new game
 	var radius float32 = 20
-	var seed int64 = 0xDEADBEEF + 7
+	// For different seeds see:
+	// https://docs.google.com/spreadsheets/d/13EbpERJ05GpjUUXOp2zU4Od2FGqymeMV0F278_eBIcQ/edit#gid=0
+	var seed int64 = 0xDEADBEEF + 4
 	rnd := rand.New(rand.NewSource(seed))
 	g, err := core.NewGameWith(
 		rnd.Int63(),
@@ -101,7 +103,7 @@ func newRandomMobEntity(mobList []*mobs.MobDefinition, rnd *rand.Rand, radius fl
 	m := mob.NewMob(selected)
 	x := newRandomCoordinate(radius)
 	y := newRandomCoordinate(radius)
-	for (x * x + y * y > radius * radius) {
+	for x*x+y*y > radius*radius {
 		x = newRandomCoordinate(radius)
 		y = newRandomCoordinate(radius)
 	}
@@ -111,5 +113,5 @@ func newRandomMobEntity(mobList []*mobs.MobDefinition, rnd *rand.Rand, radius fl
 }
 
 func newRandomCoordinate(radius float32) float32 {
-    return rand.Float32()*2*radius - radius
+	return rand.Float32()*2*radius - radius
 }
