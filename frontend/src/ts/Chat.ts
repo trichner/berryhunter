@@ -76,6 +76,6 @@ Events.on('backend.validToken', function () {
     hasValidToken = true;
 });
 
-Events.on(Events.GAME_DEATH, () => {
+Events.on(Events.GAME_BEFORE_DEATH, () => {
     hide();
 });

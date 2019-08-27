@@ -315,6 +315,7 @@ export function createPlayer(id, x, y, name) {
 }
 
 export function removePlayer() {
+    Events.trigger(Events.GAME_BEFORE_DEATH, Game);
     createSpectator(player.character.getX(), player.character.getY());
     player.remove();
     player = undefined;
@@ -323,7 +324,6 @@ export function removePlayer() {
         map.clear();
     }
     state = States.RENDERING;
-    Events.trigger(Events.GAME_DEATH, Game);
 }
 
 export function createSpectator(x, y) {
