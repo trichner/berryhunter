@@ -2,6 +2,8 @@
 
 import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
+import {KeyCodes} from './input/keyboard/keys/KeyCodes';
+import * as Events from "./Events";
 
 export class LargeMap {
     mapWidth;
@@ -146,3 +148,17 @@ function update() {
         gameObject.largeMapIcon.position.y = gameObject.getY() * this.scale;
     });
 }
+
+let Game = null;
+Events.on('game.setup', game => {
+    Game = game;
+});
+
+window.addEventListener('keydown', function (event) {
+    if (Game.state !== Game.States.PLAYING) {
+        return;
+    }
+    if (event.keyCode === KeyCodes.M) {
+        document.getElementById("largeMap").classList.toggle('hidden');
+    }
+});

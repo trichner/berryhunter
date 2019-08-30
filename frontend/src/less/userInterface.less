@@ -36,6 +36,10 @@
 }
 
 #largeMap {
+	&.hidden {
+		display: block !important;
+		visibility: hidden;
+	}
 	position: absolute;
 	top: (0.1 * @uiElementHeight);
 	bottom: (1.2 * @slotSize);
