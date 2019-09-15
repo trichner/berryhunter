@@ -508,17 +508,17 @@ export const ItemsConfig = {
     // 		directions: false
     // 	}
     // },
-    IronWall: {
-        // TODO
-        icon: {file: ''},
-        graphic: {file: ''},
-        definition: require('../../../api/items/walls/iron-wall.json'),
-        type: ItemType.PLACEABLE,
-        placeable: {
-            layer: 'placeables.walls',
-            multiPlacing: true
-        }
-    },
+    // IronWall: {
+    //     // TODO
+    //     icon: {file: ''},
+    //     graphic: {file: ''},
+    //     definition: require('../../../api/items/walls/iron-wall.json'),
+    //     type: ItemType.PLACEABLE,
+    //     placeable: {
+    //         layer: 'placeables.walls',
+    //         multiPlacing: true
+    //     }
+    // },
     // IronSpikyWall: {
     // 	// TODO
     // 	icon: {file: ''},

@@ -1,0 +1,17 @@
+{
+  "None": {
+    "name": "Bare Hands",
+    "type": "DEFAULT",
+    "description": "The default 'item' if nothing is equipped.",
+    "noIcon": true
+  },
+  "WoodClub": {
+    "subtypes": [
+      "Weapon",
+      "Tool"
+    ]
+  },
+  "MysticWand": {
+    "ignore": true
+  }
+}
