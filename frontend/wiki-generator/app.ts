@@ -1,13 +1,16 @@
 import {isDefined, isUndefined} from '../src/ts/Utils';
-import _isString = require('lodash/isString');
-import _isObject = require('lodash/isObject');
 import * as path from 'path';
 import * as changeCase from 'change-case';
 import * as Mustache from 'mustache';
 import * as fs from 'fs';
 import {promises as fsPromises} from 'fs';
 import {ItemType} from '../src/ts/items/ItemType';
-import {meter, percentage, perSecond, seconds} from "./format";
+import {itemName, seconds} from "./format";
+// Special import with the SVG hook in place!
+import {ItemsConfig as items} from '../src/config/Items';
+import {KEYWORD_DATA} from "./mechanics/keywords";
+import _isString = require('lodash/isString');
+import _isObject = require('lodash/isObject');
 
 const sharp = require('sharp');
 
@@ -20,9 +23,6 @@ hook.hook('.svg', (source: string, filename: string) => {
     // \ need to be escaped with another \ to retain them through this temporary js module
     return 'module.exports = "' + filename.replace(/\\/g, '\\\\') + '";';
 });
-
-// Special import with the SVG hook in place!
-import {ItemsConfig as items} from '../src/config/Items';
 
 
 interface ItemExtra {
@@ -115,49 +115,33 @@ const itemView = Object
         }
         delete itemExtra.type;
 
-        let factors: { name: string, value: string | number }[] = [];
+        let factors: { name: string, value: string | number, link: string }[] = [];
         if (_isObject(item.definition.factors)) {
             for (let key in item.definition.factors) {
                 let name = changeCase.titleCase(key);
                 let value = item.definition.factors[key];
-                let mappedValue: string | number;
-                switch (key) {
-                    // See berryhunterd/items/itemdefinition.go type itemDefinition
-                    case 'food':
-                    case 'damage':
-                    case 'structureDamage':
-                    case 'vulnerability':
-                        mappedValue = percentage(value);
-                        break;
-                    case 'minimumYield':
-                        name = 'Yield Resistance';
-                        break;
-                    case 'durationInSeconds':
-                        name = 'Lifespan';
-                        mappedValue = seconds(value);
-                        break;
-                    case 'heatPerSecond':
-                        name = 'Heat';
-                        mappedValue = perSecond(percentage(value));
-                        break;
-                    case 'heatRadius':
-                        mappedValue = meter(value);
-                        break;
-                    case 'replenishProbabilityPerSecond':
-                        name = 'Replenishment Rate';
-                        mappedValue = perSecond(value);
-                        break;
-                    case 'yield':
-                    case 'capacity':
-                        mappedValue = value;
-                        break;
-                    default:
-                        console.error('Unexpected factor "' + key + '"');
+                let mappedValue: string | number = value;
+                let link: string = undefined;
+
+                let keyword = KEYWORD_DATA[key];
+                if (isDefined(keyword)){
+                    if (isDefined(keyword.name)) {
+                        name = keyword.name;
+                    }
+
+                    if (isDefined(keyword.formatter)){
+                        mappedValue = keyword.formatter(value);
+                    }
+
+                    link = keyword.link;
+                } else {
+                    console.error('Unexpected factor "' + key + '"');
                 }
 
                 factors.push({
                     name: name,
-                    value: mappedValue
+                    value: mappedValue,
+                    link: link
                 })
 
             }
@@ -167,15 +151,28 @@ const itemView = Object
 
         let craftTime: string = undefined;
         let materials: { item: string, count: number }[] = [];
-        if (_isObject(item.definition.recipe)) {
-            craftTime = seconds(item.definition.recipe.craftTimeInSeconds);
-            if (Array.isArray(item.definition.recipe.materials)) {
-                materials = item.definition.recipe.materials;
+        let tools: string = undefined;
+        let recipe = item.definition.recipe;
+        if (_isObject(recipe)) {
+            craftTime = seconds(recipe.craftTimeInSeconds);
+            if (Array.isArray(recipe.materials)) {
+                materials = recipe.materials;
                 materials.forEach(material => {
-                    material.item = changeCase.titleCase(material.item)
+                    material.item = itemName(material.item)
                 });
             } else {
                 console.error('Missing recipe.materials for ' + name);
+            }
+
+            if (Array.isArray( recipe.tools)) {
+                let mappedTools = recipe.tools.map(itemName);
+                if (mappedTools.length === 1) {
+                    tools = mappedTools[0];
+                } else {
+                    tools = mappedTools.slice(0, mappedTools.length - 1).join(', ');
+                    tools += ' or ';
+                    tools += mappedTools[mappedTools.length - 1]
+                }
             }
         } else {
             // No error as items are allowed to have no recipe
@@ -187,11 +184,12 @@ const itemView = Object
         delete itemExtra.name;
 
         let itemView = {
-            name: changeCase.titleCase(name),
+            name: itemName(name),
             iconFile: iconFile,
             type: type,
             factors: factors,
             materials: materials,
+            tools: tools,
             craftTime: craftTime,
         };
 

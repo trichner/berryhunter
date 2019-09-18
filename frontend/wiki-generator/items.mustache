@@ -5,18 +5,20 @@
         <th>Type</th>
         <th>Factors</th>
         <th>Recipe</th>
+        <th>Required Building</th>
         <th>Craft Time</th>
     </tr>
     {{#.}}
         <tr>
             <td>{{name}}</td>
             <td>{{#iconFile}}[[File:{{iconFile}}]]{{/iconFile}}{{^iconFile}}No icon{{/iconFile}}</td>
-            <td><b>{{type}}</b>
-                <p>{{subtypes}}</p></td>
+            <td><b>{{type}}</b>{{#subtypes}}
+                <p>{{subtypes}}</p>{{/subtypes}}</td>
             <td>
                 <ul>
                     {{#factors}}
-                        <li>{{name}}: {{value}}</li>
+                        {{#link}}<li>[[{{link}}|{{name}}]]: {{value}}</li>{{/link}}
+                        {{^link}}<li>{{name}}: {{value}}</li>{{/link}}
                     {{/factors}}
                 </ul>
             </td>
@@ -27,6 +29,7 @@
                     {{/materials}}
                 </ul>
             </td>
+            <td>{{tools}}</td>
             <td>{{craftTime}}</td>
         </tr>
         <tr>
