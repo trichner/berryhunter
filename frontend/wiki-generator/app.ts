@@ -1,16 +1,13 @@
 import {isDefined, isUndefined} from '../src/ts/Utils';
+import _isString = require('lodash/isString');
+import _isObject = require('lodash/isObject');
 import * as path from 'path';
 import * as changeCase from 'change-case';
 import * as Mustache from 'mustache';
 import * as fs from 'fs';
 import {promises as fsPromises} from 'fs';
 import {ItemType} from '../src/ts/items/ItemType';
-import {itemName, seconds} from "./format";
-// Special import with the SVG hook in place!
-import {ItemsConfig as items} from '../src/config/Items';
-import {KEYWORD_DATA} from "./mechanics/keywords";
-import _isString = require('lodash/isString');
-import _isObject = require('lodash/isObject');
+import {itemName, meter, percentage, perSecond, seconds} from "./format";
 
 const sharp = require('sharp');
 
@@ -23,6 +20,10 @@ hook.hook('.svg', (source: string, filename: string) => {
     // \ need to be escaped with another \ to retain them through this temporary js module
     return 'module.exports = "' + filename.replace(/\\/g, '\\\\') + '";';
 });
+
+// Special import with the SVG hook in place!
+import {ItemsConfig as items} from '../src/config/Items';
+import {KEYWORD_DATA} from "./mechanics/keywords";
 
 
 interface ItemExtra {

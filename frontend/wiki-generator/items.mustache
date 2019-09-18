@@ -1,39 +1,49 @@
-<table class="article-table">
+{{#.}}
+<table class="article-table" style="margin-bottom: 4em">
     <tr>
-        <th>Name</th>
-        <th>Icon</th>
+        <td rowspan="3"
+            style="width: 30px;
+                   height: 100%;
+                   padding: 0;
+                   background-color: forestgreen;
+                   border-radius: 20px 0 0 20px;
+                   border-bottom: none">
+        </td>
+        <td colspan="5">
+            {{#iconFile}}[[File:{{iconFile}}|left]]{{/iconFile}}
+            {{^iconFile}}<div style="width: 128px; height: 128px; float: left">No icon</div>{{/iconFile}}
+
+            <p style="font-size: larger">{{name}}</p>
+            <p>{{description}}</p>
+        </td>
+    </tr>
+    <tr>
         <th>Type</th>
         <th>Factors</th>
         <th>Recipe</th>
         <th>Required Building</th>
         <th>Craft Time</th>
     </tr>
-    {{#.}}
-        <tr>
-            <td>{{name}}</td>
-            <td>{{#iconFile}}[[File:{{iconFile}}]]{{/iconFile}}{{^iconFile}}No icon{{/iconFile}}</td>
-            <td><b>{{type}}</b>{{#subtypes}}
-                <p>{{subtypes}}</p>{{/subtypes}}</td>
-            <td>
-                <ul>
-                    {{#factors}}
-                        {{#link}}<li>[[{{link}}|{{name}}]]: {{value}}</li>{{/link}}
-                        {{^link}}<li>{{name}}: {{value}}</li>{{/link}}
-                    {{/factors}}
-                </ul>
-            </td>
-            <td>
-                <ul>
-                    {{#materials}}
-                        <li>{{count}} {{item}}</li>
-                    {{/materials}}
-                </ul>
-            </td>
-            <td>{{tools}}</td>
-            <td>{{craftTime}}</td>
-        </tr>
-        <tr>
-            <td colspan="6">{{description}}</td>
-        </tr>
-    {{/.}}
+    <tr>
+        <td><b>{{type}}</b>{{#subtypes}}
+            <p>{{subtypes}}</p>{{/subtypes}}</td>
+        <td>
+            <ul>
+                {{#factors}}
+                    {{#link}}<li>[[{{link}}|{{name}}]]: {{value}}</li>{{/link}}
+                    {{^link}}<li>{{name}}: {{value}}</li>{{/link}}
+                {{/factors}}
+            </ul>
+        </td>
+        <td>
+            <ul>
+                {{#materials}}
+                    <li>{{count}} {{item}}</li>
+                {{/materials}}
+            </ul>
+        </td>
+        <td>{{tools}}</td>
+        <td>{{craftTime}}</td>
+    </tr>
 </table>
+{{/.}}
