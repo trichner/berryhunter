@@ -11,6 +11,190 @@
       "Tool"
     ]
   },
+  "StoneTool": {
+    "subtypes": [
+      "Tool"
+    ]
+  },
+  "BronzeTool": {
+    "subtypes": [
+      "Tool"
+    ]
+  },
+  "IronTool": {
+    "subtypes": [
+      "Tool"
+    ]
+  },
+  "TitaniumTool": {
+    "subtypes": [
+      "Tool"
+    ]
+  },
+  "StoneClub": {
+    "subtypes": [
+      "Weapon",
+      "Slashing"
+    ]
+  },
+  "BronzeSword": {
+    "subtypes": [
+      "Weapon",
+      "Slashing"
+    ]
+  },
+  "IronSword": {
+    "subtypes": [
+      "Weapon",
+      "Slashing"
+    ]
+  },
+  "TitaniumSword": {
+    "subtypes": [
+      "Weapon",
+      "Slashing"
+    ]
+  },
+  "StoneSpear": {
+    "subtypes": [
+      "Weapon",
+      "Piercing"
+    ]
+  },
+  "BronzeSpear": {
+    "subtypes": [
+      "Weapon",
+      "Piercing"
+    ]
+  },
+  "IronSpear": {
+    "subtypes": [
+      "Weapon",
+      "Piercing"
+    ]
+  },
+  "TitaniumSpear": {
+    "subtypes": [
+      "Weapon",
+      "Piercing"
+    ]
+  },
+  "WoodHammer": {
+    "subtypes": [
+      "Weapon",
+      "Demolition"
+    ]
+  },
+  "StoneHammer": {
+    "subtypes": [
+      "Weapon",
+      "Demolition"
+    ]
+  },
+  "BronzeHammer": {
+    "subtypes": [
+      "Weapon",
+      "Demolition"
+    ]
+  },
+  "IronHammer": {
+    "subtypes": [
+      "Weapon",
+      "Demolition"
+    ]
+  },
+  "Campfire": {
+    "subtypes": [
+      "Heat source"
+    ]
+  },
+  "BigCampfire": {
+    "subtypes": [
+      "Heat source"
+    ]
+  },
+  "Workbench": {
+    "subtypes": [
+      "Craft building"
+    ]
+  },
+  "WorkbenchConstruction": {
+    "name": "Construction Workbench",
+    "subtypes": [
+      "Craft building"
+    ]
+  },
+  "Furnace": {
+    "subtypes": [
+      "Heat source"
+    ]
+  },
+  "WoodWall": {
+    "subtypes": [
+      "Wall"
+    ]
+  },
+  "StoneWall": {
+    "subtypes": [
+      "Wall"
+    ]
+  },
+  "BronzeWall": {
+    "subtypes": [
+      "Wall"
+    ]
+  },
+  "Berry": {
+    "subtypes": [
+      "Food",
+      "Raw"
+    ]
+  },
+  "CookedMeat": {
+    "name": "Roasted Meat",
+    "subtypes": [
+      "Food",
+      "Prepared"
+    ]
+  },
+  "RawMeat": {
+    "subtypes": [
+      "Food",
+      "Raw"
+    ]
+  },
+  "BerryBowl": {
+    "subtypes": [
+      "Food",
+      "Prepared"
+    ]
+  },
+  "Flower": {
+  },
+  "Wood": {
+    "ignore": true,
+    "//": "Explained in Resources"
+  },
+  "Stone": {
+    "ignore": true,
+    "//": "Explained in Resources"
+  },
+  "Bronze": {
+    "ignore": true,
+    "//": "Explained in Resources"
+  },
+  "Iron": {
+    "ignore": true,
+    "//": "Explained in Resources"
+  },
+  "Titanium": {
+    "ignore": true,
+    "//": "Explained in Resources"
+  },
+  "Feather": {
+    "ignore": true,
+    "//": "Explained in Animals"
+  },
   "MysticWand": {
     "ignore": true
   }

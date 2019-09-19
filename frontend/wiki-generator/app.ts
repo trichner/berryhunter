@@ -62,10 +62,6 @@ const itemView = Object
             return false;
         }
 
-        if (item['type'] === ItemType.RESOURCE) {
-            return false;
-        }
-
         return true;
     })
     .map(([name, item]) => {

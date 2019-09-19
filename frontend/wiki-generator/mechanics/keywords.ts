@@ -39,12 +39,12 @@ export const KEYWORD_DATA: { [key: string]: { name?: string, formatter?: (number
     'replenishProbabilityPerSecond': {
         'name': 'Replenishment Rate',
         formatter: perSecond,
-        link: 'Mechanics#Gathering_Resources'
+        link: 'Mechanics#Resource_Replenishment'
     },
     'yield': {
         link: 'Mechanics#Gathering_Resources'
     },
     'capacity': {
-        link: 'Mechanics#Gathering_Resources'
+        link: 'Mechanics#Resource_Replenishment'
     }
 };
