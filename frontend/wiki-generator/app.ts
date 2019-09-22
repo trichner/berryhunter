@@ -1,18 +1,12 @@
 import {isDefined, isUndefined} from '../src/ts/Utils';
 import _isString = require('lodash/isString');
 import _isObject = require('lodash/isObject');
-import * as path from 'path';
 import * as changeCase from 'change-case';
-import * as Mustache from 'mustache';
-import * as fs from 'fs';
-import {promises as fsPromises} from 'fs';
-import {ItemType} from '../src/ts/items/ItemType';
-import {itemName, meter, percentage, perSecond, seconds} from "./format";
-
-const sharp = require('sharp');
-
+import {itemName, seconds} from "./format";
 const itemExtras = require('./items/extra-data.json');
-
+import {render} from "./render";
+import {ImageConverter} from "./imageConverter";
+import {mapFactors, MappedFactor} from "./factors";
 const hook = require('node-hook');
 
 // For SVG files just return the file name - the images have to uploaded by hand into the wiki
@@ -23,8 +17,6 @@ hook.hook('.svg', (source: string, filename: string) => {
 
 // Special import with the SVG hook in place!
 import {ItemsConfig as items} from '../src/config/Items';
-import {KEYWORD_DATA} from "./mechanics/keywords";
-
 
 interface ItemExtra {
     ignore: boolean
@@ -42,17 +34,7 @@ interface ItemExtra {
     materials: any
 }
 
-// TODO values to explain:
-//   vulnerability
-//   yield
-//   replenishProbabilityPerS
-// --> maybe link every factor to it's according mechanic page
-
-function getImageExportName(fileName: string): string {
-    return changeCase.pascalCase(path.parse(fileName).name) + '.png';
-}
-
-let imagesToConvert: { input: string, output: string }[] = [];
+let imageConverter = new ImageConverter();
 
 const itemView = Object
     .entries(items)
@@ -94,11 +76,7 @@ const itemView = Object
         if (!itemExtra.noIcon) {
             if (isDefined(item['icon']) &&
                 _isString(item['icon'].file)) {
-                iconFile = getImageExportName(item['icon'].file);
-                imagesToConvert.push({
-                    input: item['icon'].file,
-                    output: iconFile
-                })
+                iconFile = imageConverter.convert(item['icon'].file);
             } else {
                 console.error('Missing icon file for ' + name);
             }
@@ -112,36 +90,9 @@ const itemView = Object
         }
         delete itemExtra.type;
 
-        let factors: { name: string, value: string | number, link: string }[] = [];
+        let factors: MappedFactor[];
         if (_isObject(item.definition.factors)) {
-            for (let key in item.definition.factors) {
-                let name = changeCase.titleCase(key);
-                let value = item.definition.factors[key];
-                let mappedValue: string | number = value;
-                let link: string = undefined;
-
-                let keyword = KEYWORD_DATA[key];
-                if (isDefined(keyword)){
-                    if (isDefined(keyword.name)) {
-                        name = keyword.name;
-                    }
-
-                    if (isDefined(keyword.formatter)){
-                        mappedValue = keyword.formatter(value);
-                    }
-
-                    link = keyword.link;
-                } else {
-                    console.error('Unexpected factor "' + key + '"');
-                }
-
-                factors.push({
-                    name: name,
-                    value: mappedValue,
-                    link: link
-                })
-
-            }
+            factors = mapFactors(item.definition.factors)
         } else {
             console.error('Missing definition.factors for ' + name);
         }
@@ -205,36 +156,4 @@ const itemView = Object
         return itemView;
     });
 
-
-fsPromises.readFile(__dirname + '/items.mustache', 'utf8')
-    .then((template: string) => {
-        return Mustache.render(
-            template,
-            itemView
-        );
-    })
-    .then((rendered: string) => {
-        if (!fs.existsSync(__dirname + '/output')) {
-            fs.mkdirSync(__dirname + '/output');
-        }
-
-        return fsPromises.writeFile(__dirname + '/output/items.wiki.html', rendered, 'utf8');
-    })
-    .then(() => {
-        if (!fs.existsSync(__dirname + '/output/images')) {
-            fs.mkdirSync(__dirname + '/output/images');
-        }
-
-        return Promise.all(imagesToConvert.map((imageToConvert) => {
-            return sharp(imageToConvert.input)
-                .resize({width: 128})
-                .png({progressive: true})
-                .toFile(__dirname + '/output/images/' + imageToConvert.output)
-        }));
-    })
-    .catch(err => {
-        console.error(err);
-    })
-    .then(() => {
-        console.info('Successfully written output to ./output!');
-    });
+render('items.mustache', 'items', itemView, imageConverter);

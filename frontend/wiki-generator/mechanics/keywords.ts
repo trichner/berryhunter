@@ -1,13 +1,18 @@
-import {meter, percentage, perSecond, seconds} from "../format";
+import {chance, meter, percentage, perSecond, seconds} from "../format";
+import {BasicConfig} from "../../src/config/Basic";
 
 // See berryhunterd/items/itemdefinition.go type itemDefinition
-export const KEYWORD_DATA: { [key: string]: { name?: string, formatter?: (number) => string, link?: string, } } = {
+export const KEYWORD_DATA: { [key: string]: { name?: string, formatter?: (number) => string, link?: string, ignore?: boolean } } = {
     'food': {
         formatter: percentage,
         link: 'Mechanics#Food_.26_Starvation'
     },
     'damage': {
         formatter: percentage,
+        link: 'Mechanics#Health_.26_Damage'
+    },
+    'damageFraction': {
+        formatter: value => perSecond(percentage(value * BasicConfig.SERVER_TICKRATE)),
         link: 'Mechanics#Health_.26_Damage'
     },
     'structureDamage': {
@@ -20,7 +25,7 @@ export const KEYWORD_DATA: { [key: string]: { name?: string, formatter?: (number
     },
     'minimumYield': {
         'name': 'Yield Resistance',
-        link: 'Mechanics#Gathering_Resources'
+        link: 'Mechanics#Resource_Gathering_.26_Regrow'
     },
     'durationInSeconds': {
         'name': 'Lifespan',
@@ -38,13 +43,22 @@ export const KEYWORD_DATA: { [key: string]: { name?: string, formatter?: (number
     },
     'replenishProbabilityPerSecond': {
         'name': 'Replenishment Rate',
-        formatter: perSecond,
-        link: 'Mechanics#Resource_Replenishment'
+        formatter: (value) => perSecond(chance(value)),
+        link: 'Mechanics#Resource_Gathering_.26_Regrow'
     },
     'yield': {
-        link: 'Mechanics#Gathering_Resources'
+        link: 'Mechanics#Resource_Gathering_.26_Regrow'
     },
     'capacity': {
-        link: 'Mechanics#Resource_Replenishment'
+        link: 'Mechanics#Resource_Gathering_.26_Regrow'
+    },
+    'deltaPhi': {
+        ignore: true
+    },
+    'turnRate': {
+        ignore: true
+    },
+    'speed': {
+        formatter: value => percentage(value) + ' of character speed'
     }
 };

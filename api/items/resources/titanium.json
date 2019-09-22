@@ -3,8 +3,8 @@
   "name": "Titanium",
   "type": "RESOURCE",
   "factors": {
-    "replenishProbabilityPerSecond": 0.25,
     "minimumYield": 4,
+    "replenishProbabilityPerSecond": 0.25,
     "capacity": 15
   },
   "body": {

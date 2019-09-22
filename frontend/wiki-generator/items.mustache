@@ -28,18 +28,14 @@
         <td><b>{{type}}</b>{{#subtypes}}
             <p>{{subtypes}}</p>{{/subtypes}}</td>
         <td>
-            <ul>
-                {{#factors}}
-                    {{#link}}<li>[[{{link}}|{{name}}]]: {{value}}</li>{{/link}}
-                    {{^link}}<li>{{name}}: {{value}}</li>{{/link}}
-                {{/factors}}
+            <ul>{{#factors}}{{#link}}
+                <li>[[{{link}}|{{name}}]]: {{value}}</li>{{/link}}{{^link}}
+                <li>{{name}}: {{value}}</li>{{/link}}{{/factors}}
             </ul>
         </td>
         <td>
-            <ul>
-                {{#materials}}
-                    <li>{{count}} {{item}}</li>
-                {{/materials}}
+            <ul>{{#materials}}
+                <li>{{count}} {{item}}</li>{{/materials}}
             </ul>
         </td>
         <td>{{tools}}</td>
@@ -47,3 +43,5 @@
     </tr>
 </table>
 {{/.}}
+
+[[Category:Basics]]

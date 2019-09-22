@@ -3,8 +3,8 @@
   "name": "Wood",
   "type": "RESOURCE",
   "factors": {
-    "replenishProbabilityPerSecond": 0.6,
     "minimumYield": 0,
+    "replenishProbabilityPerSecond": 0.6,
     "capacity": 50
   },
   "body": {
