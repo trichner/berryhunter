@@ -14,15 +14,13 @@
                 <p style="font-size: larger">{{name}}</p>
                 <p>{{description}}</p>
             </td>
-            <td rowspan="3"><b>Drops</b>
-                {{#drops}}<div>{{#text}}<div>{{text}}</div>{{/text}}[[File:{{image}}|80px|{{name}}]]</div>{{/drops}}
-            </td>
         </tr>
         <tr>
             <th>Factors</th>
             <th>Size</th>
             <th>Damage</th>
             <th>Occurrence</th>
+            <th>Drops</th>
         </tr>
         <tr>
             <td>
@@ -34,6 +32,9 @@
             <td>{{size}}</td>
             <td>{{damage}}{{^damage}}harmless{{/damage}}</td>
             <td>{{occurrence}}</td>
+            <td>{{#drops}}
+                <div style="float:left">[[File:{{image}}|thumb|none|80px|{{text}}{{^text}}{{name}}{{/text}}]]</div>{{/drops}}
+            </td>
         </tr>
     </table>
 {{/.}}
