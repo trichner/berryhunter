@@ -50,25 +50,13 @@ const animalsView = animals.map((animal) => {
                 // return;
             }
 
+            let dropName = itemName(drop.item);
             let mappedDrop = {
-                text: undefined,
-                name: itemName(drop.item),
+                text: (drop.count === 1 ? '' : drop.count + 'x ') + dropName,
+                name: dropName,
                 image: imageConverter.convert(itemCfg.icon.file)
             };
-
-            for (let i = 0; i < drop.count; i++) {
-                if (i === 0) {
-                    let text: string;
-                    if (drop.count === 1) {
-                        text = mappedDrop.name;
-                    } else {
-                        text = drop.count + 'x ' + mappedDrop.name;
-                    }
-                    drops.push(Object.assign({}, mappedDrop, {text: text}));
-                } else {
-                    drops.push(mappedDrop);
-                }
-            }
+            drops.push(mappedDrop);
         });
     }
 
