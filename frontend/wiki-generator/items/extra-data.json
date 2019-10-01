@@ -2,7 +2,7 @@
   "None": {
     "name": "Bare Hands",
     "type": "DEFAULT",
-    "description": "The default 'item' if nothing is equipped.",
+    "description": "The default values if no other item is equipped.",
     "noIcon": true
   },
   "WoodClub": {
