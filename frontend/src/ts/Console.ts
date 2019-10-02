@@ -25,7 +25,8 @@ const MAX_HISTORY_LENGTH = 15;
 
 const LOCAL_COMMAND_HANDLERS: { [key: string]: (parameters: string[]) => void } = {
     'define': handleDefine,
-    'list': handleList
+    'list': handleList,
+    'crash': handleCrash
 };
 
 let token = getUrlParameter('token');
@@ -97,10 +98,18 @@ export function registerLocalCommandHandler(command: string, handler: (parameter
     LOCAL_COMMAND_HANDLERS[command] = handler;
 }
 
+/**
+ * @param command
+ * @param isAutoCommand hides the command from the history
+ */
 export function run(command: string, isAutoCommand: boolean = true) {
     onCommand(command, isAutoCommand);
 }
 
+/**
+ * @param command
+ * @param isAutoCommand hides the command from the history
+ */
 function onCommand(command: string, isAutoCommand: boolean) {
     // Ignore empty commands
     if (!command) {
@@ -225,6 +234,15 @@ function handleListMacros() {
     for (const [macroName, commands] of Object.entries(macros)) {
         log(macroName + ' => ' + commands);
     }
+}
+
+function handleCrash() {
+    // Crashing the server in two simple steps
+    // 1: Kill yourself
+    onCommand('kill', true);
+    // 2: close connection by navigating away / reloading the page
+    // window.location.reload();
+    window.location.assign('about:blank');
 }
 
 function milliseconds2string(ms) {
