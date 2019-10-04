@@ -19,8 +19,9 @@ export function start() {
     );
 
     import('../Game').then(Game => {
-        updateVitalSignsFn = Game.player.vitalSigns.updateFromBackend.bind(Game.player.vitalSigns);
-        Game.player.vitalSigns.updateFromBackend = () => {
+        let game = Game.instance;
+        updateVitalSignsFn = game.player.vitalSigns.updateFromBackend.bind(game.player.vitalSigns);
+        game.player.vitalSigns.updateFromBackend = () => {
         };
     });
 }
@@ -31,8 +32,7 @@ export function stop() {
 
     if (isFunction(updateVitalSignsFn)) {
         import('../Game').then(Game => {
-
-            Game.player.vitalSigns.updateFromBackend = updateVitalSignsFn;
+            Game.instance.player.vitalSigns.updateFromBackend = updateVitalSignsFn;
         });
     }
 }
@@ -54,8 +54,9 @@ export function showPercentage(percent) {
     stop();
 
     import('../Game').then(Game => {
-        updateVitalSignsFn = Game.player.vitalSigns.updateFromBackend.bind(Game.player.vitalSigns);
-        Game.player.vitalSigns.updateFromBackend = () => {
+        let game = Game.instance;
+        updateVitalSignsFn = game.player.vitalSigns.updateFromBackend.bind(game.player.vitalSigns);
+        game.player.vitalSigns.updateFromBackend = () => {
         };
 
         let backendValues = {};

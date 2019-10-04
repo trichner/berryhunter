@@ -3,8 +3,10 @@
 import * as NameGenerator from './NameGenerator';
 import * as Events from "./Events";
 import {Account} from "./Account";
+import {IBackend} from "./interfaces/IBackend";
+import {JoinMessage} from "./backend/messages/outgoing/JoinMessage";
 
-let Backend = null;
+let Backend: IBackend = null;
 Events.on('backend.setup', backend => {
     Backend = backend;
 });
@@ -66,7 +68,7 @@ export function hash(name, max) {
 function onSubmit(event, inputElement, screen) {
     event.preventDefault();
 
-    let name = inputElement.value;
+    let name: string = inputElement.value;
     if (!name) {
         name = inputElement.getAttribute('placeholder');
         remove();
@@ -77,9 +79,7 @@ function onSubmit(event, inputElement, screen) {
     name = name.substr(0, MAX_LENGTH);
 
 
-    Backend.sendJoin({
-        playerName: name
-    });
+    new JoinMessage(name).send();
 
     Events.trigger('game.join', screen);
 }

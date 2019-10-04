@@ -1,12 +1,13 @@
 'use strict';
 
 import {GameObject} from '../gameObjects/_GameObject';
-import * as Develop from '../develop/_Develop';
 import * as PIXI from 'pixi.js';
 import {hasAABB} from './AABBs';
 import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
+import {Develop} from "./_Develop";
 
-let Game = null;
+let Game: IGame = null;
 Events.on('game.setup', game => {
     Game = game;
 });
@@ -37,7 +38,7 @@ export class DebugCircle extends GameObject {
     createShape(x, y) {
         let circle = new PIXI.Graphics();
         circle.lineColor = 0xFFFF00;
-        circle.lineWidth = Develop.settings.linewidth;
+        circle.lineWidth = Develop.get().settings.linewidth;
         circle.drawCircle(x, y, this.size / 2);
         return circle;
     }

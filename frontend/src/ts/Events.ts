@@ -88,6 +88,7 @@ export function triggerOneTime(event, payload?) {
 }
 
 export const GAME_SETUP = 'game.setup';
+export const GAME_AFTER_SETUP = 'game.afterSetup';
 export const GAME_PLAYING = 'game.playing';
 export const GAME_BEFORE_DEATH = 'game.death';
 export const ENDSCREEN_SHOWN = 'endscreen.shown';

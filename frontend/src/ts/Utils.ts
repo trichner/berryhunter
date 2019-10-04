@@ -1,6 +1,7 @@
 'use strict';
 
 import _isString = require('lodash/isString');
+import {radians} from "./interfaces/Types";
 
 /*
  http://stackoverflow.com/a/3885844
@@ -48,7 +49,7 @@ export function removeElement(array, element) {
 }
 
 export const TwoDimensional = {
-    angleBetween: function (x1, y1, x2, y2) {
+    angleBetween: function (x1, y1, x2, y2): radians {
         let atan2 = Math.atan2(y1 - y2, x1 - x2);
         return (atan2 < 0 ? Math.PI * 2 + atan2 : atan2);
     },

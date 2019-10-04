@@ -5,6 +5,7 @@ import {BasicConfig as Constants} from '../../config/Basic';
 import {Vector} from '../Vector';
 import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../Utils';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
+import {radians} from "../interfaces/Types";
 
 
 let movementInterpolatedObjects = new Set();
@@ -139,7 +140,7 @@ export class GameObject {
         return this.getPosition().y;
     }
 
-    setRotation(rotation) {
+    setRotation(rotation: radians) {
         if (isUndefined(rotation)) {
             return;
         }

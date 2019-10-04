@@ -2,9 +2,7 @@
 
 import * as Events from './Events';
 import {BasicConfig as Constants} from '../config/Basic';
-import * as Develop from './develop/_Develop';
 import * as Equipment from './items/Equipment';
-import * as Backend from './backend/Backend';
 import * as Console from './Console';
 import * as Chat from './Chat';
 import {isDefined, isUndefined, TwoDimensional} from './Utils';
@@ -12,10 +10,21 @@ import * as Tock from 'tocktimer';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 import {Character} from "./gameObjects/Character";
+import {GameState, IGame} from "./interfaces/IGame";
+import {IBackend} from "./interfaces/IBackend";
+import {radians} from "./interfaces/Types";
+import {InputAction, InputMessage} from "./backend/messages/outgoing/InputMessage";
+import {Vector} from "./Vector";
+import {Develop} from "./develop/_Develop";
 
-let Game = null;
+let Game: IGame = null;
 Events.on('game.setup', game => {
     Game = game;
+});
+
+let Backend: IBackend = null;
+Events.on('backend.setup', (backend: IBackend) => {
+    Backend = backend;
 });
 
 let consoleCooldown = 0;
@@ -37,10 +46,7 @@ class Keys {
     }
 }
 
-interface Action {
-    item,
-    actionType: BerryhunterApi.ActionType
-}
+
 
 export class Controls {
     isCraftInProgress: () => boolean;
@@ -57,7 +63,7 @@ export class Controls {
     pauseKeys = new Keys(KeyCodes.P);
     hitAnimationTick: number = 0;
     clock: Tock;
-    inventoryAction: Action;
+    inventoryAction: InputAction;
     updateTime: number;
 
     /**
@@ -130,19 +136,19 @@ export class Controls {
         let inputManager = Game.input;
         inputManager.update(Date.now());
 
-        if (Game.state !== Game.States.PLAYING) {
+        if (Game.state !== GameState.PLAYING) {
             return;
         }
 
         if (Develop.isActive()) {
             if (isUndefined(this.updateTime)) {
                 this.updateTime = this.clock.lap();
-                Develop.logClientTickRate(this.updateTime);
+                Develop.get().logClientTickRate(this.updateTime);
             } else {
                 let currentTime = this.clock.lap();
                 let timeSinceUpdate = currentTime - this.updateTime;
                 this.updateTime = currentTime;
-                Develop.logClientTickRate(timeSinceUpdate);
+                Develop.get().logClientTickRate(timeSinceUpdate);
             }
 
             // Pausing is only available in Develop mode
@@ -160,10 +166,7 @@ export class Controls {
             consoleCooldown--;
         }
 
-        let movement = {
-            x: 0,
-            y: 0,
-        };
+        let movement = new Vector();
 
         if (this.upKeys.isDown) {
             movement.y -= 1;
@@ -178,7 +181,7 @@ export class Controls {
             movement.x += 1;
         }
 
-        let action: Action = null;
+        let action: InputAction = null;
         if (this.hitAnimationTick) {
             // Make sure tick 0 gets passed to the character to finish animation
             this.hitAnimationTick--;
@@ -219,11 +222,7 @@ export class Controls {
             }
         }
 
-        let input = {
-            rotation: undefined,
-            movement: null,
-            action: null,
-        };
+        let input = new InputMessage();
         let hasInput = false;
 
         if (Constants.ALWAYS_VIEW_CURSOR) {
@@ -263,7 +262,7 @@ export class Controls {
                 input.rotation = this.character.getRotation();
             }
 
-            Backend.sendInputTick(input);
+            input.send();
         }
     }
 
@@ -274,7 +273,7 @@ export class Controls {
             let characterX = Game.player.camera.getScreenX(this.character.getX());
             let characterY = Game.player.camera.getScreenY(this.character.getY());
 
-            let rotation = TwoDimensional.angleBetween(
+            let rotation: radians = TwoDimensional.angleBetween(
                 pointer.x,
                 pointer.y,
                 characterX,

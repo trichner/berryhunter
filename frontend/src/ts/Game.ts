@@ -1,9 +1,8 @@
 'use strict';
 
 import * as PIXI from 'pixi.js';
-import * as Backend from './backend/Backend';
+import {Backend} from "./backend/Backend";
 import {GameMapWithBackend} from './backend/GameMapWithBackend';
-import * as Develop from './develop/_Develop';
 import {MiniMap} from './MiniMap';
 import * as DayCycle from './DayCycle';
 import {Player} from './Player';
@@ -16,342 +15,350 @@ import {BasicConfig as Constants} from '../config/Basic';
 import {InputManager} from './input/InputManager';
 import * as Events from './Events';
 import {isDefined} from './Utils';
-import {Welcome} from "./backend/Welcome";
+import {WelcomeMessage} from "./backend/messages/incoming/WelcomeMessage";
 import * as Console from './Console';
 import {Camera} from './Camera';
 import {VitalSigns} from './VitalSigns';
 import * as Recipes from './items/Recipes';
 import * as Scoreboard from './scores/Scoreboard';
 import * as GroundTextureManager from './groundTextures/GroundTextureManager';
-// Assign all export in this file to a single variable to be passed into sub modules.
-import * as Game from './Game';
-
-export const States = {
-    INITIALIZING: 'INITIALIZING',
-    RENDERING: 'RENDERING',
-    PLAYING: 'PLAYING'
-};
+import {GameState, IGame} from "./interfaces/IGame";
+import {GameObjectId} from "./interfaces/Types";
+import {GraphicsConfig} from "../config/Graphics";
+import {IBackend} from "./interfaces/IBackend";
+import {Develop} from "./develop/_Develop";
 
 
-export let state = States.INITIALIZING;
+export let instance: Game;
 
-export let renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
-export let width, height;
-export let centerX, centerY;
-export let layers;
-export let stage;
-export let cameraGroup: PIXI.Container;
+export class Game implements IGame {
 
-export let map: GameMapWithBackend = null;
-export let miniMap: MiniMap = null;
+    public state = GameState.INITIALIZING;
 
-export let domElement: HTMLCanvasElement;
-export let input;
+    public renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
+    public width: number;
+    public height: number;
+    public centerX: number;
+    public centerY: number;
+    public layers;
+    public stage: PIXI.Container;
+    public cameraGroup: PIXI.Container;
 
-// TODO merge with GameState?
-export let started;
-export let paused;
-export let playing;
+    public map: GameMapWithBackend = null;
+    public miniMap: MiniMap = null;
 
-export let timeDelta;
-let _lastFrame;
+    public domElement: HTMLCanvasElement;
+    public input: InputManager;
 
-export let spectator: Spectator;
-export let player: Player;
+    // TODO merge with GameState?
+    public started: boolean;
+    public paused: boolean;
+    public playing: boolean;
 
-export function setup() {
+    public timeDelta: number;
+    private _lastFrame: number;
 
-    let setupPromises = [];
+    public spectator: Spectator;
+    public player: Player;
+    private backend: IBackend;
 
-    // Setup backend first, as this will take some time to connect.
-    Backend.setup(Game);
-    Events.triggerOneTime(Events.GAME_SETUP, Game);
+    setup(): void {
 
-    renderer = PIXI.autoDetectRenderer({
-        antialias: true,
-        backgroundColor: 0x006030
-    });
+        let setupPromises = [];
 
-    // Fullscreen
-    renderer.view.style.position = "absolute";
-    renderer.view.style.display = "block";
-    renderer.autoResize = true;
-    resizeToWindow();
+        // Setup backend first, as this will take some time to connect.
+        this.backend = new Backend();
+        this.backend.setup(this);
+        Events.triggerOneTime(Events.GAME_SETUP, this);
 
-    //Add the canvas to the HTML document
-    document.body.insertBefore(
-        renderer.view,
-        document.body.firstChild);
+        this.renderer = PIXI.autoDetectRenderer({
+            antialias: true,
+            backgroundColor: 0x006030
+        });
 
-    width = renderer.width;
-    height = renderer.height;
+        // Fullscreen
+        this.renderer.view.style.position = "absolute";
+        this.renderer.view.style.display = "block";
+        this.renderer.autoResize = true;
+        this.resizeToWindow();
 
-    centerX = width / 2;
-    centerY = height / 2;
+        //Add the canvas to the HTML document
+        document.body.insertBefore(
+            this.renderer.view,
+            document.body.firstChild);
 
-    /**
-     * Ordered by z-index
-     */
-    layers = {
-        terrain: {
-            water: new NamedGroup('water'),
-            ground: new NamedGroup('ground'),
-            textures: new NamedGroup('textures'),
-            resourceSpots: new NamedGroup('resourceSpots'),
-        },
-        placeables: {
-            campfire: new NamedGroup('campfire'),
-            chest: new NamedGroup('chest'),
-            workbench: new NamedGroup('workbench'),
-            furnace: new NamedGroup('furnace'),
+        this.width = this.renderer.width;
+        this.height = this.renderer.height;
 
-            doors: new NamedGroup('doors'),
-            walls: new NamedGroup('walls'),
-            spikyWalls: new NamedGroup('spikyWalls'),
-        },
-        characters: new NamedGroup('characters'),
-        mobs: {
-            dodo: new NamedGroup('dodo'),
-            saberToothCat: new NamedGroup('saberToothCat'),
-            mammoth: new NamedGroup('mammoth'),
-        },
-        resources: {
-            berryBush: new NamedGroup('berryBush'),
-            minerals: new NamedGroup('minerals'),
-            trees: new NamedGroup('trees'),
-        },
-        characterAdditions: {
-            craftProgress: new NamedGroup('craftProgress'),
-            chatMessages: new NamedGroup('chatMessages'),
-        },
-        overlays: {
-            vitalSignIndicators: new NamedGroup('vitalSignIndicators')
+        this.centerX = this.width / 2;
+        this.centerY = this.height / 2;
+
+        /**
+         * Ordered by z-index
+         */
+        this.layers = {
+            terrain: {
+                water: new NamedGroup('water'),
+                ground: new NamedGroup('ground'),
+                textures: new NamedGroup('textures'),
+                resourceSpots: new NamedGroup('resourceSpots'),
+            },
+            placeables: {
+                campfire: new NamedGroup('campfire'),
+                chest: new NamedGroup('chest'),
+                workbench: new NamedGroup('workbench'),
+                furnace: new NamedGroup('furnace'),
+
+                doors: new NamedGroup('doors'),
+                walls: new NamedGroup('walls'),
+                spikyWalls: new NamedGroup('spikyWalls'),
+            },
+            characters: new NamedGroup('characters'),
+            mobs: {
+                dodo: new NamedGroup('dodo'),
+                saberToothCat: new NamedGroup('saberToothCat'),
+                mammoth: new NamedGroup('mammoth'),
+            },
+            resources: {
+                berryBush: new NamedGroup('berryBush'),
+                minerals: new NamedGroup('minerals'),
+                trees: new NamedGroup('trees'),
+            },
+            characterAdditions: {
+                craftProgress: new NamedGroup('craftProgress'),
+                chatMessages: new NamedGroup('chatMessages'),
+            },
+            overlays: {
+                vitalSignIndicators: new NamedGroup('vitalSignIndicators')
+            }
+            // UI Overlay is the highest layer, but not managed with pixi.js
+        };
+
+        this.stage = new PIXI.Container();
+
+        // Terrain Background
+        this.stage.addChild(this.layers.terrain.water);
+
+        this.cameraGroup = new NamedGroup('cameraGroup');
+        this.stage.addChild(this.cameraGroup);
+
+        // Terrain Textures moving with the camera
+        this.cameraGroup.addChild(
+            this.layers.terrain.ground,
+            this.layers.terrain.textures,
+            this.layers.terrain.resourceSpots
+        );
+
+        // Lower Placeables
+        this.cameraGroup.addChild(
+            this.layers.placeables.campfire,
+            this.layers.placeables.chest,
+            this.layers.placeables.workbench,
+            this.layers.placeables.furnace,
+            this.layers.resources.berryBush
+        );
+
+        // Characters
+        this.cameraGroup.addChild(this.layers.characters);
+
+        // Mobs
+        this.cameraGroup.addChild(
+            this.layers.mobs.dodo,
+            this.layers.mobs.saberToothCat,
+            this.layers.mobs.mammoth
+        );
+
+        // Higher Placeables
+        this.cameraGroup.addChild(
+            this.layers.placeables.doors,
+            this.layers.placeables.walls,
+            this.layers.placeables.spikyWalls
+        );
+
+        // Resources
+        this.cameraGroup.addChild(
+            this.layers.resources.minerals,
+            this.layers.resources.trees
+        );
+
+        // Character Additions
+        this.cameraGroup.addChild(
+            this.layers.characterAdditions.craftProgress,
+            this.layers.characterAdditions.chatMessages,
+        );
+
+        // Vital Sign Indicators on top of everything
+        // And not part of the night filter container
+        this.stage.addChild(this.layers.overlays.vitalSignIndicators);
+
+        this.createBackground();
+
+        Camera.setup(this);
+        VitalSigns.setup(this, this.layers.overlays.vitalSignIndicators);
+        Recipes.setup(this);
+        Scoreboard.setup();
+        GroundTextureManager.setup(this);
+
+        this.domElement = this.renderer.view;
+        GameObject.setup(this);
+        DayCycle.setup(this.domElement, [
+            this.layers.terrain.water,
+            this.layers.terrain.ground,
+            this.layers.terrain.textures,
+            this.layers.terrain.resourceSpots,
+            this.layers.placeables.chest,
+            this.layers.placeables.workbench,
+            this.layers.resources.berryBush,
+            this.layers.characters,
+            this.layers.mobs.dodo,
+            this.layers.mobs.saberToothCat,
+            this.layers.mobs.mammoth,
+            this.layers.placeables.doors,
+            this.layers.placeables.walls,
+            this.layers.placeables.spikyWalls,
+            this.layers.resources.minerals,
+            this.layers.resources.trees,
+        ]);
+
+        this.input = new InputManager({
+            inputKeyboard: true,
+            inputKeyboardEventTarget: window,
+
+            inputMouse: true,
+            inputMouseEventTarget: document.documentElement,
+            inputMouseCapture: true,
+
+            inputTouch: true,
+            inputTouchEventTarget: document.documentElement,
+            inputTouchCapture: true,
+
+            inputGamepad: false,
+        });
+        this.input.boot();
+
+        // Disable context menu on right click to use the right click ingame
+        document.body.addEventListener('contextmenu', (event) => {
+            if (event.target === this.domElement || this.domElement.contains(event.target as Node)) {
+                event.preventDefault();
+            }
+        });
+
+
+        UserInterface.setup(this);
+
+        /*
+         * Initializing modules that require an initialized UI
+         */
+
+        Chat.setup(this, Backend);
+
+        if (Develop.isActive()) {
+            Develop.get().afterSetup(this);
         }
-        // UI Overlay is the highest layer, but not managed with pixi.js
-    };
-
-    stage = new PIXI.Container();
-
-    // Terrain Background
-    stage.addChild(layers.terrain.water);
-
-    cameraGroup = new NamedGroup('cameraGroup');
-    stage.addChild(cameraGroup);
-
-    // Terrain Textures moving with the camera
-    cameraGroup.addChild(
-        layers.terrain.ground,
-        layers.terrain.textures,
-        layers.terrain.resourceSpots
-    );
-
-    // Lower Placeables
-    cameraGroup.addChild(
-        layers.placeables.campfire,
-        layers.placeables.chest,
-        layers.placeables.workbench,
-        layers.placeables.furnace,
-        layers.resources.berryBush
-    );
-
-    // Characters
-    cameraGroup.addChild(layers.characters);
-
-    // Mobs
-    cameraGroup.addChild(
-        layers.mobs.dodo,
-        layers.mobs.saberToothCat,
-        layers.mobs.mammoth
-    );
-
-    // Higher Placeables
-    cameraGroup.addChild(
-        layers.placeables.doors,
-        layers.placeables.walls,
-        layers.placeables.spikyWalls
-    );
-
-    // Resources
-    cameraGroup.addChild(
-        layers.resources.minerals,
-        layers.resources.trees
-    );
-
-    // Character Additions
-    cameraGroup.addChild(
-        layers.characterAdditions.craftProgress,
-        layers.characterAdditions.chatMessages,
-    );
-
-    // Vital Sign Indicators on top of everything
-    // And not part of the night filter container
-    stage.addChild(layers.overlays.vitalSignIndicators);
-
-    createBackground();
-
-    Camera.setup(Game);
-    VitalSigns.setup(Game, layers.overlays.vitalSignIndicators);
-    Recipes.setup(Game);
-    Scoreboard.setup();
-    GroundTextureManager.setup();
-
-    domElement = renderer.view;
-    GameObject.setup(Game);
-    DayCycle.setup(domElement, [
-        layers.terrain.water,
-        layers.terrain.ground,
-        layers.terrain.textures,
-        layers.terrain.resourceSpots,
-        layers.placeables.chest,
-        layers.placeables.workbench,
-        layers.resources.berryBush,
-        layers.characters,
-        layers.mobs.dodo,
-        layers.mobs.saberToothCat,
-        layers.mobs.mammoth,
-        layers.placeables.doors,
-        layers.placeables.walls,
-        layers.placeables.spikyWalls,
-        layers.resources.minerals,
-        layers.resources.trees,
-    ]);
-
-    input = new InputManager({
-        inputKeyboard: true,
-        inputKeyboardEventTarget: window,
-
-        inputMouse: true,
-        inputMouseEventTarget: document.documentElement,
-        inputMouseCapture: true,
-
-        inputTouch: true,
-        inputTouchEventTarget: document.documentElement,
-        inputTouchCapture: true,
-
-        inputGamepad: false,
-    });
-    input.boot();
-
-    // Disable context menu on right click to use the right click ingame
-    document.body.addEventListener('contextmenu', function (event) {
-        if (event.target === domElement || domElement.contains(event.target as Node)) {
-            event.preventDefault();
-        }
-    });
 
 
-    UserInterface.setup(Game);
-
-    /*
-     * Initializing modules that require an initialized UI
-     */
-
-    Chat.setup(Game, Backend);
-
-    if (Develop.isActive()) {
-        Develop.afterSetup(Game);
+        Promise.all(setupPromises).then(() => {
+            Events.triggerOneTime(Events.GAME_AFTER_SETUP, this);
+        });
     }
 
-
-    Promise.all(setupPromises).then(function () {
-        Events.triggerOneTime('game.afterSetup', Game);
-    });
-}
-
-export function resizeToWindow() {
-    renderer.resize(window.innerWidth, window.innerHeight);
-}
-
-export function loop(now) {
-    if (paused) {
-        return;
+    resizeToWindow(): void {
+        this.renderer.resize(window.innerWidth, window.innerHeight);
     }
 
-    requestAnimationFrame(loop);
+    private loop(now): void {
+        if (this.paused) {
+            return;
+        }
 
-    timeDelta = timeSinceLastFrame(now);
+        requestAnimationFrame(this.loop.bind(this));
 
-    render();
+        this.timeDelta = this.timeSinceLastFrame(now);
 
-    _lastFrame = now;
-}
+        this.render();
 
-export function timeSinceLastFrame(now) {
-    return now - _lastFrame;
-}
+        this._lastFrame = now;
+    }
 
-export function play() {
-    playing = true;
-    paused = false;
-    _lastFrame = performance.now();
-    loop(_lastFrame);
-}
+    private timeSinceLastFrame(now): number {
+        return now - this._lastFrame;
+    }
 
-export function pause() {
-    playing = false;
-    paused = true;
-}
+    play(): void {
+        this.playing = true;
+        this.paused = false;
+        this._lastFrame = performance.now();
+        this.loop(this._lastFrame);
+    }
 
-export function render() {
-    renderer.render(stage);
-}
+    pause(): void {
+        this.playing = false;
+        this.paused = true;
+    }
 
-/**
- * Creating a player starts implicitly the game
- */
-export function createPlayer(id, x, y, name) {
-    if (isDefined(spectator)) {
-        spectator.remove();
-        spectator = undefined;
+    private render(): void {
+        this.renderer.render(this.stage);
     }
 
     /**
-     * @type Player
+     * Creating a player starts implicitly the game
      */
-    player = new Player(id, x, y, name, miniMap);
-    player.init();
-    state = States.PLAYING;
-    Events.trigger(Events.GAME_PLAYING, Game);
-}
+    createPlayer(id: GameObjectId, x: number, y: number, name: string): void {
+        if (isDefined(this.spectator)) {
+            this.spectator.remove();
+            this.spectator = undefined;
+        }
 
-export function removePlayer() {
-    Events.trigger(Events.GAME_BEFORE_DEATH, Game);
-    createSpectator(player.character.getX(), player.character.getY());
-    player.remove();
-    player = undefined;
-    if (Constants.CLEAR_MINIMAP_ON_DEATH) {
-        miniMap.clear();
-        map.clear();
+        /**
+         * @type Player
+         */
+        this.player = new Player(id, x, y, name, this.miniMap);
+        this.player.init();
+        this.state = GameState.PLAYING;
+        Events.trigger(Events.GAME_PLAYING, this);
     }
-    state = States.RENDERING;
+
+    removePlayer(): void {
+        Events.trigger(Events.GAME_BEFORE_DEATH, this);
+        this.createSpectator(this.player.character.getX(), this.player.character.getY());
+        this.player.remove();
+        this.player = undefined;
+        if (Constants.CLEAR_MINIMAP_ON_DEATH) {
+            this.miniMap.clear();
+            this.map.clear();
+        }
+        this.state = GameState.RENDERING;
+    }
+
+    createSpectator(x: number, y: number): void {
+        this.spectator = new Spectator(this, x, y);
+    }
+
+    startRendering(gameInformation: WelcomeMessage): void {
+        Console.log('Joined Server "' + gameInformation.serverName + '"');
+        const baseTexture = new PIXI.Graphics();
+        this.layers.terrain.ground.addChild(baseTexture);
+        baseTexture.beginFill(GraphicsConfig.landColor);
+        baseTexture.drawCircle(0, 0, gameInformation.mapRadius);
+
+        this.map = new GameMapWithBackend(this, gameInformation.mapRadius);
+        this.play();
+        this.state = GameState.RENDERING;
+        this.miniMap = new MiniMap(this.map.width, this.map.height);
+    }
+
+    private createBackground() {
+        const waterRect = new PIXI.Graphics();
+        this.layers.terrain.water.addChild(waterRect);
+
+        waterRect.beginFill(GraphicsConfig.waterColor);
+        waterRect.drawRect(0, 0, this.width, this.height);
+    }
 }
 
-export function createSpectator(x, y) {
-    spectator = new Spectator(Game, x, y);
-}
+instance = new Game();
 
-export function startRendering(gameInformation: Welcome) {
-    Console.log('Joined Server "' + gameInformation.serverName + '"');
-    const baseTexture = new PIXI.Graphics();
-    layers.terrain.ground.addChild(baseTexture);
-    baseTexture.beginFill(0x006030);
-    baseTexture.drawCircle(0, 0, gameInformation.mapRadius);
-
-    map = new GameMapWithBackend(Game, gameInformation.mapRadius);
-    play();
-    state = States.RENDERING;
-    miniMap = new MiniMap(map.width, map.height);
-}
-
-function createBackground() {
-    const waterRect = new PIXI.Graphics();
-    layers.terrain.water.addChild(waterRect);
-
-    waterRect.beginFill(0x287aff);
-    waterRect.drawRect(0, 0, width, height);
-}
-
-Events.on('modulesLoaded', setup);
+Events.on('modulesLoaded', instance.setup, instance);
 
 /*
  * Make sure the body can be focused.
@@ -367,9 +374,10 @@ Events.on('backend.validToken', function () {
 /*
  * https://trello.com/c/aq5lqJB7/289-schutz-gegen-versehentliches-verlassen-des-spiels
  */
+// TODO move in setup
 window.onbeforeunload = function (event) {
     // Only ask for confirmation if the user is in-game
-    if (state !== States.PLAYING) {
+    if (instance.state !== GameState.PLAYING) {
         return;
     }
 

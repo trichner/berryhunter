@@ -4,9 +4,12 @@ import {isFunction} from './Utils';
 import * as UserInterface from './userInterface/UserInterface';
 import * as Console from './Console';
 import * as Events from './Events';
+import {IGame} from "./interfaces/IGame";
+import {IBackend} from "./interfaces/IBackend";
+import {ChatMessage} from "./backend/messages/outgoing/ChatMessage";
 
-let Game = null;
-let Backend = null;
+let Game: IGame = null;
+let Backend: IBackend = null;
 let hasValidToken: boolean = false;
 
 export const KEYS = [
@@ -16,7 +19,7 @@ export const KEYS = [
 let rootElement: HTMLElement;
 let inputElement: HTMLInputElement;
 
-export function setup(game, backend) {
+export function setup(game: IGame, backend) {
     Game = game;
     Backend = backend;
 
@@ -33,9 +36,7 @@ export function setup(game, backend) {
             if (hasValidToken && message.startsWith('#')) {
                 Console.run(message.substring(1), false);
             } else {
-                Backend.sendChatMessage({
-                    message: message
-                });
+                new ChatMessage(message).send();
                 Game.player.character.say(message);
             }
 

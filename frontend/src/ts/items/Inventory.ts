@@ -9,8 +9,9 @@ import {InventorySlot} from './InventorySlot';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import './InventoryShortcuts';
 import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 Events.on('game.setup', game => {
     Game = game;
 });

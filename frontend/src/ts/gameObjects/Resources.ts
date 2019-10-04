@@ -7,8 +7,9 @@ import {InjectedSVG} from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as PIXI from 'pixi.js';
 import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 Events.on('game.setup', game => {
     Game = game;
 });

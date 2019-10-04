@@ -4,8 +4,9 @@ import {arraysEqual, isUndefined} from '../Utils';
 import * as UserInterface from '../userInterface/UserInterface';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 Events.on('game.setup', game => {
     Game = game;
 });

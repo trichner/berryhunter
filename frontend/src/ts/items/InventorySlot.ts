@@ -7,8 +7,9 @@ import * as InventoryListeners from './InventoryListeners';
 import * as Events from '../Events';
 import * as AutoFeed from '../AutoFeed';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
+import {IGame} from "../interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 Events.on('game.setup', game => {
     Game = game;
 });

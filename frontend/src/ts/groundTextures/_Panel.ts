@@ -15,12 +15,13 @@ import {
     sortStrings
 } from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
-import {GroundTextureTypes} from './GroundTextureTypes';
+import {GroundTextureType, GroundTextureTypes} from './GroundTextureTypes';
 import * as GroundTextureManager from './GroundTextureManager';
 import {saveAs} from 'file-saver';
 import * as Console from '../Console';
+import {GameState, IGame} from "../interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 
 let active = false;
 
@@ -40,7 +41,7 @@ Events.on('game.playing', function (game) {
     Console.run('give MysticWand');
 
     Game.renderer.on('prerender', function () {
-        if (Game.state === Game.States.PLAYING) {
+        if (Game.state === GameState.PLAYING) {
             let position = Game.player.character.getPosition();
             currentXLabel.textContent = position.x.toFixed(0);
             currentYLabel.textContent = position.y.toFixed(0);
@@ -85,7 +86,7 @@ let placeButton;
 let undoButton;
 
 let types;
-let groundTextureType;
+let groundTextureType: GroundTextureType;
 
 function setupPanel() {
     let groundTexturePanel = document.getElementById('groundTexturePanel');
@@ -188,19 +189,19 @@ export function placeTexture(position) {
         return;
     }
 
-    if (Game.state !== Game.States.PLAYING) {
+    if (Game.state !== GameState.PLAYING) {
         console.warn('Ground textures can only be placed while being ingame.');
         return;
     }
 
-    let flipped = 'none';
+    let flipped: 'none' | 'horizontal' | 'vertical'  = 'none';
     flippedRadios.forEach(function (element) {
         if (element.checked) {
             flipped = element.value;
         }
     });
 
-    let stacking = 'top';
+    let stacking: 'bottom' | 'top' = 'top';
     stackingRadios.forEach(function (radio) {
         if (radio.checked) {
             stacking = radio.value;
@@ -234,8 +235,8 @@ function randomizeInputs() {
 
     minSizeLabel.textContent = groundTextureType.minSize;
     maxSizeLabel.textContent = groundTextureType.maxSize;
-    sizeInput.setAttribute('min', groundTextureType.minSize);
-    sizeInput.setAttribute('max', groundTextureType.maxSize);
+    sizeInput.setAttribute('min', String(groundTextureType.minSize));
+    sizeInput.setAttribute('max', String(groundTextureType.maxSize));
     if (randomizePropertiesToggle.checked) {
         sizeInput.value = roundToNearest(
             randomInt(groundTextureType.minSize, groundTextureType.maxSize + 1),

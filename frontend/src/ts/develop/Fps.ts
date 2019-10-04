@@ -1,6 +1,8 @@
 'use strict';
 
-let Develop = null;
+import {IDevelop} from "../interfaces/IDevelop";
+
+let Develop: IDevelop = null;
 
 export function setup(game, develop) {
     Develop = develop;

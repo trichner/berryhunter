@@ -6,8 +6,9 @@ import {Placeable} from '../gameObjects/Placeable';
 import {Items} from '../items/Items';
 import * as Events from '../Events';
 import {ClickableIcon} from "../userInterface/ClickableIcon";
+import {IGame} from "../interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 
 /**
  * Gets filled with all defined recipes

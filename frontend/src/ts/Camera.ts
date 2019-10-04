@@ -1,12 +1,13 @@
 'use strict';
 
 import {Vehicle} from './natureOfCode/arrive/vehicle';
-import * as Develop from './develop/_Develop';
 import {Vector} from './Vector';
 import {Character} from './gameObjects/Character';
 import * as Events from './Events';
+import {IGame} from "./interfaces/IGame";
+import {Develop} from "./develop/_Develop";
 
-let Game = null;
+let Game: IGame = null;
 
 let Corners = [];
 let extraBoundary;
@@ -82,7 +83,7 @@ export class Camera {
         this.vehicle.update();
 
         if (!Develop.isActive() ||
-            (Develop.isActive() && Develop.settings.cameraBoundaries)) {
+            (Develop.isActive() && Develop.get().settings.cameraBoundaries)) {
             keepWithinMapBoundaries(this.vehicle);
         }
 

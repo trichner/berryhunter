@@ -16,8 +16,9 @@ import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
 import {Animation} from "../Animation";
 import {Items} from '../items/Items';
+import {IGame} from "../interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 Events.on('game.setup', game => {
     Game = game;
 });

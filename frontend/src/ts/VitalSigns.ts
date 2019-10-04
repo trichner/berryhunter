@@ -6,8 +6,9 @@ import * as UserInterface from './userInterface/UserInterface';
 import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/Basic';
 import {VitalSignBar} from "./userInterface/VitalSignBar";
+import {IGame} from "./interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 
 export enum VitalSign {
     health = 'health',

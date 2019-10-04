@@ -7,12 +7,13 @@ import {GameObject} from '../gameObjects/_GameObject';
 import {Character} from '../gameObjects/Character';
 import {Placeable} from '../gameObjects/Placeable';
 import {Resource} from '../gameObjects/Resources';
-import * as Develop from '../develop/_Develop';
 import * as Equipment from '../items/Equipment';
 import {BerryhunterApi} from './BerryhunterApi';
 import {Layer} from "../MiniMap";
+import {IGame} from "../interfaces/IGame";
+import {Develop} from "../develop/_Develop";
 
-let Game = null;
+let Game: IGame = null;
 
 export class GameMapWithBackend {
     radius: number;

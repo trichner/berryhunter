@@ -5,8 +5,9 @@ import {Items} from '../items/Items';
 import {SubIcon} from './SubIcon';
 import {BasicConfig as Constants} from '../../config/Basic';
 import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 Events.on('game.setup', game => {
     Game = game;
 });
@@ -193,7 +194,7 @@ export class ClickableIcon {
             this.progressOverlay.classList.add('hidden');
             this.inProgress = false;
             delete this.progress;
-            // A little hacky - would be nice with events
+            // TODO A little hacky - would be nice with events
             Game.player.inventory.onChange();
         } else {
             let top = 100 * this.progress.remainingTicks / this.progress.requiredTicks;

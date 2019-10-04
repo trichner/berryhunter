@@ -2,11 +2,19 @@
 
 import {nearlyEqual, isDefined} from '../Utils';
 import _clone = require('lodash/clone');
+import {BackendState} from "./Backend";
 
 
 let lastGameState;
 
-export function newSnapshot(backendState, gameState) {
+export class Snapshot {
+    tick: number;
+    player: any; // TODO introduce interfaces to player, spectator, entity...
+    entities: [];
+    inventory: []
+}
+
+export function newSnapshot(backendState: BackendState, gameState) {
     let snapshot;
     if (this.hasSnapshot()) {
         snapshot = {};
@@ -14,7 +22,7 @@ export function newSnapshot(backendState, gameState) {
 
         snapshot.player = _clone(gameState.player);
 
-        if (backendState === 'PLAYING' &&
+        if (backendState === BackendState.PLAYING &&
             !lastGameState.player.isSpectator &&
             nearlyEqual(lastGameState.player.position.x, gameState.player.position.x, 0.01) &&
             nearlyEqual(lastGameState.player.position.y, gameState.player.position.y, 0.01)) {

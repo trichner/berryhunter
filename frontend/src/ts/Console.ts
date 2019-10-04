@@ -3,11 +3,9 @@
 import * as Preloading from './Preloading';
 import * as Events from './Events';
 import {clearNode, getUrlParameter, isFunction, preventInputPropagation, resetFocus} from './Utils';
+import {IBackend} from "./interfaces/IBackend";
+import {CommandMessage} from "./backend/messages/outgoing/CommandMessage";
 
-let Backend = null;
-Events.on('backend.setup', backend => {
-    Backend = backend;
-});
 
 export const KEY_CODE = 'Backquote';
 
@@ -128,10 +126,7 @@ function onCommand(command: string, isAutoCommand: boolean) {
     log(command);
     if (token) {
         if (!tryRunLocally(command)) {
-            Backend.sendCommand({
-                command: command,
-                token: token,
-            });
+            new CommandMessage(command, token).send();
         }
     } else {
         if (!_isOpen) {

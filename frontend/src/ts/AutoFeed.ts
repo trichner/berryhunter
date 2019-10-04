@@ -5,8 +5,9 @@ import {GraphicsConfig} from '../config/Graphics';
 import {dateDiff, playCssAnimation} from './Utils';
 import _isObject = require('lodash/isObject');
 import {BerryhunterApi} from './backend/BerryhunterApi';
+import {IGame} from "./interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 Events.on('game.setup', game => {
     Game = game;
 });
