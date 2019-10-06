@@ -3,8 +3,10 @@
 /**
  * Exposes certain functionality in the browser console.
  */
-import * as Events from './Events';
+import {BackendValidTokenEvent, GameSetupEvent, PlayerCreatedEvent} from './Events';
 import * as Console from './Console';
+import {Player} from "./Player";
+import {IGame} from "./interfaces/IGame";
 
 
 function setup() {
@@ -17,18 +19,19 @@ function setup() {
     };
 
     consoleCommands.run = Console.run;
-    Events.on('game.playing', function (Game) {
-        consoleCommands.character = Game.player.character;
+    PlayerCreatedEvent.subscribe((player: Player) => {
+        consoleCommands.character = player.character;
         return true;
     });
 
-    Events.on('game.setup', function (Game) {
-        consoleCommands.pause = Game.pause;
-        consoleCommands.play = Game.play;
+    GameSetupEvent.subscribe((game: IGame) => {
+        consoleCommands.pause = game.pause;
+        consoleCommands.play = game.play;
+
         return true;
     });
 
     window['game'] = consoleCommands;
 }
 
-Events.on('backend.validToken', setup);
+BackendValidTokenEvent.subscribe(setup);

@@ -1,9 +1,8 @@
 'use strict';
 
 import * as Preloading from './Preloading';
-import * as Events from './Events';
+import {BackendValidTokenEvent} from './Events';
 import {clearNode, getUrlParameter, isFunction, preventInputPropagation, resetFocus} from './Utils';
-import {IBackend} from "./interfaces/IBackend";
 import {CommandMessage} from "./backend/messages/outgoing/CommandMessage";
 
 
@@ -39,7 +38,7 @@ let commandHistory: string[];
 let consoleSuggestions: HTMLDataListElement;
 let macros: { [key: string]: string[] } = {};
 
-Events.on('backend.validToken', function () {
+BackendValidTokenEvent.subscribe(function () {
     // Only load the console once the token was confirmed as valid
     Preloading.renderPartial(require('../partials/console.html'), onDomReady);
 });

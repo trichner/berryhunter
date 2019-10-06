@@ -3,7 +3,7 @@
 import {isFunction} from './Utils';
 import * as UserInterface from './userInterface/UserInterface';
 import * as Console from './Console';
-import * as Events from './Events';
+import {BackendValidTokenEvent, BeforeDeathEvent} from './Events';
 import {IGame} from "./interfaces/IGame";
 import {IBackend} from "./interfaces/IBackend";
 import {ChatMessage} from "./backend/messages/outgoing/ChatMessage";
@@ -73,10 +73,10 @@ export function isOpen() {
     return _isOpen;
 }
 
-Events.on('backend.validToken', function () {
+BackendValidTokenEvent.subscribe(() => {
     hasValidToken = true;
 });
 
-Events.on(Events.GAME_BEFORE_DEATH, () => {
+BeforeDeathEvent.subscribe(() => {
     hide();
 });

@@ -1,8 +1,8 @@
 'use strict';
 
-import {nearlyEqual, isDefined} from '../Utils';
+import {isDefined, nearlyEqual} from '../Utils';
+import {BackendState} from "../interfaces/IBackend";
 import _clone = require('lodash/clone');
-import {BackendState} from "./Backend";
 
 
 let lastGameState;

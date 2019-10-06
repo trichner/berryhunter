@@ -3,7 +3,7 @@
 import {flatbuffers} from 'flatbuffers';
 import {BerryhunterApi} from '../../BerryhunterApi';
 import {IBackend} from "../../../interfaces/IBackend";
-import * as Events from "../../../Events";
+import {BackendSetupEvent} from "../../../Events";
 
 export class ClientMessage {
     static webSocket: WebSocket = null;
@@ -29,7 +29,7 @@ export class ClientMessage {
         ClientMessage.webSocket.send(this.finish());
     }
 
-    public send(type: BerryhunterApi.ClientMessageBody, body: flatbuffers.Offset){
+    public send(type: BerryhunterApi.ClientMessageBody, body: flatbuffers.Offset) {
         BerryhunterApi.ClientMessage.startClientMessage(this.builder);
         BerryhunterApi.ClientMessage.addBodyType(this.builder, type);
         BerryhunterApi.ClientMessage.addBody(this.builder, body);
@@ -38,6 +38,6 @@ export class ClientMessage {
     }
 }
 
-Events.on('backend.setup', (backend: IBackend) => {
+BackendSetupEvent.subscribe((backend: IBackend) => {
     ClientMessage.webSocket = backend.webSocket;
 });

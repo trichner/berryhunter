@@ -1,21 +1,22 @@
 import fscreen from 'fscreen';
-import * as Events from "./Events";
+import {GameJoinEvent, GameLateSetupEvent, screen, StartScreenDomReadyEvent} from "./Events";
 import {Account} from "./Account";
+import {IGame} from "./interfaces/IGame";
 
 let fullscreenToggle: HTMLInputElement;
 let resizeToWindow: () => void;
 
-Events.on('startScreen.domReady', () => {
+StartScreenDomReadyEvent.subscribe(() => {
     fullscreenToggle = document.getElementById('fullscreenToggle') as HTMLInputElement;
     fullscreenToggle.checked = Account.fullScreen;
 });
 
 
-Events.on('game.afterSetup', (Game) => {
-    resizeToWindow = Game.resizeToWindow;
+GameLateSetupEvent.subscribe((game: IGame) => {
+    resizeToWindow = game.resizeToWindow;
 });
 
-Events.on('game.join', (screen) => {
+GameJoinEvent.subscribe((screen: screen) => {
     if (screen === 'start') {
         let fullScreenToggled = fullscreenToggle.checked;
         Account.fullScreen = fullScreenToggled;

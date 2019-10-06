@@ -1,7 +1,7 @@
 import {flatbuffers} from "flatbuffers";
 import {BerryhunterApi} from "../../BerryhunterApi";
 import {ClientMessage} from "./ClientMessage";
-import * as Events from "../../../Events";
+import {GameLateSetupEvent} from "../../../Events";
 
 export class JoinMessage extends ClientMessage {
     playerName: string;
@@ -19,7 +19,7 @@ export class JoinMessage extends ClientMessage {
     }
 
     public send(): void {
-        Events.on('game.afterSetup', () => {
+        GameLateSetupEvent.subscribe(() => {
             let messageBody = this.marshal();
             super.send(BerryhunterApi.ClientMessageBody.Join, messageBody);
         });

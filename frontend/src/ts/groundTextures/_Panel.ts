@@ -1,6 +1,5 @@
 'use strict';
 
-import * as Events from '../Events';
 import {Items} from '../items/Items';
 import * as Equipment from '../items/Equipment';
 import * as Preloading from '../Preloading';
@@ -20,6 +19,7 @@ import * as GroundTextureManager from './GroundTextureManager';
 import {saveAs} from 'file-saver';
 import * as Console from '../Console';
 import {GameState, IGame} from "../interfaces/IGame";
+import {BackendValidTokenEvent, GamePlayingEvent, PrerenderEvent} from "../Events";
 
 let Game: IGame = null;
 
@@ -29,7 +29,7 @@ export function isActive() {
     return active;
 }
 
-Events.on('game.playing', function (game) {
+GamePlayingEvent.subscribe((game: IGame) => {
     Game = game;
     if (!active) {
         return;
@@ -40,7 +40,7 @@ Events.on('game.playing', function (game) {
     Console.log('GroundTexturePanel activated - try to grant MysticWand');
     Console.run('give MysticWand');
 
-    Game.renderer.on('prerender', function () {
+    PrerenderEvent.subscribe( () => {
         if (Game.state === GameState.PLAYING) {
             let position = Game.player.character.getPosition();
             currentXLabel.textContent = position.x.toFixed(0);
@@ -54,7 +54,7 @@ Events.on('game.playing', function (game) {
     }, this);
 
     Game.domElement.addEventListener('click', function (event) {
-        if (Game.player.character.getEquippedItem(Equipment.Slots.HAND) === Items.MysticWand) {
+        if (Game.player.character.getEquippedItem(Equipment.EquipmentSlot.HAND) === Items.MysticWand) {
             let x = Game.player.camera.getMapX(event.pageX);
             let y = Game.player.camera.getMapY(event.pageY);
             placeTexture({x, y});
@@ -283,7 +283,7 @@ function randomizeInputs() {
     }
 }
 
-Events.on('backend.validToken', function () {
+BackendValidTokenEvent.subscribe( function () {
     if (getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
         active = true;
 

@@ -1,7 +1,8 @@
 'use strict';
 
 import {
-    clearNode, formatInt,
+    clearNode,
+    formatInt,
     formatIntWithAbbreviation,
     isDefined,
     isUndefined,
@@ -12,7 +13,7 @@ import {
 import * as Urls from '../backend/Urls';
 import * as moment from 'moment-mini';
 import * as Preloading from "../Preloading";
-import * as Events from '../Events';
+import {EndScreenShownEvent, GamePlayingEvent, StartScreenDomReadyEvent} from '../Events';
 
 let rootElement: HTMLElement;
 let leaderboardTables: Map<string, HTMLElement>;
@@ -84,7 +85,7 @@ function initDom() {
     });
 }
 
-Events.on('startScreen.domReady', () => {
+StartScreenDomReadyEvent.subscribe(() => {
     let overviewElement = rootElement.querySelector('.highScoreOverview');
     let menuItem = document.querySelector('a[href="#highScores"]');
     smoothHoverAnimation(
@@ -241,10 +242,10 @@ function mapScores(response: string) {
     return mappedHighScores;
 }
 
-Events.on(Events.GAME_PLAYING, () => {
+GamePlayingEvent.subscribe(() => {
     hide();
 });
 
-Events.on(Events.ENDSCREEN_SHOWN, () => {
+EndScreenShownEvent.subscribe(() => {
     show();
 });

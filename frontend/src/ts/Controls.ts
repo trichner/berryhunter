@@ -1,6 +1,12 @@
 'use strict';
 
-import * as Events from './Events';
+import {
+    BackendSetupEvent,
+    ControlsActionEvent,
+    ControlsMovementEvent,
+    ControlsRotateEvent,
+    GameSetupEvent
+} from './Events';
 import {BasicConfig as Constants} from '../config/Basic';
 import * as Equipment from './items/Equipment';
 import * as Console from './Console';
@@ -18,12 +24,12 @@ import {Vector} from "./Vector";
 import {Develop} from "./develop/_Develop";
 
 let Game: IGame = null;
-Events.on('game.setup', game => {
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
 let Backend: IBackend = null;
-Events.on('backend.setup', (backend: IBackend) => {
+BackendSetupEvent.subscribe((backend: IBackend) => {
     Backend = backend;
 });
 
@@ -45,7 +51,6 @@ class Keys {
         });
     }
 }
-
 
 
 export class Controls {
@@ -198,15 +203,15 @@ export class Controls {
                         case 'MAIN':
                         case 'ALT':
                             action = {
-                                item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
+                                item: Game.player.character.getEquippedItem(Equipment.EquipmentSlot.HAND),
                                 actionType: BerryhunterApi.ActionType.Primary
                             };
                             break;
                         case 'PLACING':
-                            let placedItem = this.character.getEquippedItem(Equipment.Slots.PLACEABLE);
+                            let placedItem = this.character.getEquippedItem(Equipment.EquipmentSlot.PLACEABLE);
 
                             if (!placedItem.placeable.multiPlacing) {
-                                Game.player.inventory.unequipItem(placedItem, Equipment.Slots.PLACEABLE);
+                                Game.player.inventory.unequipItem(placedItem, Equipment.EquipmentSlot.PLACEABLE);
                             }
 
                             action = {
@@ -240,19 +245,15 @@ export class Controls {
             hasInput = true;
         }
 
-        if (inputManager.activePointer.justMoved) {
-            Events.trigger('controls.rotate', movement);
-        }
-
         if (movement.x !== 0 || movement.y !== 0) {
             input.movement = movement;
-            Events.trigger('controls.movement', movement);
+            ControlsMovementEvent.trigger(movement);
             hasInput = true;
         }
 
         if (action !== null) {
             input.action = action;
-            Events.trigger('controls.action', action);
+            ControlsActionEvent.trigger(action);
             hasInput = true;
         }
 
@@ -262,8 +263,14 @@ export class Controls {
                 input.rotation = this.character.getRotation();
             }
 
+            if (inputManager.activePointer.justMoved) {
+                ControlsRotateEvent.trigger(input.rotation);
+            }
+
             input.send();
         }
+
+
     }
 
     adjustCharacterRotation() {

@@ -9,7 +9,8 @@ import * as Preloading from '../Preloading';
 import {ItemType} from './ItemType';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {ItemsConfig as Items} from '../../config/Items';
-import * as Events from '../Events';
+import {GameLateSetupEvent} from '../Events';
+import {IGame} from "../interfaces/IGame";
 import _isObject = require('lodash/isObject');
 import _property = require('lodash/property');
 
@@ -28,8 +29,8 @@ function validatePlaceable(item) {
         throw 'Item "' + item.name + '" must define a property "layer" inside "placeable".';
     }
 
-    Events.on('game.afterSetup', function (Game) {
-        let layer = _property(item.placeable.layer.split('.'))(Game.layers);
+    GameLateSetupEvent.subscribe((game: IGame) => {
+        let layer = _property(item.placeable.layer.split('.'))(game.layers);
         if (!isDefined(layer)) {
             throw 'The defined layer "' + item.placeable.layer + '" in the item "' + item.name + '" is not valid layer. Check out Game.js for a definition of all game layers.';
         }
