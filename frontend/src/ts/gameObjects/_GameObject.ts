@@ -79,7 +79,7 @@ export class GameObject {
         throw 'createShape not implemented for ' + this.constructor.name;
     }
 
-    createMinimapIcon(): PIXI.DisplayObject {
+    createMinimapIcon(): PIXI.Container {
         throw 'createMinimapIcon not implemented for ' + this.constructor.name;
     }
 

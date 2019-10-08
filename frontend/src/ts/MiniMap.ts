@@ -160,11 +160,11 @@ function update() {
     });
 }
 
-document.getElementById('miniMap').addEventListener('mousedown', function (event) {
+document.getElementById('miniMap').addEventListener('click', function (event) {
     if (Game.state !== Game.States.PLAYING) {
         return;
     }
     if (event) {
-        document.getElementById("largeMap").classList.toggle('hidden');
+        Game.largeMap.toggleVisibility();
     }
 });

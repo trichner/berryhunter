@@ -5,7 +5,7 @@ import * as UserInterface from './userInterface/UserInterface';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import * as Events from "./Events";
 import {GAME_DEATH, GAME_SETUP} from "./Events";
-import {deg2rad} from "./Utils";
+import {deg2rad, isDefined} from "./Utils";
 
 let Game = null;
 Events.on(GAME_SETUP, game => {
@@ -27,6 +27,7 @@ export class LargeMap {
     iconSizeFactor: number;
     paused: boolean;
     playing: boolean;
+    domElement: HTMLElement;
 
     constructor(mapWidth, mapHeight) {
         this.mapWidth = mapWidth;
@@ -75,6 +76,8 @@ export class LargeMap {
         this.scale = this.width / this.mapWidth;
         this.iconSizeFactor = this.scale * sizeFactorRelatedToMapSize;
 
+        this.domElement = document.getElementById("largeMap");
+
         this.renderer.on('prerender', update.bind(this));
     }
 
@@ -94,18 +97,23 @@ export class LargeMap {
         requestAnimationFrame(this.loop.bind(this));
 
         this.renderer.render(this.stage);
-    };
+    }
 
     play() {
         this.playing = true;
         this.paused = false;
         this.loop();
-    };
+    }
 
     pause() {
         this.playing = false;
         this.paused = true;
-    };
+    }
+
+    toggleVisibility(visible?: boolean) {
+        let force = isDefined(visible)? !visible : undefined;
+        this.domElement.classList.toggle('hidden', force);
+    }
 
     /**
      * Adds the icon of the object to the map.
@@ -157,12 +165,8 @@ function update() {
     });
 }
 
-function toggleVisibility(){
-        document.getElementById("largeMap").classList.toggle('hidden');
-}
-
 Events.on(GAME_DEATH, game => {
-    document.getElementById("largeMap").classList.add('hidden');
+    game.largeMap.toggleVisibility(false);
 });
 
 window.addEventListener('keydown', function (event) {
@@ -170,6 +174,6 @@ window.addEventListener('keydown', function (event) {
         return;
     }
     if (event.keyCode === KeyCodes.M) {
-        toggleVisibility();
+        Game.largeMap.toggleVisibility();
     }
 });
