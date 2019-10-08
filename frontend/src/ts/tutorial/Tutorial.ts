@@ -1,75 +1,96 @@
 'use strict';
 
 import * as Preloading from '../Preloading';
-import * as Events from '../Events';
-import {deg2rad, isFunction} from '../Utils';
+import {
+    BeforeDeathEvent,
+    CharacterEquippedItemEvent,
+    ControlsActionEvent,
+    ControlsMovementEvent,
+    ControlsRotateEvent,
+    IEvent,
+    InventoryAddEvent,
+    PlayerCreatedEvent,
+    StartScreenDomReadyEvent
+} from '../Events';
+import {deg2rad, isDefined, isFunction} from '../Utils';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import {Account} from "../Account";
+import {integer, radians} from "../interfaces/Types";
 
 
 // Ginos Vorschlag: Alle Tutorials als (animierte) Icons
 // zb Movement = WASD nacheinander jeweils gedrückt
 
-const stages = [{
-    markupId: 'movement',
-    showUntil: 'controls.movement',
-}, {
-    markupId: 'rotate',
-    showUntil: 'controls.rotate'
-}, {
-    markupId: 'action',
-    showUntil: 'controls.action'
-}, {
-    markupId: 'yield',
-    pointTowards: 'Tree', // nearest gameplay object of type
-    showUntil: 'inventory.add',
-    eventFilter: function (payload) {
-        return payload.itemName === 'Wood';
-    }
-}, {
-    markupId: 'craft',
-    pointTowards: deg2rad(225), // direction
-    showUntil: 'inventory.add',
-    eventFilter: function (payload) {
-        return payload.itemName === 'WoodClub';
-    }
-}, {
-    markupId: 'equip',
-    pointTowards: deg2rad(110), // direction
-    showUntil: 'character.equipItem',
-    eventFilter: function (payload) {
-        return payload.item.name === 'WoodClub';
-    }
-}, {
-    markupId: 'fire',
-    pointTowards: deg2rad(225), // direction
-    showUntil: 'inventory.add',
-    eventFilter: function (payload) {
-        return payload.itemName === 'Campfire';
-    }
-}, {
-    markupId: 'placing',
-    showUntil: 'controls.action',
-    eventFilter: function (payload) {
-        if (payload.item.name !== 'Campfire') {
-            return false;
-        }
-        return payload.actionType = BerryhunterApi.ActionType.PlaceItem;
-    }
-}, {
-    markupId: 'eating',
-    showUntil: 'controls.action',
-    eventFilter: function (payload) {
-        if (payload.item.name !== 'Berry') {
-            return false;
-        }
-        return payload.actionType = BerryhunterApi.ActionType.ConsumeItem;
-    }
+interface IStage {
+    markupId: string,
+    showUntil?: IEvent,
+    timeout?: integer,
+    pointTowards?: string | radians,
+    eventFilter?: (any) => boolean
+}
 
-}, {
-    markupId: 'finish',
-    showUntil: 'timeout.5000',
-}];
+const stages: IStage[] = [
+    {
+        markupId: 'movement',
+        showUntil: ControlsMovementEvent
+    }, {
+        markupId: 'rotate',
+        showUntil: ControlsRotateEvent
+    }, {
+        markupId: 'action',
+        showUntil: ControlsActionEvent
+    },
+    {
+        markupId: 'yield',
+        pointTowards: 'Tree', // nearest gameplay object of type
+        showUntil: InventoryAddEvent,
+        eventFilter: function (payload) {
+            return payload.itemName === 'Wood';
+        }
+    }, {
+        markupId: 'craft',
+        pointTowards: deg2rad(225), // direction
+        showUntil: InventoryAddEvent,
+        eventFilter: function (payload) {
+            return payload.itemName === 'WoodClub';
+        }
+    }, {
+        markupId: 'equip',
+        pointTowards: deg2rad(110), // direction
+        showUntil: CharacterEquippedItemEvent,
+        eventFilter: function (payload) {
+            return payload.item.name === 'WoodClub';
+        }
+    }, {
+        markupId: 'fire',
+        pointTowards: deg2rad(225), // direction
+        showUntil: InventoryAddEvent,
+        eventFilter: function (payload) {
+            return payload.itemName === 'Campfire';
+        }
+    }, {
+        markupId: 'placing',
+        showUntil: ControlsActionEvent,
+        eventFilter: function (payload) {
+            if (payload.item.name !== 'Campfire') {
+                return false;
+            }
+            return payload.actionType === BerryhunterApi.ActionType.PlaceItem;
+        }
+    }, {
+        markupId: 'eating',
+        showUntil: ControlsActionEvent,
+        eventFilter: function (payload) {
+            if (payload.item.name !== 'Berry') {
+                return false;
+            }
+            return payload.actionType === BerryhunterApi.ActionType.ConsumeItem;
+        }
+    }, {
+        markupId: 'finish',
+        timeout: 5000,
+    }
+];
 
 let currentStage = 0;
 let rootElement;
@@ -97,10 +118,12 @@ function showNextStep() {
         return true;
     };
 
-    if (stage.showUntil.startsWith('timeout.')) {
-        setTimeout(eventHandler, stage.showUntil.split('.')[1]);
+    if (isDefined(stage.timeout)) {
+        setTimeout(eventHandler, stage.timeout);
+    } else if (isDefined(stage.showUntil)) {
+        stage.showUntil.subscribe(eventHandler);
     } else {
-        Events.on(stage.showUntil, eventHandler);
+        throw 'Either "showUntil" or "timeout" needs to be defined on stage #' + currentStage + ' "' + stage.markupId + '"';
     }
 }
 
@@ -114,12 +137,12 @@ Preloading.renderPartial(require('./tutorial.html'), () => {
 
 let tutorialToggle: HTMLInputElement;
 
-Events.on('startScreen.domReady', () => {
+StartScreenDomReadyEvent.subscribe(() => {
     tutorialToggle = document.getElementById('tutorialToggle') as HTMLInputElement;
     tutorialToggle.checked = false;
 });
 
-Events.on('game.playing', function () {
+PlayerCreatedEvent.subscribe(() => {
     currentStage = -1;
 
     if (tutorialToggle.checked) {
@@ -127,7 +150,7 @@ Events.on('game.playing', function () {
     }
 });
 
-Events.on('game.death', function () {
+BeforeDeathEvent.subscribe(() => {
     // Reset all tutorial elements on death
     let elements = rootElement.getElementsByClassName('tutorialStep');
     for (let i = 0; i < elements.length; i++) {

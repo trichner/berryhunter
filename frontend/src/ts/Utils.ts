@@ -43,9 +43,16 @@ export function randomInt(min, max?) {
     return Math.floor(random(min, max));
 }
 
-export function removeElement(array, element) {
+/**
+ * @return whether or not the element was found and removed.
+ */
+export function removeElement(array, element): boolean {
     let indexOf = array.indexOf(element);
+    if (indexOf < 0) {
+        return false;
+    }
     array.splice(indexOf, 1);
+    return true;
 }
 
 export const TwoDimensional = {

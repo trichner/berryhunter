@@ -10,6 +10,7 @@ import {isDefined} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 import {Layer, MiniMap} from "./MiniMap";
+import {PlayerCreatedEvent} from "./Events";
 
 export class Player {
     craftProgress;
@@ -45,6 +46,7 @@ export class Player {
 
     init() {
         this.inventory.init();
+        PlayerCreatedEvent.trigger(this);
     }
 
     isCraftInProgress() {

@@ -3,11 +3,11 @@
 import {arraysEqual, isUndefined} from '../Utils';
 import * as UserInterface from '../userInterface/UserInterface';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
-import * as Events from "../Events";
 import {IGame} from "../interfaces/IGame";
+import {GameSetupEvent} from "../Events";
 
 let Game: IGame = null;
-Events.on('game.setup', game => {
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 

@@ -2,10 +2,15 @@
 
 import * as PlayerName from '../../PlayerName';
 import {isDefined, preventInputPropagation, smoothHoverAnimation} from '../../Utils';
-import * as Events from '../../Events';
 import * as DetectBrowser from 'detect-browser';
 import * as Preloading from '../../Preloading';
 import * as Credits from './Credits';
+import {
+    FirstGameStateHandledEvent,
+    PreloadingProgressedEvent,
+    PreloadingStartedEvent,
+    StartScreenDomReadyEvent
+} from "../../Events";
 
 
 let _progress = 0;
@@ -18,7 +23,7 @@ export let playerNameInput = null;
 let rootElement: HTMLElement;
 let chromeWarning;
 
-Events.on('preloading.execute', () => {
+PreloadingStartedEvent.subscribe(() => {
     Preloading.renderPartial(htmlFile, onDomReady);
 });
 
@@ -67,7 +72,7 @@ export function onDomReady() {
 
     Credits.setup();
 
-    Events.triggerOneTime('startScreen.domReady', rootElement);
+    StartScreenDomReadyEvent.trigger(rootElement);
 }
 
 export function show() {
@@ -78,9 +83,9 @@ export function hide() {
     rootElement.classList.add('hidden');
 }
 
-Events.on('preloading.progress', progress);
+PreloadingProgressedEvent.subscribe(setProgress);
 
-export function progress(value) {
+export function progress(value: number) {
     if (isDefined(value)) {
         setProgress(value);
     } else {
@@ -97,7 +102,7 @@ function setProgress(value) {
     if (isDomReady) {
         loadingBar.style.width = (_progress * 100) + '%';
         if (_progress >= 1) {
-            Events.on('firstGameStateRendered', () => {
+            FirstGameStateHandledEvent.subscribe(() => {
                 rootElement.classList.remove('loading');
                 rootElement.classList.add('finished');
                 let playerNameSubmit: HTMLInputElement = rootElement.querySelector('.playerNameSubmit');

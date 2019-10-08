@@ -9,12 +9,11 @@ import {ItemType} from '../items/ItemType';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Items} from '../items/Items';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
-import * as Events from '../Events';
 import {IGame} from "../interfaces/IGame";
-import {IBackend} from "../interfaces/IBackend";
-import {BackendState} from "../backend/Backend";
 import {InputMessage} from "../backend/messages/outgoing/InputMessage";
 import {IDevelop} from "../interfaces/IDevelop";
+import {BackendStateChangedEvent, BackendStateChangedMsg, BackendValidTokenEvent} from "../Events";
+import {BackendState} from "../interfaces/IBackend";
 
 let instance: Develop = null;
 let active: boolean = false;
@@ -205,7 +204,7 @@ export class Develop implements IDevelop {
         });
     }
 
-    public afterSetup(game): void {
+    public afterSetup(game: IGame): void {
         this.game = game;
 
         Fps.setup(game, this);
@@ -423,8 +422,8 @@ export class Develop implements IDevelop {
     }
 }
 
-Events.on('backend.stateChange', (backend: IBackend) => {
-    if (backend.getState() === BackendState.WELCOMED) {
+BackendStateChangedEvent.subscribe((msg: BackendStateChangedMsg) => {
+    if (msg.newState === BackendState.WELCOMED) {
         Console.run('ping');
 
         // Only validate once - remove this listener after execution
@@ -432,7 +431,7 @@ Events.on('backend.stateChange', (backend: IBackend) => {
     }
 });
 
-Events.on('backend.validToken', () => {
+BackendValidTokenEvent.subscribe( () => {
     if (getUrlParameter(Constants.MODE_PARAMETERS.DEVELOPMENT)) {
         active = true;
     }

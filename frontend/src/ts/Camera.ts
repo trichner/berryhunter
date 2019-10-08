@@ -3,9 +3,9 @@
 import {Vehicle} from './natureOfCode/arrive/vehicle';
 import {Vector} from './Vector';
 import {Character} from './gameObjects/Character';
-import * as Events from './Events';
 import {IGame} from "./interfaces/IGame";
 import {Develop} from "./develop/_Develop";
+import {CameraUpdatedEvent, PrerenderEvent} from "./Events";
 
 let Game: IGame = null;
 
@@ -17,7 +17,6 @@ export class Camera {
     offset: Vector;
     vehicle: Vehicle;
     position: Vector;
-    updateListener: () => void;
 
     /**
      *
@@ -38,8 +37,7 @@ export class Camera {
          */
         this.position = this.vehicle.position;
 
-        this.updateListener = this.update.bind(this);
-        Game.renderer.on('prerender', this.updateListener);
+        PrerenderEvent.subscribe(this.update, this);
     }
 
     static setup(game) {
@@ -92,11 +90,11 @@ export class Camera {
         position.add(this.offset);
         Game.cameraGroup.position.copy(position);
 
-        Events.trigger('camera.update', position);
+        CameraUpdatedEvent.trigger(position);
     }
 
     destroy() {
-        Game.renderer.off('prerender', this.updateListener);
+        PrerenderEvent.unsubscribe(this.update);
     }
 }
 

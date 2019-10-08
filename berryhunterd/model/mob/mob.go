@@ -175,7 +175,7 @@ func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	dmgFraction := item.Factors.Damage * vulnerability
 	if dmgFraction > 0 {
 		m.health = m.health.SubFraction(dmgFraction)
-		m.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
+		m.StatusEffects().Add(model.StatusEffectDamaged)
 
 		// is it dead?
 		if m.health <= 0 {

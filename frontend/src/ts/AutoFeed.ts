@@ -1,21 +1,28 @@
 'use strict';
 
-import * as Events from './Events';
 import {GraphicsConfig} from '../config/Graphics';
 import {dateDiff, playCssAnimation} from './Utils';
-import _isObject = require('lodash/isObject');
 import {BerryhunterApi} from './backend/BerryhunterApi';
 import {IGame} from "./interfaces/IGame";
+import {
+    AutoFeedActivateEvent,
+    AutoFeedDeactivateEvent,
+    AutoFeedMsg,
+    GameSetupEvent,
+    VitalSignChangedEvent,
+    VitalSignMsg
+} from "./Events";
+import _isObject = require('lodash/isObject');
 
 let Game: IGame = null;
-Events.on('game.setup', game => {
+GameSetupEvent.subscribe(game => {
     Game = game;
 });
 
 export let activeInventorySlot = null;
 export let lastAutoFeed = Date.now();
 
-export function activate(payload) {
+export function activate(payload: AutoFeedMsg) {
     activeInventorySlot = payload.inventorySlot;
 }
 
@@ -23,7 +30,7 @@ export function deactivate() {
     activeInventorySlot = null;
 }
 
-export function checkChangedVitalSign(payload) {
+export function checkChangedVitalSign(payload: VitalSignMsg) {
     // If there's no slot, auto feed is not active
     if (activeInventorySlot === null) {
         return;
@@ -74,9 +81,9 @@ export function getFoodFactor() {
     return activeInventorySlot.item.factors.food;
 }
 
-Events.on('autoFeed.activate', activate);
-Events.on('autoFeed.deactivate', deactivate);
-Events.on('vitalSign.change', checkChangedVitalSign);
+AutoFeedActivateEvent.subscribe(activate);
+AutoFeedDeactivateEvent.subscribe(deactivate);
+VitalSignChangedEvent.subscribe(checkChangedVitalSign);
 
 export function isItemSuitable(item) {
     if (!_isObject(item.factors)) {

@@ -6,11 +6,11 @@ import {isDefined, randomRotation, TwoDimensional} from '../Utils';
 import {InjectedSVG} from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as PIXI from 'pixi.js';
-import * as Events from "../Events";
 import {IGame} from "../interfaces/IGame";
+import {GameSetupEvent} from "../Events";
 
 let Game: IGame = null;
-Events.on('game.setup', game => {
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 

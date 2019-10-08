@@ -3,12 +3,12 @@
 import {GameObject} from '../gameObjects/_GameObject';
 import * as PIXI from 'pixi.js';
 import {hasAABB} from './AABBs';
-import * as Events from "../Events";
 import {IGame} from "../interfaces/IGame";
 import {Develop} from "./_Develop";
+import {GameSetupEvent, PrerenderEvent} from "../Events";
 
 let Game: IGame = null;
-Events.on('game.setup', game => {
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
@@ -22,8 +22,8 @@ export class DebugCircle extends GameObject {
 
         this.timeToLife = 60;
 
-        Game.renderer.on('prerender', () => {
-            this.timeToLife -= Game.timeDelta;
+        PrerenderEvent.subscribe((timeDelta: number) => {
+            this.timeToLife -= timeDelta;
             if (this.timeToLife < 0) {
                 this.hide();
                 delete Game.map.objects[this.id];
@@ -31,6 +31,9 @@ export class DebugCircle extends GameObject {
                 let thisHasAABB = this as hasAABB;
                 thisHasAABB.aabb.parent.removeChild(thisHasAABB.aabb);
                 thisHasAABB.aabbConnector.parent.removeChild(thisHasAABB.aabbConnector);
+
+                // Remove listener
+                return true;
             }
         }, this);
     }

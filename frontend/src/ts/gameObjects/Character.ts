@@ -6,20 +6,21 @@ import {NamedGroup} from '../NamedGroup';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {isDefined} from '../Utils';
 import * as Equipment from '../items/Equipment';
+import {EquipmentSlot} from '../items/Equipment';
 import {InjectedSVG} from '../InjectedSVG';
 import * as Preloading from '../Preloading';
 import {Vector} from '../Vector';
 import * as Text from '../Text';
 import {GraphicsConfig} from '../../config/Graphics';
-import * as Events from '../Events';
 import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
 import {Animation} from "../Animation";
 import {Items} from '../items/Items';
 import {IGame} from "../interfaces/IGame";
+import {CharacterEquippedItemEvent, GameSetupEvent, PrerenderEvent} from "../Events";
 
 let Game: IGame = null;
-Events.on('game.setup', game => {
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
@@ -69,14 +70,14 @@ export class Character extends GameObject {
          */
         this.equipmentSlotGroups = {};
         this.equippedItems = {};
-        for (let equipmentSlot in Equipment.Slots) {
+        for (let equipmentSlot in Equipment.EquipmentSlot) {
             //noinspection JSUnfilteredForInLoop
             this.equippedItems[equipmentSlot] = null;
         }
 
         let placeableSlot = new PIXI.Container();
         this.actualShape.addChild(placeableSlot);
-        this.equipmentSlotGroups[Equipment.Slots.PLACEABLE] = placeableSlot;
+        this.equipmentSlotGroups[Equipment.EquipmentSlot.PLACEABLE] = placeableSlot;
         placeableSlot.position.set(
             Constants.PLACEMENT_RANGE,
             0,
@@ -128,7 +129,7 @@ export class Character extends GameObject {
             group.position.copy(this.shape.position);
         }, this);
 
-        Game.renderer.on('prerender', this.update, this);
+        PrerenderEvent.subscribe(this.update, this);
     }
 
     initShape(svg, x, y, size, rotation) {
@@ -170,7 +171,7 @@ export class Character extends GameObject {
         this.rightHand = rightHand.group;
         this.actualShape.addChild(this.rightHand);
 
-        this.equipmentSlotGroups[Equipment.Slots.HAND] = rightHand.slot;
+        this.equipmentSlotGroups[Equipment.EquipmentSlot.HAND] = rightHand.slot;
     }
 
     createHand(handAngleDistance) {
@@ -229,7 +230,7 @@ export class Character extends GameObject {
     }
 
     getEquippedItemAnimationType() {
-        let equippedItem = this.getEquippedItem(Equipment.Slots.HAND);
+        let equippedItem = this.getEquippedItem(Equipment.EquipmentSlot.HAND);
         if (equippedItem === null) {
             equippedItem = Items.None;
         }
@@ -246,7 +247,7 @@ export class Character extends GameObject {
             this.lastRemainingTicks = remainingTicks;
         }
 
-        if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
+        if (this.isSlotEquipped(Equipment.EquipmentSlot.PLACEABLE)) {
             this.animateAction(this.rightHand, 'stab', remainingTicks);
             this.currentAction = 'PLACING';
             return Character.hitAnimationFrameDuration;
@@ -254,7 +255,7 @@ export class Character extends GameObject {
 
         // If nothing is equipped (= action with bare hand), use the boolean `useLeftHand`
         // to alternate between left and right punches
-        if (this.getEquippedItem(Equipment.Slots.HAND) === null && this.useLeftHand) {
+        if (this.getEquippedItem(Equipment.EquipmentSlot.HAND) === null && this.useLeftHand) {
             this.currentAction = 'ALT';
             this.animateAction(this.leftHand, this.getEquippedItemAnimationType(), remainingTicks, true);
         } else {
@@ -266,7 +267,7 @@ export class Character extends GameObject {
     }
 
     altAction() {
-        if (this.isSlotEquipped(Equipment.Slots.PLACEABLE)) {
+        if (this.isSlotEquipped(Equipment.EquipmentSlot.PLACEABLE)) {
             this.currentAction = false;
             return 0;
         }
@@ -326,17 +327,14 @@ export class Character extends GameObject {
         }
     }
 
-    isSlotEquipped(equipmentSlot) {
+    isSlotEquipped(equipmentSlot: EquipmentSlot) {
         return this.equippedItems[equipmentSlot] !== null;
     }
 
     /**
-     *
-     * @param item
-     * @param equipmentSlot
      * @return {Boolean} whether or not the item was equipped
      */
-    equipItem(item, equipmentSlot) {
+    equipItem(item, equipmentSlot: EquipmentSlot) {
         // If the same item is already equipped, just cancel
         if (this.equippedItems[equipmentSlot] === item) {
             return false;
@@ -357,13 +355,13 @@ export class Character extends GameObject {
         let equipmentGraphic = new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size);
         slotGroup.addChild(equipmentGraphic);
 
-        if (equipmentSlot === Equipment.Slots.PLACEABLE) {
+        if (equipmentSlot === Equipment.EquipmentSlot.PLACEABLE) {
             equipmentGraphic.rotation = Math.PI / -2;
         }
 
         this.equippedItems[equipmentSlot] = item;
 
-        Events.trigger('character.equipItem', {item, equipmentSlot});
+        CharacterEquippedItemEvent.trigger({item, equipmentSlot});
 
         return true;
     }
@@ -421,7 +419,7 @@ export class Character extends GameObject {
 
     remove() {
         this.hide();
-        Game.renderer.off('prerender', this.update, this);
+        PrerenderEvent.unsubscribe(this.update);
     }
 }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-import * as InventoryListeners from '../items/InventoryListeners';
+import {InventoryChangeMsg, InventorySlotChangedEvent} from "../Events";
 
 export class SubIcon {
     countElement;
@@ -14,8 +14,10 @@ export class SubIcon {
             this.requiredCount = requiredCount;
             this.count = count;
 
-            InventoryListeners.register(itemName, (count) => {
-                this.count = count;
+            InventorySlotChangedEvent.subscribe((msg: InventoryChangeMsg) => {
+                if (msg.itemName == itemName){
+                    this.count = msg.newCount;
+                }
             });
         }
     }

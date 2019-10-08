@@ -13,7 +13,6 @@ import * as Chat from './Chat';
 import {NamedGroup} from './NamedGroup';
 import {BasicConfig as Constants} from '../config/Basic';
 import {InputManager} from './input/InputManager';
-import * as Events from './Events';
 import {isDefined} from './Utils';
 import {WelcomeMessage} from "./backend/messages/incoming/WelcomeMessage";
 import * as Console from './Console';
@@ -27,6 +26,15 @@ import {GameObjectId} from "./interfaces/Types";
 import {GraphicsConfig} from "../config/Graphics";
 import {IBackend} from "./interfaces/IBackend";
 import {Develop} from "./develop/_Develop";
+import {
+    BackendValidTokenEvent,
+    BeforeDeathEvent,
+    GameLateSetupEvent,
+    GamePlayingEvent,
+    GameSetupEvent,
+    ModulesLoadedEvent,
+    PrerenderEvent
+} from "./Events";
 
 
 export let instance: Game;
@@ -63,13 +71,12 @@ export class Game implements IGame {
     private backend: IBackend;
 
     setup(): void {
-
         let setupPromises = [];
 
         // Setup backend first, as this will take some time to connect.
         this.backend = new Backend();
         this.backend.setup(this);
-        Events.triggerOneTime(Events.GAME_SETUP, this);
+        GameSetupEvent.trigger(this);
 
         this.renderer = PIXI.autoDetectRenderer({
             antialias: true,
@@ -200,7 +207,7 @@ export class Game implements IGame {
         GroundTextureManager.setup(this);
 
         this.domElement = this.renderer.view;
-        GameObject.setup(this);
+        GameObject.setup();
         DayCycle.setup(this.domElement, [
             this.layers.terrain.water,
             this.layers.terrain.ground,
@@ -256,9 +263,29 @@ export class Game implements IGame {
             Develop.get().afterSetup(this);
         }
 
+        /*
+         * https://trello.com/c/aq5lqJB7/289-schutz-gegen-versehentliches-verlassen-des-spiels
+         */
+        // TODO move in setup
+        window.onbeforeunload = (event) => {
+            // Only ask for confirmation if the user is in-game
+            if (this.state !== GameState.PLAYING) {
+                return;
+            }
+
+            // Don't bother developers with confirmations
+            if (developEnabled) {
+                return;
+            }
+
+            let dialogText = 'Do you want to leave this game? You\'re progress will be lost.';
+            event.preventDefault();
+            event.returnValue = dialogText;
+            return dialogText;
+        };
 
         Promise.all(setupPromises).then(() => {
-            Events.triggerOneTime(Events.GAME_AFTER_SETUP, this);
+            GameLateSetupEvent.trigger(this);
         });
     }
 
@@ -297,6 +324,7 @@ export class Game implements IGame {
     }
 
     private render(): void {
+        PrerenderEvent.trigger(this.timeDelta);
         this.renderer.render(this.stage);
     }
 
@@ -315,11 +343,11 @@ export class Game implements IGame {
         this.player = new Player(id, x, y, name, this.miniMap);
         this.player.init();
         this.state = GameState.PLAYING;
-        Events.trigger(Events.GAME_PLAYING, this);
+        GamePlayingEvent.trigger(this);
     }
 
     removePlayer(): void {
-        Events.trigger(Events.GAME_BEFORE_DEATH, this);
+        BeforeDeathEvent.trigger(this);
         this.createSpectator(this.player.character.getX(), this.player.character.getY());
         this.player.remove();
         this.player = undefined;
@@ -358,7 +386,7 @@ export class Game implements IGame {
 
 instance = new Game();
 
-Events.on('modulesLoaded', instance.setup, instance);
+ModulesLoadedEvent.subscribe(instance.setup, instance);
 
 /*
  * Make sure the body can be focused.
@@ -367,27 +395,6 @@ document.body.tabIndex = 0;
 
 
 let developEnabled = false;
-Events.on('backend.validToken', function () {
+BackendValidTokenEvent.subscribe( function () {
     developEnabled = true;
 });
-
-/*
- * https://trello.com/c/aq5lqJB7/289-schutz-gegen-versehentliches-verlassen-des-spiels
- */
-// TODO move in setup
-window.onbeforeunload = function (event) {
-    // Only ask for confirmation if the user is in-game
-    if (instance.state !== GameState.PLAYING) {
-        return;
-    }
-
-    // Don't bother developers with confirmations
-    if (developEnabled) {
-        return;
-    }
-
-    let dialogText = 'Do you want to leave this game? You\'re progress will be lost.';
-    event.preventDefault();
-    event.returnValue = dialogText;
-    return dialogText;
-};

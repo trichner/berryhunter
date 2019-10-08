@@ -6,7 +6,7 @@ import {Vector} from '../Vector';
 import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../Utils';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
 import {radians} from "../interfaces/Types";
-
+import {PrerenderEvent} from "../Events";
 
 let movementInterpolatedObjects = new Set();
 let rotatingObjects = new Set();
@@ -47,15 +47,14 @@ export class GameObject {
         this.show();
     }
 
-    static setup = function (game) {
+    static setup() {
         if (Constants.MOVEMENT_INTERPOLATION) {
-            game.renderer.on('prerender', moveInterpolatedObjects);
+            PrerenderEvent.subscribe(moveInterpolatedObjects);
         }
         if (Constants.LIMIT_TURN_RATE) {
-            game.renderer.on('prerender', applyTurnRate);
+            PrerenderEvent.subscribe(applyTurnRate);
         }
     };
-
 
     initShape(svg, x, y, size, rotation) {
         if (svg) {
@@ -73,8 +72,6 @@ export class GameObject {
 
     /**
      * Fallback method if there is no SVG bound to this gameObject class.
-     * @param x
-     * @param y
      */
     createShape(x, y) {
         throw 'createShape not implemented for ' + this.constructor.name;

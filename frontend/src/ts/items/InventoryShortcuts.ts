@@ -2,11 +2,11 @@
 
 import {BasicConfig as Constants} from '../../config/Basic';
 import {KeyCodes} from '../input/keyboard/keys/KeyCodes';
-import * as Events from "../Events";
 import {GameState, IGame} from "../interfaces/IGame";
+import {GameSetupEvent} from "../Events";
 
 let Game: IGame = null;
-Events.on('game.setup', game => {
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 

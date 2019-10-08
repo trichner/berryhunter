@@ -16,7 +16,6 @@ export enum GameState {
 export interface IGame {
     state: GameState;
 
-    renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
     width: number;
     height: number;
     centerX: number;

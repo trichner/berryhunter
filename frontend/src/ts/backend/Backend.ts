@@ -1,10 +1,10 @@
 'use strict';
 
-import * as Events from '../Events';
 import * as Utils from '../Utils';
 import * as Console from '../Console';
 import * as BackendConstants from './BackendConstants';
 import * as SnapshotFactory from './SnapshotFactory';
+import {Snapshot} from './SnapshotFactory';
 import {GameStateMessage} from './messages/incoming/GameStateMessage';
 import {WelcomeMessage} from './messages/incoming/WelcomeMessage';
 import {ScoreboardMessage} from './messages/incoming/ScoreboardMessage';
@@ -18,19 +18,15 @@ import {BerryhunterApi} from './BerryhunterApi';
 import {flatbuffers} from 'flatbuffers';
 import * as Urls from './Urls';
 import {GameState, IGame} from "../interfaces/IGame";
-import {IBackend} from "../interfaces/IBackend";
-import {Snapshot} from "./SnapshotFactory";
+import {BackendState, IBackend} from "../interfaces/IBackend";
 import {Develop} from "../develop/_Develop";
-
-export enum BackendState {
-    DISCONNECTED = 'DISCONNECTED',
-    CONNECTING = 'CONNECTING',
-    CONNECTED = 'CONNECTED',
-    WELCOMED = 'WELCOMED',
-    SPECTATING = 'SPECTATING',
-    PLAYING = 'PLAYING',
-    ERROR = 'ERROR',
-}
+import {
+    BackendSetupEvent,
+    BackendStateChangedEvent,
+    BackendValidTokenEvent,
+    FirstGameStateHandledEvent,
+    GameLateSetupEvent
+} from "../Events";
 
 export class Backend implements IBackend {
 
@@ -54,7 +50,7 @@ export class Backend implements IBackend {
             this.firstGameStateResolve = resolve;
             this.firstGameStateReject = reject;
         }).then(() => {
-            Events.triggerOneTime('firstGameStateRendered');
+            FirstGameStateHandledEvent.trigger();
         });
 
         this.setState(BackendState.CONNECTING);
@@ -77,7 +73,7 @@ export class Backend implements IBackend {
             this.lastMessageReceivedTime = performance.now();
         }
 
-        Events.triggerOneTime('backend.setup', this);
+        BackendSetupEvent.trigger(this);
     }
 
     public getState(): BackendState {
@@ -85,6 +81,7 @@ export class Backend implements IBackend {
     }
 
     setState(newState: BackendState) {
+        let oldState = this.state;
         this.state = newState;
         Console.log('Backend State: ' + this.state);
 
@@ -102,7 +99,10 @@ export class Backend implements IBackend {
             }
         }
 
-        Events.trigger('backend.stateChange', this);
+        BackendStateChangedEvent.trigger({
+            oldState: oldState,
+            newState: newState
+        });
     }
 
     private receive(message: MessageEvent): void {
@@ -207,7 +207,7 @@ export class Backend implements IBackend {
                 if (Develop.isActive()) {
                     Develop.get().logServerTick(gameState, timeSinceLastMessage);
                 }
-                Events.on('game.afterSetup', () => {
+                GameLateSetupEvent.subscribe(() => {
                     this.receiveSnapshot(SnapshotFactory.newSnapshot(this.state, gameState));
                 });
                 break;
@@ -216,7 +216,7 @@ export class Backend implements IBackend {
                 Scoreboard.updateFromBackend(scoreboardMessage);
                 break;
             case BerryhunterApi.ServerMessageBody.Pong:
-                Events.triggerOneTime('backend.validToken', this);
+                BackendValidTokenEvent.trigger(this);
                 break;
             default:
                 if (Develop.isActive()) {
