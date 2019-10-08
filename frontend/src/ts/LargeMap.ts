@@ -4,6 +4,8 @@ import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import * as Events from "./Events";
+import {GAME_DEATH, GAME_SETUP} from "./Events";
+import {deg2rad} from "./Utils";
 
 export class LargeMap {
     mapWidth;
@@ -109,7 +111,6 @@ export class LargeMap {
             // The object is already on the miniMap
             return;
         }
-8
         this.registeredGameObjectIds.push(gameObject.id);
 
         const largeMapIcon = gameObject.createLargeMapIcon();
@@ -146,12 +147,17 @@ function update() {
         // TODO Rotation des largeMapIcons anpassen
         gameObject.largeMapIcon.position.x = gameObject.getX() * this.scale;
         gameObject.largeMapIcon.position.y = gameObject.getY() * this.scale;
+        // TODO only works for character
+        gameObject.largeMapIcon.rotation = gameObject.getRotation() + deg2rad(90);
     });
 }
 
 let Game = null;
-Events.on('game.setup', game => {
+Events.on(GAME_SETUP, game => {
     Game = game;
+});
+Events.on(GAME_DEATH, game => {
+    document.getElementById("largeMap").classList.add('hidden');
 });
 
 window.addEventListener('keydown', function (event) {
