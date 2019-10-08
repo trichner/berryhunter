@@ -13,13 +13,19 @@ import {
 import * as Urls from '../backend/Urls';
 import * as moment from 'moment-mini';
 import * as Preloading from "../Preloading";
-import {EndScreenShownEvent, GamePlayingEvent, StartScreenDomReadyEvent} from '../Events';
+import {EndScreenShownEvent, GamePlayingEvent, GameSetupEvent, StartScreenDomReadyEvent} from '../Events';
+import {GameState, IGame} from "../interfaces/IGame";
 
 let rootElement: HTMLElement;
 let leaderboardTables: Map<string, HTMLElement>;
 let templateRow: HTMLElement;
 let elements = {};
 let pendingTimeout: number;
+
+let Game: IGame = null;
+GameSetupEvent.subscribe(game => {
+    Game = game;
+});
 
 export const categories = [
     'alltime',
@@ -100,6 +106,11 @@ StartScreenDomReadyEvent.subscribe(() => {
 });
 
 function open() {
+    if (Game.state === GameState.PLAYING) {
+        // Prevent the scoreboard from being opened during transition into play mode
+        return;
+    }
+
     rootElement.classList.add('open');
     document.body.classList.add('leaderboardVisible');
 
