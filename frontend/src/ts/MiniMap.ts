@@ -3,6 +3,13 @@
 import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
 import {GameObject} from "./gameObjects/_GameObject";
+import * as Events from "./Events";
+import {GAME_SETUP} from "./Events";
+
+let Game = null;
+Events.on(GAME_SETUP, game => {
+    Game = game;
+});
 
 export enum Layer {
     CHARACTER,
@@ -152,3 +159,12 @@ function update() {
         gameObject.minimapIcon.position.y = gameObject.getY() * this.scale;
     });
 }
+
+document.getElementById('miniMap').addEventListener('mousedown', function (event) {
+    if (Game.state !== Game.States.PLAYING) {
+        return;
+    }
+    if (event) {
+        document.getElementById("largeMap").classList.toggle('hidden');
+    }
+});

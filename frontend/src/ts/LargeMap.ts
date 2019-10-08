@@ -7,6 +7,11 @@ import * as Events from "./Events";
 import {GAME_DEATH, GAME_SETUP} from "./Events";
 import {deg2rad} from "./Utils";
 
+let Game = null;
+Events.on(GAME_SETUP, game => {
+    Game = game;
+});
+
 export class LargeMap {
     mapWidth;
     mapHeight;
@@ -152,10 +157,10 @@ function update() {
     });
 }
 
-let Game = null;
-Events.on(GAME_SETUP, game => {
-    Game = game;
-});
+function toggleVisibility(){
+        document.getElementById("largeMap").classList.toggle('hidden');
+}
+
 Events.on(GAME_DEATH, game => {
     document.getElementById("largeMap").classList.add('hidden');
 });
@@ -165,6 +170,6 @@ window.addEventListener('keydown', function (event) {
         return;
     }
     if (event.keyCode === KeyCodes.M) {
-        document.getElementById("largeMap").classList.toggle('hidden');
+        toggleVisibility();
     }
 });
