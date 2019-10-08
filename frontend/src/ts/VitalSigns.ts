@@ -1,13 +1,14 @@
 'use strict';
 
 import * as Preloading from './Preloading';
-import * as Events from './Events';
 import * as UserInterface from './userInterface/UserInterface';
 import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/Basic';
 import {VitalSignBar} from "./userInterface/VitalSignBar";
+import {IGame} from "./interfaces/IGame";
+import {PreloadingStartedEvent, PrerenderEvent, VitalSignChangedEvent} from "./Events";
 
-let Game = null;
+let Game: IGame = null;
 
 export enum VitalSign {
     health = 'health',
@@ -56,7 +57,7 @@ export class VitalSigns {
         this.display = new HtmlDisplay();
         this.display.hideAll();
 
-        Game.renderer.on('prerender', this.update, this);
+        PrerenderEvent.subscribe(this.update, this);
     }
 
     static setup(game, group) {
@@ -98,7 +99,7 @@ export class VitalSigns {
         }
         previousValue /= VitalSigns.MAXIMUM_VALUES[valueIndex];
         this.uiBars[valueIndex].setValue(relativeValue, previousValue);
-        Events.trigger('vitalSign.change', {
+        VitalSignChangedEvent.trigger({
             vitalSign: valueIndex,
             newValue: {
                 relative: relativeValue,
@@ -163,7 +164,7 @@ export class VitalSigns {
     }
 
     destroy() {
-        Game.renderer.off('prerender', this.update, this);
+        PrerenderEvent.unsubscribe(this.update);
         this.display.onDestroy();
     }
 }
@@ -339,7 +340,7 @@ interface IVitalSignDisplay {
 const htmlFile = require('../partials/vitalSigns.html');
 let rootElement: HTMLElement;
 
-Events.on('preloading.execute', () => {
+PreloadingStartedEvent.subscribe(() => {
     Preloading.renderPartial(htmlFile, onDomReady);
 });
 

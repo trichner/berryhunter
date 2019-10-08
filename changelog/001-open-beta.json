@@ -10,6 +10,21 @@
   "changes": [
     {
       "category": "improvement",
+      "description": "A new world map.",
+      "trelloId": "c/FYUZupMf"
+    },
+    {
+      "category": "bugFix",
+      "description": "Craft progress in the craft menu gets now reset on player death.",
+      "trelloId": "c/6qNQZR1F"
+    },
+    {
+      "category": "bugFix",
+      "description": "Chat doesn't stay open anymore when you die while typing a message.",
+      "trelloId": "c/JMGva8td"
+    },
+    {
+      "category": "improvement",
       "description": "Fixed performance issues with damage, freezing and starving overlays.",
       "trelloId": "c/XHNzicng"
     },

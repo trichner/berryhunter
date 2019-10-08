@@ -1,13 +1,14 @@
 'use strict';
 
 import {GameObject} from '../gameObjects/_GameObject';
-import * as Develop from '../develop/_Develop';
 import * as PIXI from 'pixi.js';
 import {hasAABB} from './AABBs';
-import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
+import {Develop} from "./_Develop";
+import {GameSetupEvent, PrerenderEvent} from "../Events";
 
-let Game = null;
-Events.on('game.setup', game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
@@ -21,8 +22,8 @@ export class DebugCircle extends GameObject {
 
         this.timeToLife = 60;
 
-        Game.renderer.on('prerender', () => {
-            this.timeToLife -= Game.timeDelta;
+        PrerenderEvent.subscribe((timeDelta: number) => {
+            this.timeToLife -= timeDelta;
             if (this.timeToLife < 0) {
                 this.hide();
                 delete Game.map.objects[this.id];
@@ -30,6 +31,9 @@ export class DebugCircle extends GameObject {
                 let thisHasAABB = this as hasAABB;
                 thisHasAABB.aabb.parent.removeChild(thisHasAABB.aabb);
                 thisHasAABB.aabbConnector.parent.removeChild(thisHasAABB.aabbConnector);
+
+                // Remove listener
+                return true;
             }
         }, this);
     }
@@ -37,7 +41,7 @@ export class DebugCircle extends GameObject {
     createShape(x, y): PIXI.Container {
         let circle = new PIXI.Graphics();
         circle.lineColor = 0xFFFF00;
-        circle.lineWidth = Develop.settings.linewidth;
+        circle.lineWidth = Develop.get().settings.linewidth;
         circle.drawCircle(x, y, this.size / 2);
         return circle;
     }

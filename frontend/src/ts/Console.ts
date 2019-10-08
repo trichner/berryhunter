@@ -1,13 +1,10 @@
 'use strict';
 
 import * as Preloading from './Preloading';
-import * as Events from './Events';
+import {BackendValidTokenEvent} from './Events';
 import {clearNode, getUrlParameter, isFunction, preventInputPropagation, resetFocus} from './Utils';
+import {CommandMessage} from "./backend/messages/outgoing/CommandMessage";
 
-let Backend = null;
-Events.on('backend.setup', backend => {
-    Backend = backend;
-});
 
 export const KEY_CODE = 'Backquote';
 
@@ -25,7 +22,8 @@ const MAX_HISTORY_LENGTH = 15;
 
 const LOCAL_COMMAND_HANDLERS: { [key: string]: (parameters: string[]) => void } = {
     'define': handleDefine,
-    'list': handleList
+    'list': handleList,
+    'crash': handleCrash
 };
 
 let token = getUrlParameter('token');
@@ -40,7 +38,7 @@ let commandHistory: string[];
 let consoleSuggestions: HTMLDataListElement;
 let macros: { [key: string]: string[] } = {};
 
-Events.on('backend.validToken', function () {
+BackendValidTokenEvent.subscribe(function () {
     // Only load the console once the token was confirmed as valid
     Preloading.renderPartial(require('../partials/console.html'), onDomReady);
 });
@@ -97,10 +95,18 @@ export function registerLocalCommandHandler(command: string, handler: (parameter
     LOCAL_COMMAND_HANDLERS[command] = handler;
 }
 
+/**
+ * @param command
+ * @param isAutoCommand hides the command from the history
+ */
 export function run(command: string, isAutoCommand: boolean = true) {
     onCommand(command, isAutoCommand);
 }
 
+/**
+ * @param command
+ * @param isAutoCommand hides the command from the history
+ */
 function onCommand(command: string, isAutoCommand: boolean) {
     // Ignore empty commands
     if (!command) {
@@ -119,10 +125,7 @@ function onCommand(command: string, isAutoCommand: boolean) {
     log(command);
     if (token) {
         if (!tryRunLocally(command)) {
-            Backend.sendCommand({
-                command: command,
-                token: token,
-            });
+            new CommandMessage(command, token).send();
         }
     } else {
         if (!_isOpen) {
@@ -225,6 +228,15 @@ function handleListMacros() {
     for (const [macroName, commands] of Object.entries(macros)) {
         log(macroName + ' => ' + commands);
     }
+}
+
+function handleCrash() {
+    // Crashing the server in two simple steps
+    // 1: Kill yourself
+    onCommand('kill', true);
+    // 2: close connection by navigating away / reloading the page
+    // window.location.reload();
+    window.location.assign('about:blank');
 }
 
 function milliseconds2string(ms) {

@@ -1,11 +1,13 @@
 'use strict';
 
 import * as NameGenerator from './NameGenerator';
-import * as Events from "./Events";
 import {Account} from "./Account";
+import {IBackend} from "./interfaces/IBackend";
+import {JoinMessage} from "./backend/messages/outgoing/JoinMessage";
+import {BackendSetupEvent, GameJoinEvent, screen} from "./Events";
 
-let Backend = null;
-Events.on('backend.setup', backend => {
+let Backend: IBackend = null;
+BackendSetupEvent.subscribe((backend: IBackend) => {
     Backend = backend;
 });
 
@@ -32,7 +34,7 @@ function remove() {
     Account.playerName = null;
 }
 
-export function prepareForm(formElement, inputElement, screen: ('start' | 'end')) {
+export function prepareForm(formElement, inputElement, screen: screen) {
     inputElement.setAttribute('maxlength', MAX_LENGTH);
     formElement.addEventListener('submit', (event) => {
         onSubmit(event, inputElement, screen);
@@ -63,10 +65,10 @@ export function hash(name, max) {
 }
 
 
-function onSubmit(event, inputElement, screen) {
+function onSubmit(event, inputElement, screen: screen) {
     event.preventDefault();
 
-    let name = inputElement.value;
+    let name: string = inputElement.value;
     if (!name) {
         name = inputElement.getAttribute('placeholder');
         remove();
@@ -77,10 +79,7 @@ function onSubmit(event, inputElement, screen) {
     name = name.substr(0, MAX_LENGTH);
 
 
-    Backend.sendJoin({
-        playerName: name
-    });
-
-    Events.trigger('game.join', screen);
+    new JoinMessage(name).send();
+    GameJoinEvent.trigger(screen);
 }
 

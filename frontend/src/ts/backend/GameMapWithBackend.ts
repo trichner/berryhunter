@@ -1,18 +1,20 @@
 'use strict';
 
 import _clone = require('lodash/clone');
-import {isDefined} from '../Utils';
+import {isDefined, removeElement} from '../Utils';
 import {DebugCircle} from '../develop/DebugCircle';
 import {GameObject} from '../gameObjects/_GameObject';
 import {Character} from '../gameObjects/Character';
 import {Placeable} from '../gameObjects/Placeable';
 import {Resource} from '../gameObjects/Resources';
-import * as Develop from '../develop/_Develop';
 import * as Equipment from '../items/Equipment';
+import {EquipmentSlot} from '../items/Equipment';
 import {BerryhunterApi} from './BerryhunterApi';
 import {Layer} from "../MiniMap";
+import {IGame} from "../interfaces/IGame";
+import {Develop} from "../develop/_Develop";
 
-let Game = null;
+let Game: IGame = null;
 
 export class GameMapWithBackend {
     radius: number;
@@ -94,13 +96,13 @@ export class GameMapWithBackend {
             /**
              * Handle equipment
              */
-            let slotsToHandle = _clone(Equipment.Slots);
-            delete slotsToHandle.PLACEABLE;
+            let slotsToHandle = Object.keys(EquipmentSlot).map(k => EquipmentSlot[k as any]);
+            removeElement(slotsToHandle, EquipmentSlot.PLACEABLE);
 
             if (isDefined(entity.equipment)) {
                 entity.equipment.forEach((equippedItem) => {
                     let slot = Equipment.Helper.getItemEquipmentSlot(equippedItem);
-                    delete slotsToHandle[slot];
+                    removeElement(slotsToHandle, slot);
                     let currentlyEquippedItem = character.getEquippedItem(slot);
                     if (currentlyEquippedItem === equippedItem) {
                         return;
@@ -113,10 +115,9 @@ export class GameMapWithBackend {
             }
 
             // All Slots that are not equipped according to backend are dropped.
-            for (let slot in slotsToHandle) {
-                //noinspection JSUnfilteredForInLoop
+            slotsToHandle.forEach(slot => {
                 gameObject.unequipItem(slot);
-            }
+            });
 
             /**
              * Handle Actions

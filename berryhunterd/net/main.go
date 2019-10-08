@@ -22,7 +22,8 @@ func serveWs(h func(*Client), upgrader *websocket.Upgrader, w http.ResponseWrite
 		onConnectedHandler: h,
 		send:               make(chan []byte, 256),
 		receive:            make(chan []byte, 256),
-		quit:               make(chan struct{}, 1),
+		connQuit:           make(chan struct{}, 1),
+		chanQuit:           make(chan struct{}, 1),
 	}
 	client.Run()
 }

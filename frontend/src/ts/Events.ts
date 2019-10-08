@@ -1,45 +1,14 @@
-import {isDefined} from "./Utils";
+import {isDefined, removeElement} from "./Utils";
+import {IGame} from "./interfaces/IGame";
+import {BackendState, IBackend} from "./interfaces/IBackend";
+import {Player} from "./Player";
+import {InventorySlot} from "./items/InventorySlot";
+import {Vector} from "./Vector";
+import {integer, radians} from "./interfaces/Types";
+import {InputAction} from "./backend/messages/outgoing/InputMessage";
+import {EquipmentSlot} from "./items/Equipment";
 
-/**
- * Will print a warning to the console when an event is
- * triggered where no listeners have been registered.
- */
-const WARN_ON_EMPTY_LISTENERS = false;
 const warnedEvents = [];
-
-const oneTimeEvents = {};
-const registeredListeners = {};
-
-// TODO remove callbacks as soon as triggerOnce was handled
-
-/**
- *
- * @param event event name to listen for
- * @param callback may return true to be deleted as listener, e.g. (filtered) single execution callbacks
- * @param context will be 'this' in the callback
- */
-export function on(event, callback, context?) {
-    if (oneTimeEvents.hasOwnProperty(event)) {
-        // One time event was already triggered - just execute
-        // the callback with appropriate parameters and done
-        let eventData = oneTimeEvents[event];
-        callback.call(eventData.context, eventData.payload);
-        return;
-    }
-
-    let listeners;
-    if (registeredListeners.hasOwnProperty(event)) {
-        listeners = registeredListeners[event];
-    } else {
-        listeners = [];
-        registeredListeners[event] = listeners;
-    }
-
-    if (isDefined(context)) {
-        callback = callback.bind(context);
-    }
-    listeners.push(callback);
-}
 
 function warnEmptyListeners(event) {
     // make sure there's only 1 warning per event
@@ -49,45 +18,235 @@ function warnEmptyListeners(event) {
     }
 }
 
-export function trigger(event, payload?) {
-    // console.info('Trigger ' + event);
-    if (registeredListeners.hasOwnProperty(event)) {
-        let listeners = registeredListeners[event];
-        if (WARN_ON_EMPTY_LISTENERS && listeners.length === 0) {
-            warnEmptyListeners(event);
+export interface IEvent {
+    subscribe(callback: (payload?: any) => (boolean | void), context?: object): void;
+    unsubscribe(callback: (payload?: any) => (boolean | void)): void;
+    trigger(payload?: any): void;
+}
+
+abstract class Event implements IEvent {
+    private readonly requiresListeners: boolean;
+    private listeners = [];
+
+    /**
+     * @param requiresListeners Will print a warning to the console when
+     * an event is triggered where no listeners have been registered.
+     */
+    constructor(requiresListeners: boolean = false) {
+        this.requiresListeners = requiresListeners;
+    }
+
+    public subscribe(callback: (payload?: any) => (boolean | void), context?: object): void {
+        if (isDefined(context)) {
+            callback = callback.bind(context);
+        }
+        this.listeners.push(callback);
+    }
+
+    public unsubscribe(callback: (payload?: any) => (boolean | void)): void {
+        if (!removeElement(this.listeners, callback)) {
+            warnWithStacktrace('Tried to unsubscribe callback that was never subscribed.');
+        }
+    }
+
+    public trigger(payload?: any): void {
+        if (this.listeners.length === 0){
+            if (this.requiresListeners) {
+                warnEmptyListeners(this.constructor.name)
+            }
+
             return;
         }
+
         let indexToDelete = [];
-        listeners.forEach(function (listener, index) {
+        this.listeners.forEach((listener, index) => {
             if (listener(payload)) {
                 indexToDelete.push(index);
             }
         });
-        indexToDelete.forEach(function (index) {
-            listeners.splice(index, 1);
-        })
 
-    } else if (WARN_ON_EMPTY_LISTENERS) {
-        warnEmptyListeners(event);
-        return;
+        indexToDelete.forEach((index) => {
+            this.listeners.splice(index, 1);
+        });
     }
 }
 
-export function triggerOneTime(event, payload?) {
-    if (oneTimeEvents.hasOwnProperty(event)) {
-        console.warn('Multiple triggers of "' + event + '"!');
-        return;
+class SimpleEvent extends Event {
+    public subscribe(callback: () => (boolean | void), context?: object): void {
+        super.subscribe(callback, context);
     }
 
-    oneTimeEvents[event] = {
-        payload: payload,
+    public unsubscribe(callback: () => (boolean | void)): void {
+        super.unsubscribe(callback);
+    }
+
+    public trigger(): void {
+        super.trigger();
+    }
+}
+
+class PayloadEvent<T> extends Event {
+    public subscribe(callback: (payload: T) => (boolean | void), context?: object): void {
+        super.subscribe(callback, context);
+    }
+
+    public unsubscribe(callback: (payload: T) => (boolean | void)): void {
+        super.unsubscribe(callback);
+    }
+
+    public trigger(payload: T): void {
+        super.trigger(payload);
+    }
+}
+
+abstract class OneTimeEvent extends Event {
+    private wasTriggered: boolean;
+
+    public subscribe(callback: (payload?: any) => (boolean | void), context?: object): void {
+        if (this.wasTriggered) {
+            // One time event was already triggered - just execute
+            // the callback with appropriate parameters and done
+            this.executeCallback(callback, context);
+            return;
+        }
+
+        super.subscribe(callback, context);
+    }
+
+    protected abstract executeCallback(callback: (payload?: any) => (boolean | void), context?: object);
+
+    public unsubscribe(callback: (payload?: any) => (boolean | void)): void {
+        if (this.wasTriggered) {
+            warnWithStacktrace('Unsubscribed from an already triggered one-time event.');
+        }
+
+        super.unsubscribe(callback)
+    }
+
+    public trigger(payload?: any): void {
+        if (this.wasTriggered) {
+            warnWithStacktrace('Multiple triggers of "' + this.constructor.name + '".');
+            return;
+        }
+
+        super.trigger(payload);
+        this.wasTriggered = true;
+    }
+}
+
+class OneTimeSimpleEvent extends OneTimeEvent {
+
+    public subscribe(callback: () => (boolean | void), context?: object): void {
+        super.subscribe(callback, context);
+    }
+
+    public unsubscribe(callback: () => (boolean | void)): void {
+        super.unsubscribe(callback);
+    }
+
+    public trigger(): void {
+        super.trigger();
+    }
+
+    protected executeCallback(callback: (payload?: any) => (boolean | void), context?: object) {
+        callback.call(context);
+    }
+}
+
+class OneTimePayloadEvent<T> extends OneTimeEvent {
+    private payload: T;
+
+    public subscribe(callback: (payload: T) => (boolean | void), context?: object): void {
+        super.subscribe(callback, context);
+    }
+
+    public unsubscribe(callback: (payload: T) => (boolean | void)): void {
+        super.unsubscribe(callback);
+    }
+
+    public trigger(payload: T): void {
+        this.payload = payload;
+        super.trigger(payload);
+    }
+
+
+    protected executeCallback(callback: (payload: T) => (boolean | void), context?: object) {
+        callback.call(context, this.payload);
+    }
+}
+
+function warnWithStacktrace(msg: string) {
+    console.warn(msg);
+    console.trace();
+}
+
+export const ModulesLoadedEvent: OneTimeSimpleEvent = new OneTimeSimpleEvent();
+export const PreloadingStartedEvent:  OneTimeSimpleEvent = new OneTimeSimpleEvent();
+export const PreloadingProgressedEvent:  PayloadEvent<number> = new PayloadEvent<number>();
+
+export const GameSetupEvent: OneTimePayloadEvent<IGame> = new OneTimePayloadEvent<IGame>();
+export const GameLateSetupEvent: OneTimePayloadEvent<IGame> = new OneTimePayloadEvent<IGame>();
+export const GamePlayingEvent: PayloadEvent<IGame> = new PayloadEvent<IGame>();
+export const PlayerCreatedEvent: PayloadEvent<Player> = new PayloadEvent<Player>();
+export const BeforeDeathEvent: PayloadEvent<IGame> = new PayloadEvent<IGame>();
+export type screen = 'start' | 'end';
+export const GameJoinEvent: PayloadEvent<screen> = new PayloadEvent<screen>();
+
+export const BackendSetupEvent: OneTimePayloadEvent<IBackend> = new OneTimePayloadEvent<IBackend>();
+export interface BackendStateChangedMsg {
+    oldState: BackendState;
+    newState: BackendState;
+}
+export const BackendStateChangedEvent: PayloadEvent<BackendStateChangedMsg> = new PayloadEvent<BackendStateChangedMsg>();
+/**
+ * Triggered when the developer token was validated by the backend.
+ */
+export const BackendValidTokenEvent: OneTimePayloadEvent<IBackend> = new OneTimePayloadEvent<IBackend>();
+export const FirstGameStateHandledEvent: OneTimeSimpleEvent = new OneTimeSimpleEvent();
+
+export const StartScreenDomReadyEvent: OneTimePayloadEvent<HTMLElement> = new OneTimePayloadEvent<HTMLElement>();
+export const EndScreenShownEvent: SimpleEvent = new SimpleEvent();
+
+export interface AutoFeedMsg {
+    index: number;
+    inventorySlot: InventorySlot;
+}
+
+export const AutoFeedActivateEvent: PayloadEvent<AutoFeedMsg> = new PayloadEvent<AutoFeedMsg>(true);
+export const AutoFeedDeactivateEvent: PayloadEvent<AutoFeedMsg> = new PayloadEvent<AutoFeedMsg>(true);
+
+export interface VitalSignMsg {
+    vitalSign: string;
+    newValue: {
+        relative: number,
+        absolute: number
     };
-    trigger(event, payload);
-    // Delete all listeners of this one time event, as they won't ever be called again
-    delete registeredListeners[event];
 }
 
-export const GAME_SETUP = 'game.setup';
-export const GAME_PLAYING = 'game.playing';
-export const GAME_DEATH = 'game.death';
-export const ENDSCREEN_SHOWN = 'endscreen.shown';
+export const VitalSignChangedEvent: PayloadEvent<VitalSignMsg> = new PayloadEvent<VitalSignMsg>();
+
+export const CameraUpdatedEvent: PayloadEvent<Vector> = new PayloadEvent<Vector>();
+export const ControlsRotateEvent: PayloadEvent<radians> = new PayloadEvent<radians>();
+export const ControlsMovementEvent: PayloadEvent<Vector> = new PayloadEvent<Vector>();
+export const ControlsActionEvent: PayloadEvent<InputAction> = new PayloadEvent<InputAction>();
+
+export interface CharacterEquippedItemMsg{
+    // TODO create Item interface/class
+    item: any,
+    equipmentSlot: EquipmentSlot
+}
+export const CharacterEquippedItemEvent: PayloadEvent<CharacterEquippedItemMsg> = new PayloadEvent<CharacterEquippedItemMsg>();
+export interface InventoryChangeMsg {
+    itemName: string,
+    change: integer,
+    newCount: integer,
+}
+export const InventoryAddEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEvent<InventoryChangeMsg>();
+export const InventoryRemoveEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEvent<InventoryChangeMsg>();
+export const InventorySlotChangedEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEvent<InventoryChangeMsg>();
+export const InventoryChangedEvent: SimpleEvent = new SimpleEvent();
+
+/**
+ * Fired before game rendering starts. Payload is the time delta to the last frame.
+ */
+export const PrerenderEvent: PayloadEvent<number> = new PayloadEvent<number>();

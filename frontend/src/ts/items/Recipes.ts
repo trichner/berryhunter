@@ -4,8 +4,11 @@ import {isDefined, isFunction} from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Placeable} from '../gameObjects/Placeable';
 import {Items} from '../items/Items';
+import {ClickableIcon} from "../userInterface/ClickableIcon";
+import {IGame} from "../interfaces/IGame";
+import {BeforeDeathEvent} from "../Events";
 
-let Game = null;
+let Game: IGame = null;
 
 /**
  * Gets filled with all defined recipes
@@ -246,3 +249,12 @@ export function checkNearbys(recipes) {
 
     return recipesWithNear.concat(recipesWithoutNear);
 }
+
+BeforeDeathEvent.subscribe(() => {
+    definedRecipes.forEach(recipe => {
+        let craftIcon: ClickableIcon = recipe.clickableIcon;
+        if (isDefined(craftIcon) && craftIcon.inProgress) {
+            craftIcon.updateProgress(0);
+        }
+    })
+});

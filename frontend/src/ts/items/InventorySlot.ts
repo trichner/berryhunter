@@ -3,13 +3,21 @@
 import * as Equipment from '../items/Equipment';
 import {ItemType} from './ItemType';
 import * as UserInterface from '../userInterface/UserInterface';
-import * as InventoryListeners from './InventoryListeners';
-import * as Events from '../Events';
 import * as AutoFeed from '../AutoFeed';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
+import {IGame} from "../interfaces/IGame";
+import {
+    AutoFeedActivateEvent,
+    AutoFeedDeactivateEvent,
+    AutoFeedMsg,
+    GameSetupEvent,
+    InventoryAddEvent,
+    InventoryRemoveEvent,
+    InventorySlotChangedEvent
+} from "../Events";
 
-let Game = null;
-Events.on('game.setup', game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
@@ -58,17 +66,20 @@ export class InventorySlot {
             this.activeAutoFeed = !this.activeAutoFeed;
             this.domElement.classList.toggle('activeAutoFeed', this.activeAutoFeed);
             if (this.activeAutoFeed) {
-                Events.trigger('autoFeed.activate', {
+                AutoFeedActivateEvent.trigger({
                     index: this.index,
                     inventorySlot: this
                 });
             } else {
-                Events.trigger('autoFeed.deactivate');
+                AutoFeedDeactivateEvent.trigger({
+                    index: this.index,
+                    inventorySlot: this
+                });
             }
         });
 
         // Deactivate AutoFeed for this slot if another slot is activated
-        Events.on('autoFeed.activate', (payload) => {
+        AutoFeedActivateEvent.subscribe((payload: AutoFeedMsg) => {
             if (this.activeAutoFeed && payload.index !== this.index) {
                 this.activeAutoFeed = false;
                 this.domElement.classList.remove('activeAutoFeed');
@@ -143,14 +154,15 @@ export class InventorySlot {
 
     setCount(count) {
         if (this.count !== count) {
+            let change = count - this.count;
             if (this.count < count) {
-                Events.trigger('inventory.add', {itemName: this.item.name, change: (count - this.count)});
+                InventoryAddEvent.trigger({itemName: this.item.name, change: change, newCount: count})
             } else {
-                Events.trigger('inventory.remove', {itemName: this.item.name, change: (count - this.count)});
+                InventoryRemoveEvent.trigger({itemName: this.item.name, change: change, newCount: count})
             }
             this.count = count;
             this.clickableIcon.setCount(count);
-            InventoryListeners.notify(this.item.name, count);
+            InventorySlotChangedEvent.trigger({itemName: this.item.name, change: change, newCount: count})
         }
     }
 
@@ -173,7 +185,10 @@ export class InventorySlot {
         if (this.activeAutoFeed) {
             this.activeAutoFeed = false;
             this.domElement.classList.remove('activeAutoFeed');
-            Events.trigger('autoFeed.deactivate');
+            AutoFeedDeactivateEvent.trigger({
+                index: this.index,
+                inventorySlot: this
+            });
         }
 
         if (this.isActive()) {

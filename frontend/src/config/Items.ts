@@ -5,7 +5,7 @@
  *
  */
 import {ItemType} from '../ts/items/ItemType';
-import * as Equipment from '../ts/items/Equipment';
+import {EquipmentSlot} from "../ts/items/Equipment";
 
 /**
  * ItemName: {
@@ -64,7 +64,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/tools/wood-club.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -79,7 +79,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/tools/stone-tool.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -94,7 +94,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/tools/bronze-tool.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -109,7 +109,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/tools/iron-tool.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -124,7 +124,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/tools/titanium-tool.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -142,7 +142,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/swords/stone-club.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -156,7 +156,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/swords/bronze-sword.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -170,7 +170,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/swords/iron-sword.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -184,7 +184,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/swords/titanium-sword.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -202,7 +202,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/spears/stone-spear.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'stab'
         }
     },
@@ -216,7 +216,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/spears/bronze-spear.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'stab'
         }
     },
@@ -230,7 +230,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/spears/iron-spear.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'stab'
         }
     },
@@ -244,7 +244,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/spears/titanium-spear.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'stab'
         }
     },
@@ -263,7 +263,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/hammers/wood-hammer.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -278,7 +278,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/hammers/stone-hammer.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -293,7 +293,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/hammers/bronze-hammer.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -308,7 +308,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/hammers/iron-hammer.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },
@@ -508,17 +508,17 @@ export const ItemsConfig = {
     // 		directions: false
     // 	}
     // },
-    IronWall: {
-        // TODO
-        icon: {file: ''},
-        graphic: {file: ''},
-        definition: require('../../../api/items/walls/iron-wall.json'),
-        type: ItemType.PLACEABLE,
-        placeable: {
-            layer: 'placeables.walls',
-            multiPlacing: true
-        }
-    },
+    // IronWall: {
+    //     // TODO
+    //     icon: {file: ''},
+    //     graphic: {file: ''},
+    //     definition: require('../../../api/items/walls/iron-wall.json'),
+    //     type: ItemType.PLACEABLE,
+    //     placeable: {
+    //         layer: 'placeables.walls',
+    //         multiPlacing: true
+    //     }
+    // },
     // IronSpikyWall: {
     // 	// TODO
     // 	icon: {file: ''},
@@ -651,7 +651,7 @@ export const ItemsConfig = {
         definition: require('../../../api/items/mystic-wand.json'),
         type: ItemType.EQUIPMENT,
         equipment: {
-            slot: Equipment.Slots.HAND,
+            slot: EquipmentSlot.HAND,
             animation: 'swing'
         }
     },

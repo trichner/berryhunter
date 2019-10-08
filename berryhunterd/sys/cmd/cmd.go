@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
-	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
 	"github.com/trichner/berryhunter/berryhunterd/codec"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
@@ -147,7 +146,7 @@ var commands = map[string]Command{
 
 		h := p.VitalSigns().Health
 		p.VitalSigns().Health = h.SubFraction(dmgf)
-		p.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
+		p.StatusEffects().Add(model.StatusEffectDamaged)
 
 		return nil
 	},

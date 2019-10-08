@@ -1,10 +1,14 @@
 'use strict';
 
-import * as Events from './Events';
+import {
+    BackendSetupEvent,
+    ControlsActionEvent,
+    ControlsMovementEvent,
+    ControlsRotateEvent,
+    GameSetupEvent
+} from './Events';
 import {BasicConfig as Constants} from '../config/Basic';
-import * as Develop from './develop/_Develop';
 import * as Equipment from './items/Equipment';
-import * as Backend from './backend/Backend';
 import * as Console from './Console';
 import * as Chat from './Chat';
 import {isDefined, isUndefined, TwoDimensional} from './Utils';
@@ -12,10 +16,21 @@ import * as Tock from 'tocktimer';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 import {Character} from "./gameObjects/Character";
+import {GameState, IGame} from "./interfaces/IGame";
+import {IBackend} from "./interfaces/IBackend";
+import {radians} from "./interfaces/Types";
+import {InputAction, InputMessage} from "./backend/messages/outgoing/InputMessage";
+import {Vector} from "./Vector";
+import {Develop} from "./develop/_Develop";
 
-let Game = null;
-Events.on('game.setup', game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
+});
+
+let Backend: IBackend = null;
+BackendSetupEvent.subscribe((backend: IBackend) => {
+    Backend = backend;
 });
 
 let consoleCooldown = 0;
@@ -37,10 +52,6 @@ class Keys {
     }
 }
 
-interface Action {
-    item,
-    actionType: BerryhunterApi.ActionType
-}
 
 export class Controls {
     isCraftInProgress: () => boolean;
@@ -57,7 +68,7 @@ export class Controls {
     pauseKeys = new Keys(KeyCodes.P);
     hitAnimationTick: number = 0;
     clock: Tock;
-    inventoryAction: Action;
+    inventoryAction: InputAction;
     updateTime: number;
 
     /**
@@ -130,19 +141,19 @@ export class Controls {
         let inputManager = Game.input;
         inputManager.update(Date.now());
 
-        if (Game.state !== Game.States.PLAYING) {
+        if (Game.state !== GameState.PLAYING) {
             return;
         }
 
         if (Develop.isActive()) {
             if (isUndefined(this.updateTime)) {
                 this.updateTime = this.clock.lap();
-                Develop.logClientTickRate(this.updateTime);
+                Develop.get().logClientTickRate(this.updateTime);
             } else {
                 let currentTime = this.clock.lap();
                 let timeSinceUpdate = currentTime - this.updateTime;
                 this.updateTime = currentTime;
-                Develop.logClientTickRate(timeSinceUpdate);
+                Develop.get().logClientTickRate(timeSinceUpdate);
             }
 
             // Pausing is only available in Develop mode
@@ -160,10 +171,7 @@ export class Controls {
             consoleCooldown--;
         }
 
-        let movement = {
-            x: 0,
-            y: 0,
-        };
+        let movement = new Vector();
 
         if (this.upKeys.isDown) {
             movement.y -= 1;
@@ -178,7 +186,7 @@ export class Controls {
             movement.x += 1;
         }
 
-        let action: Action = null;
+        let action: InputAction = null;
         if (this.hitAnimationTick) {
             // Make sure tick 0 gets passed to the character to finish animation
             this.hitAnimationTick--;
@@ -195,15 +203,15 @@ export class Controls {
                         case 'MAIN':
                         case 'ALT':
                             action = {
-                                item: Game.player.character.getEquippedItem(Equipment.Slots.HAND),
+                                item: Game.player.character.getEquippedItem(Equipment.EquipmentSlot.HAND),
                                 actionType: BerryhunterApi.ActionType.Primary
                             };
                             break;
                         case 'PLACING':
-                            let placedItem = this.character.getEquippedItem(Equipment.Slots.PLACEABLE);
+                            let placedItem = this.character.getEquippedItem(Equipment.EquipmentSlot.PLACEABLE);
 
                             if (!placedItem.placeable.multiPlacing) {
-                                Game.player.inventory.unequipItem(placedItem, Equipment.Slots.PLACEABLE);
+                                Game.player.inventory.unequipItem(placedItem, Equipment.EquipmentSlot.PLACEABLE);
                             }
 
                             action = {
@@ -219,11 +227,7 @@ export class Controls {
             }
         }
 
-        let input = {
-            rotation: undefined,
-            movement: null,
-            action: null,
-        };
+        let input = new InputMessage();
         let hasInput = false;
 
         if (Constants.ALWAYS_VIEW_CURSOR) {
@@ -241,19 +245,15 @@ export class Controls {
             hasInput = true;
         }
 
-        if (inputManager.activePointer.justMoved) {
-            Events.trigger('controls.rotate', movement);
-        }
-
         if (movement.x !== 0 || movement.y !== 0) {
             input.movement = movement;
-            Events.trigger('controls.movement', movement);
+            ControlsMovementEvent.trigger(movement);
             hasInput = true;
         }
 
         if (action !== null) {
             input.action = action;
-            Events.trigger('controls.action', action);
+            ControlsActionEvent.trigger(action);
             hasInput = true;
         }
 
@@ -263,8 +263,14 @@ export class Controls {
                 input.rotation = this.character.getRotation();
             }
 
-            Backend.sendInputTick(input);
+            if (inputManager.activePointer.justMoved) {
+                ControlsRotateEvent.trigger(input.rotation);
+            }
+
+            input.send();
         }
+
+
     }
 
     adjustCharacterRotation() {
@@ -274,7 +280,7 @@ export class Controls {
             let characterX = Game.player.camera.getScreenX(this.character.getX());
             let characterY = Game.player.camera.getScreenY(this.character.getY());
 
-            let rotation = TwoDimensional.angleBetween(
+            let rotation: radians = TwoDimensional.angleBetween(
                 pointer.x,
                 pointer.y,
                 characterX,

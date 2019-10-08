@@ -3,8 +3,8 @@
   "name": "Iron",
   "type": "RESOURCE",
   "factors": {
-    "replenishProbabilityPerSecond": 0.3,
     "minimumYield": 3,
+    "replenishProbabilityPerSecond": 0.3,
     "capacity": 20
   },
   "body": {

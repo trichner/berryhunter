@@ -1,15 +1,13 @@
 'use strict';
 
-import * as Events from '../Events';
 import * as Utils from '../Utils';
 import * as Console from '../Console';
-import * as Develop from '../develop/_Develop';
 import * as BackendConstants from './BackendConstants';
 import * as SnapshotFactory from './SnapshotFactory';
-import {GameState} from './GameState';
-import {ClientMessage} from './ClientMessage';
-import {Welcome} from './Welcome';
-import {ScoreboardMessage} from './ScoreboardMessage';
+import {Snapshot} from './SnapshotFactory';
+import {GameStateMessage} from './messages/incoming/GameStateMessage';
+import {WelcomeMessage} from './messages/incoming/WelcomeMessage';
+import {ScoreboardMessage} from './messages/incoming/ScoreboardMessage';
 import * as Chat from '../Chat';
 import * as Scoreboard from '../scores/Scoreboard';
 import * as DayCycle from '../DayCycle';
@@ -19,300 +17,248 @@ import * as UserInterface from '../userInterface/UserInterface';
 import {BerryhunterApi} from './BerryhunterApi';
 import {flatbuffers} from 'flatbuffers';
 import * as Urls from './Urls';
-// Assign all export in this file to a single variable to be passed into sub modules.
-import * as Backend from './Backend';
+import {GameState, IGame} from "../interfaces/IGame";
+import {BackendState, IBackend} from "../interfaces/IBackend";
+import {Develop} from "../develop/_Develop";
+import {
+    BackendSetupEvent,
+    BackendStateChangedEvent,
+    BackendValidTokenEvent,
+    FirstGameStateHandledEvent,
+    GameLateSetupEvent
+} from "../Events";
 
-let Game = null;
+export class Backend implements IBackend {
 
-export const States = {
-    DISCONNECTED: 'DISCONNECTED',
-    CONNECTING: 'CONNECTING',
-    CONNECTED: 'CONNECTED',
-    WELCOMED: 'WELCOMED',
-    SPECTATING: 'SPECTATING',
-    PLAYING: 'PLAYING',
-    ERROR: 'ERROR',
-};
+    game: IGame = null;
 
-let state = States.DISCONNECTED;
+    state: BackendState = BackendState.DISCONNECTED;
 
-let firstGameStateReceived = false;
-let firstGameStateResolve;
-let firstGameStateReject;
+    firstGameStateReceived: boolean = false;
+    firstGameStateResolve: () => void;
+    firstGameStateReject: () => void;
 
-let webSocket;
-let lastMessageReceivedTime;
+    webSocket: WebSocket;
+    lastMessageReceivedTime: number;
 
-export function setup(game) {
-    Game = game;
+    public setup(game: IGame): void {
+        this.game = game;
 
-    BackendConstants.setup();
+        BackendConstants.setup();
 
-    new Promise(function (resolve, reject) {
-        firstGameStateResolve = resolve;
-        firstGameStateReject = reject;
-    }).then(function () {
-        Events.triggerOneTime('firstGameStateRendered');
-    });
+        new Promise((resolve, reject) => {
+            this.firstGameStateResolve = resolve;
+            this.firstGameStateReject = reject;
+        }).then(() => {
+            FirstGameStateHandledEvent.trigger();
+        });
 
-    setState(States.CONNECTING);
-    webSocket = new WebSocket(Urls.gameServer);
-
-    webSocket.binaryType = 'arraybuffer';
-
-    webSocket.onopen = function () {
-        setState(States.CONNECTED);
-    };
-
-    webSocket.onerror = function () {
-        setState(States.ERROR);
-        if (!firstGameStateReceived) {
-            firstGameStateReject();
-            firstGameStateReceived = true;
-        }
-    };
-
-    webSocket.onmessage = receive.bind(this);
-
-    if (Develop.isActive()) {
-        lastMessageReceivedTime = performance.now();
-    }
-
-    Events.triggerOneTime('backend.setup', Backend);
-}
-
-export function getState() {
-    return state;
-}
-
-function setState(newState) {
-    state = newState;
-    // if (Utils.isDefined(SnapshotFactory.getLastGameState())) {
-    // 	Console.log('Tick ' + SnapshotFactory.getLastGameState().tick + ' > Backend State: ' + state);
-    // } else {
-    // 	Console.log('Pre Ticks > Backend State: ' + state);
-    // }
-    Console.log('Backend State: ' + state);
-
-    if (Develop.isActive()) {
-        switch (state) {
-            case States.DISCONNECTED:
-            case States.CONNECTING:
-                Develop.logWebsocketStatus(state, 'neutral');
-                break;
-            case States.ERROR:
-                Develop.logWebsocketStatus(state, 'bad');
-                break;
-            default:
-                Develop.logWebsocketStatus(state, 'good');
-        }
-    }
-
-    Events.trigger('backend.stateChange', Backend);
-}
-
-/**
- *
- * @param {ClientMessage} clientMessage
- */
-export function send(clientMessage) {
-    if (webSocket.readyState !== WebSocket.OPEN) {
-        // Websocket is not open (yet), ignore sending
-        return;
-    }
-
-    webSocket.send(clientMessage.finish());
-}
-
-export function sendInputTick(inputObj) {
-    if (!SnapshotFactory.hasSnapshot()) {
-        // If the backend hasn't send a snapshot yet, don't send any input.
-        return;
-    }
-
-    inputObj.tick = SnapshotFactory.getLastGameState().tick + 1;
-
-    if (Develop.isActive()) {
-        Develop.logClientTick(inputObj);
-    }
-
-    this.send(ClientMessage.fromInput(inputObj));
-}
-
-export function sendJoin(joinObj) {
-    Events.on('game.afterSetup', function () {
-        send(ClientMessage.fromJoin(joinObj));
-    });
-}
-
-export function sendCommand(commandObj) {
-    this.send(ClientMessage.fromCommand(commandObj));
-}
-
-export function sendChatMessage(chatObj) {
-    this.send(ClientMessage.fromChat(chatObj));
-}
-
-export function receive(message) {
-    if (!message.data) {
-        if (Develop.isActive()) {
-            Develop.logWebsocketStatus('Receiving empty messages', 'bad');
-        }
-        console.warn('Received empty message.');
-        return;
-    }
-
-    let data, buffer;
-    /**
-     * @type {BerryhunterApi.ServerMessage}
-     */
-    let serverMessage;
-    try {
-        data = new Uint8Array(message.data);
-    } catch (e) {
-        if (Develop.isActive()) {
-            Develop.logWebsocketStatus('Error converting message.data to Uint8Array.', 'bad');
-        }
-        console.error('Error converting message.data to Uint8Array.', message.data, e);
-        return;
-    }
-
-    try {
-        buffer = new flatbuffers.ByteBuffer(data);
-    } catch (e) {
-        if (Develop.isActive()) {
-            Develop.logWebsocketStatus('Error creating ByteBuffer from Uint8Array.', 'bad');
-        }
-        console.error('Error creating ByteBuffer from Uint8Array.', data, e);
-        return;
-    }
-
-    try {
-        serverMessage = BerryhunterApi.ServerMessage.getRootAsServerMessage(buffer);
-    } catch (e) {
-        if (Develop.isActive()) {
-            Develop.logWebsocketStatus('Error reading ServerMessage from ByteBuffer.', 'bad');
-        }
-        console.error('Error reading ServerMessage from ByteBuffer.', buffer, e);
-        return;
-    }
-
-    let timeSinceLastMessage;
-    if (Develop.isActive()) {
-        let messageReceivedTime = performance.now();
-        timeSinceLastMessage = messageReceivedTime - lastMessageReceivedTime;
-        lastMessageReceivedTime = messageReceivedTime;
-
-    }
-
-    switch (serverMessage.bodyType()) {
-        case BerryhunterApi.ServerMessageBody.Welcome:
-            setState(States.WELCOMED);
-            let welcome = new Welcome(serverMessage.body(new BerryhunterApi.Welcome()));
-            if (Develop.isActive()) {
-                Develop.logServerMessage(welcome, 'Welcome', timeSinceLastMessage);
+        this.setState(BackendState.CONNECTING);
+        this.webSocket = new WebSocket(Urls.gameServer);
+        this.webSocket.binaryType = 'arraybuffer';
+        this.webSocket.onopen = () => {
+            this.setState(BackendState.CONNECTED);
+        };
+        this.webSocket.onerror = () => {
+            this.setState(BackendState.ERROR);
+            if (!this.firstGameStateReceived) {
+                this.firstGameStateReject();
+                this.firstGameStateReceived = true;
             }
-            Game.startRendering(welcome);
-            break;
-        case BerryhunterApi.ServerMessageBody.Accept:
-            setState(States.PLAYING);
-            if (Develop.isActive()) {
-                Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Accept()), 'Accept', timeSinceLastMessage);
+        };
+
+        this.webSocket.onmessage = this.receive.bind(this);
+
+        if (Develop.isActive()) {
+            this.lastMessageReceivedTime = performance.now();
+        }
+
+        BackendSetupEvent.trigger(this);
+    }
+
+    public getState(): BackendState {
+        return this.state;
+    }
+
+    setState(newState: BackendState) {
+        let oldState = this.state;
+        this.state = newState;
+        Console.log('Backend State: ' + this.state);
+
+        if (Develop.isActive()) {
+            switch (this.state) {
+                case BackendState.DISCONNECTED:
+                case BackendState.CONNECTING:
+                    Develop.get().logWebsocketStatus(this.state, 'neutral');
+                    break;
+                case BackendState.ERROR:
+                    Develop.get().logWebsocketStatus(this.state, 'bad');
+                    break;
+                default:
+                    Develop.get().logWebsocketStatus(this.state, 'good');
             }
+        }
+
+        BackendStateChangedEvent.trigger({
+            oldState: oldState,
+            newState: newState
+        });
+    }
+
+    private receive(message: MessageEvent): void {
+        if (!message.data) {
+            if (Develop.isActive()) {
+                Develop.get().logWebsocketStatus('Receiving empty messages', 'bad');
+            }
+            console.warn('Received empty message.');
+            return;
+        }
+
+        let data: Uint8Array;
+        let buffer: flatbuffers.ByteBuffer;
+        let serverMessage: BerryhunterApi.ServerMessage;
+        try {
+            data = new Uint8Array(message.data);
+        } catch (e) {
+            if (Develop.isActive()) {
+                Develop.get().logWebsocketStatus('Error converting message.data to Uint8Array.', 'bad');
+            }
+            console.error('Error converting message.data to Uint8Array.', message.data, e);
+            return;
+        }
+
+        try {
+            buffer = new flatbuffers.ByteBuffer(data);
+        } catch (e) {
+            if (Develop.isActive()) {
+                Develop.get().logWebsocketStatus('Error creating ByteBuffer from Uint8Array.', 'bad');
+            }
+            console.error('Error creating ByteBuffer from Uint8Array.', data, e);
+            return;
+        }
+
+        try {
+            serverMessage = BerryhunterApi.ServerMessage.getRootAsServerMessage(buffer);
+        } catch (e) {
+            if (Develop.isActive()) {
+                Develop.get().logWebsocketStatus('Error reading ServerMessage from ByteBuffer.', 'bad');
+            }
+            console.error('Error reading ServerMessage from ByteBuffer.', buffer, e);
+            return;
+        }
+
+        let timeSinceLastMessage;
+        if (Develop.isActive()) {
+            let messageReceivedTime = performance.now();
+            timeSinceLastMessage = messageReceivedTime - this.lastMessageReceivedTime;
+            this.lastMessageReceivedTime = messageReceivedTime;
+        }
+
+        switch (serverMessage.bodyType()) {
+            case BerryhunterApi.ServerMessageBody.Welcome:
+                this.setState(BackendState.WELCOMED);
+                let welcome = new WelcomeMessage(serverMessage.body(new BerryhunterApi.Welcome()));
+                if (Develop.isActive()) {
+                    Develop.get().logServerMessage(welcome, 'Welcome', timeSinceLastMessage);
+                }
+                this.game.startRendering(welcome);
+                break;
+            case BerryhunterApi.ServerMessageBody.Accept:
+                this.setState(BackendState.PLAYING);
+                if (Develop.isActive()) {
+                    Develop.get().logServerMessage(serverMessage.body(new BerryhunterApi.Accept()), 'Accept', timeSinceLastMessage);
+                }
 
                 StartScreen.hide();
                 EndScreen.hide();
                 UserInterface.show();
 
-            break;
-        case BerryhunterApi.ServerMessageBody.Obituary:
-            setState(States.SPECTATING);
-            if (Develop.isActive()) {
-                Develop.logServerMessage(serverMessage.body(new BerryhunterApi.Obituary()), 'Obituary', timeSinceLastMessage);
-            }
+                break;
+            case BerryhunterApi.ServerMessageBody.Obituary:
+                this.setState(BackendState.SPECTATING);
+                if (Develop.isActive()) {
+                    Develop.get().logServerMessage(serverMessage.body(new BerryhunterApi.Obituary()), 'Obituary', timeSinceLastMessage);
+                }
 
-            Game.removePlayer();
+                this.game.removePlayer();
                 EndScreen.show();
 
-            break;
-        case BerryhunterApi.ServerMessageBody.EntityMessage:
-            /**
-             *
-             * @type {BerryhunterApi.EntityMessage}
-             */
-            let entityMessage = serverMessage.body(new BerryhunterApi.EntityMessage());
+                break;
+            case BerryhunterApi.ServerMessageBody.EntityMessage:
+                /**
+                 *
+                 * @type {BerryhunterApi.}
+                 */
+                let entityMessage: BerryhunterApi.EntityMessage = serverMessage.body(new BerryhunterApi.EntityMessage());
 
-            if (Develop.isActive()) {
-                Develop.logServerMessage(entityMessage, 'EntityMessage', timeSinceLastMessage);
-            }
+                if (Develop.isActive()) {
+                    Develop.get().logServerMessage(entityMessage, 'EntityMessage', timeSinceLastMessage);
+                }
 
-            Chat.showMessage(entityMessage.entityId().toFloat64(), entityMessage.message());
+                Chat.showMessage(entityMessage.entityId().toFloat64(), entityMessage.message());
 
-            break;
-        case BerryhunterApi.ServerMessageBody.GameState:
-            let gameState = new GameState(serverMessage.body(new BerryhunterApi.GameState()));
-            if (state === States.WELCOMED) {
-                setState(States.SPECTATING);
-                Game.createSpectator(gameState.player.x, gameState.player.y);
-            }
-            if (Develop.isActive()) {
-                Develop.logServerTick(gameState, timeSinceLastMessage);
-            }
-            Events.on('game.afterSetup', function () {
-                receiveSnapshot(SnapshotFactory.newSnapshot(state, gameState));
-            });
-            break;
-        case BerryhunterApi.ServerMessageBody.Scoreboard:
-            let scoreboardMessage = new ScoreboardMessage(serverMessage.body(new BerryhunterApi.Scoreboard()));
-            Scoreboard.updateFromBackend(scoreboardMessage);
-            break;
-        case BerryhunterApi.ServerMessageBody.Pong:
-            Events.triggerOneTime('backend.validToken', Backend);
-            break;
-        default:
-            if (Develop.isActive()) {
-                Develop.logWebsocketStatus('Received unknown body type ' + serverMessage.bodyType(), 'bad');
-            }
-            console.warn('Received unknown body type ' + serverMessage.bodyType());
+                break;
+            case BerryhunterApi.ServerMessageBody.GameState:
+                let gameState = new GameStateMessage(serverMessage.body(new BerryhunterApi.GameState()));
+                if (this.state === BackendState.WELCOMED) {
+                    this.setState(BackendState.SPECTATING);
+                    this.game.createSpectator(gameState.player.x, gameState.player.y);
+                }
+                if (Develop.isActive()) {
+                    Develop.get().logServerTick(gameState, timeSinceLastMessage);
+                }
+                GameLateSetupEvent.subscribe(() => {
+                    this.receiveSnapshot(SnapshotFactory.newSnapshot(this.state, gameState));
+                });
+                break;
+            case BerryhunterApi.ServerMessageBody.Scoreboard:
+                let scoreboardMessage = new ScoreboardMessage(serverMessage.body(new BerryhunterApi.Scoreboard()));
+                Scoreboard.updateFromBackend(scoreboardMessage);
+                break;
+            case BerryhunterApi.ServerMessageBody.Pong:
+                BackendValidTokenEvent.trigger(this);
+                break;
+            default:
+                if (Develop.isActive()) {
+                    Develop.get().logWebsocketStatus('Received unknown body type ' + serverMessage.bodyType(), 'bad');
+                }
+                console.warn('Received unknown body type ' + serverMessage.bodyType());
+        }
+
     }
 
-}
+    public receiveSnapshot(snapshot: Snapshot) {
+        this.game.map.newSnapshot(snapshot.entities);
 
-/**
- *
- * @param {{tick: number, player: {}, entities: [], inventory: []}} snapshot
- */
-export function receiveSnapshot(snapshot) {
-    Game.map.newSnapshot(snapshot.entities);
+        DayCycle.setTimeByTick(snapshot.tick);
 
-    DayCycle.setTimeByTick(snapshot.tick);
+        if (this.state === BackendState.PLAYING) {
+            if (this.game.state === GameState.PLAYING) {
+                this.game.player.updateFromBackend(snapshot.player);
+            } else {
+                this.game.createPlayer(
+                    snapshot.player.id,
+                    snapshot.player.position.x,
+                    snapshot.player.position.y,
+                    snapshot.player.name);
+            }
 
-    if (state === States.PLAYING) {
-        if (Game.state === Game.States.PLAYING) {
-            Game.player.updateFromBackend(snapshot.player);
-        } else {
-            Game.createPlayer(
-                snapshot.player.id,
-                snapshot.player.position.x,
-                snapshot.player.position.y,
-                snapshot.player.name);
+            if (Utils.isDefined(snapshot.inventory)) {
+                this.game.player.inventory.updateFromBackend(snapshot.inventory);
+            }
+
+            if (Develop.isActive()) {
+                this.game.player.character['updateAABB'](snapshot.player.aabb);
+            }
         }
 
-        if (Utils.isDefined(snapshot.inventory)) {
-            Game.player.inventory.updateFromBackend(snapshot.inventory);
+        snapshot.entities.forEach((entity) => {
+            this.game.map.addOrUpdate(entity);
+        });
+
+        if (!this.firstGameStateReceived) {
+            this.firstGameStateResolve();
+            this.firstGameStateReceived = true;
         }
-
-        if (Develop.isActive()) {
-            Game.player.character.updateAABB(snapshot.player.aabb);
-        }
-    }
-
-    snapshot.entities.forEach(function (entity) {
-        Game.map.addOrUpdate(entity);
-    });
-
-    if (!firstGameStateReceived) {
-        firstGameStateResolve();
-        firstGameStateReceived = true;
     }
 }

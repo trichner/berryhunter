@@ -2,6 +2,9 @@
 
 export const GraphicsConfig = {
 
+    waterColor: 0x287aff,
+    landColor: 0x006030,
+
     hitAnimation: {
         /**
          * Maximum opacity of the flood filter that applied on game objects when they are hit.

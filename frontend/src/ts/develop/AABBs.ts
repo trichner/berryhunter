@@ -3,8 +3,9 @@
 import {GameObject} from '../gameObjects/_GameObject';
 import {isDefined, isUndefined} from '../Utils';
 import * as PIXI from 'pixi.js';
+import {IDevelop} from "../interfaces/IDevelop";
 
-let Develop = null;
+let Develop: IDevelop = null;
 
 export interface hasAABB {
     aabb: PIXI.Graphics;
@@ -14,7 +15,7 @@ export interface hasAABB {
     showAABB: () => void;
 }
 
-export function setup(develop) {
+export function setup(develop: IDevelop) {
     Develop = develop;
 
     /**

@@ -10,8 +10,8 @@ import (
 	"github.com/trichner/berryhunter/berryhunterd/model/spectator"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
 	"log"
-	"math/rand"
 	"math"
+	"math/rand"
 )
 
 type stringSet map[string]struct{}
@@ -71,6 +71,9 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 
 			// upgrade to p
 			name := j.PlayerName // resolve collisions!
+			if len(name) > 20 {  // limit user input to 20 characters
+				name = name[:20]
+			}
 			client := sp.Client()
 			name = s.manglePlayerName(name)
 			log.Printf("☺️ '%s' joined!", name)
