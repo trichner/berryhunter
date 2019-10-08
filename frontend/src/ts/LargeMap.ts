@@ -4,11 +4,12 @@ import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import * as Events from "./Events";
-import {GAME_DEATH, GAME_SETUP} from "./Events";
 import {deg2rad, isDefined} from "./Utils";
+import {GameState, IGame} from "./interfaces/IGame";
+import {BeforeDeathEvent, GameSetupEvent} from "./Events";
 
-let Game = null;
-Events.on(GAME_SETUP, game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
@@ -165,12 +166,12 @@ function update() {
     });
 }
 
-Events.on(GAME_DEATH, game => {
+BeforeDeathEvent.subscribe((game: IGame) => {
     game.largeMap.toggleVisibility(false);
 });
 
 window.addEventListener('keydown', function (event) {
-    if (Game.state !== Game.States.PLAYING) {
+    if (Game.state !== GameState.PLAYING) {
         return;
     }
     if (event.keyCode === KeyCodes.M) {

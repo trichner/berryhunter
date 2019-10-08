@@ -3,11 +3,11 @@
 import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
 import {GameObject} from "./gameObjects/_GameObject";
-import * as Events from "./Events";
-import {GAME_SETUP} from "./Events";
+import {GameSetupEvent} from "./Events";
+import {GameState, IGame} from "./interfaces/IGame";
 
-let Game = null;
-Events.on(GAME_SETUP, game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
@@ -161,7 +161,7 @@ function update() {
 }
 
 document.getElementById('miniMap').addEventListener('click', function (event) {
-    if (Game.state !== Game.States.PLAYING) {
+    if (Game.state !== GameState.PLAYING) {
         return;
     }
     if (event) {
