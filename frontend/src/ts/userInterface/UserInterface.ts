@@ -73,11 +73,13 @@ export function show() {
     rootElement.classList.remove('hidden');
     Game.domElement.focus();
     Game.miniMap.start();
+    Game.largeMap.start();
 }
 
 export function hide() {
     rootElement.classList.add('hidden');
     Game.miniMap.stop();
+    Game.largeMap.stop();
 }
 
 export function getRootElement() {
@@ -157,8 +159,12 @@ export function getVitalSignBar(vitalSign: string): VitalSignBar {
  *
  * @return {Element}
  */
-export function getMinimapContainer() {
-    return document.querySelector('#minimap > .wrapper');
+export function getMiniMapContainer() {
+    return document.querySelector('#miniMap > .wrapper');
+}
+
+export function getLargeMapContainer(): HTMLElement {
+    return document.querySelector('#largeMap');
 }
 
 /**

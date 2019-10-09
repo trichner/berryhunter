@@ -11,6 +11,7 @@ import {BasicConfig as Constants} from '../config/Basic';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 import {Layer, MiniMap} from "./MiniMap";
 import {PlayerCreatedEvent} from "./Events";
+import {LargeMap} from "./LargeMap";
 
 export class Player {
     craftProgress;
@@ -21,7 +22,7 @@ export class Player {
     vitalSigns: VitalSigns;
     craftableItems;
 
-    constructor(id, x, y, name, miniMap: MiniMap) {
+    constructor(id, x, y, name, miniMap: MiniMap, largeMap: LargeMap) {
         /**
          * Either <code>null</code> or number of seconds
          * remaining until the current craft is done.
@@ -36,6 +37,7 @@ export class Player {
 
         this.camera = new Camera(this.character);
         miniMap.add(this.character, Layer.CHARACTER);
+        largeMap.add(this.character);
 
         this.inventory = new Inventory(this.character, this.isCraftInProgress.bind(this));
 

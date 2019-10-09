@@ -73,12 +73,20 @@ export class GameObject {
     /**
      * Fallback method if there is no SVG bound to this gameObject class.
      */
-    createShape(x, y) {
+    createShape(x, y): PIXI.Container {
         throw 'createShape not implemented for ' + this.constructor.name;
     }
 
     createMinimapIcon(): PIXI.Container {
         throw 'createMinimapIcon not implemented for ' + this.constructor.name;
+    }
+
+    createLargeMapIcon(): PIXI.Container {
+        if (this.getRotationShape() instanceof InjectedSVG) {
+            return new InjectedSVG(this.getRotationShape().texture , this.getX(), this.getY(), this.size, this.rotation);
+        } else {
+            return this.createShape(this.getX(), this.getY())
+        }
     }
 
     setPosition(x, y) {

@@ -35,6 +35,7 @@ import {
     ModulesLoadedEvent,
     PrerenderEvent
 } from "./Events";
+import {LargeMap} from "./LargeMap";
 
 
 export let instance: Game;
@@ -51,6 +52,7 @@ export class Game implements IGame {
     public layers;
     public stage: PIXI.Container;
     public cameraGroup: PIXI.Container;
+    public largeMap: LargeMap = null;
 
     public map: GameMapWithBackend = null;
     public miniMap: MiniMap = null;
@@ -340,7 +342,7 @@ export class Game implements IGame {
         /**
          * @type Player
          */
-        this.player = new Player(id, x, y, name, this.miniMap);
+        this.player = new Player(id, x, y, name, this.miniMap, this.largeMap);
         this.player.init();
         this.state = GameState.PLAYING;
         GamePlayingEvent.trigger(this);
@@ -353,6 +355,7 @@ export class Game implements IGame {
         this.player = undefined;
         if (Constants.CLEAR_MINIMAP_ON_DEATH) {
             this.miniMap.clear();
+            this.largeMap.clear();
             this.map.clear();
         }
         this.state = GameState.RENDERING;
@@ -373,6 +376,7 @@ export class Game implements IGame {
         this.play();
         this.state = GameState.RENDERING;
         this.miniMap = new MiniMap(this.map.width, this.map.height);
+        this.largeMap = new LargeMap(this.map.width, this.map.height);
     }
 
     private createBackground() {

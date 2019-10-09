@@ -31,7 +31,7 @@ export const BasicConfig = {
 	ALWAYS_VIEW_CURSOR: true,
 
 	/**
-	 * Whether or not the minimap should "forget" the map every time the player starts again
+	 * Whether or not the miniMap should "forget" the map every time the player starts again
 	 */
 	CLEAR_MINIMAP_ON_DEATH: true,
 

@@ -6,6 +6,7 @@ import {Player} from "../Player";
 import {InputManager} from "../input/InputManager";
 import {WelcomeMessage} from "../backend/messages/incoming/WelcomeMessage";
 import {GameObjectId} from "./Types";
+import {LargeMap} from "../LargeMap";
 
 export enum GameState {
     INITIALIZING,
@@ -26,6 +27,7 @@ export interface IGame {
 
     map: GameMapWithBackend;
     miniMap: MiniMap;
+    largeMap: LargeMap;
 
     domElement: HTMLCanvasElement;
     input: InputManager;

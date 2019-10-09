@@ -2,21 +2,18 @@
 
 import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
-import {GameObject} from "./gameObjects/_GameObject";
-import {GameSetupEvent} from "./Events";
+import {KeyCodes} from './input/keyboard/keys/KeyCodes';
+import * as Events from "./Events";
+import {deg2rad, isDefined} from "./Utils";
 import {GameState, IGame} from "./interfaces/IGame";
+import {BeforeDeathEvent, GameSetupEvent} from "./Events";
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
-export enum Layer {
-    CHARACTER,
-    OTHER
-}
-
-export class MiniMap {
+export class LargeMap {
     mapWidth;
     mapHeight;
     registeredGameObjectIds;
@@ -31,6 +28,7 @@ export class MiniMap {
     iconSizeFactor: number;
     paused: boolean;
     playing: boolean;
+    domElement: HTMLElement;
 
     constructor(mapWidth, mapHeight) {
         this.mapWidth = mapWidth;
@@ -46,10 +44,12 @@ export class MiniMap {
          */
         this.trackedGameObjects = [];
 
-        let container = UserInterface.getMiniMapContainer();
+        let container = UserInterface.getLargeMapContainer();
 
-        this.width = container.clientWidth;
         this.height = container.clientHeight;
+        // height will be read out from HTML and also used for width to create a circle in a square
+        // noinspection JSSuspiciousNameCombination
+        this.width = this.height;
 
         this.renderer = PIXI.autoDetectRenderer({
             width: this.width,
@@ -73,9 +73,11 @@ export class MiniMap {
             this.height / 2
         );
 
-        const sizeFactorRelatedToMapSize = 2;
+        const sizeFactorRelatedToMapSize = 1;
         this.scale = this.width / this.mapWidth;
         this.iconSizeFactor = this.scale * sizeFactorRelatedToMapSize;
+
+        this.domElement = document.getElementById("largeMap");
 
         this.renderer.on('prerender', update.bind(this));
     }
@@ -96,52 +98,53 @@ export class MiniMap {
         requestAnimationFrame(this.loop.bind(this));
 
         this.renderer.render(this.stage);
-    };
+    }
 
     play() {
         this.playing = true;
         this.paused = false;
         this.loop();
-    };
+    }
 
     pause() {
         this.playing = false;
         this.paused = true;
-    };
+    }
+
+    toggleVisibility(visible?: boolean) {
+        let force = isDefined(visible)? !visible : undefined;
+        this.domElement.classList.toggle('hidden', force);
+    }
 
     /**
      * Adds the icon of the object to the map.
+     * @param gameObject
      */
-    add(gameObject: GameObject, layer: Layer) {
+    add(gameObject) {
         if (this.registeredGameObjectIds.indexOf(gameObject.id) !== -1) {
             // The object is already on the miniMap
             return;
         }
-
         this.registeredGameObjectIds.push(gameObject.id);
 
-        const minimapIcon = gameObject.createMinimapIcon();
-        switch (layer) {
-            case Layer.CHARACTER:
-                console.log('Add character to minimap');
-                this.playerGroup.addChild(minimapIcon);
-                break;
-            case Layer.OTHER:
-                this.iconGroup.addChild(minimapIcon);
-                break;
+        const largeMapIcon = gameObject.createLargeMapIcon();
+        if (gameObject.constructor.name === 'Character') {
+            this.playerGroup.addChild(largeMapIcon);
+        } else {
+            this.iconGroup.addChild(largeMapIcon);
         }
 
         // Position each icon relative to its position on the real map.
         let x = gameObject.getX() * this.scale;
         let y = gameObject.getY() * this.scale;
-        minimapIcon.position.set(x, y);
-        minimapIcon.scale.set(this.iconSizeFactor);
+        largeMapIcon.position.set(x, y);
+        largeMapIcon.scale.set(largeMapIcon.scale.x * this.iconSizeFactor);
 
         if (gameObject.isMoveable) {
-            gameObject.minimapIcon = minimapIcon;
+            gameObject.largeMapIcon = largeMapIcon;
             this.trackedGameObjects.push(gameObject);
         }
-        return minimapIcon;
+        return largeMapIcon;
     }
 
     clear() {
@@ -155,16 +158,23 @@ export class MiniMap {
 
 function update() {
     this.trackedGameObjects.forEach(gameObject => {
-        gameObject.minimapIcon.position.x = gameObject.getX() * this.scale;
-        gameObject.minimapIcon.position.y = gameObject.getY() * this.scale;
+        // TODO Rotation des largeMapIcons anpassen
+        gameObject.largeMapIcon.position.x = gameObject.getX() * this.scale;
+        gameObject.largeMapIcon.position.y = gameObject.getY() * this.scale;
+        // TODO only works for character
+        gameObject.largeMapIcon.rotation = gameObject.getRotation() + deg2rad(90);
     });
 }
 
-document.getElementById('miniMap').addEventListener('click', function (event) {
+BeforeDeathEvent.subscribe((game: IGame) => {
+    game.largeMap.toggleVisibility(false);
+});
+
+window.addEventListener('keydown', function (event) {
     if (Game.state !== GameState.PLAYING) {
         return;
     }
-    if (event) {
+    if (event.keyCode === KeyCodes.M) {
         Game.largeMap.toggleVisibility();
     }
 });
