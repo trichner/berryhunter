@@ -1,8 +1,8 @@
 package core
 
 import (
-	"github.com/EngoEngine/ecs"
 	"fmt"
+	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/berryhunterd/cfg"
 	"github.com/trichner/berryhunter/berryhunterd/codec"
@@ -17,6 +17,7 @@ import (
 	"github.com/trichner/berryhunter/berryhunterd/sys"
 	"github.com/trichner/berryhunter/berryhunterd/sys/chat"
 	"github.com/trichner/berryhunter/berryhunterd/sys/cmd"
+	"github.com/trichner/berryhunter/berryhunterd/sys/effects"
 	"github.com/trichner/berryhunter/berryhunterd/sys/heater"
 	"github.com/trichner/berryhunter/berryhunterd/sys/statuseffects"
 	"log"
@@ -133,6 +134,9 @@ func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
 
 	sb := sys.NewScoreboardSystem(g)
 	g.AddSystem(sb)
+
+	es := effects.NewEffectSystem()
+	g.AddSystem(es)
 
 	g.printSystems()
 	return g, nil
@@ -353,6 +357,9 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 			s.AddPlayer(p)
 		case *sys.ScoreboardSystem:
 			s.AddPlayer(p)
+		case *effects.EffectSystem:
+			//s.Add(p, p.EffectComponent())
+			s.Add(p, p.EffectStack())
 		}
 	}
 }

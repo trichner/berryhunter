@@ -2,6 +2,7 @@ package player
 
 import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
 	"github.com/trichner/berryhunter/berryhunterd/model"
@@ -95,6 +96,9 @@ type player struct {
 	isGod bool
 
 	stats model.Stats
+
+	//effectComponent effects.EffectComponent
+	effectStack effects.EffectStack
 }
 
 func (p *player) StatusEffects() *model.StatusEffects {
@@ -187,6 +191,15 @@ func (p *player) Config() *factors.PlayerFactors {
 func (p *player) Stats() *model.Stats {
 	return &p.stats
 }
+
+//func (p *player) EffectComponent() *effects.EffectComponent {
+//	return &p.effectComponent
+//}
+
+func (p *player) EffectStack() *effects.EffectStack {
+	return &p.effectStack
+}
+
 
 func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
 

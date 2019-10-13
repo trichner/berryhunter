@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/EngoEngine/ecs"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
@@ -49,6 +50,9 @@ type PlayerEntity interface {
 
 	Config() *factors.PlayerFactors
 	Stats() *Stats
+
+	//EffectComponent() *effects.EffectComponent
+	EffectStack() *effects.EffectStack
 }
 
 type BasicEntities map[uint64]ecs.BasicEntity

@@ -20,7 +20,6 @@ type Effect struct {
 	Addends Addends
 }
 
-
 // Values that get multiplied
 type Factors struct {
 	factors.VulnerabilityFactors
@@ -36,7 +35,7 @@ type Addends struct {
 	InventoryCap int
 }
 
-func (f Factors) Add(other Factors)  {
+func (f Factors) Add(other Factors) {
 	f.Vulnerability *= other.Vulnerability
 
 	f.Food *= other.Food
@@ -50,12 +49,12 @@ func (f Factors) Add(other Factors)  {
 	f.Vulnerability *= other.Vulnerability
 	f.ReplenishProbability *= other.ReplenishProbability
 	f.Capacity *= other.Capacity
-	
+
 	f.DamageFraction *= other.DamageFraction
 	f.Speed *= other.Speed
 	f.DeltaPhi *= other.DeltaPhi
 	f.TurnRate *= other.TurnRate
-	
+
 	f.FreezingDamageTickFraction *= other.FreezingDamageTickFraction
 	f.StarveDamageTickFraction *= other.StarveDamageTickFraction
 	f.FreezingStarveDamageTickFraction *= other.FreezingStarveDamageTickFraction
@@ -65,7 +64,7 @@ func (f Factors) Add(other Factors)  {
 	f.HealthGainTemperatureThreshold *= other.HealthGainTemperatureThreshold
 	f.HealthGainSatietyLossTickFraction *= other.HealthGainSatietyLossTickFraction
 	f.WalkingSpeedPerTick *= other.WalkingSpeedPerTick
-	
+
 	f.CraftingSpeed *= other.CraftingSpeed
 }
 
@@ -73,7 +72,7 @@ func (a Addends) Add(other Addends) {
 	a.InventoryCap += other.InventoryCap
 }
 
-func (f Factors) Subtract(other Factors)  {
+func (f Factors) Subtract(other Factors) {
 	f.Vulnerability -= other.Vulnerability
 
 	f.Food /= other.Food
@@ -116,14 +115,14 @@ func (f Factors) test() {
 
 type EffectStack struct {
 	// How many times is the indicated effect in this stack?
-	stacks map[EffectID]StackSize
+	stacks  map[EffectID]StackSize
 	factors Factors
 	addends Addends
 }
 
-func NewEffectStack() *EffectStack {
+func newEffectStack() *EffectStack {
 	return &EffectStack{
-		stacks:make(map[EffectID]StackSize),
+		stacks:  make(map[EffectID]StackSize),
 		factors: Factors{},
 	}
 }
@@ -185,19 +184,37 @@ func parseEffectDefinitions(data []byte) (*[]*effectDefinition, error) {
 func (m *effectDefinition) mapToEffectDefinition() (*Effect, error) {
 
 	effect := &Effect{
-		ID:   EffectID(m.Id),
-		Name: m.Name,
-		MaxStacks: StackSize(m.MaxStacks),
+		ID:              EffectID(m.Id),
+		Name:            m.Name,
+		MaxStacks:       StackSize(m.MaxStacks),
 		DurationInTicks: factors.DurationInTicks(m.DurationInS),
 		Factors: Factors{
 			VulnerabilityFactors: factors.Vulnerability(m.Factors.ItemFactorsDefinition.Vulnerability),
-			ItemFactors: factors.MapItemFactors(m.Factors.ItemFactorsDefinition),
-			MobFactors: factors.MapMobFactors(m.Factors.MobFactorsDefinition),
-			PlayerFactors: factors.MapPlayerFactors(m.Factors.PlayerFactorsDefinition),
+			ItemFactors:          factors.MapItemFactors(m.Factors.ItemFactorsDefinition),
+			MobFactors:           factors.MapMobFactors(m.Factors.MobFactorsDefinition),
+			PlayerFactors:        factors.MapPlayerFactors(m.Factors.PlayerFactorsDefinition),
 		},
 	}
 
-
-
 	return effect, nil
+}
+
+//type EffectComponent struct {
+//	EffectStack *EffectStack
+//}
+//
+//func NewEffectComponent() *EffectComponent {
+//	return &EffectComponent{EffectStack: newEffectStack()}
+//}
+//
+//func (e *EffectComponent) AddEffects(effects []Effect) {
+//	e.EffectStack.Add(effects)
+//}
+//
+//func (e *EffectComponent) SubtractEffects(effects []Effect) error {
+//	return e.EffectStack.Subtract(effects)
+//}
+
+type EffectEntity interface {
+	EffectStack() *EffectStack
 }
