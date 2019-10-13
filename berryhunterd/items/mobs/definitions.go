@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/trichner/berryhunter/berryhunterd/items"
+	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 )
 
 //{
@@ -23,14 +24,6 @@ import (
 
 type MobID uint64
 
-type Factors struct {
-	Vulnerability  float32
-	DamageFraction float32
-	Speed          float32
-	DeltaPhi       float32
-	TurnRate       float32
-}
-
 type Body struct {
 	Radius    float32
 	DamageRadius float32
@@ -43,12 +36,12 @@ type Generator struct {
 type Drops []*items.ItemStack
 
 type MobDefinition struct {
-	ID      MobID
-	Name    string
-	Type    string
-	Factors Factors
-	Drops   Drops
-	Body Body
+	ID        MobID
+	Name      string
+	Type      string
+	Factors   factors.MobFactors
+	Drops     Drops
+	Body      Body
 	Generator Generator
 }
 
@@ -56,13 +49,7 @@ type mobDefinition struct {
 	Id      uint64 `json:"id"`
 	Name    string `json:"name"`
 	Type    string `json:"type"`
-	Factors struct {
-		Vulnerability  float32 `json:"vulnerability"`
-		DamageFraction float32 `json:"damageFraction"`
-		Speed          float32 `json:"speed"`
-		DeltaPhi       float32 `json:"deltaPhi"`
-		TurnRate       float32 `json:"turnRate"`
-	} `json:"factors"`
+	Factors factors.MobFactorsDefinition `json:"factors"`
 	Drops []struct {
 		Item  string `json:"item"`
 		Count int    `json:"count"`
@@ -95,13 +82,7 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 		ID:   MobID(m.Id),
 		Name: m.Name,
 		Type: m.Type,
-		Factors: Factors{
-			Vulnerability:  m.Factors.Vulnerability,
-			DamageFraction: m.Factors.DamageFraction,
-			Speed:          m.Factors.Speed,
-			DeltaPhi:       m.Factors.DeltaPhi,
-			TurnRate:       m.Factors.TurnRate,
-		},
+		Factors: factors.MapMobFactors(m.Factors),
 		Drops: make(Drops, 0, 1),
 		Body: Body{
 			Radius:m.Body.Radius,

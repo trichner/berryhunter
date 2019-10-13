@@ -1,0 +1,21 @@
+{
+  "id": 51,
+  "name": "Shoes",
+  "type": "EQUIPMENT",
+  "effects": {
+    "whileEquipped": ["MovementSpeedBonus20"]
+  },
+  "recipe": {
+    "craftTimeInSeconds": 30,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 20
+      },
+      {
+        "item": "Feather",
+        "count": 10
+      }
+    ]
+  }
+}

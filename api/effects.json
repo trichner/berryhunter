@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "MovementSpeedBonus20",
+    "factors": {
+      "walkingSpeedPerTick": 1.20
+    }
+  },
+  {
+    "id": 2,
+    "name": "PauseHunger30s",
+    "factors": {
+      "walkingSpeedPerTick": 1.20
+    },
+    "durationInSeconds": 30
+  }
+]

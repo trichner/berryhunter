@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/trichner/berryhunter/berryhunterd/cfg"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/items/mobs"
 	"log"
@@ -30,8 +31,8 @@ func loadMobs(r items.Registry, path string) mobs.Registry {
 }
 
 // loadItems parses the item definitions from the definition files
-func loadItems(path string) items.Registry {
-	registry, err := items.RegistryFromPaths(path)
+func loadItems(effects effects.Registry, path string) items.Registry {
+	registry, err := items.RegistryFromPaths(effects, path)
 	if err != nil {
 
 		log.Printf("Error: %s", err)
@@ -49,7 +50,6 @@ func loadItems(path string) items.Registry {
 
 // loadConf parses the config file
 func loadConf() *cfg.Config {
-
 	configFile := strings.TrimSpace(os.Getenv("BERRYHUNTERD_CONF"))
 	if configFile == "" {
 		configFile = "./conf.json"
@@ -62,8 +62,6 @@ func loadConf() *cfg.Config {
 }
 
 func loadTokens(tokenFile string) []string {
-
-
 	f, err := os.Open(tokenFile)
 	if err != nil {
 		log.Printf("Cannot read '%s': %s", tokenFile, err)
@@ -77,4 +75,22 @@ func loadTokens(tokenFile string) []string {
 	}
 
 	return tokens
+}
+
+// loadMobs parses the mob definitions from the definition files
+func loadEffects(path string) effects.Registry {
+	registry, err := effects.RegistryFromPaths(path)
+	if err != nil {
+
+		log.Printf("Error: %s", err)
+		os.Exit(1)
+	}
+
+	effectList := registry.Effects()
+	log.Printf("Loaded %d effect definitions:", len(effectList))
+	sort.Sort(effects.ByID(effectList))
+	for _, m := range effectList {
+		log.Printf("%3d: %s", m.ID, m.Name)
+	}
+	return registry
 }

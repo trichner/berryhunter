@@ -2,11 +2,11 @@ package player
 
 import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
-	"github.com/trichner/berryhunter/berryhunterd/cfg"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/constant"
+	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
 	"log"
@@ -86,7 +86,7 @@ type player struct {
 
 	model.PlayerVitalSigns
 
-	config *cfg.PlayerConfig
+	config *factors.PlayerFactors
 
 	ownedEntitites model.BasicEntities
 
@@ -180,7 +180,7 @@ func (p *player) Hand() *model.Hand {
 	return &p.hand
 }
 
-func (p *player) Config() *cfg.PlayerConfig {
+func (p *player) Config() *factors.PlayerFactors {
 	return p.config
 }
 

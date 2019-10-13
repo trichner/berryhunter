@@ -5,6 +5,9 @@
   "factors": {
     "food": 1.0
   },
+  "effects": {
+    "onConsume": ["PauseHunger30s"]
+  },
   "recipe": {
     "craftTimeInSeconds": 10,
     "materials": [

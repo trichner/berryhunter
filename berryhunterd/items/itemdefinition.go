@@ -2,8 +2,9 @@ package items
 
 import (
 	"encoding/json"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/model/constant"
-	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
+	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 )
 
 type EquipSlot int
@@ -32,24 +33,6 @@ type Recipe struct {
 	Tools      []Tool
 }
 
-type Factors struct {
-	Food            float32
-	Damage          float32
-	StructureDamage float32
-	Yield           int
-	MinYield        int
-	DurationInTicks int
-
-	// Placeable/Heater
-	HeatPerTick   uint32
-	HeatRadius    float32
-	Vulnerability float32
-
-	// Resource
-	ReplenishProbability float32
-	Capacity             int
-}
-
 type Body struct {
 	Radius float32
 	Solid  bool
@@ -59,14 +42,28 @@ type Body struct {
 	MaxRadius float32
 }
 
+type EffectsByEvent struct {
+	WhileCarried            []*effects.Effect
+	WhileEquipped           []*effects.Effect
+	OnConsume               []*effects.Effect
+	OnPlacing               []*effects.Effect
+	OnAttackWhileEquipped   []*effects.Effect
+	OnAttackWhileCarried    []*effects.Effect
+	OnHitWhileEquipped      []*effects.Effect
+	OnHitWhileCarried       []*effects.Effect
+	OnBeingHitWhileEquipped []*effects.Effect
+	OnBeingHitWhileCarried  []*effects.Effect
+}
+
 type ItemDefinition struct {
 	ID      ItemID
 	Type    ItemType
 	Name    string
 	Slot    EquipSlot
-	Factors Factors
+	Factors factors.ItemFactors
 	Recipe  *Recipe
 	Body    *Body
+	Effects *EffectsByEvent
 }
 
 type ByID []*ItemDefinition
@@ -84,20 +81,21 @@ type itemDefinition struct {
 	ID      int    `json:"id"`
 	Type    string `json:"type"`
 	Name    string `json:"name"`
-	Factors struct {
-		Food            float32 `json:"food"`
-		Damage          float32 `json:"damage"`
-		StructureDamage float32 `json:"structureDamage"`
-		Yield           int     `json:"yield"`
-		MinYield        int     `json:"minimumYield"`
-		DurationInS     int     `json:"durationInSeconds"`
-		HeatPerSecond   float32 `json:"heatPerSecond"`
-		HeatRadius      float32 `json:"heatRadius"`
-		Vulnerability   float32 `json:"vulnerability"`
-
-		ReplenishProbabilityPerS float32 `json:"replenishProbabilityPerSecond"`
-		Capacity                 int     `json:"capacity"`
-	} `json:"factors"`
+	Factors factors.ItemFactorsDefinition `json:"factors"`
+	Effects struct {
+		WhileCarried []string `json:"whileCarried"`
+		WhileEquipped []string `json:"whileEquipped"`
+		OnConsume []string `json:"onConsume"`
+		OnPlacing []string `json:"onPlacing"`
+		// OnAttack = applied to attack character
+		OnAttackWhileEquipped []string `json:"onAttackWhileEquipped"`
+		OnAttackWhileCarried []string `json:"onAttackWhileCarried"`
+		// OnHit = applied to hit entity
+		OnHitWhileEquipped []string `json:"onHitWhileEquipped"`
+		OnHitWhileCarried []string `json:"onHitWhileCarried"`
+		OnBeingHitWhileEquipped []string `json:"onBeingHitWhileEquipped"`
+		OnBeingHitWhileCarried []string `json:"onBeingHitWhileCarried"`
+	} `json:"effects"`
 	Slot string `json:"slot"`
 
 	Recipe *struct {
@@ -135,7 +133,20 @@ func shallowItem(name string) Item {
 	return Item{&ItemDefinition{Name: name}}
 }
 
-func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
+func mapEffects(r effects.Registry, effectNames []string) ([]*effects.Effect, error) {
+	var mappedEffects = make([]*effects.Effect, len(effectNames))
+	for i, name := range effectNames {
+		var err error
+		mappedEffects[i], err = r.GetByName(name)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return mappedEffects, nil
+}
+
+func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinition, error) {
 	slot := namesEnumEquipSlot[i.Slot]
 
 	// parse body
@@ -179,6 +190,40 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		recipe = &Recipe{craftTicks, materials, tools}
 	}
 
+	// Parse effects
+	var effectsByEvent = &EffectsByEvent{}
+	var err error
+	if effectsByEvent.WhileEquipped, err = mapEffects(r, i.Effects.WhileEquipped); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnConsume, err = mapEffects(r, i.Effects.OnConsume); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnPlacing, err = mapEffects(r, i.Effects.OnPlacing); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnAttackWhileEquipped, err = mapEffects(r, i.Effects.OnAttackWhileEquipped); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnAttackWhileCarried, err = mapEffects(r, i.Effects.OnAttackWhileCarried); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnHitWhileEquipped, err = mapEffects(r, i.Effects.OnHitWhileEquipped); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnHitWhileCarried, err = mapEffects(r, i.Effects.OnHitWhileCarried); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnBeingHitWhileEquipped, err = mapEffects(r, i.Effects.OnBeingHitWhileEquipped); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnBeingHitWhileCarried, err = mapEffects(r, i.Effects.OnBeingHitWhileCarried); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.WhileCarried, err = mapEffects(r, i.Effects.WhileCarried); err != nil {
+		return nil, err
+	}
+
 	itemType, ok := ItemTypeMap[i.Type]
 	if !ok {
 		itemType = ItemTypeNone
@@ -189,20 +234,9 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		Type: itemType,
 		Name: i.Name,
 		Slot: slot,
-		Factors: Factors{
-			Food:                 i.Factors.Food,
-			Damage:               i.Factors.Damage,
-			StructureDamage:      i.Factors.StructureDamage,
-			Yield:                i.Factors.Yield,
-			MinYield:             i.Factors.MinYield,
-			HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
-			HeatRadius:           i.Factors.HeatRadius,
-			Vulnerability:        i.Factors.Vulnerability,
-			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
-			ReplenishProbability: i.Factors.ReplenishProbabilityPerS / constant.TicksPerSecond,
-			Capacity:             i.Factors.Capacity,
-		},
+		Factors: factors.MapItemFactors(i.Factors),
 		Recipe: recipe,
 		Body:   body,
+		Effects: effectsByEvent,
 	}, nil
 }

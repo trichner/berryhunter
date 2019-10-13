@@ -19,8 +19,9 @@ import (
 func main() {
 
 	config := loadConf()
-	registry := loadItems("../api/items/")
-	mobs := loadMobs(registry, "../api/mobs/")
+	effects := loadEffects("../api/effects.json")
+	items := loadItems(effects, "../api/items/")
+	mobs := loadMobs(items, "../api/mobs/")
 
 	tokens := loadTokens("./tokens.list")
 	log.Printf("👮‍♀️ Read %d tokens.", len(tokens))
@@ -34,7 +35,7 @@ func main() {
 	g, err := core.NewGameWith(
 		rnd.Int63(),
 		core.Config(config),
-		core.Registries(registry, mobs),
+		core.Registries(items, mobs, effects),
 		core.Tokens(tokens),
 		core.Radius(radius),
 	)

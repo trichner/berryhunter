@@ -1,8 +1,10 @@
 package cfg
 
 import (
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/items/mobs"
+	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 )
 
 type GameConfig struct {
@@ -10,11 +12,12 @@ type GameConfig struct {
 	Radius       float32
 	ItemRegistry items.Registry
 	MobRegistry  mobs.Registry
+	EffectRegistry  effects.Registry
 
 	ColdFractionNightPerS float32
 	ColdFractionDayPerS   float32
 
-	PlayerConfig    PlayerConfig
+	PlayerConfig    factors.PlayerFactors
 	ChieftainConfig *ChieftainConfig
 }
 
@@ -28,18 +31,3 @@ type PubSubConfig struct {
 	TopicId	string
 }
 
-type PlayerConfig struct {
-	// tickwise loss
-	FreezingDamageTickFraction       float32
-	StarveDamageTickFraction         float32
-	FreezingStarveDamageTickFraction float32
-	SatietyLossTickFraction          float32
-
-	// constants for gaining health
-	HealthGainTick                    float32
-	HealthGainSatietyThreshold        float32
-	HealthGainTemperatureThreshold    float32
-	HealthGainSatietyLossTickFraction float32
-
-	WalkingSpeedPerTick float32
-}
