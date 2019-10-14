@@ -1,5 +1,9 @@
 package items
 
+import (
+	"github.com/trichner/berryhunter/berryhunterd/model"
+)
+
 type Equipment map[EquipSlot]Item
 
 func NewEquipment() *Equipment {
@@ -15,7 +19,7 @@ func (e Equipment) Equipped() []Item {
 	return equipped
 }
 
-func (e Equipment) Equip(item Item) {
+func (e Equipment) Equip(p model.PlayerEntity, item Item) {
 	e[item.Slot] = item
 }
 

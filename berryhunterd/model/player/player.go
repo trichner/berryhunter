@@ -28,6 +28,7 @@ func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 		config: &g.Config().PlayerConfig,
 		stats: model.Stats{BirthTick: g.Ticks()},
 		statusEffects: model.NewStatusEffects(),
+		effectStack: effects.NewEffectStack(),
 	}
 
 	// setup body
@@ -257,4 +258,3 @@ func (p *player) SetGodmode(on bool) {
 func (p *player) IsGod() bool {
 	return p.isGod;
 }
-

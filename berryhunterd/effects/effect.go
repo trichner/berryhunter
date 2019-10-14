@@ -120,8 +120,9 @@ type EffectStack struct {
 	addends Addends
 }
 
-func newEffectStack() *EffectStack {
-	return &EffectStack{
+// func newEffectStack() *EffectStack {
+func NewEffectStack() EffectStack {
+	return EffectStack{
 		stacks:  make(map[EffectID]StackSize),
 		factors: Factors{},
 	}
