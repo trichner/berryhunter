@@ -36,6 +36,7 @@ type Addends struct {
 }
 
 func (f Factors) Add(other Factors) {
+	// FIXME default values of 0 multiplied with anything ==> still 0
 	f.Vulnerability *= other.Vulnerability
 
 	f.Food *= other.Food
@@ -128,7 +129,7 @@ func NewEffectStack() EffectStack {
 	}
 }
 
-func (es EffectStack) Add(effects []Effect) {
+func (es EffectStack) Add(effects []*Effect) {
 	for _, e := range effects {
 		es.stacks[e.ID]++
 		es.factors.Add(e.Factors)
@@ -136,7 +137,7 @@ func (es EffectStack) Add(effects []Effect) {
 	}
 }
 
-func (es EffectStack) Subtract(effects []Effect) error {
+func (es EffectStack) Subtract(effects []*Effect) error {
 	for _, e := range effects {
 		if es.stacks[e.ID] == 0 {
 			return errors.New("tried to remove effect that is not part of this effect stack")

@@ -1,7 +1,8 @@
 package items
 
 import (
-	"github.com/trichner/berryhunter/berryhunterd/model"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
+	"log"
 )
 
 type Equipment map[EquipSlot]Item
@@ -19,10 +20,22 @@ func (e Equipment) Equipped() []Item {
 	return equipped
 }
 
-func (e Equipment) Equip(p model.PlayerEntity, item Item) {
+func (e Equipment) Equip(p effects.EffectEntity, item Item) {
+	e.unequipItemInSlot(p, item.Slot)
+	p.EffectStack().Add(item.Effects.WhileEquipped)
 	e[item.Slot] = item
 }
 
-func (e Equipment) Unequip(item Item) {
+func (e Equipment) Unequip(p effects.EffectEntity, item Item) {
+	e.unequipItemInSlot(p, item.Slot)
 	delete(e, item.Slot)
+}
+
+func (e Equipment) unequipItemInSlot(p effects.EffectEntity, slot EquipSlot) {
+	if curItem, ok := e[slot]; ok {
+		err := p.EffectStack().Subtract(curItem.Effects.WhileEquipped)
+		if err != nil {
+			log.Printf("Error while unequipping item %s: %s", curItem.Name, err)
+		}
+	}
 }
