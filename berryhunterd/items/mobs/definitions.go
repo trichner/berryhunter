@@ -25,7 +25,7 @@ import (
 type MobID uint64
 
 type Body struct {
-	Radius    float32
+	Radius       float32
 	DamageRadius float32
 }
 
@@ -46,18 +46,17 @@ type MobDefinition struct {
 }
 
 type mobDefinition struct {
-	Id      uint64 `json:"id"`
-	Name    string `json:"name"`
-	Type    string `json:"type"`
+	Id      uint64                       `json:"id"`
+	Name    string                       `json:"name"`
+	Type    string                       `json:"type"`
 	Factors factors.MobFactorsDefinition `json:"factors"`
-	Drops []struct {
+	Drops   []struct {
 		Item  string `json:"item"`
 		Count int    `json:"count"`
 	} `json:"drops"`
 	Body struct {
-		Radius    float32 `json:"radius"`
+		Radius       float32 `json:"radius"`
 		DamageRadius float32 `json:"damageRadius"`
-
 	} `json:"body"`
 	Generator struct {
 		Weight int `json:"weight"`
@@ -79,14 +78,14 @@ func parseMobDefinition(data []byte) (*mobDefinition, error) {
 func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, error) {
 
 	mob := &MobDefinition{
-		ID:   MobID(m.Id),
-		Name: m.Name,
-		Type: m.Type,
-		Factors: factors.MapMobFactors(m.Factors),
-		Drops: make(Drops, 0, 1),
+		ID:      MobID(m.Id),
+		Name:    m.Name,
+		Type:    m.Type,
+		Factors: factors.MapMobFactors(m.Factors, 0),
+		Drops:   make(Drops, 0, 1),
 		Body: Body{
-			Radius:m.Body.Radius,
-			DamageRadius:m.Body.DamageRadius,
+			Radius:       m.Body.Radius,
+			DamageRadius: m.Body.DamageRadius,
 		},
 		Generator: Generator{
 			Weight: m.Generator.Weight,

@@ -3,6 +3,6 @@
   "name": "MysticWand",
   "type": "EQUIPMENT",
   "effects": {
-    "whileEquipped": ["MovementSpeedBonus20"]
+    "whileEquipped": ["MovementSpeedBonus200"]
   }
 }

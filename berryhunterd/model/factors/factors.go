@@ -10,7 +10,11 @@ type VulnerabilityFactors struct {
 }
 
 func Vulnerability(v float32) VulnerabilityFactors {
-	return VulnerabilityFactors{Vulnerability:v}
+	return VulnerabilityFactors{Vulnerability: v}
+}
+
+func VulnerabilityWithDefault(v float32, def float32) VulnerabilityFactors {
+	return VulnerabilityFactors{Vulnerability: defaultFactorFloat(v, def)}
 }
 
 type ItemFactors struct {
@@ -22,8 +26,8 @@ type ItemFactors struct {
 	DurationInTicks int
 
 	// Placeable/Heater
-	HeatPerTick   uint32
-	HeatRadius    float32
+	HeatPerTick uint32
+	HeatRadius  float32
 	VulnerabilityFactors
 
 	// Resource
@@ -31,19 +35,19 @@ type ItemFactors struct {
 	Capacity             int
 }
 
-func MapItemFactors(d ItemFactorsDefinition) ItemFactors {
+func MapItemFactors(d ItemFactorsDefinition, def int) ItemFactors {
 	return ItemFactors{
-		Food:                 d.Food,
-		Damage:               d.Damage,
-		StructureDamage:      d.StructureDamage,
-		Yield:                d.Yield,
-		MinYield:             d.MinYield,
-		HeatPerTick:          vitals.FractionToAbsPerTick(d.HeatPerSecond),
-		HeatRadius:           d.HeatRadius,
-		VulnerabilityFactors: Vulnerability(d.Vulnerability),
-		DurationInTicks:      DurationInTicks(d.DurationInS),
-		ReplenishProbability: ProbabilityPerTick(d.ReplenishProbabilityPerS),
-		Capacity:             d.Capacity,
+		Food:                 defaultFactorFloat(d.Food, float32(def)),
+		Damage:               defaultFactorFloat(d.Damage, float32(def)),
+		StructureDamage:      defaultFactorFloat(d.StructureDamage, float32(def)),
+		Yield:                defaultFactorInt(d.Yield, def),
+		MinYield:             defaultFactorInt(d.MinYield, def),
+		HeatPerTick:          vitals.FractionToAbsPerTick(defaultFactorFloat(d.HeatPerSecond, float32(def))),
+		HeatRadius:           defaultFactorFloat(d.HeatRadius, float32(def)),
+		VulnerabilityFactors: Vulnerability(defaultFactorFloat(d.Vulnerability, float32(def))),
+		DurationInTicks:      defaultFactorInt(DurationInTicks(d.DurationInS), def),
+		ReplenishProbability: defaultFactorFloat(ProbabilityPerTick(d.ReplenishProbabilityPerS), float32(def)),
+		Capacity:             defaultFactorInt(d.Capacity, def),
 	}
 }
 
@@ -55,13 +59,13 @@ type MobFactors struct {
 	TurnRate       float32
 }
 
-func MapMobFactors(d MobFactorsDefinition) MobFactors {
+func MapMobFactors(d MobFactorsDefinition, def float32) MobFactors {
 	return MobFactors{
-		VulnerabilityFactors: Vulnerability(d.Vulnerability),
-		DamageFraction: d.DamageFraction,
-		Speed:          d.Speed,
-		DeltaPhi:       d.DeltaPhi,
-		TurnRate:       d.TurnRate,
+		VulnerabilityFactors: Vulnerability(defaultFactorFloat(d.Vulnerability, def)),
+		DamageFraction:       defaultFactorFloat(d.DamageFraction, def),
+		Speed:                defaultFactorFloat(d.Speed, def),
+		DeltaPhi:             defaultFactorFloat(d.DeltaPhi, def),
+		TurnRate:             defaultFactorFloat(d.TurnRate, def),
 	}
 }
 
@@ -81,19 +85,17 @@ type PlayerFactors struct {
 	WalkingSpeedPerTick float32
 }
 
-
-
-func MapPlayerFactors(d PlayerFactorsDefinition) PlayerFactors {
+func MapPlayerFactors(d PlayerFactorsDefinition, def float32) PlayerFactors {
 	return PlayerFactors{
-		FreezingDamageTickFraction :        d.FreezingDamageTickFraction,
-		HealthGainSatietyLossTickFraction : d.HealthGainSatietyLossTickFraction,
-		HealthGainSatietyThreshold :        d.HealthGainSatietyThreshold,
-		HealthGainTemperatureThreshold :    d.HealthGainTemperatureThreshold,
-		HealthGainTick :                    d.HealthGainTick,
-		SatietyLossTickFraction :           d.SatietyLossTickFraction,
-		StarveDamageTickFraction :          d.StarveDamageTickFraction,
-		FreezingStarveDamageTickFraction :  d.FreezingStarveDamageTickFraction,
-		WalkingSpeedPerTick :               d.WalkingSpeedPerTick,
+		FreezingDamageTickFraction:        defaultFactorFloat(d.FreezingDamageTickFraction, def),
+		HealthGainSatietyLossTickFraction: defaultFactorFloat(d.HealthGainSatietyLossTickFraction, def),
+		HealthGainSatietyThreshold:        defaultFactorFloat(d.HealthGainSatietyThreshold, def),
+		HealthGainTemperatureThreshold:    defaultFactorFloat(d.HealthGainTemperatureThreshold, def),
+		HealthGainTick:                    defaultFactorFloat(d.HealthGainTick, def),
+		SatietyLossTickFraction:           defaultFactorFloat(d.SatietyLossTickFraction, def),
+		StarveDamageTickFraction:          defaultFactorFloat(d.StarveDamageTickFraction, def),
+		FreezingStarveDamageTickFraction:  defaultFactorFloat(d.FreezingStarveDamageTickFraction, def),
+		WalkingSpeedPerTick:               defaultFactorFloat(d.WalkingSpeedPerTick, def),
 	}
 }
 
@@ -103,5 +105,21 @@ func DurationInTicks(d int) int {
 
 func ProbabilityPerTick(p float32) float32 {
 	// FIXME https://trello.com/c/cKtO3Rnl/427-replenishprobabilitypersecond-wird-jeden-frame-angewandt-statt-1mal-pro-sec
-	return p  / constant.TicksPerSecond
+	return p / constant.TicksPerSecond
+}
+
+func defaultFactorFloat(f float32, def float32) float32 {
+	if f == 0 {
+		return def
+	}
+
+	return f
+}
+
+func defaultFactorInt(i int, def int) int {
+	if i == 0 {
+		return def
+	}
+
+	return i
 }

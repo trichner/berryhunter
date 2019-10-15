@@ -78,23 +78,23 @@ type Item struct {
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
-	ID      int    `json:"id"`
-	Type    string `json:"type"`
-	Name    string `json:"name"`
+	ID      int                           `json:"id"`
+	Type    string                        `json:"type"`
+	Name    string                        `json:"name"`
 	Factors factors.ItemFactorsDefinition `json:"factors"`
 	Effects struct {
-		WhileCarried []string `json:"whileCarried"`
+		WhileCarried  []string `json:"whileCarried"`
 		WhileEquipped []string `json:"whileEquipped"`
-		OnConsume []string `json:"onConsume"`
-		OnPlacing []string `json:"onPlacing"`
+		OnConsume     []string `json:"onConsume"`
+		OnPlacing     []string `json:"onPlacing"`
 		// OnAttack = applied to attack character
 		OnAttackWhileEquipped []string `json:"onAttackWhileEquipped"`
-		OnAttackWhileCarried []string `json:"onAttackWhileCarried"`
+		OnAttackWhileCarried  []string `json:"onAttackWhileCarried"`
 		// OnHit = applied to hit entity
-		OnHitWhileEquipped []string `json:"onHitWhileEquipped"`
-		OnHitWhileCarried []string `json:"onHitWhileCarried"`
+		OnHitWhileEquipped      []string `json:"onHitWhileEquipped"`
+		OnHitWhileCarried       []string `json:"onHitWhileCarried"`
 		OnBeingHitWhileEquipped []string `json:"onBeingHitWhileEquipped"`
-		OnBeingHitWhileCarried []string `json:"onBeingHitWhileCarried"`
+		OnBeingHitWhileCarried  []string `json:"onBeingHitWhileCarried"`
 	} `json:"effects"`
 	Slot string `json:"slot"`
 
@@ -230,13 +230,13 @@ func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinitio
 	}
 
 	return &ItemDefinition{
-		ID:   ItemID(i.ID),
-		Type: itemType,
-		Name: i.Name,
-		Slot: slot,
-		Factors: factors.MapItemFactors(i.Factors),
-		Recipe: recipe,
-		Body:   body,
+		ID:      ItemID(i.ID),
+		Type:    itemType,
+		Name:    i.Name,
+		Slot:    slot,
+		Factors: factors.MapItemFactors(i.Factors, 0),
+		Recipe:  recipe,
+		Body:    body,
 		Effects: effectsByEvent,
 	}, nil
 }

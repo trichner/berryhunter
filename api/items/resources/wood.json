@@ -7,6 +7,9 @@
     "replenishProbabilityPerSecond": 0.6,
     "capacity": 50
   },
+  "effects": {
+    "whileCarried": ["MovementSpeedBonus200"]
+  },
   "body": {
     "minRadius": 0.40,
     "maxRadius": 1.0,

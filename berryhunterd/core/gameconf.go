@@ -15,7 +15,7 @@ func Config(conf *cfg.Config) Configuration {
 		g.ColdFractionNightPerS = conf.Game.ColdFractionNightPerS
 		g.ColdFractionDayPerS = conf.Game.ColdFractionDayPerS
 
-		g.PlayerConfig = factors.MapPlayerFactors(conf.Game.Player)
+		g.PlayerConfig = factors.MapPlayerFactors(conf.Game.Player, 0)
 
 		if conf.Chieftain != nil {
 			ctn := &cfg.ChieftainConfig{}

@@ -1,9 +1,9 @@
 [
   {
     "id": 1,
-    "name": "MovementSpeedBonus20",
+    "name": "MovementSpeedBonus200",
     "factors": {
-      "walkingSpeedPerTick": 1.20
+      "walkingSpeedPerTick": 2.00
     }
   },
   {

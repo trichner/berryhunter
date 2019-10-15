@@ -25,10 +25,10 @@ func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 		equipment:      items.NewEquipment(),
 		name:           name,
 		ownedEntitites: model.NewBasicEntities(),
-		config: &g.Config().PlayerConfig,
-		stats: model.Stats{BirthTick: g.Ticks()},
-		statusEffects: model.NewStatusEffects(),
-		effectStack: effects.NewEffectStack(),
+		config:         &g.Config().PlayerConfig,
+		stats:          model.Stats{BirthTick: g.Ticks()},
+		statusEffects:  model.NewStatusEffects(),
+		effectStack:    *effects.NewEffectStack(),
 	}
 
 	// setup body
@@ -46,7 +46,7 @@ func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 	p.viewport.Shape().Group = shapeGroup
 
 	//--- initialize inventory
-	inventory, err := initializePlayerInventory(g.Items())
+	inventory, err := initializePlayerInventory(p, g.Items())
 	if err != nil {
 		panic(err)
 	}
@@ -201,21 +201,21 @@ func (p *player) EffectStack() *effects.EffectStack {
 	return &p.effectStack
 }
 
-
-func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
+func initializePlayerInventory(p effects.EffectEntity, r items.Registry) (items.Inventory, error) {
 
 	type startItem struct {
 		name  string
 		count int
 	}
-	inventory := items.NewInventory()
+	inventory := items.NewInventory(p)
 
 	// This is the inventory a new player starts with
 	startItems := []startItem{
-//		{"IronTool", 1},
-//		{"BronzeSword", 1},
-//		{"Workbench", 1},
-//		{"BigCampfire", 3},
+		// TODO remove
+		{"MysticWand", 1},
+		//		{"BronzeSword", 1},
+		//		{"Workbench", 1},
+		//		{"BigCampfire", 3},
 	}
 
 	//--- initialize inventory
@@ -256,5 +256,5 @@ func (p *player) SetGodmode(on bool) {
 }
 
 func (p *player) IsGod() bool {
-	return p.isGod;
+	return p.isGod
 }

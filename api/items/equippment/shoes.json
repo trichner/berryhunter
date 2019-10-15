@@ -3,7 +3,7 @@
   "name": "Shoes",
   "type": "EQUIPMENT",
   "effects": {
-    "whileEquipped": ["MovementSpeedBonus20"]
+    "whileEquipped": ["MovementSpeedBonus200"]
   },
   "recipe": {
     "craftTimeInSeconds": 30,

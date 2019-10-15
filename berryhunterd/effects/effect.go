@@ -30,12 +30,56 @@ type Factors struct {
 	CraftingSpeed float32
 }
 
+// Initialize all factors to 1 to allow for easy multiplication
+func NewFactors() *Factors {
+	return &Factors{
+		VulnerabilityFactors: factors.Vulnerability(1),
+		ItemFactors: factors.ItemFactors{
+			Food:                 1,
+			Damage:               1,
+			StructureDamage:      1,
+			Yield:                1,
+			MinYield:             1,
+			DurationInTicks:      1,
+			HeatPerTick:          1,
+			HeatRadius:           1,
+			VulnerabilityFactors: factors.Vulnerability(1),
+			ReplenishProbability: 1,
+			Capacity:             1,
+		},
+		MobFactors: factors.MobFactors{
+			VulnerabilityFactors: factors.Vulnerability(1),
+			DamageFraction:       1,
+			Speed:                1,
+			DeltaPhi:             1,
+			TurnRate:             1,
+		},
+		PlayerFactors: factors.PlayerFactors{
+			FreezingDamageTickFraction:        1,
+			StarveDamageTickFraction:          1,
+			FreezingStarveDamageTickFraction:  1,
+			SatietyLossTickFraction:           1,
+			HealthGainTick:                    1,
+			HealthGainSatietyThreshold:        1,
+			HealthGainTemperatureThreshold:    1,
+			HealthGainSatietyLossTickFraction: 1,
+			WalkingSpeedPerTick:               1,
+		},
+		CraftingSpeed: 0,
+	}
+}
+
 // Values that get added
 type Addends struct {
 	InventoryCap int
 }
 
-func (f Factors) Add(other Factors) {
+// All addends are initialized to 0 to allow for easy addition
+func NewAddends() *Addends {
+	return &Addends{}
+}
+
+func (f *Factors) Add(other Factors) {
 	// FIXME default values of 0 multiplied with anything ==> still 0
 	f.Vulnerability *= other.Vulnerability
 
@@ -69,11 +113,11 @@ func (f Factors) Add(other Factors) {
 	f.CraftingSpeed *= other.CraftingSpeed
 }
 
-func (a Addends) Add(other Addends) {
+func (a *Addends) Add(other Addends) {
 	a.InventoryCap += other.InventoryCap
 }
 
-func (f Factors) Subtract(other Factors) {
+func (f *Factors) Subtract(other Factors) {
 	f.Vulnerability -= other.Vulnerability
 
 	f.Food /= other.Food
@@ -106,7 +150,7 @@ func (f Factors) Subtract(other Factors) {
 	f.CraftingSpeed /= other.CraftingSpeed
 }
 
-func (a Addends) Subtract(other Addends) {
+func (a *Addends) Subtract(other Addends) {
 	a.InventoryCap -= other.InventoryCap
 }
 
@@ -117,19 +161,28 @@ func (f Factors) test() {
 type EffectStack struct {
 	// How many times is the indicated effect in this stack?
 	stacks  map[EffectID]StackSize
-	factors Factors
-	addends Addends
+	factors *Factors
+	addends *Addends
 }
 
 // func newEffectStack() *EffectStack {
-func NewEffectStack() EffectStack {
-	return EffectStack{
+func NewEffectStack() *EffectStack {
+	return &EffectStack{
 		stacks:  make(map[EffectID]StackSize),
-		factors: Factors{},
+		factors: NewFactors(),
+		addends: NewAddends(),
 	}
 }
 
-func (es EffectStack) Add(effects []*Effect) {
+func (es *EffectStack) Factors() *Factors {
+	return es.factors
+}
+
+func (es *EffectStack) Addends() *Addends {
+	return es.addends
+}
+
+func (es *EffectStack) Add(effects []*Effect) {
 	for _, e := range effects {
 		es.stacks[e.ID]++
 		es.factors.Add(e.Factors)
@@ -137,7 +190,7 @@ func (es EffectStack) Add(effects []*Effect) {
 	}
 }
 
-func (es EffectStack) Subtract(effects []*Effect) error {
+func (es *EffectStack) Subtract(effects []*Effect) error {
 	for _, e := range effects {
 		if es.stacks[e.ID] == 0 {
 			return errors.New("tried to remove effect that is not part of this effect stack")
@@ -169,7 +222,7 @@ type effectDefinition struct {
 	DurationInS int               `json:"durationInSeconds"`
 	Factors     factorsDefinition `json:"factors"`
 	Addends     struct {
-		InventoryCap string `json:"inventoryCap"`
+		InventoryCap int `json:"inventoryCap"`
 	} `json:"addends"`
 }
 
@@ -191,10 +244,13 @@ func (m *effectDefinition) mapToEffectDefinition() (*Effect, error) {
 		MaxStacks:       StackSize(m.MaxStacks),
 		DurationInTicks: factors.DurationInTicks(m.DurationInS),
 		Factors: Factors{
-			VulnerabilityFactors: factors.Vulnerability(m.Factors.ItemFactorsDefinition.Vulnerability),
-			ItemFactors:          factors.MapItemFactors(m.Factors.ItemFactorsDefinition),
-			MobFactors:           factors.MapMobFactors(m.Factors.MobFactorsDefinition),
-			PlayerFactors:        factors.MapPlayerFactors(m.Factors.PlayerFactorsDefinition),
+			VulnerabilityFactors: factors.VulnerabilityWithDefault(m.Factors.ItemFactorsDefinition.Vulnerability, 1),
+			ItemFactors:          factors.MapItemFactors(m.Factors.ItemFactorsDefinition, 1),
+			MobFactors:           factors.MapMobFactors(m.Factors.MobFactorsDefinition, 1),
+			PlayerFactors:        factors.MapPlayerFactors(m.Factors.PlayerFactorsDefinition, 1),
+		},
+		Addends: Addends{
+			InventoryCap: m.Addends.InventoryCap,
 		},
 	}
 
