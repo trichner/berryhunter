@@ -124,6 +124,8 @@ func (p *player) CurrentAction() model.PlayerAction {
 func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	h := p.PlayerVitalSigns.Health
 
+	p.EffectStack().Add(item.Effects.OnHitPlayer)
+
 	dmgFraction := item.Factors.Damage // * vulnerability
 	if dmgFraction > 0 {
 		p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)

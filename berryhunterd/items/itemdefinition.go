@@ -43,16 +43,26 @@ type Body struct {
 }
 
 type EffectsByEvent struct {
-	WhileCarried            []*effects.Effect
-	WhileEquipped           []*effects.Effect
-	OnConsume               []*effects.Effect
-	OnPlacing               []*effects.Effect
-	OnAttackWhileEquipped   []*effects.Effect
-	OnAttackWhileCarried    []*effects.Effect
-	OnHitWhileEquipped      []*effects.Effect
-	OnHitWhileCarried       []*effects.Effect
-	OnBeingHitWhileEquipped []*effects.Effect
-	OnBeingHitWhileCarried  []*effects.Effect
+	WhileCarried   []*effects.Effect
+	WhileEquipped  []*effects.Effect
+	OnConsume      []*effects.Effect
+	OnPlacing      []*effects.Effect
+	OnHitMob       []*effects.Effect
+	OnHitResource  []*effects.Effect
+	OnHitPlaceable []*effects.Effect
+	OnHitPlayer    []*effects.Effect
+	//OnAttackWhileEquipped   []*effects.Effect
+	//OnAttackWhileCarried    []*effects.Effect
+	//OnHitWhileEquipped      []*effects.Effect
+	//OnHitWhileCarried       []*effects.Effect
+	//OnBeingHitWhileEquipped []*effects.Effect
+	//OnBeingHitWhileCarried  []*effects.Effect
+
+	// For resources:
+	// Applied to the yielding player entity
+	OnYield []*effects.Effect
+	// Applied to the resource entity
+	OnYielded []*effects.Effect
 }
 
 type ItemDefinition struct {
@@ -83,18 +93,25 @@ type itemDefinition struct {
 	Name    string                        `json:"name"`
 	Factors factors.ItemFactorsDefinition `json:"factors"`
 	Effects struct {
-		WhileCarried  []string `json:"whileCarried"`
-		WhileEquipped []string `json:"whileEquipped"`
-		OnConsume     []string `json:"onConsume"`
-		OnPlacing     []string `json:"onPlacing"`
+		WhileCarried   []string `json:"whileCarried"`
+		WhileEquipped  []string `json:"whileEquipped"`
+		OnConsume      []string `json:"onConsume"`
+		OnPlacing      []string `json:"onPlacing"`
+		OnAttack       []string `json:"onAttack"`
+		OnHitMob       []string `json:"onHitMob"`
+		OnHitResource  []string `json:"onHitResource"`
+		OnHitPlaceable []string `json:"onHitPlaceable"`
+		OnHitPlayer    []string `json:"onHitPlayer"`
 		// OnAttack = applied to attack character
-		OnAttackWhileEquipped []string `json:"onAttackWhileEquipped"`
-		OnAttackWhileCarried  []string `json:"onAttackWhileCarried"`
-		// OnHit = applied to hit entity
-		OnHitWhileEquipped      []string `json:"onHitWhileEquipped"`
-		OnHitWhileCarried       []string `json:"onHitWhileCarried"`
-		OnBeingHitWhileEquipped []string `json:"onBeingHitWhileEquipped"`
-		OnBeingHitWhileCarried  []string `json:"onBeingHitWhileCarried"`
+		//OnAttackWhileEquipped []string `json:"onAttackWhileEquipped"`
+		//OnAttackWhileCarried  []string `json:"onAttackWhileCarried"`
+		//// OnHit = applied to hit entity
+		//OnHitWhileEquipped      []string `json:"onHitWhileEquipped"`
+		//OnHitWhileCarried       []string `json:"onHitWhileCarried"`
+		//OnBeingHitWhileEquipped []string `json:"onBeingHitWhileEquipped"`
+		//OnBeingHitWhileCarried  []string `json:"onBeingHitWhileCarried"`
+		OnYield   []string `json:"onYield"`
+		OnYielded []string `json:"onYielded"`
 	} `json:"effects"`
 	Slot string `json:"slot"`
 
@@ -131,19 +148,6 @@ func parseItemDefinition(data []byte) (*itemDefinition, error) {
 
 func shallowItem(name string) Item {
 	return Item{&ItemDefinition{Name: name}}
-}
-
-func mapEffects(r effects.Registry, effectNames []string) ([]*effects.Effect, error) {
-	var mappedEffects = make([]*effects.Effect, len(effectNames))
-	for i, name := range effectNames {
-		var err error
-		mappedEffects[i], err = r.GetByName(name)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return mappedEffects, nil
 }
 
 func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinition, error) {
@@ -193,34 +197,53 @@ func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinitio
 	// Parse effects
 	var effectsByEvent = &EffectsByEvent{}
 	var err error
-	if effectsByEvent.WhileEquipped, err = mapEffects(r, i.Effects.WhileEquipped); err != nil {
+	if effectsByEvent.WhileCarried, err = effects.MapEffects(r, i.Effects.WhileCarried); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnConsume, err = mapEffects(r, i.Effects.OnConsume); err != nil {
+	if effectsByEvent.WhileEquipped, err = effects.MapEffects(r, i.Effects.WhileEquipped); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnPlacing, err = mapEffects(r, i.Effects.OnPlacing); err != nil {
+	if effectsByEvent.OnConsume, err = effects.MapEffects(r, i.Effects.OnConsume); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnAttackWhileEquipped, err = mapEffects(r, i.Effects.OnAttackWhileEquipped); err != nil {
+	if effectsByEvent.OnPlacing, err = effects.MapEffects(r, i.Effects.OnPlacing); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnAttackWhileCarried, err = mapEffects(r, i.Effects.OnAttackWhileCarried); err != nil {
+	if effectsByEvent.OnHitMob, err = effects.MapEffects(r, i.Effects.OnHitMob); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnHitWhileEquipped, err = mapEffects(r, i.Effects.OnHitWhileEquipped); err != nil {
+	if effectsByEvent.OnHitPlayer, err = effects.MapEffects(r, i.Effects.OnHitPlayer); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnHitWhileCarried, err = mapEffects(r, i.Effects.OnHitWhileCarried); err != nil {
+	if effectsByEvent.OnHitPlaceable, err = effects.MapEffects(r, i.Effects.OnHitPlaceable); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnBeingHitWhileEquipped, err = mapEffects(r, i.Effects.OnBeingHitWhileEquipped); err != nil {
+	if effectsByEvent.OnHitResource, err = effects.MapEffects(r, i.Effects.OnHitResource); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnBeingHitWhileCarried, err = mapEffects(r, i.Effects.OnBeingHitWhileCarried); err != nil {
+	//if effectsByEvent.OnAttackWhileEquipped, err = mapEffects(r, i.Effects.OnAttackWhileEquipped); err != nil {
+	//	return nil, err
+	//}
+	//if effectsByEvent.OnAttackWhileCarried, err = mapEffects(r, i.Effects.OnAttackWhileCarried); err != nil {
+	//	return nil, err
+	//}
+	//if effectsByEvent.OnHitWhileEquipped, err = mapEffects(r, i.Effects.OnHitWhileEquipped); err != nil {
+	//	return nil, err
+	//}
+	//if effectsByEvent.OnHitWhileCarried, err = mapEffects(r, i.Effects.OnHitWhileCarried); err != nil {
+	//	return nil, err
+	//}
+	//if effectsByEvent.OnBeingHitWhileEquipped, err = mapEffects(r, i.Effects.OnBeingHitWhileEquipped); err != nil {
+	//	return nil, err
+	//}
+	//if effectsByEvent.OnBeingHitWhileCarried, err = mapEffects(r, i.Effects.OnBeingHitWhileCarried); err != nil {
+	//	return nil, err
+	//}
+
+	if effectsByEvent.OnYield, err = effects.MapEffects(r, i.Effects.OnYield); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.WhileCarried, err = mapEffects(r, i.Effects.WhileCarried); err != nil {
+	if effectsByEvent.OnYielded, err = effects.MapEffects(r, i.Effects.OnYielded); err != nil {
 		return nil, err
 	}
 

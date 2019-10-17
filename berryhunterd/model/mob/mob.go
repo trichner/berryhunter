@@ -2,14 +2,15 @@ package mob
 
 import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/items/mobs"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
 	"log"
-	"math/rand"
 	"math"
+	"math/rand"
 )
 
 var _ = model.MobEntity(&Mob{})
@@ -48,8 +49,8 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 		wanderAcceleration: phy.Vec2f{d.Factors.TurnRate, 0},
 		wanderDeltaPhi:     2 * math.Pi * d.Factors.DeltaPhi,
 		// TODO use walkingSpeedPerTick from global config
-		velocity:           0.055 * d.Factors.Speed,
-		statusEffects:      model.NewStatusEffects(),
+		velocity:      0.055 * d.Factors.Speed,
+		statusEffects: model.NewStatusEffects(),
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -72,6 +73,7 @@ type Mob struct {
 	velocity           float32
 
 	statusEffects model.StatusEffects
+	effectStack   effects.EffectStack
 }
 
 func (m *Mob) StatusEffects() *model.StatusEffects {
@@ -91,6 +93,10 @@ func (m *Mob) MobDefinition() *mobs.MobDefinition {
 	return m.definition
 }
 
+func (m *Mob) EffectStack() *effects.EffectStack {
+	return &m.effectStack
+}
+
 func (m *Mob) Update(dt float32) bool {
 
 	auraCollisions := m.damageAura.Collisions()
@@ -100,6 +106,9 @@ func (m *Mob) Update(dt float32) bool {
 			if p.IsGod() {
 				continue
 			}
+
+			p.EffectStack().Add(m.MobDefinition().Effects.OnHitPlayer)
+
 			if m.definition.Factors.DamageFraction != 0 {
 				h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
 				p.VitalSigns().Health = h
@@ -157,7 +166,7 @@ func (m *Mob) Angle() float32 {
 }
 
 func (m *Mob) SetAngle(a float32) {
-	m.heading = phy.NewRotMat2f(a).Mult(phy.Vec2f{-1, 0});
+	m.heading = phy.NewRotMat2f(a).Mult(phy.Vec2f{-1, 0})
 }
 
 func (m *Mob) Health() vitals.VitalSign {
@@ -171,6 +180,9 @@ func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	if vulnerability == 0 {
 		vulnerability = 1
 	}
+
+	m.EffectStack().Add(item.Effects.OnHitMob)
+	m.EffectStack().Add(m.MobDefinition().Effects.OnBeingHit)
 
 	dmgFraction := item.Factors.Damage * vulnerability
 	if dmgFraction > 0 {

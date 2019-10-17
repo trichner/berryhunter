@@ -2,14 +2,22 @@ package resource
 
 import (
 	"fmt"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
-	"math/rand"
 	"log"
+	"math/rand"
 )
 
 var _ = model.ResourceEntity(&Resource{})
+
+type EffectsByEvent struct {
+	// Applied to the yielding player entity
+	OnYield []*effects.Effect
+	// Applied to the resource entity
+	OnYielded []*effects.Effect
+}
 
 type Resource struct {
 	model.BaseEntity
@@ -18,6 +26,8 @@ type Resource struct {
 	rand                    *rand.Rand
 	invReplenishProbability int
 	statusEffects           model.StatusEffects
+	effectStack             effects.EffectStack
+	effects                 *EffectsByEvent
 }
 
 func (r *Resource) replenish(i int) {
@@ -30,6 +40,10 @@ func (r *Resource) replenish(i int) {
 
 func (r *Resource) StatusEffects() *model.StatusEffects {
 	return &r.statusEffects
+}
+
+func (r *Resource) EffectStack() *effects.EffectStack {
+	return &r.effectStack
 }
 
 func (r *Resource) Resource() *model.ResourceStock {
@@ -94,6 +108,10 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 		rand:                    rand,
 		invReplenishProbability: invReplenishProbability,
 		statusEffects:           model.NewStatusEffects(),
+		effects: &EffectsByEvent{
+			OnYield:   resource.Effects.OnYield,
+			OnYielded: resource.Effects.OnYielded,
+		},
 	}
 	r.Body.Shape().UserData = r
 	return r, nil
@@ -111,5 +129,8 @@ func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 	if y <= 0 {
 		return
 	}
+
+	r.EffectStack().Add(item.Effects.OnHitPlaceable)
+
 	p.Inventory().AddItem(items.NewItemStack(r.stock.Item, y))
 }

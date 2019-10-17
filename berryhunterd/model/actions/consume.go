@@ -28,6 +28,8 @@ func (a *Consume) Start() {
 		h := p.VitalSigns().Satiety
 		foodFraction := a.item.Factors.Food
 		p.VitalSigns().Satiety = h.AddFraction(foodFraction)
+
+		p.EffectStack().Add(a.item.Effects.OnConsume)
 	}
 	a.ticks = 1
 }
@@ -35,4 +37,3 @@ func (a *Consume) Start() {
 func (*Consume) Type() model.PlayerActionType {
 	return model.PlayerActionConsumeItem
 }
-

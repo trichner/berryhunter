@@ -21,7 +21,7 @@ func main() {
 	config := loadConf()
 	effects := loadEffects("../api/effects.json")
 	items := loadItems(effects, "../api/items/")
-	mobs := loadMobs(items, "../api/mobs/")
+	mobs := loadMobs(items, effects, "../api/mobs/")
 
 	tokens := loadTokens("./tokens.list")
 	log.Printf("👮‍♀️ Read %d tokens.", len(tokens))

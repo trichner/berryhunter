@@ -3,6 +3,7 @@ package mobs
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 )
@@ -35,11 +36,17 @@ type Generator struct {
 
 type Drops []*items.ItemStack
 
+type EffectsByEvent struct {
+	OnHitPlayer []*effects.Effect
+	OnBeingHit  []*effects.Effect
+}
+
 type MobDefinition struct {
 	ID        MobID
 	Name      string
 	Type      string
 	Factors   factors.MobFactors
+	Effects   *EffectsByEvent
 	Drops     Drops
 	Body      Body
 	Generator Generator
@@ -50,7 +57,11 @@ type mobDefinition struct {
 	Name    string                       `json:"name"`
 	Type    string                       `json:"type"`
 	Factors factors.MobFactorsDefinition `json:"factors"`
-	Drops   []struct {
+	Effects struct {
+		OnHitPlayer []string `json:"onHitPlayer"`
+		OnBeingHit  []string `json:"onBeingHit"`
+	} `json:"effects"`
+	Drops []struct {
 		Item  string `json:"item"`
 		Count int    `json:"count"`
 	} `json:"drops"`
@@ -75,7 +86,17 @@ func parseMobDefinition(data []byte) (*mobDefinition, error) {
 	return &mob, nil
 }
 
-func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, error) {
+func (m *mobDefinition) mapToMobDefinition(r items.Registry, e effects.Registry) (*MobDefinition, error) {
+
+	// Parse effects
+	var effectsByEvent = &EffectsByEvent{}
+	var err error
+	if effectsByEvent.OnHitPlayer, err = effects.MapEffects(e, m.Effects.OnHitPlayer); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnBeingHit, err = effects.MapEffects(e, m.Effects.OnBeingHit); err != nil {
+		return nil, err
+	}
 
 	mob := &MobDefinition{
 		ID:      MobID(m.Id),
@@ -90,6 +111,7 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 		Generator: Generator{
 			Weight: m.Generator.Weight,
 		},
+		Effects: effectsByEvent,
 	}
 
 	// append drops

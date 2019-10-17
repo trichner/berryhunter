@@ -257,6 +257,19 @@ func (m *effectDefinition) mapToEffectDefinition() (*Effect, error) {
 	return effect, nil
 }
 
+func MapEffects(r Registry, effectNames []string) ([]*Effect, error) {
+	var mappedEffects = make([]*Effect, len(effectNames))
+	for i, name := range effectNames {
+		var err error
+		mappedEffects[i], err = r.GetByName(name)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return mappedEffects, nil
+}
+
 //type EffectComponent struct {
 //	EffectStack *EffectStack
 //}

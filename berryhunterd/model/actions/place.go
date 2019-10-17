@@ -34,6 +34,9 @@ func (a *Place) Start() {
 	}
 
 	log.Printf("🏗 Placing: %s", item.Name)
+
+	a.p.EffectStack().Add(item.Effects.OnPlacing)
+
 	// TODO add collision detection
 
 	e, err := placeable.NewPlaceable(item)

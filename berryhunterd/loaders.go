@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"github.com/trichner/berryhunter/berryhunterd/cfg"
 	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
@@ -9,12 +10,11 @@ import (
 	"os"
 	"sort"
 	"strings"
-	"bufio"
 )
 
 // loadMobs parses the mob definitions from the definition files
-func loadMobs(r items.Registry, path string) mobs.Registry {
-	registry, err := mobs.RegistryFromPaths(r, path)
+func loadMobs(r items.Registry, e effects.Registry, path string) mobs.Registry {
+	registry, err := mobs.RegistryFromPaths(r, e, path)
 	if err != nil {
 
 		log.Printf("Error: %s", err)

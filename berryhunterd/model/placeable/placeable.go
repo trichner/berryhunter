@@ -3,6 +3,7 @@ package placeable
 import (
 	"fmt"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
@@ -21,6 +22,7 @@ type Placeable struct {
 	radiator      *model.HeatRadiator
 	ticksLeft     int
 	statusEffects model.StatusEffects
+	effectStack   effects.EffectStack
 }
 
 func (p *Placeable) Update(dt float32) {
@@ -61,6 +63,10 @@ func (p *Placeable) Item() items.Item {
 
 func (p *Placeable) StatusEffects() *model.StatusEffects {
 	return &p.statusEffects
+}
+
+func (p *Placeable) EffectStack() *effects.EffectStack {
+	return &p.effectStack
 }
 
 func NewPlaceable(item items.Item) (*Placeable, error) {
@@ -123,6 +129,8 @@ func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	if vulnerability == 0 {
 		vulnerability = 1
 	}
+
+	p.EffectStack().Add(item.Effects.OnHitResource)
 
 	dmgFraction := item.Factors.StructureDamage * vulnerability
 	if dmgFraction > 0 {
