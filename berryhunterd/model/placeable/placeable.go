@@ -14,6 +14,11 @@ import (
 
 var _ = model.PlaceableEntity(&Placeable{})
 
+type EffectsByEvent struct {
+	// Applied to the attacking player entity
+	OnBeingHit []*effects.Effect
+}
+
 type Placeable struct {
 	model.BaseEntity
 	item items.Item
@@ -23,6 +28,7 @@ type Placeable struct {
 	ticksLeft     int
 	statusEffects model.StatusEffects
 	effectStack   effects.EffectStack
+	effects       *EffectsByEvent
 }
 
 func (p *Placeable) Update(dt float32) {
@@ -102,6 +108,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		heaterBody.Shape().Mask = int(model.LayerHeatCollision)
 		heaterBody.Shape().Group = -1 // no need to collide with other heat sources
 		radiator.Body = heaterBody
+		radiator.OnRadiatorCollision = item.Effects.OnRadiatorCollision
 	}
 
 	// setup the decay time
@@ -118,6 +125,10 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		radiator:      radiator,
 		ticksLeft:     ticksLeft,
 		statusEffects: model.NewStatusEffects(),
+		effectStack:   *effects.NewEffectStack(),
+		effects: &EffectsByEvent{
+			OnBeingHit:          item.Effects.OnBeingHit,
+		},
 	}
 	p.Body.Shape().UserData = p
 	return p, nil
@@ -130,7 +141,8 @@ func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 		vulnerability = 1
 	}
 
-	p.EffectStack().Add(item.Effects.OnHitResource)
+	p.EffectStack().Add(item.Effects.OnHitPlaceable)
+	player.EffectStack().Add(p.effects.OnBeingHit)
 
 	dmgFraction := item.Factors.StructureDamage * vulnerability
 	if dmgFraction > 0 {

@@ -87,6 +87,7 @@ func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 		}
 		//TODO Account for radius
 		t.temperature += h.HeatRadiation().HeatPerTick
+		p.EffectStack().Add(radiator.OnRadiatorCollision)
 	}
 
 }

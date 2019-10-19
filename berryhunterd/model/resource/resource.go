@@ -108,6 +108,7 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 		rand:                    rand,
 		invReplenishProbability: invReplenishProbability,
 		statusEffects:           model.NewStatusEffects(),
+		effectStack:             *effects.NewEffectStack(),
 		effects: &EffectsByEvent{
 			OnYield:   resource.Effects.OnYield,
 			OnYielded: resource.Effects.OnYielded,
@@ -130,7 +131,9 @@ func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 		return
 	}
 
-	r.EffectStack().Add(item.Effects.OnHitPlaceable)
+	r.EffectStack().Add(item.Effects.OnHitResource)
+	r.EffectStack().Add(r.effects.OnYielded)
+	p.EffectStack().Add(r.effects.OnYield)
 
 	p.Inventory().AddItem(items.NewItemStack(r.stock.Item, y))
 }

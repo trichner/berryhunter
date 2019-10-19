@@ -63,6 +63,12 @@ type EffectsByEvent struct {
 	OnYield []*effects.Effect
 	// Applied to the resource entity
 	OnYielded []*effects.Effect
+
+	// For placeables:
+	// Applied to the attacking player entity
+	OnBeingHit []*effects.Effect
+	// Applied to player entities in range of the radiator body
+	OnRadiatorCollision []*effects.Effect
 }
 
 type ItemDefinition struct {
@@ -110,8 +116,12 @@ type itemDefinition struct {
 		//OnHitWhileCarried       []string `json:"onHitWhileCarried"`
 		//OnBeingHitWhileEquipped []string `json:"onBeingHitWhileEquipped"`
 		//OnBeingHitWhileCarried  []string `json:"onBeingHitWhileCarried"`
+
 		OnYield   []string `json:"onYield"`
 		OnYielded []string `json:"onYielded"`
+
+		OnBeingHit   []string `json:"onBeingHit"`
+		OnRadiatorCollision []string `json:"onRadiatorCollision"`
 	} `json:"effects"`
 	Slot string `json:"slot"`
 
@@ -239,11 +249,16 @@ func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinitio
 	//if effectsByEvent.OnBeingHitWhileCarried, err = mapEffects(r, i.Effects.OnBeingHitWhileCarried); err != nil {
 	//	return nil, err
 	//}
-
 	if effectsByEvent.OnYield, err = effects.MapEffects(r, i.Effects.OnYield); err != nil {
 		return nil, err
 	}
 	if effectsByEvent.OnYielded, err = effects.MapEffects(r, i.Effects.OnYielded); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnBeingHit, err = effects.MapEffects(r, i.Effects.OnBeingHit); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnRadiatorCollision, err = effects.MapEffects(r, i.Effects.OnRadiatorCollision); err != nil {
 		return nil, err
 	}
 
