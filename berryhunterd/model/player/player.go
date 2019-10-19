@@ -28,7 +28,7 @@ func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 		config:         &g.Config().PlayerConfig,
 		stats:          model.Stats{BirthTick: g.Ticks()},
 		statusEffects:  model.NewStatusEffects(),
-		effectStack:    *effects.NewEffectStack(),
+		effectStack:    effects.NewEffectStack(),
 	}
 
 	// setup body
@@ -126,7 +126,9 @@ func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 
 	p.EffectStack().Add(item.Effects.OnHitPlayer)
 
-	dmgFraction := item.Factors.Damage // * vulnerability
+	dmgFraction := item.Factors.Damage
+	dmgFraction *= player.EffectStack().Factors().Damage // attackers damage modifier
+	dmgFraction *= p.EffectStack().Factors().Vulnerability // defenders damage taking modifier
 	if dmgFraction > 0 {
 		p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)
 		p.StatusEffects().Add(model.StatusEffectDamaged)

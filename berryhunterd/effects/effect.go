@@ -3,7 +3,6 @@ package effects
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 )
 
@@ -17,7 +16,7 @@ type Effect struct {
 	DurationInTicks int
 
 	Factors Factors
-	Addends Addends
+	//Addends Addends
 }
 
 // Values that get multiplied
@@ -28,6 +27,7 @@ type Factors struct {
 	factors.PlayerFactors
 
 	CraftingSpeed float32
+	InventoryCap  int
 }
 
 // Initialize all factors to 1 to allow for easy multiplication
@@ -38,14 +38,15 @@ func NewFactors() *Factors {
 			Food:                 1,
 			Damage:               1,
 			StructureDamage:      1,
-			Yield:                1,
-			MinYield:             1,
-			DurationInTicks:      1,
-			HeatPerTick:          1,
 			HeatRadius:           1,
 			VulnerabilityFactors: factors.Vulnerability(1),
 			ReplenishProbability: 1,
-			Capacity:             1,
+
+			Yield:           0,
+			MinYield:        0,
+			DurationInTicks: 0,
+			HeatPerTick:     0,
+			Capacity:        0,
 		},
 		MobFactors: factors.MobFactors{
 			VulnerabilityFactors: factors.Vulnerability(1),
@@ -66,12 +67,12 @@ func NewFactors() *Factors {
 			WalkingSpeedPerTick:               1,
 		},
 		CraftingSpeed: 0,
+		InventoryCap:  0,
 	}
 }
 
 // Values that get added
 type Addends struct {
-	InventoryCap int
 }
 
 // All addends are initialized to 0 to allow for easy addition
@@ -80,20 +81,20 @@ func NewAddends() *Addends {
 }
 
 func (f *Factors) Add(other Factors) {
-	// FIXME default values of 0 multiplied with anything ==> still 0
 	f.Vulnerability *= other.Vulnerability
 
 	f.Food *= other.Food
 	f.Damage *= other.Damage
 	f.StructureDamage *= other.StructureDamage
-	f.Yield *= other.Yield
-	f.MinYield *= other.MinYield
-	f.DurationInTicks *= other.DurationInTicks
-	f.HeatPerTick *= other.HeatPerTick
 	f.HeatRadius *= other.HeatRadius
 	f.Vulnerability *= other.Vulnerability
 	f.ReplenishProbability *= other.ReplenishProbability
-	f.Capacity *= other.Capacity
+	// Sum int values
+	f.Yield += other.Yield
+	f.MinYield += other.MinYield
+	f.DurationInTicks += other.DurationInTicks
+	f.HeatPerTick += other.HeatPerTick
+	f.Capacity += other.Capacity
 
 	f.DamageFraction *= other.DamageFraction
 	f.Speed *= other.Speed
@@ -111,10 +112,11 @@ func (f *Factors) Add(other Factors) {
 	f.WalkingSpeedPerTick *= other.WalkingSpeedPerTick
 
 	f.CraftingSpeed *= other.CraftingSpeed
+	// Sum int values
+	f.InventoryCap += f.InventoryCap
 }
 
 func (a *Addends) Add(other Addends) {
-	a.InventoryCap += other.InventoryCap
 }
 
 func (f *Factors) Subtract(other Factors) {
@@ -123,14 +125,15 @@ func (f *Factors) Subtract(other Factors) {
 	f.Food /= other.Food
 	f.Damage /= other.Damage
 	f.StructureDamage /= other.StructureDamage
-	f.Yield /= other.Yield
-	f.MinYield /= other.MinYield
-	f.DurationInTicks /= other.DurationInTicks
-	f.HeatPerTick /= other.HeatPerTick
 	f.HeatRadius /= other.HeatRadius
 	f.Vulnerability /= other.Vulnerability
 	f.ReplenishProbability /= other.ReplenishProbability
-	f.Capacity /= other.Capacity
+	// Subtract int values
+	f.Yield -= other.Yield
+	f.MinYield -= other.MinYield
+	f.DurationInTicks -= other.DurationInTicks
+	f.HeatPerTick -= other.HeatPerTick
+	f.Capacity -= other.Capacity
 
 	f.DamageFraction /= other.DamageFraction
 	f.Speed /= other.Speed
@@ -148,14 +151,14 @@ func (f *Factors) Subtract(other Factors) {
 	f.WalkingSpeedPerTick /= other.WalkingSpeedPerTick
 
 	f.CraftingSpeed /= other.CraftingSpeed
+	// Subtract int values
+	//f.InventoryCap -= other.InventoryCap
+	if other.InventoryCap > 0 {
+		panic("Cannot shrink inventory.")
+	}
 }
 
 func (a *Addends) Subtract(other Addends) {
-	a.InventoryCap -= other.InventoryCap
-}
-
-func (f Factors) test() {
-	fmt.Println("Title: ", f.Vulnerability)
 }
 
 type EffectStack struct {
@@ -166,8 +169,8 @@ type EffectStack struct {
 }
 
 // func newEffectStack() *EffectStack {
-func NewEffectStack() *EffectStack {
-	return &EffectStack{
+func NewEffectStack() EffectStack {
+	return EffectStack{
 		stacks:  make(map[EffectID]StackSize),
 		factors: NewFactors(),
 		addends: NewAddends(),
@@ -186,7 +189,7 @@ func (es *EffectStack) Add(effects []*Effect) {
 	for _, e := range effects {
 		es.stacks[e.ID]++
 		es.factors.Add(e.Factors)
-		es.addends.Add(e.Addends)
+		//es.addends.Add(e.Addends)
 	}
 }
 
@@ -197,7 +200,7 @@ func (es *EffectStack) Subtract(effects []*Effect) error {
 		}
 		es.stacks[e.ID]--
 		es.factors.Subtract(e.Factors)
-		es.addends.Subtract(e.Addends)
+		//es.addends.Subtract(e.Addends)
 	}
 
 	return nil
@@ -213,6 +216,8 @@ type factorsDefinition struct {
 	factors.ItemFactorsDefinition
 	factors.MobFactorsDefinition
 	factors.PlayerFactorsDefinition
+	CraftingSpeed float32 `json:"craftingSpeed"`
+	InventoryCap  int     `json:"inventoryCap"`
 }
 
 type effectDefinition struct {
@@ -221,9 +226,8 @@ type effectDefinition struct {
 	MaxStacks   uint8             `json:"maxStacks"`
 	DurationInS int               `json:"durationInSeconds"`
 	Factors     factorsDefinition `json:"factors"`
-	Addends     struct {
-		InventoryCap int `json:"inventoryCap"`
-	} `json:"addends"`
+	//Addends     struct {
+	//} `json:"addends"`
 }
 
 func parseEffectDefinitions(data []byte) (*[]*effectDefinition, error) {
@@ -245,13 +249,14 @@ func (m *effectDefinition) mapToEffectDefinition() (*Effect, error) {
 		DurationInTicks: factors.DurationInTicks(m.DurationInS),
 		Factors: Factors{
 			VulnerabilityFactors: factors.VulnerabilityWithDefault(m.Factors.ItemFactorsDefinition.Vulnerability, 1),
-			ItemFactors:          factors.MapItemFactors(m.Factors.ItemFactorsDefinition, 1),
-			MobFactors:           factors.MapMobFactors(m.Factors.MobFactorsDefinition, 1),
-			PlayerFactors:        factors.MapPlayerFactors(m.Factors.PlayerFactorsDefinition, 1),
+			ItemFactors:          factors.MapItemFactors(m.Factors.ItemFactorsDefinition, 1, 0),
+			MobFactors:           factors.MapMobFactors(m.Factors.MobFactorsDefinition, 1, 0),
+			PlayerFactors:        factors.MapPlayerFactors(m.Factors.PlayerFactorsDefinition, 1, 0),
+			CraftingSpeed:        m.Factors.CraftingSpeed,
+			InventoryCap:         m.Factors.InventoryCap,
 		},
-		Addends: Addends{
-			InventoryCap: m.Addends.InventoryCap,
-		},
+		//Addends: Addends{
+		//},
 	}
 
 	return effect, nil

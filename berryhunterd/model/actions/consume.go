@@ -27,6 +27,7 @@ func (a *Consume) Start() {
 		// prevent overflow
 		h := p.VitalSigns().Satiety
 		foodFraction := a.item.Factors.Food
+		foodFraction *= p.EffectStack().Factors().Food
 		p.VitalSigns().Satiety = h.AddFraction(foodFraction)
 
 		p.EffectStack().Add(a.item.Effects.OnConsume)

@@ -102,7 +102,7 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry, e effects.Registry)
 		ID:      MobID(m.Id),
 		Name:    m.Name,
 		Type:    m.Type,
-		Factors: factors.MapMobFactors(m.Factors, 0),
+		Factors: factors.MapMobFactors(m.Factors, 0, 0),
 		Drops:   make(Drops, 0, 1),
 		Body: Body{
 			Radius:       m.Body.Radius,

@@ -35,19 +35,20 @@ type ItemFactors struct {
 	Capacity             int
 }
 
-func MapItemFactors(d ItemFactorsDefinition, def int) ItemFactors {
+func MapItemFactors(d ItemFactorsDefinition, defaultFloat float32, defaultInt int) ItemFactors {
 	return ItemFactors{
-		Food:                 defaultFactorFloat(d.Food, float32(def)),
-		Damage:               defaultFactorFloat(d.Damage, float32(def)),
-		StructureDamage:      defaultFactorFloat(d.StructureDamage, float32(def)),
-		Yield:                defaultFactorInt(d.Yield, def),
-		MinYield:             defaultFactorInt(d.MinYield, def),
-		HeatPerTick:          vitals.FractionToAbsPerTick(defaultFactorFloat(d.HeatPerSecond, float32(def))),
-		HeatRadius:           defaultFactorFloat(d.HeatRadius, float32(def)),
-		VulnerabilityFactors: Vulnerability(defaultFactorFloat(d.Vulnerability, float32(def))),
-		DurationInTicks:      defaultFactorInt(DurationInTicks(d.DurationInS), def),
-		ReplenishProbability: defaultFactorFloat(ProbabilityPerTick(d.ReplenishProbabilityPerS), float32(def)),
-		Capacity:             defaultFactorInt(d.Capacity, def),
+		Food:                 defaultFactorFloat(d.Food, defaultFloat),
+		Damage:               defaultFactorFloat(d.Damage, defaultFloat),
+		StructureDamage:      defaultFactorFloat(d.StructureDamage, defaultFloat),
+		Yield:                defaultFactorInt(d.Yield, defaultInt),
+		MinYield:             defaultFactorInt(d.MinYield, defaultInt),
+		// Special case - value is defaulted (like an int) and then transformed
+		HeatPerTick:          vitals.FractionToAbsPerTick(defaultFactorFloat(d.HeatPerSecond, float32(defaultInt))),
+		HeatRadius:           defaultFactorFloat(d.HeatRadius, defaultFloat),
+		VulnerabilityFactors: Vulnerability(defaultFactorFloat(d.Vulnerability, defaultFloat)),
+		DurationInTicks:      defaultFactorInt(DurationInTicks(d.DurationInS), defaultInt),
+		ReplenishProbability: defaultFactorFloat(ProbabilityPerTick(d.ReplenishProbabilityPerS), defaultFloat),
+		Capacity:             defaultFactorInt(d.Capacity, defaultInt),
 	}
 }
 
@@ -59,13 +60,13 @@ type MobFactors struct {
 	TurnRate       float32
 }
 
-func MapMobFactors(d MobFactorsDefinition, def float32) MobFactors {
+func MapMobFactors(d MobFactorsDefinition, defaultFloat float32, defaultInt int) MobFactors {
 	return MobFactors{
-		VulnerabilityFactors: Vulnerability(defaultFactorFloat(d.Vulnerability, def)),
-		DamageFraction:       defaultFactorFloat(d.DamageFraction, def),
-		Speed:                defaultFactorFloat(d.Speed, def),
-		DeltaPhi:             defaultFactorFloat(d.DeltaPhi, def),
-		TurnRate:             defaultFactorFloat(d.TurnRate, def),
+		VulnerabilityFactors: Vulnerability(defaultFactorFloat(d.Vulnerability, defaultFloat)),
+		DamageFraction:       defaultFactorFloat(d.DamageFraction, defaultFloat),
+		Speed:                defaultFactorFloat(d.Speed, defaultFloat),
+		DeltaPhi:             defaultFactorFloat(d.DeltaPhi, defaultFloat),
+		TurnRate:             defaultFactorFloat(d.TurnRate, defaultFloat),
 	}
 }
 
@@ -85,17 +86,17 @@ type PlayerFactors struct {
 	WalkingSpeedPerTick float32
 }
 
-func MapPlayerFactors(d PlayerFactorsDefinition, def float32) PlayerFactors {
+func MapPlayerFactors(d PlayerFactorsDefinition, defaultFloat float32, defaultInt int) PlayerFactors {
 	return PlayerFactors{
-		FreezingDamageTickFraction:        defaultFactorFloat(d.FreezingDamageTickFraction, def),
-		HealthGainSatietyLossTickFraction: defaultFactorFloat(d.HealthGainSatietyLossTickFraction, def),
-		HealthGainSatietyThreshold:        defaultFactorFloat(d.HealthGainSatietyThreshold, def),
-		HealthGainTemperatureThreshold:    defaultFactorFloat(d.HealthGainTemperatureThreshold, def),
-		HealthGainTick:                    defaultFactorFloat(d.HealthGainTick, def),
-		SatietyLossTickFraction:           defaultFactorFloat(d.SatietyLossTickFraction, def),
-		StarveDamageTickFraction:          defaultFactorFloat(d.StarveDamageTickFraction, def),
-		FreezingStarveDamageTickFraction:  defaultFactorFloat(d.FreezingStarveDamageTickFraction, def),
-		WalkingSpeedPerTick:               defaultFactorFloat(d.WalkingSpeedPerTick, def),
+		FreezingDamageTickFraction:        defaultFactorFloat(d.FreezingDamageTickFraction, defaultFloat),
+		HealthGainSatietyLossTickFraction: defaultFactorFloat(d.HealthGainSatietyLossTickFraction, defaultFloat),
+		HealthGainSatietyThreshold:        defaultFactorFloat(d.HealthGainSatietyThreshold, defaultFloat),
+		HealthGainTemperatureThreshold:    defaultFactorFloat(d.HealthGainTemperatureThreshold, defaultFloat),
+		HealthGainTick:                    defaultFactorFloat(d.HealthGainTick, defaultFloat),
+		SatietyLossTickFraction:           defaultFactorFloat(d.SatietyLossTickFraction, defaultFloat),
+		StarveDamageTickFraction:          defaultFactorFloat(d.StarveDamageTickFraction, defaultFloat),
+		FreezingStarveDamageTickFraction:  defaultFactorFloat(d.FreezingStarveDamageTickFraction, defaultFloat),
+		WalkingSpeedPerTick:               defaultFactorFloat(d.WalkingSpeedPerTick, defaultFloat),
 	}
 }
 

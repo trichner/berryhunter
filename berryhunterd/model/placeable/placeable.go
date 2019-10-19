@@ -35,13 +35,13 @@ func (p *Placeable) Update(dt float32) {
 	p.ticksLeft -= 1
 
 	// prevent underflow
-	if p.ticksLeft < 0 {
-		p.ticksLeft = 0
+	if (p.ticksLeft - p.effectStack.Factors().DurationInTicks) < 0 {
+		p.ticksLeft = p.effectStack.Factors().DurationInTicks
 	}
 }
 
 func (p *Placeable) Decayed() bool {
-	return p.ticksLeft <= 0 || p.health <= 0
+	return (p.ticksLeft - p.effectStack.Factors().DurationInTicks) <= 0 || p.health <= 0
 }
 
 func (p *Placeable) HeatRadiation() *model.HeatRadiator {
@@ -75,7 +75,7 @@ func (p *Placeable) EffectStack() *effects.EffectStack {
 	return &p.effectStack
 }
 
-func NewPlaceable(item items.Item) (*Placeable, error) {
+func NewPlaceable(item items.Item, bonus struct{DurationInTicks int; HeatRadius float32; HeatPerTick uint32}) (*Placeable, error) {
 
 	if item.ItemDefinition == nil {
 		return nil, fmt.Errorf("No resource provided.")
@@ -102,7 +102,9 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	if item.Factors.HeatPerTick != 0 {
 		radiator = &model.HeatRadiator{}
 		radiator.HeatPerTick = item.Factors.HeatPerTick
+		radiator.HeatPerTick += bonus.HeatPerTick
 		radiator.Radius = item.Factors.HeatRadius
+		radiator.Radius += bonus.HeatRadius
 		heaterBody := phy.NewCircle(phy.VEC2F_ZERO, radiator.Radius)
 		heaterBody.Shape().IsSensor = true
 		heaterBody.Shape().Mask = int(model.LayerHeatCollision)
@@ -115,6 +117,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	var ticksLeft int = math.MaxInt32
 	if item.Factors.DurationInTicks != 0 {
 		ticksLeft = item.Factors.DurationInTicks
+		ticksLeft += bonus.DurationInTicks
 	}
 
 	base := model.NewBaseEntity(body, BerryhunterApi.EntityTypePlaceable)
@@ -125,9 +128,9 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		radiator:      radiator,
 		ticksLeft:     ticksLeft,
 		statusEffects: model.NewStatusEffects(),
-		effectStack:   *effects.NewEffectStack(),
+		effectStack:   effects.NewEffectStack(),
 		effects: &EffectsByEvent{
-			OnBeingHit:          item.Effects.OnBeingHit,
+			OnBeingHit: item.Effects.OnBeingHit,
 		},
 	}
 	p.Body.Shape().UserData = p
@@ -144,7 +147,10 @@ func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	p.EffectStack().Add(item.Effects.OnHitPlaceable)
 	player.EffectStack().Add(p.effects.OnBeingHit)
 
-	dmgFraction := item.Factors.StructureDamage * vulnerability
+	dmgFraction := item.Factors.StructureDamage
+	dmgFraction *= player.EffectStack().Factors().StructureDamage
+	dmgFraction *= vulnerability
+	dmgFraction *= p.effectStack.Factors().Vulnerability
 	if dmgFraction > 0 {
 		p.health = p.health.SubFraction(dmgFraction)
 		p.StatusEffects().Add(model.StatusEffectDamaged)

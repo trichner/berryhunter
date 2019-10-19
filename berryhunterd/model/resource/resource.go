@@ -33,8 +33,9 @@ type Resource struct {
 func (r *Resource) replenish(i int) {
 	res := &r.stock
 	res.Available += i
-	if res.Available > res.Capacity {
-		res.Available = res.Capacity
+	capacity := res.Capacity + r.effectStack.Factors().Capacity
+	if res.Available > capacity {
+		res.Available = capacity
 	}
 }
 
@@ -53,6 +54,7 @@ func (r *Resource) Resource() *model.ResourceStock {
 func (r *Resource) yield(i int) (yielded int) {
 
 	i -= r.stock.Item.ItemDefinition.Factors.MinYield
+	i -= r.effectStack.Factors().MinYield
 	if i < 1 {
 		return 0
 	}
@@ -75,7 +77,9 @@ func (r *Resource) Update(dt float32) {
 	if res.Item.Factors.ReplenishProbability <= 0 {
 		return
 	}
-	if r.rand.Intn(r.invReplenishProbability) == 0 {
+	invProbability := float32(r.invReplenishProbability)
+	invProbability /= r.effectStack.Factors().ReplenishProbability
+	if r.rand.Intn(int(invProbability)) == 0 {
 		r.replenish(1)
 	}
 }
@@ -108,7 +112,7 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 		rand:                    rand,
 		invReplenishProbability: invReplenishProbability,
 		statusEffects:           model.NewStatusEffects(),
-		effectStack:             *effects.NewEffectStack(),
+		effectStack:             effects.NewEffectStack(),
 		effects: &EffectsByEvent{
 			OnYield:   resource.Effects.OnYield,
 			OnYielded: resource.Effects.OnYielded,
@@ -124,6 +128,8 @@ func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 		log.Printf("😕 %s has no yield for %s.", item.Name, r.stock.Item.Name)
 		return
 	}
+
+	yield += p.EffectStack().Factors().Yield
 
 	// resistance might be too high
 	y := r.yield(yield)

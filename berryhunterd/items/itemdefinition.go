@@ -272,7 +272,7 @@ func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinitio
 		Type:    itemType,
 		Name:    i.Name,
 		Slot:    slot,
-		Factors: factors.MapItemFactors(i.Factors, 0),
+		Factors: factors.MapItemFactors(i.Factors, 0, 0),
 		Recipe:  recipe,
 		Body:    body,
 		Effects: effectsByEvent,

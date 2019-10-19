@@ -62,7 +62,7 @@ func (i *Inventory) Items() []*ItemStack {
 
 // Cap returns the maximum amount of item slots
 func (i *Inventory) Cap() int {
-	return i.cap
+	return i.cap + i.effectEntity.EffectStack().Factors().InventoryCap
 }
 
 // Count returns the number of occupied item slots
@@ -126,7 +126,7 @@ func (i *Inventory) AddItem(item *ItemStack) (added bool) {
 		}
 	}
 
-	if i.cap > len(i.items) {
+	if i.Cap() > len(i.items) {
 		i.items = append(i.items, item)
 		return true
 	}

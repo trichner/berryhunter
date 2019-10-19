@@ -3,11 +3,20 @@
     "id": 1,
     "name": "MovementSpeedBonus200",
     "factors": {
+      "speed": 2.00,
       "walkingSpeedPerTick": 2.00
     }
   },
   {
     "id": 2,
+    "name": "MovementSpeedBonus600",
+    "factors": {
+      "speed": 6.00,
+      "walkingSpeedPerTick": 6.00
+    }
+  },
+  {
+    "id": 3,
     "name": "PauseHunger30s",
     "factors": {
       "walkingSpeedPerTick": 1.20
