@@ -25,6 +25,6 @@
     "weight": 100
   },
   "effects": {
-    "OnBeingHit": ["MovementSpeedBonus600"]
+    "OnBeingHit": ["QuickEscape"]
   }
 }

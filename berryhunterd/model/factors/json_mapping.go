@@ -14,7 +14,7 @@ type ItemFactorsDefinition struct {
 	StructureDamage float32 `json:"structureDamage"`
 	Yield           int     `json:"yield"`
 	MinYield        int     `json:"minimumYield"`
-	DurationInS     int     `json:"durationInSeconds"`
+	DurationInS     float32 `json:"durationInSeconds"`
 	HeatPerSecond   float32 `json:"heatPerSecond"`
 	HeatRadius      float32 `json:"heatRadius"`
 	Vulnerability   float32 `json:"vulnerability"`

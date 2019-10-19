@@ -135,7 +135,7 @@ func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
 	sb := sys.NewScoreboardSystem(g)
 	g.AddSystem(sb)
 
-	es := effects.NewEffectSystem()
+	es := effects.NewEffectSystem(gc.EffectRegistry)
 	g.AddSystem(es)
 
 	g.printSystems()
@@ -263,6 +263,8 @@ func (g *game) addMobEntity(e model.MobEntity) {
 			s.AddEntity(e)
 		case *sys.MobSystem:
 			s.AddEntity(e)
+		case *effects.EffectSystem:
+			s.Add(e, e)
 		}
 	}
 }
@@ -289,6 +291,8 @@ func (g *game) addPlaceableEntity(p model.PlaceableEntity) {
 			if p.HeatRadiation() != nil {
 				s.AddHeater(p)
 			}
+		case *effects.EffectSystem:
+			s.Add(p, p)
 		}
 	}
 }
@@ -325,6 +329,8 @@ func (g *game) addResourceEntity(e model.ResourceEntity) {
 			s.AddEntity(e)
 		case *sys.UpdateSystem:
 			s.AddUpdateable(e)
+		case *effects.EffectSystem:
+			s.Add(e, e)
 		}
 	}
 }
@@ -359,7 +365,7 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 			s.AddPlayer(p)
 		case *effects.EffectSystem:
 			//s.Add(p, p.EffectComponent())
-			s.Add(p, p.EffectStack())
+			s.Add(p, p)
 		}
 	}
 }

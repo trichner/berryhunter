@@ -9,11 +9,12 @@
   },
   {
     "id": 2,
-    "name": "MovementSpeedBonus600",
+    "name": "QuickEscape",
     "factors": {
-      "speed": 6.00,
-      "walkingSpeedPerTick": 6.00
-    }
+      "speed": 4.00,
+      "walkingSpeedPerTick": 4.00
+    },
+    "durationInSeconds": 0.7
   },
   {
     "id": 3,

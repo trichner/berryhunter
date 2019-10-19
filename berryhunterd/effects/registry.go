@@ -12,10 +12,10 @@ type registry struct {
 	effects effectMap
 }
 
-func (r *registry) Get(i EffectID) (*Effect, error) {
-	mob, ok := r.effects[i]
+func (r *registry) Get(id EffectID) (*Effect, error) {
+	mob, ok := r.effects[id]
 	if !ok {
-		return nil, fmt.Errorf("Effect '%d' not found.", i)
+		return nil, fmt.Errorf("effect '%d' not found", id)
 	}
 	return mob, nil
 }

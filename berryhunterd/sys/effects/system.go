@@ -8,20 +8,23 @@ import (
 )
 
 type effectEntity struct {
-	b *model.BasicEntity
+	b model.BasicEntity
 	//e *effects.EffectComponent
-	e *effects.EffectStack
+	e effects.EffectEntity
 }
 
 type EffectSystem struct {
-	entities []effectEntity
+	entities       []effectEntity
+	effectRegistry effects.Registry
 }
 
-func NewEffectSystem() *EffectSystem {
-	return &EffectSystem{}
+func NewEffectSystem(r effects.Registry) *EffectSystem {
+	return &EffectSystem{
+		effectRegistry: r,
+	}
 }
 
-func (*EffectSystem) Priority() int {
+func (es *EffectSystem) Priority() int {
 	return 102
 }
 
@@ -29,19 +32,19 @@ func (*EffectSystem) Priority() int {
 //	p.entities = append(p.entities, effectEntity{b, e})
 //}
 
-func (p *EffectSystem) Add(b model.BasicEntity, e *effects.EffectStack) {
-	p.entities = append(p.entities, effectEntity{&b, e})
+func (es *EffectSystem) Add(b model.BasicEntity, e effects.EffectEntity) {
+	es.entities = append(es.entities, effectEntity{b, e})
 }
 
-func (p *EffectSystem) Update(dt float32) {
-	//for _, e := range p.entities {
-		// TODO reduce duration and remove timed out effects
-	//}
+func (es *EffectSystem) Update(dt float32) {
+	for _, e := range es.entities {
+		e.e.EffectStack().Update(dt, es.effectRegistry)
+	}
 }
 
-func (p *EffectSystem) Remove(e ecs.BasicEntity) {
-	delete := minions.FindBasic(func(i int) model.BasicEntity { return *p.entities[i].b }, len(p.entities), e)
-	if delete >= 0 {
-		p.entities = append(p.entities[:delete], p.entities[delete+1:]...)
+func (es *EffectSystem) Remove(e ecs.BasicEntity) {
+	del := minions.FindBasic(func(i int) model.BasicEntity { return es.entities[i].b }, len(es.entities), e)
+	if del >= 0 {
+		es.entities = append(es.entities[:del], es.entities[del+1:]...)
 	}
 }

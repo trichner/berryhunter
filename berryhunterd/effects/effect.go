@@ -4,16 +4,41 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/trichner/berryhunter/berryhunterd/model/factors"
+	"log"
 )
 
 type EffectID uint64
-type StackSize uint8
+type stackSize uint8
+
+// What's the behavior when the same effect is applied more than once to an EffectStack?
+type DurationStacking int
+
+const (
+	// Reset duration for all effects of same type to configured value
+	Reset DurationStacking = iota
+	// Add duration to current duration when adding effect of same type
+	Add
+	// Adding an effect of the same time doesn't change the time left
+	None
+)
+
+// What's the behavior when an effect times out?
+type DurationRemoves int
+
+const (
+	// All effects of the same type are removed
+	All DurationRemoves = iota
+	// 1 effect is removed and the duration is reset
+	OneByOne
+)
 
 type Effect struct {
-	ID              EffectID
-	Name            string
-	MaxStacks       StackSize
-	DurationInTicks int
+	ID               EffectID
+	Name             string
+	MaxStacks        stackSize
+	DurationInTicks  int
+	DurationStacking DurationStacking
+	DurationRemoves  DurationRemoves
 
 	Factors Factors
 	//Addends Addends
@@ -120,7 +145,7 @@ func (a *Addends) Add(other Addends) {
 }
 
 func (f *Factors) Subtract(other Factors) {
-	f.Vulnerability -= other.Vulnerability
+	f.Vulnerability /= other.Vulnerability
 
 	f.Food /= other.Food
 	f.Damage /= other.Damage
@@ -161,9 +186,14 @@ func (f *Factors) Subtract(other Factors) {
 func (a *Addends) Subtract(other Addends) {
 }
 
-type EffectStack struct {
+type activeEffect struct {
 	// How many times is the indicated effect in this stack?
-	stacks  map[EffectID]StackSize
+	count     stackSize
+	ticksLeft int
+}
+
+type EffectStack struct {
+	stacks  map[EffectID]*activeEffect
 	factors *Factors
 	addends *Addends
 }
@@ -171,7 +201,7 @@ type EffectStack struct {
 // func newEffectStack() *EffectStack {
 func NewEffectStack() EffectStack {
 	return EffectStack{
-		stacks:  make(map[EffectID]StackSize),
+		stacks:  make(map[EffectID]*activeEffect),
 		factors: NewFactors(),
 		addends: NewAddends(),
 	}
@@ -187,23 +217,92 @@ func (es *EffectStack) Addends() *Addends {
 
 func (es *EffectStack) Add(effects []*Effect) {
 	for _, e := range effects {
-		es.stacks[e.ID]++
-		es.factors.Add(e.Factors)
+		log.Printf("Add effect %s", e.Name)
+		a, ok := es.stacks[e.ID]
+		if !ok {
+			a = &activeEffect{
+				count:     1,
+				ticksLeft: e.DurationInTicks,
+			}
+			es.stacks[e.ID] = a
+			es.factors.Add(e.Factors)
+		} else {
+			if a.count < e.MaxStacks {
+				a.count++
+				es.factors.Add(e.Factors)
+			}
+			switch e.DurationStacking {
+			case Reset:
+				a.ticksLeft = e.DurationInTicks
+			case Add:
+				a.ticksLeft += e.DurationInTicks
+			case None:
+				// Do nothing
+			default:
+				log.Printf("Unknown DurationStacking in effect [%d] %s", e.ID, e.Name)
+			}
+		}
+		//es.stacks[e.ID]++
 		//es.addends.Add(e.Addends)
 	}
 }
 
 func (es *EffectStack) Subtract(effects []*Effect) error {
 	for _, e := range effects {
-		if es.stacks[e.ID] == 0 {
-			return errors.New("tried to remove effect that is not part of this effect stack")
+		i := es.subtractSingle(e)
+		if i != nil {
+			return i
 		}
-		es.stacks[e.ID]--
-		es.factors.Subtract(e.Factors)
-		//es.addends.Subtract(e.Addends)
 	}
 
 	return nil
+}
+
+func (es *EffectStack) subtractSingle(e *Effect) error {
+	a, exists := es.stacks[e.ID]
+	if !exists || a.count == 0 {
+		return errors.New("tried to remove effect that is not part of this effect stack")
+	}
+	a.count--
+	if a.count == 0 {
+		delete(es.stacks, e.ID)
+	}
+	es.factors.Subtract(e.Factors)
+	//es.addends.Subtract(e.Addends)
+	return nil
+}
+
+func (es *EffectStack) Update(dt float32, r Registry) {
+	for id, a := range es.stacks {
+		a.ticksLeft--
+
+		if a.ticksLeft <= 0 {
+			// Stack timed out
+			e, err := r.Get(id)
+			if err != nil {
+				log.Printf("Effect timed out, but couldn't be find in registry. %v", err)
+				continue
+			}
+
+			log.Printf("%s timed out", e.Name)
+
+			switch e.DurationRemoves {
+			case All:
+				for i := 0; i < int(a.count); i++ {
+					if err := es.subtractSingle(e); err != nil {
+						log.Printf("Couldn't remove full stack on timeout. %v", err)
+					}
+				}
+			case OneByOne:
+				if err := es.subtractSingle(e); err != nil {
+					log.Printf("Couldn't remove single stack on timeout. %v", err)
+				}
+				a.ticksLeft = e.DurationInTicks
+			default:
+				log.Printf("Unknown DurationRemoves in effect [%d] %s", e.ID, e.Name)
+			}
+		}
+	}
 }
 
 type ByID []*Effect
@@ -224,7 +323,7 @@ type effectDefinition struct {
 	Id          uint64            `json:"id"`
 	Name        string            `json:"name"`
 	MaxStacks   uint8             `json:"maxStacks"`
-	DurationInS int               `json:"durationInSeconds"`
+	DurationInS float32           `json:"durationInSeconds"`
 	Factors     factorsDefinition `json:"factors"`
 	//Addends     struct {
 	//} `json:"addends"`
@@ -245,7 +344,7 @@ func (m *effectDefinition) mapToEffectDefinition() (*Effect, error) {
 	effect := &Effect{
 		ID:              EffectID(m.Id),
 		Name:            m.Name,
-		MaxStacks:       StackSize(m.MaxStacks),
+		MaxStacks:       stackSize(m.MaxStacks),
 		DurationInTicks: factors.DurationInTicks(m.DurationInS),
 		Factors: Factors{
 			VulnerabilityFactors: factors.VulnerabilityWithDefault(m.Factors.ItemFactorsDefinition.Vulnerability, 1),

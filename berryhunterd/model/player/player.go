@@ -215,8 +215,7 @@ func initializePlayerInventory(p effects.EffectEntity, r items.Registry) (items.
 
 	// This is the inventory a new player starts with
 	startItems := []startItem{
-		// TODO remove
-		{"MysticWand", 1},
+		//{"MysticWandaw", 1},
 		//		{"BronzeSword", 1},
 		//		{"Workbench", 1},
 		//		{"BigCampfire", 3},

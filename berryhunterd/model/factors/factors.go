@@ -3,6 +3,7 @@ package factors
 import (
 	"github.com/trichner/berryhunter/berryhunterd/model/constant"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
+	"math"
 )
 
 type VulnerabilityFactors struct {
@@ -100,8 +101,8 @@ func MapPlayerFactors(d PlayerFactorsDefinition, defaultFloat float32, defaultIn
 	}
 }
 
-func DurationInTicks(d int) int {
-	return d * constant.TicksPerSecond
+func DurationInTicks(d float32) int {
+	return int(math.Round(float64(d) * float64(constant.TicksPerSecond)))
 }
 
 func ProbabilityPerTick(p float32) float32 {
