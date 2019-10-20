@@ -26,7 +26,7 @@ func (r *registry) GetByName(name string) (*Effect, error) {
 			return m, nil
 		}
 	}
-	return nil, fmt.Errorf("Effect '%s' not found.", name)
+	return nil, fmt.Errorf("effect '%s' not found", name)
 }
 
 func (r *registry) Effects() []*Effect {
@@ -37,8 +37,13 @@ func (r *registry) Effects() []*Effect {
 	return effects
 }
 
-func (r *registry) add(m *Effect) {
-	r.effects[m.ID] = m
+func (r *registry) add(e *Effect) error {
+	_, ok := r.effects[e.ID]
+	if ok {
+		return fmt.Errorf("duplicate effect ID: %d", e.ID)
+	}
+	r.effects[e.ID] = e
+	return nil
 }
 
 func newRegistry() *registry {
@@ -56,10 +61,9 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 	effects := newRegistry()
 
 	for _, path := range f {
-		// TODO how to read single file
 		info, err := os.Lstat(path)
 		if err != nil {
-			return nil, fmt.Errorf("Cannot read '%s': %s", path, err)
+			return nil, fmt.Errorf("cannot read '%s': %s", path, err)
 		}
 
 		if !info.Mode().IsRegular() {
@@ -68,11 +72,11 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 
 		data, err := ioutil.ReadFile(path)
 		if err != nil {
-			return nil, fmt.Errorf("Cannot read '%s': %s", path, err)
+			return nil, fmt.Errorf("cannot read '%s': %s", path, err)
 		}
 		effectsParsed, err := parseEffectDefinitions(data)
 		if err != nil {
-			return nil, fmt.Errorf("Cannot parse '%s': %s", path, err)
+			return nil, fmt.Errorf("cannot parse '%s': %s", path, err)
 		}
 
 		for _, effectParsed := range *effectsParsed {
@@ -80,7 +84,9 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 			if err != nil {
 				return nil, fmt.Errorf("Cannot map '%s': %s\n", path, err)
 			}
-			effects.add(effect)
+			if err := effects.add(effect); err != nil {
+				return nil, err
+			}
 		}
 	}
 

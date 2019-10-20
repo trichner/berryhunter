@@ -3,6 +3,7 @@ package effects
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 	"log"
 )
@@ -22,6 +23,12 @@ const (
 	None
 )
 
+var durationStackingToID = map[string]DurationStacking{
+	"Reset": Reset,
+	"Add":   Add,
+	"None":  None,
+}
+
 // What's the behavior when an effect times out?
 type DurationRemoves int
 
@@ -31,6 +38,11 @@ const (
 	// 1 effect is removed and the duration is reset
 	OneByOne
 )
+
+var durationRemovesToID = map[string]DurationRemoves{
+	"All":      All,
+	"OneByOne": OneByOne,
+}
 
 type Effect struct {
 	ID               EffectID
@@ -112,7 +124,6 @@ func (f *Factors) Add(other Factors) {
 	f.Damage *= other.Damage
 	f.StructureDamage *= other.StructureDamage
 	f.HeatRadius *= other.HeatRadius
-	f.Vulnerability *= other.Vulnerability
 	f.ReplenishProbability *= other.ReplenishProbability
 	// Sum int values
 	f.Yield += other.Yield
@@ -152,7 +163,6 @@ func (f *Factors) Subtract(other Factors) {
 	f.StructureDamage /= other.StructureDamage
 	f.HeatRadius /= other.HeatRadius
 	f.Vulnerability /= other.Vulnerability
-	f.ReplenishProbability /= other.ReplenishProbability
 	// Subtract int values
 	f.Yield -= other.Yield
 	f.MinYield -= other.MinYield
@@ -320,11 +330,13 @@ type factorsDefinition struct {
 }
 
 type effectDefinition struct {
-	Id          uint64            `json:"id"`
-	Name        string            `json:"name"`
-	MaxStacks   uint8             `json:"maxStacks"`
-	DurationInS float32           `json:"durationInSeconds"`
-	Factors     factorsDefinition `json:"factors"`
+	Id               uint64            `json:"id"`
+	Name             string            `json:"name"`
+	Factors          factorsDefinition `json:"factors"`
+	MaxStacks        uint8             `json:"maxStacks"`
+	DurationInS      float32           `json:"durationInSeconds"`
+	DurationStacking *string           `json:"durationStacking"`
+	DurationRemoves  *string           `json:"durationRemoves"`
 	//Addends     struct {
 	//} `json:"addends"`
 }
@@ -339,21 +351,44 @@ func parseEffectDefinitions(data []byte) (*[]*effectDefinition, error) {
 	return &effects, nil
 }
 
-func (m *effectDefinition) mapToEffectDefinition() (*Effect, error) {
+func (e *effectDefinition) mapToEffectDefinition() (*Effect, error) {
+
+	durationStacking := Reset
+	if e.DurationStacking != nil {
+		var ok bool
+		if durationStacking, ok = durationStackingToID[*e.DurationStacking]; !ok {
+			return nil, fmt.Errorf("invalid DurationStacking '%s' in effect [%d] %s", *e.DurationStacking, e.Id, e.Name)
+		}
+	}
+
+	durationRemoves := All
+	if e.DurationRemoves != nil {
+		var ok bool
+		if durationRemoves, ok = durationRemovesToID[*e.DurationRemoves]; !ok {
+			return nil, fmt.Errorf("invalid DurationRemoves '%s' in effect [%d] %s", *e.DurationRemoves, e.Id, e.Name)
+		}
+	}
+
+	maxStacks := e.MaxStacks
+	if maxStacks <= 0 {
+		return nil, fmt.Errorf("maxStack for effect [%d] %s is smaller than 1", e.Id, e.Name)
+	}
 
 	effect := &Effect{
-		ID:              EffectID(m.Id),
-		Name:            m.Name,
-		MaxStacks:       stackSize(m.MaxStacks),
-		DurationInTicks: factors.DurationInTicks(m.DurationInS),
+		ID:              EffectID(e.Id),
+		Name:            e.Name,
+		MaxStacks:       stackSize(maxStacks),
+		DurationInTicks: factors.DurationInTicks(e.DurationInS),
 		Factors: Factors{
-			VulnerabilityFactors: factors.VulnerabilityWithDefault(m.Factors.ItemFactorsDefinition.Vulnerability, 1),
-			ItemFactors:          factors.MapItemFactors(m.Factors.ItemFactorsDefinition, 1, 0),
-			MobFactors:           factors.MapMobFactors(m.Factors.MobFactorsDefinition, 1, 0),
-			PlayerFactors:        factors.MapPlayerFactors(m.Factors.PlayerFactorsDefinition, 1, 0),
-			CraftingSpeed:        m.Factors.CraftingSpeed,
-			InventoryCap:         m.Factors.InventoryCap,
+			VulnerabilityFactors: factors.VulnerabilityWithDefault(e.Factors.ItemFactorsDefinition.Vulnerability, 1),
+			ItemFactors:          factors.MapItemFactors(e.Factors.ItemFactorsDefinition, 1, 0),
+			MobFactors:           factors.MapMobFactors(e.Factors.MobFactorsDefinition, 1, 0),
+			PlayerFactors:        factors.MapPlayerFactors(e.Factors.PlayerFactorsDefinition, 1, 0),
+			CraftingSpeed:        e.Factors.CraftingSpeed,
+			InventoryCap:         e.Factors.InventoryCap,
 		},
+		DurationStacking: durationStacking,
+		DurationRemoves:  durationRemoves,
 		//Addends: Addends{
 		//},
 	}

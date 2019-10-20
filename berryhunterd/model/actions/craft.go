@@ -33,7 +33,7 @@ func (c *Craft) Start() {
 	// ok, we're good to go, remove materials & craft
 	stacks := c.item.Recipe.Materials
 	c.p.Inventory().ConsumeItems(stacks)
-	c.ticks = int(float32(ticks) * c.p.EffectStack().Factors().CraftingSpeed)
+	c.ticks = int(float32(ticks) / c.p.EffectStack().Factors().CraftingSpeed)
 }
 
 func (c *Craft) Update(dt float32) {
