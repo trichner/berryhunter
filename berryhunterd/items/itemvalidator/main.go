@@ -27,7 +27,7 @@ func main() {
 		path = arg
 	}
 
-	r, err := items.RegistryFromPaths(
+	r, err := items.RegistryFromPaths(path)
 	if err != nil {
 		log.Fatalf("Cannot parse items: %s", err)
 	}

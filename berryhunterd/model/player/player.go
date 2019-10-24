@@ -197,10 +197,6 @@ func (p *player) Stats() *model.Stats {
 	return &p.stats
 }
 
-//func (p *player) EffectComponent() *effects.EffectComponent {
-//	return &p.effectComponent
-//}
-
 func (p *player) EffectStack() *effects.EffectStack {
 	return &p.effectStack
 }

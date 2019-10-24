@@ -51,7 +51,6 @@ type PlayerEntity interface {
 	Config() *factors.PlayerFactors
 	Stats() *Stats
 
-	//EffectComponent() *effects.EffectComponent
 	EffectStack() *effects.EffectStack
 }
 

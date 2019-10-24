@@ -51,12 +51,6 @@ type EffectsByEvent struct {
 	OnHitResource  []*effects.Effect
 	OnHitPlaceable []*effects.Effect
 	OnHitPlayer    []*effects.Effect
-	//OnAttackWhileEquipped   []*effects.Effect
-	//OnAttackWhileCarried    []*effects.Effect
-	//OnHitWhileEquipped      []*effects.Effect
-	//OnHitWhileCarried       []*effects.Effect
-	//OnBeingHitWhileEquipped []*effects.Effect
-	//OnBeingHitWhileCarried  []*effects.Effect
 
 	// For resources:
 	// Applied to the yielding player entity
@@ -108,14 +102,6 @@ type itemDefinition struct {
 		OnHitResource  []string `json:"onHitResource"`
 		OnHitPlaceable []string `json:"onHitPlaceable"`
 		OnHitPlayer    []string `json:"onHitPlayer"`
-		// OnAttack = applied to attack character
-		//OnAttackWhileEquipped []string `json:"onAttackWhileEquipped"`
-		//OnAttackWhileCarried  []string `json:"onAttackWhileCarried"`
-		//// OnHit = applied to hit entity
-		//OnHitWhileEquipped      []string `json:"onHitWhileEquipped"`
-		//OnHitWhileCarried       []string `json:"onHitWhileCarried"`
-		//OnBeingHitWhileEquipped []string `json:"onBeingHitWhileEquipped"`
-		//OnBeingHitWhileCarried  []string `json:"onBeingHitWhileCarried"`
 
 		OnYield   []string `json:"onYield"`
 		OnYielded []string `json:"onYielded"`
@@ -231,24 +217,6 @@ func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinitio
 	if effectsByEvent.OnHitResource, err = effects.MapAndValidateEffects(r, "OnHitResource", i.Effects.OnHitResource); err != nil {
 		return nil, err
 	}
-	//if effectsByEvent.OnAttackWhileEquipped, err = mapEffects(r, i.Effects.OnAttackWhileEquipped); err != nil {
-	//	return nil, err
-	//}
-	//if effectsByEvent.OnAttackWhileCarried, err = mapEffects(r, i.Effects.OnAttackWhileCarried); err != nil {
-	//	return nil, err
-	//}
-	//if effectsByEvent.OnHitWhileEquipped, err = mapEffects(r, i.Effects.OnHitWhileEquipped); err != nil {
-	//	return nil, err
-	//}
-	//if effectsByEvent.OnHitWhileCarried, err = mapEffects(r, i.Effects.OnHitWhileCarried); err != nil {
-	//	return nil, err
-	//}
-	//if effectsByEvent.OnBeingHitWhileEquipped, err = mapEffects(r, i.Effects.OnBeingHitWhileEquipped); err != nil {
-	//	return nil, err
-	//}
-	//if effectsByEvent.OnBeingHitWhileCarried, err = mapEffects(r, i.Effects.OnBeingHitWhileCarried); err != nil {
-	//	return nil, err
-	//}
 	if effectsByEvent.OnYield, err = effects.MapAndValidateEffects(r, "OnYield", i.Effects.OnYield); err != nil {
 		return nil, err
 	}

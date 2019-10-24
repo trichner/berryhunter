@@ -26,7 +26,7 @@ func TestMapRecipe(t *testing.T) {
 	recipe, err := parseItemDefinition(data)
 	assert.NoError(t, err, "Should parse recipe just fine.")
 
-	vo, err := recipe.mapToItemDefinition(nil)
+	vo, err := recipe.mapToItemDefinition()
 	assert.NoError(t, err, "Should parse recipe just fine.")
 
 	fmt.Printf("%+v", vo)
@@ -34,7 +34,7 @@ func TestMapRecipe(t *testing.T) {
 
 func TestCreateRegistry(t *testing.T) {
 
-	r := RegistryFromPaths(
+	r := RegistryFromPaths("../../api/items/")
 	assert.NotNil(t, r, "registry should be defined")
 	assert.NotEmpty(t, r.Items(), "Should have some items.")
 
