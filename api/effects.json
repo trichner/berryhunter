@@ -1,27 +1,11 @@
 [
   {
     "id": 1,
-    "name": "MovementSpeedBonus200",
-    "factors": {
-      "speed": 2.00,
-      "walkingSpeedPerTick": 2.00
-    }
-  },
-  {
-    "id": 2,
     "name": "QuickEscape",
     "factors": {
       "speed": 4.00,
       "walkingSpeedPerTick": 4.00
     },
     "durationInSeconds": 0.7
-  },
-  {
-    "id": 3,
-    "name": "PauseHunger30s",
-    "factors": {
-      "walkingSpeedPerTick": 1.20
-    },
-    "durationInSeconds": 30
   }
 ]

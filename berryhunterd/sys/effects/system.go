@@ -9,7 +9,6 @@ import (
 
 type effectEntity struct {
 	b model.BasicEntity
-	//e *effects.EffectComponent
 	e effects.EffectEntity
 }
 
@@ -27,10 +26,6 @@ func NewEffectSystem(r effects.Registry) *EffectSystem {
 func (es *EffectSystem) Priority() int {
 	return 102
 }
-
-//func (p *EffectSystem) Add(b model.BasicEntity, e *effects.EffectComponent) {
-//	p.entities = append(p.entities, effectEntity{b, e})
-//}
 
 func (es *EffectSystem) Add(b model.BasicEntity, e effects.EffectEntity) {
 	es.entities = append(es.entities, effectEntity{b, e})

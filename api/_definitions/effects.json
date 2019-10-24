@@ -162,9 +162,9 @@
       },
       "maxStacks": {
         "type": "integer",
-        "description": "Number of times this effect can be applied simultaneously to the same entity.",
+        "description": "Number of times this effect can be applied simultaneously to the same entity. Omitting this property means no limit to the stack size.",
         "minimum": 1,
-        "default": 1
+        "default": "infinity"
       },
       "durationInSeconds": {
         "type": "number",

@@ -93,7 +93,7 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 	// downgrade players if they died
 	for _, p := range s.players {
 
-		if p.VitalSigns().Health == 0 {
+		if p.VitalSigns().Health <= 0 {
 			// kill p
 			log.Printf("💀 '%s' died.", p.Name())
 			sendObituaryMessage(p.Client())

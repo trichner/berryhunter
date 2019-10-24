@@ -1,8 +1,5 @@
 {
   "id": 43,
   "name": "MysticWand",
-  "type": "EQUIPMENT",
-  "effects": {
-    "whileEquipped": ["MovementSpeedBonus200"]
-  }
+  "type": "EQUIPMENT"
 }

@@ -364,7 +364,6 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 		case *sys.ScoreboardSystem:
 			s.AddPlayer(p)
 		case *effects.EffectSystem:
-			//s.Add(p, p.EffectComponent())
 			s.Add(p, p)
 		}
 	}

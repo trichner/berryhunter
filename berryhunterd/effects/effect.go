@@ -1,7 +1,6 @@
 package effects
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/trichner/berryhunter/berryhunterd/model/factors"
@@ -53,7 +52,10 @@ type Effect struct {
 	DurationRemoves  DurationRemoves
 
 	Factors Factors
-	//Addends Addends
+}
+
+func (e *Effect) String() string {
+	return fmt.Sprintf("Effect [%d] \"%s\"", e.ID, e.Name)
 }
 
 // Values that get multiplied
@@ -108,15 +110,6 @@ func NewFactors() *Factors {
 	}
 }
 
-// Values that get added
-type Addends struct {
-}
-
-// All addends are initialized to 0 to allow for easy addition
-func NewAddends() *Addends {
-	return &Addends{}
-}
-
 func (f *Factors) Add(other Factors) {
 	f.Vulnerability *= other.Vulnerability
 
@@ -152,10 +145,7 @@ func (f *Factors) Add(other Factors) {
 	f.InventoryCap += f.InventoryCap
 }
 
-func (a *Addends) Add(other Addends) {
-}
-
-func (f *Factors) Subtract(other Factors) {
+func (f *Factors) Subtract(other Factors) error {
 	f.Vulnerability /= other.Vulnerability
 
 	f.Food /= other.Food
@@ -187,33 +177,29 @@ func (f *Factors) Subtract(other Factors) {
 
 	f.CraftingSpeed /= other.CraftingSpeed
 	// Subtract int values
-	//f.InventoryCap -= other.InventoryCap
 	if other.InventoryCap > 0 {
-		panic("Cannot shrink inventory.")
+		return errors.New("cannot shrink inventory")
 	}
-}
 
-func (a *Addends) Subtract(other Addends) {
+	return nil
 }
 
 type activeEffect struct {
 	// How many times is the indicated effect in this stack?
-	count     stackSize
-	ticksLeft int
+	count       stackSize
+	ticksLeft   int
+	hasDuration bool
 }
 
 type EffectStack struct {
 	stacks  map[EffectID]*activeEffect
 	factors *Factors
-	addends *Addends
 }
 
-// func newEffectStack() *EffectStack {
 func NewEffectStack() EffectStack {
 	return EffectStack{
 		stacks:  make(map[EffectID]*activeEffect),
 		factors: NewFactors(),
-		addends: NewAddends(),
 	}
 }
 
@@ -221,23 +207,19 @@ func (es *EffectStack) Factors() *Factors {
 	return es.factors
 }
 
-func (es *EffectStack) Addends() *Addends {
-	return es.addends
-}
-
 func (es *EffectStack) Add(effects []*Effect) {
 	for _, e := range effects {
-		log.Printf("Add effect %s", e.Name)
 		a, ok := es.stacks[e.ID]
 		if !ok {
 			a = &activeEffect{
-				count:     1,
-				ticksLeft: e.DurationInTicks,
+				count:       1,
+				ticksLeft:   e.DurationInTicks,
+				hasDuration: e.DurationInTicks > 0,
 			}
 			es.stacks[e.ID] = a
 			es.factors.Add(e.Factors)
 		} else {
-			if a.count < e.MaxStacks {
+			if e.MaxStacks == 0 || a.count < e.MaxStacks {
 				a.count++
 				es.factors.Add(e.Factors)
 			}
@@ -249,11 +231,9 @@ func (es *EffectStack) Add(effects []*Effect) {
 			case None:
 				// Do nothing
 			default:
-				log.Printf("Unknown DurationStacking in effect [%d] %s", e.ID, e.Name)
+				log.Printf("Unknown DurationStacking in %v", e)
 			}
 		}
-		//es.stacks[e.ID]++
-		//es.addends.Add(e.Addends)
 	}
 }
 
@@ -277,13 +257,19 @@ func (es *EffectStack) subtractSingle(e *Effect) error {
 	if a.count == 0 {
 		delete(es.stacks, e.ID)
 	}
-	es.factors.Subtract(e.Factors)
-	//es.addends.Subtract(e.Addends)
+	if err := es.factors.Subtract(e.Factors); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (es *EffectStack) Update(dt float32, r Registry) {
 	for id, a := range es.stacks {
+		if !a.hasDuration {
+			continue
+		}
+
 		a.ticksLeft--
 
 		if a.ticksLeft <= 0 {
@@ -293,8 +279,6 @@ func (es *EffectStack) Update(dt float32, r Registry) {
 				log.Printf("Effect timed out, but couldn't be find in registry. %v", err)
 				continue
 			}
-
-			log.Printf("%s timed out", e.Name)
 
 			switch e.DurationRemoves {
 			case All:
@@ -309,121 +293,11 @@ func (es *EffectStack) Update(dt float32, r Registry) {
 				}
 				a.ticksLeft = e.DurationInTicks
 			default:
-				log.Printf("Unknown DurationRemoves in effect [%d] %s", e.ID, e.Name)
+				log.Printf("Unknown DurationRemoves in %v", e)
 			}
 		}
 	}
 }
-
-type ByID []*Effect
-
-func (a ByID) Len() int           { return len(a) }
-func (a ByID) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByID) Less(i, j int) bool { return a[i].ID < a[j].ID }
-
-type factorsDefinition struct {
-	factors.ItemFactorsDefinition
-	factors.MobFactorsDefinition
-	factors.PlayerFactorsDefinition
-	CraftingSpeed float32 `json:"craftingSpeed"`
-	InventoryCap  int     `json:"inventoryCap"`
-}
-
-type effectDefinition struct {
-	Id               uint64            `json:"id"`
-	Name             string            `json:"name"`
-	Factors          factorsDefinition `json:"factors"`
-	MaxStacks        uint8             `json:"maxStacks"`
-	DurationInS      float32           `json:"durationInSeconds"`
-	DurationStacking *string           `json:"durationStacking"`
-	DurationRemoves  *string           `json:"durationRemoves"`
-	//Addends     struct {
-	//} `json:"addends"`
-}
-
-func parseEffectDefinitions(data []byte) (*[]*effectDefinition, error) {
-	var effects []*effectDefinition
-	err := json.Unmarshal(data, &effects)
-	if err != nil {
-		return nil, err
-	}
-
-	return &effects, nil
-}
-
-func (e *effectDefinition) mapToEffectDefinition() (*Effect, error) {
-
-	durationStacking := Reset
-	if e.DurationStacking != nil {
-		var ok bool
-		if durationStacking, ok = durationStackingToID[*e.DurationStacking]; !ok {
-			return nil, fmt.Errorf("invalid DurationStacking '%s' in effect [%d] %s", *e.DurationStacking, e.Id, e.Name)
-		}
-	}
-
-	durationRemoves := All
-	if e.DurationRemoves != nil {
-		var ok bool
-		if durationRemoves, ok = durationRemovesToID[*e.DurationRemoves]; !ok {
-			return nil, fmt.Errorf("invalid DurationRemoves '%s' in effect [%d] %s", *e.DurationRemoves, e.Id, e.Name)
-		}
-	}
-
-	maxStacks := e.MaxStacks
-	if maxStacks <= 0 {
-		return nil, fmt.Errorf("maxStack for effect [%d] %s is smaller than 1", e.Id, e.Name)
-	}
-
-	effect := &Effect{
-		ID:              EffectID(e.Id),
-		Name:            e.Name,
-		MaxStacks:       stackSize(maxStacks),
-		DurationInTicks: factors.DurationInTicks(e.DurationInS),
-		Factors: Factors{
-			VulnerabilityFactors: factors.VulnerabilityWithDefault(e.Factors.ItemFactorsDefinition.Vulnerability, 1),
-			ItemFactors:          factors.MapItemFactors(e.Factors.ItemFactorsDefinition, 1, 0),
-			MobFactors:           factors.MapMobFactors(e.Factors.MobFactorsDefinition, 1, 0),
-			PlayerFactors:        factors.MapPlayerFactors(e.Factors.PlayerFactorsDefinition, 1, 0),
-			CraftingSpeed:        e.Factors.CraftingSpeed,
-			InventoryCap:         e.Factors.InventoryCap,
-		},
-		DurationStacking: durationStacking,
-		DurationRemoves:  durationRemoves,
-		//Addends: Addends{
-		//},
-	}
-
-	return effect, nil
-}
-
-func MapEffects(r Registry, effectNames []string) ([]*Effect, error) {
-	var mappedEffects = make([]*Effect, len(effectNames))
-	for i, name := range effectNames {
-		var err error
-		mappedEffects[i], err = r.GetByName(name)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return mappedEffects, nil
-}
-
-//type EffectComponent struct {
-//	EffectStack *EffectStack
-//}
-//
-//func NewEffectComponent() *EffectComponent {
-//	return &EffectComponent{EffectStack: newEffectStack()}
-//}
-//
-//func (e *EffectComponent) AddEffects(effects []Effect) {
-//	e.EffectStack.Add(effects)
-//}
-//
-//func (e *EffectComponent) SubtractEffects(effects []Effect) error {
-//	return e.EffectStack.Subtract(effects)
-//}
 
 type EffectEntity interface {
 	EffectStack() *EffectStack

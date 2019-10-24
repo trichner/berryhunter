@@ -207,28 +207,28 @@ func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinitio
 	// Parse effects
 	var effectsByEvent = &EffectsByEvent{}
 	var err error
-	if effectsByEvent.WhileCarried, err = effects.MapEffects(r, i.Effects.WhileCarried); err != nil {
+	if effectsByEvent.WhileCarried, err = effects.MapAndValidateEffects(r, "WhileCarried", i.Effects.WhileCarried); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.WhileEquipped, err = effects.MapEffects(r, i.Effects.WhileEquipped); err != nil {
+	if effectsByEvent.WhileEquipped, err = effects.MapAndValidateEffects(r, "WhileEquipped", i.Effects.WhileEquipped); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnConsume, err = effects.MapEffects(r, i.Effects.OnConsume); err != nil {
+	if effectsByEvent.OnConsume, err = effects.MapAndValidateEffects(r, "OnConsume", i.Effects.OnConsume); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnPlacing, err = effects.MapEffects(r, i.Effects.OnPlacing); err != nil {
+	if effectsByEvent.OnPlacing, err = effects.MapAndValidateEffects(r, "OnPlacing", i.Effects.OnPlacing); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnHitMob, err = effects.MapEffects(r, i.Effects.OnHitMob); err != nil {
+	if effectsByEvent.OnHitMob, err = effects.MapAndValidateEffects(r, "OnHitMob", i.Effects.OnHitMob); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnHitPlayer, err = effects.MapEffects(r, i.Effects.OnHitPlayer); err != nil {
+	if effectsByEvent.OnHitPlayer, err = effects.MapAndValidateEffects(r, "OnHitPlayer", i.Effects.OnHitPlayer); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnHitPlaceable, err = effects.MapEffects(r, i.Effects.OnHitPlaceable); err != nil {
+	if effectsByEvent.OnHitPlaceable, err = effects.MapAndValidateEffects(r, "OnHitPlaceable", i.Effects.OnHitPlaceable); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnHitResource, err = effects.MapEffects(r, i.Effects.OnHitResource); err != nil {
+	if effectsByEvent.OnHitResource, err = effects.MapAndValidateEffects(r, "OnHitResource", i.Effects.OnHitResource); err != nil {
 		return nil, err
 	}
 	//if effectsByEvent.OnAttackWhileEquipped, err = mapEffects(r, i.Effects.OnAttackWhileEquipped); err != nil {
@@ -249,16 +249,16 @@ func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinitio
 	//if effectsByEvent.OnBeingHitWhileCarried, err = mapEffects(r, i.Effects.OnBeingHitWhileCarried); err != nil {
 	//	return nil, err
 	//}
-	if effectsByEvent.OnYield, err = effects.MapEffects(r, i.Effects.OnYield); err != nil {
+	if effectsByEvent.OnYield, err = effects.MapAndValidateEffects(r, "OnYield", i.Effects.OnYield); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnYielded, err = effects.MapEffects(r, i.Effects.OnYielded); err != nil {
+	if effectsByEvent.OnYielded, err = effects.MapAndValidateEffects(r, "OnYielded", i.Effects.OnYielded); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnBeingHit, err = effects.MapEffects(r, i.Effects.OnBeingHit); err != nil {
+	if effectsByEvent.OnBeingHit, err = effects.MapAndValidateEffects(r, "OnBeingHit", i.Effects.OnBeingHit); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnRadiatorCollision, err = effects.MapEffects(r, i.Effects.OnRadiatorCollision); err != nil {
+	if effectsByEvent.OnRadiatorCollision, err = effects.MapAndValidateEffects(r, "OnRadiatorCollision", i.Effects.OnRadiatorCollision); err != nil {
 		return nil, err
 	}
 

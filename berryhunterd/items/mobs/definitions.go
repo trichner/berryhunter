@@ -91,10 +91,10 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry, e effects.Registry)
 	// Parse effects
 	var effectsByEvent = &EffectsByEvent{}
 	var err error
-	if effectsByEvent.OnHitPlayer, err = effects.MapEffects(e, m.Effects.OnHitPlayer); err != nil {
+	if effectsByEvent.OnHitPlayer, err = effects.MapAndValidateEffects(e, "OnHitPlayer", m.Effects.OnHitPlayer); err != nil {
 		return nil, err
 	}
-	if effectsByEvent.OnBeingHit, err = effects.MapEffects(e, m.Effects.OnBeingHit); err != nil {
+	if effectsByEvent.OnBeingHit, err = effects.MapAndValidateEffects(e, "OnBeingHit", m.Effects.OnBeingHit); err != nil {
 		return nil, err
 	}
 
