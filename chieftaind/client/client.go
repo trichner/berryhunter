@@ -79,23 +79,17 @@ func connect(d Dialer, fh frameHandler) {
 
 	conn, err := d()
 	if err != nil {
-		//log.Fatal(err)
-		log.Print(err)
-		return
+		log.Fatal(err)
 	}
 	defer conn.Close()
 
 	f, err := framer.NewFramer(conn)
 	if err != nil {
-		//log.Fatal(err)
-		log.Print(err)
-		return
+		log.Fatal(err)
 	}
 
 	err = fh(f)
 	if err != nil {
-		//log.Fatal(err)
-		log.Print(err)
-		return
+		log.Fatal(err)
 	}
 }

@@ -144,8 +144,8 @@ func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 		vulnerability = 1
 	}
 
-	p.EffectStack().Add(item.Effects.OnHitPlaceable)
-	player.EffectStack().Add(p.effects.OnBeingHit)
+	p.EffectStack().AddAll(item.Effects.OnHitPlaceable)
+	player.EffectStack().AddAll(p.effects.OnBeingHit)
 
 	dmgFraction := item.Factors.StructureDamage
 	dmgFraction *= player.EffectStack().Factors().StructureDamage

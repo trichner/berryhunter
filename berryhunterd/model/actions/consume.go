@@ -30,7 +30,7 @@ func (a *Consume) Start() {
 		foodFraction *= p.EffectStack().Factors().Food
 		p.VitalSigns().Satiety = h.AddFraction(foodFraction)
 
-		p.EffectStack().Add(a.item.Effects.OnConsume)
+		p.EffectStack().AddAll(a.item.Effects.OnConsume)
 	}
 	a.ticks = 1
 }

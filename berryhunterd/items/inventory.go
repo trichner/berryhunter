@@ -94,7 +94,7 @@ func (i *Inventory) AddItem(item *ItemStack) (added bool) {
 	defer func() {
 		if added {
 			for n := 0; n < item.Count; n++ {
-				i.effectEntity.EffectStack().Add(item.Item.Effects.WhileCarried)
+				i.effectEntity.EffectStack().AddAll(item.Item.Effects.WhileCarried)
 			}
 		}
 	}()
@@ -198,7 +198,7 @@ func (i *Inventory) ConsumeItem(stack *ItemStack) bool {
 	})
 
 	if hasConsumed {
-		err := i.effectEntity.EffectStack().Subtract(stack.Item.Effects.WhileCarried)
+		err := i.effectEntity.EffectStack().SubtractAll(stack.Item.Effects.WhileCarried)
 		if err != nil {
 			log.Printf("Error while dropping (consuming) item %s: %s", stack.Item.Name, err)
 		}
@@ -212,7 +212,7 @@ func (i *Inventory) DropAll(item Item) {
 	i.iterateItems(item, func(idx int) bool {
 		stack := i.items[idx]
 		for n := 0; n < stack.Count; n++ {
-			err := i.effectEntity.EffectStack().Subtract(stack.Item.Effects.WhileCarried)
+			err := i.effectEntity.EffectStack().SubtractAll(stack.Item.Effects.WhileCarried)
 			if err != nil {
 				log.Printf("Error while dropping (consuming) item %s: %s", stack.Item.Name, err)
 			}

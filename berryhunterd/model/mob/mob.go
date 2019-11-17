@@ -108,7 +108,7 @@ func (m *Mob) Update(dt float32) bool {
 				continue
 			}
 
-			p.EffectStack().Add(m.MobDefinition().Effects.OnHitPlayer)
+			p.EffectStack().AddAll(m.MobDefinition().Effects.OnHitPlayer)
 
 			dmgFraction := m.definition.Factors.DamageFraction
 			if dmgFraction != 0 {
@@ -188,8 +188,8 @@ func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 
 	vulnerability *= m.effectStack.Factors().Vulnerability
 
-	m.EffectStack().Add(item.Effects.OnHitMob)
-	m.EffectStack().Add(m.MobDefinition().Effects.OnBeingHit)
+	m.EffectStack().AddAll(item.Effects.OnHitMob)
+	m.EffectStack().AddAll(m.MobDefinition().Effects.OnBeingHit)
 
 	dmgFraction := item.Factors.Damage
 	dmgFraction *= p.EffectStack().Factors().Damage

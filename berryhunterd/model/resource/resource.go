@@ -137,9 +137,9 @@ func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 		return
 	}
 
-	r.EffectStack().Add(item.Effects.OnHitResource)
-	r.EffectStack().Add(r.effects.OnYielded)
-	p.EffectStack().Add(r.effects.OnYield)
+	r.EffectStack().AddAll(item.Effects.OnHitResource)
+	r.EffectStack().AddAll(r.effects.OnYielded)
+	p.EffectStack().AddAll(r.effects.OnYield)
 
 	p.Inventory().AddItem(items.NewItemStack(r.stock.Item, y))
 }

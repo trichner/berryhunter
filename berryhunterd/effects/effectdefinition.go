@@ -19,38 +19,32 @@ type effectDefinition struct {
 	Id               uint64            `json:"id"`
 	Name             string            `json:"name"`
 	Factors          factorsDefinition `json:"factors"`
-	MaxStacks        *uint8            `json:"maxStacks"`
+	MaxStacks        *uint             `json:"maxStacks"`
 	DurationInS      float32           `json:"durationInSeconds"`
-	DurationStacking *string           `json:"durationStacking"`
-	DurationRemoves  *string           `json:"durationRemoves"`
+	DurationStacking *DurationStacking `json:"durationStacking"`
+	DurationRemoves  *DurationRemoves  `json:"durationRemoves"`
 }
 
-func parseEffectDefinitions(data []byte) (*[]*effectDefinition, error) {
-	var effects []*effectDefinition
-	err := json.Unmarshal(data, &effects)
+func parseEffectDefinition(data []byte) (*effectDefinition, error) {
+	var e effectDefinition
+	err := json.Unmarshal(data, &e)
 	if err != nil {
 		return nil, err
 	}
 
-	return &effects, nil
+	return &e, nil
 }
 
 func (e *effectDefinition) mapToEffectDefinition() (*Effect, error) {
 
 	durationStacking := Reset
 	if e.DurationStacking != nil {
-		var ok bool
-		if durationStacking, ok = durationStackingToID[*e.DurationStacking]; !ok {
-			return nil, fmt.Errorf("invalid DurationStacking '%s' in effect [%d] %s", *e.DurationStacking, e.Id, e.Name)
-		}
+		durationStacking = *e.DurationStacking
 	}
 
 	durationRemoves := All
 	if e.DurationRemoves != nil {
-		var ok bool
-		if durationRemoves, ok = durationRemovesToID[*e.DurationRemoves]; !ok {
-			return nil, fmt.Errorf("invalid DurationRemoves '%s' in effect [%d] %s", *e.DurationRemoves, e.Id, e.Name)
-		}
+		durationRemoves = *e.DurationRemoves
 	}
 
 	maxStacks := stackSize(0)

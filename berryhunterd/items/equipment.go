@@ -22,7 +22,7 @@ func (e Equipment) Equipped() []Item {
 
 func (e Equipment) Equip(p effects.EffectEntity, item Item) {
 	e.unequipItemInSlot(p, item.Slot)
-	p.EffectStack().Add(item.Effects.WhileEquipped)
+	p.EffectStack().AddAll(item.Effects.WhileEquipped)
 	e[item.Slot] = item
 }
 
@@ -32,10 +32,14 @@ func (e Equipment) Unequip(p effects.EffectEntity, item Item) {
 }
 
 func (e Equipment) unequipItemInSlot(p effects.EffectEntity, slot EquipSlot) {
-	if curItem, ok := e[slot]; ok {
-		err := p.EffectStack().Subtract(curItem.Effects.WhileEquipped)
-		if err != nil {
-			log.Printf("Error while unequipping item %s: %s", curItem.Name, err)
-		}
+	curItem, ok := e[slot]
+
+	if !ok {
+		return
+	}
+
+	err := p.EffectStack().SubtractAll(curItem.Effects.WhileEquipped)
+	if err != nil {
+		log.Printf("Error while unequipping item %s: %s", curItem.Name, err)
 	}
 }

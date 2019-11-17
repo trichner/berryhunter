@@ -35,7 +35,7 @@ func (a *Place) Start() {
 
 	log.Printf("🏗 Placing: %s", item.Name)
 
-	a.p.EffectStack().Add(item.Effects.OnPlacing)
+	a.p.EffectStack().AddAll(item.Effects.OnPlacing)
 
 	// TODO add collision detection
 

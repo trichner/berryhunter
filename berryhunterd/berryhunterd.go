@@ -19,7 +19,7 @@ import (
 func main() {
 
 	config := loadConf()
-	effects := loadEffects("../api/effects.json")
+	effects := loadEffects("../api/effects/")
 	items := loadItems(effects, "../api/items/")
 	mobs := loadMobs(items, effects, "../api/mobs/")
 

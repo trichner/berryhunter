@@ -8,10 +8,11 @@ import (
 )
 
 type EffectID uint64
-type stackSize uint8
+type stackSize uint
 
 // What's the behavior when the same effect is applied more than once to an EffectStack?
 type DurationStacking int
+//go:generate enumer -type=DurationStacking -json -text
 
 const (
 	// Reset duration for all effects of same type to configured value
@@ -22,14 +23,9 @@ const (
 	None
 )
 
-var durationStackingToID = map[string]DurationStacking{
-	"Reset": Reset,
-	"Add":   Add,
-	"None":  None,
-}
-
 // What's the behavior when an effect times out?
 type DurationRemoves int
+//go:generate enumer -type=DurationRemoves -json -text
 
 const (
 	// All effects of the same type are removed
@@ -37,11 +33,6 @@ const (
 	// 1 effect is removed and the duration is reset
 	OneByOne
 )
-
-var durationRemovesToID = map[string]DurationRemoves{
-	"All":      All,
-	"OneByOne": OneByOne,
-}
 
 type Effect struct {
 	ID               EffectID
@@ -185,6 +176,7 @@ func (f *Factors) Subtract(other Factors) error {
 }
 
 type activeEffect struct {
+	effect *Effect
 	// How many times is the indicated effect in this stack?
 	count       stackSize
 	ticksLeft   int
@@ -207,39 +199,44 @@ func (es *EffectStack) Factors() *Factors {
 	return es.factors
 }
 
-func (es *EffectStack) Add(effects []*Effect) {
+func (es *EffectStack) AddAll(effects []*Effect) {
 	for _, e := range effects {
-		a, ok := es.stacks[e.ID]
-		if !ok {
-			a = &activeEffect{
-				count:       1,
-				ticksLeft:   e.DurationInTicks,
-				hasDuration: e.DurationInTicks > 0,
-			}
-			es.stacks[e.ID] = a
+		es.Add(e)
+	}
+}
+
+func (es *EffectStack) Add(e *Effect){
+	a, ok := es.stacks[e.ID]
+	if !ok {
+		a = &activeEffect{
+			effect:      e,
+			count:       1,
+			ticksLeft:   e.DurationInTicks,
+			hasDuration: e.DurationInTicks > 0,
+		}
+		es.stacks[e.ID] = a
+		es.factors.Add(e.Factors)
+	} else {
+		if e.MaxStacks == 0 || a.count < e.MaxStacks {
+			a.count++
 			es.factors.Add(e.Factors)
-		} else {
-			if e.MaxStacks == 0 || a.count < e.MaxStacks {
-				a.count++
-				es.factors.Add(e.Factors)
-			}
-			switch e.DurationStacking {
-			case Reset:
-				a.ticksLeft = e.DurationInTicks
-			case Add:
-				a.ticksLeft += e.DurationInTicks
-			case None:
-				// Do nothing
-			default:
-				log.Printf("Unknown DurationStacking in %v", e)
-			}
+		}
+		switch e.DurationStacking {
+		case Reset:
+			a.ticksLeft = e.DurationInTicks
+		case Add:
+			a.ticksLeft += e.DurationInTicks
+		case None:
+			// Do nothing
+		default:
+			log.Printf("Unknown DurationStacking in %v", e)
 		}
 	}
 }
 
-func (es *EffectStack) Subtract(effects []*Effect) error {
+func (es *EffectStack) SubtractAll(effects []*Effect) error {
 	for _, e := range effects {
-		i := es.subtractSingle(e)
+		i := es.Subtract(e)
 		if i != nil {
 			return i
 		}
@@ -248,7 +245,7 @@ func (es *EffectStack) Subtract(effects []*Effect) error {
 	return nil
 }
 
-func (es *EffectStack) subtractSingle(e *Effect) error {
+func (es *EffectStack) Subtract(e *Effect) error {
 	a, exists := es.stacks[e.ID]
 	if !exists || a.count == 0 {
 		return errors.New("tried to remove effect that is not part of this effect stack")
@@ -283,12 +280,12 @@ func (es *EffectStack) Update(dt float32, r Registry) {
 			switch e.DurationRemoves {
 			case All:
 				for i := 0; i < int(a.count); i++ {
-					if err := es.subtractSingle(e); err != nil {
+					if err := es.Subtract(e); err != nil {
 						log.Printf("Couldn't remove full stack on timeout. %v", err)
 					}
 				}
 			case OneByOne:
-				if err := es.subtractSingle(e); err != nil {
+				if err := es.Subtract(e); err != nil {
 					log.Printf("Couldn't remove single stack on timeout. %v", err)
 				}
 				a.ticksLeft = e.DurationInTicks

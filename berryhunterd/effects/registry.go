@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 type ByID []*Effect
@@ -67,32 +68,38 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 	effects := newRegistry()
 
 	for _, path := range f {
-		info, err := os.Lstat(path)
-		if err != nil {
-			return nil, fmt.Errorf("cannot read '%s': %s", path, err)
-		}
+		err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return fmt.Errorf("cannot read '%s': %s", path, err)
+			}
 
-		if !info.Mode().IsRegular() {
-			continue
-		}
+			if !info.Mode().IsRegular() {
+				return nil
+			}
 
-		data, err := ioutil.ReadFile(path)
-		if err != nil {
-			return nil, fmt.Errorf("cannot read '%s': %s", path, err)
-		}
-		effectsParsed, err := parseEffectDefinitions(data)
-		if err != nil {
-			return nil, fmt.Errorf("cannot parse '%s': %s", path, err)
-		}
-
-		for _, effectParsed := range *effectsParsed {
+			data, err := ioutil.ReadFile(path)
+			if err != nil {
+				return fmt.Errorf("cannot read '%s': %s", path, err)
+			}
+			effectParsed, err := parseEffectDefinition(data)
+			if err != nil {
+				return fmt.Errorf("cannot parse '%s': %s", path, err)
+			}
 			effect, err := effectParsed.mapToEffectDefinition()
 			if err != nil {
-				return nil, fmt.Errorf("Cannot map '%s': %s\n", path, err)
+				return fmt.Errorf("Cannot map '%s': %s\n", path, err)
 			}
-			if err := effects.add(effect); err != nil {
-				return nil, err
+			err = effects.add(effect)
+			if err != nil {
+				return fmt.Errorf("Cannot add '%s': %s\n", path, err)
 			}
+
+			return nil
+		})
+
+		// bail if there was an error
+		if err != nil {
+			return nil, err
 		}
 	}
 
