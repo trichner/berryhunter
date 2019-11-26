@@ -1,6 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebappWebpackPlugin = require('webapp-webpack-plugin');
+const FaviconWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
 	entry: './src/index.ts',
@@ -9,7 +9,7 @@ module.exports = {
 			title: 'BerryHunter',
 			xhtml: true
 		}),
-		new WebappWebpackPlugin({
+		new FaviconWebpackPlugin({
 			logo: './src/img/logo.svg',
 			publicPath: '.',
 			prefix: '',
