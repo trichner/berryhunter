@@ -1,22 +1,29 @@
 'use strict';
 
 import {InjectedSVG} from '../InjectedSVG';
-import * as Events from "../Events";
+import * as PIXI from "pixi.js";
+import {GroundTextureType} from "./GroundTextureTypes";
+import {integer, radians} from "../interfaces/Types";
 
-let Game = null;
-Events.on('game.setup', game => {
-    Game = game;
-});
+export interface Parameters {
+    type: GroundTextureType,
+    x: integer,
+    y: integer,
+    size: integer,
+    rotation: radians,
+    flipped: 'none' | 'horizontal' | 'vertical',
+    stacking: 'bottom' | 'top'
+}
 
 export class GroundTexture {
-    parameters;
+    parameters: Parameters;
     graphic;
 
-    constructor(parameters) {
+    constructor(parameters: Parameters) {
         this.parameters = parameters;
     }
 
-    addToMap() {
+    addToMap(layer: PIXI.Container) {
         this.graphic = new InjectedSVG(
             this.parameters.type.svg,
             this.parameters.x,
@@ -34,9 +41,9 @@ export class GroundTexture {
         }
 
         if (this.parameters.stacking === 'bottom') {
-            Game.layers.terrain.textures.addChildAt(this.graphic, 0);
+            layer.addChildAt(this.graphic, 0);
         } else {
-            Game.layers.terrain.textures.addChild(this.graphic);
+            layer.addChild(this.graphic);
         }
     }
 

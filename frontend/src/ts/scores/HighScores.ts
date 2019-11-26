@@ -1,7 +1,8 @@
 'use strict';
 
 import {
-    clearNode, formatInt,
+    clearNode,
+    formatInt,
     formatIntWithAbbreviation,
     isDefined,
     isUndefined,
@@ -12,13 +13,19 @@ import {
 import * as Urls from '../backend/Urls';
 import * as moment from 'moment-mini';
 import * as Preloading from "../Preloading";
-import * as Events from '../Events';
+import {EndScreenShownEvent, GamePlayingEvent, GameSetupEvent, StartScreenDomReadyEvent} from '../Events';
+import {GameState, IGame} from "../interfaces/IGame";
 
 let rootElement: HTMLElement;
 let leaderboardTables: Map<string, HTMLElement>;
 let templateRow: HTMLElement;
 let elements = {};
 let pendingTimeout: number;
+
+let Game: IGame = null;
+GameSetupEvent.subscribe(game => {
+    Game = game;
+});
 
 export const categories = [
     'alltime',
@@ -84,7 +91,7 @@ function initDom() {
     });
 }
 
-Events.on('startScreen.domReady', () => {
+StartScreenDomReadyEvent.subscribe(() => {
     let overviewElement = rootElement.querySelector('.highScoreOverview');
     let menuItem = document.querySelector('a[href="#highScores"]');
     smoothHoverAnimation(
@@ -99,6 +106,11 @@ Events.on('startScreen.domReady', () => {
 });
 
 function open() {
+    if (Game.state === GameState.PLAYING) {
+        // Prevent the scoreboard from being opened during transition into play mode
+        return;
+    }
+
     rootElement.classList.add('open');
     document.body.classList.add('leaderboardVisible');
 
@@ -241,10 +253,10 @@ function mapScores(response: string) {
     return mappedHighScores;
 }
 
-Events.on(Events.GAME_PLAYING, () => {
+GamePlayingEvent.subscribe(() => {
     hide();
 });
 
-Events.on(Events.ENDSCREEN_SHOWN, () => {
+EndScreenShownEvent.subscribe(() => {
     show();
 });

@@ -8,6 +8,8 @@ import 'core-js';
 // Custom scrollbars for panels. CSS is included via index.less
 import 'simplebar';
 
+import {ModulesLoadedEvent} from "./ts/Events";
+
 // Import all modules that listen for Events to ensure the listeners are actually registered
 import './ts/AutoFeed';
 import './ts/BrowserConsole';
@@ -35,5 +37,5 @@ import './ts/userInterface/screens/EndScreen';
 import './ts/userInterface/screens/StartScreen';
 
 Preloading.executePreload().then(function () {
-    Events.triggerOneTime('modulesLoaded');
+    ModulesLoadedEvent.trigger();
 });

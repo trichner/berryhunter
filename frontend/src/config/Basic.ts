@@ -18,6 +18,13 @@ export const BasicConfig = {
 	USE_NAMED_GROUPS: false,
 
 	/**
+	 * Meter are the unity in backend. Pixel are units in the frontend.
+	 *
+	 * SYNCED WITH BACKEND
+	 */
+	PIXEL_PER_METER: PIXEL_PER_METER,
+
+	/**
 	 * Movement speed of characters in the game. Is use for camera tracking.
 	 *
 	 * SYNCED WITH BACKEND

@@ -2,15 +2,16 @@
 
 import {BasicConfig as Constants} from '../../config/Basic';
 import {KeyCodes} from '../input/keyboard/keys/KeyCodes';
-import * as Events from "../Events";
+import {GameState, IGame} from "../interfaces/IGame";
+import {GameSetupEvent} from "../Events";
 
-let Game = null;
-Events.on('game.setup', game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
 window.addEventListener('keydown', function (event) {
-    if (Game.state !== Game.States.PLAYING) {
+    if (Game.state !== GameState.PLAYING) {
         return;
     }
 

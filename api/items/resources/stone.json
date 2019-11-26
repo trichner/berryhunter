@@ -3,8 +3,8 @@
   "name": "Stone",
   "type": "RESOURCE",
   "factors": {
-    "replenishProbabilityPerSecond": 0.5,
     "minimumYield": 1,
+    "replenishProbabilityPerSecond": 0.5,
     "capacity": 45
   },
   "body": {

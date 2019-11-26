@@ -5,10 +5,11 @@ import * as Preloading from '../Preloading';
 import {isUndefined, randomInt} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
 import {StatusEffect} from './StatusEffect';
-import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
+import {GameSetupEvent} from "../Events";
 
-let Game = null;
-Events.on('game.setup', game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 

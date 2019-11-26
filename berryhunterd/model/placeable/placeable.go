@@ -127,6 +127,6 @@ func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	dmgFraction := item.Factors.StructureDamage * vulnerability
 	if dmgFraction > 0 {
 		p.health = p.health.SubFraction(dmgFraction)
-		p.StatusEffects().Add(BerryhunterApi.StatusEffectDamaged)
+		p.StatusEffects().Add(model.StatusEffectDamaged)
 	}
 }

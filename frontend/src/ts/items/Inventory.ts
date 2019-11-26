@@ -8,10 +8,11 @@ import * as Equipment from './Equipment';
 import {InventorySlot} from './InventorySlot';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import './InventoryShortcuts';
-import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
+import {GameSetupEvent, InventoryChangedEvent} from "../Events";
 
-let Game = null;
-Events.on('game.setup', game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
@@ -59,6 +60,8 @@ export class Inventory {
 
             return true;
         }.bind(character);
+
+        InventoryChangedEvent.subscribe(this.onChange, this);
     }
 
     init() {
@@ -84,14 +87,14 @@ export class Inventory {
         let slot = this.slots[slotIndex];
         slot.activate();
         if (this.character.equipItem(slot.item, equipmentSlot) &&
-            equipmentSlot !== Equipment.Slots.PLACEABLE) {
+            equipmentSlot !== Equipment.EquipmentSlot.PLACEABLE) {
             Game.player.controls.onInventoryAction(slot.item, BerryhunterApi.ActionType.EquipItem);
         }
     }
 
     deactivateSlot(equipmentSlot, byUser) {
         let unequippedItem = this.character.unequipItem(equipmentSlot);
-        if (byUser && equipmentSlot !== Equipment.Slots.PLACEABLE) {
+        if (byUser && equipmentSlot !== Equipment.EquipmentSlot.PLACEABLE) {
             Game.player.controls.onInventoryAction(unequippedItem, BerryhunterApi.ActionType.UnequipItem);
         }
     }
@@ -188,6 +191,7 @@ export class Inventory {
             slot.dropItem();
         });
         this.onChange();
+        InventoryChangedEvent.unsubscribe(this.onChange);
     }
 
     /**

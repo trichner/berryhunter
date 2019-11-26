@@ -41,7 +41,10 @@ type Client struct {
 	// Buffered channel of inbound messages.
 	receive chan []byte
 
-	quit chan struct{}
+	// Is closed if the websocket connection is closed
+	connQuit chan struct{}
+	// Is closed if the send/receive channels are closed
+	chanQuit chan struct{}
 
 	// Handler notified on events
 	onConnectedHandler    func(*Client)
@@ -69,6 +72,7 @@ func (c *Client) OnDisconnect(h func(*Client)) {
 func (c *Client) readPump() {
 	defer func() {
 		// close the pipe
+		close(c.chanQuit)
 		close(c.send)
 		close(c.receive)
 		c.conn.Close()
@@ -119,10 +123,15 @@ func (c *Client) Run() {
 func (c *Client) SendMessage(msg []byte) error {
 	// is channel already closed?
 	select {
-	case <-c.quit:
+	case <-c.connQuit:
 		return errors.New("IllegalState: Write pipe closed.")
 	default:
+	}
 
+	select {
+	case <-c.chanQuit:
+		return errors.New("IllegalState: Write pipe closed.")
+	default:
 	}
 
 	select {
@@ -141,7 +150,7 @@ func (c *Client) SendMessage(msg []byte) error {
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
-		close(c.quit)
+		close(c.connQuit)
 		ticker.Stop()
 		c.conn.Close()
 	}()

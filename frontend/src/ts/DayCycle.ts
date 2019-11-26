@@ -1,7 +1,7 @@
 'use strict';
 
 import {ExtendedColorMatrixFilter} from './ExtendedColorMatrixFilter';
-import * as Develop from './develop/_Develop';
+import {Develop} from "./develop/_Develop";
 
 
 const ticksPerDay = 10 * 60 * 30; // 8 Minutes at 30 tps
@@ -113,7 +113,7 @@ function getNightFilterOpacity() {
 export function setTimeByTick(tick) {
     timeOfDay = (tick % ticksPerDay / ticksPerDay * hoursPerDay + sunriseHour) % hoursPerDay;
     if (Develop.isActive()) {
-        Develop.logTimeOfDay(getFormattedTime());
+        Develop.get().logTimeOfDay(getFormattedTime());
     }
 
     let opacity = getNightFilterOpacity();

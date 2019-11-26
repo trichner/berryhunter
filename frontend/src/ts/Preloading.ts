@@ -3,7 +3,7 @@
 import * as PIXI from 'pixi.js';
 import {htmlToElement, isNumber} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
-import * as Events from './Events';
+import {PreloadingProgressedEvent, PreloadingStartedEvent, StartScreenDomReadyEvent} from "./Events";
 
 
 const promises = [];
@@ -14,11 +14,11 @@ let executeResolve;
 export function executePreload() {
     return new Promise(function (resolve) {
         executeResolve = resolve;
-        Events.triggerOneTime('preloading.execute');
+        PreloadingStartedEvent.trigger();
     });
 }
 
-Events.on('startScreen.domReady', () => {
+StartScreenDomReadyEvent.subscribe(() => {
     let loadCycle = 1;
     /*
      * As preloads have the chance to register new preloads themself, all preloads are loaded recursively.
@@ -39,7 +39,7 @@ Events.on('startScreen.domReady', () => {
 export function registerPreload(preloadingPromise) {
     preloadingPromise.then(function (data) {
         loadedPromises++;
-        Events.trigger('preloading.progress', loadedPromises / numberOfPromises);
+        PreloadingProgressedEvent.trigger(loadedPromises / numberOfPromises);
 
         return data;
     });

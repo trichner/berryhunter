@@ -1,7 +1,7 @@
 import * as Mustache from 'mustache';
 import * as moment from 'moment-mini';
 import {isDefined, isUndefined} from '../../Utils';
-import * as Events from '../../Events';
+import {StartScreenDomReadyEvent} from '../../Events';
 import {createStartScreenPanel} from "./ScreenUtil";
 
 function requireAll(requireContext) {
@@ -11,7 +11,7 @@ function requireAll(requireContext) {
 const changelogs = requireAll(require.context('../../../../../changelog', false, /\.json$/));
 const template = require('raw-loader!./changelog.mustache');
 
-Events.on('startScreen.domReady', setup);
+StartScreenDomReadyEvent.subscribe(setup);
 
 function setup() {
     createStartScreenPanel(

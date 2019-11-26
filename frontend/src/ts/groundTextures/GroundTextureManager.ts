@@ -1,23 +1,26 @@
 'use strict';
 
 import {isDefined} from '../Utils';
-import {GroundTexture} from './GroundTexture';
+import {GroundTexture, Parameters} from './GroundTexture';
 import {GroundTextureTypes} from './GroundTextureTypes';
+import {IGame} from "../interfaces/IGame";
 
 
 const textures = [];
 let renderingStarted = false;
 let latestTextureIndex;
+let terrainTexturesLayer: PIXI.Container;
 
-export function setup() {
-    textures.forEach(function (texture) {
-        texture.addToMap();
+export function setup(game: IGame) {
+    terrainTexturesLayer = game.layers.terrain.textures;
+    textures.forEach((texture: GroundTexture) => {
+        texture.addToMap(terrainTexturesLayer);
     });
 
     renderingStarted = true;
 }
 
-export function placeTexture(parameters) {
+export function placeTexture(parameters: Parameters) {
     let newTexture = new GroundTexture(parameters);
     if (parameters.stacking === 'bottom') {
         textures.unshift(newTexture);
@@ -27,7 +30,7 @@ export function placeTexture(parameters) {
     }
 
     if (renderingStarted) {
-        newTexture.addToMap();
+        newTexture.addToMap(terrainTexturesLayer);
     }
 }
 

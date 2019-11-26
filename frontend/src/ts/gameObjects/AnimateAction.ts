@@ -2,8 +2,8 @@
 
 import {deg2rad} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
-import _merge = require('lodash/merge');
 import {Animation} from "../Animation";
+import _merge = require('lodash/merge');
 
 const animationCfg = GraphicsConfig.character.actionAnimation;
 

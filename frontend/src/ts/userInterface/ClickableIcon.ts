@@ -4,10 +4,11 @@ import {isFunction} from '../Utils';
 import {Items} from '../items/Items';
 import {SubIcon} from './SubIcon';
 import {BasicConfig as Constants} from '../../config/Basic';
-import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
+import {GameSetupEvent, InventoryChangedEvent} from "../Events";
 
-let Game = null;
-Events.on('game.setup', game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
@@ -159,26 +160,6 @@ export class ClickableIcon {
         this.domElement.classList.add('inProgress');
         this.progressOverlay.classList.remove('hidden');
         this.inProgress = true;
-
-        // let self = this;
-        // require(['Game'], function (Game) {
-        // 	let updateListener = function () {
-        // 		progress.current += Game.timeDelta;
-        // 		if (progress.current >= progress.duration) {
-        // 			self.progressOverlay.style.top = '100%';
-        // 			self.domElement.classList.remove('inProgress');
-        // 			self.progressOverlay.classList.add('hidden');
-        // 			Game.renderer.off('prerender', updateListener);
-        // 			self.inProgress = false;
-        // 			// A little hacky - would be nice with events
-        // 			Game.player.inventory.onChange();
-        // 		} else {
-        // 			let top = 100 - 100 * progress.current / progress.duration;
-        // 			self.progressOverlay.style.top = top.toFixed(3) + '%';
-        // 		}
-        // 	};
-        // 	Game.renderer.on('prerender', updateListener);
-        // });
     }
 
     updateProgress(ticksRemaining) {
@@ -193,8 +174,7 @@ export class ClickableIcon {
             this.progressOverlay.classList.add('hidden');
             this.inProgress = false;
             delete this.progress;
-            // A little hacky - would be nice with events
-            Game.player.inventory.onChange();
+            InventoryChangedEvent.trigger();
         } else {
             let top = 100 * this.progress.remainingTicks / this.progress.requiredTicks;
             this.progressOverlay.style.top = top.toFixed(3) + '%';

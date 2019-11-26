@@ -6,10 +6,11 @@ import {isDefined, randomRotation, TwoDimensional} from '../Utils';
 import {InjectedSVG} from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as PIXI from 'pixi.js';
-import * as Events from "../Events";
+import {IGame} from "../interfaces/IGame";
+import {GameSetupEvent} from "../Events";
 
-let Game = null;
-Events.on('game.setup', game => {
+let Game: IGame = null;
+GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
@@ -256,15 +257,28 @@ export class BerryBush extends Resource {
 Preloading.registerGameObjectSVG(BerryBush, berryBushCfg.bushfile, berryBushCfg.maxSize);
 Preloading.registerGameObjectSVG(BerryBush.berry, berryBushCfg.berryFile, berryBushCfg.berrySize);
 
-let flowerCfg = GraphicsConfig.resources.flower;
-
 export class Flower extends Resource {
+    static resourceSpot = {
+        svg: null
+    };
+    resourceSpotTexture: InjectedSVG;
+
     static svg;
 
     constructor(x, y, size) {
-        super(Game.layers.resources.berryBush, x, y, size, 0, Flower.svg);
+        super(Game.layers.resources.berryBush, x, y, size, randomRotation(), Flower.svg);
         this.visibleOnMinimap = false;
+
+        this.resourceSpotTexture = new InjectedSVG(Flower.resourceSpot.svg, x, y, this.size * 1.667, randomRotation());
+        Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
+    }
+
+    hide() {
+        this.resourceSpotTexture.parent.removeChild(this.resourceSpotTexture);
+        super.hide();
     }
 }
 
+let flowerCfg = GraphicsConfig.resources.flower;
+Preloading.registerGameObjectSVG(Flower.resourceSpot, flowerCfg.spotFile, flowerCfg.maxSize);
 Preloading.registerGameObjectSVG(Flower, flowerCfg.file, flowerCfg.maxSize);

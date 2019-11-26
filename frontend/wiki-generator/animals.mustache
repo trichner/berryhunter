@@ -1,0 +1,42 @@
+{{#.}}
+    <table class="article-table" style="margin-bottom: 4em">
+        <tr>
+            {{! berryhunter orange }}
+            <td rowspan="3"
+                style="width: 30px;
+                   height: 100%;
+                   padding: 0;
+                   background-color: #e37313;
+                   border-radius: 20px 0 0 20px;
+                   border-bottom: none">
+            </td>
+            <td colspan="5">[[File:{{graphic}}|left]]
+                <p style="font-size: larger">{{name}}</p>
+                <p>{{description}}</p>
+            </td>
+        </tr>
+        <tr>
+            <th>Factors</th>
+            <th>Size</th>
+            <th>Damage</th>
+            <th>Occurrence</th>
+            <th>Drops</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>{{#factors}}{{#link}}
+                    <li>[[{{link}}|{{name}}]]: {{value}}</li>{{/link}}{{^link}}
+                    <li>{{name}}: {{value}}</li>{{/link}}{{/factors}}
+                </ul>
+            </td>
+            <td>{{size}}</td>
+            <td>{{damage}}{{^damage}}harmless{{/damage}}</td>
+            <td>{{occurrence}}</td>
+            <td>{{#drops}}
+                <div style="float:left">[[File:{{image}}|thumb|none|80px|{{text}}{{^text}}{{name}}{{/text}}]]</div>{{/drops}}
+            </td>
+        </tr>
+    </table>
+{{/.}}
+
+[[Category:Basics]]

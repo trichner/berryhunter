@@ -2,13 +2,25 @@
 
 import * as Preloading from '../Preloading';
 import {GraphicsConfig} from '../../config/Graphics';
+import {degrees} from "../interfaces/Types";
 
 const GroundTextureTypes = GraphicsConfig.groundTextureTypes;
+
+export interface GroundTextureType {
+    name: string;
+    svg: PIXI.Texture;
+    file: string,
+    minSize: number,
+    maxSize: number,
+    rotation: degrees;
+    flipVertical: boolean;
+    flipHorizontal: boolean;
+}
 
 // Validate
 let hasError = false;
 for (let type in GroundTextureTypes) {
-    let groundTextureType = GroundTextureTypes[type];
+    let groundTextureType: GroundTextureType = GroundTextureTypes[type];
     groundTextureType.name = type;
 
     if (!groundTextureType.hasOwnProperty('file')) {

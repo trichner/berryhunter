@@ -4,6 +4,7 @@
   "type": "CONSUMABLE",
   "factors": {
     "food": 0.2,
+    "minimumYield": 0,
     "replenishProbabilityPerSecond": 0.08,
     "capacity": 5
   },

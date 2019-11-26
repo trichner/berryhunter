@@ -6,8 +6,9 @@ import {clearNode, isUndefined, playCssAnimation} from '../Utils';
 import {ClickableIcon} from './ClickableIcon';
 import {ClickableCountableIcon} from './ClickableCountableIcon';
 import {VitalSignBar} from './VitalSignBar';
+import {IGame} from "../interfaces/IGame";
 
-let Game = null;
+let Game: IGame = null;
 
 let rootElement;
 let cycleIcon = require('!svg-inline-loader!./cycle-icon.svg');

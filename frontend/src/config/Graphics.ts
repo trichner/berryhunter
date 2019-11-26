@@ -1,6 +1,11 @@
 'use strict';
 
+import {BasicConfig} from "./Basic";
+
 export const GraphicsConfig = {
+
+    waterColor: 0x287aff,
+    landColor: 0x006030,
 
     hitAnimation: {
         /**
@@ -107,8 +112,10 @@ export const GraphicsConfig = {
         },
 
         flower: {
+            spotFile: require('../img/flowerSpot.svg'),
             file: require('../img/flower.svg'),
-            maxSize: 20,
+            minSize: BasicConfig.PIXEL_PER_METER * 0.15 * 2,
+            maxSize: BasicConfig.PIXEL_PER_METER * 0.25 * 2,
         },
     },
 

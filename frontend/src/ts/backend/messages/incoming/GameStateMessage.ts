@@ -1,14 +1,14 @@
 'use strict';
 
-import * as BackendConstants from './BackendConstants';
-import * as Resources from '../gameObjects/Resources';
-import * as Mobs from '../gameObjects/Mobs';
-import {DebugCircle} from '../develop/DebugCircle';
-import {Character} from '../gameObjects/Character';
-import {Placeable} from '../gameObjects/Placeable';
-import {isFunction} from '../Utils';
-import {StatusEffectDefinition} from '../gameObjects/StatusEffect'
-import {BerryhunterApi} from './BerryhunterApi';
+import * as BackendConstants from '../../BackendConstants';
+import * as Resources from '../../../gameObjects/Resources';
+import * as Mobs from '../../../gameObjects/Mobs';
+import {DebugCircle} from '../../../develop/DebugCircle';
+import {Character} from '../../../gameObjects/Character';
+import {Placeable} from '../../../gameObjects/Placeable';
+import {isFunction} from '../../../Utils';
+import {StatusEffectDefinition} from '../../../gameObjects/StatusEffect'
+import {BerryhunterApi} from '../../BerryhunterApi';
 
 export class Spectator {
     id: number;
@@ -24,7 +24,7 @@ export class Spectator {
     }
 }
 
-export class GameState {
+export class GameStateMessage {
     tick: number;
     player;
     inventory;

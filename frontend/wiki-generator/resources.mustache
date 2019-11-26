@@ -1,0 +1,41 @@
+{{#.}}
+    <table class="article-table" style="margin-bottom: 4em">
+        <tr>
+            {{! berry colored }}
+            <td rowspan="3"
+                style="width: 30px;
+                   height: 100%;
+                   padding: 0;
+                   background-color: #8B619F;
+                   border-radius: 20px 0 0 20px;
+                   border-bottom: none">
+            </td>
+            <td colspan="5">
+                <div style="float: left">{{#graphics}}[[File:{{.}}]]{{/graphics}}</div>
+                <p style="font-size: larger">{{name}}</p>
+                <p>{{description}}</p>
+            </td>
+        </tr>
+        <tr>
+            <th>Factors</th>
+            <th>Size</th>
+            <th>Occurrence</th>
+            <th>Yields</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>{{#factors}}{{#link}}
+                    <li>[[{{link}}|{{name}}]]: {{value}}</li>{{/link}}{{^link}}
+                    <li>{{name}}: {{value}}</li>{{/link}}{{/factors}}
+                </ul>
+            </td>
+            <td>{{size}}</td>
+            <td>{{occurrence}}</td>
+            <td>[[File:{{drops.image}}]]
+                <p>{{drops.name}}</p>
+            </td>
+        </tr>
+    </table>
+{{/.}}
+
+[[Category:Basics]]

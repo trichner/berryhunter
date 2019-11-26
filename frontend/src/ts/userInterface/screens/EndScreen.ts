@@ -4,7 +4,7 @@ import * as Preloading from '../../Preloading';
 import * as PlayerName from '../../PlayerName';
 import * as Console from '../../Console';
 import {preventInputPropagation} from '../../Utils';
-import * as Events from '../../Events';
+import {BeforeDeathEvent, EndScreenShownEvent, PlayerCreatedEvent} from '../../Events';
 import * as DayCycle from '../../DayCycle';
 import * as SnapshotFactory from '../../backend/SnapshotFactory';
 import {Rating} from "../../rating/Rating";
@@ -22,7 +22,7 @@ function onDomReady() {
 
     rootElement.getElementsByClassName('playerForm').item(0)
         .addEventListener('animationend', function () {
-            Events.trigger(Events.ENDSCREEN_SHOWN);
+            EndScreenShownEvent.trigger();
             // As soon as the form is faded in, focus the input field
             playerNameInput.focus();
         });
@@ -46,12 +46,12 @@ export function hide() {
 let joinedAtDayTime;
 let joinedAtServerTick;
 
-Events.on('game.playing', function () {
+PlayerCreatedEvent.subscribe(() => {
     joinedAtDayTime = DayCycle.isDay();
     joinedAtServerTick = SnapshotFactory.getLastGameState().tick;
 });
 
-Events.on('game.death', function () {
+BeforeDeathEvent.subscribe(() => {
     let deathAtServerTick = SnapshotFactory.getLastGameState().tick;
     let daysSurvived = Math.floor(DayCycle.getDays(deathAtServerTick - joinedAtServerTick) * 2);
 
