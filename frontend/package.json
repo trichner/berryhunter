@@ -48,7 +48,6 @@
     "node-hook": "^1.0.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "raw-loader": "^0.5.1",
-    "sharp": "^0.23.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.0",
     "svg-inline-loader": "^0.8.0",
