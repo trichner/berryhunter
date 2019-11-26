@@ -10,7 +10,7 @@
       "Weapon",
       "Tool"
     ],
-    "description": "The first craft. The basic club allows to both fight and gather resources, namely Stone in addition to Wood.",
+    "description": "The first craft. The basic club allows to both fight and gather resources, namely Stone in addition to Wood."
   },
   "StoneTool": {
     "subtypes": [
