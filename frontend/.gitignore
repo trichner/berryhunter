@@ -25,3 +25,4 @@ $RECYCLE.BIN/
 /node_modules/
 /dist/
 /wiki-generator/output/
+/src/less/index.css
