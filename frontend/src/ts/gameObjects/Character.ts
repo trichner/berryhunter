@@ -25,8 +25,8 @@ GameSetupEvent.subscribe((game: IGame) => {
 });
 
 export class Character extends GameObject {
-    static svg;
-    static craftingIndicator = {svg: undefined};
+    static svg: PIXI.Texture;
+    static craftingIndicator: {svg: PIXI.Texture} = {svg: undefined};
     static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
 
 
@@ -53,9 +53,8 @@ export class Character extends GameObject {
     leftHand;
     rightHand;
 
-    constructor(id, x, y, name, isPlayerCharacter) {
-        super(Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2, Character.svg);
-        this.id = id;
+    constructor(id: number, x, y, name, isPlayerCharacter) {
+        super(id, Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2, Character.svg);
         this.name = name;
         this.isPlayerCharacter = isPlayerCharacter;
         this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;

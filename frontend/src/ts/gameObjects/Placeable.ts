@@ -9,8 +9,8 @@ import {StatusEffect} from "./StatusEffect";
 export class Placeable extends GameObject {
     item;
 
-    constructor(placeableItem, x, y) {
-        super(placeableItem.placeable.layer,
+    constructor(id: number, placeableItem, x, y) {
+        super(id, placeableItem.placeable.layer,
             x, y,
             placeableItem.graphic.size,
             randomRotation(placeableItem.placeable.directions),

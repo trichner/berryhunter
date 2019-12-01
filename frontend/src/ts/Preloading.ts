@@ -50,7 +50,7 @@ export function registerPreload(preloadingPromise) {
     return preloadingPromise;
 }
 
-export function registerGameObjectSVG(gameObjectClass, svgPath, maxSize) {
+export function registerGameObjectSVG(gameObjectClass: {svg: PIXI.Texture}, svgPath, maxSize) {
     return registerPreload(
         new Promise(function (resolve, reject) {
             let sourceScale = 1;

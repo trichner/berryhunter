@@ -7,6 +7,7 @@ import {GraphicsConfig} from '../../config/Graphics';
 import {StatusEffect} from './StatusEffect';
 import {IGame} from "../interfaces/IGame";
 import {GameSetupEvent} from "../Events";
+import * as PIXI from "pixi.js";
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -26,8 +27,8 @@ function file(mob) {
 }
 
 export class Mob extends GameObject {
-    constructor(gameLayer, x, y, size, svg) {
-        super(gameLayer, x, y, size, 0, svg);
+    constructor(id: number, gameLayer, x, y, size, svg: PIXI.Texture) {
+        super(id, gameLayer, x, y, size, 0, svg);
         this.isMoveable = true;
         this.visibleOnMinimap = false;
     }
@@ -50,10 +51,10 @@ export class Mob extends GameObject {
 }
 
 export class Dodo extends Mob {
-    static svg;
+    static svg: PIXI.Texture;
 
-    constructor(x, y) {
-        super(Game.layers.mobs.dodo, x, y,
+    constructor(id: number, x, y) {
+        super(id, Game.layers.mobs.dodo, x, y,
             randomInt(minSize("dodo"), maxSize("dodo")),
             Dodo.svg);
     }
@@ -62,10 +63,10 @@ export class Dodo extends Mob {
 Preloading.registerGameObjectSVG(Dodo, file("dodo"), maxSize("dodo"));
 
 export class SaberToothCat extends Mob {
-    static svg;
+    static svg: PIXI.Texture;
 
-    constructor(x, y) {
-        super(Game.layers.mobs.saberToothCat, x, y,
+    constructor(id: number, x, y) {
+        super(id, Game.layers.mobs.saberToothCat, x, y,
             randomInt(minSize("saberToothCat"), maxSize("saberToothCat")),
             SaberToothCat.svg);
 
@@ -76,10 +77,10 @@ Preloading.registerGameObjectSVG(SaberToothCat, file("saberToothCat"), maxSize("
 
 
 export class Mammoth extends Mob {
-    static svg;
+    static svg: PIXI.Texture;
 
-    constructor(x, y) {
-        super(Game.layers.mobs.mammoth, x, y,
+    constructor(id: number, x, y) {
+        super(id, Game.layers.mobs.mammoth, x, y,
             randomInt(minSize("mammoth"), maxSize("mammoth")),
             Mammoth.svg);
     }

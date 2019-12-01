@@ -61,7 +61,7 @@ export class GameMapWithBackend {
                     gameObject = new Character(entity.id, entity.position.x, entity.position.y, entity.name, false);
                     break;
                 case Placeable:
-                    gameObject = new Placeable(entity.item, entity.position.x, entity.position.y);
+                    gameObject = new Placeable(entity.id, entity.item, entity.position.x, entity.position.y);
                     break;
                 case DebugCircle:
                     if (!Develop.isActive()) {
@@ -69,7 +69,7 @@ export class GameMapWithBackend {
                     }
                 // Fallthrough
                 default:
-                    gameObject = new entity.type(entity.position.x, entity.position.y, entity.radius);
+                    gameObject = new entity.type(entity.id, entity.position.x, entity.position.y, entity.radius);
             }
 
             if (gameObject instanceof Resource) {
@@ -78,7 +78,6 @@ export class GameMapWithBackend {
             }
 
             this.objects[entity.id] = gameObject;
-            gameObject.id = entity.id;
 
             if (gameObject.visibleOnMinimap) {
                 Game.miniMap.add(gameObject, Layer.OTHER);

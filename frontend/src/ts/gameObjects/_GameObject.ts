@@ -7,12 +7,13 @@ import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../Utils';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
 import {radians} from "../interfaces/Types";
 import {PrerenderEvent} from "../Events";
+import * as PIXI from "pixi.js";
 
 let movementInterpolatedObjects = new Set();
 let rotatingObjects = new Set();
 
 export class GameObject {
-    id: number; // will be filled in GameMapWithBackend with backend ids
+    readonly id: number; // will be filled in GameMapWithBackend with backend ids
 
     layer;
     size: number = Constants.GRAPHIC_BASE_SIZE / 2;
@@ -36,7 +37,8 @@ export class GameObject {
      */
     minimapIcon: PIXI.Container;
 
-    constructor(gameLayer, x, y, size, rotation, svg) {
+    constructor(id: number, gameLayer, x, y, size, rotation, svg: PIXI.Texture) {
+        this.id = id;
         this.layer = gameLayer;
         this.size = size;
         this.rotation = rotation;
@@ -56,7 +58,7 @@ export class GameObject {
         }
     };
 
-    initShape(svg, x, y, size, rotation) {
+    initShape(svg: PIXI.Texture, x, y, size, rotation) {
         if (svg) {
             return new InjectedSVG(svg, x, y, this.size, this.rotation);
         } else {

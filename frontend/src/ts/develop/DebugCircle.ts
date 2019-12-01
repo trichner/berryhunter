@@ -16,8 +16,8 @@ GameSetupEvent.subscribe((game: IGame) => {
 export class DebugCircle extends GameObject {
     timeToLife: number;
 
-    constructor(x, y, radius) {
-        super(undefined, x, y, radius, 0, undefined);
+    constructor(id: number, x, y, radius) {
+        super(id,undefined, x, y, radius, 0, undefined);
         this.visibleOnMinimap = false;
 
         this.timeToLife = 60;

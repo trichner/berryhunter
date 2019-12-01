@@ -2,12 +2,13 @@
 
 import {GameObject} from './_GameObject';
 import * as Preloading from '../Preloading';
-import {isDefined, randomRotation, TwoDimensional} from '../Utils';
+import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../Utils';
 import {InjectedSVG} from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as PIXI from 'pixi.js';
 import {IGame} from "../interfaces/IGame";
 import {GameSetupEvent} from "../Events";
+import {alea as SeedRandom} from "seedrandom";
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -19,8 +20,8 @@ export class Resource extends GameObject {
     baseScale: number;
     private _stock;
 
-    constructor(gameLayer, x, y, size, rotation, svg) {
-        super(gameLayer, x, y, size, rotation, svg);
+    constructor(id: number, gameLayer, x, y, size, rotation, svg: PIXI.Texture) {
+        super(id, gameLayer, x, y, size, rotation, svg);
 
         this.baseScale = this.shape.scale.x;
     }
@@ -43,13 +44,11 @@ export class Resource extends GameObject {
 }
 
 export class Tree extends Resource {
-    static resourceSpot = {
-        svg: null
-    };
+    static resourceSpot: { svg: PIXI.Texture } = {svg: undefined};
     resourceSpotTexture: InjectedSVG;
 
-    constructor(x, y, size, svg) {
-        super(Game.layers.resources.trees, x, y, size * 1.8 + GraphicsConfig.character.size, 0, svg);
+    constructor(id: number, x, y, size, svg: PIXI.Texture) {
+        super(id, Game.layers.resources.trees, x, y, size * 1.8 + GraphicsConfig.character.size, 0, svg);
 
         this.resourceSpotTexture = new InjectedSVG(Tree.resourceSpot.svg, x, y, this.size * 0.7, randomRotation());
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
@@ -74,34 +73,32 @@ let treeCfg = GraphicsConfig.resources.tree;
 Preloading.registerGameObjectSVG(Tree.resourceSpot, treeCfg.spotFile, treeCfg.maxSize);
 
 export class RoundTree extends Tree {
-    static svg;
+    static svg: PIXI.Texture;
 
-    constructor(x, y, size) {
-        super(x, y, size, RoundTree.svg);
+    constructor(id: number, x, y, size) {
+        super(id, x, y, size, RoundTree.svg);
     }
 }
 
 Preloading.registerGameObjectSVG(RoundTree, treeCfg.roundTreeFile, treeCfg.maxSize);
 
 export class MarioTree extends Tree {
-    static svg;
+    static svg: PIXI.Texture;
 
-    constructor(x, y, size) {
-        super(x, y, size, MarioTree.svg);
+    constructor(id: number, x, y, size) {
+        super(id, x, y, size, MarioTree.svg);
     }
 }
 
 Preloading.registerGameObjectSVG(MarioTree, treeCfg.deciduousTreeFile, treeCfg.maxSize);
 
 export class Mineral extends Resource {
-    static resourceSpot = {
-        svg: null
-    };
+    static resourceSpot: { svg: PIXI.Texture } = {svg: undefined};
     resourceSpotTexture: InjectedSVG;
 
-    constructor(x, y, size, svg) {
+    constructor(id: number, x, y, size, svg: PIXI.Texture) {
         // Due to the shadow in the mineral graphics, those should not be randomly rotated
-        super(Game.layers.resources.minerals, x, y, size * 1.1 + GraphicsConfig.character.size, 0, svg);
+        super(id, Game.layers.resources.minerals, x, y, size * 1.1 + GraphicsConfig.character.size, 0, svg);
 
         this.resourceSpotTexture = new InjectedSVG(Mineral.resourceSpot.svg, x, y, this.size * 0.7, this.rotation);
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
@@ -117,10 +114,10 @@ let mineralCfg = GraphicsConfig.resources.mineral;
 Preloading.registerGameObjectSVG(Mineral.resourceSpot, mineralCfg.spotFile, mineralCfg.maxSize);
 
 export class Stone extends Mineral {
-    static svg;
+    static svg: PIXI.Texture;
 
-    constructor(x, y, size) {
-        super(x, y, size, Stone.svg);
+    constructor(id: number, x, y, size) {
+        super(id, x, y, size, Stone.svg);
     }
 
     createMinimapIcon() {
@@ -137,10 +134,10 @@ export class Stone extends Mineral {
 Preloading.registerGameObjectSVG(Stone, mineralCfg.stoneFile, mineralCfg.maxSize);
 
 export class Bronze extends Mineral {
-    static svg;
+    static svg: PIXI.Texture;
 
-    constructor(x, y, size) {
-        super(x, y, size, Bronze.svg);
+    constructor(id: number, x, y, size) {
+        super(id, x, y, size, Bronze.svg);
     }
 
     createMinimapIcon() {
@@ -157,10 +154,10 @@ export class Bronze extends Mineral {
 Preloading.registerGameObjectSVG(Bronze, mineralCfg.bronzeFile, mineralCfg.maxSize);
 
 export class Iron extends Mineral {
-    static svg;
+    static svg: PIXI.Texture;
 
-    constructor(x, y, size) {
-        super(x, y, size, Iron.svg);
+    constructor(id: number, x, y, size) {
+        super(id, x, y, size, Iron.svg);
     }
 
     createMinimapIcon() {
@@ -177,10 +174,10 @@ export class Iron extends Mineral {
 Preloading.registerGameObjectSVG(Iron, mineralCfg.ironFile, mineralCfg.maxSize);
 
 export class Titanium extends Mineral {
-    static svg;
+    static svg: PIXI.Texture;
 
-    constructor(x, y, size) {
-        super(x, y, size, Titanium.svg);
+    constructor(id: number, x, y, size) {
+        super(id, x, y, size, Titanium.svg);
     }
 
     createMinimapIcon() {
@@ -199,16 +196,16 @@ Preloading.registerGameObjectSVG(Titanium, mineralCfg.titaniumFile, mineralCfg.m
 let berryBushCfg = GraphicsConfig.resources.berryBush;
 
 export class BerryBush extends Resource {
-    static svg;
-    static berry = {
-        svg: null
-    };
+    static svg: PIXI.Texture;
+    static berry: { svg: PIXI.Texture } = {svg: undefined};
+    // It's the little black cross on top of berries
+    static calyx: { svg: PIXI.Texture } = {svg: undefined};
 
     actualShape;
     berries;
 
-    constructor(x, y, size) {
-        super(Game.layers.resources.berryBush, x, y, size, 0, BerryBush.svg);
+    constructor(id: number, x, y, size) {
+        super(id, Game.layers.resources.berryBush, x, y, size, 0, BerryBush.svg);
     }
 
     initShape(svg, x, y, size, rotation) {
@@ -238,24 +235,35 @@ export class BerryBush extends Resource {
         this.berries = new PIXI.Container();
         this.shape.addChild(this.berries);
 
+        // Seed a random generator with the ID of the game object to make sure it always looks the same
+        let seedRandom = new SeedRandom(this.id);
+
         for (let i = 0; i < this.capacity; i++) {
             if (i >= numberOfBerries) {
                 break;
             }
 
-            let berry = new InjectedSVG(
-                BerryBush.berry.svg,
-                (Math.cos(Math.PI * 2 / this.capacity * i) * this.size * 0.3),
-                (Math.sin(Math.PI * 2 / this.capacity * i) * this.size * 0.3),
-                berryBushCfg.berrySize
-            );
+            let berrySize = this.random(seedRandom, berryBushCfg.berryMinSize, berryBushCfg.berryMaxSize);
+
+            let distance = this.random(seedRandom, 0.2, 0.4) * this.size;
+            let x = Math.cos(Math.PI * 2 / this.capacity * i) * distance;
+            let y = Math.sin(Math.PI * 2 / this.capacity * i) * distance;
+            let berry = new InjectedSVG(BerryBush.berry.svg, x, y, berrySize);
             this.berries.addChild(berry);
+
+            let calyx = new InjectedSVG(BerryBush.calyx.svg, x, y, berrySize, this.random(seedRandom, deg2rad(-65), deg2rad(220)));
+            this.berries.addChild(calyx);
         }
+    }
+
+    random(rng, min, max) {
+        return rng() * (max - min) + min;
     }
 }
 
 Preloading.registerGameObjectSVG(BerryBush, berryBushCfg.bushfile, berryBushCfg.maxSize);
-Preloading.registerGameObjectSVG(BerryBush.berry, berryBushCfg.berryFile, berryBushCfg.berrySize);
+Preloading.registerGameObjectSVG(BerryBush.berry, berryBushCfg.berryFile, berryBushCfg.berryMaxSize);
+Preloading.registerGameObjectSVG(BerryBush.calyx, berryBushCfg.calyxFile, berryBushCfg.berryMaxSize);
 
 export class Flower extends Resource {
     static resourceSpot = {
@@ -265,8 +273,8 @@ export class Flower extends Resource {
 
     static svg;
 
-    constructor(x, y, size) {
-        super(Game.layers.resources.berryBush, x, y, size, randomRotation(), Flower.svg);
+    constructor(id: number, x, y, size) {
+        super(id, Game.layers.resources.berryBush, x, y, size, randomRotation(), Flower.svg);
         this.visibleOnMinimap = false;
 
         this.resourceSpotTexture = new InjectedSVG(Flower.resourceSpot.svg, x, y, this.size * 1.667, randomRotation());
