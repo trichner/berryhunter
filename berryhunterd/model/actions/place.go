@@ -34,9 +34,22 @@ func (a *Place) Start() {
 	}
 
 	log.Printf("🏗 Placing: %s", item.Name)
+
+	a.p.EffectStack().AddAll(item.Effects.OnPlacing)
+
 	// TODO add collision detection
 
-	e, err := placeable.NewPlaceable(item)
+	factors := a.p.EffectStack().Factors()
+	bonus := struct {
+		DurationInTicks int
+		HeatRadius      float32
+		HeatPerTick     uint32
+	}{
+		DurationInTicks: factors.DurationInTicks,
+		HeatRadius:      factors.HeatRadius,
+		HeatPerTick:     factors.HeatPerTick,
+	}
+	e, err := placeable.NewPlaceable(item, bonus)
 
 	if err != nil {
 		log.Printf("Cannot place %s: %s", item.Name, err)

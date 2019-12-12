@@ -1,4 +1,4 @@
-import {isDefined, removeElement} from "./Utils";
+import {isDefined, isUndefined, removeElement} from "./Utils";
 import {IGame} from "./interfaces/IGame";
 import {BackendState, IBackend} from "./interfaces/IBackend";
 import {Player} from "./Player";
@@ -27,6 +27,7 @@ export interface IEvent {
 abstract class Event implements IEvent {
     private readonly requiresListeners: boolean;
     private listeners = [];
+    private originalCallbacks = new Map<(payload?: any) => (boolean | void), number> ();
 
     /**
      * @param requiresListeners Will print a warning to the console when
@@ -37,6 +38,7 @@ abstract class Event implements IEvent {
     }
 
     public subscribe(callback: (payload?: any) => (boolean | void), context?: object): void {
+        this.originalCallbacks.set(callback, this.listeners.length);
         if (isDefined(context)) {
             callback = callback.bind(context);
         }
@@ -44,8 +46,11 @@ abstract class Event implements IEvent {
     }
 
     public unsubscribe(callback: (payload?: any) => (boolean | void)): void {
-        if (!removeElement(this.listeners, callback)) {
+        let index = this.originalCallbacks.get(callback);
+        if (isUndefined(index)){
             warnWithStacktrace('Tried to unsubscribe callback that was never subscribed.');
+        } else {
+            this.listeners.splice(index, 1);
         }
     }
 

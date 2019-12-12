@@ -20,7 +20,7 @@ func (a *Equip) Start() {
 	if !hasItem(a.p, a.item) {
 		return
 	}
-	a.p.Equipment().Equip(a.item)
+	a.p.Equipment().Equip(a.p, a.item)
 	a.ticks = 1
 }
 

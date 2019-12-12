@@ -2,8 +2,9 @@ package model
 
 import (
 	"github.com/EngoEngine/ecs"
-	"github.com/trichner/berryhunter/berryhunterd/cfg"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
+	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
 )
@@ -47,8 +48,10 @@ type PlayerEntity interface {
 	SetGodmode(on bool)
 	IsGod() bool
 
-	Config() *cfg.PlayerConfig
+	Config() *factors.PlayerFactors
 	Stats() *Stats
+
+	EffectStack() *effects.EffectStack
 }
 
 type BasicEntities map[uint64]ecs.BasicEntity

@@ -2,6 +2,7 @@ package cfg
 
 import (
 	"encoding/json"
+	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 	"io/ioutil"
 )
 
@@ -20,21 +21,7 @@ type Config struct {
 	Game struct {
 		ColdFractionDayPerS   float32 `json:"coldFractionDayPerSecond"`
 		ColdFractionNightPerS float32 `json:"coldFractionNightPerSecond"`
-		Player                struct {
-			FreezingDamageTickFraction       float32 `json:"freezingDamageTickFraction"`
-			StarveDamageTickFraction         float32 `json:"starveDamageTickFraction"`
-			FreezingStarveDamageTickFraction float32 `json:"freezingStarveDamageTickFraction"`
-			SatietyLossTickFraction          float32 `json:"satietyLossTickFraction"`
-
-			// constants for gaining health
-			HealthGainTick                    float32 `json:"healthGainTick"`
-			HealthGainSatietyThreshold        float32 `json:"healthGainSatietyThreshold"`
-			HealthGainTemperatureThreshold    float32 `json:"healthGainTemperatureThreshold"`
-			HealthGainSatietyLossTickFraction float32 `json:"healthGainSatietyLossTickFraction"`
-
-			//
-			WalkingSpeedPerTick float32 `json:"walkingSpeedPerTick"`
-		} `json:"player"`
+		Player         factors.PlayerFactorsDefinition        `json:"player"`
 	} `json:"game"`
 }
 

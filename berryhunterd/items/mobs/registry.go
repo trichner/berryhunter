@@ -2,6 +2,7 @@ package mobs
 
 import (
 	"fmt"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"io/ioutil"
 	"os"
@@ -53,7 +54,7 @@ type Registry interface {
 	Mobs() []*MobDefinition
 }
 
-func RegistryFromPaths(r items.Registry, f ...string) (*registry, error) {
+func RegistryFromPaths(r items.Registry, e effects.Registry, f ...string) (*registry, error) {
 
 	mobs := newRegistry()
 
@@ -76,7 +77,7 @@ func RegistryFromPaths(r items.Registry, f ...string) (*registry, error) {
 				return fmt.Errorf("Cannot parse '%s': %s", path, err)
 			}
 
-			mob, err := mobParsed.mapToMobDefinition(r)
+			mob, err := mobParsed.mapToMobDefinition(r, e)
 			if err != nil {
 				return fmt.Errorf("Cannot map '%s': %s\n", path, err)
 			}

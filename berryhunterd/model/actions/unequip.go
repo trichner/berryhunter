@@ -19,7 +19,7 @@ func (a *Unequip) Start() {
 	if !hasItem(a.p, a.item) {
 		return
 	}
-	a.p.Equipment().Unequip(a.item)
+	a.p.Equipment().Unequip(a.p, a.item)
 	a.ticks = 1
 }
 

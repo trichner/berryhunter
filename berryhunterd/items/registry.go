@@ -2,6 +2,7 @@ package items
 
 import (
 	"fmt"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -17,7 +18,7 @@ type Registry interface {
 	Items() []*ItemDefinition
 }
 
-func RegistryFromPaths(f ...string) (*registry, error) {
+func RegistryFromPaths(effects effects.Registry, f ...string) (*registry, error) {
 
 	r := NewRegistry()
 
@@ -39,7 +40,7 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 			if err != nil {
 				return fmt.Errorf("Cannot parse '%s': %s", path, err)
 			}
-			item, err := itemParsed.mapToItemDefinition()
+			item, err := itemParsed.mapToItemDefinition(effects)
 			if err != nil {
 				return fmt.Errorf("Cannot map '%s': %s\n", path, err)
 			}

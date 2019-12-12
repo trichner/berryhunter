@@ -91,11 +91,12 @@ func (i *PlayerInputSystem) updateInput(p model.PlayerEntity, next, last *model.
 
 	// do we even have inputs?
 	if next.Movement != nil {
-
 		// we can only move if we are still alive!
 		if p.VitalSigns().Health != 0 {
 			v := input2vec(next)
-			v = v.Mult(p.Config().WalkingSpeedPerTick)
+			speed := p.Config().WalkingSpeedPerTick
+			speed *= p.EffectStack().Factors().WalkingSpeedPerTick
+			v = v.Mult(speed)
 			next := p.Position().Add(v)
 			p.SetPosition(next)
 		}

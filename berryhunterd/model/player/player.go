@@ -2,11 +2,12 @@ package player
 
 import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
-	"github.com/trichner/berryhunter/berryhunterd/cfg"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/minions"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/constant"
+	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
 	"log"
@@ -24,9 +25,10 @@ func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 		equipment:      items.NewEquipment(),
 		name:           name,
 		ownedEntitites: model.NewBasicEntities(),
-		config: &g.Config().PlayerConfig,
-		stats: model.Stats{BirthTick: g.Ticks()},
-		statusEffects: model.NewStatusEffects(),
+		config:         &g.Config().PlayerConfig,
+		stats:          model.Stats{BirthTick: g.Ticks()},
+		statusEffects:  model.NewStatusEffects(),
+		effectStack:    effects.NewEffectStack(),
 	}
 
 	// setup body
@@ -44,7 +46,7 @@ func New(g model.Game, c model.Client, name string) model.PlayerEntity {
 	p.viewport.Shape().Group = shapeGroup
 
 	//--- initialize inventory
-	inventory, err := initializePlayerInventory(g.Items())
+	inventory, err := initializePlayerInventory(p, g.Items())
 	if err != nil {
 		panic(err)
 	}
@@ -86,7 +88,7 @@ type player struct {
 
 	model.PlayerVitalSigns
 
-	config *cfg.PlayerConfig
+	config *factors.PlayerFactors
 
 	ownedEntitites model.BasicEntities
 
@@ -95,6 +97,9 @@ type player struct {
 	isGod bool
 
 	stats model.Stats
+
+	//effectComponent effects.EffectComponent
+	effectStack effects.EffectStack
 }
 
 func (p *player) StatusEffects() *model.StatusEffects {
@@ -119,7 +124,11 @@ func (p *player) CurrentAction() model.PlayerAction {
 func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	h := p.PlayerVitalSigns.Health
 
-	dmgFraction := item.Factors.Damage // * vulnerability
+	p.EffectStack().AddAll(item.Effects.OnHitPlayer)
+
+	dmgFraction := item.Factors.Damage
+	dmgFraction *= player.EffectStack().Factors().Damage // attackers damage modifier
+	dmgFraction *= p.EffectStack().Factors().Vulnerability // defenders damage taking modifier
 	if dmgFraction > 0 {
 		p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)
 		p.StatusEffects().Add(model.StatusEffectDamaged)
@@ -180,7 +189,7 @@ func (p *player) Hand() *model.Hand {
 	return &p.hand
 }
 
-func (p *player) Config() *cfg.PlayerConfig {
+func (p *player) Config() *factors.PlayerFactors {
 	return p.config
 }
 
@@ -188,20 +197,24 @@ func (p *player) Stats() *model.Stats {
 	return &p.stats
 }
 
-func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
+func (p *player) EffectStack() *effects.EffectStack {
+	return &p.effectStack
+}
+
+func initializePlayerInventory(p effects.EffectEntity, r items.Registry) (items.Inventory, error) {
 
 	type startItem struct {
 		name  string
 		count int
 	}
-	inventory := items.NewInventory()
+	inventory := items.NewInventory(p)
 
 	// This is the inventory a new player starts with
 	startItems := []startItem{
-//		{"IronTool", 1},
-//		{"BronzeSword", 1},
-//		{"Workbench", 1},
-//		{"BigCampfire", 3},
+		//{"MysticWandaw", 1},
+		//		{"BronzeSword", 1},
+		//		{"Workbench", 1},
+		//		{"BigCampfire", 3},
 	}
 
 	//--- initialize inventory
@@ -242,6 +255,5 @@ func (p *player) SetGodmode(on bool) {
 }
 
 func (p *player) IsGod() bool {
-	return p.isGod;
+	return p.isGod
 }
-
