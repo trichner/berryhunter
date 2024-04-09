@@ -1,4 +1,4 @@
-FROM node:latest AS builder
+FROM node:10 AS builder
 
 # load dependencies for cacheability
 WORKDIR /app/frontend/

@@ -2,7 +2,7 @@ package cfg
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 )
 
 type Config struct {
@@ -16,7 +16,7 @@ func ReadConfig(filename string) (*Config, error) {
 
 	var err error
 	// read file
-	dat, err := ioutil.ReadFile(filename)
+	dat, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}

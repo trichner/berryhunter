@@ -1,4 +1,4 @@
-FROM golang:1.12 AS go_builder
+FROM golang:1.21 AS go_builder
 
 ENV GO111MODULE=on
 ENV GOPATH=/go
@@ -16,6 +16,7 @@ RUN go build -a -o chieftaind .
 WORKDIR /root/
 RUN /go/src/github.com/trichner/berryhunter/chieftaind/server/genkey.sh
 RUN mv /go/src/github.com/trichner/berryhunter/chieftaind/chieftaind .
+RUN cp /go/src/github.com/trichner/berryhunter/chieftaind/conf.example.json conf.json
 
 #COPY --from=go_builder /go/src/github.com/trichner/berryhunter/chieftaind/chieftaind .
 #COPY $CONF conf.json

@@ -1,6 +1,6 @@
 module github.com/trichner/berryhunter/chieftainapi
 
-go 1.12
+go 1.21
 
 require github.com/trichner/berryhunter/chieftaind v0.0.0-00010101000000-000000000000
 

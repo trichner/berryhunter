@@ -1,23 +1,25 @@
 version: '3'
 services:
-    edge:
-        image: berryhunter-edge
-        depends_on:
-            - berryhunterd
-            - chieftaind
-            - web
-        ports:
-            - "127.0.0.1:2015:2015"
-    berryhunterd:
-        image: berryhunterd
-        depends_on:
-            - chieftaind
-            - web
-        ports:
-            - "127.0.0.1:2000:80"
-    web:
-        image: berryhunter-web
-    chieftaind:
-        image: chieftaind
-        ports:
-            - "127.0.0.1:3080:3080"
+  edge:
+    image: berryhunter-edge
+    depends_on:
+      - berryhunterd
+      - chieftaind
+      - web
+    ports:
+      - "127.0.0.1:8080:8080"
+  berryhunterd:
+    image: berryhunterd
+    depends_on:
+      - chieftaind
+      - web
+    ports:
+      - "127.0.0.1:2080:80"
+  chieftaind:
+    image: chieftaind
+    ports:
+      - "127.0.0.1:3080:3080"
+  web:
+    image: berryhunter-web
+    ports:
+      - "127.0.0.1:4080:80"

@@ -1,21 +1,15 @@
-local.berryhunter.io {
+
+{
+    http_port 8080
+}
+
+http://local.berryhunter.io, http://localhost {
 
     log /dev/stdout
-    tls off
 
-    proxy /game berryhunterd:80/ {
-        transparent
-        websocket
-    }
+    reverse_proxy /game berryhunterd:80/
 
-    proxy /chieftain chieftaind:3080/ {
-        transparent
-        without /chieftain
-    }
+    reverse_proxy /chieftain chieftaind:3080/
 
-    proxy / web:80/ {
-        transparent
-    }
-
-    cors /chieftain http://localhost:2001 http://localhost
+    reverse_proxy / web:80/
 }

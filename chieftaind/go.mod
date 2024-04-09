@@ -1,6 +1,6 @@
 module github.com/trichner/berryhunter/chieftaind
 
-go 1.12
+go 1.21
 
 require (
 	cloud.google.com/go v0.40.0
