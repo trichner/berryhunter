@@ -53,8 +53,14 @@ if (getUrlParameter(Constants.MODE_PARAMETERS.NO_DOCKER)) {
     if (isLocalhost(window.location.hostname)) {
         _database = getUrl('http', 'chieftain');
     } else {
-        _database = 'https://europe-west1-berryhunter-io.cloudfunctions.net/chieftain-api'; 
+        _database = 'https://europe-west1-berryhunter-io.cloudfunctions.net/chieftain-api';
     }
+}
+if (getUrlParameter('dbUrl')) {
+    _database = getUrlParameter('dbUrl');
+}
+if (getUrlParameter('wsUrl')) {
+    _gameServer = getUrlParameter('wsUrl');
 }
 
 export const gameServer = _gameServer;
