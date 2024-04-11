@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/lmittmann/tint"
 	"github.com/trichner/berryhunter/pkg/berryhunter/core"
 	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
@@ -11,12 +12,21 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
 	"github.com/trichner/berryhunter/pkg/berryhunter/wrand"
 	"log"
+	"log/slog"
 	"math/rand"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
+
+	slog.SetDefault(slog.New(
+		tint.NewHandler(os.Stderr, &tint.Options{
+			Level:      slog.LevelDebug,
+			TimeFormat: time.TimeOnly,
+		}),
+	))
 
 	config := loadConf()
 	registry := loadItems("../api/items/")
@@ -75,12 +85,12 @@ func main() {
 
 func bootServer(h http.Handler, port int, path string, dev bool) {
 
-	log.Printf("🦄 Booting server at :%d%s", port, path)
+	slog.Info("🦄 Booting game-server", slog.String("addr", fmt.Sprintf(":%d%s", port, path)))
 	addr := fmt.Sprintf(":%d", port)
 	http.Handle(path, h)
 
 	if dev {
-		log.Print("Using development server.")
+		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("http://localhost:%d?wsUrl=ws://localhost:%d/game", port, port)))
 		http.Handle("/", http.FileServer(http.Dir("./../frontend/dist")))
 	} else {
 		// 'ping' endpoint for liveness probe
