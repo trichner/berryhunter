@@ -6,6 +6,7 @@ import (
 	"github.com/trichner/berryhunter/pkg/chieftain/dao"
 	"github.com/trichner/berryhunter/pkg/chieftain/server"
 	"github.com/trichner/berryhunter/pkg/chieftain/service"
+	"github.com/trichner/berryhunter/pkg/logging"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +16,8 @@ import (
 )
 
 func main() {
+
+	logging.SetupLogging()
 
 	log.Printf("booting chieftain")
 	config := loadConf()
