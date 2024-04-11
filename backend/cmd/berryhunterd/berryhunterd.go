@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/lmittmann/tint"
+	"github.com/mattn/go-isatty"
 	"github.com/trichner/berryhunter/pkg/berryhunter/core"
 	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
@@ -21,12 +22,7 @@ import (
 
 func main() {
 
-	slog.SetDefault(slog.New(
-		tint.NewHandler(os.Stderr, &tint.Options{
-			Level:      slog.LevelDebug,
-			TimeFormat: time.TimeOnly,
-		}),
-	))
+	setupLogging()
 
 	config := loadConf()
 	registry := loadItems("../api/items/")
@@ -81,6 +77,22 @@ func main() {
 	bootServer(g.Handler(), config.Server.Port, config.Server.Path, dev)
 
 	g.Loop()
+}
+
+func setupLogging() {
+
+	if isatty.IsTerminal(os.Stdout.Fd()) {
+		slog.SetDefault(slog.New(
+			tint.NewHandler(os.Stderr, &tint.Options{
+				Level:      slog.LevelDebug,
+				TimeFormat: time.TimeOnly,
+			}),
+		))
+	} else {
+		slog.SetDefault(slog.New(
+			slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}),
+		))
+	}
 }
 
 func bootServer(h http.Handler, port int, path string, dev bool) {
