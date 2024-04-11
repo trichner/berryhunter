@@ -1,11 +1,13 @@
 version: '3'
 services:
   edge:
-    image: berryhunter-edge
+    image: caddy:latest
     depends_on:
       - berryhunterd
       - chieftaind
       - web
+    volumes:
+      - "./Caddyfile.local:/etc/caddy/Caddyfile"
     ports:
       - "127.0.0.1:8080:8080"
   berryhunterd:

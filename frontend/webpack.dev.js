@@ -22,6 +22,7 @@ module.exports = env => {
 			contentBase: path.resolve(__dirname, 'dist'),
 			// Activate Hot Module Replacement (HMR)
 			hot: true,
+			host: '0.0.0.0',
 			port: env.port,
 			proxy: env.proxy ? {
 				'/chieftain': {

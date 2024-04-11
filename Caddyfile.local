@@ -1,15 +1,13 @@
-
 {
-    http_port 8080
+	http_port 8080
 }
 
 http://local.berryhunter.io, http://localhost {
+	log /dev/stdout
 
-    log /dev/stdout
+	reverse_proxy /game berryhunterd:80/
 
-    reverse_proxy /game berryhunterd:80/
+	reverse_proxy /chieftain chieftaind:3080/
 
-    reverse_proxy /chieftain chieftaind:3080/
-
-    reverse_proxy / web:80/
+	reverse_proxy / web:80/
 }
