@@ -28,45 +28,56 @@ func (p *player) updateVitalSigns(dt float32) {
 	vitalSigns := p.VitalSigns()
 
 	c := p.config
+	ef := p.effectStack.Factors()
 
 	// satiety
 	s := vitalSigns.Satiety
 	satietyFraction := c.SatietyLossTickFraction
+	satietyFraction *= ef.SatietyLossTickFraction
 	vitalSigns.Satiety = s.SubFraction(satietyFraction)
 
 	// Are we both starving and freezing?
 	if vitalSigns.BodyTemperature <= 0 && vitalSigns.Satiety.Fraction() <= 0 {
-		p.addHealthFraction(-c.FreezingStarveDamageTickFraction)
-		return;
+		healthFraction := -c.FreezingStarveDamageTickFraction
+		healthFraction *= ef.FreezingStarveDamageTickFraction
+		p.addHealthFraction(healthFraction)
+		return
 	}
 
 	// are we freezing?
 	if vitalSigns.BodyTemperature <= 0 {
 		healthFraction := c.FreezingDamageTickFraction
+		healthFraction *= ef.FreezingDamageTickFraction
 		p.addHealthFraction(-healthFraction)
 		p.statusEffects.Add(model.StatusEffectFreezing)
-		return;
+		return
 	}
 
 	// heal if satiety and temperature are high enough
-	if vitalSigns.Satiety.Fraction() > c.HealthGainSatietyThreshold &&
-		vitalSigns.BodyTemperature.Fraction() > c.HealthGainTemperatureThreshold {
+	satietyThreshold := c.HealthGainSatietyThreshold
+	satietyThreshold *= ef.HealthGainSatietyThreshold
+	TemperatureThreshold := c.HealthGainTemperatureThreshold
+	TemperatureThreshold *= ef.HealthGainTemperatureThreshold
+	if vitalSigns.Satiety.Fraction() > satietyThreshold &&
+		vitalSigns.BodyTemperature.Fraction() > TemperatureThreshold {
 
 		if vitalSigns.Health != vitals.Max {
-
 			healthFraction := c.HealthGainTick
+			healthFraction *= ef.HealthGainTick
 			p.addHealthFraction(healthFraction)
 
 			p.statusEffects.Add(model.StatusEffectRegenerating)
 
 			s := vitalSigns.Satiety
 			satietyFraction := c.HealthGainSatietyLossTickFraction
+			satietyFraction *= ef.HealthGainSatietyLossTickFraction
 			vitalSigns.Satiety = s.SubFraction(satietyFraction)
 		}
 
 	} else if vitalSigns.Satiety.Fraction() <= 0 {
 		// are we starving?
 		healthFraction := c.StarveDamageTickFraction
+		healthFraction *= ef.StarveDamageTickFraction
 		p.addHealthFraction(-healthFraction)
 		p.statusEffects.Add(model.StatusEffectStarving)
 	}

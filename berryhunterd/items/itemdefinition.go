@@ -2,8 +2,9 @@ package items
 
 import (
 	"encoding/json"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/model/constant"
-	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
+	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 )
 
 type EquipSlot int
@@ -32,24 +33,6 @@ type Recipe struct {
 	Tools      []Tool
 }
 
-type Factors struct {
-	Food            float32
-	Damage          float32
-	StructureDamage float32
-	Yield           int
-	MinYield        int
-	DurationInTicks int
-
-	// Placeable/Heater
-	HeatPerTick   uint32
-	HeatRadius    float32
-	Vulnerability float32
-
-	// Resource
-	ReplenishProbability float32
-	Capacity             int
-}
-
 type Body struct {
 	Radius float32
 	Solid  bool
@@ -59,14 +42,38 @@ type Body struct {
 	MaxRadius float32
 }
 
+type EffectsByEvent struct {
+	WhileCarried   []*effects.Effect
+	WhileEquipped  []*effects.Effect
+	OnConsume      []*effects.Effect
+	OnPlacing      []*effects.Effect
+	OnHitMob       []*effects.Effect
+	OnHitResource  []*effects.Effect
+	OnHitPlaceable []*effects.Effect
+	OnHitPlayer    []*effects.Effect
+
+	// For resources:
+	// Applied to the yielding player entity
+	OnYield []*effects.Effect
+	// Applied to the resource entity
+	OnYielded []*effects.Effect
+
+	// For placeables:
+	// Applied to the attacking player entity
+	OnBeingHit []*effects.Effect
+	// Applied to player entities in range of the radiator body
+	OnRadiatorCollision []*effects.Effect
+}
+
 type ItemDefinition struct {
 	ID      ItemID
 	Type    ItemType
 	Name    string
 	Slot    EquipSlot
-	Factors Factors
+	Factors factors.ItemFactors
 	Recipe  *Recipe
 	Body    *Body
+	Effects *EffectsByEvent
 }
 
 type ByID []*ItemDefinition
@@ -81,23 +88,27 @@ type Item struct {
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
-	ID      int    `json:"id"`
-	Type    string `json:"type"`
-	Name    string `json:"name"`
-	Factors struct {
-		Food            float32 `json:"food"`
-		Damage          float32 `json:"damage"`
-		StructureDamage float32 `json:"structureDamage"`
-		Yield           int     `json:"yield"`
-		MinYield        int     `json:"minimumYield"`
-		DurationInS     int     `json:"durationInSeconds"`
-		HeatPerSecond   float32 `json:"heatPerSecond"`
-		HeatRadius      float32 `json:"heatRadius"`
-		Vulnerability   float32 `json:"vulnerability"`
+	ID      int                           `json:"id"`
+	Type    string                        `json:"type"`
+	Name    string                        `json:"name"`
+	Factors factors.ItemFactorsDefinition `json:"factors"`
+	Effects struct {
+		WhileCarried   []string `json:"whileCarried"`
+		WhileEquipped  []string `json:"whileEquipped"`
+		OnConsume      []string `json:"onConsume"`
+		OnPlacing      []string `json:"onPlacing"`
+		OnAttack       []string `json:"onAttack"`
+		OnHitMob       []string `json:"onHitMob"`
+		OnHitResource  []string `json:"onHitResource"`
+		OnHitPlaceable []string `json:"onHitPlaceable"`
+		OnHitPlayer    []string `json:"onHitPlayer"`
 
-		ReplenishProbabilityPerS float32 `json:"replenishProbabilityPerSecond"`
-		Capacity                 int     `json:"capacity"`
-	} `json:"factors"`
+		OnYield   []string `json:"onYield"`
+		OnYielded []string `json:"onYielded"`
+
+		OnBeingHit   []string `json:"onBeingHit"`
+		OnRadiatorCollision []string `json:"onRadiatorCollision"`
+	} `json:"effects"`
 	Slot string `json:"slot"`
 
 	Recipe *struct {
@@ -135,7 +146,7 @@ func shallowItem(name string) Item {
 	return Item{&ItemDefinition{Name: name}}
 }
 
-func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
+func (i *itemDefinition) mapToItemDefinition(r effects.Registry) (*ItemDefinition, error) {
 	slot := namesEnumEquipSlot[i.Slot]
 
 	// parse body
@@ -179,30 +190,59 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		recipe = &Recipe{craftTicks, materials, tools}
 	}
 
+	// Parse effects
+	var effectsByEvent = &EffectsByEvent{}
+	var err error
+	if effectsByEvent.WhileCarried, err = effects.MapAndValidateEffects(r, "WhileCarried", i.Effects.WhileCarried); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.WhileEquipped, err = effects.MapAndValidateEffects(r, "WhileEquipped", i.Effects.WhileEquipped); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnConsume, err = effects.MapAndValidateEffects(r, "OnConsume", i.Effects.OnConsume); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnPlacing, err = effects.MapAndValidateEffects(r, "OnPlacing", i.Effects.OnPlacing); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnHitMob, err = effects.MapAndValidateEffects(r, "OnHitMob", i.Effects.OnHitMob); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnHitPlayer, err = effects.MapAndValidateEffects(r, "OnHitPlayer", i.Effects.OnHitPlayer); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnHitPlaceable, err = effects.MapAndValidateEffects(r, "OnHitPlaceable", i.Effects.OnHitPlaceable); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnHitResource, err = effects.MapAndValidateEffects(r, "OnHitResource", i.Effects.OnHitResource); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnYield, err = effects.MapAndValidateEffects(r, "OnYield", i.Effects.OnYield); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnYielded, err = effects.MapAndValidateEffects(r, "OnYielded", i.Effects.OnYielded); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnBeingHit, err = effects.MapAndValidateEffects(r, "OnBeingHit", i.Effects.OnBeingHit); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnRadiatorCollision, err = effects.MapAndValidateEffects(r, "OnRadiatorCollision", i.Effects.OnRadiatorCollision); err != nil {
+		return nil, err
+	}
+
 	itemType, ok := ItemTypeMap[i.Type]
 	if !ok {
 		itemType = ItemTypeNone
 	}
 
 	return &ItemDefinition{
-		ID:   ItemID(i.ID),
-		Type: itemType,
-		Name: i.Name,
-		Slot: slot,
-		Factors: Factors{
-			Food:                 i.Factors.Food,
-			Damage:               i.Factors.Damage,
-			StructureDamage:      i.Factors.StructureDamage,
-			Yield:                i.Factors.Yield,
-			MinYield:             i.Factors.MinYield,
-			HeatPerTick:          vitals.FractionToAbsPerTick(i.Factors.HeatPerSecond),
-			HeatRadius:           i.Factors.HeatRadius,
-			Vulnerability:        i.Factors.Vulnerability,
-			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
-			ReplenishProbability: i.Factors.ReplenishProbabilityPerS / constant.TicksPerSecond,
-			Capacity:             i.Factors.Capacity,
-		},
-		Recipe: recipe,
-		Body:   body,
+		ID:      ItemID(i.ID),
+		Type:    itemType,
+		Name:    i.Name,
+		Slot:    slot,
+		Factors: factors.MapItemFactors(i.Factors, 0, 0),
+		Recipe:  recipe,
+		Body:    body,
+		Effects: effectsByEvent,
 	}, nil
 }

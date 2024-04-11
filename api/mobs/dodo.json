@@ -23,5 +23,8 @@
   },
   "generator": {
     "weight": 100
+  },
+  "effects": {
+    "OnBeingHit": ["QuickEscape"]
   }
 }

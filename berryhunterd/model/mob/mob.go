@@ -2,14 +2,15 @@ package mob
 
 import (
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/items/mobs"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
 	"log"
-	"math/rand"
 	"math"
+	"math/rand"
 )
 
 var _ = model.MobEntity(&Mob{})
@@ -45,11 +46,12 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 		health:             vitals.Max,
 		definition:         d,
 		damageAura:         damageAura,
-		wanderAcceleration: phy.Vec2f{d.Factors.TurnRate, 0},
+		wanderAcceleration: phy.Vec2f{X: d.Factors.TurnRate, Y: 0},
 		wanderDeltaPhi:     2 * math.Pi * d.Factors.DeltaPhi,
 		// TODO use walkingSpeedPerTick from global config
-		velocity:           0.055 * d.Factors.Speed,
-		statusEffects:      model.NewStatusEffects(),
+		velocity:      0.055 * d.Factors.Speed,
+		statusEffects: model.NewStatusEffects(),
+		effectStack:   effects.NewEffectStack(),
 	}
 	m.Body.Shape().UserData = m
 	return m
@@ -72,6 +74,7 @@ type Mob struct {
 	velocity           float32
 
 	statusEffects model.StatusEffects
+	effectStack   effects.EffectStack
 }
 
 func (m *Mob) StatusEffects() *model.StatusEffects {
@@ -91,6 +94,10 @@ func (m *Mob) MobDefinition() *mobs.MobDefinition {
 	return m.definition
 }
 
+func (m *Mob) EffectStack() *effects.EffectStack {
+	return &m.effectStack
+}
+
 func (m *Mob) Update(dt float32) bool {
 
 	auraCollisions := m.damageAura.Collisions()
@@ -100,8 +107,13 @@ func (m *Mob) Update(dt float32) bool {
 			if p.IsGod() {
 				continue
 			}
-			if m.definition.Factors.DamageFraction != 0 {
-				h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
+
+			p.EffectStack().AddAll(m.MobDefinition().Effects.OnHitPlayer)
+
+			dmgFraction := m.definition.Factors.DamageFraction
+			if dmgFraction != 0 {
+				dmgFraction *= m.effectStack.Factors().DamageFraction
+				h := p.VitalSigns().Health.SubFraction(dmgFraction)
 				p.VitalSigns().Health = h
 				p.StatusEffects().Add(model.StatusEffectDamagedAmbient)
 			}
@@ -116,8 +128,10 @@ func (m *Mob) Update(dt float32) bool {
 	// - calculate collision response on 'horizon' circle and use as 'desired' heading
 
 	// wandering
-	m.heading, m.wanderAcceleration = wander(m.heading, m.wanderAcceleration, m.wanderDeltaPhi, m.rand)
-	pos := m.Position().Add(m.heading.Mult(m.velocity))
+	deltaPhi := m.wanderDeltaPhi * m.effectStack.Factors().DeltaPhi
+	acceleration := m.wanderAcceleration.Mult(m.effectStack.Factors().TurnRate)
+	m.heading, m.wanderAcceleration = wander(m.heading, acceleration, deltaPhi, m.rand)
+	pos := m.Position().Add(m.heading.Mult(m.velocity * m.effectStack.Factors().Speed))
 	m.SetPosition(pos)
 
 	return m.health > 0
@@ -157,7 +171,7 @@ func (m *Mob) Angle() float32 {
 }
 
 func (m *Mob) SetAngle(a float32) {
-	m.heading = phy.NewRotMat2f(a).Mult(phy.Vec2f{-1, 0});
+	m.heading = phy.NewRotMat2f(a).Mult(phy.Vec2f{-1, 0})
 }
 
 func (m *Mob) Health() vitals.VitalSign {
@@ -172,7 +186,14 @@ func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 		vulnerability = 1
 	}
 
-	dmgFraction := item.Factors.Damage * vulnerability
+	vulnerability *= m.effectStack.Factors().Vulnerability
+
+	m.EffectStack().AddAll(item.Effects.OnHitMob)
+	m.EffectStack().AddAll(m.MobDefinition().Effects.OnBeingHit)
+
+	dmgFraction := item.Factors.Damage
+	dmgFraction *= p.EffectStack().Factors().Damage
+	dmgFraction *= vulnerability
 	if dmgFraction > 0 {
 		m.health = m.health.SubFraction(dmgFraction)
 		m.StatusEffects().Add(model.StatusEffectDamaged)

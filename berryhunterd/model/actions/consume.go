@@ -27,7 +27,10 @@ func (a *Consume) Start() {
 		// prevent overflow
 		h := p.VitalSigns().Satiety
 		foodFraction := a.item.Factors.Food
+		foodFraction *= p.EffectStack().Factors().Food
 		p.VitalSigns().Satiety = h.AddFraction(foodFraction)
+
+		p.EffectStack().AddAll(a.item.Effects.OnConsume)
 	}
 	a.ticks = 1
 }
@@ -35,4 +38,3 @@ func (a *Consume) Start() {
 func (*Consume) Type() model.PlayerActionType {
 	return model.PlayerActionConsumeItem
 }
-

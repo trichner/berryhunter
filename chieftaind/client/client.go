@@ -88,7 +88,7 @@ func connect(d Dialer, fh frameHandler) {
 		log.Fatal(err)
 	}
 
-	fh(f)
+	err = fh(f)
 	if err != nil {
 		log.Fatal(err)
 	}

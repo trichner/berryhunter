@@ -1,0 +1,3 @@
+go get github.com/alvaroloes/enumer
+rem Search an run all //go:generate annotations throughout the project and print the found commands in the shell
+go generate -x ./...

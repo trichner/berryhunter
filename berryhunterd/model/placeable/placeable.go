@@ -3,6 +3,7 @@ package placeable
 import (
 	"fmt"
 	"github.com/trichner/berryhunter/api/schema/BerryhunterApi"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
@@ -13,6 +14,11 @@ import (
 
 var _ = model.PlaceableEntity(&Placeable{})
 
+type EffectsByEvent struct {
+	// Applied to the attacking player entity
+	OnBeingHit []*effects.Effect
+}
+
 type Placeable struct {
 	model.BaseEntity
 	item items.Item
@@ -21,19 +27,21 @@ type Placeable struct {
 	radiator      *model.HeatRadiator
 	ticksLeft     int
 	statusEffects model.StatusEffects
+	effectStack   effects.EffectStack
+	effects       *EffectsByEvent
 }
 
 func (p *Placeable) Update(dt float32) {
 	p.ticksLeft -= 1
 
 	// prevent underflow
-	if p.ticksLeft < 0 {
-		p.ticksLeft = 0
+	if (p.ticksLeft - p.effectStack.Factors().DurationInTicks) < 0 {
+		p.ticksLeft = p.effectStack.Factors().DurationInTicks
 	}
 }
 
 func (p *Placeable) Decayed() bool {
-	return p.ticksLeft <= 0 || p.health <= 0
+	return (p.ticksLeft - p.effectStack.Factors().DurationInTicks) <= 0 || p.health <= 0
 }
 
 func (p *Placeable) HeatRadiation() *model.HeatRadiator {
@@ -63,7 +71,11 @@ func (p *Placeable) StatusEffects() *model.StatusEffects {
 	return &p.statusEffects
 }
 
-func NewPlaceable(item items.Item) (*Placeable, error) {
+func (p *Placeable) EffectStack() *effects.EffectStack {
+	return &p.effectStack
+}
+
+func NewPlaceable(item items.Item, bonus struct{DurationInTicks int; HeatRadius float32; HeatPerTick uint32}) (*Placeable, error) {
 
 	if item.ItemDefinition == nil {
 		return nil, fmt.Errorf("No resource provided.")
@@ -90,18 +102,22 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	if item.Factors.HeatPerTick != 0 {
 		radiator = &model.HeatRadiator{}
 		radiator.HeatPerTick = item.Factors.HeatPerTick
+		radiator.HeatPerTick += bonus.HeatPerTick
 		radiator.Radius = item.Factors.HeatRadius
+		radiator.Radius += bonus.HeatRadius
 		heaterBody := phy.NewCircle(phy.VEC2F_ZERO, radiator.Radius)
 		heaterBody.Shape().IsSensor = true
 		heaterBody.Shape().Mask = int(model.LayerHeatCollision)
 		heaterBody.Shape().Group = -1 // no need to collide with other heat sources
 		radiator.Body = heaterBody
+		radiator.OnRadiatorCollision = item.Effects.OnRadiatorCollision
 	}
 
 	// setup the decay time
 	var ticksLeft int = math.MaxInt32
 	if item.Factors.DurationInTicks != 0 {
 		ticksLeft = item.Factors.DurationInTicks
+		ticksLeft += bonus.DurationInTicks
 	}
 
 	base := model.NewBaseEntity(body, BerryhunterApi.EntityTypePlaceable)
@@ -112,6 +128,10 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		radiator:      radiator,
 		ticksLeft:     ticksLeft,
 		statusEffects: model.NewStatusEffects(),
+		effectStack:   effects.NewEffectStack(),
+		effects: &EffectsByEvent{
+			OnBeingHit: item.Effects.OnBeingHit,
+		},
 	}
 	p.Body.Shape().UserData = p
 	return p, nil
@@ -124,7 +144,13 @@ func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 		vulnerability = 1
 	}
 
-	dmgFraction := item.Factors.StructureDamage * vulnerability
+	p.EffectStack().AddAll(item.Effects.OnHitPlaceable)
+	player.EffectStack().AddAll(p.effects.OnBeingHit)
+
+	dmgFraction := item.Factors.StructureDamage
+	dmgFraction *= player.EffectStack().Factors().StructureDamage
+	dmgFraction *= vulnerability
+	dmgFraction *= p.effectStack.Factors().Vulnerability
 	if dmgFraction > 0 {
 		p.health = p.health.SubFraction(dmgFraction)
 		p.StatusEffects().Add(model.StatusEffectDamaged)

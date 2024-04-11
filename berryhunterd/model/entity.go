@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/EngoEngine/ecs"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/items/mobs"
 	"github.com/trichner/berryhunter/berryhunterd/model/vitals"
@@ -54,6 +55,7 @@ type Heater interface {
 type PlaceableEntity interface {
 	Entity
 	StatusEntity
+	effects.EffectEntity
 
 	Decayed() bool
 	Update(dt float32)
@@ -72,6 +74,7 @@ type ResourceEntity interface {
 	Entity
 	Interacter
 	StatusEntity
+	effects.EffectEntity
 
 	Update(dt float32)
 	Resource() *ResourceStock
@@ -83,6 +86,7 @@ type ResourceEntity interface {
 type MobEntity interface {
 	Entity
 	StatusEntity
+	effects.EffectEntity
 
 	MobID() mobs.MobID
 	MobDefinition() *mobs.MobDefinition

@@ -2,14 +2,22 @@ package resource
 
 import (
 	"fmt"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
 	"github.com/trichner/berryhunter/berryhunterd/model"
 	"github.com/trichner/berryhunter/berryhunterd/phy"
-	"math/rand"
 	"log"
+	"math/rand"
 )
 
 var _ = model.ResourceEntity(&Resource{})
+
+type EffectsByEvent struct {
+	// Applied to the yielding player entity
+	OnYield []*effects.Effect
+	// Applied to the resource entity
+	OnYielded []*effects.Effect
+}
 
 type Resource struct {
 	model.BaseEntity
@@ -18,18 +26,25 @@ type Resource struct {
 	rand                    *rand.Rand
 	invReplenishProbability int
 	statusEffects           model.StatusEffects
+	effectStack             effects.EffectStack
+	effects                 *EffectsByEvent
 }
 
 func (r *Resource) replenish(i int) {
 	res := &r.stock
 	res.Available += i
-	if res.Available > res.Capacity {
-		res.Available = res.Capacity
+	capacity := res.Capacity + r.effectStack.Factors().Capacity
+	if res.Available > capacity {
+		res.Available = capacity
 	}
 }
 
 func (r *Resource) StatusEffects() *model.StatusEffects {
 	return &r.statusEffects
+}
+
+func (r *Resource) EffectStack() *effects.EffectStack {
+	return &r.effectStack
 }
 
 func (r *Resource) Resource() *model.ResourceStock {
@@ -39,6 +54,7 @@ func (r *Resource) Resource() *model.ResourceStock {
 func (r *Resource) yield(i int) (yielded int) {
 
 	i -= r.stock.Item.ItemDefinition.Factors.MinYield
+	i -= r.effectStack.Factors().MinYield
 	if i < 1 {
 		return 0
 	}
@@ -61,7 +77,9 @@ func (r *Resource) Update(dt float32) {
 	if res.Item.Factors.ReplenishProbability <= 0 {
 		return
 	}
-	if r.rand.Intn(r.invReplenishProbability) == 0 {
+	invProbability := float32(r.invReplenishProbability)
+	invProbability /= r.effectStack.Factors().ReplenishProbability
+	if r.rand.Intn(int(invProbability)) == 0 {
 		r.replenish(1)
 	}
 }
@@ -94,6 +112,11 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 		rand:                    rand,
 		invReplenishProbability: invReplenishProbability,
 		statusEffects:           model.NewStatusEffects(),
+		effectStack:             effects.NewEffectStack(),
+		effects: &EffectsByEvent{
+			OnYield:   resource.Effects.OnYield,
+			OnYielded: resource.Effects.OnYielded,
+		},
 	}
 	r.Body.Shape().UserData = r
 	return r, nil
@@ -106,10 +129,17 @@ func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 		return
 	}
 
+	yield += p.EffectStack().Factors().Yield
+
 	// resistance might be too high
 	y := r.yield(yield)
 	if y <= 0 {
 		return
 	}
+
+	r.EffectStack().AddAll(item.Effects.OnHitResource)
+	r.EffectStack().AddAll(r.effects.OnYielded)
+	p.EffectStack().AddAll(r.effects.OnYield)
+
 	p.Inventory().AddItem(items.NewItemStack(r.stock.Item, y))
 }

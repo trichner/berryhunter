@@ -2,6 +2,8 @@ package items
 
 import (
 	"fmt"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
+	"log"
 )
 
 const DEFAULT_INVENTORY_CAP = 9
@@ -14,14 +16,16 @@ func (i ItemID) String() string {
 }
 
 type Inventory struct {
-	items []*ItemStack
-	cap   int
+	items        []*ItemStack
+	cap          int
+	effectEntity effects.EffectEntity
 }
 
-func NewInventory() Inventory {
+func NewInventory(p effects.EffectEntity) Inventory {
 	return Inventory{
-		items: make([]*ItemStack, 0, 10),
-		cap:   DEFAULT_INVENTORY_CAP,
+		effectEntity: p,
+		items:        make([]*ItemStack, 0, 10),
+		cap:          DEFAULT_INVENTORY_CAP,
 	}
 }
 
@@ -58,7 +62,7 @@ func (i *Inventory) Items() []*ItemStack {
 
 // Cap returns the maximum amount of item slots
 func (i *Inventory) Cap() int {
-	return i.cap
+	return i.cap + i.effectEntity.EffectStack().Factors().InventoryCap
 }
 
 // Count returns the number of occupied item slots
@@ -85,7 +89,15 @@ func (i *Inventory) SetCap(cap int) {
 // otherwise the item will occupy a new slot if there is a free one
 // if none is free, the item will not be added and AddItem will return
 // false
-func (i *Inventory) AddItem(item *ItemStack) bool {
+func (i *Inventory) AddItem(item *ItemStack) (added bool) {
+
+	defer func() {
+		if added {
+			for n := 0; n < item.Count; n++ {
+				i.effectEntity.EffectStack().AddAll(item.Item.Effects.WhileCarried)
+			}
+		}
+	}()
 
 	if item == nil {
 		return false
@@ -114,7 +126,7 @@ func (i *Inventory) AddItem(item *ItemStack) bool {
 		}
 	}
 
-	if i.cap > len(i.items) {
+	if i.Cap() > len(i.items) {
 		i.items = append(i.items, item)
 		return true
 	}
@@ -185,12 +197,26 @@ func (i *Inventory) ConsumeItem(stack *ItemStack) bool {
 		return false
 	})
 
+	if hasConsumed {
+		err := i.effectEntity.EffectStack().SubtractAll(stack.Item.Effects.WhileCarried)
+		if err != nil {
+			log.Printf("Error while dropping (consuming) item %s: %s", stack.Item.Name, err)
+		}
+	}
+
 	return hasConsumed
 }
 
 // DropAll drops all items of the provided kind.
 func (i *Inventory) DropAll(item Item) {
 	i.iterateItems(item, func(idx int) bool {
+		stack := i.items[idx]
+		for n := 0; n < stack.Count; n++ {
+			err := i.effectEntity.EffectStack().SubtractAll(stack.Item.Effects.WhileCarried)
+			if err != nil {
+				log.Printf("Error while dropping (consuming) item %s: %s", stack.Item.Name, err)
+			}
+		}
 		i.items[idx] = nil
 		return false
 	})
@@ -210,7 +236,7 @@ func (i *Inventory) iterateItems(itemType Item, p itemStackPredicate) {
 // Copy returns a semi-deep copy. It copies the Inventory as well
 // as the items entries but not the item definitions
 func (i *Inventory) Copy() *Inventory {
-	j := NewInventory()
+	j := NewInventory(i.effectEntity)
 	j.cap = i.cap
 	for _, s := range i.items {
 		j.items = append(j.items, s.Copy())

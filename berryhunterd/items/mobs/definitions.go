@@ -3,7 +3,9 @@ package mobs
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/trichner/berryhunter/berryhunterd/effects"
 	"github.com/trichner/berryhunter/berryhunterd/items"
+	"github.com/trichner/berryhunter/berryhunterd/model/factors"
 )
 
 //{
@@ -23,16 +25,8 @@ import (
 
 type MobID uint64
 
-type Factors struct {
-	Vulnerability  float32
-	DamageFraction float32
-	Speed          float32
-	DeltaPhi       float32
-	TurnRate       float32
-}
-
 type Body struct {
-	Radius    float32
+	Radius       float32
 	DamageRadius float32
 }
 
@@ -42,35 +36,38 @@ type Generator struct {
 
 type Drops []*items.ItemStack
 
+type EffectsByEvent struct {
+	OnHitPlayer []*effects.Effect
+	OnBeingHit  []*effects.Effect
+}
+
 type MobDefinition struct {
-	ID      MobID
-	Name    string
-	Type    string
-	Factors Factors
-	Drops   Drops
-	Body Body
+	ID        MobID
+	Name      string
+	Type      string
+	Factors   factors.MobFactors
+	Effects   *EffectsByEvent
+	Drops     Drops
+	Body      Body
 	Generator Generator
 }
 
 type mobDefinition struct {
-	Id      uint64 `json:"id"`
-	Name    string `json:"name"`
-	Type    string `json:"type"`
-	Factors struct {
-		Vulnerability  float32 `json:"vulnerability"`
-		DamageFraction float32 `json:"damageFraction"`
-		Speed          float32 `json:"speed"`
-		DeltaPhi       float32 `json:"deltaPhi"`
-		TurnRate       float32 `json:"turnRate"`
-	} `json:"factors"`
+	Id      uint64                       `json:"id"`
+	Name    string                       `json:"name"`
+	Type    string                       `json:"type"`
+	Factors factors.MobFactorsDefinition `json:"factors"`
+	Effects struct {
+		OnHitPlayer []string `json:"onHitPlayer"`
+		OnBeingHit  []string `json:"onBeingHit"`
+	} `json:"effects"`
 	Drops []struct {
 		Item  string `json:"item"`
 		Count int    `json:"count"`
 	} `json:"drops"`
 	Body struct {
-		Radius    float32 `json:"radius"`
+		Radius       float32 `json:"radius"`
 		DamageRadius float32 `json:"damageRadius"`
-
 	} `json:"body"`
 	Generator struct {
 		Weight int `json:"weight"`
@@ -89,27 +86,32 @@ func parseMobDefinition(data []byte) (*mobDefinition, error) {
 	return &mob, nil
 }
 
-func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, error) {
+func (m *mobDefinition) mapToMobDefinition(r items.Registry, e effects.Registry) (*MobDefinition, error) {
+
+	// Parse effects
+	var effectsByEvent = &EffectsByEvent{}
+	var err error
+	if effectsByEvent.OnHitPlayer, err = effects.MapAndValidateEffects(e, "OnHitPlayer", m.Effects.OnHitPlayer); err != nil {
+		return nil, err
+	}
+	if effectsByEvent.OnBeingHit, err = effects.MapAndValidateEffects(e, "OnBeingHit", m.Effects.OnBeingHit); err != nil {
+		return nil, err
+	}
 
 	mob := &MobDefinition{
-		ID:   MobID(m.Id),
-		Name: m.Name,
-		Type: m.Type,
-		Factors: Factors{
-			Vulnerability:  m.Factors.Vulnerability,
-			DamageFraction: m.Factors.DamageFraction,
-			Speed:          m.Factors.Speed,
-			DeltaPhi:       m.Factors.DeltaPhi,
-			TurnRate:       m.Factors.TurnRate,
-		},
-		Drops: make(Drops, 0, 1),
+		ID:      MobID(m.Id),
+		Name:    m.Name,
+		Type:    m.Type,
+		Factors: factors.MapMobFactors(m.Factors, 0, 0),
+		Drops:   make(Drops, 0, 1),
 		Body: Body{
-			Radius:m.Body.Radius,
-			DamageRadius:m.Body.DamageRadius,
+			Radius:       m.Body.Radius,
+			DamageRadius: m.Body.DamageRadius,
 		},
 		Generator: Generator{
 			Weight: m.Generator.Weight,
 		},
+		Effects: effectsByEvent,
 	}
 
 	// append drops
