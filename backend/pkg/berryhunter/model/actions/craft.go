@@ -1,9 +1,10 @@
 package actions
 
 import (
+	"log"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
-	"log"
 )
 
 func NewCraft(i items.Item, p model.PlayerEntity) *Craft {
@@ -43,7 +44,6 @@ func (c *Craft) Update(dt float32) {
 }
 
 func (c *Craft) done() {
-
 	newItem := items.NewSingleItemStack(c.item)
 	ok := c.p.Inventory().AddItem(newItem)
 	if !ok {
@@ -52,7 +52,6 @@ func (c *Craft) done() {
 }
 
 func (c *Craft) canCraft() bool {
-
 	i := c.item
 	r := i.Recipe
 	inventory := c.p.Inventory()

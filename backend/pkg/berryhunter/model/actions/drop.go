@@ -16,7 +16,6 @@ type Drop struct {
 }
 
 func (a *Drop) Start() {
-
 	if !hasItem(a.p, a.item) {
 		return
 	}

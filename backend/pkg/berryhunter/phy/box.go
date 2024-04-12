@@ -22,14 +22,13 @@ func (b *Box) intersectWithCircle(circle *Circle) bool {
 }
 
 func (b *Box) intersectWithInvCircle(circle *InvCircle) bool {
-	//return true
+	// return true
 	panic("Box collisions not implemented")
 }
 
 var _ = DynamicCollider(&Box{})
 
 func (b *Box) resolveCollisions() {
-
 }
 
 func (b *Box) resolveCollsionWith(c CollisionResolver) Vec2f {
@@ -69,7 +68,6 @@ func (b *Box) ImpaleQuery(s Segment) float32 {
 
 // updates the bounding box according to the size and position of this box
 func (b *Box) updateBB() {
-
 	lower := b.shape.pos.Sub(b.extent)
 	upper := b.shape.pos.Add(b.extent)
 

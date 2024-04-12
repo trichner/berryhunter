@@ -1,13 +1,14 @@
 package sys
 
 import (
+	"log"
+	"math/rand"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/mob"
 	"github.com/trichner/berryhunter/pkg/berryhunter/wrand"
-	"log"
-	"math/rand"
 )
 
 type MobSystem struct {
@@ -34,7 +35,6 @@ func (n *MobSystem) AddEntity(e model.MobEntity) {
 }
 
 func (n *MobSystem) Update(dt float32) {
-
 	for _, mob := range n.mobs {
 		alive := mob.Update(dt)
 		if !alive {
@@ -80,7 +80,7 @@ func (n *MobSystem) Remove(b ecs.BasicEntity) {
 		}
 	}
 	if delete >= 0 {
-		//e := p.players[delete]
+		// e := p.players[delete]
 		n.mobs = append(n.mobs[:delete], n.mobs[delete+1:]...)
 	}
 }

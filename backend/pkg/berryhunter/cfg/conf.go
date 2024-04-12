@@ -11,10 +11,10 @@ type Config struct {
 		Path string `json:"path"`
 	} `json:"server"`
 	Chieftain *struct {
-		Addr *string `json:"addr"`
+		Addr   *string `json:"addr"`
 		PubSub *struct {
 			ProjectId string `json:"projectId"`
-			TopicId string `json:"topicId"`
+			TopicId   string `json:"topicId"`
 		} `json:"pubSub,omitempty"`
 	} `json:"chieftain,omitempty"`
 	Game struct {
@@ -40,7 +40,6 @@ type Config struct {
 
 // reads the config from file
 func ReadConfig(filename string) (*Config, error) {
-
 	var err error
 	// read file
 	dat, err := ioutil.ReadFile(filename)

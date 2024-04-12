@@ -19,7 +19,6 @@ import (
 )
 
 func main() {
-
 	fileGlob := os.Args[1]
 
 	pwd, _ := os.Getwd()
@@ -49,11 +48,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 }
 
 func downloadCompilerTo(path, version, platform string) error {
-
 	var buf bytes.Buffer
 
 	downloadUrl := fmt.Sprintf("https://github.com/google/flatbuffers/releases/download/%s/%s.flatc.binary.zip", version, platform)
@@ -103,7 +100,6 @@ func downloadCompilerTo(path, version, platform string) error {
 }
 
 func compileGoFlatbuffers(compilerPath string, files []string) error {
-
 	slog.Info("compiling flatbuffers", slog.String("files", strings.Join(files, ",")))
 	// flatc --go *.fbs
 
@@ -111,11 +107,9 @@ func compileGoFlatbuffers(compilerPath string, files []string) error {
 	args = append(args, files...)
 
 	return run(compilerPath, args...)
-
 }
 
 func run(prog string, args ...string) error {
-
 	cmd := exec.Command(prog, args...)
 	cmd.Stderr = os.Stderr
 

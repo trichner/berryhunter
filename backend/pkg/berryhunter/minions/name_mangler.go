@@ -5,22 +5,23 @@ import (
 	"math/rand"
 )
 
-var numberSuffix = []string{"st", "nd", "rd"}
-var adjectiveSuffix = []string{"ugly", "hard", "dumb", "crazy", "tall", "lunatic"}
-var customSuffix = []string{
-	"breaker of stones",
-	"father of rocks",
-	"bundle of sticks",
-	"first of his name",
-	"son of crazy dog",
-}
+var (
+	numberSuffix    = []string{"st", "nd", "rd"}
+	adjectiveSuffix = []string{"ugly", "hard", "dumb", "crazy", "tall", "lunatic"}
+	customSuffix    = []string{
+		"breaker of stones",
+		"father of rocks",
+		"bundle of sticks",
+		"first of his name",
+		"son of crazy dog",
+	}
+)
 
 type StringMangler func(s string) (mangled string, next StringMangler)
 
 var DefaultMangler = NewAdjectiveMangler(NewCustomMangler(NewIncrementingNumberMangler(1)))
 
 func NewAdjectiveMangler(next StringMangler) StringMangler {
-
 	return func(s string) (string, StringMangler) {
 		pick := adjectiveSuffix[rand.Intn(len(adjectiveSuffix))]
 
@@ -29,9 +30,7 @@ func NewAdjectiveMangler(next StringMangler) StringMangler {
 }
 
 func NewCustomMangler(next StringMangler) StringMangler {
-
 	return func(s string) (string, StringMangler) {
-
 		pick := customSuffix[rand.Intn(len(customSuffix))]
 		return s + ", " + pick, next
 	}
@@ -50,7 +49,6 @@ func NewIncrementingNumberMangler(i int) StringMangler {
 
 	suffix = fmt.Sprintf(" the %d%s", i, suffix)
 	return func(s string) (string, StringMangler) {
-
 		return s + suffix, NewIncrementingNumberMangler(i + 1)
 	}
 }

@@ -8,7 +8,6 @@ import (
 )
 
 func NewSpectator(pos phy.Vec2f, client model.Client) model.Spectator {
-
 	viewport := phy.NewBox(pos, phy.Vec2f{constant.ViewPortWidth / 2, constant.ViewPortHeight / 2})
 	viewport.Shape().IsSensor = true
 	viewport.Shape().Mask = int(model.LayerViewportCollision)

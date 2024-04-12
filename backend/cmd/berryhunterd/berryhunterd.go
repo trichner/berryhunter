@@ -3,6 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"log/slog"
+	"math/rand"
+	"net/http"
+	"os"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/core"
 	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
@@ -11,20 +17,14 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
 	"github.com/trichner/berryhunter/pkg/berryhunter/wrand"
 	"github.com/trichner/berryhunter/pkg/logging"
-	"log"
-	"log/slog"
-	"math/rand"
-	"net/http"
-	"os"
 )
 
 func main() {
-
 	logging.SetupLogging()
 
 	config := loadConf()
-	registry := loadItems("../api/items/")
-	mobs := loadMobs(registry, "../api/mobs/")
+	itemsRegistry := loadItems()
+	mobsRegistry := loadMobs(itemsRegistry)
 
 	tokens := loadTokens("./tokens.list")
 	log.Printf("👮‍♀️ Read %d tokens.", len(tokens))
@@ -38,7 +38,7 @@ func main() {
 	g, err := core.NewGameWith(
 		rnd.Int63(),
 		core.Config(config),
-		core.Registries(registry, mobs),
+		core.Registries(itemsRegistry, mobsRegistry),
 		core.Tokens(tokens),
 		core.Radius(radius),
 	)
@@ -52,10 +52,10 @@ func main() {
 		g.AddEntity(e)
 	}
 
-	mobList := mobs.Mobs()
+	mobList := mobsRegistry.Mobs()
 
 	if len(mobList) > 0 {
-		// add some mobs
+		// add some mobsRegistry
 		for i := 0; i < 70; i++ {
 			m := newRandomMobEntity(mobList, rnd, radius)
 			g.AddEntity(m)
@@ -78,7 +78,6 @@ func main() {
 }
 
 func bootServer(h http.Handler, port int, path string, dev bool) {
-
 	slog.Info("🦄 Booting game-server", slog.String("addr", fmt.Sprintf(":%d%s", port, path)))
 	addr := fmt.Sprintf(":%d", port)
 	http.Handle(path, h)

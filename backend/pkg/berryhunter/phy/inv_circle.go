@@ -31,7 +31,6 @@ func (c *InvCircle) intersectWithBox(b *Box) bool {
 }
 
 func (c *InvCircle) resolveCollisions() {
-
 	if len(c.collisions) == 0 {
 		return
 	}
@@ -64,7 +63,6 @@ func (c *InvCircle) resolveCollisionWithCircle(other *Circle) Vec2f {
 }
 
 func NewInvCircle(pos Vec2f, radius float32) *InvCircle {
-
 	c := &InvCircle{
 		Radius:               radius,
 		dynamicColliderShape: newDynamicColliderShape(pos),
@@ -80,7 +78,6 @@ func NewInvCircle(pos Vec2f, radius float32) *InvCircle {
 // updates the circles bounding box according to its radius and position.
 // this is a bit of a hack since an inverted circle is not really bounded
 func (c *InvCircle) updateBB() {
-
 	radiusVector := Vec2f{c.Radius * 2, c.Radius * 2}
 	lower := c.Position().Sub(radiusVector)
 	upper := c.Position().Add(radiusVector)

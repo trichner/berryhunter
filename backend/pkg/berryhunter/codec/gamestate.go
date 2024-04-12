@@ -1,12 +1,13 @@
 package codec
 
 import (
+	"log"
+
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
 )
 
 func Vec2fMarshalFlatbuf(builder *flatbuffers.Builder, v phy.Vec2f) flatbuffers.UOffsetT {
@@ -18,7 +19,6 @@ func AabbMarshalFlatbuf(aabb model.AABB, builder *flatbuffers.Builder) flatbuffe
 }
 
 func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	n := len(items)
 	BerryhunterApi.CharacterStartEquipmentVector(builder, n)
 	for _, i := range items {
@@ -29,7 +29,6 @@ func EquipmentMarshalFlatbuf(items []items.Item, builder *flatbuffers.Builder) f
 }
 
 func characterCommonMarshalFlatbuf(builder *flatbuffers.Builder, p model.PlayerEntity) {
-
 	// prepend entity specific things
 	equipment := EquipmentMarshalFlatbuf(p.Equipment().Equipped(), builder)
 	name := builder.CreateString(p.Name())
@@ -63,7 +62,6 @@ func playerActionTypeMarshal(action model.PlayerActionType) BerryhunterApi.Actio
 }
 
 func ongoingActionMarshalFlatbuf(builder *flatbuffers.Builder, action model.PlayerAction) flatbuffers.UOffsetT {
-
 	tr := uint16(action.TicksRemaining())
 	item := action.Item()
 	itemId := byte(item.ItemDefinition.ID)
@@ -71,7 +69,6 @@ func ongoingActionMarshalFlatbuf(builder *flatbuffers.Builder, action model.Play
 }
 
 func StatusEffectsMarshal(builder *flatbuffers.Builder, e model.StatusEntity) flatbuffers.UOffsetT {
-
 	se := e.StatusEffects().Effects()
 	if se == nil || len(se) == 0 {
 		builder.StartVector(1, 0, 0)
@@ -87,7 +84,6 @@ func StatusEffectsMarshal(builder *flatbuffers.Builder, e model.StatusEntity) fl
 
 // general player as seen by other players
 func CharacterEntityFlatbufMarshal(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	// prepend entity specific things
 	characterCommonMarshalFlatbuf(builder, p)
 	return BerryhunterApi.CharacterEnd(builder)
@@ -95,7 +91,6 @@ func CharacterEntityFlatbufMarshal(p model.PlayerEntity, builder *flatbuffers.Bu
 
 // player marshalled for the acting player
 func CharacterMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	characterCommonMarshalFlatbuf(builder, p)
 	// other stuffz
 	vs := p.VitalSigns()
@@ -107,7 +102,6 @@ func CharacterMarshalFlatbuf(p model.PlayerEntity, builder *flatbuffers.Builder)
 }
 
 func SpectatorMarshalFlatbuf(b *flatbuffers.Builder, s model.Spectator) flatbuffers.UOffsetT {
-
 	BerryhunterApi.SpectatorStart(b)
 	BerryhunterApi.SpectatorAddId(b, s.Basic().ID())
 	pos := Vec2fMarshalFlatbuf(b, s.Position())
@@ -116,12 +110,10 @@ func SpectatorMarshalFlatbuf(b *flatbuffers.Builder, s model.Spectator) flatbuff
 }
 
 func ItemStackMarshalFlatbuf(i *items.ItemStack, builder *flatbuffers.Builder, slot uint8) flatbuffers.UOffsetT {
-
 	return BerryhunterApi.CreateItemStack(builder, byte(i.Item.ID), uint32(i.Count), slot)
 }
 
 func InventoryMarshalFlatbuf(inventory *items.Inventory, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	inventoryItems := inventory.Items()
 
 	// only serialize non-nil elements
@@ -143,7 +135,6 @@ func InventoryMarshalFlatbuf(inventory *items.Inventory, builder *flatbuffers.Bu
 
 // MarshalFlatbuf implements FlatbufCodec for GameState
 func (gs *CharacterGameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	entities := EntitiesMarshalFlatbuf(gs.Entities, builder)
 	character := CharacterMarshalFlatbuf(gs.Player, builder)
 	inventory := InventoryMarshalFlatbuf(gs.Player.Inventory(), builder)
@@ -167,7 +158,6 @@ func CharacterGameStateMessageMarshalFlatbuf(builder *flatbuffers.Builder, g *Ch
 
 // MarshalFlatbuf implements FlatbufCodec for GameState
 func (gs *SpectatorGameState) MarshalFlatbuf(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	entities := EntitiesMarshalFlatbuf(gs.Entities, builder)
 	spectator := SpectatorMarshalFlatbuf(builder, gs.Spectator)
 
@@ -187,7 +177,6 @@ func SpectatorGameStateMessageMarshalFlatbuf(builder *flatbuffers.Builder, g *Sp
 
 // EntitiesMarshalFlatbuf marshals a list of Entity interfaces
 func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	n := len(entities)
 
 	offsets := make([]flatbuffers.UOffsetT, n)
@@ -227,7 +216,6 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 // EntityFlatbufMarshal marshals an Entity interface to its corresponding
 // flatbuffer schema
 func ResourceEntityFlatbufMarshal(e model.ResourceEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	statusEffects := StatusEffectsMarshal(builder, e)
 
 	BerryhunterApi.ResourceStart(builder)
@@ -250,7 +238,6 @@ func ResourceEntityFlatbufMarshal(e model.ResourceEntity, builder *flatbuffers.B
 }
 
 func PlaceableEntityFlatbufMarshal(e model.PlaceableEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	statusEffects := StatusEffectsMarshal(builder, e)
 
 	BerryhunterApi.PlaceableStart(builder)

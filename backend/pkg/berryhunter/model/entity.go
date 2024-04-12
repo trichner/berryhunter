@@ -87,8 +87,8 @@ type MobEntity interface {
 	MobID() mobs.MobID
 	MobDefinition() *mobs.MobDefinition
 	Health() vitals.VitalSign
-	//Velocity() phy.Vec2f
-	//SetVelocity(v phy.Vec2f)
+	// Velocity() phy.Vec2f
+	// SetVelocity(v phy.Vec2f)
 	Update(dt float32) bool
 	SetAngle(a float32)
 }

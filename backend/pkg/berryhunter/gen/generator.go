@@ -1,19 +1,21 @@
 package gen
 
 import (
+	"log"
+	"math/rand"
+
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
-	"math/rand"
 )
 
-const gridSize = 100
-const chunkSize float32 = 2.7
+const (
+	gridSize          = 100
+	chunkSize float32 = 2.7
+)
 
 func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.ResourceEntity {
-
 	var steps int64 = int64(radius * 2 / chunkSize)
 	var maximumOffset float32 = 0.9 * chunkSize
 	var chunkQuarterSize float32 = chunkSize / 4.0
@@ -53,7 +55,6 @@ func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.Reso
 }
 
 func chunkRand(x, y int64, rnd *rand.Rand) *rand.Rand {
-
 	seed := rnd.Int63() ^ x ^ (y << 32)
 
 	return rand.New(rand.NewSource(seed))

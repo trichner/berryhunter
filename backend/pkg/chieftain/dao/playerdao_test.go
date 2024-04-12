@@ -3,13 +3,13 @@ package dao
 import (
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewPlayerDao(t *testing.T) {
-
 	p1 := Player{
 		Uuid:    "df8299c1-eb30-462d-9a86-ec7f8d2bca82",
 		Name:    "Jimmy Belair",
@@ -28,7 +28,6 @@ func TestNewPlayerDao(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = ds.Transact(context.Background(), func(ctx context.Context) error {
-
 		playerDao, err := NewPlayerDao()
 		assert.NoError(t, err)
 

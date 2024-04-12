@@ -1,6 +1,10 @@
 package sys
 
 import (
+	"log"
+	"math"
+	"math/rand"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
@@ -9,9 +13,6 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/player"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/spectator"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
-	"math"
-	"math/rand"
 )
 
 type stringSet map[string]struct{}
@@ -54,14 +55,12 @@ func (s *ConnectionStateSystem) AddPlayer(player model.PlayerEntity) {
 }
 
 func randomVectorInCirlce(rmax float32) phy.Vec2f {
-
 	r := rand.Float32() * rmax
 	a := rand.Float32() * 2 * math.Pi
 	return phy.NewPolarVec2f(r, a)
 }
 
 func (s *ConnectionStateSystem) Update(dt float32) {
-
 	// upgrade spectators if they want to join
 	for _, sp := range s.spectators {
 		j := sp.Client().NextJoin()
@@ -92,7 +91,6 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 
 	// downgrade players if they died
 	for _, p := range s.players {
-
 		if p.VitalSigns().Health == 0 {
 			// kill p
 			log.Printf("💀 '%s' died.", p.Name())
@@ -108,11 +106,9 @@ func (s *ConnectionStateSystem) Update(dt float32) {
 
 		}
 	}
-
 }
 
 func (s *ConnectionStateSystem) doFuneral(p model.PlayerEntity) {
-
 	// remove the players placed entities
 	for _, e := range p.OwnedEntities() {
 		s.game.RemoveEntity(e)
@@ -120,7 +116,6 @@ func (s *ConnectionStateSystem) doFuneral(p model.PlayerEntity) {
 }
 
 func (s *ConnectionStateSystem) Remove(e ecs.BasicEntity) {
-
 	s.removeFromPlayers(e)
 	s.removeFromSpectators(e)
 }
@@ -145,7 +140,6 @@ func (s *ConnectionStateSystem) removeFromPlayers(e ecs.BasicEntity) {
 }
 
 func (s *ConnectionStateSystem) manglePlayerName(name string) string {
-
 	mangler := minions.DefaultMangler
 	for s.names.contains(name) {
 		name, mangler = mangler(name)
@@ -154,7 +148,6 @@ func (s *ConnectionStateSystem) manglePlayerName(name string) string {
 }
 
 func sendAcceptMessage(c model.Client) {
-
 	builder := flatbuffers.NewBuilder(32)
 	acceptMsg := codec.AcceptMessageFlatbufMarshal(builder)
 	builder.Finish(acceptMsg)
@@ -162,7 +155,6 @@ func sendAcceptMessage(c model.Client) {
 }
 
 func sendObituaryMessage(c model.Client) {
-
 	builder := flatbuffers.NewBuilder(32)
 	obituaryMsg := codec.ObituaryMessageFlatbufMarshal(builder)
 	builder.Finish(obituaryMsg)

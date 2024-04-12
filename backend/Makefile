@@ -1,9 +1,24 @@
 
 
-.PHONY: dev
+.PHONY: dev build gen fmt
 
-dev:
-	go run ./cmd/berryhunterd -dev
+build: berryhunterd.build
 
-chieftaind.dev:
-	go run ./cmd/chieftaind
+gen:
+	@go generate
+
+fmt:
+	@gofumpt -l -w .
+
+cp-defs:
+	$(info "bundling items and mobs definitions")
+	@find ./pkg/api -type f -name '*.json' -delete
+	@cp -rf ../api/items ../api/mobs ./pkg/api
+
+%.build: cp-defs
+	go build -o $* ./cmd/$*
+
+dev: berryhunterd.dev
+
+%.dev: cp-defs
+	go run ./cmd/$* -dev

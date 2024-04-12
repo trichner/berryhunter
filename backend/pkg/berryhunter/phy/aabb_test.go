@@ -2,12 +2,12 @@ package phy
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAABB_Size(t *testing.T) {
-
 	var bb AABB
 
 	bb = AABB{0, 0, 1, 1}
@@ -18,7 +18,6 @@ func TestAABB_Size(t *testing.T) {
 }
 
 func TestAABB_MinkowskiDiff_positive(t *testing.T) {
-
 	var b1, b2 AABB
 
 	b1 = AABB{0, 0, 2, 2}
@@ -33,8 +32,8 @@ func TestAABB_MinkowskiDiff_positive(t *testing.T) {
 
 	assert.Equal(t, IntersectAabb(&b1, &b2), intersects, "Do intersect")
 }
-func TestAABB_MinkowskiDiff_negative(t *testing.T) {
 
+func TestAABB_MinkowskiDiff_negative(t *testing.T) {
 	var b1, b2 AABB
 
 	b1 = AABB{0, 0, 2, 2}

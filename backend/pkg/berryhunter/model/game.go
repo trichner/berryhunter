@@ -1,11 +1,12 @@
 package model
 
 import (
+	"net/http"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
-	"net/http"
 )
 
 type Game interface {

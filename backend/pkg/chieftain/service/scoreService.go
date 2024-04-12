@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/trichner/berryhunter/pkg/chieftain/dao"
 )
 

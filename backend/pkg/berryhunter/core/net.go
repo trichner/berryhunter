@@ -1,11 +1,12 @@
 package core
 
 import (
+	"log"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
-	"log"
 )
 
 type NetSystem struct {
@@ -16,7 +17,7 @@ type NetSystem struct {
 }
 
 func NewNetSystem(g *game) *NetSystem {
-	//TODO configure path/ports here
+	// TODO configure path/ports here
 	return &NetSystem{game: g}
 }
 
@@ -42,7 +43,6 @@ func (n *NetSystem) AddSpectator(s model.Spectator) {
 }
 
 func (n *NetSystem) Update(dt float32) {
-
 	// assemble game state prototype
 	characterGameState := codec.CharacterGameState{}
 	characterGameState.Tick = n.game.Tick
@@ -63,7 +63,6 @@ func (n *NetSystem) Update(dt float32) {
 }
 
 func (n *NetSystem) playerSendState(p model.PlayerEntity, gs codec.CharacterGameState) {
-
 	var entities []model.Entity
 
 	// find all entities in view
@@ -90,7 +89,6 @@ func (n *NetSystem) playerSendState(p model.PlayerEntity, gs codec.CharacterGame
 }
 
 func (n *NetSystem) spectatorSendState(s model.Spectator, gs codec.SpectatorGameState) {
-
 	var entities []model.Entity
 
 	// find all entities in view

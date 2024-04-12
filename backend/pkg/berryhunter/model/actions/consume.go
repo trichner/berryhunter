@@ -16,7 +16,6 @@ type Consume struct {
 }
 
 func (a *Consume) Start() {
-
 	p := a.p
 	if !hasItem(p, a.item) {
 		return

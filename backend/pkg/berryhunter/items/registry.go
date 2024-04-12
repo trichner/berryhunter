@@ -2,7 +2,7 @@ package items
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io/fs"
 	"os"
 	"path/filepath"
 )
@@ -17,8 +17,46 @@ type Registry interface {
 	Items() []*ItemDefinition
 }
 
-func RegistryFromPaths(f ...string) (*registry, error) {
+func RegistryFromFS(fileSystem fs.FS) (*registry, error) {
+	r := NewRegistry()
 
+	err := fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return fmt.Errorf("Cannot read '%s': %s", path, err)
+		}
+
+		if d.IsDir() {
+			return nil
+		}
+
+		data, err := fs.ReadFile(fileSystem, path)
+		if err != nil {
+			return fmt.Errorf("Cannot read '%s': %s", path, err)
+		}
+		itemParsed, err := parseItemDefinition(data)
+		if err != nil {
+			return fmt.Errorf("Cannot parse '%s': %s", path, err)
+		}
+		item, err := itemParsed.mapToItemDefinition()
+		if err != nil {
+			return fmt.Errorf("Cannot map '%s': %s\n", path, err)
+		}
+		err = r.Add(item)
+		if err != nil {
+			return fmt.Errorf("Cannot add '%s': %s\n", path, err)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r.decorateMaterials()
+
+	return r, nil
+}
+
+func RegistryFromPaths(f ...string) (*registry, error) {
 	r := NewRegistry()
 
 	for _, path := range f {
@@ -31,7 +69,7 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 				return nil
 			}
 
-			data, err := ioutil.ReadFile(path)
+			data, err := os.ReadFile(path)
 			if err != nil {
 				return fmt.Errorf("Cannot read '%s': %s", path, err)
 			}
@@ -49,7 +87,6 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 			}
 			return nil
 		})
-
 		// bail if there was an error
 		if err != nil {
 			return nil, err
@@ -94,7 +131,6 @@ func NewRegistry() *registry {
 }
 
 func (r *registry) Add(i *ItemDefinition) error {
-
 	_, ok := r.items[i.ID]
 	if ok {
 		return fmt.Errorf("Duplicate item ID: %d", i.ID)

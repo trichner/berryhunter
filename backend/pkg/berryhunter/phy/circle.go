@@ -27,7 +27,6 @@ func (c *Circle) intersectWithInvCircle(i *InvCircle) bool {
 }
 
 func (c *Circle) resolveCollisions() {
-
 	if len(c.collisions) == 0 {
 		return
 	}
@@ -56,7 +55,6 @@ func (c *Circle) resolveCollsionWith(collider CollisionResolver) Vec2f {
 }
 
 func (c *Circle) resolveCollisionWithCircle(other *Circle) Vec2f {
-
 	return resolveCircleThomas(c, other)
 }
 
@@ -69,7 +67,6 @@ func (c *Circle) resolveCollisionWithInvCircle(i *InvCircle) Vec2f {
 }
 
 func resolveInvCircle(c *Circle, i *InvCircle) Vec2f {
-
 	if i.Radius < c.Radius {
 		return i.Position().Sub(c.Position())
 	}
@@ -90,8 +87,7 @@ func resolveInvCircle(c *Circle, i *InvCircle) Vec2f {
 }
 
 func resolveCircleThomas(c *Circle, other *Circle) Vec2f {
-
-	//distance := c.pos.Sub(other.pos)
+	// distance := c.pos.Sub(other.pos)
 	distance := other.Position().Sub(c.Position())
 	magnitude := distance.Abs()
 
@@ -121,7 +117,6 @@ func resolveCircleThomas(c *Circle, other *Circle) Vec2f {
 }
 
 func resolveCircleRaoul(circle *Circle, other *Circle) Vec2f {
-
 	// calculate resulting force
 	radii := circle.Radius + other.Radius
 	// calculate required offset to resolve collision
@@ -147,7 +142,6 @@ func NewCircle(pos Vec2f, radius float32) *Circle {
 }
 
 func (circle *Circle) MinkowskiDiff(other *Circle) *Circle {
-
 	r := circle.Radius + other.Radius
 	o := circle.Position().Sub(other.Position())
 
@@ -156,13 +150,11 @@ func (circle *Circle) MinkowskiDiff(other *Circle) *Circle {
 
 // Stabs the shape and returns true if the point lies on the shape
 func (circle *Circle) StabQuery(p Vec2f) bool {
-
 	return circle.Position().Sub(p).AbsSq() < circle.Radius*circle.Radius
 }
 
 // Stabs the shape and returns true if the point lies on the shape
 func (circle *Circle) ImpaleQuery(s Segment) float32 {
-
 	// is the segment already inside?
 	if circle.StabQuery(s.origin) {
 		return 0
@@ -212,7 +204,6 @@ func (circle *Circle) ImpaleQuery(s Segment) float32 {
 
 // updates the circles bounding box according to its radius and position.
 func (circle *Circle) updateBB() {
-
 	radiusVector := Vec2f{circle.Radius, circle.Radius}
 	lower := circle.Position().Sub(radiusVector)
 	upper := circle.Position().Add(radiusVector)

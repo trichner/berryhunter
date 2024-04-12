@@ -11,10 +11,12 @@ const (
 	StatusEffectDamagedAmbient = StatusEffect(BerryhunterApi.StatusEffectDamagedAmbient)
 )
 
-type StatusEffect int
-type StatusEffects struct {
-	effects map[StatusEffect]struct{}
-}
+type (
+	StatusEffect  int
+	StatusEffects struct {
+		effects map[StatusEffect]struct{}
+	}
+)
 
 func NewStatusEffects() StatusEffects {
 	return StatusEffects{

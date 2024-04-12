@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"log"
 	"os"
 	"sort"
+
+	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 )
 
 var helpArgs = map[string]bool{
@@ -15,7 +16,6 @@ var helpArgs = map[string]bool{
 }
 
 func main() {
-
 	path := "./"
 	if len(os.Args) > 1 {
 		arg := os.Args[1]

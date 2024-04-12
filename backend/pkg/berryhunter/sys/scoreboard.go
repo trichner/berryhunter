@@ -4,11 +4,12 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"io"
+	"time"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/minions"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
-	"io"
-	"time"
 )
 
 type Player struct {
@@ -32,7 +33,6 @@ type ScoreboardSystem struct {
 }
 
 func NewScoreboardSystem(g model.Game) *ScoreboardSystem {
-
 	//ccfg := g.Config().ChieftainConfig
 	//var c ScoreboardUpdateClient
 	//
@@ -75,8 +75,7 @@ func (d *ScoreboardSystem) AddSpectator(e model.Spectator) {
 }
 
 func (d *ScoreboardSystem) Update(dt float32) {
-
-	//TODO
+	// TODO
 
 	// only send every 10s
 	if d.g.Ticks()%300 != 0 {
@@ -111,7 +110,7 @@ func (d *ScoreboardSystem) updateChieftain() {
 		players = append(players, Player{
 			Name:  p.Name(),
 			Uuid:  p.Client().UUID().String(),
-			Score: d.g.Ticks() - p.Stats().BirthTick, //TODO will overflow
+			Score: d.g.Ticks() - p.Stats().BirthTick, // TODO will overflow
 		})
 	}
 
@@ -119,12 +118,10 @@ func (d *ScoreboardSystem) updateChieftain() {
 	d.chieftain.Write(&s)
 }
 
-//var uuidNs = uuid.Must(uuid.NewRandom())
-
+// var uuidNs = uuid.Must(uuid.NewRandom())
 var serverId = time.Now().UnixNano()
 
 func id2uuid(id uint64) string {
-
 	idBytes := make([]byte, 8)
 	binary.LittleEndian.PutUint64(idBytes, id)
 
@@ -140,16 +137,17 @@ func id2uuid(id uint64) string {
 func (d *ScoreboardSystem) Remove(e ecs.BasicEntity) {
 	idx := minions.FindBasic(func(i int) model.BasicEntity { return d.players[i] }, len(d.players), e)
 	if idx >= 0 {
-		//e := p.players[idx]
+		// e := p.players[idx]
 		d.players = append(d.players[:idx], d.players[idx+1:]...)
 	}
 
 	idx = minions.FindBasic(func(i int) model.BasicEntity { return d.clients[i] }, len(d.clients), e)
 	if idx >= 0 {
-		//e := p.players[idx]
+		// e := p.players[idx]
 		d.clients = append(d.clients[:idx], d.clients[idx+1:]...)
 	}
 }
+
 func (d *ScoreboardSystem) Close() error {
 	err := d.chieftain.Close()
 	d.g = nil

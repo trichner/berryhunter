@@ -1,12 +1,13 @@
 package client
 
 import (
+	"log"
+
 	"github.com/google/uuid"
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/net"
-	"log"
 )
 
 var _ = model.Client(&client{})
@@ -73,7 +74,6 @@ func (c *client) SendMessage(bytes []byte) error {
 }
 
 func (c *client) routeMessage(msg *BerryhunterApi.ClientMessage) {
-
 	// route message
 	switch msg.BodyType() {
 	case BerryhunterApi.ClientMessageBodyInput:
@@ -124,8 +124,8 @@ func NewClient(c *net.Client) model.Client {
 	})
 
 	c.OnDisconnect(func(o *net.Client) {
-		//TODO channel leak?
-		//newClient.Close()
+		// TODO channel leak?
+		// newClient.Close()
 	})
 	return newClient
 }

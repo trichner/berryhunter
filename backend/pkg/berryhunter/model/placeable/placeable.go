@@ -2,13 +2,14 @@ package placeable
 
 import (
 	"fmt"
+	"log"
+	"math"
+
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/vitals"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
-	"math"
 )
 
 var _ = model.PlaceableEntity(&Placeable{})
@@ -64,7 +65,6 @@ func (p *Placeable) StatusEffects() *model.StatusEffects {
 }
 
 func NewPlaceable(item items.Item) (*Placeable, error) {
-
 	if item.ItemDefinition == nil {
 		return nil, fmt.Errorf("No resource provided.")
 	}

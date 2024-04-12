@@ -9,7 +9,6 @@ import (
 )
 
 func unwrapInput(msg *BerryhunterApi.ClientMessage) *BerryhunterApi.Input {
-
 	i := &BerryhunterApi.Input{}
 	err := fbutil.UnwrapUnion[BerryhunterApi.ClientMessageBody](msg, i)
 	if err != nil {
@@ -50,7 +49,6 @@ func unmarshalInput(fbInput *BerryhunterApi.Input) *model.PlayerInput {
 }
 
 func unwrapJoin(msg *BerryhunterApi.ClientMessage) *BerryhunterApi.Join {
-
 	i := &BerryhunterApi.Join{}
 	err := fbutil.UnwrapUnion[BerryhunterApi.ClientMessageBody](msg, i)
 	if err != nil {
@@ -69,7 +67,6 @@ func unmarshalJoin(j *BerryhunterApi.Join) *model.Join {
 }
 
 func unwrapCheat(msg *BerryhunterApi.ClientMessage) *BerryhunterApi.Cheat {
-
 	i := &BerryhunterApi.Cheat{}
 	err := fbutil.UnwrapUnion[BerryhunterApi.ClientMessageBody](msg, i)
 	if err != nil {
@@ -88,7 +85,6 @@ func unmarshalCheat(c *BerryhunterApi.Cheat) *model.Cheat {
 }
 
 func unwrapChatMessage(msg *BerryhunterApi.ClientMessage) *BerryhunterApi.ChatMessage {
-
 	i := &BerryhunterApi.ChatMessage{}
 	err := fbutil.UnwrapUnion[BerryhunterApi.ClientMessageBody](msg, i)
 	if err != nil {
@@ -107,30 +103,25 @@ func unmarshalChatMessage(c *BerryhunterApi.ChatMessage) *model.ChatMessage {
 }
 
 func InputMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.PlayerInput {
-
 	fbutil.AssertBodyType[BerryhunterApi.ClientMessageBody](msg, BerryhunterApi.ClientMessageBodyInput)
 	return unmarshalInput(unwrapInput(msg))
 }
 
 func JoinMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.Join {
-
 	fbutil.AssertBodyType[BerryhunterApi.ClientMessageBody](msg, BerryhunterApi.ClientMessageBodyJoin)
 	return unmarshalJoin(unwrapJoin(msg))
 }
 
 func CheatMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.Cheat {
-
 	fbutil.AssertBodyType[BerryhunterApi.ClientMessageBody](msg, BerryhunterApi.ClientMessageBodyCheat)
 	return unmarshalCheat(unwrapCheat(msg))
 }
 
 func ChatMessageFlatbufferUnmarshal(msg *BerryhunterApi.ClientMessage) *model.ChatMessage {
-
 	fbutil.AssertBodyType[BerryhunterApi.ClientMessageBody](msg, BerryhunterApi.ClientMessageBodyChatMessage)
 	return unmarshalChatMessage(unwrapChatMessage(msg))
 }
 
 func ClientMessageFlatbufferUnmarshal(bytes []byte) *BerryhunterApi.ClientMessage {
-
 	return BerryhunterApi.GetRootAsClientMessage(bytes, 0)
 }

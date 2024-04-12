@@ -6,7 +6,6 @@ import (
 )
 
 func TestMangler(t *testing.T) {
-
 	name := "Jon"
 
 	mangled, mangler := DefaultMangler(name)

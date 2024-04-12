@@ -2,10 +2,11 @@ package phy
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"math"
 	"math/rand"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type circleIntersectionTestCase struct {
@@ -60,7 +61,6 @@ var circleIntersectionCases []circleIntersectionTestCase = []circleIntersectionT
 }
 
 func randomVector(rand *rand.Rand) Vec2f {
-
 	dir := Vec2f{rand.Float32(), rand.Float32()}.Normalize()
 	return dir.Mult(5 * rand.Float32())
 }
@@ -105,5 +105,4 @@ func TestCircle_ImpaleQuery(t *testing.T) {
 		fmt.Printf("D: %f\n", d)
 		assert.Equal(t, iqt.e, d, "Impale correctly")
 	}
-
 }

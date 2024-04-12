@@ -6,9 +6,10 @@ package net
 import (
 	"bytes"
 	"errors"
-	"github.com/gorilla/websocket"
 	"log"
 	"time"
+
+	"github.com/gorilla/websocket"
 )
 
 const (

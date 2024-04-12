@@ -16,7 +16,6 @@ type Equip struct {
 }
 
 func (a *Equip) Start() {
-
 	if !hasItem(a.p, a.item) {
 		return
 	}

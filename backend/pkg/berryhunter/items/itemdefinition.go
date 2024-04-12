@@ -2,6 +2,7 @@ package items
 
 import (
 	"encoding/json"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/constant"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/vitals"
 )
@@ -156,7 +157,7 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		// map tools list
 		tools := make([]Tool, 0)
 		for _, v := range i.Recipe.Tools {
-			_ = v //TODO
+			_ = v // TODO
 			//entityType, err := mapItemIdentifier(v)
 			//if err != nil {
 			//	return nil, err

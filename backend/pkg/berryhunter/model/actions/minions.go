@@ -1,9 +1,10 @@
 package actions
 
 import (
+	"log"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
-	"log"
 )
 
 func hasItem(p model.PlayerEntity, item items.Item) bool {

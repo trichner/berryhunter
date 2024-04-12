@@ -1,10 +1,11 @@
 package heater
 
 import (
+	"log"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/minions"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
-	"log"
 )
 
 type playerMap map[uint64]*temperatureEntity
@@ -30,7 +31,6 @@ func (*HeaterSystem) Priority() int {
 }
 
 func (h *HeaterSystem) New(w *ecs.World) {
-
 	log.Println("HeaterSystem nominal")
 }
 
@@ -47,7 +47,6 @@ func (f *HeaterSystem) AddHeater(h model.Heater) {
 }
 
 func (f *HeaterSystem) Update(dt float32) {
-
 	for _, t := range f.players {
 		t.temperature = 0
 	}
@@ -63,12 +62,10 @@ func (f *HeaterSystem) Update(dt float32) {
 		bt := t.player.VitalSigns().BodyTemperature.Add(t.temperature)
 		t.player.VitalSigns().BodyTemperature = bt
 	}
-
 }
 
 // applies the inputs to a player
 func (f *HeaterSystem) UpdateHeater(h model.Heater) {
-
 	radiator := h.HeatRadiation()
 	if radiator == nil {
 		return
@@ -85,10 +82,9 @@ func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 		if t == nil {
 			log.Panicf("😱 Player not found in system, not added?")
 		}
-		//TODO Account for radius
+		// TODO Account for radius
 		t.temperature += h.HeatRadiation().HeatPerTick
 	}
-
 }
 
 func (f *HeaterSystem) Remove(b ecs.BasicEntity) {

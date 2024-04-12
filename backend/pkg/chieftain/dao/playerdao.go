@@ -1,14 +1,14 @@
 package dao
 
-// sudo docker run --rm --name mariadb -it -p 127.0.0.1:3306:3306 -e MYSQL_ROOT_PASSWORD=root mariadb:latest
 import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/jmoiron/sqlx"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"time"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Player struct {
@@ -42,8 +42,7 @@ type playerDao struct {
 }
 
 func NewPlayerDao(store DataStore) (PlayerDao, error) {
-
-	return &playerDao{store:store}, nil
+	return &playerDao{store: store}, nil
 }
 
 func ConvertTime(t time.Time) int64 {
@@ -82,13 +81,13 @@ func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, perio
 	now := time.Now()
 	switch period {
 	case OneDay:
-		now = now.AddDate(0,0,-1)
-		break;
+		now = now.AddDate(0, 0, -1)
+		break
 	case OneWeek:
-		now = now.AddDate(0,0,-7)
-		break;
+		now = now.AddDate(0, 0, -7)
+		break
 	case OneMonth:
-		now = now.AddDate(0,0,-30)
+		now = now.AddDate(0, 0, -30)
 	}
 
 	sinceDate := ConvertTime(now)
@@ -98,7 +97,7 @@ func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, perio
 				WHERE updated >= ? 
 				ORDER BY score DESC 
 				LIMIT ?`,
-				sinceDate, limit)
+		sinceDate, limit)
 	return players, err
 }
 
@@ -117,7 +116,7 @@ func (p *playerDao) UpsertPlayer(ctx context.Context, pl Player) error {
 }
 
 func (p *playerDao) mustTx(ctx context.Context) *sqlx.Tx {
-	tx, err :=  p.store.Tx(ctx)
+	tx, err := p.store.Tx(ctx)
 	if err != nil {
 		log.Fatalf("no transaction found: %s", err)
 	}

@@ -3,13 +3,14 @@ package server
 import (
 	"context"
 	"fmt"
+	"log"
+	"net"
+	"time"
+
 	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
 	"github.com/trichner/berryhunter/common/fbutil"
 	"github.com/trichner/berryhunter/pkg/chieftain/dao"
 	"github.com/trichner/berryhunter/pkg/chieftain/framer"
-	"log"
-	"net"
-	"time"
 )
 
 type ConnHandler struct {
@@ -26,7 +27,6 @@ func HandleConn(store dao.DataStore, playerDao dao.PlayerDao, conn net.Conn) err
 }
 
 func (c *ConnHandler) handleConn(conn net.Conn) (err error) {
-
 	// close connections and handle all errors and panics
 	defer func() {
 		if r := recover(); r != nil {
@@ -54,7 +54,6 @@ func (c *ConnHandler) handleConn(conn net.Conn) (err error) {
 }
 
 func (c *ConnHandler) handleFrames(ctx context.Context, f framer.Framer) error {
-
 	for {
 		msg, err := f.ReadMessage()
 		if err != nil {
@@ -74,7 +73,6 @@ func (c *ConnHandler) handleFrames(ctx context.Context, f framer.Framer) error {
 }
 
 func (c *ConnHandler) handleMessage(ctx context.Context, bytes []byte) error {
-
 	log.Printf("rx message")
 	msg := ChieftainApi.GetRootAsClientMessage(bytes, 0)
 	switch msg.BodyType() {
@@ -90,7 +88,6 @@ func (c *ConnHandler) handleMessage(ctx context.Context, bytes []byte) error {
 }
 
 func (c *ConnHandler) handleScoreboard(ctx context.Context, s *ChieftainApi.Scoreboard) error {
-
 	player := &ChieftainApi.ScoreboardPlayer{}
 	for i := 0; i < s.PlayersLength(); i++ {
 		s.Players(player, i)
@@ -98,7 +95,6 @@ func (c *ConnHandler) handleScoreboard(ctx context.Context, s *ChieftainApi.Scor
 		// Logic
 		// 1. find entry with uuid
 		p, err := c.playerDao.FindPlayerByUuid(ctx, string(player.Uuid()))
-
 		if err != nil {
 			return err
 		}

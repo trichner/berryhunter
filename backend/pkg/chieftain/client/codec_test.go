@@ -1,9 +1,10 @@
 package client
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
-	"testing"
 
 	"github.com/google/flatbuffers/go"
 )

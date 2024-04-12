@@ -17,15 +17,16 @@ type DayCycleSystem struct {
 }
 
 func NewDayCycleSystem(g model.Game, cycleTicks uint64, coldFractionNightPerS float32,
-	coldFractionDayPerS float32) *DayCycleSystem {
-
+	coldFractionDayPerS float32,
+) *DayCycleSystem {
 	nightCoolPerTick := vitals.FractionToAbsPerTick(coldFractionNightPerS)
 	dayCoolPerTick := vitals.FractionToAbsPerTick(coldFractionDayPerS)
 	return &DayCycleSystem{
 		g:                g,
 		cycleTicks:       cycleTicks,
 		nightCoolPerTick: nightCoolPerTick,
-		dayCoolPerTick:   dayCoolPerTick}
+		dayCoolPerTick:   dayCoolPerTick,
+	}
 }
 
 func (*DayCycleSystem) Priority() int {
@@ -37,7 +38,6 @@ func (d *DayCycleSystem) AddPlayer(e model.PlayerEntity) {
 }
 
 func (d *DayCycleSystem) Update(dt float32) {
-
 	// is it night?
 	c := d.dayCoolPerTick
 	if d.g.Ticks()%d.cycleTicks > d.cycleTicks/2 {
@@ -58,7 +58,7 @@ func (d *DayCycleSystem) Update(dt float32) {
 func (d *DayCycleSystem) Remove(e ecs.BasicEntity) {
 	idx := minions.FindBasic(func(i int) model.BasicEntity { return d.players[i] }, len(d.players), e)
 	if idx >= 0 {
-		//e := p.players[idx]
+		// e := p.players[idx]
 		d.players = append(d.players[:idx], d.players[idx+1:]...)
 	}
 }

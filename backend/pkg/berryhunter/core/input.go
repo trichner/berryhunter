@@ -1,12 +1,13 @@
 package core
 
 import (
+	"log"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/actions"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
 )
 
 const inputBuffererCount = 3
@@ -34,7 +35,6 @@ func (i *PlayerInputSystem) Priority() int {
 }
 
 func (i *PlayerInputSystem) New(w *ecs.World) {
-
 	// initialize buffers
 	for idx := range i.ibufs {
 		i.ibufs[idx] = NewInputBufferer()
@@ -51,7 +51,6 @@ func (i *PlayerInputSystem) AddPlayer(p model.PlayerEntity) {
 }
 
 func (i *PlayerInputSystem) Update(dt float32) {
-
 	// get all inputs
 	for _, p := range i.players {
 		input := p.Client().NextInput()
@@ -77,7 +76,6 @@ func (i *PlayerInputSystem) Update(dt float32) {
 
 // applies the inputs to a player
 func (i *PlayerInputSystem) updateInput(p model.PlayerEntity, next, last *model.PlayerInput) {
-
 	resolveHandCollisions(p)
 
 	// reset
@@ -91,7 +89,6 @@ func (i *PlayerInputSystem) updateInput(p model.PlayerEntity, next, last *model.
 
 	// do we even have inputs?
 	if next.Movement != nil {
-
 		// we can only move if we are still alive!
 		if p.VitalSigns().Health != 0 {
 			v := input2vec(next)
@@ -99,7 +96,6 @@ func (i *PlayerInputSystem) updateInput(p model.PlayerEntity, next, last *model.
 			next := p.Position().Add(v)
 			p.SetPosition(next)
 		}
-
 	}
 
 	// process actions if available
@@ -129,7 +125,6 @@ func resolveHandCollisions(player model.PlayerEntity) {
 }
 
 func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Action) {
-
 	if action == nil {
 		return
 	}
@@ -196,7 +191,7 @@ func (i *PlayerInputSystem) Remove(b ecs.BasicEntity) {
 		}
 	}
 	if delete >= 0 {
-		//e := p.players[delete]
+		// e := p.players[delete]
 		i.players = append(i.players[:delete], i.players[delete+1:]...)
 	}
 }

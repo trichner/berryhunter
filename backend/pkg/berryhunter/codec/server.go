@@ -30,7 +30,6 @@ type Welcome struct {
 }
 
 func AcceptMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	BerryhunterApi.AcceptStart(builder)
 	accept := BerryhunterApi.AcceptEnd(builder)
 
@@ -38,7 +37,6 @@ func AcceptMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffs
 }
 
 func ObituaryMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	BerryhunterApi.ObituaryStart(builder)
 	accept := BerryhunterApi.ObituaryEnd(builder)
 
@@ -46,7 +44,6 @@ func ObituaryMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOf
 }
 
 func PongMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	BerryhunterApi.PongStart(builder)
 	validToken := BerryhunterApi.PongEnd(builder)
 

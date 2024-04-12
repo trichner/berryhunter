@@ -1,11 +1,12 @@
 package actions
 
 import (
+	"log"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/placeable"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
 )
 
 func NewPlace(i items.Item, p model.PlayerEntity, g model.Game) *Place {
@@ -20,7 +21,6 @@ type Place struct {
 }
 
 func (a *Place) Start() {
-
 	item := a.item
 	if item.Type != items.ItemTypePlaceable {
 
@@ -37,7 +37,6 @@ func (a *Place) Start() {
 	// TODO add collision detection
 
 	e, err := placeable.NewPlaceable(item)
-
 	if err != nil {
 		log.Printf("Cannot place %s: %s", item.Name, err)
 		return

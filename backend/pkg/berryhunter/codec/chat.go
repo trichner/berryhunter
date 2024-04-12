@@ -6,7 +6,6 @@ import (
 )
 
 func EntityMessageFlatbufMarshal(builder *flatbuffers.Builder, id uint64, msg string) flatbuffers.UOffsetT {
-
 	msgOffset := builder.CreateString(msg)
 	BerryhunterApi.EntityMessageStart(builder)
 	BerryhunterApi.EntityMessageAddEntityId(builder, id)

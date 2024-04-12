@@ -6,8 +6,10 @@ import (
 	"io"
 )
 
-const megaByte = 1000 * 1000
-const prefixBytes = 4
+const (
+	megaByte    = 1000 * 1000
+	prefixBytes = 4
+)
 
 type Framer interface {
 	WriteMessage(message []byte) error
@@ -16,7 +18,6 @@ type Framer interface {
 }
 
 func NewFramer(rw io.ReadWriter) (Framer, error) {
-
 	if rw == nil {
 		return nil, fmt.Errorf("reader/writer missing")
 	}
@@ -29,12 +30,10 @@ type framer struct {
 }
 
 func (f *framer) WriteMessage(message []byte) error {
-
 	return writeMessage(f.rw, message)
 }
 
 func (f *framer) ReadMessage() ([]byte, error) {
-
 	return readMessage(f.rw)
 }
 

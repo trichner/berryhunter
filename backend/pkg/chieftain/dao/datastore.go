@@ -3,6 +3,7 @@ package dao
 import (
 	"context"
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -33,7 +34,6 @@ type dataStore struct {
 }
 
 func NewDataStore(dbfile string) (DataStore, error) {
-
 	db, err := sqlx.Connect("sqlite3", dbfile)
 	if err != nil {
 		return nil, err
@@ -69,7 +69,6 @@ func (d *dataStore) Transact(ctx context.Context, t TransactifiedFunc) (err erro
 }
 
 func (d *dataStore) Tx(ctx context.Context) (*sqlx.Tx, error) {
-
 	tx, ok := ctx.Value(txKey).(*sqlx.Tx)
 	if !ok {
 		return nil, fmt.Errorf("no transaction found")

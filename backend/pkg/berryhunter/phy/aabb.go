@@ -47,7 +47,6 @@ func (bb *AABB) Center() Vec2f {
 
 // Translate returns a new AABB translated by f
 func (bb *AABB) Translate(f Vec2f) AABB {
-
 	l := bb.Left + f.X
 	r := bb.Right + f.X
 
@@ -60,7 +59,6 @@ func (bb *AABB) Translate(f Vec2f) AABB {
 // MinkowskiDiff calculates the minkowski difference of two AABBs
 // roughly from here: http://hamaluik.com/posts/simple-aabb-collision-using-minkowski-difference/
 func (bb *AABB) MinkowskiDiff(other AABB) AABB {
-
 	l := bb.Left - other.Right
 	b := bb.Bottom - other.Upper
 
@@ -73,7 +71,6 @@ func (bb *AABB) MinkowskiDiff(other AABB) AABB {
 // ClosestPointOnBounds finds the smallest vector to the
 // bounds of this AABB from the provided vector
 func (bb *AABB) ClosestPointOnBounds(p Vec2f) Vec2f {
-
 	minDist := abs32f(p.X - bb.Left)
 	boundsPoint := Vec2f{bb.Left, p.Y}
 

@@ -31,7 +31,7 @@ func (p *PostUpdateSystem) Update(dt float32) {
 func (p *PostUpdateSystem) Remove(e ecs.BasicEntity) {
 	delete := minions.FindBasic(func(i int) model.BasicEntity { return p.postUpdaters[i] }, len(p.postUpdaters), e)
 	if delete >= 0 {
-		//e := p.players[delete]
+		// e := p.players[delete]
 		p.postUpdaters = append(p.postUpdaters[:delete], p.postUpdaters[delete+1:]...)
 	}
 }

@@ -5,10 +5,11 @@ package server
 import (
 	"context"
 	"crypto/tls"
-	"github.com/trichner/berryhunter/pkg/chieftain/dao"
-	"github.com/trichner/berryhunter/pkg/chieftain/framer"
 	"io"
 	"log"
+
+	"github.com/trichner/berryhunter/pkg/chieftain/dao"
+	"github.com/trichner/berryhunter/pkg/chieftain/framer"
 )
 
 type Server struct {
@@ -26,7 +27,6 @@ func NewServer(store dao.DataStore, playerDao dao.PlayerDao) (*Server, error) {
 type FrameHandler func(ctx context.Context, f framer.Framer) error
 
 func (srv *Server) ListenTls(laddr, certFile, keyFile string) error {
-
 	cer, err := tls.LoadX509KeyPair(certFile, keyFile)
 	if err != nil {
 		return err

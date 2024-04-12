@@ -5,11 +5,15 @@ import (
 	"fmt"
 )
 
-type dynamicShapes []DynamicCollider
-type shapeSet map[DynamicCollider]struct{}
+type (
+	dynamicShapes []DynamicCollider
+	shapeSet      map[DynamicCollider]struct{}
+)
 
-type colliderGrid map[Vec2i][]Collider
-type dynamicColliderGrid map[Vec2i][]DynamicCollider
+type (
+	colliderGrid        map[Vec2i][]Collider
+	dynamicColliderGrid map[Vec2i][]DynamicCollider
+)
 
 const gridWidth = 10
 
@@ -20,7 +24,6 @@ func floor32f(f float32) int {
 
 // NewSpace initializes a new Space
 func NewSpace() *Space {
-
 	return &Space{
 		shapes:     make(shapeSet),
 		gridStatic: make(colliderGrid),
@@ -49,7 +52,6 @@ func (s *Space) getStaticAt(x, y int) []Collider {
 
 // Update runs collision detection over all boxes
 func (s *Space) Update() {
-
 	s.grid = make(dynamicColliderGrid)
 
 	// reset all collisions and dynamic bodies
@@ -71,13 +73,11 @@ func (s *Space) Update() {
 	for shape := range s.shapes {
 		shape.resolveCollisions()
 	}
-
 }
 
 // bruteIntersectShapes calculates collisions of a slice of dynamicShapes
 // with brute force
 func (s *Space) bruteIntersectShapes(statics []Collider, shapes []DynamicCollider) {
-
 	n := len(shapes)
 	// go over all dynamic shapes
 	for i := 0; i < n; i++ {
@@ -130,7 +130,6 @@ func (s *Space) bruteIntersectShapes(statics []Collider, shapes []DynamicCollide
 			current.addCollision(other)
 		}
 	}
-
 }
 
 // AddShape appends a new shape to the existing ones
@@ -152,7 +151,6 @@ func (s *Space) AddStaticShape(c Collider) {
 
 // insert inserts a new shape into the specified grid.
 func (s *Space) insert(c DynamicCollider) {
-
 	bb := c.BoundingBox()
 
 	for x := floor32f(bb.Left / gridWidth); x <= floor32f(bb.Right/gridWidth); x++ {
@@ -164,7 +162,6 @@ func (s *Space) insert(c DynamicCollider) {
 
 // insertAt inserts a shape at the specified x/y chunk coordinates
 func (s *Space) insertAt(p Vec2i, v DynamicCollider) {
-
 	list := s.grid[p]
 	if list == nil {
 		list = make([]DynamicCollider, 0, 4)
@@ -176,7 +173,6 @@ func (s *Space) insertAt(p Vec2i, v DynamicCollider) {
 // insert inserts a new static shape into the specified grid.
 // Note: static shapes may never be removed
 func (s *Space) insertStatic(c Collider) {
-
 	bb := c.BoundingBox()
 
 	for x := floor32f(bb.Left / gridWidth); x <= floor32f(bb.Right/gridWidth); x++ {
@@ -188,7 +184,6 @@ func (s *Space) insertStatic(c Collider) {
 
 // insertStaticAt inserts a static shape at the specified x/y chunk coordinates
 func (s *Space) insertStaticAt(p Vec2i, v Collider) {
-
 	list := s.gridStatic[p]
 	if list == nil {
 		list = make([]Collider, 0, 4)
@@ -199,7 +194,6 @@ func (s *Space) insertStaticAt(p Vec2i, v Collider) {
 
 // String simple string representation of a space
 func (s *Space) String() string {
-
 	var buffer bytes.Buffer
 
 	for v, list := range s.grid {

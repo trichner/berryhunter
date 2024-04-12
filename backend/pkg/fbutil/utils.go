@@ -2,6 +2,7 @@ package fbutil
 
 import (
 	"fmt"
+
 	"github.com/google/flatbuffers/go"
 )
 
@@ -15,7 +16,6 @@ type Unioner[T ~byte] interface {
 }
 
 func UnwrapUnion[T ~byte](msg Unioner[T], b TableInitializer) error {
-
 	unionTable := new(flatbuffers.Table)
 	if msg.Body(unionTable) {
 		b.Init(unionTable.Bytes, unionTable.Pos)
@@ -26,7 +26,6 @@ func UnwrapUnion[T ~byte](msg Unioner[T], b TableInitializer) error {
 }
 
 func AssertBodyType[T ~byte](msg Unioner[T], expected T) error {
-
 	bodyType := msg.BodyType()
 	if bodyType != expected {
 		return fmt.Errorf("illegal union type: %d", expected)

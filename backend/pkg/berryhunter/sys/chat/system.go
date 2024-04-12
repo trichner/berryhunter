@@ -1,11 +1,12 @@
 package chat
 
 import (
+	"log"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
-	"log"
 )
 
 type ChatSystem struct {
@@ -35,7 +36,6 @@ func (p *ChatSystem) Update(dt float32) {
 }
 
 func updatePlayer(p model.PlayerEntity) {
-
 	msg := p.Client().NextChatMessage()
 	if msg == nil {
 		return
@@ -71,7 +71,7 @@ func (p *ChatSystem) Remove(e ecs.BasicEntity) {
 		}
 	}
 	if delete >= 0 {
-		//e := p.players[delete]
+		// e := p.players[delete]
 		p.players = append(p.players[:delete], p.players[delete+1:]...)
 	}
 }

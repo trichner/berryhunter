@@ -3,7 +3,6 @@ package phy
 // CollisionResolver is an interface to resolve collisions
 // via double dispatching
 type CollisionResolver interface {
-
 	// resolveCollsionWith resolves a collision between
 	// itself and another shape
 	// returns the reaction force

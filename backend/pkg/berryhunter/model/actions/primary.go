@@ -19,11 +19,10 @@ type Primary struct {
 }
 
 func (p *Primary) Start() {
-
 	if !hasItem(p.p, p.item) {
 		return
 	}
-	p.p.Hand().Collider.Shape().Mask = -1 //TODO fine grained layers
+	p.p.Hand().Collider.Shape().Mask = -1 // TODO fine grained layers
 	p.p.Hand().Item = p.item
 }
 

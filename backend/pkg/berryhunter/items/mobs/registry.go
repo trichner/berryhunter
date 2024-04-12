@@ -2,10 +2,12 @@ package mobs
 
 import (
 	"fmt"
-	"github.com/trichner/berryhunter/pkg/berryhunter/items"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 )
 
 type mobMap map[MobID]*MobDefinition
@@ -53,8 +55,39 @@ type Registry interface {
 	Mobs() []*MobDefinition
 }
 
-func RegistryFromPaths(r items.Registry, f ...string) (*registry, error) {
+func RegistryFromFS(r items.Registry, fileSystem fs.FS) (*registry, error) {
+	mobs := newRegistry()
 
+	err := fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return fmt.Errorf("cannot read '%s': %w", path, err)
+		}
+
+		if d.IsDir() {
+			return nil
+		}
+
+		data, err := fs.ReadFile(fileSystem, path)
+		if err != nil {
+			return fmt.Errorf("cannot read '%s': %w", path, err)
+		}
+		mobParsed, err := parseMobDefinition(data)
+		if err != nil {
+			return fmt.Errorf("cannot parse '%s': %w", path, err)
+		}
+
+		mob, err := mobParsed.mapToMobDefinition(r)
+		if err != nil {
+			return fmt.Errorf("cannot map '%s': %w\n", path, err)
+		}
+		mobs.add(mob)
+		return nil
+	})
+
+	return mobs, err
+}
+
+func RegistryFromPaths(r items.Registry, f ...string) (*registry, error) {
 	mobs := newRegistry()
 
 	for _, path := range f {
@@ -83,7 +116,6 @@ func RegistryFromPaths(r items.Registry, f ...string) (*registry, error) {
 			mobs.add(mob)
 			return nil
 		})
-
 		// bail if there was an error
 		if err != nil {
 			return nil, err

@@ -5,9 +5,10 @@ package net
 // license that can be found in the LICENSE file.
 
 import (
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/websocket"
 )
 
 // serveWs handles websocket requests from the peer.
@@ -31,7 +32,6 @@ func serveWs(h func(*Client), upgrader *websocket.Upgrader, w http.ResponseWrite
 // WsHandleFunc returns a http.HandleFunc that accepts new ws clients and registers them
 // with the hub.
 func NewHandleFunc(h func(*Client)) http.HandlerFunc {
-
 	upgrader := &websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,

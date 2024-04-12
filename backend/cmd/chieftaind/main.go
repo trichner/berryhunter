@@ -1,22 +1,22 @@
 package main
 
 import (
-	"github.com/trichner/berryhunter/pkg/chieftain/api"
-	"github.com/trichner/berryhunter/pkg/chieftain/cfg"
-	"github.com/trichner/berryhunter/pkg/chieftain/dao"
-	"github.com/trichner/berryhunter/pkg/chieftain/server"
-	"github.com/trichner/berryhunter/pkg/chieftain/service"
-	"github.com/trichner/berryhunter/pkg/logging"
 	"log"
 	"net/http"
 	"os"
 	"path"
 	"strings"
 	"sync"
+
+	"github.com/trichner/berryhunter/pkg/chieftain/api"
+	"github.com/trichner/berryhunter/pkg/chieftain/cfg"
+	"github.com/trichner/berryhunter/pkg/chieftain/dao"
+	"github.com/trichner/berryhunter/pkg/chieftain/server"
+	"github.com/trichner/berryhunter/pkg/chieftain/service"
+	"github.com/trichner/berryhunter/pkg/logging"
 )
 
 func main() {
-
 	logging.SetupLogging()
 
 	log.Printf("booting chieftain")
@@ -74,7 +74,6 @@ func main() {
 }
 
 func loadConf() *cfg.Config {
-
 	configFile := strings.TrimSpace(os.Getenv("CHIEFTAIND_CONF"))
 	if configFile == "" {
 		configFile = "./conf.json"

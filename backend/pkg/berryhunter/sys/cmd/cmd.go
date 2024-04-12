@@ -2,6 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"strconv"
+	"strings"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
@@ -9,9 +13,6 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/minions"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
-	"strconv"
-	"strings"
 )
 
 var commands = map[string]Command{
@@ -42,7 +43,6 @@ var commands = map[string]Command{
 		return nil
 	},
 	"PING": func(g model.Game, p model.PlayerEntity, arg *string) error {
-
 		msg := "PONG"
 		if arg != nil && len(*arg) > 0 {
 			msg += " " + *arg
@@ -58,7 +58,6 @@ var commands = map[string]Command{
 		return nil
 	},
 	"KILL": func(g model.Game, p model.PlayerEntity, arg *string) error {
-
 		target := p
 		if arg != nil && len(*arg) > 0 {
 			id, err := strconv.ParseUint(*arg, 10, 64)
@@ -81,7 +80,6 @@ var commands = map[string]Command{
 		return nil
 	},
 	"WARP": func(g model.Game, p model.PlayerEntity, arg *string) error {
-
 		if arg == nil {
 			return fmt.Errorf("no arguments, usage: 'WARP <X> <Y>'")
 		}
@@ -108,7 +106,6 @@ var commands = map[string]Command{
 		return nil
 	},
 	"GOD": func(g model.Game, p model.PlayerEntity, arg *string) error {
-
 		if arg != nil && *arg == "off" {
 			p.SetGodmode(false)
 		} else {
@@ -118,21 +115,18 @@ var commands = map[string]Command{
 		return nil
 	},
 	"STARVE": func(g model.Game, p model.PlayerEntity, arg *string) error {
-
 		h := p.VitalSigns().Satiety
 		p.VitalSigns().Satiety = h.SubFraction(1.0)
 
 		return nil
 	},
 	"FREEZE": func(g model.Game, p model.PlayerEntity, arg *string) error {
-
 		h := p.VitalSigns().BodyTemperature
 		p.VitalSigns().BodyTemperature = h.SubFraction(1.0)
 
 		return nil
 	},
 	"DAMAGE": func(g model.Game, p model.PlayerEntity, arg *string) error {
-
 		if arg == nil || len(*arg) == 0 {
 			return fmt.Errorf("no argument, usage: 'DAMAGE <percentage>'")
 		}
@@ -164,7 +158,6 @@ func NewCommandSystem(g model.Game, tokens []string) *CommandSystem {
 }
 
 func (*CommandSystem) New(w *ecs.World) {
-
 	log.Println("CommandSystem nominal")
 }
 
@@ -177,7 +170,6 @@ func (c *CommandSystem) AddPlayer(p model.PlayerEntity) {
 }
 
 func (c *CommandSystem) Update(dt float32) {
-
 	// handle cheat commands
 	for _, player := range c.players {
 		cheat := player.Client().NextCheat()
@@ -216,7 +208,6 @@ func (c *CommandSystem) Update(dt float32) {
 }
 
 func (c *CommandSystem) validateToken(token string) bool {
-
 	for _, t := range c.tokens {
 		if t == token {
 			return true
@@ -227,7 +218,6 @@ func (c *CommandSystem) validateToken(token string) bool {
 }
 
 func (c *CommandSystem) Remove(e ecs.BasicEntity) {
-
 	i := minions.FindBasic(func(idx int) model.BasicEntity {
 		return c.players[idx]
 	}, len(c.players), e)

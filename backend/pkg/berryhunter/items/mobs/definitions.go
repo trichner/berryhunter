@@ -3,6 +3,7 @@ package mobs
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 )
 
@@ -89,7 +90,6 @@ func parseMobDefinition(data []byte) (*mobDefinition, error) {
 }
 
 func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, error) {
-
 	mob := &MobDefinition{
 		ID:   MobID(m.Id),
 		Name: m.Name,

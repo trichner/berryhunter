@@ -2,15 +2,15 @@ package gen
 
 import (
 	"fmt"
+	"math/rand"
+	"testing"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
 	"github.com/trichner/berryhunter/pkg/berryhunter/wrand"
-	"math/rand"
-	"testing"
 )
 
 func Test_populate(t *testing.T) {
-
 	rnd := rand.New(rand.NewSource(0x1337))
 	steps := int64(10)
 	for x := int64(0); x < steps; x++ {
@@ -38,7 +38,6 @@ func (*mockRegistry) Items() []*items.ItemDefinition {
 var _ = items.Registry(&mockRegistry{})
 
 func Test_randomEntity(t *testing.T) {
-
 	entities := []staticEntityBody{}
 	entities = append(entities, trees...)
 	entities = append(entities, resources...)
@@ -48,11 +47,9 @@ func Test_randomEntity(t *testing.T) {
 		e := NewRandomEntityFrom(&mockRegistry{}, phy.Vec2f{}, entities, rnd)
 		fmt.Printf("Selected: %v\n", e)
 	}
-
 }
 
 func Test_chooseEnity(t *testing.T) {
-
 	entities := []staticEntityBody{}
 	entities = append(entities, trees...)
 	entities = append(entities, resources...)

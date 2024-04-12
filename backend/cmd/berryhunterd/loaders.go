@@ -2,18 +2,23 @@ package main
 
 import (
 	"bufio"
-	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
-	"github.com/trichner/berryhunter/pkg/berryhunter/items"
-	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
+	"fmt"
 	"log"
+	"log/slog"
 	"os"
 	"sort"
 	"strings"
+
+	aitems "github.com/trichner/berryhunter/pkg/api/items"
+	amobs "github.com/trichner/berryhunter/pkg/api/mobs"
+	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
+	"github.com/trichner/berryhunter/pkg/berryhunter/items"
+	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 )
 
 // loadMobs parses the mob definitions from the definition files
-func loadMobs(r items.Registry, path string) mobs.Registry {
-	registry, err := mobs.RegistryFromPaths(r, path)
+func loadMobs(r items.Registry) mobs.Registry {
+	registry, err := mobs.RegistryFromFS(r, amobs.Mobs)
 	if err != nil {
 
 		log.Printf("Error: %s", err)
@@ -21,35 +26,34 @@ func loadMobs(r items.Registry, path string) mobs.Registry {
 	}
 
 	mobList := registry.Mobs()
-	log.Printf("Loaded %d mob definitions:", len(mobList))
+	slog.Info("Loaded mob definitions", slog.Int("count", len(mobList)))
 	sort.Sort(mobs.ByID(mobList))
 	for _, m := range mobList {
-		log.Printf("%3d: %s (%s)", m.ID, m.Name, m.Type)
+		slog.Debug(fmt.Sprintf("%3d: %s (%s)", m.ID, m.Name, m.Type))
 	}
 	return registry
 }
 
 // loadItems parses the item definitions from the definition files
-func loadItems(path string) items.Registry {
-	registry, err := items.RegistryFromPaths(path)
+func loadItems() items.Registry {
+	// registry, err := items.RegistryFromPaths(path)
+	registry, err := items.RegistryFromFS(aitems.Items)
 	if err != nil {
-
-		log.Printf("Error: %s", err)
+		slog.Error("Error: %s", err)
 		os.Exit(1)
 	}
 
 	itemList := registry.Items()
-	log.Printf("Loaded %d item definitions:", len(itemList))
+	slog.Info("Loaded item definitions", slog.Int("count", len(itemList)))
 	sort.Sort(items.ByID(itemList))
 	for _, i := range itemList {
-		log.Printf("%3d: %s (%d)", i.ID, i.Name, i.Type)
+		slog.Debug(fmt.Sprintf("%3d: %s (%d)", i.ID, i.Name, i.Type))
 	}
 	return registry
 }
 
 // loadConf parses the config file
 func loadConf() *cfg.Config {
-
 	configFile := strings.TrimSpace(os.Getenv("BERRYHUNTERD_CONF"))
 	if configFile == "" {
 		configFile = "./conf.json"
@@ -62,7 +66,6 @@ func loadConf() *cfg.Config {
 }
 
 func loadTokens(tokenFile string) []string {
-
 	f, err := os.Open(tokenFile)
 	if err != nil {
 		log.Printf("Cannot read '%s': %s", tokenFile, err)

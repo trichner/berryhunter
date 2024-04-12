@@ -7,7 +7,6 @@ import (
 )
 
 func ScoreboardFlatbufMarshal(builder *flatbuffers.Builder, scoreboard model.Scoreboard) flatbuffers.UOffsetT {
-
 	tick := scoreboard.Tick
 
 	n := len(scoreboard.Players)

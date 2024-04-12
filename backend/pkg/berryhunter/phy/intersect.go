@@ -9,7 +9,6 @@ type Intersector interface {
 
 // IntersectAabb tests if two AABBs intersect
 func IntersectAabb(a *AABB, b *AABB) bool {
-
 	if a.Right < b.Left {
 		return false // a is left of b
 	}
@@ -31,7 +30,6 @@ func IntersectAabb(a *AABB, b *AABB) bool {
 
 // IntersectCircles tests if two circles intersect
 func IntersectCircles(a *Circle, b *Circle) bool {
-
 	d := a.Position().Sub(b.Position()).AbsSq()
 	r := a.Radius + b.Radius
 	return d < r*r
@@ -41,7 +39,6 @@ func IntersectCircles(a *Circle, b *Circle) bool {
 // Note that the circle must have a smaller radius than the
 // inverted circle for this to make any sense
 func IntersectCircleInvCircle(a *Circle, b *InvCircle) bool {
-
 	if a.Radius > b.Radius {
 		return true
 	}
@@ -53,7 +50,6 @@ func IntersectCircleInvCircle(a *Circle, b *InvCircle) bool {
 // ArbiterShapes tests if two dynamicShapes can collide based on their
 // respective Group and Layer. Returns true if they can collide.
 func ArbiterShapes(a Collider, b Collider) bool {
-
 	as := a.Shape()
 	bs := b.Shape()
 	if as.Group != 0 && as.Group == bs.Group {

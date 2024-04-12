@@ -14,7 +14,6 @@ type Player struct {
 type Scoreboard []Player
 
 func clientMessageWrapFlatbufMarshal(builder *flatbuffers.Builder, body flatbuffers.UOffsetT, bodyType byte) flatbuffers.UOffsetT {
-
 	ChieftainApi.ClientMessageStart(builder)
 	ChieftainApi.ClientMessageAddBodyType(builder, bodyType)
 	ChieftainApi.ClientMessageAddBody(builder, body)
@@ -22,7 +21,6 @@ func clientMessageWrapFlatbufMarshal(builder *flatbuffers.Builder, body flatbuff
 }
 
 func playerMarshal(builder *flatbuffers.Builder, p *Player) flatbuffers.UOffsetT {
-
 	uuid := builder.CreateString(p.Uuid)
 	name := builder.CreateString(p.Name)
 
@@ -34,7 +32,6 @@ func playerMarshal(builder *flatbuffers.Builder, p *Player) flatbuffers.UOffsetT
 }
 
 func ScoreBoardMarshal(w *Scoreboard) []byte {
-
 	builder := flatbuffers.NewBuilder(64)
 
 	nplayers := len(*w)

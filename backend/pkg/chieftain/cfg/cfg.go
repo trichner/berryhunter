@@ -13,7 +13,6 @@ type Config struct {
 
 // reads the config from file
 func ReadConfig(filename string) (*Config, error) {
-
 	var err error
 	// read file
 	dat, err := os.ReadFile(filename)

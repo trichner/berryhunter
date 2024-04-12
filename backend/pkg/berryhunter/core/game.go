@@ -2,6 +2,13 @@ package core
 
 import (
 	"fmt"
+	"log"
+	"math/rand"
+	"net/http"
+	"sort"
+	"sync/atomic"
+	"time"
+
 	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
@@ -19,12 +26,6 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/sys/cmd"
 	"github.com/trichner/berryhunter/pkg/berryhunter/sys/heater"
 	"github.com/trichner/berryhunter/pkg/berryhunter/sys/statuseffects"
-	"log"
-	"math/rand"
-	"net/http"
-	"sort"
-	"sync/atomic"
-	"time"
 )
 
 type entitiesMap map[uint64]model.BasicEntity
@@ -48,7 +49,6 @@ type game struct {
 var _ = model.Game(&game{})
 
 func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
-
 	gc := &cfg.GameConfig{
 		Radius: 20,
 		Tokens: []string{},
@@ -155,7 +155,6 @@ func (g *game) Mobs() mobs.Registry {
 }
 
 func (g *game) Handler() http.Handler {
-
 	return net.NewHandleFunc(func(c *net.Client) {
 		client := client.NewClient(c)
 		g.sendWelcomeMessage(client)
@@ -166,12 +165,10 @@ func (g *game) Handler() http.Handler {
 			log.Printf("😱 Join queue full! Dropping client.")
 			client.Close()
 		}
-
 	})
 }
 
 func (g *game) Loop() {
-
 	//---- run game loop
 	tickrate := time.Second / constant.TicksPerSecond
 	log.Printf("Starting loop with %d tps", constant.TicksPerSecond)
@@ -188,7 +185,6 @@ func (g *game) Config() *cfg.GameConfig {
 }
 
 func (g *game) GetEntity(id uint64) (model.BasicEntity, error) {
-
 	e, ok := g.entities[id]
 	if !ok {
 		return nil, fmt.Errorf("entity with id %d not found", id)
@@ -202,7 +198,6 @@ func (g *game) RemoveEntity(e ecs.BasicEntity) {
 }
 
 func (g *game) AddEntity(e model.BasicEntity) {
-
 	g.entities[e.Basic().ID()] = e
 
 	switch v := e.(type) {
@@ -222,10 +217,8 @@ func (g *game) AddEntity(e model.BasicEntity) {
 }
 
 func (g *game) addSpectator(e model.Spectator) {
-
 	// Loop over all Systems
 	for _, system := range g.Systems() {
-
 		// Use a type-switch to figure out which System is which
 		switch s := system.(type) {
 
@@ -243,10 +236,8 @@ func (g *game) addSpectator(e model.Spectator) {
 }
 
 func (g *game) addMobEntity(e model.MobEntity) {
-
 	// Loop over all Systems
 	for _, system := range g.Systems() {
-
 		// Use a type-switch to figure out which System is which
 		switch s := system.(type) {
 
@@ -266,7 +257,6 @@ func (g *game) addMobEntity(e model.MobEntity) {
 func (g *game) addPlaceableEntity(p model.PlaceableEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
-
 		// Use a type-switch to figure out which System is which
 		switch s := system.(type) {
 
@@ -292,7 +282,6 @@ func (g *game) addPlaceableEntity(p model.PlaceableEntity) {
 func (g *game) addEntity(e model.Entity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
-
 		// Use a type-switch to figure out which System is which
 		switch s := system.(type) {
 
@@ -308,7 +297,6 @@ func (g *game) addEntity(e model.Entity) {
 func (g *game) addResourceEntity(e model.ResourceEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
-
 		// Use a type-switch to figure out which System is which
 		switch s := system.(type) {
 
@@ -328,7 +316,6 @@ func (g *game) addResourceEntity(e model.ResourceEntity) {
 func (g *game) addPlayer(p model.PlayerEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
-
 		// Use a type-switch to figure out which System is which
 		switch s := system.(type) {
 		case *sys.PhysicsSystem:
@@ -360,7 +347,6 @@ func (g *game) addPlayer(p model.PlayerEntity) {
 const stepMillis = 33.0
 
 func (g *game) update() {
-
 	// fixed 33ms steps
 	beforeMillis := time.Now().UnixNano() / 1000000
 
@@ -390,7 +376,6 @@ func (g *game) sendWelcomeMessage(c model.Client) {
 }
 
 func (g *game) printSystems() {
-
 	systems := g.World.Systems()
 	sort.Sort(ByPriority(systems))
 
@@ -411,7 +396,6 @@ func (b ByPriority) Len() int {
 }
 
 func (b ByPriority) Less(i, j int) bool {
-
 	pi := 0
 	if p, ok := b[i].(ecs.Prioritizer); ok {
 		pi = p.Priority()

@@ -3,11 +3,12 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"github.com/trichner/berryhunter/pkg/chieftain/dao"
-	"github.com/trichner/berryhunter/pkg/chieftain/service"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/trichner/berryhunter/pkg/chieftain/dao"
+	"github.com/trichner/berryhunter/pkg/chieftain/service"
 )
 
 func NewRouter(ds dao.DataStore, s service.ScoreService) http.Handler {
@@ -21,7 +22,6 @@ func NewRouter(ds dao.DataStore, s service.ScoreService) http.Handler {
 
 func wrapInTransaction(ds dao.DataStore, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		err := ds.Transact(r.Context(), func(ctx context.Context) error {
 			r = r.WithContext(ctx)
 			next.ServeHTTP(w, r)
@@ -41,7 +41,6 @@ func GetPing() http.HandlerFunc {
 }
 
 func GetHighScoresHandler(s service.ScoreService) http.HandlerFunc {
-
 	return func(w http.ResponseWriter, r *http.Request) {
 		scores, err := s.ScoresPerPeriod(r.Context(), 1)
 		if err != nil {
@@ -56,7 +55,6 @@ func GetHighScoresHandler(s service.ScoreService) http.HandlerFunc {
 }
 
 func GetScoreboardHandler(s service.ScoreService) http.HandlerFunc {
-
 	return func(w http.ResponseWriter, r *http.Request) {
 		scores, err := s.ScoresPerPeriod(r.Context(), 10)
 		if err != nil {

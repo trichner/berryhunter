@@ -2,9 +2,10 @@ package phy
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type testCaseCircle struct {
@@ -12,7 +13,6 @@ type testCaseCircle struct {
 }
 
 func TestSpace_AddShape(t *testing.T) {
-
 	circles := []testCaseCircle{
 		{10, 10, 5},
 		{1, 1, 1},
@@ -28,8 +28,8 @@ func TestSpace_AddShape(t *testing.T) {
 
 	fmt.Printf("Grid:\n%s\n", s)
 
-	//found := shape.getAt(shape.grid, 1, 1)
-	//assert.Equal(t, 1, len(found), "Find a shape")
+	// found := shape.getAt(shape.grid, 1, 1)
+	// assert.Equal(t, 1, len(found), "Find a shape")
 
 	s.Update()
 
@@ -42,7 +42,6 @@ func TestSpace_AddShape(t *testing.T) {
 }
 
 func BenchmarkSpace_Update(b *testing.B) {
-
 	s := NewSpace()
 	for i := 0; i < b.N; i++ {
 		x := float32(rand.Intn(100))
@@ -57,5 +56,4 @@ func BenchmarkSpace_Update(b *testing.B) {
 }
 
 func TestSpace_AddStaticShape(t *testing.T) {
-
 }

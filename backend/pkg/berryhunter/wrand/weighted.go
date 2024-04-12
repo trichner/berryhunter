@@ -11,7 +11,6 @@ type Choice struct {
 }
 
 func NewWeightedChoice(choices []Choice) *weightedChoice {
-
 	wc := &weightedChoice{choices: choices}
 
 	totals := []int{}
@@ -35,8 +34,8 @@ type weightedChoice struct {
 }
 
 func (wc *weightedChoice) Choose(rand *rand.Rand) interface{} {
-	if (wc.runningTotal == 0) {
-		return nil;
+	if wc.runningTotal == 0 {
+		return nil
 	}
 	rnd := rand.Intn(wc.runningTotal)
 	i := sort.Search(len(wc.totals), func(i int) bool { return wc.totals[i] >= rnd })

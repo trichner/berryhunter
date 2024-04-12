@@ -4,9 +4,10 @@ package client
 
 import (
 	"crypto/tls"
-	"github.com/trichner/berryhunter/pkg/chieftain/framer"
 	"io"
 	"log"
+
+	"github.com/trichner/berryhunter/pkg/chieftain/framer"
 )
 
 type Client struct {
@@ -21,9 +22,8 @@ type Conn interface {
 type Dialer func() (Conn, error)
 
 func Connect(addr string) (*Client, error) {
-
 	conf := &tls.Config{
-		//TODO(Thomas) for debugging...
+		// TODO(Thomas) for debugging...
 		InsecureSkipVerify: true,
 	}
 
@@ -34,7 +34,6 @@ func Connect(addr string) (*Client, error) {
 }
 
 func ConnectWithDialer(d Dialer) (*Client, error) {
-
 	c := &Client{
 		tx:   make(chan *Scoreboard, 128),
 		done: make(chan struct{}),
@@ -42,7 +41,6 @@ func ConnectWithDialer(d Dialer) (*Client, error) {
 
 	go func() {
 		connect(d, func(f framer.Framer) error {
-
 			// write pump
 			for {
 				msg, ok := <-c.tx
@@ -76,7 +74,6 @@ func (c *Client) Close() error {
 type frameHandler func(f framer.Framer) error
 
 func connect(d Dialer, fh frameHandler) {
-
 	conn, err := d()
 	if err != nil {
 		log.Fatal(err)

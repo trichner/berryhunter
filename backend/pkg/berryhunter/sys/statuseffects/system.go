@@ -36,7 +36,7 @@ func (p *StatusEffectsSystem) Update(dt float32) {
 func (p *StatusEffectsSystem) Remove(e ecs.BasicEntity) {
 	delete := minions.FindBasic(func(i int) model.BasicEntity { return p.entities[i].b }, len(p.entities), e)
 	if delete >= 0 {
-		//e := p.players[delete]
+		// e := p.players[delete]
 		p.entities = append(p.entities[:delete], p.entities[delete+1:]...)
 	}
 }

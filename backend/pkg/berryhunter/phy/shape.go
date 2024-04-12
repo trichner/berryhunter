@@ -115,11 +115,9 @@ func (c *colliderShape) resetCollisions() {
 }
 
 func (c *colliderShape) resolveFancyCollisions() {
-
 }
 
 func (c *colliderShape) resolveFancyCollision(other Collider) Vec2f {
-
 	// TODO
 	return VEC2F_ZERO
 }

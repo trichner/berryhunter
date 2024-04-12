@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFramer_ReadMessage(t *testing.T) {
-	buf := bytes.NewBuffer(make([]byte,0, 128))
+	buf := bytes.NewBuffer(make([]byte, 0, 128))
 
 	framer, err := NewFramer(buf)
 
@@ -36,4 +37,3 @@ func TestFramer_ReadMessage(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, msg2, rx)
 }
-

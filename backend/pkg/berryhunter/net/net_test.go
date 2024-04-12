@@ -26,7 +26,6 @@ func OnConnected(c *Client) {
 }
 
 func TestClient_Run(t *testing.T) {
-
 	http.HandleFunc("/ws", NewHandleFunc(OnConnected))
 
 	err := http.ListenAndServe(":3000", nil)

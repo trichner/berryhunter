@@ -2,13 +2,13 @@ package items
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParseRecipe(t *testing.T) {
-
 	data, err := ioutil.ReadFile("test-item.json")
 	assert.NoError(t, err, "Should read file just fine.")
 
@@ -19,7 +19,6 @@ func TestParseRecipe(t *testing.T) {
 }
 
 func TestMapRecipe(t *testing.T) {
-
 	data, err := ioutil.ReadFile("test-item.json")
 	assert.NoError(t, err, "Should read file just fine.")
 
@@ -33,7 +32,6 @@ func TestMapRecipe(t *testing.T) {
 }
 
 func TestCreateRegistry(t *testing.T) {
-
 	r := RegistryFromPaths("../../api/items/")
 	assert.NotNil(t, r, "registry should be defined")
 	assert.NotEmpty(t, r.Items(), "Should have some items.")

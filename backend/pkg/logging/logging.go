@@ -1,15 +1,15 @@
 package logging
 
 import (
-	"github.com/lmittmann/tint"
-	"github.com/mattn/go-isatty"
 	"log/slog"
 	"os"
 	"time"
+
+	"github.com/lmittmann/tint"
+	"github.com/mattn/go-isatty"
 )
 
 func SetupLogging() {
-
 	if isatty.IsTerminal(os.Stdout.Fd()) {
 		slog.SetDefault(slog.New(
 			tint.NewHandler(os.Stderr, &tint.Options{

@@ -1,15 +1,16 @@
 package mob
 
 import (
+	"log"
+	"math"
+	"math/rand"
+
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/vitals"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
-	"math"
-	"math/rand"
 )
 
 var _ = model.MobEntity(&Mob{})
@@ -92,7 +93,6 @@ func (m *Mob) MobDefinition() *mobs.MobDefinition {
 }
 
 func (m *Mob) Update(dt float32) bool {
-
 	auraCollisions := m.damageAura.Collisions()
 	for c := range auraCollisions {
 		p, ok := c.Shape().UserData.(model.PlayerEntity)
@@ -108,7 +108,7 @@ func (m *Mob) Update(dt float32) bool {
 		}
 	}
 
-	//TODO:
+	// TODO:
 	// A: Wandering
 	// - http://natureofcode.com/book/chapter-6-autonomous-agents/
 	// B: Environment Awareness

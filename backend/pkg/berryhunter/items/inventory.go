@@ -86,7 +86,6 @@ func (i *Inventory) SetCap(cap int) {
 // if none is free, the item will not be added and AddItem will return
 // false
 func (i *Inventory) AddItem(item *ItemStack) bool {
-
 	if item == nil {
 		return false
 	}
@@ -126,7 +125,6 @@ func (i *Inventory) AddItem(item *ItemStack) bool {
 // available in the inventory. Returns true if all are present, otherwise
 // false
 func (i *Inventory) CanConsumeItems(stacks []*ItemStack) bool {
-
 	canConsume := true
 	for _, s := range stacks {
 		canConsume = canConsume && i.CanConsume(s)
@@ -141,7 +139,6 @@ func (i *Inventory) CanConsumeItems(stacks []*ItemStack) bool {
 // CanConsume checks if an ItemStack is available in the inventory or not.
 // Returns true if available, otherwise false.
 func (i *Inventory) CanConsume(stack *ItemStack) bool {
-
 	canConsume := false
 	i.iterateItems(stack.Item, func(idx int) bool {
 		if i.items[idx].Count >= stack.Count {
@@ -158,7 +155,6 @@ type itemStackPredicate func(i int) bool
 // it will skip items that are not available.
 // Returns true if all items were consumed, otherwise false.
 func (i *Inventory) ConsumeItems(stacks []*ItemStack) bool {
-
 	allConsumed := true
 	for _, s := range stacks {
 		allConsumed = allConsumed && i.ConsumeItem(s)
@@ -170,7 +166,6 @@ func (i *Inventory) ConsumeItems(stacks []*ItemStack) bool {
 // ConsumeItem removes a single ItemStack from the inventory.
 // Returns true if it was available, otherwise false
 func (i *Inventory) ConsumeItem(stack *ItemStack) bool {
-
 	hasConsumed := false
 	i.iterateItems(stack.Item, func(idx int) bool {
 		cstack := i.items[idx]

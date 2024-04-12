@@ -1,6 +1,8 @@
 package player
 
 import (
+	"log"
+
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
@@ -9,17 +11,16 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/constant"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/vitals"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
 )
 
 var _ = model.PlayerEntity(&player{})
 
 func New(g model.Game, c model.Client, name string) model.PlayerEntity {
-
 	e := minions.NewCircleEntity(0.25)
 
 	e.EntityType = model.EntityType(BerryhunterApi.EntityTypeCharacter)
-	p := &player{BaseEntity: e,
+	p := &player{
+		BaseEntity:     e,
 		client:         c,
 		equipment:      items.NewEquipment(),
 		name:           name,
@@ -161,6 +162,7 @@ func (p *player) Client() model.Client {
 func (p *player) Position() phy.Vec2f {
 	return p.Body.Position()
 }
+
 func (p *player) SetPosition(v phy.Vec2f) {
 	p.Body.SetPosition(v)
 	p.viewport.SetPosition(v)
@@ -189,7 +191,6 @@ func (p *player) Stats() *model.Stats {
 }
 
 func initializePlayerInventory(r items.Registry) (items.Inventory, error) {
-
 	type startItem struct {
 		name  string
 		count int
@@ -226,7 +227,6 @@ func (p *player) startAction(tool items.Item) {
 var handOffset = phy.Vec2f{0.25, 0}
 
 func (p *player) updateHand() {
-
 	// could cache Rotation matrix/ handOffset
 	relativeOffset := phy.NewRotMat2f(p.angle).Mult(handOffset)
 	handPos := p.Position().Add(relativeOffset)

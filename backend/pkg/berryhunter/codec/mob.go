@@ -7,7 +7,6 @@ import (
 )
 
 func MobEntityFlatbufMarshal(m model.MobEntity, builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-
 	statusEffects := StatusEffectsMarshal(builder, m)
 
 	BerryhunterApi.MobStart(builder)

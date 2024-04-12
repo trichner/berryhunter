@@ -2,14 +2,15 @@ package server
 
 import (
 	"context"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
-	"github.com/trichner/berryhunter/pkg/chieftain/client"
-	"github.com/trichner/berryhunter/pkg/chieftain/dao"
 	"io"
 	"net"
 	"sync"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"github.com/trichner/berryhunter/pkg/chieftain/client"
+	"github.com/trichner/berryhunter/pkg/chieftain/dao"
 )
 
 func xTestListenTls(t *testing.T) {
@@ -21,11 +22,9 @@ func xTestListenTls(t *testing.T) {
 
 	srv, err := NewServer(dataStore, playerDao)
 	go srv.ListenTls("127.0.0.1:3443", "server.crt", "server.key")
-
 }
 
 func TestServer(t *testing.T) {
-
 	clientConn, serverConn := net.Pipe()
 
 	c, err := client.ConnectWithDialer(func() (client.Conn, error) {
@@ -65,7 +64,6 @@ func TestServer(t *testing.T) {
 }
 
 func newMockDataStore() (*mockDataStore, error) {
-
 	ds, err := dao.NewDataStore()
 	if err != nil {
 		return nil, err

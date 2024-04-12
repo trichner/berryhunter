@@ -7,7 +7,6 @@ import (
 )
 
 func TestWeightedChoice_Choose(t *testing.T) {
-
 	rnd := rand.New(rand.NewSource(77))
 
 	wc := NewWeightedChoice([]Choice{
@@ -24,7 +23,6 @@ func TestWeightedChoice_Choose(t *testing.T) {
 }
 
 func TestWeightedChoice_Empty(t *testing.T) {
-
 	rnd := rand.New(rand.NewSource(77))
 
 	wc := NewWeightedChoice([]Choice{})

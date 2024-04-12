@@ -2,11 +2,12 @@ package resource
 
 import (
 	"fmt"
+	"log"
+	"math/rand"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"log"
-	"math/rand"
 )
 
 var _ = model.ResourceEntity(&Resource{})
@@ -37,7 +38,6 @@ func (r *Resource) Resource() *model.ResourceStock {
 }
 
 func (r *Resource) yield(i int) (yielded int) {
-
 	i -= r.stock.Item.ItemDefinition.Factors.MinYield
 	if i < 1 {
 		return 0
@@ -67,7 +67,6 @@ func (r *Resource) Update(dt float32) {
 }
 
 func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityType model.EntityType) (*Resource, error) {
-
 	if resource.ItemDefinition == nil {
 		return nil, fmt.Errorf("no resource provided")
 	}

@@ -2,12 +2,13 @@ package gen
 
 import (
 	"fmt"
+	"math/rand"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/resource"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
 	"github.com/trichner/berryhunter/pkg/berryhunter/wrand"
-	"math/rand"
 )
 
 var _ = model.Interacter(&resource.Resource{})
@@ -24,10 +25,8 @@ func NewRandomEntityFrom(items items.Registry, p phy.Vec2f, bodies []staticEntit
 }
 
 func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEntityBody, rnd *rand.Rand) (model.ResourceEntity, error) {
-
 	resourceItem, err := items.GetByName(body.resourceName)
 	if err != nil {
-
 		return nil, fmt.Errorf("unknown ressource: %s", body.resourceName)
 		//TODO: errors.WithMessage(err,
 		//	fmt.Sprintf("unknown ressource: %s", body.resourceName),
@@ -56,11 +55,9 @@ func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEnti
 }
 
 func deriveRadius(rnd *rand.Rand, item items.Item) (float32, error) {
-
 	bodyDefinition := item.Body
 	radius := bodyDefinition.Radius
 	if radius < 0 {
-
 		return 0, fmt.Errorf("resource %s has invalid radius: 0 <= %f", item.Name, radius)
 	}
 

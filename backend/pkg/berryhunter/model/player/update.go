@@ -23,7 +23,6 @@ func (p *player) Update(dt float32) {
 }
 
 func (p *player) updateVitalSigns(dt float32) {
-
 	vitalSigns := p.VitalSigns()
 
 	c := p.config
@@ -62,7 +61,6 @@ func (p *player) updateVitalSigns(dt float32) {
 			satietyFraction := c.HealthGainSatietyLossTickFraction
 			vitalSigns.Satiety = s.SubFraction(satietyFraction)
 		}
-
 	} else if vitalSigns.Satiety.Fraction() <= 0 {
 		// are we starving?
 		healthFraction := c.StarveDamageTickFraction
