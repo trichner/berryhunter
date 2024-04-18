@@ -5,7 +5,7 @@
 build: berryhunterd.build
 
 gen:
-	@go generate
+	@go generate ./...
 
 fmt:
 	@gofumpt -l -w .
