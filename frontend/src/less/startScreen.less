@@ -60,7 +60,8 @@
 		margin-bottom: 16px;
 	}
 
-	&.loading {
+	&.loading,
+	&.failure {
 		#hunter {
 			opacity: 0;
 		}
@@ -86,6 +87,12 @@
 			transform: translate(-50%, -50%) rotate(-38deg) scale(1);
 			filter: blur(0);
 			opacity: 1;
+		}
+	}
+
+	&.failure {
+		#loadingBar {
+			background-color: crimson;
 		}
 	}
 

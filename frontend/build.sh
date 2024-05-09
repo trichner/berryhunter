@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yarn run build
+npm run build

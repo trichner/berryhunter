@@ -137,9 +137,14 @@ function show() {
     //     });
     // })();
 
-    loadHighScores().then((highScores) => {
-        populateHighScores(highScores);
-    });
+    loadHighScores()
+        .then((highScores) => {
+            populateHighScores(highScores);
+        })
+        .catch((response) => {
+            console.error('Error loading highscores.', response);
+            hide();
+        });
 }
 
 function hide() {

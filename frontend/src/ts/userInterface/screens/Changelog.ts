@@ -1,6 +1,6 @@
 import * as Mustache from 'mustache';
 import * as moment from 'moment-mini';
-import {isDefined, isUndefined} from '../../Utils';
+import {htmlModuleToString, isDefined, isUndefined} from '../../Utils';
 import {StartScreenDomReadyEvent} from '../../Events';
 import {createStartScreenPanel} from "./ScreenUtil";
 
@@ -9,7 +9,7 @@ function requireAll(requireContext) {
 }
 
 const changelogs = requireAll(require.context('../../../../../changelog', false, /\.json$/));
-const template = require('raw-loader!./changelog.mustache');
+const template = require('./changelog.mustache');
 
 StartScreenDomReadyEvent.subscribe(setup);
 
@@ -23,7 +23,7 @@ function setup() {
 }
 
 function renderChangelogs(changelogs: ChangelogVO[]): string {
-    return Mustache.render(template, changelogs);
+    return Mustache.render(htmlModuleToString(template), changelogs);
 }
 
 function validateTrelloId(trelloId: string | string[]) {

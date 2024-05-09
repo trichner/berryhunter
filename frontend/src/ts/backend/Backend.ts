@@ -21,6 +21,7 @@ import {GameState, IGame} from "../interfaces/IGame";
 import {BackendState, IBackend} from "../interfaces/IBackend";
 import {Develop} from "../develop/_Develop";
 import {
+    BackendConnectionFailureEvent,
     BackendSetupEvent,
     BackendStateChangedEvent,
     BackendValidTokenEvent,
@@ -46,11 +47,13 @@ export class Backend implements IBackend {
 
         BackendConstants.setup();
 
-        new Promise((resolve, reject) => {
+        new Promise<void>((resolve, reject) => {
             this.firstGameStateResolve = resolve;
             this.firstGameStateReject = reject;
         }).then(() => {
             FirstGameStateHandledEvent.trigger();
+        }).catch(() => {
+            BackendConnectionFailureEvent.trigger();
         });
 
         this.setState(BackendState.CONNECTING);

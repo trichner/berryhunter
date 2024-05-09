@@ -1,6 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FaviconWebpackPlugin = require('favicons-webpack-plugin');
+// const svgToMiniDataURI = require('mini-svg-data-uri');
+// const FaviconWebpackPlugin = require('favicons-webpack-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+
 
 module.exports = {
 	entry: './src/index.ts',
@@ -9,40 +12,44 @@ module.exports = {
 			title: 'BerryHunter',
 			xhtml: true
 		}),
-		new FaviconWebpackPlugin({
-			logo: './src/img/logo.svg',
-			publicPath: '.',
-			prefix: '',
-			favicons: {
-				appName: 'BerryHunter',
-				appDescription: 'A 2D multiplayer stone age survival game',
-				developerName: 'Team Dodo',
-				developerURL: 'https://berryhunter.io',
-				display: 'fullscreen',
-				orientation: 'landscape',
-				start_url: '',
-				theme_color: '#E66CEF',
-				version: 'Open Beta'
-			}
-		})
+		// new FaviconWebpackPlugin({
+		// 	logo: './src/img/logo.svg',
+		// 	publicPath: '.',
+		// 	prefix: '',
+		// 	favicons: {
+		// 		appName: 'BerryHunter',
+		// 		appDescription: 'A 2D multiplayer stone age survival game',
+		// 		developerName: 'Team Dodo',
+		// 		developerURL: 'https://berryhunter.io',
+		// 		display: 'fullscreen',
+		// 		orientation: 'landscape',
+		// 		start_url: '',
+		// 		theme_color: '#E66CEF',
+		// 		version: 'Open Beta'
+		// 	}
+		// }),
+		new NodePolyfillPlugin()
 	],
 
 	resolve: {
 		// Add '.ts' as resolvable extensions.
-		extensions: ['.ts', '.js']
+		extensions: ['.ts', '.js'],
 	},
 
 	module: {
 		rules: [
-			// All files with a '.ts' extension will be handled by 'awesome-typescript-loader'.
-			{test: /\.ts$/, loader: 'awesome-typescript-loader'},
+			{
+				test: /\.ts$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
+			},
 
 			{
 				test: /\.html$/,
 				use: [{
 					loader: 'html-loader',
 					options: {
-						interpolate: 'require', // used to require other html partials inside of html
+						// interpolate: 'require', // used to require other html partials inside of html
 						minimize: true,
 					}
 				}]
@@ -51,32 +58,39 @@ module.exports = {
 			// All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
 			{enforce: 'pre', test: /\.js$/, loader: 'source-map-loader'},
 
-			// https://webpack.js.org/loaders/less-loader/
 			{
-				test: /\.less$/,
-				use: [{
-					loader: 'style-loader' // creates style nodes from JS strings
-				}, {
-					loader: 'css-loader' // translates CSS into CommonJS
-				}, {
-					loader: 'less-loader' // compiles Less to CSS
-				}]
+				test: /\.svg/,
+				type: 'asset/inline',
+				// generator: {
+				// 	dataUrl: content => {
+				// 		// return 'data:image/svg+xml,' + content.toString();
+				// 		content = content.toString();
+				// 		return svgToMiniDataURI(content);
+				// 	}
+				// },
 			},
 
-			// embed small PNG/JPG/GIF/SVG images as well as fonts as Data URLs
-			// and copy larger files to the output directory.
+			// https://webpack.js.org/guides/asset-modules/#resource-assets
 			{
-				test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-				loader: 'url-loader',
-				options: {
-					limit: 249856 // 244 KiB
-				}
+				test: /\.(png|jpg|gif|eot|ttf|woff|woff2)$/,
+				resourceQuery: { not: [/raw/] },
+				type: 'asset',
+			},
+
+			{
+				test: /\.(mustache)$/,
+				type: 'asset/source'
+			},
+
+			{
+				resourceQuery: /raw/,
+				type: 'asset/source',
 			}
 		]
 	},
 
 	output: {
-		filename: '[name].[hash].js',
+		filename: '[name].[fullhash].js',
 		path: path.resolve(__dirname, 'dist')
 	},
 };

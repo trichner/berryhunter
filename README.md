@@ -56,7 +56,6 @@ Repo for the most awesome berry-hunting experience.
 **For frontend**
 
 1. Install node.js https://nodejs.org
-2. Install yarn https://yarnpkg.com/
 
 #### Build everything
 

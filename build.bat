@@ -15,6 +15,6 @@ cd ..
 echo Build Frontend
 
 cd frontend
-yarn
+npm install
 call build.bat
 cd ..

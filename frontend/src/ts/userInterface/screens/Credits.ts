@@ -1,4 +1,5 @@
 import {createStartScreenPanel} from "./ScreenUtil";
+import {htmlModuleToString} from "../../Utils";
 
 const html: string = require('./credits.html');
 
@@ -11,9 +12,8 @@ export function setup() {
     rootElement = document.getElementById('creditsContainer');
     createStartScreenPanel(
         rootElement,
-        html,
+        htmlModuleToString(html),
         'closeCredits',
         'creditsVisible',
         '#credits');
 }
-

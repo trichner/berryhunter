@@ -1,3 +1,3 @@
 @echo off
 
-yarn run build
+npm run build

@@ -1,7 +1,7 @@
 'use strict';
 
 import * as PIXI from 'pixi.js';
-import {htmlToElement, isNumber} from './Utils';
+import {htmlModuleToString, htmlToElement, isNumber} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
 import {PreloadingProgressedEvent, PreloadingStartedEvent, StartScreenDomReadyEvent} from "./Events";
 
@@ -24,7 +24,7 @@ StartScreenDomReadyEvent.subscribe(() => {
      * As preloads have the chance to register new preloads themself, all preloads are loaded recursively.
      */
     return (function waitForPreloads() {
-        return new Promise(function (resolve) {
+        return new Promise<void>(function (resolve) {
             loadCycle++;
             if (promises.length > 0) {
                 let promisesToResolve = promises.slice();
@@ -51,6 +51,7 @@ export function registerPreload(preloadingPromise) {
 }
 
 export function registerGameObjectSVG(gameObjectClass: {svg: PIXI.Texture}, svgPath, maxSize) {
+    svgPath = htmlModuleToString(svgPath);
     return registerPreload(
         new Promise(function (resolve, reject) {
             let sourceScale = 1;
@@ -69,7 +70,7 @@ export function registerGameObjectSVG(gameObjectClass: {svg: PIXI.Texture}, svgP
     );
 }
 
-export function renderPartial(html, onDomReady = () => {}) {
-    document.body.appendChild(htmlToElement(html));
+export function renderPartial(html: (string | {default: string}), onDomReady = () => {}) {
+    document.body.appendChild(htmlToElement(htmlModuleToString(html)));
     onDomReady();
 }

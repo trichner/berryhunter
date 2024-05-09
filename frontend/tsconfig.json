@@ -3,7 +3,7 @@
 		"outDir": "./dist/",
 		"sourceMap": true,
 //		"noImplicitAny": true,
-		"module": "commonjs",
+		"module": "commonjs", // TODO replace with es6 to enable proper tree-shaking
 		"target": "es5",
 		"downlevelIteration": true,
 		"lib": [
@@ -19,7 +19,7 @@
 	},
 	"include": [
 		"./src/index.ts",
-		"./src/ts/**/*",
-		"./wiki-generator/**/*"
+		"./src/ts/**/*"
+//		"./wiki-generator/**/*"
 	]
 }

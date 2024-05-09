@@ -3,7 +3,7 @@
  * modules are taking up space and which might be duplicates.
  */
 
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const prod = require('./webpack.prod.js');
 const Visualizer = require('webpack-visualizer-plugin');
 

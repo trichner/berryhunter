@@ -1,9 +1,9 @@
-import {makeRequest, smoothHoverAnimation} from "../Utils";
+import {htmlModuleToString, makeRequest, smoothHoverAnimation} from "../Utils";
 import _isObject = require('lodash/isObject');
 
 let html = require('./rating.html');
-let emptyStarIcon = require('!svg-inline-loader!./img/emptyStar.svg');
-let filledStarIcon = require('!svg-inline-loader!./img/filledStar.svg');
+let emptyStarIcon = require('./img/emptyStar.svg?raw');
+let filledStarIcon = require('./img/filledStar.svg?raw');
 
 export class Rating {
     private ratingContainer: Element;
@@ -16,7 +16,7 @@ export class Rating {
     private rating: number = 0;
 
     constructor(parentElement: Element, showSocialMedia: boolean) {
-        parentElement.innerHTML = html;
+        parentElement.innerHTML = htmlModuleToString(html);
 
         this.ratingContainer = parentElement.querySelector('.ratingContainer');
         this.initRatingContainer(this.ratingContainer);
@@ -127,7 +127,7 @@ export class Rating {
             }
         }).then(() => {
             // won't happen because of CORS
-        }).catch(response => {
+        }).catch((response: {status: number, statusText: string} ) => {
             if (_isObject(response) && response.status === 0) {
                 // All good, CORS just blocked the response but the server got the user feedback
                 this.onSuccess();

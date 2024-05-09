@@ -4,27 +4,18 @@
  */
 
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
-module.exports = merge.smart(common, {
+module.exports = merge(common, {
 	mode: 'production',
 	plugins: [
-		new CleanWebpackPlugin(['dist']),
-		new webpack.HashedModuleIdsPlugin(),
+		new webpack.ids.HashedModuleIdsPlugin(),
 		new MiniCssExtractPlugin({
 			filename: '[name].[contenthash].css',
 		}),
-		new OptimizeCssAssetsPlugin({
-			cssProcessorPluginOptions: {
-				preset: ['default', {
-					discardComments: {removeAll: true}
-				}],
-			},
-		})
 	],
 
 	module: {
@@ -42,7 +33,24 @@ module.exports = merge.smart(common, {
 		]
 	},
 
+	output: {
+		clean: true,
+	},
+
 	optimization: {
+		minimizer: [
+			`...`,
+			new CssMinimizerPlugin({
+				minimizerOptions: {
+					preset: [
+						'default',
+						{
+							discardComments: {removeAll: true},
+						},
+					],
+				},
+			}),
+		],
 		runtimeChunk: 'single',
 		splitChunks: {
 			cacheGroups: {

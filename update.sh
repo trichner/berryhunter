@@ -31,8 +31,8 @@ popd
 # rebuild frontend
 pushd ./frontend/
 
-yarn
-yarn build
+npm install
+npm run build
 
 popd
 

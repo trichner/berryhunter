@@ -6,4 +6,4 @@ start /d "berryhunterd" berryhunterd.exe
 
 cd frontend
 
-yarn run start
+npm run start

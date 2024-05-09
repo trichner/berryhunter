@@ -160,7 +160,15 @@ export function randomRotation(limitDirections?) {
     return random(0, Math.PI * 2);
 }
 
-export function htmlToElement(html) {
+export function htmlModuleToString(html: (string | { 'default': string })): string {
+    if (_isString(html)) {
+        return html;
+    } else {
+        return html.default;
+    }
+}
+
+export function htmlToElement(html: string) {
     const template = document.createElement('template');
     template.innerHTML = html;
     return template.content.firstChild;
@@ -177,6 +185,7 @@ export function svgToElement(svg) {
  * @param {{method: String, url: String, [headers]: {}, [params]: String|{}}} opts
  * @returns {Promise}
  */
+// TODO replace with fetch?
 export function makeRequest(opts) {
     return new Promise(function (resolve, reject) {
         const xhr = new XMLHttpRequest();

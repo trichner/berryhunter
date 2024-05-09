@@ -1,1 +1,1 @@
-yarn run ts-node wiki-generator/app.ts
+npm run ts-node wiki-generator/app.ts

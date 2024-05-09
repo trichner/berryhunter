@@ -216,7 +216,7 @@ function moveInterpolatedObjects() {
          *
          * @param {GameObject} gameObject
          */
-        function (gameObject) {
+        function (gameObject: GameObject) {
             let elapsedTimePortion = (now - gameObject.desireTimestamp) / Constants.SERVER_TICKRATE;
             if (elapsedTimePortion >= 1) {
                 gameObject.shape.position.copy(gameObject.desiredPosition);
@@ -238,7 +238,7 @@ function applyTurnRate() {
          *
          * @param {GameObject} gameObject
          */
-        function (gameObject) {
+        function (gameObject: GameObject) {
             let elapsedTime = now - gameObject.desiredRotationTimestamp;
             let rotationDifference = elapsedTime * gameObject.turnRate;
             let rotationShape = gameObject.getRotationShape();

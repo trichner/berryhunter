@@ -3,20 +3,19 @@
 ### Windows
 
 1. Install node.js https://nodejs.org
-2. Install yarn https://yarnpkg.com/
 
 ### All Systems
 
-1. `$ yarn install`
+1. `$ npm install`
 
 ### Run for development
 
-`$ yarn run start`
+`$ npm run start`
 or
 `$ start.bat`
 
 ### Build for production
 
-`$ yarn run build`
+`$ npm run build`
 or
 `$ build.bat`

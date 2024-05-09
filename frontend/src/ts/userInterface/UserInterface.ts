@@ -11,7 +11,7 @@ import {IGame} from "../interfaces/IGame";
 let Game: IGame = null;
 
 let rootElement;
-let cycleIcon = require('!svg-inline-loader!./cycle-icon.svg');
+let cycleIcon = require('./cycle-icon.svg?raw');
 
 let craftingElement;
 let craftableItemTemplate;

@@ -7,6 +7,7 @@ import * as Preloading from '../../Preloading';
 import * as Credits from './Credits';
 import {
     FirstGameStateHandledEvent,
+    BackendConnectionFailureEvent,
     PreloadingProgressedEvent,
     PreloadingStartedEvent,
     StartScreenDomReadyEvent
@@ -111,6 +112,13 @@ function setProgress(value) {
         }
     }
 }
+
+BackendConnectionFailureEvent.subscribe(() => {
+    rootElement.classList.remove('loading');
+    rootElement.classList.add('failure');
+    let playerNameSubmit: HTMLInputElement = rootElement.querySelector('.playerNameSubmit');
+    playerNameSubmit.value = "Couldn't connect";
+});
 
 function getProgress() {
     return progress;
