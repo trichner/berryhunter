@@ -75,7 +75,7 @@ func main() {
 	}
 
 	if config.Server.TlsHost != "" {
-		err := bootTlsServer(g.Handler(), config.Server.Path, config.Server.TlsHost)
+		err := bootTlsServer(g.Handler(), config.Server.Path, config.Server.TlsHost, dev)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -86,7 +86,7 @@ func main() {
 	g.Loop()
 }
 
-func bootTlsServer(h http.Handler, path string, host string) error {
+func bootTlsServer(h http.Handler, path string, host string, dev bool) error {
 	slog.Info("🦄 Booting TLS game-server", slog.String("addr", fmt.Sprintf("https://%s%s", host, path)), slog.Any("hosts", []string{host}))
 
 	userCacheDir, err := os.UserCacheDir()
@@ -109,11 +109,21 @@ func bootTlsServer(h http.Handler, path string, host string) error {
 
 	mux := http.NewServeMux()
 
-	// 'ping' endpoint for liveness probe
-	mux.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		writer.WriteHeader(http.StatusNoContent)
-	})
 	mux.Handle(path, h)
+
+	if dev {
+		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("https://%s?wsUrl=wss://%s%s", host, host, path)))
+		mux.Handle("/", http.FileServer(http.Dir("./../frontend/dist")))
+	} else {
+		// 'ping' endpoint
+		mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+			if req.URL.Path != "/" {
+				http.NotFound(w, req)
+				return
+			}
+			w.WriteHeader(http.StatusNoContent)
+		})
+	}
 
 	s := &http.Server{
 		Addr:      ":https",
