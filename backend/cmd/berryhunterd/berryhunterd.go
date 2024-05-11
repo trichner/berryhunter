@@ -128,7 +128,7 @@ func bootTlsServer(h http.Handler, path string, host string, dev bool) error {
 	s := &http.Server{
 		Addr:      ":https",
 		TLSConfig: m.TLSConfig(),
-		Handler:   h,
+		Handler:   mux,
 	}
 
 	// start server
