@@ -18,13 +18,15 @@ import (
 	"strings"
 )
 
+const flatcVersion = "v24.3.25"
+
 func main() {
 	fileGlob := os.Args[1]
 
 	pwd, _ := os.Getwd()
 	slog.Info("running", slog.String("prog", os.Args[0]), slog.String("pwd", pwd))
 
-	version := "v24.3.25"
+	version := flatcVersion
 
 	platform := ""
 	switch runtime.GOOS {
@@ -33,12 +35,13 @@ func main() {
 	case "darwin":
 		platform = "Mac"
 	default:
-		slog.Error("unsupported OS for flatbuffer compilation", slog.String("os", runtime.GOOS))
+		slog.Error("unsupported OS for flatbuffer compilation, add support in `flatcgen.go`", slog.String("os", runtime.GOOS))
 	}
 
 	compilerPath := fmt.Sprintf("./flatc_%s_%s", platform, strings.ReplaceAll(version, ".", "_"))
 	err := downloadCompilerTo(compilerPath, version, platform)
 	if err != nil {
+		slog.Error("failed to download flatc compiler", slog.String("version", version), slog.Any("error", err))
 		panic(err)
 	}
 
@@ -46,6 +49,7 @@ func main() {
 
 	err = compileGoFlatbuffers(compilerPath, files)
 	if err != nil {
+		slog.Error("failed to compile flatbuffers", slog.String("compiler", compilerPath), slog.String("version", version), slog.Any("error", err))
 		panic(err)
 	}
 }
@@ -55,7 +59,7 @@ func downloadCompilerTo(path, version, platform string) error {
 
 	downloadUrl := fmt.Sprintf("https://github.com/google/flatbuffers/releases/download/%s/%s.flatc.binary.zip", version, platform)
 
-	slog.Info("downloading flatc", slog.String("url", downloadUrl), slog.String("platform", platform), slog.String("version", version))
+	slog.Info("downloading flatc", slog.String("url", downloadUrl), slog.String("platform", platform), slog.String("flatcVersion", version))
 
 	res, err := http.Get(downloadUrl)
 	if err != nil || res.StatusCode != 200 {
@@ -106,7 +110,11 @@ func compileGoFlatbuffers(compilerPath string, files []string) error {
 	args := []string{"--go"}
 	args = append(args, files...)
 
-	return run(compilerPath, args...)
+	err := run(compilerPath, args...)
+	if err != nil {
+		return fmt.Errorf("compiling flatbuffers failed: %w", err)
+	}
+	return nil
 }
 
 func run(prog string, args ...string) error {
@@ -116,5 +124,9 @@ func run(prog string, args ...string) error {
 	out, err := cmd.Output()
 	slog.Debug("command executed", slog.String("name", prog), slog.String("out", string(out)))
 
-	return err
+	if err != nil {
+		return fmt.Errorf("command %q failed %s: %w", append([]string{prog}, args...), out, err)
+	}
+
+	return nil
 }

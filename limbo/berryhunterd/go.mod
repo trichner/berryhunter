@@ -1,6 +1,8 @@
 module github.com/trichner/berryhunter/berryhunterd
 
-go 1.12
+go 1.21
+
+toolchain go1.22.1
 
 require (
 	github.com/EngoEngine/ecs v1.0.3

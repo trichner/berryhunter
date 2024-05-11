@@ -9,7 +9,17 @@ DOCKER_REPO="gcr.io/berryhunter-io"
 
 all: build
 
-build: $(TARGET_BUILD)
+.PHONY: build.frontend build.backend
+
+build: build.frontend build.backend
+
+build.backend: build.frontend
+
+build.backend:
+	$(MAKE) -C backend build
+
+build.frontend:
+	$(MAKE) -C frontend build
 
 tag: $(TARGET_TAG)
 
