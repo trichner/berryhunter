@@ -7,8 +7,9 @@ import (
 
 type Config struct {
 	Server struct {
-		Port int    `json:"port"`
-		Path string `json:"path"`
+		Port    int    `json:"port"`
+		Path    string `json:"path"`
+		TlsHost string `json:"tlsHost"`
 	} `json:"server"`
 	Chieftain *struct {
 		Addr   *string `json:"addr"`

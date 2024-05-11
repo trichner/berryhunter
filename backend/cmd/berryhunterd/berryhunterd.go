@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/trichner/berryhunter/pkg/berryhunter/core"
 	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
@@ -17,6 +18,7 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
 	"github.com/trichner/berryhunter/pkg/berryhunter/wrand"
 	"github.com/trichner/berryhunter/pkg/logging"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 func main() {
@@ -72,9 +74,57 @@ func main() {
 		os.Exit(1)
 	}
 
-	bootServer(g.Handler(), config.Server.Port, config.Server.Path, dev)
+	if config.Server.TlsHost != "" {
+		err := bootTlsServer(g.Handler(), config.Server.Path, config.Server.TlsHost)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		bootServer(g.Handler(), config.Server.Port, config.Server.Path, dev)
+	}
 
 	g.Loop()
+}
+
+func bootTlsServer(h http.Handler, path string, host string) error {
+	slog.Info("🦄 Booting TLS game-server", slog.String("addr", fmt.Sprintf("https://%s%s", host, path)), slog.Any("hosts", []string{host}))
+
+	userCacheDir, err := os.UserCacheDir()
+	if err != nil {
+		return err
+	}
+
+	cacheDir := filepath.Join(userCacheDir, "berryhunterd")
+
+	hosts := []string{host}
+
+	slog.Info("🔐 Requesting ACME certificate", slog.Any("hosts", hosts), slog.String("cache_dir", cacheDir))
+
+	m := &autocert.Manager{
+		Cache:      autocert.DirCache(cacheDir),
+		Prompt:     autocert.AcceptTOS,
+		Email:      "dev@berryhunter.io",
+		HostPolicy: autocert.HostWhitelist(hosts...),
+	}
+
+	mux := http.NewServeMux()
+
+	// 'ping' endpoint for liveness probe
+	mux.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
+		writer.WriteHeader(http.StatusNoContent)
+	})
+	mux.Handle(path, h)
+
+	s := &http.Server{
+		Addr:      ":https",
+		TLSConfig: m.TLSConfig(),
+		Handler:   h,
+	}
+
+	// start server
+	go s.ListenAndServeTLS("", "")
+
+	return nil
 }
 
 func bootServer(h http.Handler, port int, path string, dev bool) {
