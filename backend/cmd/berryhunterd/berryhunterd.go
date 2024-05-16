@@ -29,7 +29,7 @@ func main() {
 	mobsRegistry := loadMobs(itemsRegistry)
 
 	tokens := loadTokens("./tokens.list")
-	log.Printf("👮‍♀️ Read %d tokens.", len(tokens))
+	slog.Info("👮‍♀️ read tokens", slog.Int("token_count", len(tokens)))
 
 	// new game
 	var radius float32 = 20
@@ -113,7 +113,7 @@ func bootTlsServer(h http.Handler, path string, host string, dev bool) error {
 
 	if dev {
 		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("https://%s?wsUrl=wss://%s%s", host, host, path)))
-		mux.Handle("/", http.FileServer(http.Dir("./../frontend/dist")))
+		mux.Handle("/", frontendHandler())
 	} else {
 		// 'ping' endpoint
 		mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
@@ -132,7 +132,7 @@ func bootTlsServer(h http.Handler, path string, host string, dev bool) error {
 	}
 
 	// start server
-	go s.ListenAndServeTLS("", "")
+	go log.Fatal(s.ListenAndServeTLS("", ""))
 
 	return nil
 }
@@ -140,19 +140,34 @@ func bootTlsServer(h http.Handler, path string, host string, dev bool) error {
 func bootServer(h http.Handler, port int, path string, dev bool) {
 	slog.Info("🦄 Booting game-server", slog.String("addr", fmt.Sprintf(":%d%s", port, path)))
 	addr := fmt.Sprintf(":%d", port)
-	http.Handle(path, h)
+
+	mux := http.NewServeMux()
+	mux.Handle(path, h)
 
 	if dev {
 		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("http://localhost:%d?wsUrl=ws://localhost:%d/game", port, port)))
-		http.Handle("/", http.FileServer(http.Dir("./../frontend/dist")))
+		mux.Handle("/", frontendHandler())
 	} else {
 		// 'ping' endpoint for liveness probe
-		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path != "/" {
+				http.NotFound(w, r)
+				return
+			}
 			w.WriteHeader(204)
 		})
 	}
 	// start server
-	go http.ListenAndServe(addr, nil)
+	go log.Fatal(http.ListenAndServe(addr, mux))
+}
+
+func frontendHandler() http.Handler {
+	frontendPath, err := filepath.Abs("./../frontend/dist")
+	if err != nil {
+		log.Fatal(err)
+	}
+	slog.Info("🕸️ serving frontend", slog.String("path", frontendPath))
+	return http.FileServer(http.Dir(frontendPath))
 }
 
 func newRandomMobEntity(mobList []*mobs.MobDefinition, rnd *rand.Rand, radius float32) model.MobEntity {

@@ -6,18 +6,20 @@ Repo for the most awesome berry-hunting experience.
 
 **Prerequisites**
 - install 
-  - `go >1.22`
-  - `node 20`& `npm`
   - `make`
-  - `docker` (optional but useful)
+  - `go >1.22`
+  - `docker`
+  - `node 20`& `npm` (optional but useful)
 
 **Build**
 1. build the frontend
    ```
-   cd ./frontend/ && npm install && npm run build
+   # requires docker
+   make -C frontend build
    ```
 2. build the backend
    ```
+   # requires go >1.22
    make -C backend build
    ```
 3. boot the server

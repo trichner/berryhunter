@@ -91,7 +91,7 @@ func setupDefaultConfig() (*cfg.Config, error) {
 func loadTokens(tokenFile string) []string {
 	f, err := os.Open(tokenFile)
 	if err != nil {
-		slog.Info("Cannot read '%s': %s", tokenFile, err)
+		slog.Info("Cannot read tokens", slog.String("file", tokenFile), slog.Any("error", err))
 		return []string{}
 	}
 	s := bufio.NewScanner(f)
