@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	_ "embed"
+	"errors"
 	"fmt"
 	"log"
 	"log/slog"
@@ -15,6 +17,9 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 )
+
+//go:embed conf.default.json
+var defaultConfig []byte
 
 // loadMobs parses the mob definitions from the definition files
 func loadMobs(r items.Registry) mobs.Registry {
@@ -58,17 +63,35 @@ func loadConf() *cfg.Config {
 	if configFile == "" {
 		configFile = "./conf.json"
 	}
+	slog.Info("reading config", slog.String("path", configFile))
 	config, err := cfg.ReadConfig(configFile)
-	if err != nil {
+	if errors.Is(err, os.ErrNotExist) {
+		config, err = setupDefaultConfig()
+		if err != nil {
+			log.Panicf("Cannot read config '%s':%v", configFile, err)
+		}
+	} else if err != nil {
 		log.Panicf("Cannot read config '%s':%v", configFile, err)
 	}
 	return config
 }
 
+// setupDefaultConfig creates a default config file if non is found
+func setupDefaultConfig() (*cfg.Config, error) {
+
+	path := "./conf.json"
+	slog.Info("setting up default config", slog.String("path", path))
+	err := os.WriteFile(path, defaultConfig, 0644)
+	if err != nil {
+		return nil, fmt.Errorf("cannot write default config: %w", err)
+	}
+
+	return cfg.ReadConfig(path)
+}
 func loadTokens(tokenFile string) []string {
 	f, err := os.Open(tokenFile)
 	if err != nil {
-		log.Printf("Cannot read '%s': %s", tokenFile, err)
+		slog.Info("Cannot read '%s': %s", tokenFile, err)
 		return []string{}
 	}
 	s := bufio.NewScanner(f)

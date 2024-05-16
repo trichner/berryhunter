@@ -2,6 +2,30 @@
 
 Repo for the most awesome berry-hunting experience.
 
+## tl;dr
+
+**Prerequisites**
+- install 
+  - `go >1.22`
+  - `node 20`& `npm`
+  - `make`
+  - `docker` (optional but useful)
+
+**Build**
+1. build the frontend
+   ```
+   cd ./frontend/ && npm install && npm run build
+   ```
+2. build the backend
+   ```
+   make -C backend build
+   ```
+3. boot the server
+    ```
+    ./backend/berryhunterd
+    ```
+
+
 ## Running the Project
 
 ### Mac Environment
