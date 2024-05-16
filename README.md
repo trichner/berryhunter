@@ -24,8 +24,11 @@ Repo for the most awesome berry-hunting experience.
    ```
 3. boot the server
     ```
-    ./backend/berryhunterd
+    cd backend
+    ./berryhunterd -dev
     ```
+4. check the logs to figure out what URL to open in your local browser, probably http://localhost:2000/?wsUrl=ws://localhost:2000/game
+5. profit!
 
 
 ## Running the Project
