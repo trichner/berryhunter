@@ -11,6 +11,7 @@ version: 1
 before:
   hooks:
     - sh -c "cd backend && go mod tidy"
+    - make -C backend cp-defs
 
 builds:
   - binary: berryhunterd
