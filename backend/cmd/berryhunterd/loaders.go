@@ -78,16 +78,16 @@ func loadConf() *cfg.Config {
 
 // setupDefaultConfig creates a default config file if non is found
 func setupDefaultConfig() (*cfg.Config, error) {
-
 	path := "./conf.json"
 	slog.Info("setting up default config", slog.String("path", path))
-	err := os.WriteFile(path, defaultConfig, 0644)
+	err := os.WriteFile(path, defaultConfig, 0o644)
 	if err != nil {
 		return nil, fmt.Errorf("cannot write default config: %w", err)
 	}
 
 	return cfg.ReadConfig(path)
 }
+
 func loadTokens(tokenFile string) []string {
 	f, err := os.Open(tokenFile)
 	if err != nil {

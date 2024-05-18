@@ -132,7 +132,7 @@ func bootTlsServer(h http.Handler, path string, host string, dev bool) error {
 	}
 
 	// start server
-	go log.Fatal(s.ListenAndServeTLS("", ""))
+	go s.ListenAndServeTLS("", "")
 
 	return nil
 }
@@ -158,7 +158,7 @@ func bootServer(h http.Handler, port int, path string, dev bool) {
 		})
 	}
 	// start server
-	go log.Fatal(http.ListenAndServe(addr, mux))
+	go http.ListenAndServe(addr, mux)
 }
 
 func frontendHandler() http.Handler {
