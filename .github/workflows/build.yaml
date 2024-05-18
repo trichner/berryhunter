@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: go-setup
+        name: Set up Go
+        uses: actions/setup-go@v4
+      - id: release
+        name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: upload-artifacts
+        name: Upload assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: binaries
+          path: dist/*
