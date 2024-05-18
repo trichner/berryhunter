@@ -48,7 +48,10 @@ Repo for the most awesome berry-hunting experience.
 
 ### Windows Environment
 
-#### Prerequisites
+Usage of WSL is recommended, but not described here.
+If you have a WSL --> move the project there and just follow the Mac Environment instructions
+
+#### (30.10.2018) Prerequisites
 
 **To compile Go-libraries**
 
