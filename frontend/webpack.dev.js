@@ -7,7 +7,7 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
 
-module.exports = env => {
+module.exports = (env) => {
 	// Define default environment
 	env = merge({
 		port: 80,
