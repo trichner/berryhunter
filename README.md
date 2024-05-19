@@ -4,14 +4,14 @@ Repo for the most awesome berry-hunting experience.
 
 ## tl;dr
 
-**Prerequisites**
+### Prerequisites
 - install 
   - `make`
-  - `go >1.22`
-  - `docker`
-  - `node 20`& `npm` (optional but useful)
+  - `go >1.22` ([instructions](https://go.dev/doc/install))
+  - `docker` ([instructions](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository))
+  - `node 20` (optional but useful; includes npm 10.5; usage of NVM recommended)
 
-**Build**
+### Build
 1. build the frontend
    ```
    # requires docker
@@ -27,11 +27,36 @@ Repo for the most awesome berry-hunting experience.
     cd backend
     ./berryhunterd -dev
     ```
-4. check the logs to figure out what URL to open in your local browser, probably http://localhost:2000/?wsUrl=ws://localhost:2000/game
+4. check the console to figure out what URL to open in your local browser, probably http://localhost:2000/?wsUrl=ws://localhost:2000/game
 5. profit!
 
 
 ## Running the Project
+
+### Windows Environment
+
+We use WSL (Windows Subsystem for Linux) which basically allows you to run Linux commands right on your Windows machine.
+
+There is an [official guide](https://learn.microsoft.com/en-us/windows/wsl/install), but you can just use these commands to have everything in order:
+
+1. Open Powershell as **administrator**
+2. Run `Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform, Microsoft-Windows-Subsystem-Linux`
+3. Reboot when prompted
+4. `wsl --set-default-version 2`
+5. `wsl --install -d Ubuntu-24.04`
+6. As soon as the Powershell is done with the installation, it will open your new Ubuntu instance and asks you for a username and password.
+    - Username can be anything but `root`, personally I like to use the same name as my windows username
+    - Username needs to be all lowercase letters and or underscore (_) or dash (-)
+    - Password doesn't need to be secure, you can easily repeat your username as password --> just remember it, as resetting it from outside is not possible
+7. `sudo apt update && sudo apt upgrade` will install the latest system updates
+8. Inside Ubuntu, run `explorer.exe .` --> this opens a regular Windows explorer window (at `\\wsl.localhost\Ubuntu-24.04\home\[username]\` ). If you are familiar with Unix you will notice how this path is a combination of a windows mounted "network" drive, your WSL distribution and finally the Unix filesystem.
+9. Create a folder `workspaces` inside this Ubuntu home folder.
+10. Checkout `berryhunter` here and open the project in your IDE
+11. From here on you can follow the general/mac instructions
+    - use `sudo -i` to become the root user for the rest of your session
+    - `exit` ends your root session
+    - Use `sudo apt install [software]` to install everything you need
+    - To install go use `sudo snap install go --classic`
 
 ### Mac Environment
 (Last updated 30.10.2018)
@@ -45,60 +70,5 @@ Repo for the most awesome berry-hunting experience.
 #### Known Issues
 
 - there's a race condition between chieftaind and berryhunterd. If berryhunterd starts before chieftaind is up, it will crash. **Solution:** Shut down docker-compose (CTRL+C) and run `./up.sh` again.
-
-### Windows Environment
-
-Usage of WSL is recommended, but not described here.
-If you have a WSL --> move the project there and just follow the Mac Environment instructions
-
-#### (30.10.2018) Prerequisites
-
-**To compile Go-libraries**
-
-- Install tdm64-gcc
-(http://tdm-gcc.tdragon.net/download)
-	- Create
-	- 32bit and 64 bit
-	- Type of install: TDM-GCC recommended, C/C++
-
-**For chieftaind**
-
-- Install go
-- OpenSSL https://wiki.openssl.org/index.php/Binaries (I used "Win64 OpenSSL v1.1.1" from https://slproweb.com/products/Win32OpenSSL.html )
-    - Add `C:\Program Files\OpenSSL-Win64\bin` (or whatever the installation path is) to your PATH variable
-- Install required certificates:
-    1. `cd chieftaind`
-    2. `server\genkey.bat`
-    3. The following error message can be safely ignored:
-  ```
-  Can't load ./.rnd into RNG
-  6656:error:2406F079:random number generator:RAND_load_file:Cannot open file:crypto\
-  rand\randfile.c:88:Filename=./.rnd
-  ```
-- Create `conf.json` from `conf.example.json`
-
-**For berryhunderd**
-
-- Install go
-- Install git
-- Create `conf.json` from `conf.default.json`
-- Create `tokens.list` from `tokens.example.list`
-- Switch tag from engo.io/esc to v1.0.1 `git checkout tags/v1.0.1`
-
-**For frontend**
-
-1. Install node.js https://nodejs.org
-
-#### Build everything
-
-- Run build.bat in project root
-- every project part (chieftaind, berryhunterd, frontend) has it's own build.bat, too. In case you only want to build a specific part.
-
-#### Run everything
-
-- Run start.bat in project root
-- every project part (chieftaind, berryhunterd, frontend) has it's own start.bat, too. In case you only want to build a specific part.
-
-
 
 :V
