@@ -1,8 +1,6 @@
 // The Nature of Code
 // Daniel Shiffman
 // http://natureofcode.com
-'use strict';
-
 // The "Vehicle" class
 import {Vector} from '../../Vector';
 import {map} from '../../Utils';

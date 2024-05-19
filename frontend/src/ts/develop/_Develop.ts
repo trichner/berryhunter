@@ -1,5 +1,3 @@
-'use strict';
-
 import * as AABBs from './AABBs';
 import * as Fps from './Fps';
 import * as Preloading from '../Preloading';

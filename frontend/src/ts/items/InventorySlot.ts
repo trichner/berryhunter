@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Equipment from '../items/Equipment';
 import {ItemType} from './ItemType';
 import * as UserInterface from '../userInterface/UserInterface';

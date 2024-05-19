@@ -1,5 +1,3 @@
-'use strict';
-
 import {ExtendedColorMatrixFilter} from './ExtendedColorMatrixFilter';
 import {Develop} from "./develop/_Develop";
 

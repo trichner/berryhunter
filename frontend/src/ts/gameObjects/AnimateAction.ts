@@ -1,5 +1,3 @@
-'use strict';
-
 import {deg2rad} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
 import {Animation} from "../Animation";

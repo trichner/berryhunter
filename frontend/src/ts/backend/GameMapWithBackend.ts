@@ -1,5 +1,3 @@
-'use strict';
-
 import _clone = require('lodash/clone');
 import {isDefined, removeElement} from '../Utils';
 import {DebugCircle} from '../develop/DebugCircle';

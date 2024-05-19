@@ -1,5 +1,3 @@
-'use strict';
-
 import * as NameGenerator from './NameGenerator';
 import {Account} from "./Account";
 import {IBackend} from "./interfaces/IBackend";
@@ -82,4 +80,3 @@ function onSubmit(event, inputElement, screen: screen) {
     new JoinMessage(name).send();
     GameJoinEvent.trigger(screen);
 }
-

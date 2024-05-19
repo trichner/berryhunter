@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Exposes certain functionality in the browser console.
  */

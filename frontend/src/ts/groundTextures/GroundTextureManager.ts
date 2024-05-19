@@ -1,5 +1,3 @@
-'use strict';
-
 import {isDefined} from '../Utils';
 import {GroundTexture, Parameters} from './GroundTexture';
 import {GroundTextureTypes} from './GroundTextureTypes';

@@ -1,5 +1,3 @@
-'use strict';
-
 import {Vehicle} from './natureOfCode/arrive/vehicle';
 import {Vector} from './Vector';
 import {Character} from './gameObjects/Character';

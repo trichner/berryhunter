@@ -1,5 +1,3 @@
-'use strict';
-
 import {BasicConfig} from "./Basic";
 
 export const GraphicsConfig = {

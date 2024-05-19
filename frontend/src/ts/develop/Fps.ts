@@ -1,5 +1,3 @@
-'use strict';
-
 import {IDevelop} from "../interfaces/IDevelop";
 import {IGame} from "../interfaces/IGame";
 import {PrerenderEvent} from "../Events";

@@ -1,5 +1,3 @@
-'use strict';
-
 import {isDefined, isUndefined} from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
 import * as Recipes from './Recipes';

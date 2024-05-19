@@ -1,5 +1,3 @@
-'use strict';
-
 import {GraphicsConfig} from '../config/Graphics';
 import {dateDiff, playCssAnimation} from './Utils';
 import {BerryhunterApi} from './backend/BerryhunterApi';

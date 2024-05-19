@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Utils from '../Utils';
 import * as Console from '../Console';
 import * as BackendConstants from './BackendConstants';

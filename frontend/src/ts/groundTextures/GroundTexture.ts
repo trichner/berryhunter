@@ -1,5 +1,3 @@
-'use strict';
-
 import {InjectedSVG} from '../InjectedSVG';
 import * as PIXI from "pixi.js";
 import {GroundTextureType} from "./GroundTextureTypes";

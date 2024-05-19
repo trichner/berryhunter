@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Preloading from '../Preloading';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {clearNode, isUndefined, playCssAnimation} from '../Utils';

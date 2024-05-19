@@ -1,5 +1,3 @@
-'use strict';
-
 import {isFunction} from '../Utils';
 import {Items} from '../items/Items';
 import {SubIcon} from './SubIcon';

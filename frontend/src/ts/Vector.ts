@@ -1,6 +1,3 @@
-'use strict';
-
-
 export class Vector {
     x: number;
     y: number;
@@ -142,4 +139,3 @@ export class Vector {
         return {x: this.x, y: this.y};
     }
 }
-

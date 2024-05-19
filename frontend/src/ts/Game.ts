@@ -1,5 +1,3 @@
-'use strict';
-
 import * as PIXI from 'pixi.js';
 import {Backend} from "./backend/Backend";
 import {GameMapWithBackend} from './backend/GameMapWithBackend';

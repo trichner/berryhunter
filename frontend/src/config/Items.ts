@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Register of available items in the game.
  *

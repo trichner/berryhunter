@@ -1,5 +1,3 @@
-'use strict';
-
 import * as UserInterface from '../userInterface/UserInterface';
 import {clearNode, formatIntWithAbbreviation, isDefined, isUndefined} from '../Utils';
 

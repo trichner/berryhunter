@@ -1,5 +1,3 @@
-'use strict';
-
 import {isFunction} from './Utils';
 import * as UserInterface from './userInterface/UserInterface';
 import * as Console from './Console';

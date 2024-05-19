@@ -1,5 +1,3 @@
-'use strict';
-
 import {InjectedSVG} from '../InjectedSVG';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Vector} from '../Vector';

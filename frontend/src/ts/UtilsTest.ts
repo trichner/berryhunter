@@ -1,5 +1,3 @@
-'use strict';
-
 import {nearlyEqual} from './Utils';
 
 function assertTrue(value) {

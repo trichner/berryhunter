@@ -1,5 +1,3 @@
-'use strict';
-
 import {arraysEqual, isUndefined} from '../Utils';
 import * as UserInterface from '../userInterface/UserInterface';
 import {BerryhunterApi} from '../backend/BerryhunterApi';

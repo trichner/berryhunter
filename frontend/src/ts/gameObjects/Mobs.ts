@@ -1,5 +1,3 @@
-'use strict';
-
 import {GameObject} from './_GameObject';
 import * as Preloading from '../Preloading';
 import {isUndefined, randomInt} from '../Utils';

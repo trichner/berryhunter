@@ -1,5 +1,3 @@
-'use strict';
-
 import {InventoryChangeMsg, InventorySlotChangedEvent} from "../Events";
 
 export class SubIcon {

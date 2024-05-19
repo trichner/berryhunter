@@ -1,5 +1,3 @@
-'use strict';
-
 import {BasicConfig as Constants} from '../../config/Basic';
 import {KeyCodes} from '../input/keyboard/keys/KeyCodes';
 import {GameState, IGame} from "../interfaces/IGame";

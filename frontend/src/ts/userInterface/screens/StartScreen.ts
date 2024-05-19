@@ -1,5 +1,3 @@
-'use strict';
-
 import * as PlayerName from '../../PlayerName';
 import {isDefined, preventInputPropagation, smoothHoverAnimation} from '../../Utils';
 import * as DetectBrowser from 'detect-browser';

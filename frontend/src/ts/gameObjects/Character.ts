@@ -1,5 +1,3 @@
-'use strict';
-
 import {GameObject} from './_GameObject';
 import * as PIXI from 'pixi.js';
 import {NamedGroup} from '../NamedGroup';

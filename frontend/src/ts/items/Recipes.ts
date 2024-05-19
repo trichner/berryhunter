@@ -1,5 +1,3 @@
-'use strict';
-
 import {isDefined, isFunction} from '../Utils';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Placeable} from '../gameObjects/Placeable';

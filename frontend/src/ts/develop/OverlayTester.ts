@@ -1,5 +1,3 @@
-'use strict';
-
 import {BasicConfig as Constants} from '../../config/Basic';
 import {isFunction} from "../Utils";
 import {VitalSigns} from "../VitalSigns";

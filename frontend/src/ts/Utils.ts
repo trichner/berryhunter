@@ -1,5 +1,3 @@
-'use strict';
-
 import _isString = require('lodash/isString');
 import {radians} from "./interfaces/Types";
 

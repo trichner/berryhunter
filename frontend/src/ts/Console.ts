@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Preloading from './Preloading';
 import {BackendValidTokenEvent} from './Events';
 import {clearNode, getUrlParameter, isFunction, preventInputPropagation, resetFocus} from './Utils';

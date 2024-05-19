@@ -1,5 +1,3 @@
-'use strict';
-
 export const ItemType = {
     RESOURCE: 'RESOURCE',
     PLACEABLE: 'PLACEABLE',

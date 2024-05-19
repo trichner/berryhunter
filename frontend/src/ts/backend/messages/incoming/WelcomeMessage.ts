@@ -1,4 +1,3 @@
-'use strict';
 import {BerryhunterApi} from '../../BerryhunterApi';
 
 export class WelcomeMessage {

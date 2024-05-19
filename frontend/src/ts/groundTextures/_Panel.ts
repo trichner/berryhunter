@@ -1,5 +1,3 @@
-'use strict';
-
 import {Items} from '../items/Items';
 import * as Equipment from '../items/Equipment';
 import * as Preloading from '../Preloading';

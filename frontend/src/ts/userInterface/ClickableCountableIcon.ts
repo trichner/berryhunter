@@ -1,5 +1,3 @@
-'use strict';
-
 import {ClickableIcon} from './ClickableIcon';
 
 export class ClickableCountableIcon extends ClickableIcon {

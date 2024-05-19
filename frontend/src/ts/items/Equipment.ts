@@ -1,5 +1,3 @@
-'use strict';
-
 import {ItemType} from './ItemType';
 
 export enum EquipmentSlot {

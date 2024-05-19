@@ -1,5 +1,3 @@
-'use strict';
-
 import * as PIXI from 'pixi.js';
 import {BasicConfig as Constants} from '../config/Basic';
 

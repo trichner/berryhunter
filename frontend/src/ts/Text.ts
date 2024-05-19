@@ -1,5 +1,3 @@
-'use strict';
-
 import _extend = require('lodash/extend');
 
 export function defaultStyle() {

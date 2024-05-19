@@ -1,5 +1,3 @@
-'use strict';
-
 import * as PIXI from 'pixi.js';
 import {GameObject} from './_GameObject';
 import {randomRotation} from '../Utils';

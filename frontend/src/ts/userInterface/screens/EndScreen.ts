@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Preloading from '../../Preloading';
 import * as PlayerName from '../../PlayerName';
 import * as Console from '../../Console';

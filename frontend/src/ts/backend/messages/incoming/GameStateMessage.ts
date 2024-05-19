@@ -1,5 +1,3 @@
-'use strict';
-
 import * as BackendConstants from '../../BackendConstants';
 import * as Resources from '../../../gameObjects/Resources';
 import * as Mobs from '../../../gameObjects/Mobs';

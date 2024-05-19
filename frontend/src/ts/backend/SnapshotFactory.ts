@@ -1,5 +1,3 @@
-'use strict';
-
 import {isDefined, nearlyEqual} from '../Utils';
 import {BackendState} from "../interfaces/IBackend";
 import _clone = require('lodash/clone');

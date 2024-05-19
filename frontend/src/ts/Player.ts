@@ -1,5 +1,3 @@
-'use strict';
-
 import {Character} from './gameObjects/Character';
 import {StatusEffect} from './gameObjects/StatusEffect';
 import {Controls} from './Controls';

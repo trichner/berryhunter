@@ -1,5 +1,3 @@
-'use strict';
-
 import * as Preloading from './Preloading';
 import * as UserInterface from './userInterface/UserInterface';
 import {GraphicsConfig} from '../config/Graphics';

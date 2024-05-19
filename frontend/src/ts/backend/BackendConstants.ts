@@ -1,5 +1,3 @@
-'use strict';
-
 import {Items} from '../items/Items';
 import {StatusEffect, StatusEffectDefinition} from '../gameObjects/StatusEffect';
 import {BerryhunterApi} from './BerryhunterApi';

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Item configs are getting loaded.
  *

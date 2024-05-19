@@ -1,5 +1,3 @@
-'use strict';
-
 import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
 import {GameObject} from "./gameObjects/_GameObject";

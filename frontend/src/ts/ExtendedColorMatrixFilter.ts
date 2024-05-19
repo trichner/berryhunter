@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Adds presets to PIXI.filters.ColorMatrixFilter
  */
