@@ -49,10 +49,9 @@ module.exports = {
 				use: [{
 					loader: 'html-loader',
 					options: {
-						// interpolate: 'require', // used to require other html partials inside of html
 						minimize: true,
 					}
-				}]
+				}],
 			},
 
 			// All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.

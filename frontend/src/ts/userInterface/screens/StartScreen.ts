@@ -12,6 +12,7 @@ import {
     PreloadingStartedEvent,
     StartScreenDomReadyEvent
 } from "../../Events";
+import * as SocialMedia from "../partials/SocialMedia";
 
 
 let _progress = 0;
@@ -63,8 +64,12 @@ export function onDomReady() {
         });
     }
 
-    rootElement.querySelectorAll('.socialLink').forEach(element => {
-        smoothHoverAnimation(element, {animationDuration: 0.3});
+    SocialMedia.content.then((htmlContent) => {
+        rootElement.querySelector('.socialMediaContainer').innerHTML = htmlContent;
+
+        rootElement.querySelectorAll('.socialLink').forEach(element => {
+            smoothHoverAnimation(element, {animationDuration: 0.3});
+        });
     });
 
     smoothHoverAnimation(

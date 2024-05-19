@@ -15,6 +15,7 @@ import * as moment from 'moment-mini';
 import * as Preloading from "../Preloading";
 import {EndScreenShownEvent, GamePlayingEvent, GameSetupEvent, StartScreenDomReadyEvent} from '../Events';
 import {GameState, IGame} from "../interfaces/IGame";
+import * as SocialMedia from "../userInterface/partials/SocialMedia";
 
 let rootElement: HTMLElement;
 let leaderboardTables: Map<string, HTMLElement>;
@@ -83,11 +84,15 @@ function initDom() {
         elements[category] = {
             playerName: rootElement.querySelector('.highscore.' + category + ' > .playerName'),
             score: rootElement.querySelector('.highscore.' + category + ' > .score'),
-        }
+        };
     });
 
-    rootElement.querySelectorAll('.socialLink').forEach((element) => {
-        smoothHoverAnimation(element, {animationDuration: 0.3});
+    SocialMedia.content.then((htmlContent) => {
+        rootElement.querySelector('.socialMediaContainer').innerHTML = htmlContent;
+
+        rootElement.querySelectorAll('.socialLink').forEach((element) => {
+            smoothHoverAnimation(element, {animationDuration: 0.3});
+        });
     });
 }
 

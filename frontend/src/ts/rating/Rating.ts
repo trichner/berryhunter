@@ -1,5 +1,6 @@
 import {htmlModuleToString, makeRequest, smoothHoverAnimation} from "../Utils";
 import _isObject = require('lodash/isObject');
+import * as SocialMedia from "../userInterface/partials/SocialMedia";
 
 let html = require('./rating.html');
 let emptyStarIcon = require('./img/emptyStar.svg?raw');
@@ -21,10 +22,13 @@ export class Rating {
         this.ratingContainer = parentElement.querySelector('.ratingContainer');
         this.initRatingContainer(this.ratingContainer);
 
-        this.socialMediaContainer = parentElement.querySelector('.socialMediaContainer');
-        this.socialMediaContainer.classList.toggle('hidden', !showSocialMedia);
-        this.socialMediaContainer.querySelectorAll('.socialLink').forEach((element) => {
-            smoothHoverAnimation(element, {animationDuration: 0.3});
+        SocialMedia.content.then((htmlContent) => {
+            this.socialMediaContainer = parentElement.querySelector('.socialMediaContainer');
+            this.socialMediaContainer.classList.toggle('hidden', !showSocialMedia);
+            this.socialMediaContainer.querySelector('.injected').innerHTML = htmlContent;
+            this.socialMediaContainer.querySelectorAll('.socialLink').forEach((element) => {
+                smoothHoverAnimation(element, {animationDuration: 0.3});
+            });
         });
 
         this.feedbackContainer = parentElement.querySelector('.feedbackContainer');
@@ -89,7 +93,7 @@ export class Rating {
         ratingContainer.querySelectorAll('.tooltip > span').forEach((tooltip: HTMLElement) => {
             let value: number = parseInt(tooltip.dataset.value);
             this.ratingTooltips[value] = tooltip;
-        })
+        });
     }
 
     onRating() {
