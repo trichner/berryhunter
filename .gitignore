@@ -1,11 +1,10 @@
-.idea/
+/.idea/
 *.iml
-frontend/death-io.sublime-project
-frontend/death-io.sublime-workspace
 .DS_Store
 *.log
-backend/backend.exe
-backend/conf.json
+/backend/berryhunterd
+/backend/backend.exe
+/backend/conf.json
 id_berryhunter-ci
 node_modules/
 berryhunter.sublime-project
