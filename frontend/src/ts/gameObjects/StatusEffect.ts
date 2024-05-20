@@ -1,5 +1,6 @@
 import {ExtendedColorMatrixFilter} from '../ExtendedColorMatrixFilter';
 import {Animation} from "../Animation";
+import {EaseDisplayObject} from "pixi-ease";
 
 export interface StatusEffectDefinition {
     id: string;
@@ -84,20 +85,22 @@ export class StatusEffect implements StatusEffectDefinition {
         this.colorMatrix.alpha = this.startAlpha;
 
         let animation = new Animation();
-        let to = animation.to(
-            this.colorMatrix,
+        let to = animation.add(
+            // TODO ugly, need to test and find better way
+            this.colorMatrix as unknown as PIXI.DisplayObject,
             {alpha: this.endAlpha},
-            500,
             {
+                duration: 500,
                 repeat: true,
                 reverse: true,
                 ease: 'easeInOutCubic'
             }
-        );
+        ) as EaseDisplayObject;
 
         // If the startAlpha is lower, we want the animation to end on the start
         // in the opposite case, the animation should end on the end (without reversing)
         let isReverse = (this.startAlpha > this.endAlpha);
+        // TODO test this
         to.on('loop', () => {
             isReverse = !isReverse;
             // The effect was scheduled to be removed - remove the update function from the global ticker

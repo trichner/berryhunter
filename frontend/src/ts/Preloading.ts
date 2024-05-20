@@ -7,10 +7,10 @@ import {PreloadingProgressedEvent, PreloadingStartedEvent, StartScreenDomReadyEv
 const promises = [];
 let numberOfPromises = 0;
 let loadedPromises = 0;
-let executeResolve;
+let executeResolve: (value: void) => void;
 
 export function executePreload() {
-    return new Promise(function (resolve) {
+    return new Promise<void>(function (resolve) {
         executeResolve = resolve;
         PreloadingStartedEvent.trigger();
     });
@@ -34,7 +34,7 @@ StartScreenDomReadyEvent.subscribe(() => {
     })().then(executeResolve);
 });
 
-export function registerPreload(preloadingPromise) {
+export function registerPreload(preloadingPromise: Promise<any>) {
     preloadingPromise.then(function (data) {
         loadedPromises++;
         PreloadingProgressedEvent.trigger(loadedPromises / numberOfPromises);
@@ -48,7 +48,7 @@ export function registerPreload(preloadingPromise) {
     return preloadingPromise;
 }
 
-export function registerGameObjectSVG(gameObjectClass: {svg: PIXI.Texture}, svgPath, maxSize) {
+export function registerGameObjectSVG(gameObjectClass: {svg: PIXI.Texture}, svgPath: string | { default: string; }, maxSize: number) {
     svgPath = htmlModuleToString(svgPath);
     return registerPreload(
         new Promise(function (resolve, reject) {
@@ -57,7 +57,7 @@ export function registerGameObjectSVG(gameObjectClass: {svg: PIXI.Texture}, svgP
                 // Scale sourceScale according to the maximum required graphic size
                 sourceScale = sourceScale * (2 * maxSize) / Constants.GRAPHIC_BASE_SIZE;
             }
-            gameObjectClass.svg = PIXI.Texture.fromImage(svgPath, undefined, undefined, sourceScale);
+            gameObjectClass.svg = PIXI.Texture.from(svgPath, {resourceOptions: {scale: sourceScale}});
             gameObjectClass.svg.baseTexture.on('loaded', function () {
                 resolve(gameObjectClass.svg);
             });

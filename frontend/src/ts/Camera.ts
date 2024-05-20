@@ -1,3 +1,4 @@
+import _debounce = require('lodash/debounce');
 import {Vehicle} from './natureOfCode/arrive/vehicle';
 import {Vector} from './Vector';
 import {IGame} from "./interfaces/IGame";
@@ -83,7 +84,7 @@ export class Camera {
         let position = Vector.clone(this.position);
         position.negate();
         position.add(this.offset);
-        Game.cameraGroup.position.copy(position);
+        Game.cameraGroup.position.copyFrom(position);
 
         CameraUpdatedEvent.trigger(position);
     }

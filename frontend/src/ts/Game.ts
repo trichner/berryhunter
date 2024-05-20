@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import _debounce = require('lodash/debounce');
 import {Backend} from "./backend/Backend";
 import {GameMapWithBackend} from './backend/GameMapWithBackend';
 import {MiniMap} from './MiniMap';
@@ -41,7 +42,7 @@ export class Game implements IGame {
 
     public state = GameState.INITIALIZING;
 
-    public renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
+    public renderer: PIXI.Renderer;
     public width: number;
     public height: number;
     public centerX: number;
@@ -81,22 +82,18 @@ export class Game implements IGame {
             backgroundColor: 0x006030
         });
 
-        // Fullscreen
+        // Fill whole viewport
         this.renderer.view.style.position = "absolute";
         this.renderer.view.style.display = "block";
-        this.renderer.autoResize = true;
         this.resizeToWindow();
+
+        // TODO re-center view on resize
+        window.addEventListener('resize', _debounce(this.resizeToWindow.bind(this), 150));
 
         //Add the canvas to the HTML document
         document.body.insertBefore(
             this.renderer.view,
             document.body.firstChild);
-
-        this.width = this.renderer.width;
-        this.height = this.renderer.height;
-
-        this.centerX = this.width / 2;
-        this.centerY = this.height / 2;
 
         /**
          * Ordered by z-index
@@ -289,6 +286,11 @@ export class Game implements IGame {
 
     resizeToWindow(): void {
         this.renderer.resize(window.innerWidth, window.innerHeight);
+        this.width = this.renderer.width;
+        this.height = this.renderer.height;
+
+        this.centerX = this.width / 2;
+        this.centerY = this.height / 2;
     }
 
     private loop(now): void {

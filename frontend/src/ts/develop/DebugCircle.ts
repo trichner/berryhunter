@@ -38,8 +38,10 @@ export class DebugCircle extends GameObject {
 
     createShape(x, y) {
         let circle = new PIXI.Graphics();
-        circle.lineColor = 0xFFFF00;
-        circle.lineWidth = Develop.get().settings.linewidth;
+        circle.lineStyle(
+            Develop.get().settings.linewidth,
+            0xFFFF00,
+        );
         circle.drawCircle(x, y, this.size / 2);
         return circle;
     }

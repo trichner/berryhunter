@@ -25,7 +25,7 @@ GameSetupEvent.subscribe((game: IGame) => {
 
 export class Character extends GameObject implements ICharacterLike {
     static svg: PIXI.Texture;
-    static craftingIndicator: {svg: PIXI.Texture} = {svg: undefined};
+    static craftingIndicator: { svg: PIXI.Texture } = {svg: undefined};
     static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
 
 
@@ -49,8 +49,8 @@ export class Character extends GameObject implements ICharacterLike {
     messagesGroup: PIXI.Container;
     craftingIndicator: NamedGroup;
 
-    leftHand: PIXI.Container;
-    rightHand: PIXI.Container;
+    leftHand: PIXI.Container & { originalTranslation: { x: number, y: number } };
+    rightHand: PIXI.Container & { originalTranslation: { x: number, y: number } };
 
     private prerenderSubToken: ISubscriptionToken;
 
@@ -86,7 +86,7 @@ export class Character extends GameObject implements ICharacterLike {
 
         this.createHands();
 
-        Object.values(this.equipmentSlotGroups).forEach(function (equipmentSlot: { originalTranslation: Vector, position }) {
+        Object.values(this.equipmentSlotGroups).forEach((equipmentSlot: { originalTranslation: Vector, position }) => {
             equipmentSlot.originalTranslation = Vector.clone(equipmentSlot.position);
         });
 
@@ -126,7 +126,7 @@ export class Character extends GameObject implements ICharacterLike {
         }
 
         this.followGroups.forEach(function (group: PIXI.Container) {
-            group.position.copy(this.shape.position);
+            group.position.copyFrom(this.shape.position);
         }, this);
 
         this.prerenderSubToken = PrerenderEvent.subscribe(this.update, this);
@@ -174,8 +174,9 @@ export class Character extends GameObject implements ICharacterLike {
         this.equipmentSlotGroups[Equipment.EquipmentSlot.HAND] = rightHand.slot;
     }
 
-    createHand(handAngleDistance: number) {
-        let group = new PIXI.Container();
+    createHand(handAngleDistance: number):
+        { group: PIXI.Container & { originalTranslation: { x: number, y: number } }, slot: PIXI.Container } {
+        let group = new PIXI.Container() as PIXI.Container & { originalTranslation: { x: number, y: number } };
 
         const handAngle = 0;
         group.position.set(
@@ -191,8 +192,10 @@ export class Character extends GameObject implements ICharacterLike {
         let handShape = new PIXI.Graphics();
         group.addChild(handShape);
         handShape.beginFill(GraphicsConfig.character.hands.fillColor);
-        handShape.lineColor = GraphicsConfig.character.hands.lineColor;
-        handShape.lineWidth = 0.212 * 0.6; // relative to size
+        handShape.lineStyle(
+            0.212 * 0.6, // relative to size
+            GraphicsConfig.character.hands.lineColor,
+        );
         handShape.drawCircle(0, 0, this.size * 0.2);
 
         group['originalTranslation'] = Vector.clone(group.position);
@@ -273,7 +276,12 @@ export class Character extends GameObject implements ICharacterLike {
         }
     }
 
-    private animateAction(hand, type: 'swing' | 'stab', remainingTicks?: number, mirrored: boolean = false) {
+    private animateAction(
+        hand: PIXI.DisplayObject & { originalTranslation: { x: number, y: number } },
+        type: 'swing' | 'stab',
+        remainingTicks?: number,
+        mirrored: boolean = false,
+    ) {
         animateAction({
             size: this.size,
             hand,
@@ -299,8 +307,8 @@ export class Character extends GameObject implements ICharacterLike {
             return true;
         });
 
-        this.followGroups.forEach(function (group) {
-            group.position.copy(this.shape.position);
+        this.followGroups.forEach((group) => {
+            group.position.copyFrom(this.shape.position);
         }, this);
 
         if (this.isPlayerCharacter) {
@@ -334,7 +342,7 @@ export class Character extends GameObject implements ICharacterLike {
     /**
      * @return {Boolean} whether or not the item was equipped
      */
-    equipItem(item, equipmentSlot: EquipmentSlot) {
+    equipItem(item, equipmentSlot: EquipmentSlot): boolean {
         // If the same item is already equipped, just cancel
         if (this.equippedItems[equipmentSlot] === item) {
             return false;
@@ -394,7 +402,7 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     say(message) {
-        let textStyle = Text.style({fill: '#e37313', stroke: '#000000', strokeThickness: 5});
+        let textStyle = Text.style({fill: '#E37313', stroke: '#000000', strokeThickness: 5});
         let fontSize = textStyle.fontSize;
 
         // Move all currently displayed messages up

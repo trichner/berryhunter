@@ -13,7 +13,7 @@ export class InjectedSVG extends PIXI.Sprite {
         this.x = x;
         this.y = y;
         if (typeof size !== 'number') {
-            console.warn('InjectedSVG "' + svgTexture.baseTexture.imageUrl + '" size "' + size + '" is not a number but a ' + (typeof size));
+            console.warn('InjectedSVG "' + svgTexture.baseTexture.cacheId + '" size "' + size + '" is not a number but a ' + (typeof size));
         }
         this.width = size;
         this.height = size;

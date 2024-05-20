@@ -5,18 +5,22 @@ import _merge = require('lodash/merge');
 
 const animationCfg = GraphicsConfig.character.actionAnimation;
 
-interface Hand {
-    x: number;
-    y: number;
-    originalTranslation: { x: number, y: number }
-}
-
 export const types = {
     swing: undefined,
     stab: undefined,
 };
 
-export function animateAction(options: { hand: Hand, type?: 'swing' | 'stab', animation: Animation, animationFrame?: number, onDone?: () => any, size: number, mirrored?: boolean }) {
+interface AnimationActionOptions {
+    hand: PIXI.DisplayObject & {originalTranslation: { x: number, y: number }};
+    type?: keyof typeof types;
+    animation: Animation;
+    animationFrame?: number;
+    onDone?: () => any;
+    size: number;
+    mirrored?: boolean;
+}
+
+export function animateAction(options: AnimationActionOptions) {
     options = _merge({
         mirrored: false,
         type: 'stab',
@@ -31,108 +35,56 @@ export function animateAction(options: { hand: Hand, type?: 'swing' | 'stab', an
     types[options.type](options, overallDuration, forwardDuration, start);
 }
 
-types.swing = function (options, overallDuration, forwardDuration, start) {
-    options.animation.to(
+types.swing = function (options: AnimationActionOptions, overallDuration: number, forwardDuration: number, start: number) {
+    options.animation.add(
         options.hand,
         {
             x: options.hand.originalTranslation.x + options.size * 0.6,
         },
-        forwardDuration,
         {
+            duration: forwardDuration,
             ease: 'easeOutCirc',
+            reverse: true,
         },
-    ).time = start;
-    options.animation.to(
+    );
+    options.animation.add(
         options.hand,
         {
             y: options.hand.originalTranslation.y + options.size * (options.mirrored ? +0.6 : -0.6),
         },
-        forwardDuration,
         {
+            duration: forwardDuration,
             ease: 'easeInCirc',
+            reverse: true,
         },
-    ).time = start;
-    options.animation.to(
+    );
+    options.animation.add(
         options.hand,
         {
             rotation: deg2rad(-45),
         },
-        forwardDuration,
         {
+            duration: forwardDuration,
             ease: 'linear',
+            reverse: true,
         },
-    ).time = start;
+    );
 
-    options.animation.on('done', function () {
-        let animation = new Animation();
-        let duration = overallDuration - forwardDuration;
-        start = Math.max(0, start - forwardDuration);
-        animation.to(
-            options.hand,
-            {
-                x: options.hand.originalTranslation.x,
-            },
-            duration,
-            {
-                ease: 'easeInCirc',
-            },
-        ).time = start;
-        animation.to(
-            options.hand,
-            {
-                y: options.hand.originalTranslation.y,
-            },
-            duration,
-            {
-                ease: 'easeOutCirc',
-            },
-        ).time = start;
-        animation.to(
-            options.hand,
-            {
-                rotation: 0,
-            },
-            duration,
-            {
-                ease: 'linear',
-            },
-        ).time = start;
-
-        animation.on('done', function () {
-            options.onDone();
-        });
-    });
+    options.animation.on('complete', options.onDone);
 };
 
-types.stab = function (options, overallDuration, forwardDuration, start) {
-    options.animation.to(
+types.stab = function (options: AnimationActionOptions, overallDuration: number, forwardDuration: number, start: number) {
+    options.animation.add(
         options.hand,
         {
             x: options.hand.originalTranslation.x + options.size * 0.5,
         },
-        forwardDuration,
         {
+            duration: forwardDuration,
             ease: 'easeInOutQuad',
+            reverse: true,
         },
-    ).time = start;
+    );
 
-    options.animation.on('done', function () {
-        let animation = new Animation();
-        let duration = overallDuration - forwardDuration;
-        start = Math.max(0, start - forwardDuration);
-        animation.to(
-            options.hand,
-            {
-                x: options.hand.originalTranslation.x,
-            },
-            duration,
-            {
-                ease: 'linear',
-            },
-        ).time = start;
-
-        animation.on('done', function () {
-            options.onDone();
-        });
-    });
+    options.animation.on('complete', options.onDone);
 };

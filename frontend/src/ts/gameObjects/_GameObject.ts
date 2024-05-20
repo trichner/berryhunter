@@ -217,10 +217,10 @@ function moveInterpolatedObjects() {
         function (gameObject: GameObject) {
             let elapsedTimePortion = (now - gameObject.desireTimestamp) / Constants.SERVER_TICKRATE;
             if (elapsedTimePortion >= 1) {
-                gameObject.shape.position.copy(gameObject.desiredPosition);
+                gameObject.shape.position.copyFrom(gameObject.desiredPosition);
                 movementInterpolatedObjects.delete(gameObject);
             } else {
-                gameObject.shape.position.copy(
+                gameObject.shape.position.copyFrom(
                     Vector.clone(gameObject.shape.position).lerp(
                         gameObject.desiredPosition,
                         elapsedTimePortion));

@@ -381,7 +381,7 @@ export function playCssAnimation(element, animationClass) {
     element.classList.remove(animationClass);
     // Use 1 render cycle delay to ensure the animation is restarted
     requestAnimationFrame(function () {
-        element.classList.add(animationClass)
+        element.classList.add(animationClass);
     });
 }
 

@@ -8,13 +8,13 @@ export enum Layer {
 }
 
 export class MiniMap {
-    mapWidth;
-    mapHeight;
-    registeredGameObjectIds;
-    trackedGameObjects;
-    width;
-    height;
-    renderer;
+    mapWidth: number;
+    mapHeight: number;
+    registeredGameObjectIds: number[];
+    trackedGameObjects: GameObject[];
+    width: number;
+    height: number;
+    renderer: PIXI.Renderer;
     stage: PIXI.Container;
     iconGroup: PIXI.Container;
     playerGroup: PIXI.Container;
@@ -23,7 +23,7 @@ export class MiniMap {
     paused: boolean;
     playing: boolean;
 
-    constructor(mapWidth, mapHeight) {
+    constructor(mapWidth: number, mapHeight: number) {
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
 
@@ -145,7 +145,7 @@ export class MiniMap {
 }
 
 function update() {
-    this.trackedGameObjects.forEach(gameObject => {
+    this.trackedGameObjects.forEach((gameObject: GameObject) => {
         gameObject.minimapIcon.position.x = gameObject.getX() * this.scale;
         gameObject.minimapIcon.position.y = gameObject.getY() * this.scale;
     });
