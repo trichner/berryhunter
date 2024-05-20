@@ -10,7 +10,7 @@ import {EquipmentSlot} from "./items/Equipment";
 
 const warnedEvents = [];
 
-function warnEmptyListeners(event) {
+function warnEmptyListeners(event: string) {
     // make sure there's only 1 warning per event
     if (!warnedEvents.includes(event)) {
         console.warn('No listeners for event "' + event + '"!');
@@ -19,9 +19,13 @@ function warnEmptyListeners(event) {
 }
 
 export interface IEvent {
-    subscribe(callback: (payload?: any) => (boolean | void), context?: object): void;
-    unsubscribe(callback: (payload?: any) => (boolean | void)): void;
+    subscribe(callback: (payload?: any) => (boolean | void), context?: object): ISubscriptionToken;
+
     trigger(payload?: any): void;
+}
+
+export interface ISubscriptionToken {
+    unsubscribe(): void;
 }
 
 abstract class Event implements IEvent {
@@ -36,23 +40,25 @@ abstract class Event implements IEvent {
         this.requiresListeners = requiresListeners;
     }
 
-    public subscribe(callback: (payload?: any) => (boolean | void), context?: object): void {
+    public subscribe(callback: (payload?: any) => (boolean | void), context?: object): ISubscriptionToken {
         if (isDefined(context)) {
             callback = callback.bind(context);
         }
         this.listeners.push(callback);
+
+        return new Event.SubscriptionToken(this, callback);
     }
 
-    public unsubscribe(callback: (payload?: any) => (boolean | void)): void {
+    protected unsubscribe(callback: (payload?: any) => (boolean | void)): void {
         if (!removeElement(this.listeners, callback)) {
             warnWithStacktrace('Tried to unsubscribe callback that was never subscribed.');
         }
     }
 
     public trigger(payload?: any): void {
-        if (this.listeners.length === 0){
+        if (this.listeners.length === 0) {
             if (this.requiresListeners) {
-                warnEmptyListeners(this.constructor.name)
+                warnEmptyListeners(this.constructor.name);
             }
 
             return;
@@ -69,15 +75,20 @@ abstract class Event implements IEvent {
             this.listeners.splice(index, 1);
         });
     }
+
+    private static SubscriptionToken = class implements ISubscriptionToken {
+        constructor(private event: Event, private callback: (payload?: any) => (boolean | void)) {
+        }
+
+        unsubscribe(): void {
+            this.event.unsubscribe(this.callback);
+        }
+    };
 }
 
 class SimpleEvent extends Event {
-    public subscribe(callback: () => (boolean | void), context?: object): void {
-        super.subscribe(callback, context);
-    }
-
-    public unsubscribe(callback: () => (boolean | void)): void {
-        super.unsubscribe(callback);
+    public subscribe(callback: () => (boolean | void), context?: object): ISubscriptionToken {
+        return super.subscribe(callback, context);
     }
 
     public trigger(): void {
@@ -86,12 +97,8 @@ class SimpleEvent extends Event {
 }
 
 class PayloadEvent<T> extends Event {
-    public subscribe(callback: (payload: T) => (boolean | void), context?: object): void {
-        super.subscribe(callback, context);
-    }
-
-    public unsubscribe(callback: (payload: T) => (boolean | void)): void {
-        super.unsubscribe(callback);
+    public subscribe(callback: (payload: T) => (boolean | void), context?: object): ISubscriptionToken {
+        return super.subscribe(callback, context);
     }
 
     public trigger(payload: T): void {
@@ -102,7 +109,7 @@ class PayloadEvent<T> extends Event {
 abstract class OneTimeEvent extends Event {
     private wasTriggered: boolean;
 
-    public subscribe(callback: (payload?: any) => (boolean | void), context?: object): void {
+    public subscribe(callback: (payload?: any) => (boolean | void), context?: object): ISubscriptionToken {
         if (this.wasTriggered) {
             // One time event was already triggered - just execute
             // the callback with appropriate parameters and done
@@ -113,14 +120,14 @@ abstract class OneTimeEvent extends Event {
         super.subscribe(callback, context);
     }
 
-    protected abstract executeCallback(callback: (payload?: any) => (boolean | void), context?: object);
+    protected abstract executeCallback(callback: (payload?: any) => (boolean | void), context?: object): void;
 
     public unsubscribe(callback: (payload?: any) => (boolean | void)): void {
         if (this.wasTriggered) {
             warnWithStacktrace('Unsubscribed from an already triggered one-time event.');
         }
 
-        super.unsubscribe(callback)
+        super.unsubscribe(callback);
     }
 
     public trigger(payload?: any): void {
@@ -136,12 +143,8 @@ abstract class OneTimeEvent extends Event {
 
 class OneTimeSimpleEvent extends OneTimeEvent {
 
-    public subscribe(callback: () => (boolean | void), context?: object): void {
-        super.subscribe(callback, context);
-    }
-
-    public unsubscribe(callback: () => (boolean | void)): void {
-        super.unsubscribe(callback);
+    public subscribe(callback: () => (boolean | void), context?: object): ISubscriptionToken {
+        return super.subscribe(callback, context);
     }
 
     public trigger(): void {
@@ -156,12 +159,8 @@ class OneTimeSimpleEvent extends OneTimeEvent {
 class OneTimePayloadEvent<T> extends OneTimeEvent {
     private payload: T;
 
-    public subscribe(callback: (payload: T) => (boolean | void), context?: object): void {
-        super.subscribe(callback, context);
-    }
-
-    public unsubscribe(callback: (payload: T) => (boolean | void)): void {
-        super.unsubscribe(callback);
+    public subscribe(callback: (payload: T) => (boolean | void), context?: object): ISubscriptionToken {
+        return super.subscribe(callback, context);
     }
 
     public trigger(payload: T): void {

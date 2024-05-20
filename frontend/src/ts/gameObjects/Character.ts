@@ -15,41 +15,44 @@ import {StatusEffect} from './StatusEffect';
 import {Animation} from "../Animation";
 import {Items} from '../items/Items';
 import {IGame} from "../interfaces/IGame";
-import {CharacterEquippedItemEvent, GameSetupEvent, PrerenderEvent} from "../Events";
+import {CharacterEquippedItemEvent, GameSetupEvent, ISubscriptionToken, PrerenderEvent} from "../Events";
+import {ICharacterLike} from "../interfaces/ICharacter";
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
-export class Character extends GameObject {
+export class Character extends GameObject implements ICharacterLike {
     static svg: PIXI.Texture;
     static craftingIndicator: {svg: PIXI.Texture} = {svg: undefined};
     static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
 
 
     name: string;
-    nameElement;
+    nameElement: PIXI.Text;
     isPlayerCharacter: boolean;
     movementSpeed: number;
 
-    currentAction;
+    currentAction: string | false;
     equipmentSlotGroups;
     equippedItems;
     lastRemainingTicks: number = 0;
     useLeftHand: boolean = false;
 
-    actualShape;
+    actualShape: NamedGroup;
 
     // Contains PIXI.Containers that will mirror this characters position
-    followGroups;
+    followGroups: PIXI.Container[];
 
-    messages;
-    messagesGroup;
+    messages: PIXI.Text[];
+    messagesGroup: PIXI.Container;
     craftingIndicator: NamedGroup;
 
-    leftHand;
-    rightHand;
+    leftHand: PIXI.Container;
+    rightHand: PIXI.Container;
+
+    private prerenderSubToken: ISubscriptionToken;
 
     constructor(id: number, x, y, name, isPlayerCharacter) {
         super(id, Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2, Character.svg);
@@ -83,7 +86,7 @@ export class Character extends GameObject {
 
         this.createHands();
 
-        Object.values(this.equipmentSlotGroups).forEach(function (equipmentSlot: { originalTranslation, position }) {
+        Object.values(this.equipmentSlotGroups).forEach(function (equipmentSlot: { originalTranslation: Vector, position }) {
             equipmentSlot.originalTranslation = Vector.clone(equipmentSlot.position);
         });
 
@@ -122,14 +125,14 @@ export class Character extends GameObject {
             circle.rotation = -0.5 * Math.PI;
         }
 
-        this.followGroups.forEach(function (group) {
+        this.followGroups.forEach(function (group: PIXI.Container) {
             group.position.copy(this.shape.position);
         }, this);
 
-        PrerenderEvent.subscribe(this.update, this);
+        this.prerenderSubToken = PrerenderEvent.subscribe(this.update, this);
     }
 
-    initShape(svg, x, y, size, rotation) {
+    initShape(svg: PIXI.Texture, x: number, y: number, size: number, rotation: number) {
         let group = new PIXI.Container();
         group.position.set(x, y);
 
@@ -149,7 +152,7 @@ export class Character extends GameObject {
             Damaged: StatusEffect.forDamaged(this.actualShape),
             DamagedAmbient: StatusEffect.forDamagedOverTime(this.actualShape),
             Freezing: StatusEffect.forFreezing(this.actualShape)
-        }
+        };
     }
 
     getRotationShape() {
@@ -171,7 +174,7 @@ export class Character extends GameObject {
         this.equipmentSlotGroups[Equipment.EquipmentSlot.HAND] = rightHand.slot;
     }
 
-    createHand(handAngleDistance) {
+    createHand(handAngleDistance: number) {
         let group = new PIXI.Container();
 
         const handAngle = 0;
@@ -206,7 +209,7 @@ export class Character extends GameObject {
         }
 
         if (isDefined(this.nameElement)) {
-            this.nameElement.value = name;
+            this.nameElement.text = this.name;
             return;
         }
 
@@ -288,8 +291,8 @@ export class Character extends GameObject {
         let timeDelta = Game.timeDelta;
 
         this.messages = this.messages.filter((message) => {
-            message.timeToLife -= timeDelta;
-            if (message.timeToLife <= 0) {
+            message['timeToLife'] -= timeDelta;
+            if (message['timeToLife'] <= 0) {
                 this.messagesGroup.removeChild(message);
                 return false;
             }
@@ -416,7 +419,7 @@ export class Character extends GameObject {
 
     remove() {
         this.hide();
-        PrerenderEvent.unsubscribe(this.update);
+        this.prerenderSubToken.unsubscribe();
     }
 }
 

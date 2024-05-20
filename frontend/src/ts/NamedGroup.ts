@@ -3,9 +3,8 @@ import {BasicConfig as Constants} from '../config/Basic';
 
 
 export class NamedGroup extends PIXI.Container {
-    constructor(name) {
+    constructor(name: string) {
         super();
-
 
         if (!Constants.USE_NAMED_GROUPS) {
             NamedGroup.nameGroup(this, name);
@@ -13,7 +12,7 @@ export class NamedGroup extends PIXI.Container {
     }
 
 
-    static nameGroup(group, name) {
+    static nameGroup(group: NamedGroup, name: string) {
         group['!name'] = name;
     };
 }

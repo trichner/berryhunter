@@ -1,26 +1,26 @@
 import {Vehicle} from './natureOfCode/arrive/vehicle';
 import {Vector} from './Vector';
-import {Character} from './gameObjects/Character';
 import {IGame} from "./interfaces/IGame";
 import {Develop} from "./develop/_Develop";
-import {CameraUpdatedEvent, PrerenderEvent} from "./Events";
+import {CameraUpdatedEvent, ISubscriptionToken, PrerenderEvent} from "./Events";
+import {ICharacterLike} from "./interfaces/ICharacter";
 
 let Game: IGame = null;
 
 let Corners = [];
-let extraBoundary;
+let extraBoundary: number;
 
 export class Camera {
-    character: Character;
+    character: ICharacterLike;
     offset: Vector;
     vehicle: Vehicle;
     position: Vector;
+    private prerenderSubToken: ISubscriptionToken;
 
     /**
-     *
-     * @param {Character} character the Character to follow
+     * @param character the character to follow
      */
-    constructor(character) {
+    constructor(character: ICharacterLike) {
         this.character = character;
 
         this.offset = new Vector(Game.centerX, Game.centerY);
@@ -30,15 +30,12 @@ export class Camera {
 
         this.vehicle.setMaxSpeed(character.movementSpeed * 2);
 
-        /**
-         * @type {Vector}
-         */
         this.position = this.vehicle.position;
 
-        PrerenderEvent.subscribe(this.update, this);
+        this.prerenderSubToken = PrerenderEvent.subscribe(this.update, this);
     }
 
-    static setup(game) {
+    static setup(game: IGame) {
         Game = game;
 
         extraBoundary = Math.min(Game.width, Game.height) / 2;
@@ -50,19 +47,19 @@ export class Camera {
         }
     };
 
-    getScreenX(mapX) {
+    getScreenX(mapX: number): number {
         return mapX - this.getX() + this.offset.x;
     }
 
-    getScreenY(mapY) {
+    getScreenY(mapY: number): number {
         return mapY - this.getY() + this.offset.y;
     }
 
-    getMapX(screenX) {
+    getMapX(screenX: number): number {
         return screenX + this.getX() - this.offset.x;
     }
 
-    getMapY(screenY) {
+    getMapY(screenY: number): number {
         return screenY + this.getY() - this.offset.y;
     }
 
@@ -92,11 +89,11 @@ export class Camera {
     }
 
     destroy() {
-        PrerenderEvent.unsubscribe(this.update);
+        this.prerenderSubToken.unsubscribe();
     }
 }
 
-function keepWithinMapBoundaries(vehicle) {
+function keepWithinMapBoundaries(vehicle: Vehicle) {
     let corners = Corners.map(function (corner) {
         return vehicle.position.clone().add(corner);
     });

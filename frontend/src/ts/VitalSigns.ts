@@ -4,7 +4,7 @@ import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/Basic';
 import {VitalSignBar} from "./userInterface/VitalSignBar";
 import {IGame} from "./interfaces/IGame";
-import {PreloadingStartedEvent, PrerenderEvent, VitalSignChangedEvent} from "./Events";
+import {ISubscriptionToken, PreloadingStartedEvent, PrerenderEvent, VitalSignChangedEvent} from "./Events";
 
 let Game: IGame = null;
 
@@ -36,6 +36,7 @@ export class VitalSigns {
     previousValuesLimit: number;
     uiBars: { [key in VitalSign]: VitalSignBar };
     display: IVitalSignDisplay;
+    private prerenderSubToken: ISubscriptionToken;
 
     constructor() {
         this.health = VitalSigns.MAXIMUM_VALUES.health;
@@ -55,7 +56,7 @@ export class VitalSigns {
         this.display = new HtmlDisplay();
         this.display.hideAll();
 
-        PrerenderEvent.subscribe(this.update, this);
+        this.prerenderSubToken = PrerenderEvent.subscribe(this.update, this);
     }
 
     static setup(game, group) {
@@ -162,7 +163,7 @@ export class VitalSigns {
     }
 
     destroy() {
-        PrerenderEvent.unsubscribe(this.update);
+        this.prerenderSubToken.unsubscribe();
         this.display.onDestroy();
     }
 }
