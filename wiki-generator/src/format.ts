@@ -1,6 +1,5 @@
 import * as changeCase from 'change-case';
-import {min} from "moment-mini";
-import {isUndefined} from "../src/ts/Utils";
+import {isUndefined} from "../../frontend/src/ts/Utils";
 
 export function percentage(value: number): string {
     return (value * 100).toFixed(0) + '%';
@@ -19,7 +18,7 @@ export function meter(value: number): string {
 }
 
 export function itemName(itemName: string) {
-    return changeCase.titleCase(itemName);
+    return changeCase.capitalCase(itemName);
 }
 
 export function chance(value: number): string {

@@ -16,8 +16,8 @@ hook.hook('.svg', (source: string, filename: string) => {
 
 // Special import with the SVG hook in place!
 import {animals} from "./animals.data";
-import {ItemsConfig} from "../../src/config/Items";
-import {isUndefined} from "../../src/ts/Utils";
+import {ItemsConfig} from "../../../frontend/src/config/Items";
+import {isUndefined} from "../../../frontend/src/ts/Utils";
 
 const blacklistedFactors = ['damageFraction'];
 let totalWeight: number = 0;
@@ -75,7 +75,7 @@ const animalsView = animals.map((animal) => {
     }
 
     return Object.assign({}, animal, {
-        name: changeCase.titleCase(name),
+        name: changeCase.capitalCase(name),
         graphic: imageConverter.convert(animal.graphic),
         factors: mapFactors(definition.factors).filter(factor => !blacklistedFactors.includes(factor.rawName)),
         drops: drops,

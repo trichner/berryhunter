@@ -1,0 +1,36 @@
+{
+  "name": "berryhunter-wiki-generator",
+  "version": "0.0.1",
+  "description": "Generate wiki markup to fill the BerryHunter wiki",
+  "scripts": {
+    "generate-old": "ts-node src/app.ts",
+    "generate": "tsx src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "https://github.com/trichner/berryhunter",
+  "keywords": [
+    "wiki",
+    "generator"
+  ],
+  "author": "Raoul Zander",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "npm": ">=10.0.0 <11.0.0",
+    "node": ">=20.0.0 <21.0.0"
+  },
+  "homepage": "https://github.com/trichner/berryhunter#readme",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "mustache": "^4.2.0",
+    "sharp": "^0.33.4"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.4",
+    "change-case": "^4.1.2",
+    "node-hook": "^1.0.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.10.5",
+    "typescript": "^5.4.5"
+  }
+}

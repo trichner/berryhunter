@@ -1,9 +1,9 @@
-import {isDefined, isUndefined} from '../src/ts/Utils';
+import {isDefined, isUndefined} from '../../frontend/src/ts/Utils';
 import _isString = require('lodash/isString');
 import _isObject = require('lodash/isObject');
 import * as changeCase from 'change-case';
 import {itemName, seconds} from "./format";
-const itemExtras = require('./items/extra-data.json');
+import itemExtras = require('../data/items/extra-data.json');
 import {render} from "./render";
 import {ImageConverter} from "./imageConverter";
 import {mapFactors, MappedFactor} from "./factors";
@@ -16,7 +16,8 @@ hook.hook('.svg', (source: string, filename: string) => {
 });
 
 // Special import with the SVG hook in place!
-import {ItemsConfig as items} from '../src/config/Items';
+import {ItemsConfig as items} from '../../frontend/src/config/Items';
+import {ItemConfig} from "../../frontend/src/ts/interfaces/Item";
 
 interface ItemExtra {
     ignore: boolean
@@ -38,7 +39,7 @@ let imageConverter = new ImageConverter();
 
 const itemView = Object
     .entries(items)
-    .filter(([name, item]) => {
+    .filter(([name, item]: [string, ItemConfig]) => {
         if (itemExtras.hasOwnProperty(name) &&
             itemExtras[name].ignore) {
             return false;
@@ -46,7 +47,7 @@ const itemView = Object
 
         return true;
     })
-    .map(([name, item]) => {
+    .map(([name, item]: [string, ItemConfig]) => {
         if (isUndefined(item.definition)) {
             console.error('Missing definition');
             return;
@@ -84,7 +85,7 @@ const itemView = Object
 
         let type: string = itemExtra.type || item.definition.type;
         if (_isString(type)) {
-            type = changeCase.titleCase(type);
+            type = changeCase.capitalCase(type);
         } else {
             console.error('Missing definition.type for ' + name);
         }
@@ -92,7 +93,7 @@ const itemView = Object
 
         let factors: MappedFactor[];
         if (_isObject(item.definition.factors)) {
-            factors = mapFactors(item.definition.factors)
+            factors = mapFactors(item.definition.factors);
         } else {
             console.error('Missing definition.factors for ' + name);
         }
@@ -106,7 +107,7 @@ const itemView = Object
             if (Array.isArray(recipe.materials)) {
                 materials = recipe.materials;
                 materials.forEach(material => {
-                    material.item = itemName(material.item)
+                    material.item = itemName(material.item);
                 });
             } else {
                 console.error('Missing recipe.materials for ' + name);
@@ -119,7 +120,7 @@ const itemView = Object
                 } else {
                     tools = mappedTools.slice(0, mappedTools.length - 1).join(', ');
                     tools += ' or ';
-                    tools += mappedTools[mappedTools.length - 1]
+                    tools += mappedTools[mappedTools.length - 1];
                 }
             }
         } else {
@@ -156,4 +157,5 @@ const itemView = Object
         return itemView;
     });
 
+// noinspection JSIgnoredPromiseFromCall
 render('items.mustache', 'items', itemView, imageConverter);

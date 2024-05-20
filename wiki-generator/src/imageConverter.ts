@@ -25,7 +25,7 @@ export class ImageConverter {
             return sharp(imageToConvert.input)
                 .resize({width: 128})
                 .png({progressive: true})
-                .toFile(outputPath + imageToConvert.output)
+                .toFile(outputPath + imageToConvert.output);
         }));
     }
 }

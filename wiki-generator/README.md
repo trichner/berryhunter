@@ -1,3 +1,14 @@
+# BerryHunter Wiki Generator
+
+This tool takes game data from across the project and compiles into a format compatible for https://berryhunter.fandom.com/.
+
+**State 2024:**
+- https://berryhunter.fandom.com/ is dead
+- fandom.com is an awful wiki with a bad reputation and massive amounts of advertisements
+  - https://www.wiki.gg/ could be considered as alternative
+- While this project is compiling & running, it has some issues
+  - `change-case` 5+ is enforcing ESM projects. This doesn't seem to be easily compatible with ts-node
+
 ### extra-data.json
 
 Values provided here override any data fetched from the API data.

@@ -3,6 +3,8 @@ import * as fs from 'fs';
 import {promises as fsPromises} from 'fs';
 import {ImageConverter} from "./imageConverter";
 
+const outputPath = '/../output';
+
 export function render(templateName: string, outputName: string, viewData: any, imageConverter: ImageConverter): Promise<void> {
     return fsPromises.readFile(__dirname + '/' + templateName, 'utf8')
         .then((template: string) => {
@@ -12,24 +14,24 @@ export function render(templateName: string, outputName: string, viewData: any, 
             );
         })
         .then((rendered: string) => {
-            if (!fs.existsSync(__dirname + '/output')) {
-                fs.mkdirSync(__dirname + '/output');
+            if (!fs.existsSync(__dirname + outputPath)) {
+                fs.mkdirSync(__dirname + outputPath);
             }
 
-            return fsPromises.writeFile(__dirname + '/output/' + outputName + '.wiki.html', rendered, 'utf8');
+            return fsPromises.writeFile(__dirname + outputPath + '/' + outputName + '.wiki.html', rendered, 'utf8');
         })
         .then(() => {
-            if (!fs.existsSync(__dirname + '/output/images')) {
-                fs.mkdirSync(__dirname + '/output/images');
+            if (!fs.existsSync(__dirname + outputPath + '/images')) {
+                fs.mkdirSync(__dirname + outputPath + '/images');
             }
 
-           return imageConverter.render(__dirname + '/output/images/');
+           return imageConverter.render(__dirname + outputPath + '/images/');
         })
         .catch(err => {
             console.error(err);
         })
         .then(() => {
-            console.info('Successfully written output to ./output!');
+            console.info('Successfully written output to ' + __dirname + outputPath + '!');
         });
 
 }

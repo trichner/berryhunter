@@ -15,7 +15,6 @@ hook.hook('.svg', (source: string, filename: string) => {
 
 // Special import with the SVG hook in place!
 import {resources} from "./resources-data";
-import {isUndefined} from "../../src/ts/Utils";
 
 const whitelistedFactors = ['replenishProbabilityPerSecond', 'minimumYield', 'capacity'];
 let totalWeight: number = 0;
@@ -48,11 +47,11 @@ const resourcesView = resources.map((resource) => {
     }
 
     return Object.assign({}, resource, {
-        name: changeCase.titleCase(resource.name),
+        name: changeCase.capitalCase(resource.name),
         graphics: resource.graphics.map(imageConverter.convert.bind(imageConverter)),
         factors: mapFactors(definition.factors).filter(factor => whitelistedFactors.includes(factor.rawName)),
         drops: {
-            name: changeCase.titleCase(resource.produces.definition.name),
+            name: changeCase.capitalCase(resource.produces.definition.name),
             image:  imageConverter.convert(resource.produces.icon.file),
         },
         size: formattedSize,

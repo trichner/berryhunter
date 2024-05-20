@@ -1,5 +1,5 @@
-import {GraphicsConfig} from "../../src/config/Graphics";
-import {ItemsConfig} from "../../src/config/Items";
+import {GraphicsConfig} from "../../../frontend/src/config/Graphics";
+import {ItemsConfig} from "../../../frontend/src/config/Items";
 
 const resourceCfg = GraphicsConfig.resources;
 

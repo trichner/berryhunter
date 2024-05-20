@@ -1,6 +1,6 @@
 import * as changeCase from "change-case";
 import {KEYWORD_DATA} from "./mechanics/keywords";
-import {isDefined} from "../src/ts/Utils";
+import {isDefined} from "../../frontend/src/ts/Utils";
 
 export interface MappedFactor {
     name: string;
@@ -23,7 +23,7 @@ export function mapFactors(factors): MappedFactor[] {
 }
 
 export function mapFactor(factor: string, value: string | number): MappedFactor {
-    let name = changeCase.titleCase(factor);
+    let name = changeCase.capitalCase(factor);
     let mappedValue: string | number = value;
     let link: string = undefined;
 

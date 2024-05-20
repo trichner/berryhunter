@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "module": "commonjs", // TODO replace with es6 to enable proper tree-shaking
+    "downlevelIteration": true,
+    "alwaysStrict": true,
+    "resolveJsonModule": true,
+    "lib": [
+      "es2017",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ],
+    "types": [
+      "webpack-env",
+      "node"
+    ]
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
