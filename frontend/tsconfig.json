@@ -11,16 +11,13 @@
 			"es2017",
 			"dom",
 			"dom.iterable",
-			"scripthost"
 		],
 		"types": [
 			"webpack-env",
-			"node"
 		]
 	},
 	"include": [
 		"./src/index.ts",
 		"./src/ts/**/*"
-//		"./wiki-generator/**/*"
 	]
 }

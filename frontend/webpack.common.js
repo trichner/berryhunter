@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const svgToMiniDataURI = require('mini-svg-data-uri');
-// const FaviconWebpackPlugin = require('favicons-webpack-plugin');
+const FaviconWebpackPlugin = require('favicons-webpack-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 
@@ -12,22 +12,23 @@ module.exports = {
 			title: 'BerryHunter',
 			xhtml: true
 		}),
-		// new FaviconWebpackPlugin({
-		// 	logo: './src/img/logo.svg',
-		// 	publicPath: '.',
-		// 	prefix: '',
-		// 	favicons: {
-		// 		appName: 'BerryHunter',
-		// 		appDescription: 'A 2D multiplayer stone age survival game',
-		// 		developerName: 'Team Dodo',
-		// 		developerURL: 'https://berryhunter.io',
-		// 		display: 'fullscreen',
-		// 		orientation: 'landscape',
-		// 		start_url: '',
-		// 		theme_color: '#E66CEF',
-		// 		version: 'Open Beta'
-		// 	}
-		// }),
+		new FaviconWebpackPlugin({
+			logo: './src/img/logo.svg',
+			publicPath: '.',
+			prefix: '',
+			inject: true,
+			favicons: {
+				appName: 'BerryHunter',
+				appDescription: 'A 2D multiplayer stone age survival game',
+				developerName: 'Team Dodo',
+				developerURL: 'https://berryhunter.io',
+				display: 'fullscreen',
+				orientation: 'landscape',
+				start_url: '',
+				theme_color: '#E66CEF',
+				version: 'Open Beta'
+			}
+		}),
 		new NodePolyfillPlugin()
 	],
 
