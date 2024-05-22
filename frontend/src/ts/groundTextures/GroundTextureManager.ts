@@ -2,12 +2,13 @@ import {isDefined} from '../Utils';
 import {GroundTexture, Parameters} from './GroundTexture';
 import {GroundTextureTypes} from './GroundTextureTypes';
 import {IGame} from "../interfaces/IGame";
+import { Container } from 'pixi.js';
 
 
 const textures = [];
 let renderingStarted = false;
 let latestTextureIndex;
-let terrainTexturesLayer: PIXI.Container;
+let terrainTexturesLayer: Container;
 
 export function setup(game: IGame) {
     terrainTexturesLayer = game.layers.terrain.textures;

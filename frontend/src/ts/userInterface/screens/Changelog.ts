@@ -1,8 +1,8 @@
 import * as Mustache from 'mustache';
-import * as moment from 'moment-mini';
 import {htmlModuleToString, isDefined, isUndefined} from '../../Utils';
 import {StartScreenDomReadyEvent} from '../../Events';
-import {createStartScreenPanel} from "./ScreenUtil";
+import {createStartScreenPanel} from './ScreenUtil';
+import {compareDesc, format, parse} from 'date-fns';
 
 function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);
@@ -57,12 +57,12 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
                 categories.delete(name);
             }
         }
-        let mdate = moment(changelog.date, 'DD.MM.YYYY');
+        let mdate = parse(changelog.date, 'dd.MM.yyyy', new Date());
         return {
             codename: prepareCodename(changelog.codename),
             date: mdate,
-            datetime: mdate.format('YYYY-MM-DD'),
-            dateFormatted: mdate.format('DD.MM.YYYY'),
+            datetime: format( mdate, 'yyyy-MM-dd'),
+            dateFormatted: format( mdate, 'dd.MM.yyyy'),
             description: changelog.description,
             descriptionHtml: prepareDescriptionHtml(changelog.descriptionHtml),
             categories: Array.from(categories.values())
@@ -70,8 +70,7 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
     });
 
     mapped.sort((c1, c2) => {
-        // Sort descending - newest on top
-        return -1 * c1.date.diff(c2.date);
+        return compareDesc(c1.date, c2.date);
     });
 
     return mapped;
@@ -128,7 +127,7 @@ interface ChangeJSON {
 
 interface ChangelogVO {
     codename: string,
-    date: moment.Moment,
+    date: Date,
     datetime: string,
     dateFormatted: string,
     description?: string,

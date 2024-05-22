@@ -2,6 +2,7 @@ import {deg2rad} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
 import {Animation} from "../Animation";
 import _merge = require('lodash/merge');
+import {DisplayObject} from "pixi.js";
 
 const animationCfg = GraphicsConfig.character.actionAnimation;
 
@@ -11,7 +12,7 @@ export const types = {
 };
 
 interface AnimationActionOptions {
-    hand: PIXI.DisplayObject & {originalTranslation: { x: number, y: number }};
+    hand: DisplayObject & {originalTranslation: { x: number, y: number }};
     type?: keyof typeof types;
     animation: Animation;
     animationFrame?: number;

@@ -10,11 +10,13 @@
 		"lib": [
 			"es2017",
 			"dom",
-			"dom.iterable",
+			"dom.iterable"
 		],
 		"types": [
-			"webpack-env",
-		]
+			"webpack-env"
+		],
+		"moduleResolution": "Node",
+		"esModuleInterop": true,
 	},
 	"include": [
 		"./src/index.ts",

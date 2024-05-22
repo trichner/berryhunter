@@ -1,34 +1,27 @@
 import {
-    BackendSetupEvent,
     ControlsActionEvent,
     ControlsMovementEvent,
     ControlsRotateEvent,
-    GameSetupEvent
+    GameSetupEvent,
 } from './Events';
 import {BasicConfig as Constants} from '../config/Basic';
 import * as Equipment from './items/Equipment';
 import * as Console from './Console';
 import * as Chat from './Chat';
 import {isDefined, isUndefined, TwoDimensional} from './Utils';
-import * as Tock from 'tocktimer';
+import Tock from 'tocktimer';
 import {KeyCodes} from './input/keyboard/keys/KeyCodes';
 import {BerryhunterApi} from './backend/BerryhunterApi';
-import {Character} from "./gameObjects/Character";
-import {GameState, IGame} from "./interfaces/IGame";
-import {IBackend} from "./interfaces/IBackend";
-import {radians} from "./interfaces/Types";
-import {InputAction, InputMessage} from "./backend/messages/outgoing/InputMessage";
-import {Vector} from "./Vector";
-import {Develop} from "./develop/_Develop";
+import {Character} from './gameObjects/Character';
+import {GameState, IGame} from './interfaces/IGame';
+import {radians} from './interfaces/Types';
+import {InputAction, InputMessage} from './backend/messages/outgoing/InputMessage';
+import {Vector} from './Vector';
+import {Develop} from './develop/_Develop';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
-});
-
-let Backend: IBackend = null;
-BackendSetupEvent.subscribe((backend: IBackend) => {
-    Backend = backend;
 });
 
 let consoleCooldown = 0;
@@ -73,7 +66,7 @@ export class Controls {
      * @param {Character} character
      * @param {function} isCraftInProgress Model function. Can be called to determine if a craft is in progress.
      */
-    constructor(character, isCraftInProgress) {
+    constructor(character: Character, isCraftInProgress: () => boolean) {
         this.isCraftInProgress = isCraftInProgress;
         this.character = character;
 
@@ -85,6 +78,7 @@ export class Controls {
         this.clock = new Tock({
             interval: Constants.INPUT_TICKRATE,
             callback: this.update.bind(this),
+            complete: () => {},
         });
 
         this.clock.start();
@@ -202,7 +196,7 @@ export class Controls {
                         case 'ALT':
                             action = {
                                 item: Game.player.character.getEquippedItem(Equipment.EquipmentSlot.HAND),
-                                actionType: BerryhunterApi.ActionType.Primary
+                                actionType: BerryhunterApi.ActionType.Primary,
                             };
                             break;
                         case 'PLACING':
@@ -214,7 +208,7 @@ export class Controls {
 
                             action = {
                                 item: placedItem,
-                                actionType: BerryhunterApi.ActionType.PlaceItem
+                                actionType: BerryhunterApi.ActionType.PlaceItem,
                             };
                             break;
                     }

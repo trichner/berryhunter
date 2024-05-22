@@ -34,6 +34,7 @@ import {
     ModulesLoadedEvent,
     PrerenderEvent
 } from "./Events";
+import {AbstractRenderer} from "pixi.js";
 
 
 export let instance: Game;
@@ -42,7 +43,7 @@ export class Game implements IGame {
 
     public state = GameState.INITIALIZING;
 
-    public renderer: PIXI.Renderer;
+    public renderer: AbstractRenderer;
     public width: number;
     public height: number;
     public centerX: number;

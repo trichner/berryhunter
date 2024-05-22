@@ -1,6 +1,7 @@
 import {ExtendedColorMatrixFilter} from '../ExtendedColorMatrixFilter';
 import {Animation} from "../Animation";
 import {EaseDisplayObject} from "pixi-ease";
+import { DisplayObject } from 'pixi.js';
 
 export interface StatusEffectDefinition {
     id: string;
@@ -87,7 +88,7 @@ export class StatusEffect implements StatusEffectDefinition {
         let animation = new Animation();
         let to = animation.add(
             // TODO ugly, need to test and find better way
-            this.colorMatrix as unknown as PIXI.DisplayObject,
+            this.colorMatrix as unknown as DisplayObject,
             {alpha: this.endAlpha},
             {
                 duration: 500,

@@ -1,12 +1,13 @@
 import * as Preloading from '../Preloading';
 import {GraphicsConfig} from '../../config/Graphics';
 import {degrees} from "../interfaces/Types";
+import { Texture } from 'pixi.js';
 
 const GroundTextureTypes = GraphicsConfig.groundTextureTypes;
 
 export interface GroundTextureType {
     name: string;
-    svg: PIXI.Texture;
+    svg: Texture;
     file: string,
     minSize: number,
     maxSize: number,

@@ -6,14 +6,14 @@ import {
     isUndefined,
     makeRequest,
     preventInputPropagation,
-    smoothHoverAnimation
+    smoothHoverAnimation,
 } from '../Utils';
 import * as Urls from '../backend/Urls';
-import * as moment from 'moment-mini';
-import * as Preloading from "../Preloading";
+import * as Preloading from '../Preloading';
 import {EndScreenShownEvent, GamePlayingEvent, GameSetupEvent, StartScreenDomReadyEvent} from '../Events';
-import {GameState, IGame} from "../interfaces/IGame";
-import * as SocialMedia from "../userInterface/partials/SocialMedia";
+import {GameState, IGame} from '../interfaces/IGame';
+import * as SocialMedia from '../userInterface/partials/SocialMedia';
+import {parseISO} from 'date-fns';
 
 let rootElement: HTMLElement;
 let leaderboardTables: Map<string, HTMLElement>;
@@ -101,7 +101,7 @@ StartScreenDomReadyEvent.subscribe(() => {
         overviewElement,
         {
             animationDuration: 0.3,
-            additionalHoverElement: menuItem
+            additionalHoverElement: menuItem,
         });
 
     overviewElement.addEventListener('click', open);
@@ -161,7 +161,7 @@ function hide() {
 function loadHighScores() {
     return makeRequest({
         method: 'GET',
-        url: Urls.database + '/highscores'
+        url: Urls.database + '/highscores',
     }).then(mapScores);
 }
 
@@ -195,7 +195,7 @@ export function populateHighScores(highScores) {
 function loadScoreboard() {
     return makeRequest({
         method: 'GET',
-        url: Urls.database + '/scoreboard'
+        url: Urls.database + '/scoreboard',
     }).then(mapScores);
 }
 
@@ -253,8 +253,8 @@ function mapScores(response: string) {
             return {
                 playerName: highScore.name,
                 score: highScore.score,
-                date: moment(highScore.updated, 'YYYY-MM-DD[T]HH:mm:ssZ')
-            }
+                date: parseISO(highScore.updated),
+            };
         });
     });
 

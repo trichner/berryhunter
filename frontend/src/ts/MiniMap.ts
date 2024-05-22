@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
 import {GameObject} from "./gameObjects/_GameObject";
+import {AbstractRenderer} from "pixi.js";
 
 export enum Layer {
     CHARACTER,
@@ -14,7 +15,7 @@ export class MiniMap {
     trackedGameObjects: GameObject[];
     width: number;
     height: number;
-    renderer: PIXI.Renderer;
+    renderer: AbstractRenderer;
     stage: PIXI.Container;
     iconGroup: PIXI.Container;
     playerGroup: PIXI.Container;
@@ -45,7 +46,7 @@ export class MiniMap {
         this.renderer = PIXI.autoDetectRenderer({
             width: this.width,
             height: this.height,
-            transparent: true
+            backgroundAlpha: 0,
         });
         container.appendChild(this.renderer.view);
         this.stage = new PIXI.Container();

@@ -6,6 +6,7 @@ import {IBackend} from "../../../interfaces/IBackend";
 import {BackendSetupEvent} from "../../../Events";
 
 export class ClientMessage {
+    // TODO dafuq is that
     static webSocket: WebSocket = null;
 
     protected builder: flatbuffers.Builder;
