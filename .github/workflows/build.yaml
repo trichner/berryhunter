@@ -27,15 +27,21 @@ jobs:
           args: release --clean --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: upload-backend-artifacts
+        name: Upload assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: berryhunterd
+          path: dist/*
       - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
       - id: build-frontend
         working-directory: frontend
         run: npm install && npm run build
-      - id: upload-artifacts
+      - id: upload-frontend-artifacts
         name: Upload assets
         uses: actions/upload-artifact@v3
         with:
-          name: binaries
-          path: dist/*
+          name: frontend
+          path: frontend/dist/*
