@@ -20,13 +20,19 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22'
-      - id: release
+      - id: build backend
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
           args: release --clean --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - id: build frontend
+        working-directory: frontend
+        run: npm install && npm run build
       - id: upload-artifacts
         name: Upload assets
         uses: actions/upload-artifact@v3
