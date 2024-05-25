@@ -1,0 +1,20 @@
+# Forward structured journalctl logs to Cloud Logging
+# /etc/google-cloud-ops-agent/config.yaml
+logging:
+  receivers:
+    journal:
+      type: systemd_journald
+  processors:
+    json:
+      type: parse_json
+      field: MESSAGE
+    move_severity:
+      type: modify_fields
+      fields:
+        severity:
+          move_from: jsonPayload.severity
+  service:
+    pipelines:
+      journald_json:
+        receivers: [journal]
+        processors: [json, move_severity]

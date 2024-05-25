@@ -1,8 +1,8 @@
 {
   "server": {
-    "port": 2000,
     "path": "/game",
-    "frontendDir": "../frontend/dist"
+    "tlsHost": "dev.berryhunter.io",
+    "frontendDir": "./frontend"
   },
   "chieftain": {},
   "game": {

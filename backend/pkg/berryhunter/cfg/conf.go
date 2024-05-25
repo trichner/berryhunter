@@ -5,12 +5,15 @@ import (
 	"io/ioutil"
 )
 
+type Server struct {
+	Port        int    `json:"port"`
+	Path        string `json:"path"`
+	TlsHost     string `json:"tlsHost"`
+	FrontendDir string `json:"frontendDir"`
+}
+
 type Config struct {
-	Server struct {
-		Port    int    `json:"port"`
-		Path    string `json:"path"`
-		TlsHost string `json:"tlsHost"`
-	} `json:"server"`
+	Server    Server `json:"server"`
 	Chieftain *struct {
 		Addr   *string `json:"addr"`
 		PubSub *struct {

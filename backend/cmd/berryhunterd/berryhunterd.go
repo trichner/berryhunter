@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
 	"log"
 	"log/slog"
 	"math/rand"
@@ -74,29 +75,43 @@ func main() {
 		os.Exit(1)
 	}
 
-	if config.Server.TlsHost != "" {
-		err := bootTlsServer(g.Handler(), config.Server.Path, config.Server.TlsHost, dev)
-		if err != nil {
-			log.Fatal(err)
-		}
-	} else {
-		bootServer(g.Handler(), config.Server.Port, config.Server.Path, dev)
+	if err := bootHttp(g.Handler(), config.Server, dev); err != nil {
+		slog.Error("failed to boot HTTP server", slog.Any("error", err))
+		panic(err)
 	}
 
 	g.Loop()
 }
 
-func bootTlsServer(h http.Handler, path string, host string, dev bool) error {
-	slog.Info("🦄 Booting TLS game-server", slog.String("addr", fmt.Sprintf("https://%s%s", host, path)), slog.Any("hosts", []string{host}))
+func bootHttp(h http.Handler, cfg cfg.Server, dev bool) error {
 
-	userCacheDir, err := os.UserCacheDir()
+	if cfg.TlsHost != "" {
+		return bootTlsServer(h, cfg, dev)
+	} else {
+		bootServer(h, cfg, dev)
+	}
+	return nil
+}
+func bootTlsServer(h http.Handler, cfg cfg.Server, dev bool) error {
+
+	host := cfg.TlsHost
+	path := cfg.Path
+
+	port := cfg.Port
+	if port != 0 && port != 443 {
+		slog.Warn("ignoring `port` config, TLS defaults to 443", slog.Int("configured_port", port))
+	}
+
+	hosts := []string{host}
+
+	slog.Info("🦄 Booting TLS game-server", slog.String("addr", fmt.Sprintf("https://%s%s", host, path)), slog.Any("hosts", hosts))
+
+	cacheDir, err := determineCacheDir()
 	if err != nil {
 		return err
 	}
 
-	cacheDir := filepath.Join(userCacheDir, "berryhunterd")
-
-	hosts := []string{host}
+	cacheDir = filepath.Join(cacheDir, "berryhunterd")
 
 	slog.Info("🔐 Requesting ACME certificate", slog.Any("hosts", hosts), slog.String("cache_dir", cacheDir))
 
@@ -109,11 +124,11 @@ func bootTlsServer(h http.Handler, path string, host string, dev bool) error {
 
 	mux := http.NewServeMux()
 
-	mux.Handle(path, h)
+	mux.Handle(cfg.Path, h)
 
 	if dev {
 		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("https://%s?wsUrl=wss://%s%s", host, host, path)))
-		mux.Handle("/", frontendHandler())
+		mux.Handle("/", frontendHandler(cfg.FrontendDir))
 	} else {
 		// 'ping' endpoint
 		mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
@@ -137,7 +152,21 @@ func bootTlsServer(h http.Handler, path string, host string, dev bool) error {
 	return nil
 }
 
-func bootServer(h http.Handler, port int, path string, dev bool) {
+func determineCacheDir() (string, error) {
+	// explicit systemd cache directory
+	cacheDir := os.Getenv("CACHE_DIRECTORY")
+	if cacheDir != "" {
+		return cacheDir, nil
+	}
+
+	return os.UserCacheDir()
+}
+
+func bootServer(h http.Handler, cfg cfg.Server, dev bool) {
+
+	port := cfg.Port
+	path := cfg.Path
+
 	slog.Info("🦄 Booting game-server", slog.String("addr", fmt.Sprintf(":%d%s", port, path)))
 	addr := fmt.Sprintf(":%d", port)
 
@@ -146,7 +175,7 @@ func bootServer(h http.Handler, port int, path string, dev bool) {
 
 	if dev {
 		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("http://localhost:%d?wsUrl=ws://localhost:%d/game", port, port)))
-		mux.Handle("/", frontendHandler())
+		mux.Handle("/", frontendHandler(cfg.FrontendDir))
 	} else {
 		// 'ping' endpoint for liveness probe
 		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -161,8 +190,8 @@ func bootServer(h http.Handler, port int, path string, dev bool) {
 	go http.ListenAndServe(addr, mux)
 }
 
-func frontendHandler() http.Handler {
-	frontendPath, err := filepath.Abs("./../frontend/dist")
+func frontendHandler(fsPath string) http.Handler {
+	frontendPath, err := filepath.Abs(fsPath)
 	if err != nil {
 		log.Fatal(err)
 	}
