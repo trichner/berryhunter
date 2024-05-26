@@ -10,8 +10,6 @@ export interface IDevelop {
         measurementSampleRate: integer
     };
 
-    afterSetup(game): void;
-
     logClientTickRate(timeSinceLast): void;
 
     logTimeOfDay(formattedTimeOfDay): void;

@@ -1,7 +1,7 @@
 import * as AABBs from './AABBs';
 import * as Fps from './Fps';
 import * as Preloading from '../Preloading';
-import {getUrlParameter, htmlToElement, isDefined, isUndefined, rad2deg} from '../Utils';
+import {getUrlParameter, htmlToElement, isDefined, isNumber, isUndefined, rad2deg} from '../Utils';
 import * as Console from '../Console';
 import {ItemType} from '../items/ItemType';
 import {BasicConfig as Constants} from '../../config/Basic';
@@ -10,14 +10,22 @@ import {BerryhunterApi} from '../backend/BerryhunterApi';
 import {IGame} from "../interfaces/IGame";
 import {InputMessage} from "../backend/messages/outgoing/InputMessage";
 import {IDevelop} from "../interfaces/IDevelop";
-import {BackendStateChangedEvent, BackendStateChangedMsg, BackendValidTokenEvent} from "../Events";
-import {BackendState} from "../interfaces/IBackend";
+import {
+    BackendSetupEvent,
+    BackendStateChangedEvent,
+    BackendStateChangedMsg,
+    BackendValidTokenEvent,
+    GameSetupEvent,
+} from '../Events';
+import {BackendState, IBackend} from '../interfaces/IBackend';
+import _isObject = require('lodash/isObject');
 
+let Game: IGame = null;
+let Backend: IBackend = null;
 let instance: Develop = null;
 let active: boolean = false;
 
 export class Develop implements IDevelop {
-    game: IGame = null;
     public settings = {
         showAABBs: false,
         cameraBoundaries: true,
@@ -38,6 +46,14 @@ export class Develop implements IDevelop {
 
     showNextGameState: boolean = false;
 
+    public static trySetup() {
+        if (!active) return;
+        if (Game === null) return;
+        
+        instance = new Develop();
+        instance.setup();
+    }
+    
     public static get(): IDevelop {
         if (instance === null) {
             instance = new Develop();
@@ -56,8 +72,21 @@ export class Develop implements IDevelop {
 
     private setup(): void {
         AABBs.setup(this);
+        Fps.setup(Game, this);
 
         this.setupDevelopPanel();
+
+        switch (Backend.getState()) {
+            case BackendState.DISCONNECTED:
+            case BackendState.CONNECTING:
+                Develop.get().logWebsocketStatus(Backend.getState(), 'neutral');
+                break;
+            case BackendState.ERROR:
+                Develop.get().logWebsocketStatus(Backend.getState(), 'bad');
+                break;
+            default:
+                Develop.get().logWebsocketStatus(Backend.getState(), 'good');
+        }
     }
 
     private setupDevelopPanel() {
@@ -166,17 +195,17 @@ export class Develop implements IDevelop {
     private onSettingToggle(setting, newValue) {
         switch (setting) {
             case 'showAABBs':
-                Object.values(this.game.map.objects)
+                Object.values(Game.map.objects)
                     .forEach((gameObject: AABBs.hasAABB) => {
                         if (newValue) {
                             gameObject.showAABB();
-                            if (isDefined(this.game.player)) {
-                                this.game.player.character['showAABB']();
+                            if (isDefined(Game.player)) {
+                                Game.player.character['showAABB']();
                             }
                         } else {
                             gameObject.hideAABB();
-                            if (isDefined(this.game.player)) {
-                                this.game.player.character['hideAABB']();
+                            if (isDefined(Game.player)) {
+                                Game.player.character['hideAABB']();
                             }
                         }
                     });
@@ -184,7 +213,6 @@ export class Develop implements IDevelop {
             // Game.render();
         }
     }
-
 
     private setupTickSampler() {
         let showServerTick = document.getElementById('develop_showServerTick');
@@ -202,13 +230,7 @@ export class Develop implements IDevelop {
         });
     }
 
-    public afterSetup(game: IGame): void {
-        this.game = game;
-
-        Fps.setup(game, this);
-    }
-
-    private logValue(name, value) {
+    private logValue(name: string, value: any) {
         document.getElementById('develop_' + name).textContent = value;
     }
 
@@ -280,24 +302,36 @@ export class Develop implements IDevelop {
         document.getElementById('develop_timeOfDay').textContent = formattedTimeOfDay;
     }
 
-    private serverTickReplacer(key, value) {
+    private serverTickReplacer(key: string, value: any) {
         switch (key) {
             case 'item':
             case 'type':
-                return value.name;
+                if (_isObject(value) && value.hasOwnProperty('name')) {
+                    return value['name'];
+                }
+                break;
             case 'equipment':
-                return value.map(entry => {
-                    return entry.name;
-                });
+                if (Array.isArray(value)) {
+                    return value.map(entry => {
+                        return entry.name;
+                    });
+                }
+                break;
             case 'x':
             case 'y':
             case 'LowerX':
             case 'LowerY':
             case 'UpperX':
             case 'UpperY':
-                return Math.round(value * 100) / 100;
+                if (isNumber(value)) {
+                    return Math.round(value * 100) / 100;
+                }
+                break;
             case 'rotation':
-                return rad2deg(value) + 'deg';
+                if (isNumber(value)) {
+                    return rad2deg(value).toFixed(1) + 'deg';
+                }
+                break;
         }
 
         return value;
@@ -406,19 +440,25 @@ export class Develop implements IDevelop {
         this.logSampledValue('clientTickRate', this.logs.clientTickRate, timeSinceLast, 'ms');
     }
 
-    public logWebsocketStatus(text, status): void {
+    public logWebsocketStatus(text: string, status: ('neutral' | 'good' | 'bad')): void {
         let webSocketCell = document.getElementById('develop_webSocket');
         if (webSocketCell === null) {
             return;
         }
         webSocketCell.textContent = text;
-        webSocketCell.classList.remove('neutral');
-        webSocketCell.classList.remove('good');
-        webSocketCell.classList.remove('bad');
-
+        webSocketCell.classList.remove('neutral', 'good', 'bad');
         webSocketCell.classList.add(status);
     }
 }
+
+GameSetupEvent.subscribe((game) => {
+    Game = game;
+    Develop.trySetup();
+});
+
+BackendSetupEvent.subscribe((backend) => {
+    Backend = backend;
+});
 
 BackendStateChangedEvent.subscribe((msg: BackendStateChangedMsg) => {
     if (msg.newState === BackendState.WELCOMED) {
@@ -432,5 +472,6 @@ BackendStateChangedEvent.subscribe((msg: BackendStateChangedMsg) => {
 BackendValidTokenEvent.subscribe( () => {
     if (getUrlParameter(Constants.MODE_PARAMETERS.DEVELOPMENT)) {
         active = true;
+        Develop.trySetup();
     }
 });

@@ -264,10 +264,6 @@ export class Game implements IGame {
 
         Chat.setup(this, Backend);
 
-        if (Develop.isActive()) {
-            Develop.get().afterSetup(this);
-        }
-
         /*
          * https://trello.com/c/aq5lqJB7/289-schutz-gegen-versehentliches-verlassen-des-spiels
          */
