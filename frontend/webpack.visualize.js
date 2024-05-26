@@ -5,8 +5,12 @@
 
 const { merge } = require('webpack-merge');
 const prod = require('./webpack.prod.js');
-const Visualizer = require('webpack-visualizer-plugin');
+const Visualizer = require('webpack-visualizer-plugin2');
+const path = require('node:path');
 
 module.exports = merge(prod, {
-	plugins: [new Visualizer()]
+	plugins: [new Visualizer({
+		filename: path.join('..', 'stats', 'statistics.html'),
+		throwOnError: true
+	})]
 });

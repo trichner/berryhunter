@@ -1,8 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const svgToMiniDataURI = require('mini-svg-data-uri');
+const svgToMiniDataURI = require('mini-svg-data-uri');
 const FaviconWebpackPlugin = require('favicons-webpack-plugin');
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 
 module.exports = {
@@ -29,7 +28,6 @@ module.exports = {
 				version: 'Open Beta'
 			}
 		}),
-		new NodePolyfillPlugin()
 	],
 
 	resolve: {
@@ -59,15 +57,11 @@ module.exports = {
 			{enforce: 'pre', test: /\.js$/, loader: 'source-map-loader'},
 
 			{
-				test: /\.svg/,
+				test: /\.svg$/,
 				type: 'asset/inline',
-				// generator: {
-				// 	dataUrl: content => {
-				// 		// return 'data:image/svg+xml,' + content.toString();
-				// 		content = content.toString();
-				// 		return svgToMiniDataURI(content);
-				// 	}
-				// },
+				generator: {
+					dataUrl: content => svgToMiniDataURI(content.toString()),
+				},
 			},
 
 			// https://webpack.js.org/guides/asset-modules/#resource-assets
