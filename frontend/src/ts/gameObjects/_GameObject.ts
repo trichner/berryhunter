@@ -1,4 +1,4 @@
-import {InjectedSVG} from '../InjectedSVG';
+import {createInjectedSVG} from '../InjectedSVG';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Vector} from '../Vector';
 import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../Utils';
@@ -58,7 +58,7 @@ export class GameObject {
 
     initShape(svg: PIXI.Texture, x, y, size, rotation) {
         if (svg) {
-            return new InjectedSVG(svg, x, y, this.size, this.rotation);
+            return createInjectedSVG(svg, x, y, this.size, this.rotation);
         } else {
             const args = Array.prototype.splice.call(arguments, 2);
             return this.createShape.apply(this, [x, y].concat(args));

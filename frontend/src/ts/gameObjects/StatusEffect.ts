@@ -1,7 +1,7 @@
-import {ExtendedColorMatrixFilter} from '../ExtendedColorMatrixFilter';
 import {Animation} from "../Animation";
 import {EaseDisplayObject} from "pixi-ease";
-import { DisplayObject } from 'pixi.js';
+import {ColorMatrixFilter, DisplayObject} from 'pixi.js';
+import {flood} from '../ColorMatrixFilterExtensions';
 
 export interface StatusEffectDefinition {
     id: string;
@@ -20,7 +20,7 @@ export class StatusEffect implements StatusEffectDefinition {
     readonly priority: number;
 
     showing: boolean = false;
-    colorMatrix: ExtendedColorMatrixFilter;
+    colorMatrix: ColorMatrixFilter;
     startAlpha: number;
     endAlpha: number;
 
@@ -28,8 +28,8 @@ export class StatusEffect implements StatusEffectDefinition {
         this.id = definition.id;
         this.priority = definition.priority;
 
-        this.colorMatrix = new ExtendedColorMatrixFilter();
-        this.colorMatrix.flood(red, green, blue, 1);
+        this.colorMatrix = new ColorMatrixFilter();
+        flood(this.colorMatrix, red, green, blue, 1);
         this.colorMatrix.alpha = startAlpha;
         this.colorMatrix.enabled = false;
 

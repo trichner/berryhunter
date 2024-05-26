@@ -32,7 +32,7 @@ class Keys {
     constructor(...keys: number[]) {
         this.keys = [];
         for (let i = 0; i < arguments.length; i++) {
-            this.keys.push(Game.input.keyboard.addKey(arguments[i]));
+            this.keys.push(Game.inputManager.keyboard.addKey(arguments[i]));
         }
     }
 
@@ -130,7 +130,7 @@ export class Controls {
     }
 
     update() {
-        let inputManager = Game.input;
+        let inputManager = Game.inputManager;
         inputManager.update(Date.now());
 
         if (Game.state !== GameState.PLAYING) {
@@ -266,7 +266,7 @@ export class Controls {
     }
 
     adjustCharacterRotation() {
-        let pointer = Game.input.activePointer;
+        let pointer = Game.inputManager.activePointer;
 
         if (isDefined(Game.player)) {
             let characterX = Game.player.camera.getScreenX(this.character.getX());

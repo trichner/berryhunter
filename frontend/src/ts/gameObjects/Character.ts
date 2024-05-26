@@ -1,11 +1,10 @@
 import {GameObject} from './_GameObject';
 import * as PIXI from 'pixi.js';
-import {NamedGroup} from '../NamedGroup';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {isDefined} from '../Utils';
 import * as Equipment from '../items/Equipment';
 import {EquipmentSlot} from '../items/Equipment';
-import {InjectedSVG} from '../InjectedSVG';
+import {createInjectedSVG} from '../InjectedSVG';
 import * as Preloading from '../Preloading';
 import {Vector} from '../Vector';
 import * as Text from '../Text';
@@ -17,6 +16,7 @@ import {Items} from '../items/Items';
 import {IGame} from "../interfaces/IGame";
 import {CharacterEquippedItemEvent, GameSetupEvent, ISubscriptionToken, PrerenderEvent} from "../Events";
 import {ICharacterLike} from "../interfaces/ICharacter";
+import {createNameContainer} from '../CustomData';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -40,14 +40,14 @@ export class Character extends GameObject implements ICharacterLike {
     lastRemainingTicks: number = 0;
     useLeftHand: boolean = false;
 
-    actualShape: NamedGroup;
+    actualShape: PIXI.Container;
 
     // Contains PIXI.Containers that will mirror this characters position
     followGroups: PIXI.Container[];
 
     messages: PIXI.Text[];
     messagesGroup: PIXI.Container;
-    craftingIndicator: NamedGroup;
+    craftingIndicator: PIXI.Container;
 
     leftHand: PIXI.Container & { originalTranslation: { x: number, y: number } };
     rightHand: PIXI.Container & { originalTranslation: { x: number, y: number } };
@@ -111,11 +111,11 @@ export class Character extends GameObject implements ICharacterLike {
             Game.layers.characterAdditions.craftProgress.addChild(craftProgressFollowGroup);
             this.followGroups.push(craftProgressFollowGroup);
 
-            let craftingIndicator = new NamedGroup('craftingIndicator');
+            let craftingIndicator = createNameContainer('craftingIndicator');
             this.craftingIndicator = craftingIndicator;
             craftProgressFollowGroup.addChild(craftingIndicator);
             craftingIndicator.position.y = -1.2 * (this.size + 24) - 20;
-            craftingIndicator.addChild(new InjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
+            craftingIndicator.addChild(createInjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
             craftingIndicator.visible = false;
 
             let circle = new PIXI.Graphics();
@@ -136,7 +136,7 @@ export class Character extends GameObject implements ICharacterLike {
         let group = new PIXI.Container();
         group.position.set(x, y);
 
-        this.actualShape = new NamedGroup('actualShape');
+        this.actualShape = createNameContainer('actualShape');
         this.actualShape.addChild(super.initShape(svg, 0, 0, size, rotation));
         group.addChild(this.actualShape);
 
@@ -360,7 +360,7 @@ export class Character extends GameObject implements ICharacterLike {
         } else {
             slotGroup.position.y = slotGroup.originalTranslation.y;
         }
-        let equipmentGraphic = new InjectedSVG(item.graphic.svg, 0, 0, item.graphic.size);
+        let equipmentGraphic = createInjectedSVG(item.graphic.svg, 0, 0, item.graphic.size);
         slotGroup.addChild(equipmentGraphic);
 
         if (equipmentSlot === Equipment.EquipmentSlot.PLACEABLE) {

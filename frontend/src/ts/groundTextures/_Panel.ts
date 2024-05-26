@@ -44,8 +44,8 @@ GamePlayingEvent.subscribe((game: IGame) => {
             currentXLabel.textContent = position.x.toFixed(0);
             currentYLabel.textContent = position.y.toFixed(0);
 
-            let x = Game.player.camera.getMapX(Game.input.activePointer.x);
-            let y = Game.player.camera.getMapY(Game.input.activePointer.y);
+            let x = Game.player.camera.getMapX(Game.inputManager.activePointer.x);
+            let y = Game.player.camera.getMapY(Game.inputManager.activePointer.y);
             xLabel.textContent = x.toFixed(0);
             yLabel.textContent = y.toFixed(0);
         }

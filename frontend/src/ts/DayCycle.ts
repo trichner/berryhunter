@@ -1,20 +1,19 @@
-import {ExtendedColorMatrixFilter} from './ExtendedColorMatrixFilter';
-import {Develop} from "./develop/_Develop";
+import {Develop} from './develop/_Develop';
+import {ColorMatrixFilter, Container, Filter} from 'pixi.js';
+import {flood, lumaGreyscale} from './ColorMatrixFilterExtensions';
 
 
 const ticksPerDay = 10 * 60 * 30; // 8 Minutes at 30 tps
 const hoursPerDay = 24;
 /**
- * First hour that is considered "day" in regards of visuals and temperature
- * @type {number}
+ * First hour that is considered "day" in regard to visuals and temperature
  */
-const sunriseHour = 6;
+const sunriseHour: number = 6;
 const sunsetHour = sunriseHour + hoursPerDay / 2;
 /**
  * Time of color fade on dusk / dawn
- * @type {number}
  */
-const twilightDuration = 1.5;
+const twilightDuration: number = 1.5;
 
 const sunriseStart = sunriseHour - (twilightDuration * 2 / 3);
 const sunriseEnd = sunriseHour + (twilightDuration / 3);
@@ -27,21 +26,21 @@ const NightVisuals = {
     FLOOD_COLOR: {
         red: 107,
         green: 131,
-        blue: 185
+        blue: 185,
     },
     FLOOD_OPACITY: 0.9,
 };
 
-let timeOfDay;
+let timeOfDay: number;
 
-let filteredContainers;
-let colorMatrix: ExtendedColorMatrixFilter;
-let filters;
+let filteredContainers: Container[];
+let colorMatrix: ColorMatrixFilter;
+let filters: Filter[];
 
-export function setup(mainSvgElement, pfilteredContainers) {
-    filteredContainers = pfilteredContainers;
+export function setup(pFilteredContainers: Container[]) {
+    filteredContainers = pFilteredContainers;
 
-    colorMatrix = new ExtendedColorMatrixFilter();
+    colorMatrix = new ColorMatrixFilter();
     filters = [colorMatrix];
 }
 
@@ -57,7 +56,7 @@ export function isNight() {
     return !isDay();
 }
 
-export function getDays(serverTicks) {
+export function getDays(serverTicks: number) {
     return serverTicks / ticksPerDay;
 }
 
@@ -108,7 +107,7 @@ function getNightFilterOpacity() {
     }
 }
 
-export function setTimeByTick(tick) {
+export function setTimeByTick(tick: number) {
     timeOfDay = (tick % ticksPerDay / ticksPerDay * hoursPerDay + sunriseHour) % hoursPerDay;
     if (Develop.isActive()) {
         Develop.get().logTimeOfDay(getFormattedTime());
@@ -119,26 +118,31 @@ export function setTimeByTick(tick) {
         lastOpacity = opacity;
 
         if (opacity === 0) {
-            filteredContainers.forEach(function (container) {
+            filteredContainers.forEach((container: Container) => {
                 container.filters = null;
-            })
+            });
         } else {
-            filteredContainers.forEach(function (container) {
+            filteredContainers.forEach((container: Container) => {
                 container.filters = filters;
-            }, this);
+            });
             /**
              * Opacity: Saturation
              * 0    : 1
              * 0.5  : 0.65
              * 1    : 0.3
              */
-            colorMatrix.flood(
+            flood(
+                colorMatrix,
                 NightVisuals.FLOOD_COLOR.red,
                 NightVisuals.FLOOD_COLOR.green,
                 NightVisuals.FLOOD_COLOR.blue,
-                opacity * NightVisuals.FLOOD_OPACITY
+                opacity * NightVisuals.FLOOD_OPACITY,
             );
-            colorMatrix.lumaGreyscale(opacity * (1 - NightVisuals.SATURATION), true);
+            lumaGreyscale(
+                colorMatrix,
+                opacity * (1 - NightVisuals.SATURATION),
+                true,
+            );
         }
     }
 }

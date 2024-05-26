@@ -68,7 +68,7 @@ export class Develop implements IDevelop {
                 .forEach((eventName) => {
                     developPanel.addEventListener(eventName, (event) => {
                         event.stopPropagation();
-                    })
+                    });
                 });
 
             this.setupToggleButtons();

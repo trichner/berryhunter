@@ -6,6 +6,7 @@ import {Player} from "../Player";
 import {InputManager} from "../input/InputManager";
 import {WelcomeMessage} from "../backend/messages/incoming/WelcomeMessage";
 import {GameObjectId} from "./Types";
+import {Container} from 'pixi.js';
 
 export enum GameState {
     INITIALIZING,
@@ -13,36 +14,43 @@ export enum GameState {
     PLAYING
 }
 
+export interface IGameLayers {
+    terrain: Record<string, Container>,
+    placeables: Record<string, Container>,
+    characters: Container,
+    mobs: Record<string, Container>,
+    resources: Record<string, Container>,
+    characterAdditions: Record<string, Container>,
+    overlays: Record<string, Container>,
+}
+
 export interface IGame {
-    state: GameState;
+    readonly state: GameState;
 
-    width: number;
-    height: number;
-    centerX: number;
-    centerY: number;
-    layers;
-    stage: PIXI.Container;
-    cameraGroup: PIXI.Container;
+    readonly width: number;
+    readonly height: number;
+    readonly centerX: number;
+    readonly centerY: number;
 
-    map: GameMapWithBackend;
-    miniMap: MiniMap;
+    readonly layers: IGameLayers;
+    readonly cameraGroup: PIXI.Container;
 
-    domElement: HTMLCanvasElement;
-    input: InputManager;
+    readonly map: GameMapWithBackend;
+    readonly miniMap: MiniMap;
 
-    // TODO merge with GameState?
-    started: boolean;
-    paused: boolean;
-    playing: boolean;
+    readonly domElement: HTMLCanvasElement;
+    readonly inputManager: InputManager;
 
-    timeDelta: number;
+    readonly started: boolean;
+    readonly paused: boolean;
+    readonly playing: boolean;
 
-    spectator: Spectator;
-    player: Player;
+    readonly timeDelta: number;
+
+    readonly spectator: Spectator;
+    readonly player: Player;
 
     setup(): void;
-
-    resizeToWindow(): void;
 
     play(): void;
 

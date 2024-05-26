@@ -3,7 +3,7 @@
 		"outDir": "./dist/",
 		"sourceMap": true,
 //		"noImplicitAny": true,
-		"module": "commonjs", // TODO replace with es6 to enable proper tree-shaking
+//		"module": "commonjs", // TODO replace with es6 to enable proper tree-shaking
 		"target": "es5",
 		"downlevelIteration": true,
 		"alwaysStrict": true,

@@ -1,5 +1,5 @@
-import {InjectedSVG} from '../InjectedSVG';
 import * as PIXI from "pixi.js";
+import {createInjectedSVG} from '../InjectedSVG';
 import {GroundTextureType} from "./GroundTextureTypes";
 import {integer, radians} from "../interfaces/Types";
 
@@ -15,14 +15,14 @@ export interface Parameters {
 
 export class GroundTexture {
     parameters: Parameters;
-    graphic;
+    graphic: PIXI.Sprite;
 
     constructor(parameters: Parameters) {
         this.parameters = parameters;
     }
 
     addToMap(layer: PIXI.Container) {
-        this.graphic = new InjectedSVG(
+        this.graphic = createInjectedSVG(
             this.parameters.type.svg,
             this.parameters.x,
             this.parameters.y,

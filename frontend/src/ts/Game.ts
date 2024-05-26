@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import _debounce = require('lodash/debounce');
 import {Backend} from "./backend/Backend";
 import {GameMapWithBackend} from './backend/GameMapWithBackend';
 import {MiniMap} from './MiniMap';
@@ -9,7 +8,6 @@ import {Spectator} from './Spectator';
 import {GameObject} from './gameObjects/_GameObject';
 import * as UserInterface from './userInterface/UserInterface';
 import * as Chat from './Chat';
-import {NamedGroup} from './NamedGroup';
 import {BasicConfig as Constants} from '../config/Basic';
 import {InputManager} from './input/InputManager';
 import {isDefined} from './Utils';
@@ -20,7 +18,7 @@ import {VitalSigns} from './VitalSigns';
 import * as Recipes from './items/Recipes';
 import * as Scoreboard from './scores/Scoreboard';
 import * as GroundTextureManager from './groundTextures/GroundTextureManager';
-import {GameState, IGame} from "./interfaces/IGame";
+import {GameState, IGame, IGameLayers} from './interfaces/IGame';
 import {GameObjectId} from "./interfaces/Types";
 import {GraphicsConfig} from "../config/Graphics";
 import {IBackend} from "./interfaces/IBackend";
@@ -34,7 +32,8 @@ import {
     ModulesLoadedEvent,
     PrerenderEvent
 } from "./Events";
-import {AbstractRenderer} from "pixi.js";
+import {Application, ICanvas} from 'pixi.js';
+import {createNameContainer} from './CustomData';
 
 
 export let instance: Game;
@@ -43,20 +42,14 @@ export class Game implements IGame {
 
     public state = GameState.INITIALIZING;
 
-    public renderer: AbstractRenderer;
-    public width: number;
-    public height: number;
-    public centerX: number;
-    public centerY: number;
-    public layers;
-    public stage: PIXI.Container;
+    private application: Application<ICanvas>;
+    public layers: IGameLayers;
     public cameraGroup: PIXI.Container;
 
     public map: GameMapWithBackend = null;
     public miniMap: MiniMap = null;
 
-    public domElement: HTMLCanvasElement;
-    public input: InputManager;
+    public inputManager: InputManager;
 
     // TODO merge with GameState?
     public started: boolean;
@@ -64,11 +57,34 @@ export class Game implements IGame {
     public playing: boolean;
 
     public timeDelta: number;
-    private _lastFrame: number;
 
     public spectator: Spectator;
     public player: Player;
     private backend: IBackend;
+
+    public get width() : number{
+        return  this.application.view.width;
+    }
+
+    public get height() : number{
+        return  this.application.view.height;
+    }
+
+    public get centerX() : number{
+        return  this.width / 2;
+    }
+
+    public get centerY() : number{
+        return  this.height / 2;
+    }
+
+    public get domElement(): HTMLCanvasElement {
+        return this.application.view as HTMLCanvasElement;
+    }
+
+    private get stage(): PIXI.Container {
+        return  this.application.stage;
+    }
 
     setup(): void {
         let setupPromises = [];
@@ -78,71 +94,59 @@ export class Game implements IGame {
         this.backend.setup(this);
         GameSetupEvent.trigger(this);
 
-        this.renderer = PIXI.autoDetectRenderer({
+        this.application = new PIXI.Application({
+            resizeTo: window,
             antialias: true,
-            backgroundColor: 0x006030
         });
 
-        // Fill whole viewport
-        this.renderer.view.style.position = "absolute";
-        this.renderer.view.style.display = "block";
-        this.resizeToWindow();
-
-        // TODO re-center view on resize
-        window.addEventListener('resize', _debounce(this.resizeToWindow.bind(this), 150));
-
         //Add the canvas to the HTML document
-        document.body.insertBefore(
-            this.renderer.view,
-            document.body.firstChild);
+        document.body.prepend(this.domElement);
 
         /**
          * Ordered by z-index
          */
         this.layers = {
             terrain: {
-                water: new NamedGroup('water'),
-                ground: new NamedGroup('ground'),
-                textures: new NamedGroup('textures'),
-                resourceSpots: new NamedGroup('resourceSpots'),
+                water: createNameContainer('water'),
+                ground: createNameContainer('ground'),
+                textures: createNameContainer('textures'),
+                resourceSpots: createNameContainer('resourceSpots'),
             },
             placeables: {
-                campfire: new NamedGroup('campfire'),
-                chest: new NamedGroup('chest'),
-                workbench: new NamedGroup('workbench'),
-                furnace: new NamedGroup('furnace'),
+                campfire: createNameContainer('campfire'),
+                chest: createNameContainer('chest'),
+                workbench: createNameContainer('workbench'),
+                furnace: createNameContainer('furnace'),
 
-                doors: new NamedGroup('doors'),
-                walls: new NamedGroup('walls'),
-                spikyWalls: new NamedGroup('spikyWalls'),
+                doors: createNameContainer('doors'),
+                walls: createNameContainer('walls'),
+                spikyWalls: createNameContainer('spikyWalls'),
             },
-            characters: new NamedGroup('characters'),
+            characters: createNameContainer('characters'),
             mobs: {
-                dodo: new NamedGroup('dodo'),
-                saberToothCat: new NamedGroup('saberToothCat'),
-                mammoth: new NamedGroup('mammoth'),
+                dodo: createNameContainer('dodo'),
+                saberToothCat: createNameContainer('saberToothCat'),
+                mammoth: createNameContainer('mammoth'),
             },
             resources: {
-                berryBush: new NamedGroup('berryBush'),
-                minerals: new NamedGroup('minerals'),
-                trees: new NamedGroup('trees'),
+                berryBush: createNameContainer('berryBush'),
+                minerals: createNameContainer('minerals'),
+                trees: createNameContainer('trees'),
             },
             characterAdditions: {
-                craftProgress: new NamedGroup('craftProgress'),
-                chatMessages: new NamedGroup('chatMessages'),
+                craftProgress: createNameContainer('craftProgress'),
+                chatMessages: createNameContainer('chatMessages'),
             },
             overlays: {
-                vitalSignIndicators: new NamedGroup('vitalSignIndicators')
+                vitalSignIndicators: createNameContainer('vitalSignIndicators')
             }
             // UI Overlay is the highest layer, but not managed with pixi.js
         };
 
-        this.stage = new PIXI.Container();
-
         // Terrain Background
         this.stage.addChild(this.layers.terrain.water);
 
-        this.cameraGroup = new NamedGroup('cameraGroup');
+        this.cameraGroup = createNameContainer('cameraGroup');
         this.stage.addChild(this.cameraGroup);
 
         // Terrain Textures moving with the camera
@@ -202,9 +206,8 @@ export class Game implements IGame {
         Scoreboard.setup();
         GroundTextureManager.setup(this);
 
-        this.domElement = this.renderer.view;
         GameObject.setup();
-        DayCycle.setup(this.domElement, [
+        DayCycle.setup([
             this.layers.terrain.water,
             this.layers.terrain.ground,
             this.layers.terrain.textures,
@@ -223,7 +226,7 @@ export class Game implements IGame {
             this.layers.resources.trees,
         ]);
 
-        this.input = new InputManager({
+        this.inputManager = new InputManager({
             inputKeyboard: true,
             inputKeyboardEventTarget: window,
 
@@ -237,9 +240,9 @@ export class Game implements IGame {
 
             inputGamepad: false,
         });
-        this.input.boot();
+        this.inputManager.boot();
 
-        // Disable context menu on right click to use the right click ingame
+        // Disable context menu on right click to use the right click in-game
         document.body.addEventListener('contextmenu', (event) => {
             if (event.target === this.domElement || this.domElement.contains(event.target as Node)) {
                 event.preventDefault();
@@ -262,8 +265,7 @@ export class Game implements IGame {
         /*
          * https://trello.com/c/aq5lqJB7/289-schutz-gegen-versehentliches-verlassen-des-spiels
          */
-        // TODO move in setup
-        window.onbeforeunload = (event) => {
+        window.onbeforeunload = (event: BeforeUnloadEvent) => {
             // Only ask for confirmation if the user is in-game
             if (this.state !== GameState.PLAYING) {
                 return;
@@ -276,6 +278,7 @@ export class Game implements IGame {
 
             let dialogText = 'Do you want to leave this game? You\'re progress will be lost.';
             event.preventDefault();
+            // noinspection JSDeprecatedSymbols
             event.returnValue = dialogText;
             return dialogText;
         };
@@ -285,48 +288,26 @@ export class Game implements IGame {
         });
     }
 
-    resizeToWindow(): void {
-        this.renderer.resize(window.innerWidth, window.innerHeight);
-        this.width = this.renderer.width;
-        this.height = this.renderer.height;
-
-        this.centerX = this.width / 2;
-        this.centerY = this.height / 2;
-    }
-
-    private loop(now): void {
+    private loop(delta: number): void {
         if (this.paused) {
             return;
         }
 
-        requestAnimationFrame(this.loop.bind(this));
-
-        this.timeDelta = this.timeSinceLastFrame(now);
-
-        this.render();
-
-        this._lastFrame = now;
-    }
-
-    private timeSinceLastFrame(now): number {
-        return now - this._lastFrame;
+        this.timeDelta = delta;
+        PrerenderEvent.trigger(this.timeDelta);
     }
 
     play(): void {
         this.playing = true;
         this.paused = false;
-        this._lastFrame = performance.now();
-        this.loop(this._lastFrame);
+        this.application.start();
+        this.application.ticker.add(this.loop, this);
     }
 
     pause(): void {
         this.playing = false;
         this.paused = true;
-    }
-
-    private render(): void {
-        PrerenderEvent.trigger(this.timeDelta);
-        this.renderer.render(this.stage);
+        this.application.stop();
     }
 
     /**

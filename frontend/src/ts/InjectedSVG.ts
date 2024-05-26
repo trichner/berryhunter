@@ -2,21 +2,16 @@ import {BasicConfig as Constants} from '../config/Basic';
 import * as PIXI from 'pixi.js';
 
 
-export class InjectedSVG extends PIXI.Sprite {
-    constructor(svgTexture: PIXI.Texture, x, y, size, rotation?) {
-        super(svgTexture);
+export function createInjectedSVG(svgTexture: PIXI.Texture, x: number, y: number, size: number = (Constants.GRAPHIC_BASE_SIZE / 2), rotation: number = 0): PIXI.Sprite{
+    const sprite = new PIXI.Sprite(svgTexture);
 
-        size = size || (Constants.GRAPHIC_BASE_SIZE / 2);
-        size *= 2;
+    sprite.anchor.set(0.5, 0.5);
+    sprite.x = x;
+    sprite.y = y;
+    size *= 2;
+    sprite.width = size;
+    sprite.height = size;
+    sprite.rotation = rotation;
 
-        this.anchor.set(0.5, 0.5);
-        this.x = x;
-        this.y = y;
-        if (typeof size !== 'number') {
-            console.warn('InjectedSVG "' + svgTexture.baseTexture.cacheId + '" size "' + size + '" is not a number but a ' + (typeof size));
-        }
-        this.width = size;
-        this.height = size;
-        this.rotation = rotation || 0;
-    }
+    return sprite;
 }

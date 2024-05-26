@@ -1,7 +1,7 @@
 import {GameObject} from './_GameObject';
 import * as Preloading from '../Preloading';
 import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../Utils';
-import {InjectedSVG} from '../InjectedSVG';
+import {createInjectedSVG} from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
 import * as PIXI from 'pixi.js';
 import {IGame} from "../interfaces/IGame";
@@ -43,12 +43,12 @@ export class Resource extends GameObject {
 
 export class Tree extends Resource {
     static resourceSpot: { svg: PIXI.Texture } = {svg: undefined};
-    resourceSpotTexture: InjectedSVG;
+    resourceSpotTexture: PIXI.Sprite;
 
     constructor(id: number, x, y, size, svg: PIXI.Texture) {
         super(id, Game.layers.resources.trees, x, y, size * 1.8 + GraphicsConfig.character.size, 0, svg);
 
-        this.resourceSpotTexture = new InjectedSVG(Tree.resourceSpot.svg, x, y, this.size * 0.7, randomRotation());
+        this.resourceSpotTexture = createInjectedSVG(Tree.resourceSpot.svg, x, y, this.size * 0.7, randomRotation());
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
     }
 
@@ -92,13 +92,13 @@ Preloading.registerGameObjectSVG(MarioTree, treeCfg.deciduousTreeFile, treeCfg.m
 
 export class Mineral extends Resource {
     static resourceSpot: { svg: PIXI.Texture } = {svg: undefined};
-    resourceSpotTexture: InjectedSVG;
+    resourceSpotTexture: PIXI.Sprite;
 
     constructor(id: number, x, y, size, svg: PIXI.Texture) {
         // Due to the shadow in the mineral graphics, those should not be randomly rotated
         super(id, Game.layers.resources.minerals, x, y, size * 1.1 + GraphicsConfig.character.size, 0, svg);
 
-        this.resourceSpotTexture = new InjectedSVG(Mineral.resourceSpot.svg, x, y, this.size * 0.7, this.rotation);
+        this.resourceSpotTexture = createInjectedSVG(Mineral.resourceSpot.svg, x, y, this.size * 0.7, this.rotation);
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
     }
 
@@ -246,10 +246,10 @@ export class BerryBush extends Resource {
             let distance = this.random(seedRandom, 0.2, 0.4) * this.size;
             let x = Math.cos(Math.PI * 2 / this.capacity * i) * distance;
             let y = Math.sin(Math.PI * 2 / this.capacity * i) * distance;
-            let berry = new InjectedSVG(BerryBush.berry.svg, x, y, berrySize);
+            let berry = createInjectedSVG(BerryBush.berry.svg, x, y, berrySize);
             this.berries.addChild(berry);
 
-            let calyx = new InjectedSVG(BerryBush.calyx.svg, x, y, berrySize, this.random(seedRandom, deg2rad(-65), deg2rad(220)));
+            let calyx = createInjectedSVG(BerryBush.calyx.svg, x, y, berrySize, this.random(seedRandom, deg2rad(-65), deg2rad(220)));
             this.berries.addChild(calyx);
         }
     }
@@ -259,15 +259,18 @@ export class BerryBush extends Resource {
     }
 }
 
+// noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(BerryBush, berryBushCfg.bushfile, berryBushCfg.maxSize);
+// noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(BerryBush.berry, berryBushCfg.berryFile, berryBushCfg.berryMaxSize);
+// noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(BerryBush.calyx, berryBushCfg.calyxFile, berryBushCfg.berryMaxSize);
 
 export class Flower extends Resource {
     static resourceSpot = {
         svg: null
     };
-    resourceSpotTexture: InjectedSVG;
+    resourceSpotTexture: PIXI.Sprite;
 
     static svg;
 
@@ -275,7 +278,7 @@ export class Flower extends Resource {
         super(id, Game.layers.resources.berryBush, x, y, size, randomRotation(), Flower.svg);
         this.visibleOnMinimap = false;
 
-        this.resourceSpotTexture = new InjectedSVG(Flower.resourceSpot.svg, x, y, this.size * 1.667, randomRotation());
+        this.resourceSpotTexture = createInjectedSVG(Flower.resourceSpot.svg, x, y, this.size * 1.667, randomRotation());
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
     }
 
@@ -286,5 +289,7 @@ export class Flower extends Resource {
 }
 
 let flowerCfg = GraphicsConfig.resources.flower;
+// noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(Flower.resourceSpot, flowerCfg.spotFile, flowerCfg.maxSize);
+// noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(Flower, flowerCfg.file, flowerCfg.maxSize);

@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
 import {GameObject} from "./gameObjects/_GameObject";
-import {AbstractRenderer} from "pixi.js";
 
 export enum Layer {
     CHARACTER,
@@ -15,7 +14,7 @@ export class MiniMap {
     trackedGameObjects: GameObject[];
     width: number;
     height: number;
-    renderer: AbstractRenderer;
+    application: PIXI.Application;
     stage: PIXI.Container;
     iconGroup: PIXI.Container;
     playerGroup: PIXI.Container;
@@ -43,12 +42,14 @@ export class MiniMap {
         this.width = container.clientWidth;
         this.height = container.clientHeight;
 
-        this.renderer = PIXI.autoDetectRenderer({
+        this.application = new PIXI.Application({
             width: this.width,
             height: this.height,
             backgroundAlpha: 0,
+            resizeTo: container as HTMLElement,
         });
-        container.appendChild(this.renderer.view);
+
+        container.appendChild(this.application.view as unknown as Node);
         this.stage = new PIXI.Container();
 
         this.iconGroup = new PIXI.Container();
@@ -69,7 +70,7 @@ export class MiniMap {
         this.scale = this.width / this.mapWidth;
         this.iconSizeFactor = this.scale * sizeFactorRelatedToMapSize;
 
-        this.renderer.on('prerender', update.bind(this));
+        this.application.ticker.add(this.update, this);
     }
 
     start() {
@@ -80,26 +81,24 @@ export class MiniMap {
         this.pause();
     }
 
-    loop() {
-        if (this.paused) {
-            return;
-        }
-
-        requestAnimationFrame(this.loop.bind(this));
-
-        this.renderer.render(this.stage);
-    };
-
     play() {
         this.playing = true;
         this.paused = false;
-        this.loop();
+        this.application.start();
     };
 
     pause() {
         this.playing = false;
         this.paused = true;
+        this.application.stop();
     };
+
+    private update() {
+        this.trackedGameObjects.forEach((gameObject: GameObject) => {
+            gameObject.minimapIcon.position.x = gameObject.getX() * this.scale;
+            gameObject.minimapIcon.position.y = gameObject.getY() * this.scale;
+        });
+    }
 
     /**
      * Adds the icon of the object to the map.
@@ -143,11 +142,4 @@ export class MiniMap {
         this.iconGroup.removeChildren();
     }
 
-}
-
-function update() {
-    this.trackedGameObjects.forEach((gameObject: GameObject) => {
-        gameObject.minimapIcon.position.x = gameObject.getX() * this.scale;
-        gameObject.minimapIcon.position.y = gameObject.getY() * this.scale;
-    });
 }
