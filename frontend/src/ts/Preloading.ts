@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js';
 import {htmlModuleToString, htmlToElement, isNumber} from './Utils';
 import {BasicConfig as Constants} from '../config/Basic';
-import {PreloadingProgressedEvent, PreloadingStartedEvent, StartScreenDomReadyEvent} from "./Events";
+import {PreloadingProgressedEvent, PreloadingStartedEvent, StartScreenDomReadyEvent} from './Events';
+import {Assets, Texture} from 'pixi.js';
 
 
 const promises = [];
@@ -48,27 +49,33 @@ export function registerPreload(preloadingPromise: Promise<any>) {
     return preloadingPromise;
 }
 
-export function registerGameObjectSVG(gameObjectClass: {svg: PIXI.Texture}, svgPath: string | { default: string; }, maxSize: number) {
-    svgPath = htmlModuleToString(svgPath);
+export function registerGameObjectSVG(
+    gameObjectClass: { svg: PIXI.Texture },
+    svgPath: string | { default: string; },
+    maxSize: number,
+) {
+    let sourceScale = Constants.GRAPHICS_RESOLUTION * (2 * Constants.GRAPHIC_BASE_SIZE);
+    if (isNumber(maxSize)) {
+        // Scale sourceScale according to the maximum required graphic size
+        sourceScale = Constants.GRAPHICS_RESOLUTION * (2 * maxSize);
+    }
     return registerPreload(
-        new Promise(function (resolve, reject) {
-            let sourceScale = 1;
-            if (isNumber(maxSize)) {
-                // Scale sourceScale according to the maximum required graphic size
-                sourceScale = sourceScale * (2 * maxSize) / Constants.GRAPHIC_BASE_SIZE;
-            }
-            gameObjectClass.svg = PIXI.Texture.from(svgPath, {resourceOptions: {scale: sourceScale}});
-            gameObjectClass.svg.baseTexture.on('loaded', function () {
-                resolve(gameObjectClass.svg);
-            });
-            gameObjectClass.svg.baseTexture.on('error', function () {
-                reject("Error loading texture '" + svgPath + "'");
-            });
+        Assets.load({
+            src: htmlModuleToString(svgPath),
+            data: {
+                width: sourceScale,
+                height: sourceScale,
+            },
+        }).then((texture: Texture) => {
+            gameObjectClass.svg = texture;
         }),
     );
 }
 
-export function renderPartial(html: (string | {default: string}), onDomReady = () => {}) {
+export function renderPartial(
+    html: (string | { default: string }),
+    onDomReady = () => {},
+) {
     document.body.appendChild(htmlToElement(htmlModuleToString(html)));
     onDomReady();
 }

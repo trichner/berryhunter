@@ -1,8 +1,7 @@
 /**
  * Adds presets to PIXI.filters.ColorMatrixFilter
  */
-import {ColorMatrix} from '@pixi/filter-color-matrix';
-import {ColorMatrixFilter} from 'pixi.js';
+import {ColorMatrix, ColorMatrixFilter} from 'pixi.js';
 
 /**
  * @param colorMatrixFilter

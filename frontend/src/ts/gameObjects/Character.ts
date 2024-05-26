@@ -1,5 +1,4 @@
 import {GameObject} from './_GameObject';
-import * as PIXI from 'pixi.js';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {isDefined} from '../Utils';
 import * as Equipment from '../items/Equipment';
@@ -7,16 +6,17 @@ import {EquipmentSlot} from '../items/Equipment';
 import {createInjectedSVG} from '../InjectedSVG';
 import * as Preloading from '../Preloading';
 import {Vector} from '../Vector';
-import * as Text from '../Text';
 import {GraphicsConfig} from '../../config/Graphics';
 import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
-import {Animation} from "../Animation";
+import {Animation} from '../Animation';
 import {Items} from '../items/Items';
-import {IGame} from "../interfaces/IGame";
-import {CharacterEquippedItemEvent, GameSetupEvent, ISubscriptionToken, PrerenderEvent} from "../Events";
-import {ICharacterLike} from "../interfaces/ICharacter";
+import {IGame} from '../interfaces/IGame';
+import {CharacterEquippedItemEvent, GameSetupEvent, ISubscriptionToken, PrerenderEvent} from '../Events';
+import {ICharacterLike} from '../interfaces/ICharacter';
 import {createNameContainer} from '../CustomData';
+import {Container, Graphics, Text, Texture} from 'pixi.js';
+import * as TextDisplay from '../../config/TextDisplay';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -24,13 +24,13 @@ GameSetupEvent.subscribe((game: IGame) => {
 });
 
 export class Character extends GameObject implements ICharacterLike {
-    static svg: PIXI.Texture;
-    static craftingIndicator: { svg: PIXI.Texture } = {svg: undefined};
+    static svg: Texture;
+    static craftingIndicator: { svg: Texture } = {svg: undefined};
     static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
 
 
     name: string;
-    nameElement: PIXI.Text;
+    nameElement: Text;
     isPlayerCharacter: boolean;
     movementSpeed: number;
 
@@ -40,26 +40,26 @@ export class Character extends GameObject implements ICharacterLike {
     lastRemainingTicks: number = 0;
     useLeftHand: boolean = false;
 
-    actualShape: PIXI.Container;
+    actualShape: Container;
 
-    // Contains PIXI.Containers that will mirror this characters position
-    followGroups: PIXI.Container[];
+    // Contains Containers that will mirror this characters position
+    followGroups: Container[];
 
-    messages: PIXI.Text[];
-    messagesGroup: PIXI.Container;
-    craftingIndicator: PIXI.Container;
+    messages: Text[];
+    messagesGroup: Container;
+    craftingIndicator: Container;
 
-    leftHand: PIXI.Container & { originalTranslation: { x: number, y: number } };
-    rightHand: PIXI.Container & { originalTranslation: { x: number, y: number } };
+    leftHand: Container & { originalTranslation: { x: number, y: number } };
+    rightHand: Container & { originalTranslation: { x: number, y: number } };
 
     private prerenderSubToken: ISubscriptionToken;
 
-    constructor(id: number, x, y, name, isPlayerCharacter) {
+    constructor(id: number, x: number, y: number, name: string, isPlayerCharacter: boolean) {
         super(id, Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2, Character.svg);
         this.name = name;
         this.isPlayerCharacter = isPlayerCharacter;
         this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
-        this.isMoveable = true;
+        this.isMovable = true;
         this.visibleOnMinimap = false;
         this.turnRate = 0;
 
@@ -75,7 +75,7 @@ export class Character extends GameObject implements ICharacterLike {
             this.equippedItems[equipmentSlot] = null;
         }
 
-        let placeableSlot = new PIXI.Container();
+        let placeableSlot = new Container();
         this.actualShape.addChild(placeableSlot);
         this.equipmentSlotGroups[Equipment.EquipmentSlot.PLACEABLE] = placeableSlot;
         placeableSlot.position.set(
@@ -97,17 +97,17 @@ export class Character extends GameObject implements ICharacterLike {
 
         this.followGroups = [];
 
-        let messagesFollowGroup = new PIXI.Container();
+        let messagesFollowGroup = new Container();
         Game.layers.characterAdditions.chatMessages.addChild(messagesFollowGroup);
         this.followGroups.push(messagesFollowGroup);
 
         this.messages = [];
-        this.messagesGroup = new PIXI.Container();
+        this.messagesGroup = new Container();
         messagesFollowGroup.addChild(this.messagesGroup);
         this.messagesGroup.position.y = -1.2 * (this.size + 24);
 
         if (this.isPlayerCharacter) {
-            let craftProgressFollowGroup = new PIXI.Container();
+            let craftProgressFollowGroup = new Container();
             Game.layers.characterAdditions.craftProgress.addChild(craftProgressFollowGroup);
             this.followGroups.push(craftProgressFollowGroup);
 
@@ -118,22 +118,22 @@ export class Character extends GameObject implements ICharacterLike {
             craftingIndicator.addChild(createInjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
             craftingIndicator.visible = false;
 
-            let circle = new PIXI.Graphics();
+            let circle = new Graphics();
             this.craftingIndicator['circle'] = circle;
             craftingIndicator.addChild(circle);
             // Let the progress start at 12 o'clock
             circle.rotation = -0.5 * Math.PI;
         }
 
-        this.followGroups.forEach(function (group: PIXI.Container) {
+        this.followGroups.forEach(function (group: Container) {
             group.position.copyFrom(this.shape.position);
         }, this);
 
         this.prerenderSubToken = PrerenderEvent.subscribe(this.update, this);
     }
 
-    initShape(svg: PIXI.Texture, x: number, y: number, size: number, rotation: number) {
-        let group = new PIXI.Container();
+    initShape(svg: Texture, x: number, y: number, size: number, rotation: number) {
+        let group = new Container();
         group.position.set(x, y);
 
         this.actualShape = createNameContainer('actualShape');
@@ -175,8 +175,8 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     createHand(handAngleDistance: number):
-        { group: PIXI.Container & { originalTranslation: { x: number, y: number } }, slot: PIXI.Container } {
-        let group = new PIXI.Container() as PIXI.Container & { originalTranslation: { x: number, y: number } };
+        { group: Container & { originalTranslation: { x: number, y: number } }, slot: Container } {
+        let group = new Container() as Container & { originalTranslation: { x: number, y: number } };
 
         const handAngle = 0;
         group.position.set(
@@ -184,19 +184,19 @@ export class Character extends GameObject implements ICharacterLike {
             Math.sin(handAngle + Math.PI * handAngleDistance) * this.size * 0.8,
         );
 
-        let slotGroup = new PIXI.Container();
+        let slotGroup = new Container();
         group.addChild(slotGroup);
         slotGroup.position.set(-this.size * 0.2, 0);
         slotGroup.rotation = Math.PI / 2;
 
-        let handShape = new PIXI.Graphics();
+        let handShape = new Graphics()
+            .circle(0, 0, this.size * 0.2)
+            .fill(GraphicsConfig.character.hands.fillColor)
+            .stroke({
+                width: 0.212 * 0.6 /* relative to size */,
+                color: GraphicsConfig.character.hands.lineColor,
+            });
         group.addChild(handShape);
-        handShape.beginFill(GraphicsConfig.character.hands.fillColor);
-        handShape.lineStyle(
-            0.212 * 0.6, // relative to size
-            GraphicsConfig.character.hands.lineColor,
-        );
-        handShape.drawCircle(0, 0, this.size * 0.2);
 
         group['originalTranslation'] = Vector.clone(group.position);
 
@@ -216,7 +216,12 @@ export class Character extends GameObject implements ICharacterLike {
             return;
         }
 
-        let text = new PIXI.Text(this.name, Text.style({fill: 'white'}));
+        const text = new Text({
+            text: this.name,
+            style: TextDisplay.style({
+                fill: 'white',
+            }),
+        });
         text.anchor.set(0.5, 0.5);
         this.shape.addChild(text);
         text.position.set(0, -1.3 * this.size);
@@ -224,12 +229,10 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     createMinimapIcon() {
-        let shape = new PIXI.Graphics();
         let miniMapCfg = GraphicsConfig.miniMap.icons.character;
-        shape.beginFill(miniMapCfg.color, miniMapCfg.alpha);
-        shape.drawCircle(0, 0, this.size * miniMapCfg.sizeFactor);
-
-        return shape;
+        return new Graphics()
+            .circle(0, 0, this.size * miniMapCfg.sizeFactor)
+            .fill({color: miniMapCfg.color, alpha: miniMapCfg.alpha});
     }
 
     getEquippedItemAnimationType() {
@@ -277,7 +280,7 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     private animateAction(
-        hand: PIXI.DisplayObject & { originalTranslation: { x: number, y: number } },
+        hand: Container & { originalTranslation: { x: number, y: number } },
         type: 'swing' | 'stab',
         remainingTicks?: number,
         mirrored: boolean = false,
@@ -401,16 +404,19 @@ export class Character extends GameObject implements ICharacterLike {
         return this.equippedItems[equipmentSlot];
     }
 
-    say(message) {
-        let textStyle = Text.style({fill: '#E37313', stroke: '#000000', strokeThickness: 5});
-        let fontSize = textStyle.fontSize;
+    say(message: string) {
+        let textStyle = TextDisplay.style({fill: '#E37313', stroke: {color: '#000000', width: 5}});
+        let fontSize = textStyle.fontSize as number;
 
         // Move all currently displayed messages up
         this.messages.forEach((message) => {
             message.position.y -= fontSize * 1.1;
         });
 
-        let messageShape = new PIXI.Text(message, textStyle);
+        let messageShape = new Text({
+            text: message,
+            style: textStyle,
+        });
         messageShape.anchor.set(0.5, 0.5);
         messageShape['timeToLife'] = Constants.CHAT_MESSAGE_DURATION;
         this.messagesGroup.addChild(messageShape);
@@ -431,8 +437,10 @@ export class Character extends GameObject implements ICharacterLike {
     }
 }
 
+// noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(Character, GraphicsConfig.character.file, GraphicsConfig.character.size);
 
+// noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(
     Character.craftingIndicator,
     GraphicsConfig.character.craftingIndicator.file,

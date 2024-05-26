@@ -1,76 +1,113 @@
-import * as PIXI from 'pixi.js';
 import * as UserInterface from './userInterface/UserInterface';
-import {GameObject} from "./gameObjects/_GameObject";
+import {GameObject} from './gameObjects/_GameObject';
+import {registerPreload} from './Preloading';
+import {Application, Container, ContainerChild} from 'pixi.js';
 
 export enum Layer {
     CHARACTER,
     OTHER
 }
 
+const sizeFactorRelatedToMapSize = 2;
+
 export class MiniMap {
     mapWidth: number;
     mapHeight: number;
-    registeredGameObjectIds: number[];
-    trackedGameObjects: GameObject[];
-    width: number;
-    height: number;
-    application: PIXI.Application;
-    stage: PIXI.Container;
-    iconGroup: PIXI.Container;
-    playerGroup: PIXI.Container;
+
+    /**
+     * All game objects added to the minimap.
+     */
+    registeredGameObjectIds: number[] = [];
+
+    /**
+     * Movable game objects those minimap position will be updated continuously.
+     */
+    trackedGameObjects: GameObject[] = [];
+    application: Application;
+    stage: Container;
+    iconGroup: Container;
+    playerGroup: Container;
     scale: number;
     iconSizeFactor: number;
     paused: boolean;
     playing: boolean;
 
-    constructor(mapWidth: number, mapHeight: number) {
+    public get width(): number {
+        return this.application.canvas.width;
+    }
+
+    public get height(): number {
+        return this.application.canvas.height;
+    }
+
+    constructor() {
+        let container = UserInterface.getMinimapContainer();
+
+        this.application = new Application();
+
+        // noinspection JSIgnoredPromiseFromCall
+        registerPreload(this.application.init({
+            backgroundAlpha: 0,
+            resizeTo: container as HTMLElement,
+        }));
+    }
+
+    public setup(mapWidth: number, mapHeight: number) {
+        let container = UserInterface.getMinimapContainer();
+        container.appendChild(this.application.canvas);
+
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
 
-        /**
-         * All game objects added to the minimap.
-         */
-        this.registeredGameObjectIds = [];
+        this.stage = this.application.stage;
 
-        /**
-         * Moveable game objects those minimap position will be updated continuously.
-         */
-        this.trackedGameObjects = [];
-
-        let container = UserInterface.getMinimapContainer();
-
-        this.width = container.clientWidth;
-        this.height = container.clientHeight;
-
-        this.application = new PIXI.Application({
-            width: this.width,
-            height: this.height,
-            backgroundAlpha: 0,
-            resizeTo: container as HTMLElement,
-        });
-
-        container.appendChild(this.application.view as unknown as Node);
-        this.stage = new PIXI.Container();
-
-        this.iconGroup = new PIXI.Container();
+        this.iconGroup = new Container();
         this.stage.addChild(this.iconGroup);
+
+        this.playerGroup = new Container();
+        this.stage.addChild(this.playerGroup);
+
+        this.updateScaling();
+
+        this.application.ticker.add(this.update, this);
+        this.application.renderer.addListener('resize', this.onResize, this);
+    }
+
+    private updateScaling() {
         this.iconGroup.position.set(
             this.width / 2,
-            this.height / 2
+            this.height / 2,
         );
-
-        this.playerGroup = new PIXI.Container();
-        this.stage.addChild(this.playerGroup);
         this.playerGroup.position.set(
             this.width / 2,
-            this.height / 2
+            this.height / 2,
         );
-
-        const sizeFactorRelatedToMapSize = 2;
+        const previousScale = this.scale;
         this.scale = this.width / this.mapWidth;
         this.iconSizeFactor = this.scale * sizeFactorRelatedToMapSize;
 
-        this.application.ticker.add(this.update, this);
+        return previousScale;
+    }
+
+    onResize() {
+        const previousScale = this.updateScaling();
+
+        // Adjust all minimap icon's position & size
+        this.iconGroup.children.forEach((child) => {
+            this.updateMinimapIconOnResize(child, previousScale);
+        });
+        this.playerGroup.children.forEach((child) => {
+            this.updateMinimapIconOnResize(child, previousScale);
+        });
+    }
+
+    private updateMinimapIconOnResize(child: ContainerChild, previousScale: number) {
+        const originalX = child.position.x / previousScale;
+        const originalY = child.position.y / previousScale;
+        const x = originalX * this.scale;
+        const y = originalY * this.scale;
+        child.position.set(x, y);
+        child.scale.set(this.iconSizeFactor);
     }
 
     start() {
@@ -128,7 +165,7 @@ export class MiniMap {
         minimapIcon.position.set(x, y);
         minimapIcon.scale.set(this.iconSizeFactor);
 
-        if (gameObject.isMoveable) {
+        if (gameObject.isMovable) {
             gameObject.minimapIcon = minimapIcon;
             this.trackedGameObjects.push(gameObject);
         }
@@ -141,5 +178,4 @@ export class MiniMap {
         this.playerGroup.removeChildren();
         this.iconGroup.removeChildren();
     }
-
 }

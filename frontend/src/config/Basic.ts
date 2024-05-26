@@ -48,6 +48,13 @@ export const BasicConfig = {
 	GRAPHIC_BASE_SIZE: 100,
 
 	/**
+	 * Higher numbers = sharper textures, but more texture memory used
+	 *
+	 * Default: 1
+	 */
+	GRAPHICS_RESOLUTION: 1,
+
+	/**
 	 * Settings for the map editor
 	 */
 	mapEditor: {

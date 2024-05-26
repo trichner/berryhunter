@@ -1,3 +1,4 @@
+import {Container, Graphics, Texture} from 'pixi.js';
 import {createInjectedSVG} from '../InjectedSVG';
 import {BasicConfig as Constants} from '../../config/Basic';
 import {Vector} from '../Vector';
@@ -5,7 +6,6 @@ import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../Utils';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
 import {radians} from "../interfaces/Types";
 import {PrerenderEvent} from "../Events";
-import * as PIXI from "pixi.js";
 
 let movementInterpolatedObjects = new Set();
 let rotatingObjects = new Set();
@@ -13,36 +13,35 @@ let rotatingObjects = new Set();
 export class GameObject {
     readonly id: number; // will be filled in GameMapWithBackend with backend ids
 
-    layer;
+    layer: Container;
     size: number = Constants.GRAPHIC_BASE_SIZE / 2;
     rotation: number = 0;
     turnRate: number = Constants.DEFAULT_TURN_RATE;
-    isMoveable: boolean = false;
+    isMovable: boolean = false;
     rotateOnPositioning: boolean = false;
     visibleOnMinimap: boolean = true;
-    shape;
+    shape: Container;
     statusEffects: { [key: string]: StatusEffect };
     activeStatusEffect: StatusEffect = null;
 
     desiredPosition: Vector;
-    desireTimestamp;
+    desireTimestamp: number;
 
     desiredRotation: number;
-    desiredRotationTimestamp;
+    desiredRotationTimestamp: number;
 
     /**
-     * Set by MiniMap if this is a tracked (= moveable) GameObject
+     * Set by MiniMap if this is a tracked (= movable) GameObject
      */
-    minimapIcon: PIXI.Container;
+    minimapIcon: Container;
 
-    constructor(id: number, gameLayer, x, y, size, rotation, svg: PIXI.Texture) {
+    constructor(id: number, gameLayer: Container, x: number, y: number, size: number, rotation: number, svg: Texture) {
         this.id = id;
         this.layer = gameLayer;
         this.size = size;
         this.rotation = rotation;
 
-        const args = Array.prototype.splice.call(arguments, 5);
-        this.shape = this.initShape.apply(this, [svg, x, y, size, rotation].concat(args));
+        this.shape = this.initShape(svg, x, y, size, rotation);
         this.statusEffects = this.createStatusEffects();
         this.show();
     }
@@ -56,12 +55,11 @@ export class GameObject {
         }
     };
 
-    initShape(svg: PIXI.Texture, x, y, size, rotation) {
+    initShape(svg: Texture, x: number, y: number, size: number, rotation: number): Container {
         if (svg) {
-            return createInjectedSVG(svg, x, y, this.size, this.rotation);
+            return createInjectedSVG(svg, x, y, size, rotation);
         } else {
-            const args = Array.prototype.splice.call(arguments, 2);
-            return this.createShape.apply(this, [x, y].concat(args));
+            return this.createShape(x, y, size, rotation);
         }
     }
 
@@ -73,15 +71,15 @@ export class GameObject {
     /**
      * Fallback method if there is no SVG bound to this gameObject class.
      */
-    createShape(x, y) {
+    createShape(x: number, y: number, size: number, rotation: number): Graphics {
         throw 'createShape not implemented for ' + this.constructor.name;
     }
 
-    createMinimapIcon(): PIXI.Container {
+    createMinimapIcon(): Container {
         throw 'createMinimapIcon not implemented for ' + this.constructor.name;
     }
 
-    setPosition(x, y) {
+    setPosition(x: number, y: number) {
         if (isUndefined(x)) {
             throw "x has to be defined.";
         }
@@ -157,7 +155,7 @@ export class GameObject {
         return this.getRotationShape().rotation;
     }
 
-    getRotationShape() {
+    getRotationShape(): Container {
         return this.shape;
     }
 

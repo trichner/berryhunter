@@ -1,6 +1,6 @@
-import {Animation} from "../Animation";
-import {EaseDisplayObject} from "pixi-ease";
-import {ColorMatrixFilter, DisplayObject} from 'pixi.js';
+import {Animation} from '../Animation';
+import {EaseDisplayObject} from 'pixi-ease';
+import {ColorMatrixFilter, Container} from 'pixi.js';
 import {flood} from '../ColorMatrixFilterExtensions';
 
 export interface StatusEffectDefinition {
@@ -24,7 +24,15 @@ export class StatusEffect implements StatusEffectDefinition {
     startAlpha: number;
     endAlpha: number;
 
-    private constructor(definition: StatusEffectDefinition, gameObjectShape, red, green, blue, startAlpha, endAlpha) {
+    private constructor(
+        definition: StatusEffectDefinition,
+        gameObjectShape: Container,
+        red: number,
+        green: number,
+        blue: number,
+        startAlpha: number,
+        endAlpha: number,
+    ) {
         this.id = definition.id;
         this.priority = definition.priority;
 
@@ -37,33 +45,28 @@ export class StatusEffect implements StatusEffectDefinition {
         this.endAlpha = endAlpha;
 
         if (Array.isArray(gameObjectShape.filters)) {
-            // filters are returned as copy
-            let filters = gameObjectShape.filters;
-            // so we modify the copy
-            filters.push(this.colorMatrix);
-            // and replace the filters with the modified copy
-            gameObjectShape.filters = filters;
+            gameObjectShape.filters = [...gameObjectShape.filters, this.colorMatrix];
         } else {
             gameObjectShape.filters = [this.colorMatrix];
         }
     }
 
-    static forDamaged(gameObjectShape) {
+    static forDamaged(gameObjectShape: Container) {
         // #BF153A old Health Bar dark red?
-        return new StatusEffect(StatusEffect.Damaged, gameObjectShape, 191, 21, 58, 0.8, 0.0);
+        return new StatusEffect(StatusEffect.Damaged, gameObjectShape, 191, 21, 58, 0.5, 0.1);
     }
 
-    static forDamagedOverTime(gameObjectShape) {
+    static forDamagedOverTime(gameObjectShape: Container) {
         // #BF153A old Health Bar dark red?
         return new StatusEffect(StatusEffect.DamagedAmbient, gameObjectShape, 191, 21, 58, 0.8, 0.2);
     }
 
-    static forFreezing(gameObjectShape) {
+    static forFreezing(gameObjectShape: Container) {
         // #1E7A1E
         return new StatusEffect(StatusEffect.Freezing, gameObjectShape, 18, 87, 153, 0.4, 0.8);
     }
 
-    static forStarving(gameObjectShape) {
+    static forStarving(gameObjectShape: Container) {
         // #125799
         return new StatusEffect(StatusEffect.Starving, gameObjectShape, 30, 120, 30, 0.2, 0.8);
     }
@@ -88,21 +91,21 @@ export class StatusEffect implements StatusEffectDefinition {
         let animation = new Animation();
         let to = animation.add(
             // TODO ugly, need to test and find better way
-            this.colorMatrix as unknown as DisplayObject,
+            this.colorMatrix as unknown as Container,
             {alpha: this.endAlpha},
             {
                 duration: 500,
                 repeat: true,
                 reverse: true,
-                ease: 'easeInOutCubic'
-            }
+                ease: 'easeInOutCubic',
+            },
         ) as EaseDisplayObject;
 
         // If the startAlpha is lower, we want the animation to end on the start
         // in the opposite case, the animation should end on the end (without reversing)
         let isReverse = (this.startAlpha > this.endAlpha);
         // TODO test this
-        to.on('loop', () => {
+        to.on('reverse', () => {
             isReverse = !isReverse;
             // The effect was scheduled to be removed - remove the update function from the global ticker
             // the rest will be cleaned up by the GC

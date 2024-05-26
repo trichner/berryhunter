@@ -28,11 +28,7 @@ export class GameStateMessage {
     inventory;
     entities;
 
-    /**
-     *
-     * @param {BerryhunterApi.GameState} gameState
-     */
-    constructor(gameState) {
+    constructor(gameState: BerryhunterApi.GameState) {
         this.tick = gameState.tick().toFloat64();
 
         switch (gameState.playerType()) {
@@ -73,8 +69,8 @@ function unmarshalVec2f(vec2f) {
 /**
  * @param {BerryhunterApi.Entity} wrappedEntity
  */
-function unmarshalWrappedEntity(wrappedEntity) {
-    let eType = wrappedEntity.eType();
+function unmarshalWrappedEntity(wrappedEntity: BerryhunterApi.Entity) {
+    const eType: BerryhunterApi.AnyEntity = wrappedEntity.eType();
 
     if (eType === BerryhunterApi.AnyEntity.NONE) {
         return null;
@@ -83,12 +79,13 @@ function unmarshalWrappedEntity(wrappedEntity) {
     let entity;
 
     for (let eTypeName in BerryhunterApi.AnyEntity) {
+        // @ts-ignore
         if (BerryhunterApi.AnyEntity[eTypeName] === eType) {
             entity = new BerryhunterApi[eTypeName]();
         }
     }
+
     /**
-     *
      * @type {BerryhunterApi.Mob | BerryhunterApi.Resource | BerryhunterApi.Player}
      */
     entity = wrappedEntity.e(entity);
@@ -168,7 +165,7 @@ function unmarshalEntity(entity, eType) {
         result.statusEffects = unmarshalStatusEffects(entity.statusEffectsLength(), entity.statusEffects.bind(entity));
     }
 
-    return result
+    return result;
 }
 
 /**

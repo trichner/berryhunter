@@ -204,6 +204,7 @@ export const BackendValidTokenEvent: OneTimePayloadEvent<IBackend> = new OneTime
 export const FirstGameStateHandledEvent: OneTimeSimpleEvent = new OneTimeSimpleEvent();
 export const BackendConnectionFailureEvent: OneTimeSimpleEvent = new OneTimeSimpleEvent();
 
+export const UserInteraceDomReadyEvent: OneTimePayloadEvent<HTMLElement> = new OneTimePayloadEvent<HTMLElement>();
 export const StartScreenDomReadyEvent: OneTimePayloadEvent<HTMLElement> = new OneTimePayloadEvent<HTMLElement>();
 export const EndScreenShownEvent: SimpleEvent = new SimpleEvent();
 

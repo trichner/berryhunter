@@ -40,7 +40,7 @@ export class GameMapWithBackend {
         let gameObject = this.getObject(entity.id);
         if (gameObject) {
             // FIXME Der Server sollte mir nur Entities liefern, die sich auch geändert haben
-            if (gameObject.isMoveable) {
+            if (gameObject.isMovable) {
                 gameObject.setPosition(entity.position.x, entity.position.y);
                 if (!gameObject.rotateOnPositioning) {
                     gameObject.setRotation(entity.rotation);

@@ -9,7 +9,7 @@ export class Snapshot {
     tick: number;
     player: any; // TODO introduce interfaces to player, spectator, entity...
     entities: [];
-    inventory: []
+    inventory: [];
 }
 
 export function newSnapshot(backendState: BackendState, gameState) {

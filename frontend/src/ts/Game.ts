@@ -1,5 +1,6 @@
-import * as PIXI from 'pixi.js';
-import {Backend} from "./backend/Backend";
+import {Application, Container, Graphics, Ticker} from 'pixi.js';
+
+import {Backend} from './backend/Backend';
 import {GameMapWithBackend} from './backend/GameMapWithBackend';
 import {MiniMap} from './MiniMap';
 import * as DayCycle from './DayCycle';
@@ -11,7 +12,7 @@ import * as Chat from './Chat';
 import {BasicConfig as Constants} from '../config/Basic';
 import {InputManager} from './input/InputManager';
 import {isDefined} from './Utils';
-import {WelcomeMessage} from "./backend/messages/incoming/WelcomeMessage";
+import {WelcomeMessage} from './backend/messages/incoming/WelcomeMessage';
 import * as Console from './Console';
 import {Camera} from './Camera';
 import {VitalSigns} from './VitalSigns';
@@ -19,10 +20,10 @@ import * as Recipes from './items/Recipes';
 import * as Scoreboard from './scores/Scoreboard';
 import * as GroundTextureManager from './groundTextures/GroundTextureManager';
 import {GameState, IGame, IGameLayers} from './interfaces/IGame';
-import {GameObjectId} from "./interfaces/Types";
-import {GraphicsConfig} from "../config/Graphics";
-import {IBackend} from "./interfaces/IBackend";
-import {Develop} from "./develop/_Develop";
+import {GameObjectId} from './interfaces/Types';
+import {GraphicsConfig} from '../config/Graphics';
+import {IBackend} from './interfaces/IBackend';
+import {Develop} from './develop/_Develop';
 import {
     BackendValidTokenEvent,
     BeforeDeathEvent,
@@ -30,10 +31,10 @@ import {
     GamePlayingEvent,
     GameSetupEvent,
     ModulesLoadedEvent,
-    PrerenderEvent
-} from "./Events";
-import {Application, ICanvas} from 'pixi.js';
+    PrerenderEvent, UserInteraceDomReadyEvent,
+} from './Events';
 import {createNameContainer} from './CustomData';
+import {registerPreload} from './Preloading';
 
 
 export let instance: Game;
@@ -42,9 +43,9 @@ export class Game implements IGame {
 
     public state = GameState.INITIALIZING;
 
-    private application: Application<ICanvas>;
+    private application: Application;
     public layers: IGameLayers;
-    public cameraGroup: PIXI.Container;
+    public cameraGroup: Container;
 
     public map: GameMapWithBackend = null;
     public miniMap: MiniMap = null;
@@ -62,28 +63,38 @@ export class Game implements IGame {
     public player: Player;
     private backend: IBackend;
 
-    public get width() : number{
-        return  this.application.view.width;
+    public get width(): number {
+        return this.application.canvas.width;
     }
 
-    public get height() : number{
-        return  this.application.view.height;
+    public get height(): number {
+        return this.application.canvas.height;
     }
 
-    public get centerX() : number{
-        return  this.width / 2;
+    public get centerX(): number {
+        return this.width / 2;
     }
 
-    public get centerY() : number{
-        return  this.height / 2;
+    public get centerY(): number {
+        return this.height / 2;
     }
 
     public get domElement(): HTMLCanvasElement {
-        return this.application.view as HTMLCanvasElement;
+        return this.application.canvas;
     }
 
-    private get stage(): PIXI.Container {
-        return  this.application.stage;
+    private get stage(): Container {
+        return this.application.stage;
+    }
+
+    constructor() {
+        this.application = new Application();
+
+        // noinspection JSIgnoredPromiseFromCall
+        registerPreload(this.application.init({
+            resizeTo: window,
+            antialias: true,
+        }));
     }
 
     setup(): void {
@@ -93,11 +104,6 @@ export class Game implements IGame {
         this.backend = new Backend();
         this.backend.setup(this);
         GameSetupEvent.trigger(this);
-
-        this.application = new PIXI.Application({
-            resizeTo: window,
-            antialias: true,
-        });
 
         //Add the canvas to the HTML document
         document.body.prepend(this.domElement);
@@ -138,8 +144,8 @@ export class Game implements IGame {
                 chatMessages: createNameContainer('chatMessages'),
             },
             overlays: {
-                vitalSignIndicators: createNameContainer('vitalSignIndicators')
-            }
+                vitalSignIndicators: createNameContainer('vitalSignIndicators'),
+            },
             // UI Overlay is the highest layer, but not managed with pixi.js
         };
 
@@ -153,7 +159,7 @@ export class Game implements IGame {
         this.cameraGroup.addChild(
             this.layers.terrain.ground,
             this.layers.terrain.textures,
-            this.layers.terrain.resourceSpots
+            this.layers.terrain.resourceSpots,
         );
 
         // Lower Placeables
@@ -162,7 +168,7 @@ export class Game implements IGame {
             this.layers.placeables.chest,
             this.layers.placeables.workbench,
             this.layers.placeables.furnace,
-            this.layers.resources.berryBush
+            this.layers.resources.berryBush,
         );
 
         // Characters
@@ -172,20 +178,20 @@ export class Game implements IGame {
         this.cameraGroup.addChild(
             this.layers.mobs.dodo,
             this.layers.mobs.saberToothCat,
-            this.layers.mobs.mammoth
+            this.layers.mobs.mammoth,
         );
 
         // Higher Placeables
         this.cameraGroup.addChild(
             this.layers.placeables.doors,
             this.layers.placeables.walls,
-            this.layers.placeables.spikyWalls
+            this.layers.placeables.spikyWalls,
         );
 
         // Resources
         this.cameraGroup.addChild(
             this.layers.resources.minerals,
-            this.layers.resources.trees
+            this.layers.resources.trees,
         );
 
         // Character Additions
@@ -288,12 +294,12 @@ export class Game implements IGame {
         });
     }
 
-    private loop(delta: number): void {
+    private loop(ticker: Ticker): void {
         if (this.paused) {
             return;
         }
 
-        this.timeDelta = delta;
+        this.timeDelta = ticker.deltaMS;
         PrerenderEvent.trigger(this.timeDelta);
     }
 
@@ -346,30 +352,31 @@ export class Game implements IGame {
 
     startRendering(gameInformation: WelcomeMessage): void {
         Console.log('Joined Server "' + gameInformation.serverName + '"');
-        const baseTexture = new PIXI.Graphics();
+        const baseTexture = new Graphics()
+            .circle(0, 0, gameInformation.mapRadius)
+            .fill(GraphicsConfig.landColor);
         this.layers.terrain.ground.addChild(baseTexture);
-        baseTexture.beginFill(GraphicsConfig.landColor);
-        baseTexture.drawCircle(0, 0, gameInformation.mapRadius);
 
         this.map = new GameMapWithBackend(this, gameInformation.mapRadius);
         this.play();
         this.state = GameState.RENDERING;
-        this.miniMap = new MiniMap(this.map.width, this.map.height);
+        this.miniMap.setup(this.map.width, this.map.height);
     }
 
     private createBackground() {
-        const waterRect = new PIXI.Graphics();
+        const waterRect = new Graphics()
+            .rect(0, 0, this.width, this.height)
+            .fill(GraphicsConfig.waterColor);
         this.layers.terrain.water.addChild(waterRect);
-
-        waterRect.beginFill(GraphicsConfig.waterColor);
-        waterRect.drawRect(0, 0, this.width, this.height);
     }
 }
 
 instance = new Game();
 
 ModulesLoadedEvent.subscribe(instance.setup, instance);
-
+UserInteraceDomReadyEvent.subscribe(() => {
+    instance.miniMap = new MiniMap();
+});
 /*
  * Make sure the body can be focused.
  */
@@ -377,6 +384,6 @@ document.body.tabIndex = 0;
 
 
 let developEnabled = false;
-BackendValidTokenEvent.subscribe( function () {
+BackendValidTokenEvent.subscribe(function () {
     developEnabled = true;
 });

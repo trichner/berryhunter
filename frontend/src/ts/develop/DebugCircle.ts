@@ -1,9 +1,9 @@
 import {GameObject} from '../gameObjects/_GameObject';
 import * as PIXI from 'pixi.js';
 import {hasAABB} from './AABBs';
-import {IGame} from "../interfaces/IGame";
-import {Develop} from "./_Develop";
-import {GameSetupEvent, PrerenderEvent} from "../Events";
+import {IGame} from '../interfaces/IGame';
+import {Develop} from './_Develop';
+import {GameSetupEvent, PrerenderEvent} from '../Events';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -36,13 +36,9 @@ export class DebugCircle extends GameObject {
         }, this);
     }
 
-    createShape(x, y) {
-        let circle = new PIXI.Graphics();
-        circle.lineStyle(
-            Develop.get().settings.linewidth,
-            0xFFFF00,
-        );
-        circle.drawCircle(x, y, this.size / 2);
-        return circle;
+    createShape(x: number, y: number) {
+        return new PIXI.Graphics()
+            .circle(x, y, this.size / 2)
+            .stroke({width: Develop.get().settings.linewidth, color: 0xFFFF00});
     }
 }

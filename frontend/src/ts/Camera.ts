@@ -13,7 +13,6 @@ let extraBoundary: number;
 
 export class Camera {
     character: ICharacterLike;
-    offset: Vector;
     vehicle: Vehicle;
     position: Vector;
     private prerenderSubToken: ISubscriptionToken;
@@ -24,7 +23,6 @@ export class Camera {
     constructor(character: ICharacterLike) {
         this.character = character;
 
-        this.offset = new Vector(Game.centerX, Game.centerY);
         this.vehicle = new Vehicle(
             character.getX(),
             character.getY());
@@ -49,19 +47,19 @@ export class Camera {
     };
 
     getScreenX(mapX: number): number {
-        return mapX - this.getX() + this.offset.x;
+        return mapX - this.getX() + Game.centerX;
     }
 
     getScreenY(mapY: number): number {
-        return mapY - this.getY() + this.offset.y;
+        return mapY - this.getY() + Game.centerY;
     }
 
     getMapX(screenX: number): number {
-        return screenX + this.getX() - this.offset.x;
+        return screenX + this.getX() - Game.centerX;
     }
 
     getMapY(screenY: number): number {
-        return screenY + this.getY() - this.offset.y;
+        return screenY + this.getY() - Game.centerY;
     }
 
     getX() {
@@ -83,7 +81,7 @@ export class Camera {
 
         let position = Vector.clone(this.position);
         position.negate();
-        position.add(this.offset);
+        position.add(new Vector(Game.centerX, Game.centerY));
         Game.cameraGroup.position.copyFrom(position);
 
         CameraUpdatedEvent.trigger(position);

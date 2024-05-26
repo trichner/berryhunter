@@ -19,7 +19,7 @@ export class Player {
     vitalSigns: VitalSigns;
     craftableItems;
 
-    constructor(id, x, y, name, miniMap: MiniMap) {
+    constructor(id: number, x: number, y: number, name: string, miniMap: MiniMap) {
         /**
          * Either <code>null</code> or number of seconds
          * remaining until the current craft is done.

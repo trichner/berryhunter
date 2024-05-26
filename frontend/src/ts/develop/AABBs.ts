@@ -1,14 +1,14 @@
 import {GameObject} from '../gameObjects/_GameObject';
 import {isDefined, isUndefined} from '../Utils';
-import * as PIXI from 'pixi.js';
 import {IDevelop} from "../interfaces/IDevelop";
+import {Graphics} from 'pixi.js';
 
 let Develop: IDevelop = null;
 
 export interface hasAABB {
-    aabb: PIXI.Graphics;
-    aabbConnector: PIXI.Graphics;
-    updateAABB: (aabb) => void;
+    aabb: Graphics;
+    aabbConnector: Graphics;
+    // updateAABB: (aabb) => void;
     hideAABB: () => void;
     showAABB: () => void;
 }
@@ -42,18 +42,18 @@ export function setup(develop: IDevelop) {
             let x = startX + width / 2;
             let y = startY + height / 2;
 
-            this.aabb = new PIXI.Graphics();
-            this.layer.addChild(this.aabb);
-            this.aabb.lineColor = Develop.settings.elementColor;
-            this.aabb.lineWidth = Develop.settings.linewidth;
-            this.aabb.drawRect(x, y, width, height);
+            this.aabb = new Graphics()
+                .rect(x, y, width, height)
+                .stroke({width: Develop.settings.linewidth, color: Develop.settings.elementColor});
 
-            this.aabbConnector = new PIXI.Graphics();
+            this.layer.addChild(this.aabb);
+
+            this.aabbConnector = new Graphics()
+                .stroke({width: Develop.settings.linewidth, color: Develop.settings.elementColor})
+                .moveTo(this.getX(), this.getY())
+                .lineTo(x, y);
             this.layer.addChild(this.aabbConnector);
-            this.aabbConnector.lineColor = Develop.settings.elementColor;
-            this.aabbConnector.lineWidth = Develop.settings.linewidth;
-            this.aabbConnector.moveTo(this.getX(), this.getY());
-            this.aabbConnector.lineTo(x, y);
+
         } else {
             this.aabb.position.set((startX + endX) / 2, (startY + endY) / 2);
         }
@@ -61,14 +61,13 @@ export function setup(develop: IDevelop) {
 
     GameObject.prototype['hideAABB'] = function () {
         if (isDefined(this.aabb)) {
-            this.aabb.noStroke();
+            this.aabb.stroke({width: 0, alpha: 0});
         }
     };
 
     GameObject.prototype['showAABB'] = function () {
         if (isDefined(this.aabb)) {
-            this.aabb.stroke = Develop.settings.elementColor;
-            this.aabb.linewidth = Develop.settings.linewidth;
+            this.aabb.stroke({width: Develop.settings.linewidth, color: Develop.settings.elementColor});
         }
     };
 

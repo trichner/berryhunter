@@ -5,6 +5,7 @@ import {ClickableIcon} from './ClickableIcon';
 import {ClickableCountableIcon} from './ClickableCountableIcon';
 import {VitalSignBar} from './VitalSignBar';
 import {IGame} from "../interfaces/IGame";
+import {UserInteraceDomReadyEvent} from '../Events';
 
 let Game: IGame = null;
 
@@ -19,6 +20,7 @@ let vitalSignsBars: { [key: string]: VitalSignBar };
 
 Preloading.renderPartial(require('./userInterface.html'), () => {
     rootElement = document.getElementById('gameUI');
+    UserInteraceDomReadyEvent.trigger(rootElement);
 });
 
 export function setup(game) {
@@ -151,18 +153,10 @@ export function getVitalSignBar(vitalSign: string): VitalSignBar {
     return vitalSignsBars[vitalSign];
 }
 
-/**
- *
- * @return {Element}
- */
-export function getMinimapContainer() {
+export function getMinimapContainer(): Element {
     return document.querySelector('#minimap > .wrapper');
 }
 
-/**
- *
- * @return {Element}
- */
 export function getChat(): HTMLElement {
     return document.getElementById('chat');
 }
