@@ -21,11 +21,8 @@ export function getCustomData(object: Object, property: CustomProperty) {
     return object['__berryhunter_data'][property];
 }
 
-// TODO checkout Container.getChildByLabel / getChildByName
 export function createNameContainer(name: string) : Container {
     let container = new Container();
-    if (BasicConfig.USE_NAMED_GROUPS) {
-        setCustomData(container, CustomProperty.NAME, name);
-    }
+    container.label = name;
     return container;
 }

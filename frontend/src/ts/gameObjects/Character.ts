@@ -107,20 +107,19 @@ export class Character extends GameObject implements ICharacterLike {
         this.messagesGroup.position.y = -1.2 * (this.size + 24);
 
         if (this.isPlayerCharacter) {
-            let craftProgressFollowGroup = new Container();
+            const craftProgressFollowGroup = new Container();
             Game.layers.characterAdditions.craftProgress.addChild(craftProgressFollowGroup);
             this.followGroups.push(craftProgressFollowGroup);
 
-            let craftingIndicator = createNameContainer('craftingIndicator');
-            this.craftingIndicator = craftingIndicator;
-            craftProgressFollowGroup.addChild(craftingIndicator);
-            craftingIndicator.position.y = -1.2 * (this.size + 24) - 20;
-            craftingIndicator.addChild(createInjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
-            craftingIndicator.visible = false;
+            this.craftingIndicator = createNameContainer('craftingIndicator');
+            craftProgressFollowGroup.addChild(this.craftingIndicator);
+            this.craftingIndicator.position.y = -1.2 * (this.size + 24) - 20;
+            this.craftingIndicator.addChild(createInjectedSVG(Character.craftingIndicator.svg, 0, 0, 20));
+            this.craftingIndicator.visible = false;
 
-            let circle = new Graphics();
-            this.craftingIndicator['circle'] = circle;
-            craftingIndicator.addChild(circle);
+            const circle = new Graphics();
+            circle.label = 'circle';
+            this.craftingIndicator.addChild(circle);
             // Let the progress start at 12 o'clock
             circle.rotation = -0.5 * Math.PI;
         }
@@ -321,7 +320,7 @@ export class Character extends GameObject implements ICharacterLike {
 
     updatePlayerCharacter() {
         if (Game.player.isCraftInProgress()) {
-            let craftProgress = Game.player.craftProgress;
+            const craftProgress = Game.player.craftProgress;
             let progress = 1 - (craftProgress.remainingTicks / craftProgress.requiredTicks);
             if (progress >= 1) {
                 Game.player.craftProgress = null;
@@ -329,12 +328,14 @@ export class Character extends GameObject implements ICharacterLike {
                 this.craftingIndicator.visible = false;
             }
 
-            let craftingIndicatorCircle = this.craftingIndicator['circle'];
-            craftingIndicatorCircle.clear();
-            craftingIndicatorCircle.lineStyle(
-                GraphicsConfig.character.craftingIndicator.lineWidth,
-                GraphicsConfig.character.craftingIndicator.lineColor, 1);
-            craftingIndicatorCircle.arc(0, 0, 27, 0, progress * 2 * Math.PI);
+            const craftingIndicatorCircle = this.craftingIndicator.getChildByLabel('circle') as Graphics;
+            craftingIndicatorCircle
+                .clear()
+                .arc(0, 0, 27, 0, progress * 2 * Math.PI)
+                .stroke({
+                    width: GraphicsConfig.character.craftingIndicator.lineWidth,
+                    color: GraphicsConfig.character.craftingIndicator.lineColor,
+                });
         }
     }
 
