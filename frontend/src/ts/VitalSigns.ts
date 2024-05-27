@@ -1,7 +1,7 @@
 import * as Preloading from './Preloading';
 import * as UserInterface from './userInterface/UserInterface';
 import {GraphicsConfig} from '../config/Graphics';
-import {BasicConfig as Constants} from '../config/Basic';
+import {BasicConfig as Constants} from '../config/BasicConfig';
 import {VitalSignBar} from "./userInterface/VitalSignBar";
 import {IGame} from "./interfaces/IGame";
 import {ISubscriptionToken, PreloadingStartedEvent, PrerenderEvent, VitalSignChangedEvent} from "./Events";

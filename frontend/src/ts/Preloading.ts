@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import {htmlModuleToString, htmlToElement, isNumber} from './Utils';
-import {BasicConfig as Constants} from '../config/Basic';
+import {BasicConfig as Constants} from '../config/BasicConfig';
 import {PreloadingProgressedEvent, PreloadingStartedEvent, StartScreenDomReadyEvent} from './Events';
 import {Assets, Texture} from 'pixi.js';
 

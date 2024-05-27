@@ -4,7 +4,7 @@ import {
     ControlsRotateEvent,
     GameSetupEvent,
 } from './Events';
-import {BasicConfig as Constants} from '../config/Basic';
+import {BasicConfig as Constants} from '../config/BasicConfig';
 import * as Equipment from './items/Equipment';
 import * as Console from './Console';
 import * as Chat from './Chat';

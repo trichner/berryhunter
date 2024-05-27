@@ -5,7 +5,7 @@ import {Camera} from './Camera';
 import {Inventory} from './items/Inventory';
 import {VitalSigns} from './VitalSigns';
 import {isDefined} from './Utils';
-import {BasicConfig as Constants} from '../config/Basic';
+import {BasicConfig as Constants} from '../config/BasicConfig';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 import {Layer, MiniMap} from "./MiniMap";
 import {PlayerCreatedEvent} from "./Events";

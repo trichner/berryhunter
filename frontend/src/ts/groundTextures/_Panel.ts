@@ -3,7 +3,6 @@ import * as Equipment from '../items/Equipment';
 import * as Preloading from '../Preloading';
 import {
     deg2rad,
-    getUrlParameter,
     htmlToElement,
     isUndefined,
     random,
@@ -11,13 +10,14 @@ import {
     roundToNearest,
     sortStrings
 } from '../Utils';
-import {BasicConfig as Constants} from '../../config/Basic';
+import {BasicConfig as Constants} from '../../config/BasicConfig';
 import {GroundTextureType, GroundTextureTypes} from './GroundTextureTypes';
 import * as GroundTextureManager from './GroundTextureManager';
 import {saveAs} from 'file-saver';
 import * as Console from '../Console';
 import {GameState, IGame} from "../interfaces/IGame";
 import {BackendValidTokenEvent, GamePlayingEvent, PrerenderEvent} from "../Events";
+import {WebParameters} from '../WebParameters';
 
 let Game: IGame = null;
 
@@ -282,7 +282,7 @@ function randomizeInputs() {
 }
 
 BackendValidTokenEvent.subscribe( function () {
-    if (getUrlParameter(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
+    if (WebParameters.get().has(Constants.MODE_PARAMETERS.GROUND_TEXTURE_EDITOR)) {
         active = true;
 
         Preloading.renderPartial(require('./groundTexturePanel.html'), setupPanel);

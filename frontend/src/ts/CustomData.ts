@@ -1,5 +1,4 @@
 import {Container} from 'pixi.js';
-import {BasicConfig} from '../config/Basic';
 
 export enum CustomProperty {
     NAME = 'name',

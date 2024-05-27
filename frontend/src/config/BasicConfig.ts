@@ -12,13 +12,16 @@ export const BasicConfig = {
 		GROUND_TEXTURE_EDITOR: 'textures',
         NO_DOCKER: 'no-docker'
 	},
-	/**
-	 * If custom graphic containers should be used, that are named.
-	 */
-	USE_NAMED_GROUPS: false,
+
+	VALUE_PARAMETERS: {
+		DATABASE_URL: 'dbUrl',
+		WEBSOCKET_URL: 'wsUrl',
+		TOKEN: 'token',
+		START_COMMANDS: 'start-cmds',
+	},
 
 	/**
-	 * Meter are the unity in backend. Pixel are units in the frontend.
+	 * Meter are the unit in backend. Pixels are units in the frontend.
 	 *
 	 * SYNCED WITH BACKEND
 	 */

@@ -87,21 +87,6 @@ export function defaultFor(arg, val) {
     return typeof arg !== 'undefined' ? arg : val;
 }
 
-export function getUrlParameter(sParam) {
-    let sPageUrl = decodeURIComponent(window.location.search.substring(1)),
-        sUrlVariables = sPageUrl.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sUrlVariables.length; i++) {
-        sParameterName = sUrlVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
-    }
-}
-
 export function clearNode(node: Node) {
     while (node.firstChild) {
         node.removeChild(node.firstChild);

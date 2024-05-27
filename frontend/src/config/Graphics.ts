@@ -1,4 +1,4 @@
-import {BasicConfig} from "./Basic";
+import {BasicConfig} from "./BasicConfig";
 
 export const GraphicsConfig = {
 

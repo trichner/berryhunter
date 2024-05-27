@@ -24,8 +24,8 @@ import {
     BackendStateChangedEvent,
     BackendValidTokenEvent,
     FirstGameStateHandledEvent,
-    GameLateSetupEvent
-} from "../Events";
+    GameLateSetupEvent, PongReceivedEvent,
+} from '../Events';
 
 export class Backend implements IBackend {
 
@@ -39,6 +39,7 @@ export class Backend implements IBackend {
 
     webSocket: WebSocket;
     lastMessageReceivedTime: number;
+    firstPongReceived = false;
 
     public setup(game: IGame): void {
         this.game = game;
@@ -217,7 +218,13 @@ export class Backend implements IBackend {
                 Scoreboard.updateFromBackend(scoreboardMessage);
                 break;
             case BerryhunterApi.ServerMessageBody.Pong:
-                BackendValidTokenEvent.trigger(this);
+                PongReceivedEvent.trigger();
+
+                if (!this.firstPongReceived) {
+                    BackendValidTokenEvent.trigger(this);
+                    this.firstPongReceived = true;
+                }
+
                 break;
             default:
                 if (Develop.isActive()) {

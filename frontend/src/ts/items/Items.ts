@@ -5,7 +5,7 @@
 import {isDefined} from '../Utils';
 import * as Preloading from '../Preloading';
 import {ItemType} from './ItemType';
-import {BasicConfig as Constants} from '../../config/Basic';
+import {BasicConfig as Constants} from '../../config/BasicConfig';
 import {ItemsConfig as Items} from '../../config/Items';
 import {GameLateSetupEvent} from '../Events';
 import {IGame} from "../interfaces/IGame";

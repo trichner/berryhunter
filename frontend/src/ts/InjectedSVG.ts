@@ -1,4 +1,4 @@
-import {BasicConfig as Constants} from '../config/Basic';
+import {BasicConfig as Constants} from '../config/BasicConfig';
 import * as PIXI from 'pixi.js';
 
 

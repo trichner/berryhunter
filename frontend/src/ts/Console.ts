@@ -1,8 +1,9 @@
 import * as Preloading from './Preloading';
-import {BackendValidTokenEvent} from './Events';
-import {clearNode, getUrlParameter, isFunction, preventInputPropagation, resetFocus} from './Utils';
-import {CommandMessage} from "./backend/messages/outgoing/CommandMessage";
-
+import {BackendValidTokenEvent, PongReceivedEvent} from './Events';
+import {clearNode, isFunction, preventInputPropagation, resetFocus} from './Utils';
+import {CommandMessage} from './backend/messages/outgoing/CommandMessage';
+import {WebParameters} from './WebParameters';
+import {BasicConfig} from '../config/BasicConfig';
 
 export const KEY_CODE = 'Backquote';
 
@@ -21,10 +22,11 @@ const MAX_HISTORY_LENGTH = 15;
 const LOCAL_COMMAND_HANDLERS: { [key: string]: (parameters: string[]) => void } = {
     'define': handleDefine,
     'list': handleList,
-    'crash': handleCrash
+    'crash': handleCrash,
 };
 
-let token = getUrlParameter('token');
+const hasToken = WebParameters.get().has(BasicConfig.VALUE_PARAMETERS.TOKEN);
+const token = WebParameters.get().getString(BasicConfig.VALUE_PARAMETERS.TOKEN, '');
 let domReady = false;
 let _isOpen = false;
 let rootElement: HTMLElement;
@@ -36,10 +38,17 @@ let commandHistory: string[];
 let consoleSuggestions: HTMLDataListElement;
 let macros: { [key: string]: string[] } = {};
 
-BackendValidTokenEvent.subscribe(function () {
+BackendValidTokenEvent.subscribe( () => {
+    log('Server accepted our token');
+
     // Only load the console once the token was confirmed as valid
     Preloading.renderPartial(require('../partials/console.html'), onDomReady);
 });
+
+PongReceivedEvent.subscribe(() => {
+    log('Server replied: PONG');
+});
+
 
 function onDomReady() {
     rootElement = document.getElementById('console');
@@ -74,6 +83,11 @@ function onDomReady() {
 
     macros = readMacros();
     createMacroHandlers(macros);
+
+    WebParameters.get().tryGetStringArray(BasicConfig.VALUE_PARAMETERS.START_COMMANDS, (commands => {
+        log('Running ' + commands.length + ' start commands:');
+        commands.forEach(command => run(command));
+    }));
 }
 
 function populateSuggestions(suggestions: string[]) {
@@ -86,7 +100,7 @@ function populateSuggestions(suggestions: string[]) {
 }
 
 function clearSuggestions() {
-    clearNode(consoleSuggestions)
+    clearNode(consoleSuggestions);
 }
 
 export function registerLocalCommandHandler(command: string, handler: (parameters: string[]) => void) {
@@ -117,11 +131,15 @@ function onCommand(command: string, isAutoCommand: boolean) {
         return;
     }
 
+    if (command.startsWith('#')) {
+        command = command.substring(1);
+    }
+
     if (!isAutoCommand) {
         storeInHistory(command);
     }
-    log(command);
-    if (token) {
+    log('#' + command);
+    if (hasToken) {
         if (!tryRunLocally(command)) {
             new CommandMessage(command, token).send();
         }
@@ -237,7 +255,7 @@ function handleCrash() {
     window.location.assign('about:blank');
 }
 
-function milliseconds2string(ms) {
+function milliseconds2string(ms: number) {
     return (ms / 1000).toFixed(2);
 }
 
@@ -298,11 +316,11 @@ function writeMacros(macros: { [key: string]: string[] }) {
     localStorage.setItem('consoleMacros', JSON.stringify(macros));
 }
 
-export function logError(message) {
+export function logError(message: string) {
     log('ERROR: ' + message);
 }
 
-export function log(message) {
+export function log(message: string) {
     if (!domReady) {
         scheduledMessages.push(message);
         return;

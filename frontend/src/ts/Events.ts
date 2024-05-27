@@ -201,6 +201,7 @@ export const BackendStateChangedEvent: PayloadEvent<BackendStateChangedMsg> = ne
  * Triggered when the developer token was validated by the backend.
  */
 export const BackendValidTokenEvent: OneTimePayloadEvent<IBackend> = new OneTimePayloadEvent<IBackend>();
+export const PongReceivedEvent: SimpleEvent = new SimpleEvent();
 export const FirstGameStateHandledEvent: OneTimeSimpleEvent = new OneTimeSimpleEvent();
 export const BackendConnectionFailureEvent: OneTimeSimpleEvent = new OneTimeSimpleEvent();
 

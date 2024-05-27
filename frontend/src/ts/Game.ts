@@ -9,7 +9,7 @@ import {Spectator} from './Spectator';
 import {GameObject} from './gameObjects/_GameObject';
 import * as UserInterface from './userInterface/UserInterface';
 import * as Chat from './Chat';
-import {BasicConfig as Constants} from '../config/Basic';
+import {BasicConfig as Constants} from '../config/BasicConfig';
 import {InputManager} from './input/InputManager';
 import {isDefined} from './Utils';
 import {WelcomeMessage} from './backend/messages/incoming/WelcomeMessage';

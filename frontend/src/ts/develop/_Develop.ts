@@ -1,10 +1,10 @@
 import * as AABBs from './AABBs';
 import * as Fps from './Fps';
 import * as Preloading from '../Preloading';
-import {getUrlParameter, htmlToElement, isDefined, isNumber, isUndefined, rad2deg} from '../Utils';
+import {htmlToElement, isDefined, isNumber, isUndefined, rad2deg} from '../Utils';
 import * as Console from '../Console';
 import {ItemType} from '../items/ItemType';
-import {BasicConfig as Constants} from '../../config/Basic';
+import {BasicConfig as Constants} from '../../config/BasicConfig';
 import {Items} from '../items/Items';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import {IGame} from "../interfaces/IGame";
@@ -19,6 +19,7 @@ import {
 } from '../Events';
 import {BackendState, IBackend} from '../interfaces/IBackend';
 import _isObject = require('lodash/isObject');
+import {WebParameters} from '../WebParameters';
 
 let Game: IGame = null;
 let Backend: IBackend = null;
@@ -470,7 +471,7 @@ BackendStateChangedEvent.subscribe((msg: BackendStateChangedMsg) => {
 });
 
 BackendValidTokenEvent.subscribe( () => {
-    if (getUrlParameter(Constants.MODE_PARAMETERS.DEVELOPMENT)) {
+    if (WebParameters.get().has(Constants.MODE_PARAMETERS.DEVELOPMENT)) {
         active = true;
         Develop.trySetup();
     }

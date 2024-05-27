@@ -1,4 +1,4 @@
-import {BasicConfig as Constants} from '../../config/Basic';
+import {BasicConfig as Constants} from '../../config/BasicConfig';
 import {KeyCodes} from '../input/keyboard/keys/KeyCodes';
 import {GameState, IGame} from "../interfaces/IGame";
 import {GameSetupEvent} from "../Events";

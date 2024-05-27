@@ -1,6 +1,6 @@
 import {Container, Graphics, Texture} from 'pixi.js';
 import {createInjectedSVG} from '../InjectedSVG';
-import {BasicConfig as Constants} from '../../config/Basic';
+import {BasicConfig as Constants} from '../../config/BasicConfig';
 import {Vector} from '../Vector';
 import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../Utils';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';

@@ -1,5 +1,5 @@
 import * as Preloading from '../Preloading';
-import {BasicConfig as Constants} from '../../config/Basic';
+import {BasicConfig as Constants} from '../../config/BasicConfig';
 import {clearNode, isUndefined, playCssAnimation} from '../Utils';
 import {ClickableIcon} from './ClickableIcon';
 import {ClickableCountableIcon} from './ClickableCountableIcon';

@@ -1,5 +1,5 @@
-import {getUrlParameter} from "../Utils";
-import {BasicConfig as Constants} from "../../config/Basic";
+import {BasicConfig as Constants} from "../../config/BasicConfig";
+import {WebParameters} from '../WebParameters';
 
 function isLocalhost(hostname: string) {
     switch (hostname) {
@@ -45,7 +45,7 @@ function getUrl(protocol: string, path: string) {
 let _gameServer: string;
 let _database: string;
 
-if (getUrlParameter(Constants.MODE_PARAMETERS.NO_DOCKER)) {
+if (WebParameters.get().has(Constants.MODE_PARAMETERS.NO_DOCKER)) {
     _gameServer = 'ws://localhost:2000/game';
     _database = '/chieftain';
 } else {
@@ -56,12 +56,12 @@ if (getUrlParameter(Constants.MODE_PARAMETERS.NO_DOCKER)) {
         _database = 'https://europe-west1-berryhunter-io.cloudfunctions.net/chieftain-api';
     }
 }
-if (getUrlParameter('dbUrl')) {
-    _database = getUrlParameter('dbUrl');
-}
-if (getUrlParameter('wsUrl')) {
-    _gameServer = getUrlParameter('wsUrl');
-}
+WebParameters.get().tryGetString(Constants.VALUE_PARAMETERS.DATABASE_URL, (dbUrl) => {
+    _database = dbUrl;
+});
+WebParameters.get().tryGetString(Constants.VALUE_PARAMETERS.WEBSOCKET_URL, (wsUrl) => {
+    _gameServer = wsUrl;
+});
 
 export const gameServer = _gameServer;
 export const database = _database;

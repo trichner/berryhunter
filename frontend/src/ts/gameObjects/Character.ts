@@ -1,5 +1,5 @@
 import {GameObject} from './_GameObject';
-import {BasicConfig as Constants} from '../../config/Basic';
+import {BasicConfig as Constants} from '../../config/BasicConfig';
 import {isDefined} from '../Utils';
 import * as Equipment from '../items/Equipment';
 import {EquipmentSlot} from '../items/Equipment';
