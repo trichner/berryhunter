@@ -1,7 +1,7 @@
 import * as AABBs from './AABBs';
 import * as Fps from './Fps';
 import * as Preloading from '../Preloading';
-import {htmlToElement, isDefined, isNumber, isUndefined, rad2deg} from '../Utils';
+import {htmlToElement, isDefined, isNumber, isUndefined, rad2deg, resetFocus} from '../Utils';
 import * as Console from '../Console';
 import {ItemType} from '../items/ItemType';
 import {BasicConfig as Constants} from '../../config/BasicConfig';
@@ -14,7 +14,7 @@ import {
     BackendSetupEvent,
     BackendStateChangedEvent,
     BackendStateChangedMsg,
-    BackendValidTokenEvent,
+    BackendValidTokenEvent, ControlsActionEvent,
     GameSetupEvent,
 } from '../Events';
 import {BackendState, IBackend} from '../interfaces/IBackend';
@@ -92,14 +92,34 @@ export class Develop implements IDevelop {
 
     private setupDevelopPanel() {
         Preloading.renderPartial(require('./developPanel.html'), () => {
-            let developPanel = document.getElementById('developPanel');
+            const developPanel = document.getElementById('developPanel');
             // Capture inputs to prevent game actions while acting in develop panel
-            ['click', 'pointerdown', 'mousedown', 'keyup', 'keydown']
+            [
+                'click',
+                'pointerdown',
+                'pointerup',
+                'mousedown',
+                'mouseup',
+                'mousemove',
+                'touchstart',
+                'touchend',
+                'keyup',
+                'keydown']
                 .forEach((eventName) => {
                     developPanel.addEventListener(eventName, (event) => {
                         event.stopPropagation();
                     });
                 });
+
+            developPanel.addEventListener('focusin', (event) => {
+                const target = event.target as Element;
+                if (['select', 'input'].includes(target.tagName.toLowerCase())) {
+                    // Keep input elements focussed
+                    return;
+                }
+
+                resetFocus();
+            });
 
             this.setupToggleButtons();
 
@@ -107,17 +127,17 @@ export class Develop implements IDevelop {
 
             this.setupTickSampler();
         });
+
+        ControlsActionEvent.subscribe(() => {
+            // The event.preventDefault() of the inputManager otherwise keeps the focus in the develop panel input elements.
+            resetFocus();
+        });
     }
 
     private setupToggleButtons() {
-        let buttons = document.querySelectorAll('#developPanel .toggleButton');
+        const buttons = document.querySelectorAll('#developPanel .toggleButton');
 
-        /**
-         *
-         * @param {Element} button
-         * @param {boolean} state
-         */
-        let setButtonState = (button, state) => {
+        const setButtonState = (button: Element, state: boolean) => {
             if (state) {
                 button.querySelector('span.state').textContent = 'On';
                 button.classList.add('on');
@@ -130,7 +150,7 @@ export class Develop implements IDevelop {
         };
 
         for (let i = 0; i < buttons.length; i++) {
-            let button = buttons[i];
+            const button = buttons[i];
             setButtonState(button, this.settings[button.getAttribute('data-setting')]);
             button.addEventListener('click', () => {
                 let setting = button.getAttribute('data-setting');
@@ -172,14 +192,14 @@ export class Develop implements IDevelop {
         let itemCount = document.getElementById('develop_itemCount') as HTMLInputElement;
         itemCount.addEventListener('input', () => {
             itemCount.style.width = Math.max(1.6, (1 + (itemCount.value.length * 0.6))) + 'em';
-            let step;
+            let step: number;
             if (parseInt(itemCount.value, 10) < 10) {
                 step = 1;
             } else {
                 step = Math.pow(10, itemCount.value.length - 2) * 5;
             }
-            itemCount.setAttribute('step', step);
-            itemCount.setAttribute('min', step); // otherwise steps will be 11, 16, ...
+            itemCount.setAttribute('step', String(step));
+            itemCount.setAttribute('min', String(step)); // otherwise steps will be 11, 16, ...
 
             itemAdd.classList.toggle('plural', itemCount.value !== '1');
         });

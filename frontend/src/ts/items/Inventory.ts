@@ -8,6 +8,7 @@ import {BerryhunterApi} from '../backend/BerryhunterApi';
 import './InventoryShortcuts';
 import {IGame} from "../interfaces/IGame";
 import {GameSetupEvent, InventoryChangedEvent, ISubscriptionToken} from "../Events";
+import { Character } from '../gameObjects/Character';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -17,18 +18,14 @@ GameSetupEvent.subscribe((game: IGame) => {
 
 export class Inventory {
 
-    character;
-    isCraftInProgress;
+    character: Character;
+    isCraftInProgress: () => boolean;
     craftableRecipes;
     availableCrafts;
     slots;
     private inventoryChangedSubToken: ISubscriptionToken;
 
-    /**
-     * @param {Character} character
-     * @param {function} isCraftInProgress
-     */
-    constructor(character, isCraftInProgress) {
+    constructor(character: Character, isCraftInProgress: () => boolean) {
         this.character = character;
         this.isCraftInProgress = isCraftInProgress;
         this.craftableRecipes = [];
