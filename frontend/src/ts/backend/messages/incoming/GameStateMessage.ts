@@ -203,7 +203,7 @@ function unmarshalAABB(aabb) {
         LowerY: aabb.lower().y(),
         UpperX: aabb.upper().x(),
         UpperY: aabb.upper().y(),
-    }
+    };
 }
 
 /**

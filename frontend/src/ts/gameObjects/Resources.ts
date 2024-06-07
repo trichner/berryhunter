@@ -5,7 +5,7 @@ import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../Utils';
 import {createInjectedSVG} from '../InjectedSVG';
 import {GraphicsConfig} from '../../config/Graphics';
 import {IGame} from "../interfaces/IGame";
-import {GameSetupEvent} from "../Events";
+import {GameSetupEvent, ResourceStockChange} from '../Events';
 import {alea as SeedRandom} from "seedrandom";
 
 let Game: IGame = null;
@@ -49,6 +49,11 @@ export class Resource extends GameObject {
      * @protected
      */
     protected onStockChange(newStock: number, oldStock: number) {
+        ResourceStockChange.trigger({
+            entityType: this.constructor.name,
+            newStock: newStock,
+            oldStock: oldStock,
+        });
         let scale = newStock / this.capacity;
         this.shape.scale.set(this.baseScale * scale);
     }

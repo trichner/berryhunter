@@ -247,6 +247,7 @@ export const InventoryAddEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEv
 export const InventoryRemoveEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEvent<InventoryChangeMsg>();
 export const InventorySlotChangedEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEvent<InventoryChangeMsg>();
 export const InventoryChangedEvent: SimpleEvent = new SimpleEvent();
+export const ResourceStockChange: PayloadEvent<{entityType: string, newStock: number, oldStock: number}> = new PayloadEvent();
 
 /**
  * Fired before game rendering starts. Payload is the time delta to the last frame.

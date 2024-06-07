@@ -35,6 +35,7 @@ import './ts/userInterface/ClickableIcon';
 import './ts/userInterface/screens/Changelog';
 import './ts/userInterface/screens/EndScreen';
 import './ts/userInterface/screens/StartScreen';
+import './ts/juice/Juice';
 
 Preloading.executePreload().then(function () {
     ModulesLoadedEvent.trigger();

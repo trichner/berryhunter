@@ -79,6 +79,11 @@ module.exports = {
 			{
 				resourceQuery: /raw/,
 				type: 'asset/source',
+			},
+
+			{
+				test: /\.mp3$/,
+				type: 'asset/resource'
 			}
 		]
 	},
