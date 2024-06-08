@@ -14,7 +14,9 @@ import {
     BackendSetupEvent,
     BackendStateChangedEvent,
     BackendStateChangedMsg,
-    BackendValidTokenEvent, ControlsActionEvent,
+    BackendValidTokenEvent,
+    ControlsActionEvent,
+    DevelopSetupEvent,
     GameSetupEvent,
 } from '../Events';
 import {BackendState, IBackend} from '../interfaces/IBackend';
@@ -88,6 +90,8 @@ export class Develop implements IDevelop {
             default:
                 Develop.get().logWebsocketStatus(Backend.getState(), 'good');
         }
+
+        DevelopSetupEvent.trigger();
     }
 
     private setupDevelopPanel() {

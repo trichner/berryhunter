@@ -21,11 +21,19 @@ export class Account {
     }
 
     static get fullScreen(): boolean {
-        return getBoolean('fullScreen')
+        return getBoolean('fullScreen');
     }
 
     static set fullScreen(enabled: boolean) {
         setValue('fullScreen', enabled);
+    }
+
+    static get rawGameSettings(): string {
+        return getString('gameSettings');
+    }
+
+    static set rawGameSettings(json: string) {
+        setValue('gameSettings', json);
     }
 }
 

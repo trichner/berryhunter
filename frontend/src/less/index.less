@@ -72,6 +72,27 @@ a {
 	}
 }
 
+button {
+	cursor: pointer;
+}
+
+a.closeButton {
+	position: absolute;
+	display: block;
+	top: 0;
+	right: 0;
+
+	padding: 0.5rem;
+	color: white;
+	text-decoration: none;
+	font-size: 3rem;
+	z-index: 1;
+
+	&.hidden {
+		display: none; // enforce global rule as id rule display: block takes priority
+	}
+}
+
 .layout, .layout-column, .layout-row {
 	box-sizing: border-box;
 	display: -webkit-box;
@@ -344,3 +365,4 @@ a {
 @import "changelog";
 @import "socialMedia";
 @import "vitalSigns";
+@import "gameSettings";

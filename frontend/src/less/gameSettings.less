@@ -1,0 +1,43 @@
+#gameSettings {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1; // Overlay start & end screen
+
+    &.develop-offset {
+        top: 350px;
+    }
+}
+
+#gameSettingsButton {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+
+    > img {
+        width: 3rem;
+        height: 3rem;
+    }
+}
+
+#gameSettingsPanel {
+    background-color: @backgroundColor;
+    color: white;
+    padding: 1rem;
+    border-radius: 0.7vh;
+
+    h2 {
+        margin: 0;
+        margin-bottom: 1rem;
+    }
+
+    h3 {
+        margin: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .value {
+        display: inline-block;
+        min-width: 1.125em;
+    }
+}

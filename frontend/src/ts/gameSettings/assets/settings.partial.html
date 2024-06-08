@@ -1,0 +1,22 @@
+<div id="gameSettings">
+    <button id="gameSettingsButton">
+        <img src="./settings-icon.svg" />
+    </button>
+
+    <section id="gameSettingsPanel" class="hidden">
+        <a href="#" id="closeGameSettings" class="closeButton">X</a>
+
+        <h2>Settings</h2>
+
+        <h3>Audio</h3>
+        <div>
+            <input type="checkbox" id="muteAllToggle" />
+            <label for="muteAllToggle">Mute</label>
+        </div>
+        <div>
+            <label for="masterVolume">Volume</label>
+            <input type="range" id="masterVolume" name="volume" min="0" max="100" step="1"  />
+            <span class="value">100</span>
+        </div>
+    </section>
+</div>

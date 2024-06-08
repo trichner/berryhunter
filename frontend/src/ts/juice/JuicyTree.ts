@@ -1,11 +1,11 @@
-import {ResourceStockChange} from '../Events';
+import {ResourceStockChangedEvent} from '../Events';
 import {MarioTree, RoundTree} from '../gameObjects/Resources';
 import {isUndefined, random} from '../Utils';
 import {sound} from '@pixi/sound';
 import * as PIXI from 'pixi.js';
 import {registerPreload} from '../Preloading';
 
-ResourceStockChange.subscribe((payload) => {
+ResourceStockChangedEvent.subscribe((payload) => {
     if (isUndefined(payload.oldStock)) {
         // Object was just placed
         return;
@@ -19,7 +19,6 @@ ResourceStockChange.subscribe((payload) => {
     switch (payload.entityType) {
         case MarioTree.name:
         case RoundTree.name:
-        // Do stuff
             sound.play('tree-chop', {
                 speed: random(0.9, 1.11),
                 volume: random(0.8, 1.25),
@@ -31,6 +30,6 @@ ResourceStockChange.subscribe((payload) => {
 });
 
 
-PIXI.Assets.add({ alias: 'tree-chop', src: require('../../sounds/536736__egomassive__chop.mp3') });
+PIXI.Assets.add({alias: 'tree-chop', src: require('../../sounds/536736__egomassive__chop.mp3')});
 // noinspection JSIgnoredPromiseFromCall
 registerPreload(PIXI.Assets.load('tree-chop'));

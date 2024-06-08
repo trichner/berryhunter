@@ -192,6 +192,7 @@ export type screen = 'start' | 'end';
 export const GameJoinEvent: PayloadEvent<screen> = new PayloadEvent<screen>();
 
 export const BackendSetupEvent: OneTimePayloadEvent<IBackend> = new OneTimePayloadEvent<IBackend>();
+export const DevelopSetupEvent: OneTimeSimpleEvent = new OneTimeSimpleEvent();
 export interface BackendStateChangedMsg {
     oldState: BackendState;
     newState: BackendState;
@@ -247,7 +248,8 @@ export const InventoryAddEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEv
 export const InventoryRemoveEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEvent<InventoryChangeMsg>();
 export const InventorySlotChangedEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEvent<InventoryChangeMsg>();
 export const InventoryChangedEvent: SimpleEvent = new SimpleEvent();
-export const ResourceStockChange: PayloadEvent<{entityType: string, newStock: number, oldStock: number}> = new PayloadEvent();
+export const ResourceStockChangedEvent: PayloadEvent<{entityType: string, newStock: number, oldStock: number}> = new PayloadEvent();
+export const GameSettingChangedEvent: PayloadEvent<{ path: string, newValue: any, oldValue: any }> = new PayloadEvent();
 
 /**
  * Fired before game rendering starts. Payload is the time delta to the last frame.
