@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"path"
@@ -19,7 +20,7 @@ import (
 func main() {
 	logging.SetupLogging()
 
-	log.Printf("booting chieftain")
+	slog.Info("booting chieftain")
 	config := loadConf()
 
 	dataStore, err := dao.NewDataStore(path.Join(config.DataDir, "chieftain.db"))

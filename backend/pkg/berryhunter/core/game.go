@@ -2,7 +2,7 @@ package core
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"math/rand"
 	"net/http"
 	"sort"
@@ -60,7 +60,7 @@ func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
 			return nil, err
 		}
 	}
-	log.Printf("%+v", gc)
+	slog.Debug("new game with config", slog.Any("configuration", gc))
 
 	g := &game{
 		entities:     make(entitiesMap),
@@ -162,7 +162,7 @@ func (g *game) Handler() http.Handler {
 		select {
 		case g.joinQueue <- client:
 		default:
-			log.Printf("😱 Join queue full! Dropping client.")
+			slog.Info("😱 Join queue full! Dropping client.", slog.String("uuid", client.UUID().String()))
 			client.Close()
 		}
 	})
@@ -171,7 +171,7 @@ func (g *game) Handler() http.Handler {
 func (g *game) Loop() {
 	//---- run game loop
 	tickrate := time.Second / constant.TicksPerSecond
-	log.Printf("Starting loop with %d tps", constant.TicksPerSecond)
+	slog.Info("starting game loop", slog.Int("ticks_per_second", constant.TicksPerSecond))
 
 	ticker := time.NewTicker(tickrate)
 	for {
@@ -379,13 +379,13 @@ func (g *game) printSystems() {
 	systems := g.World.Systems()
 	sort.Sort(ByPriority(systems))
 
-	log.Printf("Ordered Systems:")
+	slog.Debug("enabled systems", slog.Int("count", len(systems)))
 	for _, s := range systems {
 		p := 0
 		if prioritizer, ok := s.(ecs.Prioritizer); ok {
 			p = prioritizer.Priority()
 		}
-		log.Printf(" %4d %T", p, s)
+		slog.Debug(fmt.Sprintf("%4d %T", p, s))
 	}
 }
 

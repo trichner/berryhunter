@@ -5,11 +5,13 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/google/uuid"
 
 	aitems "github.com/trichner/berryhunter/pkg/api/items"
 	amobs "github.com/trichner/berryhunter/pkg/api/mobs"
@@ -25,9 +27,8 @@ var defaultConfig []byte
 func loadMobs(r items.Registry) mobs.Registry {
 	registry, err := mobs.RegistryFromFS(r, amobs.Mobs)
 	if err != nil {
-
-		log.Printf("Error: %s", err)
-		os.Exit(1)
+		slog.Error("failed to load mobs", slog.Any("err", err))
+		panic(err)
 	}
 
 	mobList := registry.Mobs()
@@ -44,8 +45,8 @@ func loadItems() items.Registry {
 	// registry, err := items.RegistryFromPaths(path)
 	registry, err := items.RegistryFromFS(aitems.Items)
 	if err != nil {
-		slog.Error("Error: %s", err)
-		os.Exit(1)
+		slog.Error("failed to load items", slog.Any("err", err))
+		panic(err)
 	}
 
 	itemList := registry.Items()
@@ -68,10 +69,12 @@ func loadConf() *cfg.Config {
 	if errors.Is(err, os.ErrNotExist) {
 		config, err = setupDefaultConfig()
 		if err != nil {
-			log.Panicf("Cannot read config '%s':%v", configFile, err)
+			slog.Error("cannot read config", slog.String("file", configFile), slog.Any("err", err))
+			panic(err)
 		}
 	} else if err != nil {
-		log.Panicf("Cannot read config '%s':%v", configFile, err)
+		slog.Error("cannot read config", slog.String("file", configFile), slog.Any("err", err))
+		panic(err)
 	}
 	return config
 }
@@ -88,9 +91,18 @@ func setupDefaultConfig() (*cfg.Config, error) {
 	return cfg.ReadConfig(path)
 }
 
-func loadTokens(tokenFile string) []string {
+func loadOrCreateTokens(tokenFile string) []string {
 	f, err := os.Open(tokenFile)
-	if err != nil {
+	if os.IsNotExist(err) {
+		absPath, _ := filepath.Abs(tokenFile)
+		slog.Info("Tokens file not found, creating", slog.String("file", absPath))
+		tkns, err := createTokens(tokenFile)
+		if err != nil {
+			slog.Info("failed to create token file, temporary token created", slog.String("token", tkns[0]))
+			return []string{}
+		}
+		return tkns
+	} else if err != nil {
 		slog.Info("Cannot read tokens", slog.String("file", tokenFile), slog.Any("error", err))
 		return []string{}
 	}
@@ -102,4 +114,15 @@ func loadTokens(tokenFile string) []string {
 	}
 
 	return tokens
+}
+
+func createTokens(tokenFile string) ([]string, error) {
+	s := uuid.Must(uuid.NewRandom()).String()
+
+	err := os.WriteFile(tokenFile, []byte(s+"\n"), 0o644)
+	if err != nil {
+		absPath, _ := filepath.Abs(tokenFile)
+		return nil, fmt.Errorf("failed to create tokens file %s: %w", absPath, err)
+	}
+	return []string{s}, err
 }

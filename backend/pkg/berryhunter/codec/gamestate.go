@@ -1,7 +1,8 @@
 package codec
 
 import (
-	"log"
+	"fmt"
+	"log/slog"
 
 	"github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
@@ -198,7 +199,8 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 			marshalled = ResourceEntityFlatbufMarshal(v, builder)
 			eType = BerryhunterApi.AnyEntityResource
 		default:
-			log.Panicf(" Unknown entity: %+v", e)
+			slog.Error("unknown entity", slog.Any("entity", e))
+			panic(fmt.Sprintf("unknown entity: %+v", e))
 		}
 		BerryhunterApi.EntityStart(builder)
 		BerryhunterApi.EntityAddE(builder, marshalled)

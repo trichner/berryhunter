@@ -3,13 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
-	"log"
 	"log/slog"
 	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
 
 	"github.com/trichner/berryhunter/pkg/berryhunter/core"
 	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
@@ -29,7 +29,7 @@ func main() {
 	itemsRegistry := loadItems()
 	mobsRegistry := loadMobs(itemsRegistry)
 
-	tokens := loadTokens("./tokens.list")
+	tokens := loadOrCreateTokens("./tokens.list")
 	slog.Info("👮‍♀️ read tokens", slog.Int("token_count", len(tokens)))
 
 	// new game
@@ -84,7 +84,6 @@ func main() {
 }
 
 func bootHttp(h http.Handler, cfg cfg.Server, dev bool) error {
-
 	if cfg.TlsHost != "" {
 		return bootTlsServer(h, cfg, dev)
 	} else {
@@ -92,8 +91,8 @@ func bootHttp(h http.Handler, cfg cfg.Server, dev bool) error {
 	}
 	return nil
 }
-func bootTlsServer(h http.Handler, cfg cfg.Server, dev bool) error {
 
+func bootTlsServer(h http.Handler, cfg cfg.Server, dev bool) error {
 	host := cfg.TlsHost
 	path := cfg.Path
 
@@ -163,7 +162,6 @@ func determineCacheDir() (string, error) {
 }
 
 func bootServer(h http.Handler, cfg cfg.Server, dev bool) {
-
 	port := cfg.Port
 	path := cfg.Path
 
@@ -193,7 +191,8 @@ func bootServer(h http.Handler, cfg cfg.Server, dev bool) {
 func frontendHandler(fsPath string) http.Handler {
 	frontendPath, err := filepath.Abs(fsPath)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("failed to serve frontend", slog.Any("err", err))
+		panic(err)
 	}
 	slog.Info("🕸️ serving frontend", slog.String("path", frontendPath))
 	return http.FileServer(http.Dir(frontendPath))

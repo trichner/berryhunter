@@ -1,8 +1,10 @@
 package cfg
 
 import (
+	"encoding/json"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
+	"log/slog"
 )
 
 type GameConfig struct {
@@ -16,6 +18,23 @@ type GameConfig struct {
 
 	PlayerConfig    PlayerConfig
 	ChieftainConfig *ChieftainConfig
+}
+
+func (g *GameConfig) LogValue() slog.Value {
+	raw, err := json.Marshal(g)
+	if err != nil {
+		return slog.AnyValue(err)
+	}
+
+	var asMap map[string]any
+	err = json.Unmarshal(raw, &asMap)
+	if err != nil {
+		return slog.AnyValue(err)
+	}
+
+	return slog.GroupValue(
+		slog.Any("raw", asMap),
+	)
 }
 
 type ChieftainConfig struct {
