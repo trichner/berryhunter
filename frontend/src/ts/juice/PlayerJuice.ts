@@ -1,4 +1,4 @@
-import {InventoryAddEvent, BeforeDeathEvent} from '../Events';
+import {InventoryAddEvent, BeforeDeathEvent, PlaceablePlacedEvent} from '../Events';
 import {random} from '../Utils';
 import {sound} from '@pixi/sound';
 import * as PIXI from 'pixi.js';
@@ -22,9 +22,23 @@ InventoryAddEvent.subscribe((payload) => {
     });
 });
 
+PlaceablePlacedEvent.subscribe((payload) => {
+    switch(payload.item)
+    {
+        default:
+            sound.play('place-heavy', {
+                speed: random(0.9, 1.11),
+                volume: random(0.8, 1),
+            });
+            break;
+    }
+});
+
 PIXI.Assets.add({alias: 'collect', src: require('../../sounds/245645__unfa__cartoon-pop-clean.mp3')});
 PIXI.Assets.add({alias: 'death', src: require('../../sounds/416838__tonsil5__grunt2-death-pain.mp3')});
+PIXI.Assets.add({alias: 'place-heavy', src: require('../../sounds/443629__checholio__28-clavando-estaca.mp3')});
 
 // noinspection JSIgnoredPromiseFromCall
 registerPreload(PIXI.Assets.load('collect'));
 registerPreload(PIXI.Assets.load('death'));
+registerPreload(PIXI.Assets.load('place-heavy'));

@@ -3,6 +3,7 @@ import {GameObject} from './_GameObject';
 import {randomRotation} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
 import {StatusEffect} from "./StatusEffect";
+import {PlaceablePlacedEvent} from '../Events';
 
 export class Placeable extends GameObject {
     item;
@@ -16,6 +17,7 @@ export class Placeable extends GameObject {
 
         this.item = placeableItem;
         this.visibleOnMinimap = placeableItem.placeable.visibleOnMinimap;
+        PlaceablePlacedEvent.trigger(this);
     }
 
     is(placeableItem) {

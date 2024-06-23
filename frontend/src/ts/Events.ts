@@ -7,6 +7,7 @@ import {Vector} from "./Vector";
 import {integer, radians} from "./interfaces/Types";
 import {InputAction} from "./backend/messages/outgoing/InputMessage";
 import {EquipmentSlot} from "./items/Equipment";
+import { Placeable } from "./gameObjects/Placeable";
 
 const warnedEvents = [];
 
@@ -258,3 +259,5 @@ export const PrerenderEvent: PayloadEvent<number> = new PayloadEvent<number>();
 
 export const OnDayTimeStartEvent: SimpleEvent = new SimpleEvent();
 export const OnNightTimeStartEvent: SimpleEvent = new SimpleEvent();
+
+export const PlaceablePlacedEvent: PayloadEvent<Placeable> = new PayloadEvent<Placeable>();
