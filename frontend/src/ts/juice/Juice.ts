@@ -1,2 +1,2 @@
-import './JuicyTree';
+import './ResourceJuice';
 import './PlayerJuice';
