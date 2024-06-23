@@ -16,8 +16,6 @@ ResourceStockChangedEvent.subscribe((payload) => {
         return;
     }
 
-    console.log(payload.entityType);
-
     switch (payload.entityType) {
         case Resources.MarioTree.name:
         case Resources.RoundTree.name:
