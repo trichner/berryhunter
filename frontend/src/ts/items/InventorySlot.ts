@@ -50,9 +50,7 @@ export class InventorySlot {
         this.activeAutoFeed = false;
 
         this.clickableIcon = UserInterface.getInventorySlot(index);
-
         this.clickableIcon.onLeftClick = this.leftClick.bind(this);
-
         this.clickableIcon.onRightClick = this.rightClick.bind(this);
 
         // A bit hacky, but it works...
@@ -154,6 +152,7 @@ export class InventorySlot {
         if (this.count !== count) {
             let change = count - this.count;
             if (this.count < count) {
+                this.addBounceEffect();
                 InventoryAddEvent.trigger({itemName: this.item.name, change: change, newCount: count})
             } else {
                 InventoryRemoveEvent.trigger({itemName: this.item.name, change: change, newCount: count})
@@ -215,6 +214,14 @@ export class InventorySlot {
 
     isFilled() {
         return this.item !== null;
+    }
+
+    addBounceEffect() {
+        // Reset animation
+        this.domElement.classList.remove('bounce');
+        void this.domElement.offsetWidth;
+
+        this.domElement.classList.add('bounce');
     }
 }
 
