@@ -255,3 +255,6 @@ export const GameSettingChangedEvent: PayloadEvent<{ path: string, newValue: any
  * Fired before game rendering starts. Payload is the time delta to the last frame.
  */
 export const PrerenderEvent: PayloadEvent<number> = new PayloadEvent<number>();
+
+export const OnDayTimeStartEvent: SimpleEvent = new SimpleEvent();
+export const OnNightTimeStartEvent: SimpleEvent = new SimpleEvent();

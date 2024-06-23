@@ -1,7 +1,8 @@
 import {Develop} from './develop/_Develop';
 import {ColorMatrixFilter, Container, Filter} from 'pixi.js';
 import {flood, lumaGreyscale} from './ColorMatrixFilterExtensions';
-
+import {isUndefined} from './Utils';
+import {OnDayTimeStartEvent, OnNightTimeStartEvent} from './Events';
 
 const ticksPerDay = 10 * 60 * 30; // 8 Minutes at 30 tps
 const hoursPerDay = 24;
@@ -36,6 +37,7 @@ let timeOfDay: number;
 let filteredContainers: Container[];
 let colorMatrix: ColorMatrixFilter;
 let filters: Filter[];
+let knownIsDay;
 
 export function setup(pFilteredContainers: Container[]) {
     filteredContainers = pFilteredContainers;
@@ -111,6 +113,19 @@ export function setTimeByTick(tick: number) {
     timeOfDay = (tick % ticksPerDay / ticksPerDay * hoursPerDay + sunriseHour) % hoursPerDay;
     if (Develop.isActive()) {
         Develop.get().logTimeOfDay(getFormattedTime());
+    }
+
+    if (knownIsDay != isDay()) {
+        if (!isUndefined(knownIsDay)){
+            if (isDay()){
+                OnDayTimeStartEvent.trigger();
+            }
+            else {
+                OnNightTimeStartEvent.trigger();
+            }
+        }
+        
+        knownIsDay = isDay();
     }
 
     let opacity = getNightFilterOpacity();
