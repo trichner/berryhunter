@@ -1,5 +1,5 @@
 import {Animation} from '../Animation';
-import {EaseDisplayObject} from 'pixi-ease';
+import {EaseDisplayObject, Ease} from 'pixi-ease';
 import {ColorMatrixFilter, Container} from 'pixi.js';
 import {flood} from '../ColorMatrixFilterExtensions';
 
@@ -23,6 +23,7 @@ export class StatusEffect implements StatusEffectDefinition {
     colorMatrix: ColorMatrixFilter;
     startAlpha: number;
     endAlpha: number;
+    shape: Container;
 
     private constructor(
         definition: StatusEffectDefinition,
@@ -35,6 +36,7 @@ export class StatusEffect implements StatusEffectDefinition {
     ) {
         this.id = definition.id;
         this.priority = definition.priority;
+        this.shape = gameObjectShape;
 
         this.colorMatrix = new ColorMatrixFilter();
         flood(this.colorMatrix, red, green, blue, 1);
@@ -89,17 +91,30 @@ export class StatusEffect implements StatusEffectDefinition {
         this.colorMatrix.alpha = this.startAlpha;
 
         let animation = new Animation();
+
         let to = animation.add(
             // TODO ugly, need to test and find better way
             this.colorMatrix as unknown as Container,
             {alpha: this.endAlpha},
             {
-                duration: 500,
+                duration: 200,
                 repeat: true,
                 reverse: true,
                 ease: 'easeInOutCubic',
             },
         ) as EaseDisplayObject;
+
+        if (this.id === StatusEffect.Damaged.id){
+            //Squeeze scale. Possible combine with "Animation", but atm reverse and on/once does not seem to work?
+            //animation.add(this.shape, { scaleX: 1.2, scaleY: 0.8 }, { reverse: true, removeExisting: true, duration: 200, ease: 'easeOutElastic' });
+
+            let ease = new Ease({ duration: 200, ease: 'easeOutElastic' }); 
+
+            ease.add(this.shape.scale, { x: 1.2, y: 0.8 }, { duration: 200, ease: 'easeOutElastic' });
+            ease.once('complete', () => {
+                ease.add(this.shape.scale, { x: 1, y: 1 }, { duration: 200, ease: 'easeInBounce' });
+            });
+        }
 
         // If the startAlpha is lower, we want the animation to end on the start
         // in the opposite case, the animation should end on the end (without reversing)

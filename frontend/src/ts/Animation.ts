@@ -50,4 +50,9 @@ export class Animation {
         this.ease.on(event, callback, context);
         return this;
     }
+
+    once(event: string | symbol, callback: ListenerFn, context?: any): this {
+        this.ease.once(event, callback, context);
+        return this;
+    }
 }
