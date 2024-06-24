@@ -108,11 +108,11 @@ export class StatusEffect implements StatusEffectDefinition {
             //Squeeze scale. Possible combine with "Animation", but atm reverse and on/once does not seem to work?
             //animation.add(this.shape, { scaleX: 1.2, scaleY: 0.8 }, { reverse: true, removeExisting: true, duration: 200, ease: 'easeOutElastic' });
 
-            let ease = new Ease({ duration: 200, ease: 'easeOutElastic' }); 
+            let ease = new Ease({ duration: 140, ease: 'easeOutElastic' }); 
 
-            ease.add(this.shape.scale, { x: 1.2, y: 0.8 }, { duration: 200, ease: 'easeOutElastic' });
+            ease.add(this.shape.scale, { x: 1.2, y: 0.8 }, { duration: 60, ease: 'easeOutElastic' });
             ease.once('complete', () => {
-                ease.add(this.shape.scale, { x: 1, y: 1 }, { duration: 200, ease: 'easeInBounce' });
+                ease.add(this.shape.scale, { x: 1, y: 1 }, { duration: 80, ease: 'easeInBounce' });
             });
         }
 
