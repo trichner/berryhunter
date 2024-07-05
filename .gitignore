@@ -3,7 +3,7 @@
 .DS_Store
 *.log
 /backend/berryhunterd
-/backend/backend.exe
+/backend/berryhunterd.exe
 /backend/conf.json
 id_berryhunter-ci
 node_modules/
