@@ -12,6 +12,12 @@ cp ~/<yourconfig>/conf.json ./conf.json
 cp ~/<yourbackend>/berryhunterd ./berryhunterd
 cp -R ~/<yourfrontend>/dist ./frontend
 
+# make binary executable
+chmod +x berryhunterd
+
+# create empty tokens file - the service with DynamicUser option will not be able to do so
+touch tokens.list
+
 # add systemd unit, contents see ./berryhunterd.service
 systemctl edit --force --full berryhunterd
 
@@ -19,5 +25,5 @@ systemctl edit --force --full berryhunterd
 systemctl enable --now berryhunterd
 
 # follow the logs
-journalct -f -u berryhunterd
+journalctl -f -u berryhunterd
 ```
