@@ -7,7 +7,8 @@ import (
 	"os"
 	"path"
 	"strings"
-	"sync"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/trichner/berryhunter/pkg/chieftain/api"
 	"github.com/trichner/berryhunter/pkg/chieftain/cfg"
@@ -25,20 +26,23 @@ func main() {
 
 	dataStore, err := dao.NewDataStore(path.Join(config.DataDir, "chieftain.db"))
 	if err != nil {
-		log.Fatalf("cannot boot chieftain: %s", err)
+		slog.Error("cannot boot chieftain", slog.Any("error", err))
+		panic(err)
 	}
 
 	playerStore, err := dao.NewPlayerDao(dataStore)
 	if err != nil {
-		log.Fatalf("cannot boot chieftain: %s", err)
+		slog.Error("cannot boot chieftain", slog.Any("error", err))
+		panic(err)
 	}
 
 	scoreService, err := service.NewScoreService(playerStore)
 	if err != nil {
-		log.Fatalf("cannot boot chieftain: %s", err)
+		slog.Error("cannot boot chieftain", slog.Any("error", err))
+		panic(err)
 	}
 
-	var wg sync.WaitGroup
+	wg := new(errgroup.Group)
 
 	// boot TLS server
 	s, err := server.NewServer(dataStore, playerStore)
@@ -49,29 +53,30 @@ func main() {
 	addr := config.ApiAddr
 	log.Printf("chieftain listening on %s", addr)
 
-	wg.Add(1)
-	go func() {
-		err = s.ListenTls(addr, "server.crt", "server.key")
-		if err != nil {
-			log.Fatalf("cannot boot chieftain: %s", err)
-		}
-	}()
+	bundle := &server.CertBundle{
+		CACertFile:     "ca_cert.pem",
+		ServerCertFile: "server_cert.pem",
+		ServerKeyFile:  "server_key.pem",
+	}
+
+	wg.Go(func() error {
+		return s.ListenTls(addr, bundle)
+	})
 
 	// boot HTTP server
-	wg.Add(1)
-
 	restAddr := config.RestAddr
 	log.Printf("rest api listening on %s/scoreboard", restAddr)
-	go func() {
+	wg.Go(func() error {
 		r := api.NewRouter(dataStore, scoreService)
-		err := http.ListenAndServe(restAddr, r)
-		if err != nil {
-			log.Fatalf("cannot boot api: %s", err)
-		}
-	}()
+		return http.ListenAndServe(restAddr, r)
+	})
 
-	log.Printf("boot successful, all systems nominal")
-	wg.Wait()
+	slog.Info("chieftain booted, all systems nominal")
+	err = wg.Wait()
+	if err != nil {
+		slog.Error("chieftain crashed", slog.Any("error", err))
+		panic(err)
+	}
 }
 
 func loadConf() *cfg.Config {

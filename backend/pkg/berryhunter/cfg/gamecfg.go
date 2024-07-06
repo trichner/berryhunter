@@ -2,9 +2,10 @@ package cfg
 
 import (
 	"encoding/json"
+	"log/slog"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
-	"log/slog"
 )
 
 type GameConfig struct {

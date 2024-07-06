@@ -5,12 +5,24 @@ package server
 import (
 	"context"
 	"crypto/tls"
+	"crypto/x509"
+	"errors"
+	"fmt"
 	"io"
 	"log"
+	"log/slog"
+	"os"
 
 	"github.com/trichner/berryhunter/pkg/chieftain/dao"
 	"github.com/trichner/berryhunter/pkg/chieftain/framer"
 )
+
+type CertBundle struct {
+	CACertFile string
+
+	ServerCertFile string
+	ServerKeyFile  string
+}
 
 type Server struct {
 	store     dao.DataStore
@@ -26,13 +38,26 @@ func NewServer(store dao.DataStore, playerDao dao.PlayerDao) (*Server, error) {
 
 type FrameHandler func(ctx context.Context, f framer.Framer) error
 
-func (srv *Server) ListenTls(laddr, certFile, keyFile string) error {
-	cer, err := tls.LoadX509KeyPair(certFile, keyFile)
+func (srv *Server) ListenTls(laddr string, certs *CertBundle) error {
+	caPool := x509.NewCertPool()
+	caCert, err := os.ReadFile(certs.CACertFile)
+	if err != nil {
+		return err
+	}
+	if ok := caPool.AppendCertsFromPEM(caCert); !ok {
+		return fmt.Errorf("failed to load %s into certpool", certs.CACertFile)
+	}
+
+	serverCert, err := tls.LoadX509KeyPair(certs.ServerCertFile, certs.ServerKeyFile)
 	if err != nil {
 		return err
 	}
 
-	config := &tls.Config{Certificates: []tls.Certificate{cer}}
+	config := &tls.Config{
+		Certificates: []tls.Certificate{serverCert},
+		ClientCAs:    caPool,
+		ClientAuth:   tls.RequireAndVerifyClientCert,
+	}
 	ln, err := tls.Listen("tcp", laddr, config)
 	if err != nil {
 		return err
@@ -45,13 +70,13 @@ func (srv *Server) ListenTls(laddr, certFile, keyFile string) error {
 			log.Println(err)
 			continue
 		}
-		log.Printf("client connected %s", conn.RemoteAddr())
+		slog.Info("client connected", slog.String("remote", conn.RemoteAddr().String()))
 		go func() {
 			err := HandleConn(srv.store, srv.playerDao, conn)
-			if err == io.EOF {
-				log.Printf("client disconnected %s", conn.RemoteAddr())
+			if errors.Is(err, io.EOF) {
+				slog.Info("client disconnected", slog.String("remote", conn.RemoteAddr().String()))
 			} else if err != nil {
-				log.Println(err)
+				slog.Error("client error", slog.Any("error", err))
 			}
 		}()
 	}

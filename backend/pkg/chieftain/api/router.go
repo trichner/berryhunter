@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -28,7 +29,7 @@ func wrapInTransaction(ds dao.DataStore, next http.Handler) http.Handler {
 			return nil
 		})
 		if err != nil {
-			log.Printf("cannot handle: %s\n", err)
+			slog.Error("bad request", slog.Any("error", err), slog.Any("request", r.RequestURI))
 			w.WriteHeader(500)
 		}
 	})

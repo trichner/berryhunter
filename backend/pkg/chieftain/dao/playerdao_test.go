@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/alecthomas/assert/v2"
 )
 
 func TestNewPlayerDao(t *testing.T) {
@@ -14,31 +14,35 @@ func TestNewPlayerDao(t *testing.T) {
 		Uuid:    "df8299c1-eb30-462d-9a86-ec7f8d2bca82",
 		Name:    "Jimmy Belair",
 		Score:   10,
-		Updated: ConvertTime(time.Now()),
+		Updated: time.Now().Unix(),
 	}
 
 	p2 := Player{
 		Uuid:    "06cb0e74-7ab9-407b-9bf0-a138335b807a",
 		Name:    "Bob Eiger",
 		Score:   11,
-		Updated: ConvertTime(time.Now()),
+		Updated: time.Now().Unix(),
 	}
 
-	ds, err := NewDataStore()
+	ds, err := NewDataStore(t.TempDir() + "/test.db")
 	assert.NoError(t, err)
 
 	err = ds.Transact(context.Background(), func(ctx context.Context) error {
-		playerDao, err := NewPlayerDao()
+		playerDao, err := NewPlayerDao(ds)
 		assert.NoError(t, err)
 
-		playerDao.UpsertPlayer(ctx, p1)
+		err = playerDao.UpsertPlayer(ctx, p1)
+		assert.NoError(t, err)
 
-		playerDao.UpsertPlayer(ctx, p2)
+		err = playerDao.UpsertPlayer(ctx, p2)
+		assert.NoError(t, err)
 
 		p2.Score = p2.Score + 1
-		playerDao.UpsertPlayer(ctx, p2)
+		err = playerDao.UpsertPlayer(ctx, p2)
+		assert.NoError(t, err)
 
 		players, err := playerDao.FindPlayers(ctx)
+		assert.Equal(t, 2, len(players))
 		for _, p := range players {
 			fmt.Printf("Player: %v\n", p)
 		}

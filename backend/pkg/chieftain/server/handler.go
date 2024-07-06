@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
 	"net"
 	"time"
 
@@ -73,7 +73,7 @@ func (c *ConnHandler) handleFrames(ctx context.Context, f framer.Framer) error {
 }
 
 func (c *ConnHandler) handleMessage(ctx context.Context, bytes []byte) error {
-	log.Printf("rx message")
+	slog.Debug("rx message")
 	msg := ChieftainApi.GetRootAsClientMessage(bytes, 0)
 	switch msg.BodyType() {
 	case ChieftainApi.ClientMessageBodyScoreboard:
@@ -110,7 +110,7 @@ func (c *ConnHandler) handleScoreboard(ctx context.Context, s *ChieftainApi.Scor
 			Uuid:    string(player.Uuid()),
 			Name:    string(player.Name()),
 			Score:   uint(player.Score()),
-			Updated: dao.ConvertTime(time.Now()),
+			Updated: time.Now().Unix(),
 		})
 	}
 

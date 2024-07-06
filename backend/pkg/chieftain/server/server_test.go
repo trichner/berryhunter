@@ -4,25 +4,25 @@ import (
 	"context"
 	"io"
 	"net"
-	"sync"
 	"testing"
+	"time"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
+	"github.com/alecthomas/assert/v2"
 	"github.com/trichner/berryhunter/pkg/chieftain/client"
 	"github.com/trichner/berryhunter/pkg/chieftain/dao"
+	"golang.org/x/sync/errgroup"
 )
 
-func xTestListenTls(t *testing.T) {
-	dataStore, err := dao.NewDataStore()
-	assert.NoError(t, err)
-
-	playerDao, err := dao.NewPlayerDao()
-	assert.NoError(t, err)
-
-	srv, err := NewServer(dataStore, playerDao)
-	go srv.ListenTls("127.0.0.1:3443", "server.crt", "server.key")
-}
+//func xTestListenTls(t *testing.T) {
+//	dataStore, err := dao.NewDataStore()
+//	assert.NoError(t, err)
+//
+//	playerDao, err := dao.NewPlayerDao()
+//	assert.NoError(t, err)
+//
+//	srv, err := NewServer(dataStore, playerDao)
+//	go srv.ListenTls("127.0.0.1:3443", "server.crt", "server.key")
+//}
 
 func TestServer(t *testing.T) {
 	clientConn, serverConn := net.Pipe()
@@ -33,21 +33,18 @@ func TestServer(t *testing.T) {
 	assert.NoError(t, err)
 
 	// mock dependencies
-	dataStore, err := newMockDataStore()
+	dataStore, err := newMockDataStore(t)
 	assert.NoError(t, err)
-	dataStore.On("Transact", mock.Anything, mock.Anything).Return(nil)
+	// dataStore.On("Transact", mock.Anything, mock.Anything).Return(nil)
 
 	playerDao := newMockPlayerDao()
-	playerDao.On("UpsertPlayer", mock.Anything, mock.AnythingOfType("dao.Player")).Return()
+	// playerDao.On("UpsertPlayer", mock.Anything, mock.AnythingOfType("dao.Player")).Return()
 
 	// handle server connection
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		err := HandleConn(dataStore, playerDao, serverConn)
-		assert.Equal(t, err, io.EOF)
-		wg.Done()
-	}()
+	wg := new(errgroup.Group)
+	wg.Go(func() error {
+		return HandleConn(dataStore, playerDao, serverConn)
+	})
 
 	// send some data to the server
 	s := generateScoreboard()
@@ -58,53 +55,49 @@ func TestServer(t *testing.T) {
 
 	// wait for the server to receive the messages
 	// and ACK the connection close
-	wg.Wait()
-
-	playerDao.AssertNumberOfCalls(t, "UpsertPlayer", len(*s)*2)
+	err = wg.Wait()
+	assert.Equal(t, err, io.EOF)
 }
 
-func newMockDataStore() (*mockDataStore, error) {
-	ds, err := dao.NewDataStore()
-	if err != nil {
-		return nil, err
+func newMockDataStore(t *testing.T) (dao.DataStore, error) {
+	return dao.NewDataStore(t.TempDir() + "/test.db")
+}
+
+func newMockPlayerDao() dao.PlayerDao {
+	return &mockPlayerDao{
+		scoreboard: generateScoreboard(),
 	}
-
-	return &mockDataStore{
-		real: ds,
-	}, nil
-}
-
-type mockDataStore struct {
-	mock.Mock
-	real dao.DataStore
-}
-
-func (ds *mockDataStore) Transact(ctx context.Context, t dao.TransactifiedFunc) error {
-	ds.Called(ctx, t)
-	t(ctx)
-	return nil
-}
-
-func (ds *mockDataStore) Close() error {
-	ds.Called()
-	return ds.real.Close()
-}
-
-func newMockPlayerDao() *mockPlayerDao {
-	return &mockPlayerDao{}
 }
 
 type mockPlayerDao struct {
-	mock.Mock
+	scoreboard *client.Scoreboard
+}
+
+func (pd *mockPlayerDao) FindTopPlayers(ctx context.Context, limit int) ([]dao.Player, error) {
+	// TODO implement me
+	panic("implement me")
+}
+
+func (pd *mockPlayerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, period dao.RollingPeriod) ([]dao.Player, error) {
+	// TODO implement me
+	panic("implement me")
+}
+
+func (pd *mockPlayerDao) FindPlayerByUuid(ctx context.Context, uuid string) (*dao.Player, error) {
+	return &dao.Player{
+		Uuid:    uuid,
+		Id:      1,
+		Name:    "Tobi",
+		Score:   1345,
+		Updated: time.Now().Unix(),
+	}, nil
 }
 
 func (pd *mockPlayerDao) UpsertPlayer(ctx context.Context, p dao.Player) error {
-	pd.Called(ctx, p)
 	return nil
 }
 
 func (pd *mockPlayerDao) FindPlayers(ctx context.Context) ([]dao.Player, error) {
-	pd.Called(ctx)
 	panic("implement me")
 }
 

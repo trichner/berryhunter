@@ -90,7 +90,7 @@ func (p *playerDao) FindTopPlayersInPeriod(ctx context.Context, limit int, perio
 		now = now.AddDate(0, 0, -30)
 	}
 
-	sinceDate := ConvertTime(now)
+	sinceDate := now.Unix()
 	err := tx.Select(&players,
 		`SELECT * 
 				FROM player 
@@ -110,7 +110,7 @@ func (p *playerDao) UpsertPlayer(ctx context.Context, pl Player) error {
 
 	_, err := tx.ExecContext(ctx, `
 			INSERT INTO player (uuid, name, score, updated) VALUES (?, ?, ?, ?)
-			ON DUPLICATE KEY UPDATE name=?, score=?, updated=?
+			ON CONFLICT(uuid) DO UPDATE SET name=?, score=?, updated=?
 			`, pl.Uuid, pl.Name, pl.Score, pl.Updated, pl.Name, pl.Score, pl.Updated)
 	return err
 }
