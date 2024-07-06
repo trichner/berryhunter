@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
+	"github.com/trichner/berryhunter/pkg/api/ChieftainApi"
 
 	"github.com/google/flatbuffers/go"
 )

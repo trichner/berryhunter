@@ -3,12 +3,12 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/trichner/berryhunter/pkg/api/ChieftainApi"
+	"github.com/trichner/berryhunter/pkg/fbutil"
 	"log/slog"
 	"net"
 	"time"
 
-	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
-	"github.com/trichner/berryhunter/common/fbutil"
 	"github.com/trichner/berryhunter/pkg/chieftain/dao"
 	"github.com/trichner/berryhunter/pkg/chieftain/framer"
 )
@@ -78,7 +78,7 @@ func (c *ConnHandler) handleMessage(ctx context.Context, bytes []byte) error {
 	switch msg.BodyType() {
 	case ChieftainApi.ClientMessageBodyScoreboard:
 		s := &ChieftainApi.Scoreboard{}
-		if err := fbutil.UnwrapUnion(msg, s); err != nil {
+		if err := fbutil.UnwrapUnion[ChieftainApi.ClientMessageBody](msg, s); err != nil {
 			return err
 		}
 		return c.handleScoreboard(ctx, s)

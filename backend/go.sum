@@ -36,10 +36,8 @@ github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
 github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/trichner/berryhunter/api/schema/ChieftainApi v0.0.0-20240511093843-fd7bd328b338 h1:9jGZ+dak1b+YsSu4np6Yl1C5HG0od51/drszcEqwP7Q=
-github.com/trichner/berryhunter/api/schema/ChieftainApi v0.0.0-20240511093843-fd7bd328b338/go.mod h1:5FL3PdTCI0yg7+TYWOOhsYZA2B03BE06+1x4RKkfJIw=
-github.com/trichner/berryhunter/common/fbutil v0.0.0-20240412171018-6317cce2f4fd h1:wv4G7Wr7EAaC75zah1LEm6Ij1ahwtx3tOTjch6KPewc=
-github.com/trichner/berryhunter/common/fbutil v0.0.0-20240412171018-6317cce2f4fd/go.mod h1:bHtvYcU1tBsw9tVHYs0taIzHz1VerTLGTxz+CT6UyOU=
+github.com/trichner/berryhunter/api/schema/ChieftainApi v0.0.0-20240706234528-c0ffee5b48b2 h1:7vnQE+hwvtT5MUdM8e8y42vsYrVJByt3zMcIzLsimWE=
+github.com/trichner/berryhunter/api/schema/ChieftainApi v0.0.0-20240706234528-c0ffee5b48b2/go.mod h1:5FL3PdTCI0yg7+TYWOOhsYZA2B03BE06+1x4RKkfJIw=
 golang.org/x/crypto v0.25.0 h1:ypSNr+bnYL2YhwoMt2zPxHFmbAN1KZs/njMG3hxUp30=
 golang.org/x/crypto v0.25.0/go.mod h1:T+wALwcMOSE0kXgUAnPAHqTLW+XHgcELELW8VaDgm/M=
 golang.org/x/net v0.27.0 h1:5K3Njcw06/l2y9vpGCSdcxWOYHOUk3dVNGDXN+FvAys=

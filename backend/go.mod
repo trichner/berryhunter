@@ -13,8 +13,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/stretchr/testify v1.9.0
-	github.com/trichner/berryhunter/api/schema/ChieftainApi v0.0.0-20240511093843-fd7bd328b338
-	github.com/trichner/berryhunter/common/fbutil v0.0.0-20240412171018-6317cce2f4fd
+	github.com/trichner/berryhunter/api/schema/ChieftainApi v0.0.0-20240706234528-c0ffee5b48b2
 	golang.org/x/crypto v0.25.0
 	golang.org/x/sync v0.7.0
 )

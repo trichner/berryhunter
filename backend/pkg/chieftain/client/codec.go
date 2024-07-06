@@ -2,7 +2,7 @@ package client
 
 import (
 	"github.com/google/flatbuffers/go"
-	"github.com/trichner/berryhunter/api/schema/ChieftainApi"
+	"github.com/trichner/berryhunter/pkg/api/ChieftainApi"
 )
 
 type Player struct {
@@ -13,7 +13,7 @@ type Player struct {
 
 type Scoreboard []Player
 
-func clientMessageWrapFlatbufMarshal(builder *flatbuffers.Builder, body flatbuffers.UOffsetT, bodyType byte) flatbuffers.UOffsetT {
+func clientMessageWrapFlatbufMarshal(builder *flatbuffers.Builder, body flatbuffers.UOffsetT, bodyType ChieftainApi.ClientMessageBody) flatbuffers.UOffsetT {
 	ChieftainApi.ClientMessageStart(builder)
 	ChieftainApi.ClientMessageAddBodyType(builder, bodyType)
 	ChieftainApi.ClientMessageAddBody(builder, body)
