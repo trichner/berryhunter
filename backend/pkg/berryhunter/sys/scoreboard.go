@@ -94,18 +94,20 @@ func (d *ScoreboardSystem) updateChieftain() {
 	if len(d.players) == 0 {
 		return
 	}
-	players := make([]client.Player, 0, len(d.players))
 
-	for _, p := range d.players {
-		players = append(players, client.Player{
+	players := make([]client.Player, len(d.players))
+	for i, p := range d.players {
+		players[i] = client.Player{
 			Name:  p.Name(),
 			Uuid:  p.Client().UUID().String(),
 			Score: d.g.Ticks() - p.Stats().BirthTick, // TODO will overflow
-		})
+		}
 	}
 
-	s := client.Scoreboard(players)
-	d.chieftain.Write(&s)
+	s := &client.Scoreboard{
+		Players: players,
+	}
+	d.chieftain.Write(s)
 }
 
 // var uuidNs = uuid.Must(uuid.NewRandom())

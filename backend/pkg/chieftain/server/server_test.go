@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"github.com/trichner/berryhunter/pkg/chieftain/db"
 	"io"
 	"net"
 	"testing"
@@ -60,7 +61,7 @@ func TestServer(t *testing.T) {
 }
 
 func newMockDataStore(t *testing.T) (dao.DataStore, error) {
-	return dao.NewDataStore(t.TempDir() + "/test.db")
+	return db.New(t.TempDir() + "/test.db")
 }
 
 func newMockPlayerDao() dao.PlayerDao {

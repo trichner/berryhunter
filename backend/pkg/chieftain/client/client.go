@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"log/slog"
 	"os"
 
 	"github.com/trichner/berryhunter/pkg/chieftain/framer"
@@ -40,11 +41,14 @@ func Connect(config *Config) (*Client, error) {
 		return nil, fmt.Errorf("failed to load ca cert file: %w", err)
 	}
 
-	caPool.AppendCertsFromPEM(ca)
+	ok := caPool.AppendCertsFromPEM(ca)
+	if !ok {
+		return nil, fmt.Errorf("failed to add trust root: %s", config.CACertFile)
+	}
 
 	clientCert, err := tls.LoadX509KeyPair(config.ClientCertFile, config.ClientKeyFile)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to load client certificate: %w", err)
 	}
 
 	conf := &tls.Config{
@@ -86,11 +90,17 @@ func ConnectWithDialer(d Dialer) (*Client, error) {
 }
 
 func (c *Client) Write(s *Scoreboard) {
+	if s == nil {
+		slog.Debug("'nil' scoreboard, skipping chieftain update")
+		return
+	}
+	slog.Debug("sending scoreboard to chieftain")
 	c.tx <- s
 }
 
 // Close closes the connection, may panic if already closed!
 func (c *Client) Close() error {
+	slog.Debug("closing chieftain client")
 	close(c.tx)
 	<-c.done
 	return nil

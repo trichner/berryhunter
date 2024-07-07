@@ -11,7 +11,9 @@ type Player struct {
 	Score uint64
 }
 
-type Scoreboard []Player
+type Scoreboard struct {
+	Players []Player
+}
 
 func clientMessageWrapFlatbufMarshal(builder *flatbuffers.Builder, body flatbuffers.UOffsetT, bodyType ChieftainApi.ClientMessageBody) flatbuffers.UOffsetT {
 	ChieftainApi.ClientMessageStart(builder)
@@ -34,9 +36,9 @@ func playerMarshal(builder *flatbuffers.Builder, p *Player) flatbuffers.UOffsetT
 func ScoreBoardMarshal(w *Scoreboard) []byte {
 	builder := flatbuffers.NewBuilder(64)
 
-	nplayers := len(*w)
+	nplayers := len(w.Players)
 	playerOffsets := make([]flatbuffers.UOffsetT, 0, nplayers)
-	for _, p := range *w {
+	for _, p := range w.Players {
 		playerOffsets = append(playerOffsets, playerMarshal(builder, &p))
 	}
 

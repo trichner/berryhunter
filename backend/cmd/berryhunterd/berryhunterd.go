@@ -50,7 +50,13 @@ func main() {
 		addr := fmt.Sprintf("127.0.0.1:%d", port)
 		config.Chieftain.Addr = addr
 		slog.Info("booting embedded chieftain", slog.String("server_addr", addr))
-		chieftainServer, err := bootChieftain("", port)
+
+		dir, err := determineCacheDir()
+		if err != nil {
+			slog.Error("cannot determine cache directory for chieftain", slog.Any("error", err))
+			panic(err)
+		}
+		chieftainServer, err := bootChieftain(dir, port)
 		if err != nil {
 			slog.Error("failed to boot HTTP server", slog.Any("error", err))
 			panic(err)
