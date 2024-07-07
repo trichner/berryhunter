@@ -10,8 +10,8 @@ type Choice struct {
 	Choice interface{}
 }
 
-func NewWeightedChoice(choices []Choice) *weightedChoice {
-	wc := &weightedChoice{choices: choices}
+func NewWeightedChoice(choices []Choice) *WeightedChoice {
+	wc := &WeightedChoice{choices: choices}
 
 	totals := []int{}
 	runningTotal := 0
@@ -27,13 +27,13 @@ func NewWeightedChoice(choices []Choice) *weightedChoice {
 	return wc
 }
 
-type weightedChoice struct {
+type WeightedChoice struct {
 	choices      []Choice
 	totals       []int
 	runningTotal int
 }
 
-func (wc *weightedChoice) Choose(rand *rand.Rand) interface{} {
+func (wc *WeightedChoice) Choose(rand *rand.Rand) interface{} {
 	if wc.runningTotal == 0 {
 		return nil
 	}

@@ -3,6 +3,7 @@ package dao
 import (
 	"context"
 	"fmt"
+	"github.com/trichner/berryhunter/pkg/chieftain/db"
 	"testing"
 	"time"
 
@@ -24,11 +25,11 @@ func TestNewPlayerDao(t *testing.T) {
 		Updated: time.Now().Unix(),
 	}
 
-	ds, err := NewDataStore(t.TempDir() + "/test.db")
+	database, err := db.New(t.TempDir() + "/test.db")
 	assert.NoError(t, err)
 
-	err = ds.Transact(context.Background(), func(ctx context.Context) error {
-		playerDao, err := NewPlayerDao(ds)
+	err = database.Transact(context.Background(), func(ctx context.Context) error {
+		playerDao, err := NewPlayerDao(database)
 		assert.NoError(t, err)
 
 		err = playerDao.UpsertPlayer(ctx, p1)

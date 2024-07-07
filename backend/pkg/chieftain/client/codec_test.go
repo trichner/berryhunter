@@ -1,12 +1,11 @@
 package client
 
 import (
+	flatbuffers "github.com/google/flatbuffers/go"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/trichner/berryhunter/pkg/api/ChieftainApi"
-
-	"github.com/google/flatbuffers/go"
 )
 
 func Test_playerMarshal(t *testing.T) {

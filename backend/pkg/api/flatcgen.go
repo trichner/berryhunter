@@ -29,17 +29,29 @@ func main() {
 	version := flatcVersion
 
 	platform := ""
+	artifactName := ""
 	switch runtime.GOOS {
 	case "windows":
 		platform = "Windows"
+		artifactName = "Windows.flatc.binary.zip"
 	case "darwin":
 		platform = "Mac"
+		artifactName = "Mac.flatc.binary.zip"
+	case "linux":
+		platform = "Linux"
+		artifactName = "Linux.flatc.binary.clang++-15.zip"
 	default:
-		slog.Error("unsupported OS for flatbuffer compilation, add support in `flatcgen.go`", slog.String("os", runtime.GOOS))
+		err := fmt.Errorf("unsupported OS %s for flatbuffer compilation, add support in `flatcgen.go`", runtime.GOOS)
+		slog.Error("failed to determine flatc compiler", slog.Any("error", err))
+		panic(err)
 	}
 
+	// https://github.com/google/flatbuffers/releases/download/v24.3.25/Linux.flatc.binary.clang++-15.zip
+	// https://github.com/google/flatbuffers/releases/download/v24.3.25/Mac.flatc.binary.zip
+	// https://github.com/google/flatbuffers/releases/download/v24.3.25/Windows.flatc.binary.zip
+
 	compilerPath := fmt.Sprintf("./flatc_%s_%s", platform, strings.ReplaceAll(version, ".", "_"))
-	err := downloadCompilerTo(compilerPath, version, platform)
+	err := downloadCompilerTo(compilerPath, version, artifactName)
 	if err != nil {
 		slog.Error("failed to download flatc compiler", slog.String("version", version), slog.Any("error", err))
 		panic(err)
@@ -54,12 +66,12 @@ func main() {
 	}
 }
 
-func downloadCompilerTo(path, version, platform string) error {
+func downloadCompilerTo(path, version, artifactName string) error {
 	var buf bytes.Buffer
 
-	downloadUrl := fmt.Sprintf("https://github.com/google/flatbuffers/releases/download/%s/%s.flatc.binary.zip", version, platform)
+	downloadUrl := fmt.Sprintf("https://github.com/google/flatbuffers/releases/download/%s/%s", version, artifactName)
 
-	slog.Info("downloading flatc", slog.String("url", downloadUrl), slog.String("platform", platform), slog.String("flatcVersion", version))
+	slog.Info("downloading flatc", slog.String("url", downloadUrl), slog.String("artifact", artifactName), slog.String("flatcVersion", version))
 
 	res, err := http.Get(downloadUrl)
 	if err != nil || res.StatusCode != 200 {
@@ -89,11 +101,14 @@ func downloadCompilerTo(path, version, platform string) error {
 	if err != nil {
 		return err
 	}
+	defer compressed.Close()
 
 	dst, err := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0o755)
 	if err != nil {
 		return err
 	}
+	defer dst.Close()
+
 	written, err := io.Copy(dst, compressed)
 	if err != nil {
 		return err

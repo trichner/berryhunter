@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/trichner/berryhunter/pkg/chieftain/db"
 	"log"
 	"log/slog"
 	"net/http"
@@ -24,7 +25,7 @@ func main() {
 	slog.Info("booting chieftain")
 	config := loadConf()
 
-	dataStore, err := dao.NewDataStore(path.Join(config.DataDir, "chieftain.db"))
+	dataStore, err := db.New(path.Join(config.DataDir, "chieftain.db"))
 	if err != nil {
 		slog.Error("cannot boot chieftain", slog.Any("error", err))
 		panic(err)
