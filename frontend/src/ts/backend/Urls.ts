@@ -50,11 +50,7 @@ if (WebParameters.get().has(Constants.MODE_PARAMETERS.NO_DOCKER)) {
     _database = '/chieftain';
 } else {
     _gameServer = getUrl('ws', 'game');
-    if (isLocalhost(window.location.hostname)) {
-        _database = getUrl('http', 'chieftain');
-    } else {
-        _database = 'https://europe-west1-berryhunter-io.cloudfunctions.net/chieftain-api';
-    }
+    _database = getUrl('http', 'chieftain');
 }
 WebParameters.get().tryGetString(Constants.VALUE_PARAMETERS.DATABASE_URL, (dbUrl) => {
     _database = dbUrl;

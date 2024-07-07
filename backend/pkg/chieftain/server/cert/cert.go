@@ -27,11 +27,11 @@ type Bundle struct {
 	ClientKeyFile  string
 }
 
-func GenerateServerCertificate(hosts []string, ips []string) (*Bundle, error) {
-	return generateCertificates(hosts, ips)
+func GenerateServerCertificate(dir string, hosts []string, ips []string) (*Bundle, error) {
+	return generateCertificates(dir, hosts, ips)
 }
 
-func generateCertificates(hosts []string, ips []string) (*Bundle, error) {
+func generateCertificates(dir string, hosts []string, ips []string) (*Bundle, error) {
 	sub := pkix.Name{
 		CommonName:   "Berryhunter",
 		Organization: []string{"Berryhunter"},
@@ -52,40 +52,47 @@ func generateCertificates(hosts []string, ips []string) (*Bundle, error) {
 		return nil, fmt.Errorf("failed to create client certificate: %w", err)
 	}
 
-	err = saveCert("ca_cert.pem", caCertBytes)
-	if err != nil {
-		return nil, err
-	}
-	err = saveKey("ca_key.pem", caKey)
-	if err != nil {
-		return nil, err
-	}
-
-	err = saveCert("server_cert.pem", serverCertBytes)
-	if err != nil {
-		return nil, err
-	}
-	err = saveKey("server_key.pem", serverKey)
+	caCertFile := filepath.Join(dir, "ca_cert.pem")
+	err = saveCert(caCertFile, caCertBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	err = saveCert("client_cert.pem", clientCertBytes)
+	caKeyFile := filepath.Join(dir, "ca_key.pem")
+	err = saveKey(caKeyFile, caKey)
 	if err != nil {
 		return nil, err
 	}
-	err = saveKey("client_key.pem", clientKey)
+
+	serverCertFile := filepath.Join(dir, "server_cert.pem")
+	err = saveCert(serverCertFile, serverCertBytes)
+	if err != nil {
+		return nil, err
+	}
+	serverKeyFile := filepath.Join(dir, "server_key.pem")
+	err = saveKey(serverKeyFile, serverKey)
+	if err != nil {
+		return nil, err
+	}
+
+	clientCertFile := filepath.Join(dir, "client_cert.pem")
+	err = saveCert(clientCertFile, clientCertBytes)
+	if err != nil {
+		return nil, err
+	}
+	clientKeyFile := filepath.Join(dir, "client_key.pem")
+	err = saveKey(clientKeyFile, clientKey)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Bundle{
-		CACertFile:     "ca_cert.pem",
-		CAKeyFile:      "ca_key.pem",
-		ServerCertFile: "server_cert.pem",
-		ServerKeyFile:  "server_key.pem",
-		ClientCertFile: "client_cert.pem",
-		ClientKeyFile:  "client_key.pem",
+		CACertFile:     caCertFile,
+		CAKeyFile:      caKeyFile,
+		ServerCertFile: serverCertFile,
+		ServerKeyFile:  serverKeyFile,
+		ClientCertFile: clientCertFile,
+		ClientKeyFile:  clientKeyFile,
 	}, nil
 }
 

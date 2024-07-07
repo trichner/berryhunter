@@ -4,7 +4,11 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	flatbuffers "github.com/google/flatbuffers/go"
+	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
+	"github.com/trichner/berryhunter/pkg/chieftain/client"
 	"io"
+	"log"
 	"time"
 
 	"github.com/EngoEngine/ecs"
@@ -12,16 +16,8 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 )
 
-type Player struct {
-	Uuid  string
-	Name  string
-	Score uint64
-}
-
-type Scoreboard []Player
-
 type ScoreboardUpdateClient interface {
-	Write(s *Scoreboard)
+	Write(s *client.Scoreboard)
 	io.Closer
 }
 
@@ -33,32 +29,27 @@ type ScoreboardSystem struct {
 }
 
 func NewScoreboardSystem(g model.Game) *ScoreboardSystem {
-	//ccfg := g.Config().ChieftainConfig
-	//var c ScoreboardUpdateClient
-	//
-	//if ccfg != nil && ccfg.Addr != nil {
-	//	var err error
-	//	addr := *ccfg.Addr
-	//	c, err = client.Connect(addr)
-	//	if err != nil {
-	//		log.Printf("cannot reach chieftain at %s: %s\n", addr, err)
-	//	} else {
-	//		log.Println("🏆 connected to chieftain via Socket")
-	//	}
-	//} else if ccfg != nil && ccfg.PubSubConfig != nil {
-	//	ps := ccfg.PubSubConfig
-	//	var err error
-	//	c, err = client.NewPubSubClient(ps.ProjectId, ps.TopicId)
-	//	if err != nil {
-	//		log.Printf("cannot reach chieftain: %s\n", err)
-	//	} else {
-	//		log.Println("🏆 connected to chieftain via PubSub")
-	//	}
-	//} else {
-	//	log.Println("no chieftain configuration, skipping")
-	//}
+	ccfg := g.Config().ChieftainConfig
+	var c ScoreboardUpdateClient
 
-	return &ScoreboardSystem{g: g, chieftain: nil}
+	if ccfg != nil && ccfg.Addr != "" {
+		var err error
+		c, err = client.Connect(&client.Config{
+			Addr:           ccfg.Addr,
+			CACertFile:     ccfg.CaCertFile,
+			ClientCertFile: ccfg.ClientCertFile,
+			ClientKeyFile:  ccfg.ClientKeyFile,
+		})
+		if err != nil {
+			log.Printf("cannot reach chieftain at %s: %s\n", ccfg.Addr, err)
+		} else {
+			log.Println("🏆 connected to chieftain via Socket")
+		}
+	} else {
+		log.Println("no chieftain configuration, skipping")
+	}
+
+	return &ScoreboardSystem{g: g, chieftain: c}
 }
 
 func (*ScoreboardSystem) Priority() int {
@@ -75,26 +66,25 @@ func (d *ScoreboardSystem) AddSpectator(e model.Spectator) {
 }
 
 func (d *ScoreboardSystem) Update(dt float32) {
-	// TODO
 
 	// only send every 10s
 	if d.g.Ticks()%300 != 0 {
 		return
 	}
 
-	//scoreboard := model.Scoreboard{
-	//	Players: d.players,
-	//	Tick:    d.g.Ticks(),
-	//}
-	//builder := flatbuffers.NewBuilder(32)
-	//msg := codec.ScoreboardFlatbufMarshal(builder, scoreboard)
-	//builder.Finish(msg)
-	//
-	//for _, c := range d.clients {
-	//	c.Client().SendMessage(builder.FinishedBytes())
-	//}
-	//
-	//d.updateChieftain()
+	scoreboard := model.Scoreboard{
+		Players: d.players,
+		Tick:    d.g.Ticks(),
+	}
+	builder := flatbuffers.NewBuilder(32)
+	msg := codec.ScoreboardFlatbufMarshal(builder, scoreboard)
+	builder.Finish(msg)
+
+	for _, c := range d.clients {
+		c.Client().SendMessage(builder.FinishedBytes())
+	}
+
+	d.updateChieftain()
 }
 
 func (d *ScoreboardSystem) updateChieftain() {
@@ -104,17 +94,17 @@ func (d *ScoreboardSystem) updateChieftain() {
 	if len(d.players) == 0 {
 		return
 	}
-	players := make([]Player, 0, len(d.players))
+	players := make([]client.Player, 0, len(d.players))
 
 	for _, p := range d.players {
-		players = append(players, Player{
+		players = append(players, client.Player{
 			Name:  p.Name(),
 			Uuid:  p.Client().UUID().String(),
 			Score: d.g.Ticks() - p.Stats().BirthTick, // TODO will overflow
 		})
 	}
 
-	s := Scoreboard(players)
+	s := client.Scoreboard(players)
 	d.chieftain.Write(&s)
 }
 

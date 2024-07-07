@@ -25,12 +25,44 @@ import (
 func main() {
 	logging.SetupLogging()
 
+	var dev, help, chieftain bool
+	flag.BoolVar(&dev, "dev", false, "Serve frontend directly")
+	flag.BoolVar(&help, "help", false, "Show usage help")
+	flag.BoolVar(&chieftain, "chieftain", false, "Also boot embedded chieftain")
+	flag.Parse()
+	if help {
+		flag.Usage()
+		os.Exit(1)
+	}
+
 	config := loadConf()
 	itemsRegistry := loadItems()
 	mobsRegistry := loadMobs(itemsRegistry)
 
 	tokens := loadOrCreateTokens("./tokens.list")
 	slog.Info("👮‍♀️ read tokens", slog.Int("token_count", len(tokens)))
+
+	// boot embedded chieftain
+	var err error
+	var chieftainHandler http.Handler
+	if chieftain {
+		port := 3443
+		addr := fmt.Sprintf("127.0.0.1:%d", port)
+		config.Chieftain.Addr = addr
+		slog.Info("booting embedded chieftain", slog.String("server_addr", addr))
+		chieftainServer, err := bootChieftain("", port)
+		if err != nil {
+			slog.Error("failed to boot HTTP server", slog.Any("error", err))
+			panic(err)
+		}
+		defer chieftainServer.Close()
+
+		config.Chieftain.CaCertFile = chieftainServer.Certificates.CACertFile
+		config.Chieftain.ClientCertFile = chieftainServer.Certificates.ClientCertFile
+		config.Chieftain.ClientKeyFile = chieftainServer.Certificates.ClientKeyFile
+
+		chieftainHandler = chieftainServer.ScoreHandler
+	}
 
 	// new game
 	var radius float32 = 20
@@ -66,16 +98,8 @@ func main() {
 	}
 
 	//---- set up server
-	var dev, help bool
-	flag.BoolVar(&dev, "dev", false, "Serve frontend directly")
-	flag.BoolVar(&help, "help", false, "Show usage help")
-	flag.Parse()
-	if help {
-		flag.Usage()
-		os.Exit(1)
-	}
 
-	if err := bootHttp(g.Handler(), config.Server, dev); err != nil {
+	if err := bootHttp(g.Handler(), chieftainHandler, config.Server, dev); err != nil {
 		slog.Error("failed to boot HTTP server", slog.Any("error", err))
 		panic(err)
 	}
@@ -83,18 +107,17 @@ func main() {
 	g.Loop()
 }
 
-func bootHttp(h http.Handler, cfg cfg.Server, dev bool) error {
+func bootHttp(gameHandler, chieftainHandler http.Handler, cfg cfg.Server, dev bool) error {
 	if cfg.TlsHost != "" {
-		return bootTlsServer(h, cfg, dev)
+		return bootTlsServer(gameHandler, chieftainHandler, cfg, dev)
 	} else {
-		bootServer(h, cfg, dev)
+		bootServer(gameHandler, chieftainHandler, cfg, dev)
 	}
 	return nil
 }
 
-func bootTlsServer(h http.Handler, cfg cfg.Server, dev bool) error {
+func bootTlsServer(gameHandler, chieftainHandler http.Handler, cfg cfg.Server, dev bool) error {
 	host := cfg.TlsHost
-	path := cfg.Path
 
 	port := cfg.Port
 	if port != 0 && port != 443 {
@@ -103,7 +126,7 @@ func bootTlsServer(h http.Handler, cfg cfg.Server, dev bool) error {
 
 	hosts := []string{host}
 
-	slog.Info("🦄 Booting TLS game-server", slog.String("addr", fmt.Sprintf("https://%s%s", host, path)), slog.Any("hosts", hosts))
+	slog.Info("🦄 Booting TLS game-server", slog.String("addr", fmt.Sprintf("https://%s/game", host)), slog.Any("hosts", hosts))
 
 	cacheDir, err := determineCacheDir()
 	if err != nil {
@@ -123,10 +146,16 @@ func bootTlsServer(h http.Handler, cfg cfg.Server, dev bool) error {
 
 	mux := http.NewServeMux()
 
-	mux.Handle(cfg.Path, h)
+	mux.Handle("/game", gameHandler)
+
+	const chieftainPath = "/chieftain"
+	if chieftainHandler != nil {
+		slog.Info("Serving chieftain", slog.String("addr", fmt.Sprintf(":%d/%s", port, chieftainPath)))
+		mux.Handle(chieftainPath+"/", http.StripPrefix(chieftainPath, chieftainHandler))
+	}
 
 	if dev {
-		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("https://%s?wsUrl=wss://%s%s", host, host, path)))
+		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("https://%s?wsUrl=wss://%s/game", host, host)))
 		mux.Handle("/", frontendHandler(cfg.FrontendDir))
 	} else {
 		// 'ping' endpoint
@@ -161,18 +190,27 @@ func determineCacheDir() (string, error) {
 	return os.UserCacheDir()
 }
 
-func bootServer(h http.Handler, cfg cfg.Server, dev bool) {
+func bootServer(gameHandler, chieftainHandler http.Handler, cfg cfg.Server, dev bool) {
 	port := cfg.Port
-	path := cfg.Path
 
-	slog.Info("🦄 Booting game-server", slog.String("addr", fmt.Sprintf(":%d%s", port, path)))
+	slog.Info("🦄 Booting game-server", slog.String("addr", fmt.Sprintf(":%d/game", port)))
 	addr := fmt.Sprintf(":%d", port)
 
 	mux := http.NewServeMux()
-	mux.Handle(path, h)
+	mux.Handle("/game", gameHandler)
+
+	const chieftainPath = "/chieftain"
+	if chieftainHandler != nil {
+		slog.Info("Serving chieftain", slog.String("addr", fmt.Sprintf(":%d/%s", port, chieftainPath)))
+		mux.Handle(chieftainPath+"/", http.StripPrefix(chieftainPath, chieftainHandler))
+	}
 
 	if dev {
-		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("http://localhost:%d?wsUrl=ws://localhost:%d/game", port, port)))
+		dbUrl := ""
+		if chieftainHandler != nil {
+			dbUrl = fmt.Sprintf("&dbUrl=http://localhost:%d%s", port, chieftainPath)
+		}
+		slog.Info("🔥 dev server running", slog.String("url", fmt.Sprintf("http://localhost:%d?wsUrl=ws://localhost:%d/game%s", port, port, dbUrl)))
 		mux.Handle("/", frontendHandler(cfg.FrontendDir))
 	} else {
 		// 'ping' endpoint for liveness probe

@@ -1,6 +1,8 @@
 package main
 
 import (
+	_ "embed"
+	"fmt"
 	"github.com/trichner/berryhunter/pkg/chieftain/db"
 	"log"
 	"log/slog"
@@ -18,6 +20,9 @@ import (
 	"github.com/trichner/berryhunter/pkg/chieftain/service"
 	"github.com/trichner/berryhunter/pkg/logging"
 )
+
+//go:embed conf.default.json
+var defaultConfig []byte
 
 func main() {
 	logging.SetupLogging()
@@ -52,8 +57,9 @@ func main() {
 	}
 
 	addr := config.ApiAddr
-	log.Printf("chieftain listening on %s", addr)
+	slog.Info("chieftain listening", slog.String("addr", addr))
 
+	// TODO make configurable
 	bundle := &server.CertBundle{
 		CACertFile:     "ca_cert.pem",
 		ServerCertFile: "server_cert.pem",
@@ -66,7 +72,7 @@ func main() {
 
 	// boot HTTP server
 	restAddr := config.RestAddr
-	log.Printf("rest api listening on %s/scoreboard", restAddr)
+	slog.Info("rest api listening", slog.String("url", fmt.Sprintf("%s/scoreboard", restAddr)))
 	wg.Go(func() error {
 		r := api.NewRouter(dataStore, scoreService)
 		return http.ListenAndServe(restAddr, r)
@@ -85,6 +91,15 @@ func loadConf() *cfg.Config {
 	if configFile == "" {
 		configFile = "./conf.json"
 	}
+
+	_, err := os.Stat(configFile)
+	if os.IsNotExist(err) {
+		err := os.WriteFile(configFile, defaultConfig, 0644)
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	config, err := cfg.ReadConfig(configFile)
 	if err != nil {
 		log.Panicf("Cannot read config '%s':%v", configFile, err)

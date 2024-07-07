@@ -23,15 +23,12 @@ func Config(conf *cfg.Config) Configuration {
 		g.PlayerConfig.FreezingStarveDamageTickFraction = conf.Game.Player.FreezingStarveDamageTickFraction
 		g.PlayerConfig.WalkingSpeedPerTick = conf.Game.Player.WalkingSpeedPerTick
 
-		if conf.Chieftain != nil {
+		if conf.Chieftain.Addr != "" {
 			ctn := &cfg.ChieftainConfig{}
 			ctn.Addr = conf.Chieftain.Addr
-			if conf.Chieftain.PubSub != nil {
-				ps := &cfg.PubSubConfig{}
-				ps.ProjectId = conf.Chieftain.PubSub.ProjectId
-				ps.TopicId = conf.Chieftain.PubSub.TopicId
-				ctn.PubSubConfig = ps
-			}
+			ctn.CaCertFile = conf.Chieftain.CaCertFile
+			ctn.ClientCertFile = conf.Chieftain.ClientCertFile
+			ctn.ClientKeyFile = conf.Chieftain.ClientKeyFile
 			g.ChieftainConfig = ctn
 		}
 

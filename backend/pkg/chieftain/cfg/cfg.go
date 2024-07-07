@@ -6,12 +6,15 @@ import (
 )
 
 type Config struct {
-	ApiAddr  string `json:"apiAddr"`
-	RestAddr string `json:"restAddr"`
-	DataDir  string `json:"dataDir"`
+	ApiTlsHost string `json:"apiTlsHost"`
+	ApiAddr    string `json:"apiAddr"`
+
+	RestTlsHost string `json:"restTlsHost"`
+	RestAddr    string `json:"restAddr"`
+
+	DataDir string `json:"dataDir"`
 }
 
-// reads the config from file
 func ReadConfig(filename string) (*Config, error) {
 	var err error
 	// read file

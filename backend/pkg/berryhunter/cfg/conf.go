@@ -7,19 +7,18 @@ import (
 
 type Server struct {
 	Port        int    `json:"port"`
-	Path        string `json:"path"`
 	TlsHost     string `json:"tlsHost"`
 	FrontendDir string `json:"frontendDir"`
 }
 
 type Config struct {
 	Server    Server `json:"server"`
-	Chieftain *struct {
-		Addr   *string `json:"addr"`
-		PubSub *struct {
-			ProjectId string `json:"projectId"`
-			TopicId   string `json:"topicId"`
-		} `json:"pubSub,omitempty"`
+	Chieftain struct {
+		Addr string `json:"addr"`
+
+		CaCertFile     string `json:"caCertFile"`
+		ClientCertFile string `json:"clientCertFile"`
+		ClientKeyFile  string `json:"clientKeyFile"`
 	} `json:"chieftain,omitempty"`
 	Game struct {
 		ColdFractionDayPerS   float32 `json:"coldFractionDayPerSecond"`

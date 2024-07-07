@@ -4,11 +4,22 @@ package client
 
 import (
 	"crypto/tls"
+	"crypto/x509"
+	"fmt"
 	"io"
 	"log"
+	"os"
 
 	"github.com/trichner/berryhunter/pkg/chieftain/framer"
 )
+
+type Config struct {
+	Addr string
+
+	CACertFile     string
+	ClientCertFile string
+	ClientKeyFile  string
+}
 
 type Client struct {
 	tx   chan *Scoreboard
@@ -21,14 +32,28 @@ type Conn interface {
 
 type Dialer func() (Conn, error)
 
-func Connect(addr string) (*Client, error) {
+func Connect(config *Config) (*Client, error) {
+
+	caPool := x509.NewCertPool()
+	ca, err := os.ReadFile(config.CACertFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load ca cert file: %w", err)
+	}
+
+	caPool.AppendCertsFromPEM(ca)
+
+	clientCert, err := tls.LoadX509KeyPair(config.ClientCertFile, config.ClientKeyFile)
+	if err != nil {
+		return nil, err
+	}
+
 	conf := &tls.Config{
-		// TODO(Thomas) for debugging...
-		InsecureSkipVerify: true,
+		Certificates: []tls.Certificate{clientCert},
+		RootCAs:      caPool,
 	}
 
 	d := func() (Conn, error) {
-		return tls.Dial("tcp", addr, conf)
+		return tls.Dial("tcp", config.Addr, conf)
 	}
 	return ConnectWithDialer(d)
 }

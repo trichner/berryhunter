@@ -18,7 +18,7 @@ import (
 
 // TestCert_Http generates mTLS certificates, boots an HTTP server and does a trivial HTTP request to it
 func TestCert_Http(t *testing.T) {
-	bundle, err := GenerateServerCertificate([]string{"dev.berryhunter.io"}, []string{"127.0.0.1"})
+	bundle, err := GenerateServerCertificate(t.TempDir(), []string{"dev.berryhunter.io"}, []string{"127.0.0.1"})
 	assert.NoError(t, err)
 
 	caPool := x509.NewCertPool()

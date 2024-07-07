@@ -39,13 +39,10 @@ func (g *GameConfig) LogValue() slog.Value {
 }
 
 type ChieftainConfig struct {
-	Addr         *string
-	PubSubConfig *PubSubConfig
-}
-
-type PubSubConfig struct {
-	ProjectId string
-	TopicId   string
+	Addr           string
+	CaCertFile     string
+	ClientCertFile string
+	ClientKeyFile  string
 }
 
 type PlayerConfig struct {

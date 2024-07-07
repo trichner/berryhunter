@@ -9,8 +9,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"log/slog"
+	"net"
 	"os"
 
 	"github.com/trichner/berryhunter/pkg/chieftain/dao"
@@ -27,6 +27,7 @@ type CertBundle struct {
 type Server struct {
 	store     dao.DataStore
 	playerDao dao.PlayerDao
+	listener  net.Listener
 }
 
 func NewServer(store dao.DataStore, playerDao dao.PlayerDao) (*Server, error) {
@@ -38,7 +39,14 @@ func NewServer(store dao.DataStore, playerDao dao.PlayerDao) (*Server, error) {
 
 type FrameHandler func(ctx context.Context, f framer.Framer) error
 
-func (srv *Server) ListenTls(laddr string, certs *CertBundle) error {
+func (s *Server) Close() error {
+	if s.listener != nil {
+		return s.listener.Close()
+	}
+	return nil
+}
+
+func (s *Server) ListenTls(laddr string, certs *CertBundle) error {
 	caPool := x509.NewCertPool()
 	caCert, err := os.ReadFile(certs.CACertFile)
 	if err != nil {
@@ -58,21 +66,20 @@ func (srv *Server) ListenTls(laddr string, certs *CertBundle) error {
 		ClientCAs:    caPool,
 		ClientAuth:   tls.RequireAndVerifyClientCert,
 	}
-	ln, err := tls.Listen("tcp", laddr, config)
+	s.listener, err = tls.Listen("tcp", laddr, config)
 	if err != nil {
 		return err
 	}
-	defer ln.Close()
 
 	for {
-		conn, err := ln.Accept()
+		conn, err := s.listener.Accept()
 		if err != nil {
-			log.Println(err)
+			slog.Error("failed to accept chieftain TLS connection", slog.Any("error", err))
 			continue
 		}
 		slog.Info("client connected", slog.String("remote", conn.RemoteAddr().String()))
 		go func() {
-			err := HandleConn(srv.store, srv.playerDao, conn)
+			err := HandleConn(s.store, s.playerDao, conn)
 			if errors.Is(err, io.EOF) {
 				slog.Info("client disconnected", slog.String("remote", conn.RemoteAddr().String()))
 			} else if err != nil {

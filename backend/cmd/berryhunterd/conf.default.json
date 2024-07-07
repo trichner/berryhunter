@@ -1,7 +1,6 @@
 {
   "server": {
     "port": 2000,
-    "path": "/game",
     "frontendDir": "../frontend/dist"
   },
   "chieftain": {},
