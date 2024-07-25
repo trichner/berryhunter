@@ -13,7 +13,7 @@ import * as Preloading from '../Preloading';
 import {EndScreenShownEvent, GamePlayingEvent, GameSetupEvent, StartScreenDomReadyEvent} from '../Events';
 import {GameState, IGame} from '../interfaces/IGame';
 import * as SocialMedia from '../userInterface/partials/SocialMedia';
-import {parseISO} from 'date-fns';
+ import {format, parseISO} from 'date-fns';
 
 let rootElement: HTMLElement;
 let leaderboardTables: Map<string, HTMLElement>;
@@ -215,9 +215,9 @@ function populateScoreboards(highScores) {
             let newRow = templateRow.cloneNode(true) as HTMLElement;
             newRow.querySelector('.rank').textContent = '#' + (i + 1);
             if (category == 'daily') {
-                newRow.querySelector('.date').textContent = highScore.date.format('HH:mm');
+                newRow.querySelector('.date').textContent = format(highScore.date, 'HH:mm');
             } else {
-                newRow.querySelector('.date').textContent = highScore.date.format('DD.MM.YYYY');
+                newRow.querySelector('.date').textContent = format(highScore.date, 'DD.MM.YYYY');
             }
             displayValueWithTitle(newRow.querySelector('.playerName'), highScore.playerName);
             displayValueWithTitle(
