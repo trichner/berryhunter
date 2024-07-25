@@ -217,7 +217,7 @@ function populateScoreboards(highScores) {
             if (category == 'daily') {
                 newRow.querySelector('.date').textContent = format(highScore.date, 'HH:mm');
             } else {
-                newRow.querySelector('.date').textContent = format(highScore.date, 'DD.MM.YYYY');
+                newRow.querySelector('.date').textContent = format(highScore.date, 'dd.MM.yyyy');
             }
             displayValueWithTitle(newRow.querySelector('.playerName'), highScore.playerName);
             displayValueWithTitle(
