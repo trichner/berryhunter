@@ -1,8 +1,9 @@
 package client
 
 import (
-	flatbuffers "github.com/google/flatbuffers/go"
 	"testing"
+
+	flatbuffers "github.com/google/flatbuffers/go"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/trichner/berryhunter/pkg/api/ChieftainApi"

@@ -9,6 +9,7 @@ WorkingDirectory=/opt/berryhunterd
 ExecStart=/opt/berryhunterd/berryhunterd -dev
 DynamicUser=yes
 CacheDirectory=cache
+StateDirectory=state
 # to bind port 443 & 80
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 

@@ -34,7 +34,6 @@ type Conn interface {
 type Dialer func() (Conn, error)
 
 func Connect(config *Config) (*Client, error) {
-
 	caPool := x509.NewCertPool()
 	ca, err := os.ReadFile(config.CACertFile)
 	if err != nil {

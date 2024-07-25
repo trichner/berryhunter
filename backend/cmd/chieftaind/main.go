@@ -3,13 +3,14 @@ package main
 import (
 	_ "embed"
 	"fmt"
-	"github.com/trichner/berryhunter/pkg/chieftain/db"
 	"log"
 	"log/slog"
 	"net/http"
 	"os"
 	"path"
 	"strings"
+
+	"github.com/trichner/berryhunter/pkg/chieftain/db"
 
 	"golang.org/x/sync/errgroup"
 
@@ -94,7 +95,7 @@ func loadConf() *cfg.Config {
 
 	_, err := os.Stat(configFile)
 	if os.IsNotExist(err) {
-		err := os.WriteFile(configFile, defaultConfig, 0644)
+		err := os.WriteFile(configFile, defaultConfig, 0o644)
 		if err != nil {
 			panic(err)
 		}

@@ -51,9 +51,9 @@ func main() {
 		config.Chieftain.Addr = addr
 		slog.Info("booting embedded chieftain", slog.String("server_addr", addr))
 
-		dir, err := determineCacheDir()
+		dir, err := determineStateDir()
 		if err != nil {
-			slog.Error("cannot determine cache directory for chieftain", slog.Any("error", err))
+			slog.Error("cannot determine state directory for chieftain", slog.Any("error", err))
 			panic(err)
 		}
 		chieftainServer, err := bootChieftain(dir, port)
@@ -191,6 +191,16 @@ func determineCacheDir() (string, error) {
 	cacheDir := os.Getenv("CACHE_DIRECTORY")
 	if cacheDir != "" {
 		return cacheDir, nil
+	}
+
+	return os.UserCacheDir()
+}
+
+func determineStateDir() (string, error) {
+	// explicit systemd state directory
+	stateDir := os.Getenv("STATE_DIRECTORY")
+	if stateDir != "" {
+		return stateDir, nil
 	}
 
 	return os.UserCacheDir()

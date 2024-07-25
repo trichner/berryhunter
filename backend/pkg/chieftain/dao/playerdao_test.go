@@ -3,9 +3,10 @@ package dao
 import (
 	"context"
 	"fmt"
-	"github.com/trichner/berryhunter/pkg/chieftain/db"
 	"testing"
 	"time"
+
+	"github.com/trichner/berryhunter/pkg/chieftain/db"
 
 	"github.com/alecthomas/assert/v2"
 )

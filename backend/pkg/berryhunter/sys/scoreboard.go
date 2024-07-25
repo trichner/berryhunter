@@ -4,12 +4,13 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	flatbuffers "github.com/google/flatbuffers/go"
-	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
-	"github.com/trichner/berryhunter/pkg/chieftain/client"
 	"io"
 	"log"
 	"time"
+
+	flatbuffers "github.com/google/flatbuffers/go"
+	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
+	"github.com/trichner/berryhunter/pkg/chieftain/client"
 
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/minions"
@@ -66,7 +67,6 @@ func (d *ScoreboardSystem) AddSpectator(e model.Spectator) {
 }
 
 func (d *ScoreboardSystem) Update(dt float32) {
-
 	// only send every 10s
 	if d.g.Ticks()%300 != 0 {
 		return

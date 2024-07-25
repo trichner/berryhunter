@@ -2,11 +2,12 @@ package server
 
 import (
 	"context"
-	"github.com/trichner/berryhunter/pkg/chieftain/db"
 	"io"
 	"net"
 	"testing"
 	"time"
+
+	"github.com/trichner/berryhunter/pkg/chieftain/db"
 
 	"github.com/alecthomas/assert/v2"
 	"github.com/trichner/berryhunter/pkg/chieftain/client"

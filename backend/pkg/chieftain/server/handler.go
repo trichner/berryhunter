@@ -3,11 +3,12 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/trichner/berryhunter/pkg/api/ChieftainApi"
-	"github.com/trichner/berryhunter/pkg/fbutil"
 	"log/slog"
 	"net"
 	"time"
+
+	"github.com/trichner/berryhunter/pkg/api/ChieftainApi"
+	"github.com/trichner/berryhunter/pkg/fbutil"
 
 	"github.com/trichner/berryhunter/pkg/chieftain/dao"
 	"github.com/trichner/berryhunter/pkg/chieftain/framer"

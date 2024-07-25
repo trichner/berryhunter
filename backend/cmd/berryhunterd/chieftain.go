@@ -2,6 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
+	"net/http"
+	"os"
+	"path"
+	"path/filepath"
+
 	"github.com/trichner/berryhunter/pkg/chieftain/api"
 	"github.com/trichner/berryhunter/pkg/chieftain/dao"
 	"github.com/trichner/berryhunter/pkg/chieftain/db"
@@ -9,11 +15,6 @@ import (
 	"github.com/trichner/berryhunter/pkg/chieftain/server/cert"
 	"github.com/trichner/berryhunter/pkg/chieftain/service"
 	"golang.org/x/sync/errgroup"
-	"log/slog"
-	"net/http"
-	"os"
-	"path"
-	"path/filepath"
 )
 
 type ChieftainServer struct {
@@ -38,7 +39,6 @@ func (c *ChieftainServer) Close() error {
 }
 
 func bootChieftain(dir string, port int) (*ChieftainServer, error) {
-
 	dataStore, err := db.New(path.Join(dir, "chieftain.db"))
 	if err != nil {
 		return nil, err
@@ -90,7 +90,6 @@ func bootChieftain(dir string, port int) (*ChieftainServer, error) {
 }
 
 func loadOrGenerateCertificates(dir string) (*cert.Bundle, error) {
-
 	const caCertFileName = "ca_cert.pem"
 	const caKeyFileName = "ca_key.pem"
 
