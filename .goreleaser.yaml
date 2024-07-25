@@ -15,8 +15,6 @@ before:
 
 builds:
   - binary: berryhunterd
-    env:
-      - CGO_ENABLED=0
     dir: ./backend
     main: ./cmd/berryhunterd
     goos:
