@@ -18,6 +18,7 @@ export function createStartScreenPanel(
         closeButton.classList.toggle('hidden', !isVisible);
         if (isVisible) {
             closeButton.style.left = rootElement.getBoundingClientRect().right + 'px';
+            closeButton.style.right = 'unset';
 
             if (backgroundContainer !== null) {
                 backgroundContainer.style.height = backgroundContainer.parentElement.scrollHeight + "px";
@@ -48,4 +49,3 @@ export function createStartScreenPanel(
         }
     });
 }
-
