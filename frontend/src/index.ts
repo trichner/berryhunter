@@ -19,6 +19,7 @@ import './ts/gameObjects/Resources';
 import './ts/gameSettings/GameSettingsUI';
 import './ts/groundTextures/GroundTexture';
 import './ts/groundTextures/_Panel';
+import './ts/input/testingDisplay/InputTestingDisplay';
 import './ts/items/Crafting';
 import './ts/items/Inventory';
 import './ts/items/InventoryShortcuts';

@@ -1,0 +1,56 @@
+#inputTestingDisplay {
+    position: absolute;
+    bottom: 8.4vh;
+    left: 50%;
+    transform: translateX(-50%);
+
+    > .left,
+    > .right {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        justify-content: center;
+
+        > .line-break {
+            flex-basis: 100%;
+        }
+    }
+
+    > .left {
+        width: calc(3 * 56px + 3 * 8px);
+        margin-right: 56px;
+    }
+
+    .keyDisplay {
+        width: 56px;
+        height: 56px;
+        line-height: 56px;
+        text-align: center;
+        background: white;
+        margin: 4px;
+
+        &::before {
+            content: attr(data-key);
+        }
+    }
+
+    .mouseButtonDisplay{
+        width: 34px;
+        height: 56px;
+        line-height: 56px;
+        text-align: center;
+        background: white;
+        margin: 4px;
+
+        &[data-mouse-button="left"],
+        &[data-mouse-button="middle"] {
+            border-top-left-radius: 30%;
+        }
+
+        &[data-mouse-button="right"],
+        &[data-mouse-button="middle"] {
+            border-top-right-radius: 30%;
+        }
+    }
+}
