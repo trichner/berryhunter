@@ -53,6 +53,18 @@ interface HighScoreDTO {
     updated: string;
 }
 
+interface HighScoresVO {
+    alltime?: HighScoreVO[];
+    monthly?: HighScoreVO[];
+    weekly?: HighScoreVO[];
+    daily?: HighScoreVO[];
+}
+interface HighScoreVO {
+    playerName: string;
+    score: number;
+    date: Date;
+}
+
 const htmlFile = require('./highScores.html');
 Preloading.renderPartial(htmlFile, onDomReady);
 
@@ -117,7 +129,11 @@ function open() {
     rootElement.classList.add('open');
     document.body.classList.add('leaderboardVisible');
 
-    loadScoreboard().then(populateScoreboards);
+    loadScoreboard().then((highScores) => {
+        // Also update the highscores so they match with the scoreboard
+        populateHighScores(highScores);
+        populateScoreboards(highScores);
+    });
 }
 
 function close(event: Event) {
@@ -158,14 +174,14 @@ function hide() {
     }
 }
 
-function loadHighScores() {
+function loadHighScores(): Promise<HighScoresVO> {
     return makeRequest({
         method: 'GET',
         url: Urls.database + '/highscores',
     }).then(mapScores);
 }
 
-export function populateHighScores(highScores) {
+function populateHighScores(highScores: HighScoresVO) {
     if (isUndefined(rootElement)) {
         // html is not yet loaded - ignore high scores
         return;
@@ -192,14 +208,14 @@ export function populateHighScores(highScores) {
     });
 }
 
-function loadScoreboard() {
+function loadScoreboard(): Promise<HighScoresVO> {
     return makeRequest({
         method: 'GET',
         url: Urls.database + '/scoreboard',
     }).then(mapScores);
 }
 
-function populateScoreboards(highScores) {
+function populateScoreboards(highScores: HighScoresVO) {
     categories.forEach((category) => {
         if (!highScores.hasOwnProperty(category)) {
             return;
@@ -239,11 +255,10 @@ function displayValueWithTitle(element: Element, value: string, title?: string) 
 }
 
 
-function mapScores(response: string) {
+function mapScores(response: string): HighScoresVO {
+    const highScores: HighScoresDTO = JSON.parse(response);
 
-    let highScores: HighScoresDTO = JSON.parse(response);
-
-    let mappedHighScores = {};
+    const mappedHighScores: HighScoresVO = {};
     categories.forEach((category) => {
         if (!highScores.hasOwnProperty(category)) {
             return;
