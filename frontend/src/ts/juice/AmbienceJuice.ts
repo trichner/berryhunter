@@ -5,11 +5,13 @@ import {registerPreload} from '../Preloading';
 
 OnDayTimeStartEvent.subscribe(() => {
     sound.play('rooster', {
+        volume: 0.5
     });
 });
 
 OnNightTimeStartEvent.subscribe(() => {
     sound.play('wolf', {
+        volume: 0.5
     });
 });
 
