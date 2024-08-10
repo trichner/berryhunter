@@ -34,6 +34,12 @@ export function random(min, max?) {
     }
 }
 
+export function randomFrom<T>(array: T[]): T {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+}
+
+
 export function randomInt(min, max?) {
     if (arguments.length == 1) {
         return Math.floor(random(min));

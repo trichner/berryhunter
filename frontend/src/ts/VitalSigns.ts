@@ -4,7 +4,7 @@ import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/BasicConfig';
 import {VitalSignBar} from "./userInterface/VitalSignBar";
 import {IGame} from "./interfaces/IGame";
-import {ISubscriptionToken, PreloadingStartedEvent, PrerenderEvent, VitalSignChangedEvent} from "./Events";
+import {ISubscriptionToken, PlayerStartedFreezingEvent, PreloadingStartedEvent, PrerenderEvent, VitalSignChangedEvent} from "./Events";
 
 let Game: IGame = null;
 
@@ -80,6 +80,7 @@ export class VitalSigns {
     setValue(valueIndex: string, value: number) {
         let previousValue = this[valueIndex];
         this[valueIndex] = value;
+        let change = value - previousValue;
         let relativeValue = value / VitalSigns.MAXIMUM_VALUES[valueIndex];
 
         // If the vital sign increased ...
@@ -102,9 +103,14 @@ export class VitalSigns {
             vitalSign: valueIndex,
             newValue: {
                 relative: relativeValue,
-                absolute: value
+                absolute: value,
+                change: change
             }
         });
+
+        if (valueIndex == VitalSign.bodyHeat && relativeValue <= 0 && previousValue > 0) {
+            PlayerStartedFreezingEvent.trigger();
+        }
     }
 
     onDamageTaken(skipFadeIn = false) {

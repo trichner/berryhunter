@@ -8,7 +8,7 @@ import {isDefined} from './Utils';
 import {BasicConfig as Constants} from '../config/BasicConfig';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 import {Layer, MiniMap} from "./MiniMap";
-import {PlayerCreatedEvent} from "./Events";
+import {PlayerCreatedEvent, PlayerDamagedEvent} from "./Events";
 
 export class Player {
     craftProgress;
@@ -65,9 +65,11 @@ export class Player {
         }
 
         if (entity.statusEffects.indexOf(StatusEffect.Damaged) !== -1) {
+            PlayerDamagedEvent.trigger(this);
             this.vitalSigns.onDamageTaken();
         } else if (entity.statusEffects.indexOf(StatusEffect.DamagedAmbient) !== -1) {
             this.vitalSigns.onDamageTaken(true);
+            PlayerDamagedEvent.trigger(this);
         }
 
         let newVitalSigns = {
