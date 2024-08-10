@@ -191,6 +191,7 @@ export const GamePlayingEvent: PayloadEvent<IGame> = new PayloadEvent<IGame>();
 export const PlayerCreatedEvent: PayloadEvent<Player> = new PayloadEvent<Player>();
 export const PlayerDamagedEvent: PayloadEvent<Player> = new PayloadEvent<Player>();
 export const PlayerStartedFreezingEvent: SimpleEvent = new SimpleEvent();
+export const PlayerCraftingStateChangedEvent: PayloadEvent<boolean> = new PayloadEvent<boolean>();
 export const BeforeDeathEvent: PayloadEvent<IGame> = new PayloadEvent<IGame>();
 export type screen = 'start' | 'end';
 export const GameJoinEvent: PayloadEvent<screen> = new PayloadEvent<screen>();

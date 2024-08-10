@@ -12,7 +12,7 @@ import {StatusEffect} from './StatusEffect';
 import {Animation} from '../Animation';
 import {Items} from '../items/Items';
 import {IGame} from '../interfaces/IGame';
-import {CharacterEquippedItemEvent, GameSetupEvent, ISubscriptionToken, PrerenderEvent} from '../Events';
+import {CharacterEquippedItemEvent, GameSetupEvent, ISubscriptionToken, PlayerCraftingStateChangedEvent, PrerenderEvent} from '../Events';
 import {ICharacterLike} from '../interfaces/ICharacter';
 import {createNameContainer} from '../CustomData';
 import {Container, Graphics, Text, Texture} from 'pixi.js';
@@ -336,6 +336,10 @@ export class Character extends GameObject implements ICharacterLike {
                     width: GraphicsConfig.character.craftingIndicator.lineWidth,
                     color: GraphicsConfig.character.craftingIndicator.lineColor,
                 });
+        }
+        else {
+            //TODO: this triggers all the time now, preventing audio loop from sticking when the window is not focused
+            PlayerCraftingStateChangedEvent.trigger(false);
         }
     }
 

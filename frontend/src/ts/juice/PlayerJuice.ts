@@ -1,4 +1,4 @@
-import { InventoryAddEvent, BeforeDeathEvent, PlaceablePlacedEvent, ControlsActionEvent, VitalSignChangedEvent, PlayerDamagedEvent, PlayerStartedFreezingEvent } from '../Events';
+import { InventoryAddEvent, BeforeDeathEvent, PlaceablePlacedEvent, ControlsActionEvent, VitalSignChangedEvent, PlayerDamagedEvent, PlayerStartedFreezingEvent, PlayerCraftingStateChangedEvent } from '../Events';
 import { random, randomFrom } from '../Utils';
 import { sound } from '@pixi/sound';
 import * as PIXI from 'pixi.js';
@@ -92,6 +92,22 @@ VitalSignChangedEvent.subscribe((payload) => {
     }
 });
 
+PlayerCraftingStateChangedEvent.subscribe((isCrafting) => {
+    const soundId = 'loopCrafting';
+    const soundToPlay = sound.find(soundId);
+
+    if (isCrafting) {
+        if (soundToPlay.isPlaying) return;
+        sound.play(soundId, {
+            volume: random(0.8, 0.9),
+            loop: true
+        });
+    }
+    else {
+        soundToPlay.stop();
+    }
+});
+
 const triggerMap = new TriggerIntervalMap();
 const hurt = ['hurt', 'hurt2', 'hurt3', 'hurt4', 'hurt5'];
 
@@ -106,6 +122,7 @@ PIXI.Assets.add({ alias: 'hurt4', src: require('../../sounds/413175__micahlg__ma
 PIXI.Assets.add({ alias: 'hurt5', src: require('../../sounds/413179__micahlg__male_hurt14.mp3') });
 PIXI.Assets.add({ alias: 'hungry', src: require('../../sounds/447911__breviceps__growling-stomach-stomach-rumbles.mp3') });
 PIXI.Assets.add({ alias: 'cold', src: require('../../sounds/685253__antonsoederberg__freeze-sound-effect-fx.mp3') });
+PIXI.Assets.add({ alias: 'loopCrafting', src: require('../../sounds/399585__wolffvisuals__workbench-tailoring.mp3') });
 
 // noinspection JSIgnoredPromiseFromCall
 registerPreload(PIXI.Assets.load('collect'));
@@ -119,4 +136,5 @@ registerPreload(PIXI.Assets.load('hurt4'));
 registerPreload(PIXI.Assets.load('hurt5'));
 registerPreload(PIXI.Assets.load('hungry'));
 registerPreload(PIXI.Assets.load('cold'));
+registerPreload(PIXI.Assets.load('loopCrafting'));
 

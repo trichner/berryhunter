@@ -8,7 +8,7 @@ import {isDefined} from './Utils';
 import {BasicConfig as Constants} from '../config/BasicConfig';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 import {Layer, MiniMap} from "./MiniMap";
-import {PlayerCreatedEvent, PlayerDamagedEvent} from "./Events";
+import {PlayerCraftingStateChangedEvent, PlayerCreatedEvent, PlayerDamagedEvent} from "./Events";
 
 export class Player {
     craftProgress;
@@ -57,6 +57,7 @@ export class Player {
         };
         this.craftProgress.remainingTicks = this.craftProgress.requiredTicks;
         this.character.craftingIndicator.visible = true;
+        PlayerCraftingStateChangedEvent.trigger(true);
     }
 
     updateFromBackend(entity) {
