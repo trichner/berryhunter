@@ -56,7 +56,7 @@ ControlsActionEvent.subscribe((payload) => {
 PlayerDamagedEvent.subscribe((payload) => {
     const soundId = 'hurt';
     const delayInterval = 5000;
-    if (triggerMap.trigger(soundId, delayInterval)){
+    if (triggerMap.trigger(soundId, delayInterval)) {
         const soundId2 = randomFrom(hurt);
         sound.play(soundId2, {
             speed: random(0.8, 0.9),
@@ -65,10 +65,10 @@ PlayerDamagedEvent.subscribe((payload) => {
     }
 });
 
-PlayerStartedFreezingEvent.subscribe( () => {
+PlayerStartedFreezingEvent.subscribe(() => {
     const soundId = 'cold';
     const delayInterval = 3000;
-    if (triggerMap.trigger(soundId, delayInterval)){
+    if (triggerMap.trigger(soundId, delayInterval)) {
         sound.play(soundId, {
             volume: random(0.8, 0.9),
         });
@@ -78,10 +78,10 @@ PlayerStartedFreezingEvent.subscribe( () => {
 VitalSignChangedEvent.subscribe((payload) => {
     switch (payload.vitalSign) {
         case 'satiety':
-            if (payload.newValue.relative <= 0){
+            if (payload.newValue.relative <= 0) {
                 const soundId = 'hungry';
                 const delayInterval = 5000;
-                if (triggerMap.trigger(soundId, delayInterval)){
+                if (triggerMap.trigger(soundId, delayInterval)) {
                     sound.play(soundId, {
                         speed: random(0.9, 1),
                         volume: random(0.8, 1),
@@ -94,7 +94,7 @@ VitalSignChangedEvent.subscribe((payload) => {
 
 const triggerMap = new TriggerIntervalMap();
 const hurt = ['hurt', 'hurt2', 'hurt3', 'hurt4', 'hurt5'];
-    
+
 PIXI.Assets.add({ alias: 'collect', src: require('../../sounds/245645__unfa__cartoon-pop-clean.mp3') });
 PIXI.Assets.add({ alias: 'death', src: require('../../sounds/416838__tonsil5__grunt2-death-pain.mp3') });
 PIXI.Assets.add({ alias: 'place-heavy', src: require('../../sounds/443629__checholio__28-clavando-estaca.mp3') });
