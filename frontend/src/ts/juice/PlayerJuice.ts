@@ -4,6 +4,7 @@ import {sound} from '@pixi/sound';
 import * as PIXI from 'pixi.js';
 import {registerPreload} from '../Preloading';
 import {BerryhunterApi} from "../backend/BerryhunterApi";
+import { ItemType } from '../items/ItemType';
 
 BeforeDeathEvent.subscribe((payload) => {
         sound.play('death', {
@@ -17,10 +18,17 @@ InventoryAddEvent.subscribe((payload) => {
     const t = (value - 1) / (10 - 1);
     const volumeModifier = 0.5 + t * (1.5 - 0.5);
 
-    sound.play('collect', {
-        speed: random(0.9, 1.11),
-        volume: random(0.7 * volumeModifier, 1 * volumeModifier),
-    });
+    switch(payload.itemType){
+        case 'RESOURCE':
+            break
+        default:
+            if (payload.itemName == 'Flower') break;
+            sound.play('collect', {
+                speed: random(0.9, 1.11),
+                volume: random(0.7 * volumeModifier, 1 * volumeModifier),
+            });
+            break;
+    }
 });
 
 PlaceablePlacedEvent.subscribe((payload) => {

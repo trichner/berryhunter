@@ -7,7 +7,8 @@ import {Vector} from "./Vector";
 import {integer, radians} from "./interfaces/Types";
 import {InputAction} from "./backend/messages/outgoing/InputMessage";
 import {EquipmentSlot} from "./items/Equipment";
-import { Placeable } from "./gameObjects/Placeable";
+import {Placeable} from "./gameObjects/Placeable";
+import {ItemType} from '../ts/items/ItemType';
 
 const warnedEvents = [];
 
@@ -242,6 +243,7 @@ export interface CharacterEquippedItemMsg{
 export const CharacterEquippedItemEvent: PayloadEvent<CharacterEquippedItemMsg> = new PayloadEvent<CharacterEquippedItemMsg>();
 export interface InventoryChangeMsg {
     itemName: string,
+    itemType: string,
     change: integer,
     newCount: integer,
 }

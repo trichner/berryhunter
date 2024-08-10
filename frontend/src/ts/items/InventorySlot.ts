@@ -153,13 +153,13 @@ export class InventorySlot {
             let change = count - this.count;
             if (this.count < count) {
                 this.addBounceEffect();
-                InventoryAddEvent.trigger({itemName: this.item.name, change: change, newCount: count})
+                InventoryAddEvent.trigger({itemName: this.item.name, itemType: this.item.type, change: change, newCount: count})
             } else {
-                InventoryRemoveEvent.trigger({itemName: this.item.name, change: change, newCount: count})
+                InventoryRemoveEvent.trigger({itemName: this.item.name, itemType: this.item.type, change: change, newCount: count})
             }
             this.count = count;
             this.clickableIcon.setCount(count);
-            InventorySlotChangedEvent.trigger({itemName: this.item.name, change: change, newCount: count})
+            InventorySlotChangedEvent.trigger({itemName: this.item.name, itemType: this.item.type,change: change, newCount: count})
         }
     }
 
