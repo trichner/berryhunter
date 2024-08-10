@@ -39,7 +39,6 @@ export function randomFrom<T>(array: T[]): T {
     return array[randomIndex];
 }
 
-
 export function randomInt(min, max?) {
     if (arguments.length == 1) {
         return Math.floor(random(min));
