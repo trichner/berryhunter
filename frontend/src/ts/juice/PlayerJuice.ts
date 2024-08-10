@@ -1,16 +1,15 @@
-import {InventoryAddEvent, BeforeDeathEvent, PlaceablePlacedEvent, ControlsActionEvent} from '../Events';
-import {random} from '../Utils';
-import {sound} from '@pixi/sound';
+import { InventoryAddEvent, BeforeDeathEvent, PlaceablePlacedEvent, ControlsActionEvent } from '../Events';
+import { random } from '../Utils';
+import { sound } from '@pixi/sound';
 import * as PIXI from 'pixi.js';
-import {registerPreload} from '../Preloading';
-import {BerryhunterApi} from "../backend/BerryhunterApi";
-import { ItemType } from '../items/ItemType';
+import { registerPreload } from '../Preloading';
+import { BerryhunterApi } from "../backend/BerryhunterApi";
 
 BeforeDeathEvent.subscribe((payload) => {
-        sound.play('death', {
-            speed: random(0.9, 1.11),
-            volume: random(0.7, 1),
-        });
+    sound.play('death', {
+        speed: random(0.9, 1.11),
+        volume: random(0.7, 1),
+    });
 });
 
 InventoryAddEvent.subscribe((payload) => {
@@ -18,7 +17,7 @@ InventoryAddEvent.subscribe((payload) => {
     const t = (value - 1) / (10 - 1);
     const volumeModifier = 0.5 + t * (1.5 - 0.5);
 
-    switch(payload.itemType){
+    switch (payload.itemType) {
         case 'RESOURCE':
             break
         default:
@@ -32,8 +31,7 @@ InventoryAddEvent.subscribe((payload) => {
 });
 
 PlaceablePlacedEvent.subscribe((payload) => {
-    switch(payload.item)
-    {
+    switch (payload.item) {
         default:
             sound.play('place-heavy', {
                 speed: random(0.9, 1.11),
@@ -54,10 +52,10 @@ ControlsActionEvent.subscribe((payload) => {
     }
 });
 
-PIXI.Assets.add({alias: 'collect', src: require('../../sounds/245645__unfa__cartoon-pop-clean.mp3')});
-PIXI.Assets.add({alias: 'death', src: require('../../sounds/416838__tonsil5__grunt2-death-pain.mp3')});
-PIXI.Assets.add({alias: 'place-heavy', src: require('../../sounds/443629__checholio__28-clavando-estaca.mp3')});
-PIXI.Assets.add({alias: 'eat', src: require('../../sounds/548367__borgory__chewing-crunch.mp3')});
+PIXI.Assets.add({ alias: 'collect', src: require('../../sounds/245645__unfa__cartoon-pop-clean.mp3') });
+PIXI.Assets.add({ alias: 'death', src: require('../../sounds/416838__tonsil5__grunt2-death-pain.mp3') });
+PIXI.Assets.add({ alias: 'place-heavy', src: require('../../sounds/443629__checholio__28-clavando-estaca.mp3') });
+PIXI.Assets.add({ alias: 'eat', src: require('../../sounds/548367__borgory__chewing-crunch.mp3') });
 
 // noinspection JSIgnoredPromiseFromCall
 registerPreload(PIXI.Assets.load('collect'));
