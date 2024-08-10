@@ -24,6 +24,8 @@ export class StatusEffect implements StatusEffectDefinition {
     startAlpha: number;
     endAlpha: number;
     shape: Container;
+    originalScaleX: number;
+    originalScaleY: number;
 
     private constructor(
         definition: StatusEffectDefinition,
@@ -37,6 +39,8 @@ export class StatusEffect implements StatusEffectDefinition {
         this.id = definition.id;
         this.priority = definition.priority;
         this.shape = gameObjectShape;
+        this.originalScaleX = this.shape.scale.x;
+        this.originalScaleY = this.shape.scale.y;
 
         this.colorMatrix = new ColorMatrixFilter();
         flood(this.colorMatrix, red, green, blue, 1);
@@ -77,16 +81,15 @@ export class StatusEffect implements StatusEffectDefinition {
         return statusEffects.sort(function (a: StatusEffectDefinition, b: StatusEffectDefinition) {
             return a.priority - b.priority;
         });
-    };
+    }
 
     show() {
         if (this.showing) {
-            // Nothing to do, Effect is already showing
+            this.playFromBeginning();
             return;
         }
 
         this.showing = true;
-
         this.colorMatrix.enabled = true;
         this.colorMatrix.alpha = this.startAlpha;
 
@@ -104,15 +107,17 @@ export class StatusEffect implements StatusEffectDefinition {
             },
         ) as EaseDisplayObject;
 
-        if (this.id === StatusEffect.Damaged.id){
-            //Squeeze scale. Possible combine with "Animation", but atm reverse and on/once does not seem to work?
-            //animation.add(this.shape, { scaleX: 1.2, scaleY: 0.8 }, { reverse: true, removeExisting: true, duration: 200, ease: 'easeOutElastic' });
+        if (this.id === StatusEffect.Damaged.id) {
+            let ease = new Ease({});
 
-            let ease = new Ease({ duration: 140, ease: 'easeOutElastic' }); 
+            // Generate random scale factors
+            const randomScaleX = this.originalScaleX * (1.1 + Math.random() * 0.2); // Between 1.1x and 1.3x
+            const randomScaleY = this.originalScaleY * (0.7 + Math.random() * 0.2); // Between 0.7x and 0.9x
 
-            ease.add(this.shape.scale, { x: 1.2, y: 0.8 }, { duration: 60, ease: 'easeOutElastic' });
+            ease.add(this.shape.scale, { x: randomScaleX, y: randomScaleY }, { duration: 60, ease: 'easeOutElastic' });
+
             ease.once('complete', () => {
-                ease.add(this.shape.scale, { x: 1, y: 1 }, { duration: 80, ease: 'easeInBounce' });
+                ease.add(this.shape.scale, { x: this.originalScaleX, y: this.originalScaleY }, { duration: 80, ease: 'easeInBounce' });
             });
         }
 
@@ -130,12 +135,30 @@ export class StatusEffect implements StatusEffectDefinition {
         });
     }
 
+    reset() {
+        if (this.showing) {
+            this.showing = false;
+            this.colorMatrix.alpha = this.startAlpha;
+            this.shape.scale.set(1, 1);
+            this.colorMatrix.enabled = false;
+        }
+    }
+
+    playFromBeginning() {
+        if (this.showing) {
+            this.reset(); // Reset the current animation and properties
+
+            // Restart the animation
+            this.show();
+        }
+    }
+
     hide() {
         this.showing = false;
     }
 
     forceHide() {
-        this.showing = false;
+        this.hide();
         this.colorMatrix.enabled = false;
     }
 }
