@@ -78,22 +78,20 @@ export class StatusEffect implements StatusEffectDefinition {
 
         this.easeEffects = easeEffects;
 
-        if (this.soundData && this.soundData.soundId)
+        if (soundData && typeof soundData.soundId === 'string') {
             this.soundData = soundData;
+            console.log( this.soundData.soundId);
+        }
     }
 
-    static forDamaged(gameObjectShape: Container, soundId? : string) {
+    static forDamaged(gameObjectShape: Container, soundData?: SoundData) {
         // #BF153A old Health Bar dark red?
         return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
             { red: 191, green: 21, blue: 58, startAlpha: 0.5, endAlpha: 0.1 },
-            [ { type: 'scale', from: 1.1, to: 0.7 } ],
-            { soundId: soundId, options: {
-                speed: random(0.8, 0.9),
-                volume: random(0.8, 0.9),
-            } });
+            [{ type: 'scale', from: 1.1, to: 0.7 }], soundData);
     }
 
-    static forDamagedOverTime(gameObjectShape: Container) {
+    static forDamagedOverTime(gameObjectShape: Container, soundData?: SoundData) {
         // #BF153A old Health Bar dark red?
         return new StatusEffect(StatusEffect.DamagedAmbient, gameObjectShape, {
             red: 191,
@@ -101,7 +99,9 @@ export class StatusEffect implements StatusEffectDefinition {
             blue: 58,
             startAlpha: 0.8,
             endAlpha: 0.2
-        });
+        },
+            null,
+            soundData);
     }
 
     static forFreezing(gameObjectShape: Container) {
@@ -207,10 +207,11 @@ export class StatusEffect implements StatusEffectDefinition {
             });
         }
 
-        if (this.soundData){
+        if (this.soundData) {
             const playRoll = this.soundData.chanceToPlay ? Math.random() <= this.soundData.chanceToPlay : true;
-            if (playRoll)
+            if (playRoll) {
                 sound.play(this.soundData.soundId, this.soundData.options);
+            }
         }
     }
 

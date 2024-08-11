@@ -1,6 +1,6 @@
 import {GameObject} from './_GameObject';
 import * as Preloading from '../Preloading';
-import {isUndefined, randomInt} from '../Utils';
+import {isUndefined, random, randomInt} from '../Utils';
 import {GraphicsConfig} from '../../config/Graphics';
 import {StatusEffect} from './StatusEffect';
 import {IGame} from '../interfaces/IGame';
@@ -40,7 +40,7 @@ export class Mob extends GameObject {
         super.setRotation(rotation + Math.PI / 2);
     }
 
-    createStatusEffects() {
+    protected override createStatusEffects() {
         return {
             Damaged: StatusEffect.forDamaged(this.shape),
             DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
@@ -55,6 +55,21 @@ export class Dodo extends Mob {
         super(id, Game.layers.mobs.dodo, x, y,
             randomInt(minSize('dodo'), maxSize('dodo')),
             Dodo.svg);
+    }
+
+    protected override createStatusEffects() {
+        return {
+            Damaged: StatusEffect.forDamaged(this.shape, 
+                {
+                    soundId: 'dodoHit',
+                    options: {
+                        volume: random(0.4, 0.5),
+                        speed: random(1, 1.1)
+                    },
+                    chanceToPlay: 0.3
+                }),
+            DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
+        };
     }
 }
 

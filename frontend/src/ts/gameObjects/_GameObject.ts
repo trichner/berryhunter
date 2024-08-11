@@ -63,7 +63,7 @@ export class GameObject {
         }
     }
 
-    createStatusEffects() {
+    protected createStatusEffects() {
         // Default NOP
         return {};
     }
