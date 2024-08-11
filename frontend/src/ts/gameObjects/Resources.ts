@@ -7,6 +7,7 @@ import {GraphicsConfig} from '../../config/Graphics';
 import {IGame} from "../interfaces/IGame";
 import {GameSetupEvent, ResourceStockChangedEvent} from '../Events';
 import {alea as SeedRandom} from "seedrandom";
+import { StatusEffect, StatusEffectDefinition } from './StatusEffect';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -56,6 +57,22 @@ export class Resource extends GameObject {
         });
         let scale = newStock / this.capacity;
         this.shape.scale.set(this.baseScale * scale);
+    }
+
+    createStatusEffects() {
+        return {
+            Yielded: StatusEffect.forYielded(this.shape)
+        };
+    }
+
+    protected logStatusChange(newStatusEffects: StatusEffectDefinition[]): void {
+        if (!Array.isArray(newStatusEffects) || newStatusEffects.length === 0) {
+            console.log("nothing");
+        } else {
+            newStatusEffects.forEach((effect: StatusEffectDefinition) => {
+                console.log(effect.id);
+            });
+        }
     }
 }
 
