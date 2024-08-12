@@ -1,9 +1,14 @@
-import {ResourceStockChangedEvent} from '../Events';
+import {GameSetupEvent, ResourceStockChangedEvent} from '../Events';
 import * as Resources from '../gameObjects/Resources';
 import {isUndefined, random} from '../Utils';
 import {sound} from '@pixi/sound';
 import * as PIXI from 'pixi.js';
 import {registerPreload} from '../Preloading';
+import {Emitter, upgradeConfig} from '@pixi/particle-emitter';
+import * as Preloading from '../Preloading';
+import {GraphicsConfig} from '../../config/Graphics';
+import { Container } from '@pixi/display';
+
 
 ResourceStockChangedEvent.subscribe((payload) => {
     if (isUndefined(payload.oldStock)) {
@@ -23,6 +28,7 @@ ResourceStockChangedEvent.subscribe((payload) => {
                 speed: random(0.9, 1.11),
                 volume: random(0.8, 1.25),
             });
+
             break;
         case Resources.BerryBush.name:
         case Resources.Flower.name:

@@ -8,6 +8,9 @@ import {IGame} from "../interfaces/IGame";
 import {GameSetupEvent, ResourceStockChangedEvent} from '../Events';
 import {alea as SeedRandom} from "seedrandom";
 import { StatusEffect, StatusEffectDefinition } from './StatusEffect';
+import {Emitter, upgradeConfig} from '@pixi/particle-emitter';
+import { Container as DContainter } from '@pixi/display';
+
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -76,13 +79,24 @@ export class Resource extends GameObject {
     }
 }
 
+const particleAssets = {
+    leave: {
+        svg: null as Texture,
+    }
+};
+Preloading.registerGameObjectSVG(particleAssets.leave, GraphicsConfig.resources.tree.leaveParticleFile, 5);
+
 export class Tree extends Resource {
     static resourceSpot: { svg: Texture } = {svg: undefined};
     resourceSpotTexture: Sprite;
+    private static emitter: Emitter = null;
 
     constructor(id: number, x: number, y: number, size: number, svg: Texture) {
         super(id, Game.layers.resources.trees, x, y, size * 1.8 + GraphicsConfig.character.size, 0, svg);
 
+        if (Tree.emitter === null) {
+            Tree.emitter = new Emitter(Game.layers.resources.trees as unknown as DContainter, upgradeConfig(require('./tree-particles.json'), [particleAssets.leave.svg]));
+        }
         this.resourceSpotTexture = createInjectedSVG(Tree.resourceSpot.svg, x, y, this.size * 0.7, randomRotation());
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
     }
@@ -97,6 +111,12 @@ export class Tree extends Resource {
     hide() {
         this.resourceSpotTexture.parent.removeChild(this.resourceSpotTexture);
         super.hide();
+    }
+
+    protected onStockChange(newStock: number, oldStock: number) {
+        super.onStockChange(newStock, oldStock);
+        Tree.emitter.updateOwnerPos(this.getX(), this.getY());
+        Tree.emitter.emitNow();
     }
 }
 

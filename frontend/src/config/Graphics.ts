@@ -89,6 +89,8 @@ export const GraphicsConfig = {
 
             roundTreeFile: require('../img/roundTree.svg'),
             deciduousTreeFile: require('../img/deciduousTree.svg'),
+
+            leaveParticleFile: require('../img/leave.svg'),
         },
 
         mineral: {
