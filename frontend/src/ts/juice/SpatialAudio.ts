@@ -9,7 +9,6 @@ export class SpatialAudio {
     logging: boolean = false;
 
     constructor() {
-        //TODO: This should be the camera center world position
         CameraUpdatedEvent.subscribe((position) => {
             this.listenerPosition = position;
         })
@@ -36,10 +35,6 @@ export class SpatialAudio {
 
         // Volume
         let volume = 1 - Math.min(distance / maxDistance, 1);
-        //TODO allow volume PlayOption to apply here
-        //let volumeFactor = playOptions?.volume ?? 1;
-        //volumeFactor = Math.max(0.1, Math.min(volumeFactor, 2));
-        //volume *= volumeFactor;
         volume = Math.max(0.1, Math.min(volume, 1));
         if (!isFinite(volume)) {
             volume = 1;
@@ -55,7 +50,6 @@ export class SpatialAudio {
         }
 
         if (this.logging) {
-            
             console.log('pos - ' + this.listenerPosition);
             console.log('sourcepos - ' + sourcePosition);
             console.log('dist - ' + distance);
@@ -65,10 +59,12 @@ export class SpatialAudio {
 
         // Play sound
         const stereoFilter = new filters.StereoFilter(pan);
-        soundInstance.play({
-            volume: volume,
+        playOptions = {
+            ...playOptions,
+            volume: (playOptions?.volume ?? 1) * volume,
             filters: [stereoFilter]
-        });
+        };
+        soundInstance.play(playOptions);
     }
 
     setListenerPosition(x: number, y: number) {
