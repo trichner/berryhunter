@@ -201,6 +201,9 @@ export class GameObject {
         this.activeStatusEffect = this.statusEffects[statusEffectid];
         this.activeStatusEffect.show();
     }
+
+    public onMove(){
+    }
 }
 
 
@@ -223,6 +226,7 @@ function moveInterpolatedObjects() {
                         gameObject.desiredPosition,
                         elapsedTimePortion));
             }
+            gameObject.onMove();
         });
 }
 

@@ -12,7 +12,7 @@ import {StatusEffect} from './StatusEffect';
 import {Animation} from '../Animation';
 import {Items} from '../items/Items';
 import {IGame} from '../interfaces/IGame';
-import {CharacterEquippedItemEvent, GameSetupEvent, ISubscriptionToken, PlayerCraftingStateChangedEvent, PrerenderEvent} from '../Events';
+import {CharacterEquippedItemEvent, CharacterMoved, GameSetupEvent, ISubscriptionToken, PlayerCraftingStateChangedEvent, PlayerMoved, PrerenderEvent} from '../Events';
 import {ICharacterLike} from '../interfaces/ICharacter';
 import {createNameContainer} from '../CustomData';
 import {Container, Graphics, Text, Texture} from 'pixi.js';
@@ -439,6 +439,15 @@ export class Character extends GameObject implements ICharacterLike {
     remove() {
         this.hide();
         this.prerenderSubToken.unsubscribe();
+    }
+
+    override onMove(): void {
+        if (this.isPlayerCharacter){
+            PlayerMoved.trigger(this.getPosition());
+        }
+        else{
+            CharacterMoved.trigger(this.getPosition());
+        }
     }
 }
 

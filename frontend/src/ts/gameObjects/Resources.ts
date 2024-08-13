@@ -54,6 +54,7 @@ export class Resource extends GameObject {
             entityType: this.constructor.name,
             newStock: newStock,
             oldStock: oldStock,
+            position: this.getPosition()
         });
         let scale = newStock / this.capacity;
         this.shape.scale.set(this.baseScale * scale);

@@ -1,10 +1,11 @@
-import { InventoryAddEvent, BeforeDeathEvent, PlaceablePlacedEvent, ControlsActionEvent, VitalSignChangedEvent, PlayerDamagedEvent, PlayerStartedFreezingEvent, PlayerCraftingStateChangedEvent } from '../Events';
+import { InventoryAddEvent, BeforeDeathEvent, PlaceablePlacedEvent, ControlsActionEvent, VitalSignChangedEvent, PlayerDamagedEvent, PlayerStartedFreezingEvent, PlayerCraftingStateChangedEvent, PlayerMoved, CharacterMoved } from '../Events';
 import { random, randomFrom } from '../Utils';
 import { sound } from '@pixi/sound';
 import * as PIXI from 'pixi.js';
 import { registerPreload } from '../Preloading';
 import { BerryhunterApi } from "../backend/BerryhunterApi";
 import { TriggerIntervalMap } from './TriggerIntervalMap';
+import { spatialAudio } from './SpatialAudio';
 
 BeforeDeathEvent.subscribe((payload) => {
     sound.play('death', {
@@ -34,7 +35,7 @@ InventoryAddEvent.subscribe((payload) => {
 PlaceablePlacedEvent.subscribe((payload) => {
     switch (payload.item) {
         default:
-            sound.play('place-heavy', {
+            spatialAudio.play('place-heavy', payload.getPosition(), {
                 speed: random(0.9, 1.11),
                 volume: random(0.8, 1),
             });
@@ -75,6 +76,24 @@ PlayerStartedFreezingEvent.subscribe(() => {
     }
 });
 
+PlayerMoved.subscribe((position) => {
+    const soundId = 'step';
+    const delayInterval = 400;
+    if (triggerMap.trigger(soundId, delayInterval)) {
+        const soundId2 = randomFrom(steps);
+        spatialAudio.play(soundId2, position, { volume: 0.2 });
+    }
+});
+
+CharacterMoved.subscribe((position) => {
+    const soundId = 'step';
+    const delayInterval = 400;
+    if (triggerMap.trigger(soundId, delayInterval)) {
+        const soundId2 = randomFrom(steps);
+        spatialAudio.play(soundId2, position, { volume: 0.2 });
+    }
+});
+
 VitalSignChangedEvent.subscribe((payload) => {
     switch (payload.vitalSign) {
         case 'satiety':
@@ -110,6 +129,7 @@ PlayerCraftingStateChangedEvent.subscribe((isCrafting) => {
 
 const triggerMap = new TriggerIntervalMap();
 const hurt = ['hurt', 'hurt2', 'hurt3', 'hurt4', 'hurt5'];
+const steps = ['step', 'step2', 'step3'];
 
 PIXI.Assets.add({ alias: 'collect', src: require('../../sounds/245645__unfa__cartoon-pop-clean.mp3') });
 PIXI.Assets.add({ alias: 'death', src: require('../../sounds/416838__tonsil5__grunt2-death-pain.mp3') });
@@ -123,6 +143,9 @@ PIXI.Assets.add({ alias: 'hurt5', src: require('../../sounds/413179__micahlg__ma
 PIXI.Assets.add({ alias: 'hungry', src: require('../../sounds/447911__breviceps__growling-stomach-stomach-rumbles.mp3') });
 PIXI.Assets.add({ alias: 'cold', src: require('../../sounds/685253__antonsoederberg__freeze-sound-effect-fx.mp3') });
 PIXI.Assets.add({ alias: 'loopCrafting', src: require('../../sounds/399585__wolffvisuals__workbench-tailoring.mp3') });
+PIXI.Assets.add({ alias: 'step', src: require('../../sounds/750798__simonjeffery13__footsteps-on-road.mp3') });
+PIXI.Assets.add({ alias: 'step2', src: require('../../sounds/750798__simonjeffery13__footsteps-on-road2.mp3') });
+PIXI.Assets.add({ alias: 'step3', src: require('../../sounds/750798__simonjeffery13__footsteps-on-road3.mp3') });
 
 // noinspection JSIgnoredPromiseFromCall
 registerPreload(PIXI.Assets.load('collect'));
@@ -136,5 +159,8 @@ registerPreload(PIXI.Assets.load('hurt4'));
 registerPreload(PIXI.Assets.load('hurt5'));
 registerPreload(PIXI.Assets.load('hungry'));
 registerPreload(PIXI.Assets.load('cold'));
+registerPreload(PIXI.Assets.load('step'));
+registerPreload(PIXI.Assets.load('step2'));
+registerPreload(PIXI.Assets.load('step3'));
 registerPreload(PIXI.Assets.load('loopCrafting'));
 

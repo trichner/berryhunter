@@ -4,6 +4,7 @@ import {isUndefined, random} from '../Utils';
 import {sound} from '@pixi/sound';
 import * as PIXI from 'pixi.js';
 import {registerPreload} from '../Preloading';
+import { spatialAudio } from './SpatialAudio';
 
 ResourceStockChangedEvent.subscribe((payload) => {
     if (isUndefined(payload.oldStock)) {
@@ -19,7 +20,7 @@ ResourceStockChangedEvent.subscribe((payload) => {
     switch (payload.entityType) {
         case Resources.MarioTree.name:
         case Resources.RoundTree.name:
-            sound.play('tree-chop', {
+            spatialAudio.play('tree-chop', payload.position, {
                 speed: random(0.9, 1.11),
                 volume: random(0.8, 1.25),
             });

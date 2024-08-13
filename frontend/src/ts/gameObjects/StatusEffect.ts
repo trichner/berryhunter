@@ -5,6 +5,8 @@ import { flood } from '../ColorMatrixFilterExtensions';
 import { PlayOptions, sound } from '@pixi/sound';
 import { random } from '../Utils';
 import { SoundData } from '../audio/SoundData';
+import { spatialAudio } from '../juice/SpatialAudio';
+import { Vector } from '../Vector';
 
 export interface StatusEffectDefinition {
     id: string;
@@ -80,7 +82,6 @@ export class StatusEffect implements StatusEffectDefinition {
 
         if (soundData && typeof soundData.soundId === 'string') {
             this.soundData = soundData;
-            console.log( this.soundData.soundId);
         }
     }
 
@@ -210,7 +211,7 @@ export class StatusEffect implements StatusEffectDefinition {
         if (this.soundData) {
             const playRoll = this.soundData.chanceToPlay ? Math.random() <= this.soundData.chanceToPlay : true;
             if (playRoll) {
-                sound.play(this.soundData.soundId, this.soundData.options);
+                spatialAudio.play(this.soundData.soundId, Vector.clone(this.shape.position), this.soundData.options);
             }
         }
     }

@@ -84,11 +84,23 @@ export class Camera {
         position.add(new Vector(Game.centerX, Game.centerY));
         Game.cameraGroup.position.copyFrom(position);
 
-        CameraUpdatedEvent.trigger(position);
+        CameraUpdatedEvent.trigger(this.getCameraWorldCenter());
     }
 
     destroy() {
         this.prerenderSubToken.unsubscribe();
+    }
+
+    getCameraWorldCenter(): Vector {
+        let cornersWorldPosition = Corners.map(corner => {
+            return new Vector(corner.x, corner.y).add(this.position);
+        });
+        let center = new Vector(0, 0);
+        cornersWorldPosition.forEach(corner => {
+            center.add(corner);
+        });
+        center.divideScalar(Corners.length);
+        return center;
     }
 }
 

@@ -191,6 +191,8 @@ export const GamePlayingEvent: PayloadEvent<IGame> = new PayloadEvent<IGame>();
 export const PlayerCreatedEvent: PayloadEvent<Player> = new PayloadEvent<Player>();
 export const PlayerDamagedEvent: PayloadEvent<Player> = new PayloadEvent<Player>();
 export const PlayerStartedFreezingEvent: SimpleEvent = new SimpleEvent();
+export const PlayerMoved: PayloadEvent<Vector> = new PayloadEvent<Vector>();
+export const CharacterMoved: PayloadEvent<Vector> = new PayloadEvent<Vector>();
 export const PlayerCraftingStateChangedEvent: PayloadEvent<boolean> = new PayloadEvent<boolean>();
 export const BeforeDeathEvent: PayloadEvent<IGame> = new PayloadEvent<IGame>();
 export type screen = 'start' | 'end';
@@ -255,7 +257,7 @@ export const InventoryAddEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEv
 export const InventoryRemoveEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEvent<InventoryChangeMsg>();
 export const InventorySlotChangedEvent: PayloadEvent<InventoryChangeMsg> = new PayloadEvent<InventoryChangeMsg>();
 export const InventoryChangedEvent: SimpleEvent = new SimpleEvent();
-export const ResourceStockChangedEvent: PayloadEvent<{ entityType: string, newStock: number, oldStock: number }> = new PayloadEvent();
+export const ResourceStockChangedEvent: PayloadEvent<{ entityType: string, newStock: number, oldStock: number, position: Vector }> = new PayloadEvent();
 export const GameSettingChangedEvent: PayloadEvent<{ path: string, newValue: any, oldValue: any }> = new PayloadEvent();
 
 /**
