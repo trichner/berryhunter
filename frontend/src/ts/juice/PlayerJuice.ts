@@ -8,10 +8,21 @@ import { TriggerIntervalMap } from './TriggerIntervalMap';
 import { spatialAudio } from './SpatialAudio';
 
 BeforeDeathEvent.subscribe((payload) => {
-    sound.play('death', {
-        speed: random(0.9, 1.11),
-        volume: random(0.7, 1),
-    });
+    if (payload?.player?.character) {
+        spatialAudio.play('death',
+            payload.player.character.getPosition(),
+            {
+                speed: random(0.9, 1.11),
+                volume: random(0.7, 1),
+            });
+    }
+    else {
+        sound.play('death',
+            {
+                speed: random(0.9, 1.11),
+                volume: random(0.7, 1),
+            });
+    }
 });
 
 InventoryAddEvent.subscribe((payload) => {
@@ -35,10 +46,12 @@ InventoryAddEvent.subscribe((payload) => {
 PlaceablePlacedEvent.subscribe((payload) => {
     switch (payload.item) {
         default:
-            spatialAudio.play('place-heavy', payload.getPosition(), {
-                speed: random(0.9, 1.11),
-                volume: random(0.8, 1),
-            });
+            spatialAudio.play('place-heavy',
+                payload.getPosition(),
+                {
+                    speed: random(0.9, 1.11),
+                    volume: random(0.8, 1),
+                });
             break;
     }
 });
@@ -58,11 +71,13 @@ PlayerDamagedEvent.subscribe((payload) => {
     const soundId = 'hurt';
     const delayInterval = 5000;
     if (triggerMap.trigger(soundId, delayInterval)) {
-        const soundId2 = randomFrom(hurt);
-        sound.play(soundId2, {
-            speed: random(0.8, 0.9),
-            volume: random(0.8, 0.9),
-        });
+        const randomSoundId = randomFrom(hurt);
+        spatialAudio.play(randomSoundId,
+            payload.character.getPosition(),
+            {
+                speed: random(0.8, 0.9),
+                volume: random(0.8, 0.9),
+            });
     }
 });
 
@@ -71,7 +86,7 @@ PlayerStartedFreezingEvent.subscribe(() => {
     const delayInterval = 3000;
     if (triggerMap.trigger(soundId, delayInterval)) {
         sound.play(soundId, {
-            volume: random(0.8, 0.9),
+            volume: random(0.7, 0.8),
         });
     }
 });
@@ -80,8 +95,8 @@ PlayerMoved.subscribe((position) => {
     const soundId = 'step';
     const delayInterval = 400;
     if (triggerMap.trigger(soundId, delayInterval)) {
-        const soundId2 = randomFrom(steps);
-        spatialAudio.play(soundId2, position, { volume: 0.2 });
+        const randomSoundId = randomFrom(steps);
+        spatialAudio.play(randomSoundId, position, { volume: 0.9 });
     }
 });
 
@@ -89,8 +104,8 @@ CharacterMoved.subscribe((position) => {
     const soundId = 'step';
     const delayInterval = 400;
     if (triggerMap.trigger(soundId, delayInterval)) {
-        const soundId2 = randomFrom(steps);
-        spatialAudio.play(soundId2, position, { volume: 0.2 });
+        const randomSoundId = randomFrom(steps);
+        spatialAudio.play(randomSoundId, position, { volume: 0.9 });
     }
 });
 
