@@ -40,10 +40,18 @@ func updatePlayer(p model.PlayerEntity) {
 	if msg == nil {
 		return
 	}
-	log.Printf("New message: %s", string(*msg))
+	strMsg := string(*msg)
+	if len(strMsg) == 0 {
+		return
+	}
+	// cap chat messages to 120 characters
+	if len(strMsg) > 120 {
+		strMsg = strMsg[:120]
+	}
+	log.Printf("New message: %s", strMsg)
 
 	builder := flatbuffers.NewBuilder(32)
-	entityMessage := codec.EntityMessageFlatbufMarshal(builder, p.Basic().ID(), string(*msg))
+	entityMessage := codec.EntityMessageFlatbufMarshal(builder, p.Basic().ID(), strMsg)
 	builder.Finish(entityMessage)
 	bytes := builder.FinishedBytes()
 

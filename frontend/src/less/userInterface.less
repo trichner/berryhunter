@@ -373,21 +373,36 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -1.3px * (30 + 16));
+	transform: translate(-50%, calc(-100% - 6vh));
+
+	max-width: 14em;
+	min-height: 1.3em;
 
 	background-color: @backgroundColor;
 
 	padding: (0.1 * @slotSize);
 	border-radius: (0.1 * @slotSize);
 
-	min-height: 1.3em;
 }
 
 #chatInput {
 	display: block;
 	min-width: 1em;
+	min-height: 1em;
 	color: white;
 	text-align: center;
+
+	// Make the input look like regular text
+	appearance: none;
+	font-family: inherit;
+	font-size: 100%;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	background: none;
+	border: none;
+
+	resize: none;
 
 	&:focus {
 		box-shadow: none;
