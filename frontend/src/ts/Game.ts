@@ -11,7 +11,7 @@ import * as UserInterface from './userInterface/UserInterface';
 import * as Chat from './Chat';
 import {BasicConfig as Constants} from '../config/BasicConfig';
 import {InputManager} from './input/InputManager';
-import {isDefined} from './Utils';
+import {isDefined, resetFocus} from './Utils';
 import {WelcomeMessage} from './backend/messages/incoming/WelcomeMessage';
 import * as Console from './Console';
 import {Camera} from './Camera';
@@ -253,6 +253,12 @@ export class Game implements IGame {
             if (event.target === this.domElement || this.domElement.contains(event.target as Node)) {
                 event.preventDefault();
             }
+        });
+
+        // Not really sure why, but clicking through the game (and thus into the body) does not restore the focus on the game
+        // but this would be required to interact with overlay panels such as Develop or Settings
+        document.body.addEventListener('click', (event) => {
+            resetFocus();
         });
 
 

@@ -313,34 +313,61 @@ export function resetFocus() {
     document.body.focus();
 }
 
-/*
-* Disable event propagation for key and mouse events to prevent those event defaults
-* from being prevented globally.
-*/
-export function preventInputPropagation(element, ignoredKeys?) {
-
-    function preventKeyInputPropagation(event) {
-        if (ignoredKeys.indexOf(event.which) === -1) {
+/**
+ * Disable event propagation for key and mouse events to prevent those event defaults
+ * from being prevented globally.
+ * @param element
+ * @param keyList if you provide `propagated` keys, all other keys will NOT be propagated.
+ *      If you provide `notPropagated`, all other keys WILL be propagated. Mutually exclusive.
+ */
+export function preventInputPropagation(
+    element: Element,
+    keyList?: {
+        propagated?: string[] | string,
+        notPropagated?: string[] | string
+    },
+) {
+    function preventKeyInputPropagation(event: KeyboardEvent) {
+        if (!keyList.propagated.includes(event.code)) {
             event.stopPropagation();
         }
     }
 
-    function preventCodeInputPropagation(event) {
-        if (ignoredKeys !== event.code) {
+    function allowKeyInputPropagation(event: KeyboardEvent) {
+        if (keyList.notPropagated.includes(event.code)) {
             event.stopPropagation();
         }
     }
 
-    function preventInputPropagation(event) {
+    function preventCodeInputPropagation(event: KeyboardEvent) {
+        if (keyList.propagated !== event.code) {
+            event.stopPropagation();
+        }
+    }
+
+    function allowCodeInputPropagation(event: KeyboardEvent) {
+        if (keyList.notPropagated !== event.code) {
+            event.stopPropagation();
+        }
+    }
+
+    function preventInputPropagation(event: KeyboardEvent) {
         event.stopPropagation();
     }
 
-    if (Array.isArray(ignoredKeys)) {
+    keyList = defaultFor(keyList, {});
+    if (Array.isArray(keyList.propagated)) {
         element.addEventListener('keydown', preventKeyInputPropagation);
         element.addEventListener('keyup', preventKeyInputPropagation);
-    } else if (_isString(ignoredKeys)) {
+    } else if (_isString(keyList.propagated)) {
         element.addEventListener('keydown', preventCodeInputPropagation);
         element.addEventListener('keyup', preventCodeInputPropagation);
+    } else if (Array.isArray(keyList.notPropagated)) {
+        element.addEventListener('keydown', allowKeyInputPropagation);
+        element.addEventListener('keyup', allowKeyInputPropagation);
+    } else if (_isString(keyList.notPropagated)) {
+        element.addEventListener('keydown', allowCodeInputPropagation);
+        element.addEventListener('keyup', allowCodeInputPropagation);
     } else {
         element.addEventListener('keydown', preventInputPropagation);
         element.addEventListener('keyup', preventInputPropagation);
@@ -349,7 +376,42 @@ export function preventInputPropagation(element, ignoredKeys?) {
     element.addEventListener('mousedown', preventInputPropagation);
     element.addEventListener('mousemove', preventInputPropagation);
     element.addEventListener('mouseup', preventInputPropagation);
+    element.addEventListener('pointerdown', preventInputPropagation);
+    element.addEventListener('pointerup', preventInputPropagation);
+    element.addEventListener('touchstart', preventInputPropagation);
+    element.addEventListener('touchend', preventInputPropagation);
     element.addEventListener('click', preventInputPropagation);
+}
+
+/**
+ * Basically {@link preventInputPropagation} with sensible defaults for a range of interactable elements.
+ */
+export function preventShortcutPropagation(element: Element) {
+    if (element instanceof HTMLInputElement) {
+        switch (element.type) {
+            case 'range':
+                preventInputPropagation(element, {notPropagated: ['ArrowLeft', 'ArrowRight', 'Tab']});
+                return;
+            case 'checkbox':
+                preventInputPropagation(element, {notPropagated: ['Space', 'Tab']});
+                return;
+            default:
+                console.warn(`Unsupported InputElement of type '${element.type}'.`, element);
+                return;
+        }
+    }
+
+    if (element instanceof HTMLButtonElement) {
+        preventInputPropagation(element, {notPropagated: ['Enter', 'Tab']});
+        return;
+    }
+
+    if (element instanceof HTMLAnchorElement) {
+        preventInputPropagation(element, {notPropagated: ['Enter', 'Tab']});
+        return;
+    }
+
+    console.warn('Unsupported Element.', element);
 }
 
 
