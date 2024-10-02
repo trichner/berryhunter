@@ -51,6 +51,7 @@ module.exports = merge(common, {
 				},
 			}),
 		],
+		moduleIds: 'deterministic',
 		runtimeChunk: 'single',
 		splitChunks: {
 			cacheGroups: {
