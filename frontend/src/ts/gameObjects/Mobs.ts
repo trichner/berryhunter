@@ -99,6 +99,21 @@ export class Mammoth extends Mob {
             randomInt(minSize('mammoth'), maxSize('mammoth')),
             Mammoth.svg);
     }
+
+    protected override createStatusEffects() {
+        return {
+            Damaged: StatusEffect.forDamaged(this.shape, 
+                {
+                    soundId: 'mammothHit',
+                    options: {
+                        volume: random(0.4, 0.5),
+                        speed: random(1, 1.1)
+                    },
+                    chanceToPlay: 0.3
+                }),
+            DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
+        };
+    }
 }
 
 // noinspection JSIgnoredPromiseFromCall
