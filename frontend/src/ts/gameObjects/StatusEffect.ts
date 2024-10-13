@@ -25,6 +25,7 @@ export interface EaseEffect {
     type: string;
     from : number;
     to: number;
+    duration: number;
 }
 
 export class StatusEffect implements StatusEffectDefinition {
@@ -35,6 +36,8 @@ export class StatusEffect implements StatusEffectDefinition {
     static Starving: StatusEffectDefinition = {id: 'Starving', priority: 5};
     static ResourceHit: StatusEffectDefinition = {id: 'Hit', priority: 5};
     static Regenerating: StatusEffectDefinition = {id: 'Regenerating', priority: 6};
+
+    static damageColor = 0xBF153A;
 
     readonly id: string;
     readonly priority: number;
@@ -88,8 +91,8 @@ export class StatusEffect implements StatusEffectDefinition {
     static forDamaged(gameObjectShape: Container, soundData?: SoundData) {
         // #BF153A old Health Bar dark red?
         return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
-            { red: 191, green: 21, blue: 58, startAlpha: 0.5, endAlpha: 0.1 },
-            [{ type: 'scale', from: 1.1, to: 0.7 }], soundData);
+            null,
+            [{ type: 'scale', from: 1.1, to: 0.7, duration: 100 }, { type: 'tint', from:0xFFFFFF, to: StatusEffect.damageColor, duration: 100 }], soundData);
     }
 
     static forDamagedOverTime(gameObjectShape: Container, soundData?: SoundData) {
@@ -130,7 +133,7 @@ export class StatusEffect implements StatusEffectDefinition {
     static forYielded(gameObjectShape: Container, soundId? : string) {
         return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
             null,
-            [ { type: 'shake', from: 15, to: 18 } ],
+            [ { type: 'shake', from: 15, to: 18, duration: 30 } ],
             { soundId: soundId, options: {
                 speed: random(0.8, 0.9),
                 volume: random(0.8, 0.9),
@@ -169,15 +172,13 @@ export class StatusEffect implements StatusEffectDefinition {
                 },
             ) as EaseDisplayObject;
 
-            // If the startAlpha is lower, we want the animation to end on the start
-            // in the opposite case, the animation should end on the end (without reversing)
-            let isReverse = (this.startAlpha > this.endAlpha);
-            // TODO test this
             to.on('reverse', () => {
-                isReverse = !isReverse;
-                // The effect was scheduled to be removed - remove the update function from the global ticker
-                // the rest will be cleaned up by the GC
-                if (!this.showing && !isReverse) {
+                if (!this.showing) {
+                    this.forceHide();
+                }
+            });
+            to.on('complete', () => {
+                if (!this.showing) {
                     this.forceHide();
                 }
             });
@@ -191,17 +192,20 @@ export class StatusEffect implements StatusEffectDefinition {
                     case 'scale':
                         const randomScaleX = this.originalScaleX * effect.from;
                         const randomScaleY = this.originalScaleY * effect.to;
-
-                        ease.add(this.shape.scale, { x: randomScaleX, y: randomScaleY }, { duration: 60, ease: 'easeOutElastic' });
-
+                        ease.add(this.shape.scale, { x: randomScaleX, y: randomScaleY }, { duration: effect.duration / 2, ease: 'easeOutElastic' });
                         ease.once('complete', () => {
-                            ease.add(this.shape.scale, { x: this.originalScaleX, y: this.originalScaleY }, { duration: 80, ease: 'easeInBounce' });
+                            ease.add(this.shape.scale, { x: this.originalScaleX, y: this.originalScaleY }, { duration: effect.duration / 2, ease: 'easeInBounce' });
                         });
                         break;
                     case 'shake':
                         const shakeIntensity = random( effect.from, effect.to );
-                        ease.add(this.shape.position, { shake: shakeIntensity }, { duration: 30, ease: 'easeOutElastic' });
+                        ease.add(this.shape.position, { shake: shakeIntensity }, { duration: effect.duration, ease: 'easeOutElastic' });
                         break;
+                    case 'tint':
+                        ease.add(this.shape, { tint: effect.to }, { duration: effect.duration / 2, ease: 'linear' });
+                        ease.once('complete', () => {
+                            ease.add(this.shape, { tint: 0xFFFFFF }, { duration: effect.duration / 2, ease: 'linear' }); // Transition back to the original color
+                        });
                     default:
                         break;
                 }
