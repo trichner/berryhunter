@@ -1,6 +1,6 @@
 import { ColorMatrixFilter, Container, Ticker } from 'pixi.js';
 import { flood } from '../ColorMatrixFilterExtensions';
-import { random, randomInt, randomSign } from '../Utils';
+import { isDefined, random, randomInt, randomSign } from '../Utils';
 import { SoundData } from '../audio/SoundData';
 import { spatialAudio } from '../juice/SpatialAudio';
 import { Vector } from '../Vector';
@@ -11,12 +11,25 @@ export interface StatusEffectDefinition {
     priority: number;
 }
 
-export interface ColorEffect {
+export class ColorMatrixTweenEffect implements TweenEffect {
+    type: string;
+    from: number;
+    to: number;
+    duration: number;
+    repeat?: boolean;
     red: number;
     green: number;
     blue: number;
-    startAlpha: number;
-    endAlpha: number;
+    constructor(red: number, green: number, blue: number, from: number, to: number, duration: number, repeat?: boolean) {
+        this.type = 'colorMatrix'
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+        this.from = from;
+        this.to = to;
+        this.duration = duration
+        this.repeat = repeat
+    }
 }
 
 export interface TweenEffect {
@@ -24,6 +37,7 @@ export interface TweenEffect {
     from: number;
     to: number;
     duration: number;
+    repeat?: boolean;
 }
 
 export class StatusEffect implements StatusEffectDefinition {
@@ -40,6 +54,7 @@ export class StatusEffect implements StatusEffectDefinition {
     readonly id: string;
     readonly priority: number;
 
+    private updateFn: () => void;
     showing: boolean = false;
     colorMatrix: ColorMatrixFilter;
     startAlpha: number;
@@ -47,15 +62,14 @@ export class StatusEffect implements StatusEffectDefinition {
     shape: Container;
     originalScaleX: number;
     originalScaleY: number;
-    tweenEffects?: TweenEffect[];
+    tweenEffects: TweenEffect[];
     soundData?: SoundData;
     tweenGroup: TweenGroup
 
     private constructor(
         definition: StatusEffectDefinition,
         gameObjectShape: Container,
-        colorEffect?: ColorEffect,
-        easeEffects?: TweenEffect[],
+        tweenEffects: TweenEffect[],
         soundData?: SoundData
     ) {
         this.tweenGroup = new TweenGroup();
@@ -64,82 +78,69 @@ export class StatusEffect implements StatusEffectDefinition {
         this.shape = gameObjectShape;
         this.originalScaleX = this.shape.scale.x;
         this.originalScaleY = this.shape.scale.y;
+        tweenEffects.forEach(effect => {
+            if (effect instanceof ColorMatrixTweenEffect) {
+                if (isDefined(this.colorMatrix)) {
+                    console.error("Duplicate ColorMatrixTweenEffects defined in " + this.id + ". Currently, only one is supported.")
+                }
+                this.colorMatrix = new ColorMatrixFilter();
+                flood(this.colorMatrix, effect.red, effect.green, effect.blue, 1);
+                this.colorMatrix.alpha = effect.from;
+                this.colorMatrix.enabled = false;
 
-        if (colorEffect) {
-            this.colorMatrix = new ColorMatrixFilter();
-            flood(this.colorMatrix, colorEffect.red, colorEffect.green, colorEffect.blue, 1);
-            this.colorMatrix.alpha = colorEffect.startAlpha;
-            this.colorMatrix.enabled = false;
+                this.startAlpha = effect.from;
+                this.endAlpha = effect.to;
 
-            this.startAlpha = colorEffect.startAlpha;
-            this.endAlpha = colorEffect.endAlpha;
-
-            if (Array.isArray(gameObjectShape.filters)) {
-                gameObjectShape.filters = [...gameObjectShape.filters, this.colorMatrix];
-            } else {
-                gameObjectShape.filters = [this.colorMatrix];
+                if (Array.isArray(gameObjectShape.filters)) {
+                    gameObjectShape.filters = [...gameObjectShape.filters, this.colorMatrix];
+                } else {
+                    gameObjectShape.filters = [this.colorMatrix];
+                }
             }
-        }
 
-        this.tweenEffects = easeEffects;
+        });
+
+        this.tweenEffects = tweenEffects;
 
         if (soundData && typeof soundData.soundId === 'string') {
             this.soundData = soundData;
         }
+
+        this.updateFn = () => {
+            this.update();
+        };
     }
 
     static forDamaged(gameObjectShape: Container, soundData?: SoundData) {
         // #BF153A old Health Bar dark red?
         return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
-            {
-                red: 191,
-                green: 21,
-                blue: 58,
-                startAlpha: 0.8,
-                endAlpha: 0.2
-            },
-            [{ type: 'scale', from: 1.1, to: 0.7, duration: 100 }], soundData);
+            [
+                new ColorMatrixTweenEffect(191, 21, 58, 0.5, 0.1, 100),
+                { type: 'scale', from: 1.1, to: 0.8, duration: 100 }], soundData);
     }
 
     static forDamagedOverTime(gameObjectShape: Container, soundData?: SoundData) {
         // #BF153A old Health Bar dark red?
-        return new StatusEffect(StatusEffect.DamagedAmbient, gameObjectShape, {
-            red: 191,
-            green: 21,
-            blue: 58,
-            startAlpha: 0.8,
-            endAlpha: 0.2
-        },
-            null,
+        return new StatusEffect(StatusEffect.DamagedAmbient, gameObjectShape,
+            [new ColorMatrixTweenEffect(191, 21, 58, 0.8, 0.2, 100)],
             soundData);
     }
 
     static forFreezing(gameObjectShape: Container) {
         // #125799
-        return new StatusEffect(StatusEffect.Freezing, gameObjectShape, {
-            red: 18,
-            green: 87,
-            blue: 153,
-            startAlpha: 0.4,
-            endAlpha: 0.8
-        });
+        return new StatusEffect(StatusEffect.Freezing, gameObjectShape,
+            [new ColorMatrixTweenEffect(18, 87, 153, 0.4, 0.8, 100)]);
     }
 
     static forStarving(gameObjectShape: Container) {
         // #1E7A1E
-        return new StatusEffect(StatusEffect.Starving, gameObjectShape, {
-            red: 30,
-            green: 120,
-            blue: 30,
-            startAlpha: 0.2,
-            endAlpha: 0.8
-        });
+        return new StatusEffect(StatusEffect.Starving, gameObjectShape,
+            [new ColorMatrixTweenEffect(30, 120, 30, 0.2, 0.8, 100)]);
     }
 
     static forYielded(gameObjectShape: Container, soundId?: string) {
         return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
-            null,
-            [{ type: 'shake', from: 4, to: 8, duration: 20 }],
+            [{ type: 'shake', from: 4, to: 4, duration: 24 }],
             {
                 soundId: soundId, options: {
                     speed: random(0.8, 0.9),
@@ -170,88 +171,101 @@ export class StatusEffect implements StatusEffectDefinition {
         }
 
         this.showing = true;
+        Ticker.shared.remove(this.updateFn);
+        Ticker.shared.add(this.updateFn);
     }
 
     private buildTweens() {
-        if (this.colorMatrix) {
-            this.colorMatrix.alpha = this.startAlpha;
-            const colorTween = new Tween(this.colorMatrix);
-            colorTween.to({ alpha: this.endAlpha }, 100)
-                .repeat(1)
-                .yoyo(true)
-                .easing(Easing.Elastic.InOut);
-            this.tweenGroup.add(colorTween);
-            colorTween.onEveryStart(() => {
-
-                this.colorMatrix.enabled = true;
-            })
-            colorTween.onComplete(() => {
-
-                this.colorMatrix.enabled = false;
-            })
-        }
+        this.tweenGroup.removeAll();
 
         //TODO: These should be part of the "Animation"?
-        if (Array.isArray(this.tweenEffects)) {
-            this.tweenEffects.forEach((effect: TweenEffect) => {
-                switch (effect.type) {
-                    case 'scale': {
-                        const randomScaleX = this.originalScaleX * effect.from;
-                        const randomScaleY = this.originalScaleY * effect.to;
-                        const tween = new Tween(this.shape.scale);
-                        tween.to({ x: randomScaleX, y: randomScaleY }, effect.duration)
-                            .easing(Easing.Elastic.Out)
-                            .repeat(1)
-                            .yoyo(true);
-                        this.tweenGroup.add(tween);
-                        break;
+
+        this.tweenEffects.forEach((effect: TweenEffect) => {
+            const repeats = effect.repeat ? Infinity : 1;
+            switch (effect.type) {
+                case 'colorMatrix': {
+                    if (this.colorMatrix) {
+                        this.colorMatrix.alpha = this.startAlpha;
+                        const colorTween = new Tween(this.colorMatrix);
+                        colorTween.to({ alpha: effect.to }, effect.duration)
+                            .repeat(repeats)
+                            .yoyo(true)
+                            .easing(Easing.Elastic.In);
+                        this.tweenGroup.add(colorTween);
+                        colorTween.onEveryStart(() => {
+                            this.colorMatrix.enabled = true;
+                        })
+                        colorTween.onComplete(() => {
+
+                            this.colorMatrix.enabled = false;
+                        })
+                        colorTween.onStop(() => {
+
+                            this.colorMatrix.enabled = false;
+                        })
                     }
-                    case 'shake': {
-                        const tween = new Tween(this.shape.position);
-                        tween.to({
-                            x: this.shape.position.x + randomInt(effect.from, effect.to) * randomSign(),
-                            y: this.shape.position.y + randomInt(effect.from, effect.to) * randomSign()
-                        }, effect.duration)
-                            .easing(Easing.Elastic.InOut)
-                            .repeat(1)
-                            .yoyo(true);
-                        this.tweenGroup.add(tween);
-                        break;
-                    }
-                    case 'tint': {
-                        const tween = new Tween(this.shape);
-                        tween.to({ tint: effect.to }, effect.duration)
-                            .easing(Easing.Cubic.Out)
-                            .repeat(1).yoyo(true);
-                        this.tweenGroup.add(tween);
-                        break;
-                    }
-                    default:
-                        break;
+                    break;
                 }
-            });
-            Ticker.shared.add(() => {
-                this.tweenGroup.update();
-            });
+                case 'scale': {
+                    const randomScaleX = this.originalScaleX * effect.from;
+                    const randomScaleY = this.originalScaleY * effect.to;
+                    const tween = new Tween(this.shape.scale);
+                    tween.to({ x: randomScaleX, y: randomScaleY }, effect.duration)
+                        .easing(Easing.Elastic.Out)
+                        .repeat(repeats)
+                        .yoyo(true);
+                    this.tweenGroup.add(tween);
+                    break;
+                }
+                case 'shake': {
+                    const tween = new Tween(this.shape.position);
+                    tween.to({
+                        x: this.shape.position.x + randomInt(effect.from, effect.to) * randomSign(),
+                        y: this.shape.position.y + randomInt(effect.from, effect.to) * randomSign()
+                    }, effect.duration)
+                        .easing(Easing.Bounce.Out)
+                        .repeat(repeats)
+                        .yoyo(true);
+                    this.tweenGroup.add(tween);
+                    break;
+                }
+                case 'tint': {
+                    const tween = new Tween(this.shape);
+                    tween.to({ tint: effect.to }, effect.duration)
+                        .easing(Easing.Cubic.Out)
+                        .repeat(repeats).yoyo(true);
+                    this.tweenGroup.add(tween);
+                    break;
+                }
+                default:
+                    break;
+            }
+        });
+    }
+
+    update() {
+        this.tweenGroup.update();
+        if (!this.showing) {
+            if (this.tweenGroup.allStopped()) {
+                Ticker.shared.remove(this.updateFn);
+            }
         }
     }
 
-    reset() {
-        if (this.showing) {
-            this.tweenGroup.getAll().forEach(tween => tween.stop());
-            this.showing = false;
-            this.shape.scale.set(1, 1);
-            if (this.colorMatrix) {
-                this.colorMatrix.alpha = this.startAlpha;
-                this.colorMatrix.enabled = false;
-
-            }
+    stop() {
+        Ticker.shared.remove(this.updateFn);
+        this.tweenGroup.getAll().forEach(tween => tween.stop());
+        this.showing = false;
+        this.shape.scale.set(1, 1);
+        if (this.colorMatrix) {
+            this.colorMatrix.alpha = this.startAlpha;
+            this.colorMatrix.enabled = false;
         }
     }
 
     playFromBeginning() {
         if (this.showing) {
-            this.reset();
+            this.stop();
             this.show();
         }
     }
