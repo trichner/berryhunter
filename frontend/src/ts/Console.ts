@@ -62,7 +62,7 @@ function onDomReady() {
         }
     });
 
-    preventInputPropagation(commandInput, KEY_CODE);
+    preventInputPropagation(commandInput, {propagated: KEY_CODE});
 
     document.getElementById('console').addEventListener('submit', function (event) {
         event.preventDefault();

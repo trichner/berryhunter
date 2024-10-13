@@ -111,6 +111,9 @@ function setProgress(value) {
                 rootElement.classList.add('finished');
                 let playerNameSubmit: HTMLInputElement = rootElement.querySelector('.playerNameSubmit');
                 playerNameSubmit.value = "Play";
+                let playerNameInput: HTMLInputElement = rootElement.querySelector('.playerNameInput');
+                playerNameInput.select();
+                playerNameInput.focus();
             });
         }
     }

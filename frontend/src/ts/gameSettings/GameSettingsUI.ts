@@ -2,7 +2,7 @@ import * as Preloading from '../Preloading';
 import {GameSettings} from './GameSettings';
 import {DevelopSetupEvent} from '../Events';
 import {parseInt} from 'lodash';
-import {resetFocus} from '../Utils';
+import {preventShortcutPropagation, resetFocus} from '../Utils';
 
 const gameSettings = GameSettings.get();
 let rootElement: HTMLElement;
@@ -22,13 +22,16 @@ function onDomReady() {
 
 function setupButtons() {
     showButton = rootElement.querySelector('#gameSettingsButton');
+    preventShortcutPropagation(showButton);
     showButton.addEventListener('click', (event) => {
         event.preventDefault();
 
         show();
     });
 
-    rootElement.querySelector('#closeGameSettings').addEventListener('click', (event) => {
+    const closeButton = rootElement.querySelector('#closeGameSettings');
+    preventShortcutPropagation(closeButton);
+    closeButton.addEventListener('click', (event) => {
         event.preventDefault();
 
         hide();
@@ -38,22 +41,9 @@ function setupButtons() {
 function setupPanel() {
     panelElement = rootElement.querySelector('#gameSettingsPanel');
 
-    [
-        'click',
-        'pointerdown',
-        'pointerup',
-        'mousedown',
-        'mouseup',
-        'mousemove',
-        'touchstart',
-        'touchend',
-        'keyup',
-        'keydown']
-        .forEach((eventName) => {
-            panelElement.addEventListener(eventName, (event) => {
-                event.stopPropagation();
-            });
-        });
+    panelElement
+        .querySelectorAll('input')
+        .forEach(preventShortcutPropagation);
 
     setupAudioSettings();
 }

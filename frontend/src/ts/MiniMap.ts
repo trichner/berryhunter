@@ -152,7 +152,6 @@ export class MiniMap {
         const minimapIcon = gameObject.createMinimapIcon();
         switch (layer) {
             case Layer.CHARACTER:
-                console.log('Add character to minimap');
                 this.playerGroup.addChild(minimapIcon);
                 break;
             case Layer.OTHER:

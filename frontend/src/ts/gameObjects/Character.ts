@@ -410,7 +410,14 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     say(message: string) {
-        let textStyle = TextDisplay.style({fill: '#E37313', stroke: {color: '#000000', width: 5}});
+        let textStyle = TextDisplay.style({
+            fill: '#E37313',
+            stroke: {color: '#000000', width: 3},
+            wordWrap: true,
+            wordWrapWidth: 14 * 16, // no idea why, but it fits the 14em in HTML
+            breakWords: true,
+            lineHeight: 22,
+        });
         let fontSize = textStyle.fontSize as number;
 
         // Move all currently displayed messages up
@@ -422,7 +429,7 @@ export class Character extends GameObject implements ICharacterLike {
             text: message,
             style: textStyle,
         });
-        messageShape.anchor.set(0.5, 0.5);
+        messageShape.anchor.set(0.5, 1);
         messageShape['timeToLife'] = Constants.CHAT_MESSAGE_DURATION;
         this.messagesGroup.addChild(messageShape);
 

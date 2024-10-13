@@ -22,7 +22,7 @@ StartScreenDomReadyEvent.subscribe(() => {
     /*
      * As preloads have the chance to register new preloads themself, all preloads are loaded recursively.
      */
-    return (function waitForPreloads() {
+    (function waitForPreloads() {
         return new Promise<void>(function (resolve) {
             loadCycle++;
             if (promises.length > 0) {
