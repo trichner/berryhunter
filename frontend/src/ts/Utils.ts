@@ -46,6 +46,13 @@ export function randomInt(min, max?) {
     return Math.floor(random(min, max));
 }
 
+export function randomSign(){
+    if (Math.random() <= 0.5){
+        return -1;
+    }
+    return 1;
+}
+
 /**
  * @return whether or not the element was found and removed.
  */

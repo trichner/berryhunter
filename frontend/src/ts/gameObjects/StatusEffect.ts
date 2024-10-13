@@ -1,12 +1,10 @@
-import { Animation } from '../Animation';
-import { EaseDisplayObject, Ease } from 'pixi-ease';
-import { ColorMatrixFilter, Container } from 'pixi.js';
+import { ColorMatrixFilter, Container, Ticker } from 'pixi.js';
 import { flood } from '../ColorMatrixFilterExtensions';
-import { PlayOptions, sound } from '@pixi/sound';
-import { random } from '../Utils';
+import { random, randomInt, randomSign } from '../Utils';
 import { SoundData } from '../audio/SoundData';
 import { spatialAudio } from '../juice/SpatialAudio';
 import { Vector } from '../Vector';
+import { Easing, Tween, Group as TweenGroup } from '@tweenjs/tween.js'
 
 export interface StatusEffectDefinition {
     id: string;
@@ -21,21 +19,21 @@ export interface ColorEffect {
     endAlpha: number;
 }
 
-export interface EaseEffect {
+export interface TweenEffect {
     type: string;
-    from : number;
+    from: number;
     to: number;
     duration: number;
 }
 
 export class StatusEffect implements StatusEffectDefinition {
-    static Damaged: StatusEffectDefinition = {id: 'Damaged', priority: 1};
-    static DamagedAmbient: StatusEffectDefinition = {id: 'DamagedAmbient', priority: 2};
-    static Yielded: StatusEffectDefinition = {id: 'Yielded', priority: 3};
-    static Freezing: StatusEffectDefinition = {id: 'Freezing', priority: 4};
-    static Starving: StatusEffectDefinition = {id: 'Starving', priority: 5};
-    static ResourceHit: StatusEffectDefinition = {id: 'Hit', priority: 5};
-    static Regenerating: StatusEffectDefinition = {id: 'Regenerating', priority: 6};
+    static Damaged: StatusEffectDefinition = { id: 'Damaged', priority: 1 };
+    static DamagedAmbient: StatusEffectDefinition = { id: 'DamagedAmbient', priority: 2 };
+    static Yielded: StatusEffectDefinition = { id: 'Yielded', priority: 3 };
+    static Freezing: StatusEffectDefinition = { id: 'Freezing', priority: 4 };
+    static Starving: StatusEffectDefinition = { id: 'Starving', priority: 5 };
+    static ResourceHit: StatusEffectDefinition = { id: 'Hit', priority: 5 };
+    static Regenerating: StatusEffectDefinition = { id: 'Regenerating', priority: 6 };
 
     static damageColor = 0xBF153A;
 
@@ -49,16 +47,18 @@ export class StatusEffect implements StatusEffectDefinition {
     shape: Container;
     originalScaleX: number;
     originalScaleY: number;
-    easeEffects?: EaseEffect[];
+    tweenEffects?: TweenEffect[];
     soundData?: SoundData;
+    tweenGroup: TweenGroup
 
     private constructor(
         definition: StatusEffectDefinition,
         gameObjectShape: Container,
-        colorEffect? : ColorEffect,
-        easeEffects?: EaseEffect[],
-        soundData? : SoundData
+        colorEffect?: ColorEffect,
+        easeEffects?: TweenEffect[],
+        soundData?: SoundData
     ) {
+        this.tweenGroup = new TweenGroup();
         this.id = definition.id;
         this.priority = definition.priority;
         this.shape = gameObjectShape;
@@ -70,7 +70,7 @@ export class StatusEffect implements StatusEffectDefinition {
             flood(this.colorMatrix, colorEffect.red, colorEffect.green, colorEffect.blue, 1);
             this.colorMatrix.alpha = colorEffect.startAlpha;
             this.colorMatrix.enabled = false;
-    
+
             this.startAlpha = colorEffect.startAlpha;
             this.endAlpha = colorEffect.endAlpha;
 
@@ -81,7 +81,7 @@ export class StatusEffect implements StatusEffectDefinition {
             }
         }
 
-        this.easeEffects = easeEffects;
+        this.tweenEffects = easeEffects;
 
         if (soundData && typeof soundData.soundId === 'string') {
             this.soundData = soundData;
@@ -91,8 +91,14 @@ export class StatusEffect implements StatusEffectDefinition {
     static forDamaged(gameObjectShape: Container, soundData?: SoundData) {
         // #BF153A old Health Bar dark red?
         return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
-            null,
-            [{ type: 'scale', from: 1.1, to: 0.7, duration: 100 }, { type: 'tint', from:0xFFFFFF, to: StatusEffect.damageColor, duration: 100 }], soundData);
+            {
+                red: 191,
+                green: 21,
+                blue: 58,
+                startAlpha: 0.8,
+                endAlpha: 0.2
+            },
+            [{ type: 'scale', from: 1.1, to: 0.7, duration: 100 }], soundData);
     }
 
     static forDamagedOverTime(gameObjectShape: Container, soundData?: SoundData) {
@@ -130,14 +136,16 @@ export class StatusEffect implements StatusEffectDefinition {
         });
     }
 
-    static forYielded(gameObjectShape: Container, soundId? : string) {
+    static forYielded(gameObjectShape: Container, soundId?: string) {
         return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
             null,
-            [ { type: 'shake', from: 15, to: 18, duration: 30 } ],
-            { soundId: soundId, options: {
-                speed: random(0.8, 0.9),
-                volume: random(0.8, 0.9),
-            } });
+            [{ type: 'shake', from: 4, to: 8, duration: 20 }],
+            {
+                soundId: soundId, options: {
+                    speed: random(0.8, 0.9),
+                    volume: random(0.8, 0.9),
+                }
+            });
     }
 
     static sortByPriority(statusEffects: StatusEffectDefinition[]): StatusEffectDefinition[] {
@@ -151,66 +159,8 @@ export class StatusEffect implements StatusEffectDefinition {
             this.playFromBeginning();
             return;
         }
-
-        this.showing = true;
-
-        if (this.colorMatrix) {
-            this.colorMatrix.enabled = true;
-            this.colorMatrix.alpha = this.startAlpha;
-    
-            let animation = new Animation();
-    
-            let to = animation.add(
-                // TODO ugly, need to test and find better way
-                this.colorMatrix as unknown as Container,
-                {alpha: this.endAlpha},
-                {
-                    duration: 200,
-                    repeat: true,
-                    reverse: true,
-                    ease: 'easeInOutCubic',
-                },
-            ) as EaseDisplayObject;
-
-            to.on('reverse', () => {
-                if (!this.showing) {
-                    this.forceHide();
-                }
-            });
-            to.on('complete', () => {
-                if (!this.showing) {
-                    this.forceHide();
-                }
-            });
-        }
-        
-        //TODO: These should be part of the "Animation"?
-        if (Array.isArray(this.easeEffects)) {
-            let ease = new Ease({});
-            this.easeEffects.forEach((effect: EaseEffect) => {
-                switch (effect.type) {
-                    case 'scale':
-                        const randomScaleX = this.originalScaleX * effect.from;
-                        const randomScaleY = this.originalScaleY * effect.to;
-                        ease.add(this.shape.scale, { x: randomScaleX, y: randomScaleY }, { duration: effect.duration / 2, ease: 'easeOutElastic' });
-                        ease.once('complete', () => {
-                            ease.add(this.shape.scale, { x: this.originalScaleX, y: this.originalScaleY }, { duration: effect.duration / 2, ease: 'easeInBounce' });
-                        });
-                        break;
-                    case 'shake':
-                        const shakeIntensity = random( effect.from, effect.to );
-                        ease.add(this.shape.position, { shake: shakeIntensity }, { duration: effect.duration, ease: 'easeOutElastic' });
-                        break;
-                    case 'tint':
-                        ease.add(this.shape, { tint: effect.to }, { duration: effect.duration / 2, ease: 'linear' });
-                        ease.once('complete', () => {
-                            ease.add(this.shape, { tint: 0xFFFFFF }, { duration: effect.duration / 2, ease: 'linear' }); // Transition back to the original color
-                        });
-                    default:
-                        break;
-                }
-            });
-        }
+        this.buildTweens();
+        this.tweenGroup.getAll().forEach(tween => tween.start());
 
         if (this.soundData) {
             const playRoll = this.soundData.chanceToPlay ? Math.random() <= this.soundData.chanceToPlay : true;
@@ -218,32 +168,99 @@ export class StatusEffect implements StatusEffectDefinition {
                 spatialAudio.play(this.soundData.soundId, Vector.clone(this.shape.position), this.soundData.options);
             }
         }
+
+        this.showing = true;
+    }
+
+    private buildTweens() {
+        if (this.colorMatrix) {
+            this.colorMatrix.alpha = this.startAlpha;
+            const colorTween = new Tween(this.colorMatrix);
+            colorTween.to({ alpha: this.endAlpha }, 100)
+                .repeat(1)
+                .yoyo(true)
+                .easing(Easing.Elastic.InOut);
+            this.tweenGroup.add(colorTween);
+            colorTween.onEveryStart(() => {
+
+                this.colorMatrix.enabled = true;
+            })
+            colorTween.onComplete(() => {
+
+                this.colorMatrix.enabled = false;
+            })
+        }
+
+        //TODO: These should be part of the "Animation"?
+        if (Array.isArray(this.tweenEffects)) {
+            this.tweenEffects.forEach((effect: TweenEffect) => {
+                switch (effect.type) {
+                    case 'scale': {
+                        const randomScaleX = this.originalScaleX * effect.from;
+                        const randomScaleY = this.originalScaleY * effect.to;
+                        const tween = new Tween(this.shape.scale);
+                        tween.to({ x: randomScaleX, y: randomScaleY }, effect.duration)
+                            .easing(Easing.Elastic.Out)
+                            .repeat(1)
+                            .yoyo(true);
+                        this.tweenGroup.add(tween);
+                        break;
+                    }
+                    case 'shake': {
+                        const tween = new Tween(this.shape.position);
+                        tween.to({
+                            x: this.shape.position.x + randomInt(effect.from, effect.to) * randomSign(),
+                            y: this.shape.position.y + randomInt(effect.from, effect.to) * randomSign()
+                        }, effect.duration)
+                            .easing(Easing.Elastic.InOut)
+                            .repeat(1)
+                            .yoyo(true);
+                        this.tweenGroup.add(tween);
+                        break;
+                    }
+                    case 'tint': {
+                        const tween = new Tween(this.shape);
+                        tween.to({ tint: effect.to }, effect.duration)
+                            .easing(Easing.Cubic.Out)
+                            .repeat(1).yoyo(true);
+                        this.tweenGroup.add(tween);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            });
+            Ticker.shared.add(() => {
+                this.tweenGroup.update();
+            });
+        }
     }
 
     reset() {
         if (this.showing) {
+            this.tweenGroup.getAll().forEach(tween => tween.stop());
             this.showing = false;
-            this.colorMatrix.alpha = this.startAlpha;
             this.shape.scale.set(1, 1);
-            this.colorMatrix.enabled = false;
+            if (this.colorMatrix) {
+                this.colorMatrix.alpha = this.startAlpha;
+                this.colorMatrix.enabled = false;
+
+            }
         }
     }
 
     playFromBeginning() {
         if (this.showing) {
-            this.reset(); // Reset the current animation and properties
-
-            // Restart the animation
+            this.reset();
             this.show();
         }
     }
 
     hide() {
+        if (this.colorMatrix) {
+            this.colorMatrix.alpha = this.startAlpha;
+            this.colorMatrix.enabled = false;
+        }
         this.showing = false;
-    }
-
-    forceHide() {
-        this.hide();
-        this.colorMatrix.enabled = false;
     }
 }

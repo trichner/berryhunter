@@ -181,7 +181,7 @@ export class GameObject {
                     // No effect running, run one
                     this.showStatusEffect(newStatusEffect.id);
                 } else if (this.activeStatusEffect.id !== newStatusEffect.id) {
-                    this.activeStatusEffect.forceHide();
+                    this.activeStatusEffect.hide();
                     this.showStatusEffect(newStatusEffect.id);
                 }
             } else {
