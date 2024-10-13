@@ -18,11 +18,23 @@ import {radians} from './interfaces/Types';
 import {InputAction, InputMessage} from './backend/messages/outgoing/InputMessage';
 import {Vector} from './Vector';
 import {Develop} from './develop/_Develop';
+import {GamepadManager} from './input/gamepad/GamepadManager';
+
+enum InputMode {
+    MouseAndKeyboard,
+    Gamepad,
+    Touch
+}
+
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
+
+let activeInputMode : InputMode = InputMode.MouseAndKeyboard;
+const gamepadManager = new GamepadManager();
+gamepadManager.pollGamepads();
 
 let consoleCooldown = 0;
 
@@ -132,6 +144,8 @@ export class Controls {
     update() {
         let inputManager = Game.inputManager;
         inputManager.update(Date.now());
+        let gamepadUsed = false;
+        let keyOrMouseUsed = false;
 
         if (Game.state !== GameState.PLAYING) {
             return;
@@ -164,77 +178,128 @@ export class Controls {
         }
 
         let movement = new Vector();
+        
+        let gamepadActionKeyActive = false;
+        if (gamepadManager.getGamepadCount() > 0) {
+            if (gamepadManager.isButtonPressed(0, 7) || gamepadManager.isButtonPressed(0, 0)) {
+                gamepadActionKeyActive = true;
+                gamepadUsed = true;
+            }
+            let xAxisValue = gamepadManager.getAxisValue(0, 0);
+            let yAxisValue = gamepadManager.getAxisValue(0, 1);
+            if (Math.abs(xAxisValue) > 0.5){
+                movement.x = xAxisValue;
+                gamepadUsed = true;
+            }
+            if (Math.abs(yAxisValue) > 0.5){
+                movement.y = yAxisValue;
+                gamepadUsed = true;
+            }
+            let xRightStickAxisValue = gamepadManager.getAxisValue(0, 2);
+            let yRightStickAxisValue = gamepadManager.getAxisValue(0, 3);
+            let magnitude = Math.sqrt(xRightStickAxisValue * xRightStickAxisValue + yRightStickAxisValue * yRightStickAxisValue);
+            if (magnitude > 0.5) {
+                let rotation: radians = Math.atan2(yRightStickAxisValue, xRightStickAxisValue);
+                this.character.setRotation(rotation);
+            }
+        }
 
         if (this.upKeys.isDown) {
             movement.y -= 1;
+            keyOrMouseUsed = true;
         }
         if (this.downKeys.isDown) {
             movement.y += 1;
+            keyOrMouseUsed = true;
         }
         if (this.leftKeys.isDown) {
             movement.x -= 1;
+            keyOrMouseUsed = true;
         }
         if (this.rightKeys.isDown) {
             movement.x += 1;
+            keyOrMouseUsed = true;
         }
 
         let action: InputAction = null;
+        let checkForActions : boolean = true;
         if (this.hitAnimationTick) {
             // Make sure tick 0 gets passed to the character to finish animation
             this.hitAnimationTick--;
-        } else {
-            if (isDefined(this.inventoryAction)) {
-                action = this.inventoryAction;
-                delete this.inventoryAction;
-            } else {
-                if (this.isCraftInProgress()) {
-                    // Don't check for actions
-                } else if (this.actionKeys.isDown || inputManager.activePointer.leftButtonDown()) {
-                    this.hitAnimationTick = this.character.action();
-                    switch (this.character.currentAction) {
-                        case 'MAIN':
-                        case 'ALT':
-                            action = {
-                                item: Game.player.character.getEquippedItem(Equipment.EquipmentSlot.HAND),
-                                actionType: BerryhunterApi.ActionType.Primary,
-                            };
-                            break;
-                        case 'PLACING':
-                            let placedItem = this.character.getEquippedItem(Equipment.EquipmentSlot.PLACEABLE);
+            checkForActions = false;
+        }
+        else if (isDefined(this.inventoryAction)) {
+            action = this.inventoryAction;
+            delete this.inventoryAction;
+            checkForActions = false;
+        }
+        else if (this.isCraftInProgress()) {
+            checkForActions = false;
+        }
 
-                            if (!placedItem.placeable.multiPlacing) {
-                                Game.player.inventory.unequipItem(placedItem, Equipment.EquipmentSlot.PLACEABLE);
-                            }
-
-                            action = {
-                                item: placedItem,
-                                actionType: BerryhunterApi.ActionType.PlaceItem,
-                            };
-                            break;
-                    }
-                } else if (this.altActionKeys.isDown || inputManager.activePointer.rightButtonDown()) {
-                    // Alt Action is only cancelling an equipped placeable - not need to report to backend
-                    this.hitAnimationTick = this.character.altAction();
-                }
+        if (checkForActions){
+            let actionKeyActive = this.actionKeys.isDown || inputManager.activePointer.leftButtonDown();
+            //TODO this is duplicated
+            if (keyOrMouseUsed){
+                activeInputMode = InputMode.MouseAndKeyboard
             }
+            else if (gamepadUsed){
+                activeInputMode = InputMode.Gamepad;
+            }
+            if (actionKeyActive || gamepadActionKeyActive) {
+                this.hitAnimationTick = this.character.action();
+                switch (this.character.currentAction) {
+                    case 'MAIN':
+                    case 'ALT':
+                        action = {
+                            item: Game.player.character.getEquippedItem(Equipment.EquipmentSlot.HAND),
+                            actionType: BerryhunterApi.ActionType.Primary,
+                        };
+                        break;
+                    case 'PLACING':
+                        let placedItem = this.character.getEquippedItem(Equipment.EquipmentSlot.PLACEABLE);
+    
+                        if (!placedItem.placeable.multiPlacing) {
+                            Game.player.inventory.unequipItem(placedItem, Equipment.EquipmentSlot.PLACEABLE);
+                        }
+    
+                        action = {
+                            item: placedItem,
+                            actionType: BerryhunterApi.ActionType.PlaceItem,
+                        };
+                        break;
+                }
+            } else if (this.altActionKeys.isDown || inputManager.activePointer.rightButtonDown()) {
+                // Alt Action is only cancelling an equipped placeable - not need to report to backend
+                this.hitAnimationTick = this.character.altAction();
+            }
+        }
+
+        if (keyOrMouseUsed){
+            activeInputMode = InputMode.MouseAndKeyboard
+        }
+        else if (gamepadUsed){
+            activeInputMode = InputMode.Gamepad;
         }
 
         let input = new InputMessage();
         let hasInput = false;
 
-        if (Constants.ALWAYS_VIEW_CURSOR) {
-            if (inputManager.activePointer.justMoved ||
-                this.lastX !== this.character.getX() ||
-                this.lastY !== this.character.getY()) {
-
-                input.rotation = this.adjustCharacterRotation();
+        if (activeInputMode == InputMode.MouseAndKeyboard){
+            if (Constants.ALWAYS_VIEW_CURSOR) {
+                if (inputManager.activePointer.justMoved ||
+                    this.lastX !== this.character.getX() ||
+                    this.lastY !== this.character.getY()) {
+    
+                    input.rotation = this.adjustCharacterRotationToPointer();
+                    hasInput = true;
+                    this.lastX = this.character.getX();
+                    this.lastY = this.character.getY();
+                }
+            } else if (inputManager.activePointer.justMoved) {
+                input.rotation = this.adjustCharacterRotationToPointer();
                 hasInput = true;
-                this.lastX = this.character.getX();
-                this.lastY = this.character.getY();
             }
-        } else if (inputManager.activePointer.justMoved) {
-            input.rotation = this.adjustCharacterRotation();
-            hasInput = true;
         }
 
         if (movement.x !== 0 || movement.y !== 0) {
@@ -265,7 +330,7 @@ export class Controls {
 
     }
 
-    adjustCharacterRotation() {
+    adjustCharacterRotationToPointer() {
         let pointer = Game.inputManager.activePointer;
 
         if (isDefined(Game.player)) {
