@@ -56,14 +56,14 @@ export const ItemsConfig = {
         icon: {file: require('../img/items/clubWoodIcon.svg')},
         graphic: {
             file: require('../img/items/clubWood.svg'),
-            size: 40,
+            size: <number> 40,
             offsetX: 15
         },
         definition: require('../../../api/items/tools/wood-club.json'),
-        type: ItemType.EQUIPMENT,
+        type: <keyof typeof ItemType> ItemType.EQUIPMENT,
         equipment: {
             slot: EquipmentSlot.HAND,
-            animation: 'swing'
+            animation: <('swing' | 'stab')> 'swing'
         }
     },
     StoneTool: {
