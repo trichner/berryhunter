@@ -25,7 +25,7 @@ function onDomReady() {
             playerNameInput.focus();
         });
 
-    new Rating(rootElement.querySelector('.userRating'), true);
+    new Rating(rootElement.querySelector('.userRating'), true, false);
 }
 
 Preloading.renderPartial(require('./endScreen.html'), onDomReady);

@@ -3,6 +3,7 @@ import _isObject = require('lodash/isObject');
 import * as SocialMedia from "../userInterface/partials/SocialMedia";
 
 let html = require('./rating.html');
+let htmlOnlySocials = require('./ratingOnlySocials.html');
 let emptyStarIcon = require('./img/emptyStar.svg?raw');
 let filledStarIcon = require('./img/filledStar.svg?raw');
 
@@ -16,11 +17,17 @@ export class Rating {
     private successContainer: Element;
     private rating: number = 0;
 
-    constructor(parentElement: Element, showSocialMedia: boolean) {
-        parentElement.innerHTML = htmlModuleToString(html);
+    constructor(parentElement: Element, showSocialMedia: boolean, enableRatings: boolean) {
+        if (enableRatings) {
+            parentElement.innerHTML = htmlModuleToString(html);
+        } else {
+            parentElement.innerHTML = htmlModuleToString(htmlOnlySocials);
+        }
 
-        this.ratingContainer = parentElement.querySelector('.ratingContainer');
-        this.initRatingContainer(this.ratingContainer);
+        if (enableRatings) {
+            this.ratingContainer = parentElement.querySelector('.ratingContainer');
+            this.initRatingContainer(this.ratingContainer);
+        }
 
         SocialMedia.content.then((htmlContent) => {
             this.socialMediaContainer = parentElement.querySelector('.socialMediaContainer');
@@ -31,13 +38,15 @@ export class Rating {
             });
         });
 
-        this.feedbackContainer = parentElement.querySelector('.feedbackContainer');
-        this.feedbackText = this.feedbackContainer.querySelector('.feedbackText') as HTMLTextAreaElement;
+        if (enableRatings) {
+            this.feedbackContainer = parentElement.querySelector('.feedbackContainer');
+            this.feedbackText = this.feedbackContainer.querySelector('.feedbackText') as HTMLTextAreaElement;
 
-        this.submitContainer = parentElement.querySelector('.submitContainer');
-        this.initSubmit();
+            this.submitContainer = parentElement.querySelector('.submitContainer');
+            this.initSubmit();
 
-        this.successContainer = parentElement.querySelector('.successContainer');
+            this.successContainer = parentElement.querySelector('.successContainer');
+        }
     }
 
     initRatingContainer(ratingContainer: Element) {
