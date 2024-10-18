@@ -122,24 +122,24 @@ export class StatusEffect implements StatusEffectDefinition {
     static forDamagedOverTime(gameObjectShape: Container, soundData?: SoundData) {
         // #BF153A old Health Bar dark red?
         return new StatusEffect(StatusEffect.DamagedAmbient, gameObjectShape,
-            [new ColorMatrixTweenEffect(191, 21, 58, 0.8, 0.2, 100)],
+            [new ColorMatrixTweenEffect(191, 21, 58, 0.8, 0.2, 200)],
             soundData);
     }
 
     static forFreezing(gameObjectShape: Container) {
         // #125799
         return new StatusEffect(StatusEffect.Freezing, gameObjectShape,
-            [new ColorMatrixTweenEffect(18, 87, 153, 0.4, 0.8, 100)]);
+            [new ColorMatrixTweenEffect(18, 87, 153, 0.4, 0.8, 200)]);
     }
 
     static forStarving(gameObjectShape: Container) {
         // #1E7A1E
         return new StatusEffect(StatusEffect.Starving, gameObjectShape,
-            [new ColorMatrixTweenEffect(30, 120, 30, 0.2, 0.8, 100)]);
+            [new ColorMatrixTweenEffect(30, 120, 30, 0.2, 0.8, 200)]);
     }
 
     static forYielded(gameObjectShape: Container, soundId?: string) {
-        return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
+        return new StatusEffect(StatusEffect.Yielded, gameObjectShape,
             [{ type: 'shake', from: 4, to: 4, duration: 24 }],
             {
                 soundId: soundId, options: {
@@ -211,7 +211,7 @@ export class StatusEffect implements StatusEffectDefinition {
                     const randomScaleY = this.originalScaleY * effect.to;
                     const tween = new Tween(this.shape.scale);
                     tween.to({ x: randomScaleX, y: randomScaleY }, effect.duration)
-                        .easing(Easing.Elastic.Out)
+                        .easing(Easing.Sinusoidal.Out)
                         .repeat(repeats)
                         .yoyo(true);
                     this.tweenGroup.add(tween);
