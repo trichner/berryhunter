@@ -35,6 +35,22 @@ export class Account {
     static set rawGameSettings(json: string) {
         setValue('gameSettings', json);
     }
+
+    static get developPanelPositionX(): number {
+        return getInt('developPanel.position.x');
+    }
+
+    static set developPanelPositionX(x: number) {
+        setValue('developPanel.position.x', String(x));
+    }
+
+    static get developPanelPositionY(): number {
+        return getInt('developPanel.position.y');
+    }
+
+    static set developPanelPositionY(y: number) {
+        setValue('developPanel.position.y', String(y));
+    }
 }
 
 function getString(key: string) {

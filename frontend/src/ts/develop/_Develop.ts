@@ -22,11 +22,15 @@ import {
 import {BackendState, IBackend} from '../interfaces/IBackend';
 import _isObject = require('lodash/isObject');
 import {WebParameters} from '../WebParameters';
+import {Account} from '../Account';
 
 let Game: IGame = null;
 let Backend: IBackend = null;
 let instance: Develop = null;
 let active: boolean = false;
+
+let dragStartX: number = undefined;
+let dragStartY: number = undefined;
 
 export class Develop implements IDevelop {
     public settings = {
@@ -98,6 +102,7 @@ export class Develop implements IDevelop {
         Preloading.renderPartial(require('./developPanel.html'), () => {
             const developPanel = document.getElementById('developPanel');
             // Capture inputs to prevent game actions while acting in develop panel
+            // TODO use GameSettingsUI behavior
             [
                 'click',
                 'pointerdown',
@@ -124,6 +129,35 @@ export class Develop implements IDevelop {
 
                 resetFocus();
             });
+
+            developPanel.addEventListener('dragstart', (event: DragEvent) => {
+                console.log('DragStart', event);
+                event.dataTransfer.setData('application/x-moz-node', developPanel as unknown as string);
+                dragStartX = event.offsetX;
+                dragStartY = event.offsetY;
+            });
+
+            developPanel.addEventListener('dragend', (event: DragEvent) => {
+                console.log('DragEnd', event);
+
+                const newX = event.clientX - dragStartX;
+                const newY = event.clientY - dragStartY;
+                developPanel.style.left = newX + 'px';
+                developPanel.style.top = newY + 'px';
+                developPanel.style.right = 'unset';
+                Account.developPanelPositionX = newX;
+                Account.developPanelPositionY = newY;
+            });
+
+            const savedX = Account.developPanelPositionX;
+            if (savedX !== null) {
+                developPanel.style.left = savedX + 'px';
+                developPanel.style.right = 'unset';
+            }
+            const savedY = Account.developPanelPositionY;
+            if (savedX !== null) {
+                developPanel.style.top = savedY + 'px';
+            }
 
             this.setupToggleButtons();
 
