@@ -39,4 +39,5 @@ Other free fonts available at "http://www.davebastian.com"
 	url('stoneage-webfont.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
 }

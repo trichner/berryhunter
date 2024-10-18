@@ -275,6 +275,22 @@
 		animation: betaStamp-pulse 450ms infinite alternate ease-in;
 	}
 
+	&.text-mode {
+		padding: 8px 16px;
+
+		border: 10px solid transparent;
+		border-image-source: url("../ts/userInterface/screens/betaStampFrame.svg");
+		border-image-width: 10px;
+		border-image-slice: calc(2 / 31 * 100%) calc(2 / 99 * 100%) fill;
+
+		font-family: 'Capture Smallz', sans-serif;
+		text-transform: uppercase;
+		color: #ff0000;
+		text-decoration: none;
+		font-size: 8vmin;
+		line-height: 80%;
+	}
+
 	> img {
 		display: block;
 		width: 40vh;
