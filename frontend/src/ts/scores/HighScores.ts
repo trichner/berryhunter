@@ -65,8 +65,7 @@ interface HighScoreVO {
     date: Date;
 }
 
-const htmlFile = require('./highScores.html');
-Preloading.renderPartial(htmlFile, onDomReady);
+Preloading.renderPartial(require('./highScores.html'), onDomReady);
 
 function onDomReady() {
     rootElement = document.getElementById('highScores');
@@ -169,6 +168,7 @@ function show() {
 function hide() {
     rootElement.classList.add('hidden');
     rootElement.classList.remove('loaded');
+    document.body.classList.remove('leaderboardAvailable');
     if (isDefined(pendingTimeout)) {
         window.clearTimeout(pendingTimeout);
     }
@@ -188,6 +188,7 @@ function populateHighScores(highScores: HighScoresVO) {
     }
 
     rootElement.classList.add('loaded');
+    document.body.classList.add('leaderboardAvailable');
 
     categories.forEach((category) => {
         if (!highScores.hasOwnProperty(category)) {

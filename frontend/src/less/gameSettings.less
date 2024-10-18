@@ -2,10 +2,15 @@
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 1; // Overlay start & end screen
+    z-index: (100 + 1); // Overlay start & end screen and highScores
 
     &.develop-offset {
         top: 350px;
+    }
+
+    .leaderboardAvailable:not(.leaderboardVisible) & {
+        top: 46px; // leave space for the High Scores row
+        margin-top: 0.7vh;
     }
 }
 
