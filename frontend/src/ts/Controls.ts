@@ -107,7 +107,7 @@ export class Controls {
         }
 
 
-        if (Chat.KEYS.indexOf(event.which) !== -1) {
+        if (Chat.KEYS.includes(event.which)) {
             Chat.show();
             event.preventDefault();
             return;

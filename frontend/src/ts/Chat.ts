@@ -29,7 +29,7 @@ export function setup(game: IGame, backend) {
         // but necessary to prevent movement while typing
         event.stopPropagation();
 
-        if (KEYS.indexOf(event.which) !== -1) {
+        if (KEYS.includes(event.which)) {
             let message = inputElement.value;
             if (hasValidToken && message.startsWith('#')) {
                 Console.run(message.substring(1), false);

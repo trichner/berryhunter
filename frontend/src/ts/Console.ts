@@ -57,7 +57,7 @@ function onDomReady() {
     consoleSuggestions = document.getElementById('console_suggestions') as HTMLDataListElement;
 
     commandInput.addEventListener('keypress', function (event) {
-        if (FILTERED_KEYCODES.indexOf(event.which) !== -1) {
+        if (FILTERED_KEYCODES.includes(event.which)) {
             event.preventDefault();
         }
     });

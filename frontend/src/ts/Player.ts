@@ -65,10 +65,10 @@ export class Player {
             this.character.setPosition(entity.position.x, entity.position.y);
         }
 
-        if (entity.statusEffects.indexOf(StatusEffect.Damaged) !== -1) {
+        if (entity.statusEffects.includes(StatusEffect.Damaged)) {
             PlayerDamagedEvent.trigger(this);
             this.vitalSigns.onDamageTaken();
-        } else if (entity.statusEffects.indexOf(StatusEffect.DamagedAmbient) !== -1) {
+        } else if (entity.statusEffects.includes(StatusEffect.DamagedAmbient)) {
             this.vitalSigns.onDamageTaken(true);
             PlayerDamagedEvent.trigger(this);
         }

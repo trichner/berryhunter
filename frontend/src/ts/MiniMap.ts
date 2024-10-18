@@ -141,7 +141,7 @@ export class MiniMap {
      * Adds the icon of the object to the map.
      */
     add(gameObject: GameObject, layer: Layer) {
-        if (this.registeredGameObjectIds.indexOf(gameObject.id) !== -1) {
+        if (this.registeredGameObjectIds.includes(gameObject.id)) {
             // The object is already on the minimao
             return;
         }
