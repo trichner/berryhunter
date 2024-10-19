@@ -1,13 +1,14 @@
-import {AddOptions, Ease, EaseParams} from 'pixi-ease';
-import {defaultFor} from './Utils';
+import { defaultFor } from './Utils';
 import _merge = require('lodash/merge');
-import {ListenerFn} from "eventemitter3";
-import {Container, Ticker} from 'pixi.js';
+import { ListenerFn } from "eventemitter3";
+import { Container, Ticker } from 'pixi.js';
+import { Easing, Tween, Group as TweenGroup } from '@tweenjs/tween.js';
 
 export class Animation {
-    private ease: Ease;
+    private tweenGroup: TweenGroup;
     private updateFn: () => void;
     private ticker: Ticker;
+    private onCompleteFunc;
 
     /**
      * Helper list for multiple animations
@@ -18,41 +19,40 @@ export class Animation {
      * @event List#done(List) final animation completed in the list
      * @event List#each(elapsed, List) each update after eases are updated
      */
-    constructor(options: { ticker?: Ticker, autoDestroy?: boolean } = {}) {
-        this.ease = new Ease(_merge(options, {useTicker: false}));
+    constructor() {
+        this.tweenGroup = new TweenGroup();
+    }
 
-        // TODO this sucks - just discard all animations on .destroy()
-        this.ticker = options.ticker || Ticker.shared;
+    start() {
+        this.tweenGroup.getAll().forEach(tween => tween.start());
+        this.ticker = Ticker.shared;
         this.updateFn = () => {
-            // @ts-ignore update is a bit weirdly defined in Ease.list
-            this.ease.update(this.ticker.deltaTime * 16.66);
+            this.tweenGroup.update();
+            if (this.tweenGroup.allStopped()) {
+                if (this.onCompleteFunc)
+                    this.onCompleteFunc();
+                Ticker.shared.remove(this.updateFn);
+            }
         };
         this.ticker.add(this.updateFn);
-
-        let autoDestroy = defaultFor(options.autoDestroy, true);
-        if (autoDestroy) {
-            this.on('complete', () => {
-                this.destroy();
-            });
-        }
     }
 
     destroy() {
-        this.ease.destroy();
+        this.tweenGroup.getAll().forEach(tween => tween.stop());
         this.ticker.remove(this.updateFn);
     }
 
-    add(object: Container, goto: EaseParams, options: AddOptions) {
-        return this.ease.add(object, goto, options);
+    add(object, to, options: { duration: number, easing, reverse?: boolean }) {
+        let tween = new Tween(object);
+        tween.to(to, options.duration)
+            .easing(options.easing)
+            .yoyo(true)
+            .repeat(1);
+        this.tweenGroup.add(tween);
+        return tween;
     }
 
-    on(event: string | symbol, callback: ListenerFn, context?: any): this {
-        this.ease.on(event, callback, context);
-        return this;
-    }
-
-    once(event: string | symbol, callback: ListenerFn, context?: any): this {
-        this.ease.once(event, callback, context);
-        return this;
+    onComplete(onComplete: ListenerFn) {
+        this.onCompleteFunc = onComplete;
     }
 }

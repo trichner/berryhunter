@@ -23,6 +23,12 @@ GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
+export interface Hand {
+    container: { group: Container & { originalTranslation: { x: number, y: number } }, slot: Container };
+    originalTranslation: { x: number, y: number };
+    originalRotation: number;
+}
+
 export class Character extends GameObject implements ICharacterLike {
     static svg: Texture;
     static craftingIndicator: { svg: Texture } = {svg: undefined};
@@ -49,8 +55,8 @@ export class Character extends GameObject implements ICharacterLike {
     messagesGroup: Container;
     craftingIndicator: Container;
 
-    leftHand: Container & { originalTranslation: { x: number, y: number } };
-    rightHand: Container & { originalTranslation: { x: number, y: number } };
+    leftHand: Hand;
+    rightHand: Hand;
 
     private prerenderSubToken: ISubscriptionToken;
 
@@ -162,19 +168,17 @@ export class Character extends GameObject implements ICharacterLike {
         // TODO Hände unter die Frisur rendern
         const handAngleDistance = 0.4;
 
-        this.leftHand = this.createHand(-handAngleDistance).group;
-        this.actualShape.addChild(this.leftHand);
+        this.leftHand = this.createHand(-handAngleDistance);
+        this.actualShape.addChild(this.leftHand.container.group);
 
+        this.rightHand = this.createHand(handAngleDistance);
+        this.actualShape.addChild(this.rightHand.container.group);
 
-        let rightHand = this.createHand(handAngleDistance);
-        this.rightHand = rightHand.group;
-        this.actualShape.addChild(this.rightHand);
-
-        this.equipmentSlotGroups[Equipment.EquipmentSlot.HAND] = rightHand.slot;
+        this.equipmentSlotGroups[Equipment.EquipmentSlot.HAND] = this.rightHand.container.slot;
     }
 
     createHand(handAngleDistance: number):
-        { group: Container & { originalTranslation: { x: number, y: number } }, slot: Container } {
+        Hand {
         let group = new Container() as Container & { originalTranslation: { x: number, y: number } };
 
         const handAngle = 0;
@@ -198,10 +202,13 @@ export class Character extends GameObject implements ICharacterLike {
         group.addChild(handShape);
 
         group['originalTranslation'] = Vector.clone(group.position);
-
         return {
-            group: group,
-            slot: slotGroup,
+            container: {
+                group: group,
+                slot: slotGroup,
+            },
+            originalTranslation: { x: group.x, y: group.y },
+            originalRotation: group.rotation
         };
     }
 
@@ -279,14 +286,14 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     private animateAction(
-        hand: Container & { originalTranslation: { x: number, y: number } },
+        hand: Hand,
         type: 'swing' | 'stab',
         remainingTicks?: number,
         mirrored: boolean = false,
     ) {
         animateAction({
             size: this.size,
-            hand,
+            hand: hand,
             type,
             animation: new Animation(),
             animationFrame: remainingTicks,
