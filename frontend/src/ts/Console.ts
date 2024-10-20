@@ -86,7 +86,9 @@ function onDomReady() {
 
     WebParameters.get().tryGetStringArray(BasicConfig.VALUE_PARAMETERS.START_COMMANDS, (commands => {
         log('Running ' + commands.length + ' start commands:');
-        commands.forEach(command => run(command));
+        commands.forEach((command, index) => {
+            setTimeout(() => run(command), index * 100);
+        });
     }));
 }
 
@@ -314,6 +316,10 @@ function readMacros(): { [key: string]: string[] } {
 
 function writeMacros(macros: { [key: string]: string[] }) {
     localStorage.setItem('consoleMacros', JSON.stringify(macros));
+}
+
+export function logWarning(message: string) {
+    log('WARNING: ' + message);
 }
 
 export function logError(message: string) {
