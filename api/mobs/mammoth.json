@@ -17,7 +17,7 @@
   ],
   "body": {
     "radius": 0.5,
-    "damageRadius": 0.52
+    "damageRadius": 0.435
   },
   "generator": {
     "weight": 20
