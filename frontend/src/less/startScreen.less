@@ -87,6 +87,10 @@
 			transform: translate(-50%, -50%) rotate(-38deg) scale(1);
 			filter: blur(0);
 			opacity: 1;
+
+			&.off-season {
+				filter: blur(0) invert(1) hue-rotate(45deg);
+			}
 		}
 	}
 
@@ -289,6 +293,10 @@
 		text-decoration: none;
 		font-size: 8vmin;
 		line-height: 80%;
+	}
+
+	&.off-season {
+		filter: blur(20px) invert(1) hue-rotate(45deg);
 	}
 
 	> img {
