@@ -73,7 +73,7 @@ PlayerDamagedEvent.subscribe((payload) => {
     if (triggerMap.trigger(soundId, delayInterval)) {
         const randomSoundId = randomFrom(hurt);
         spatialAudio.play(randomSoundId,
-            payload.character.getPosition(),
+            payload.player.character.getPosition(),
             {
                 speed: random(0.8, 0.9),
                 volume: random(0.8, 0.9),
@@ -178,4 +178,3 @@ registerPreload(PIXI.Assets.load('step'));
 registerPreload(PIXI.Assets.load('step2'));
 registerPreload(PIXI.Assets.load('step3'));
 registerPreload(PIXI.Assets.load('loopCrafting'));
-

@@ -3,12 +3,12 @@ import {StatusEffect} from './gameObjects/StatusEffect';
 import {Controls} from './Controls';
 import {Camera} from './Camera';
 import {Inventory} from './items/Inventory';
-import {VitalSigns} from './VitalSigns';
+import {DamageState, VitalSigns, VitalSignValues} from './VitalSigns';
 import {isDefined} from './Utils';
 import {BasicConfig as Constants} from '../config/BasicConfig';
 import {BerryhunterApi} from './backend/BerryhunterApi';
-import {Layer, MiniMap} from "./MiniMap";
-import {PlayerCraftingStateChangedEvent, PlayerCreatedEvent, PlayerDamagedEvent} from "./Events";
+import {Layer, MiniMap} from './MiniMap';
+import {PlayerCraftingStateChangedEvent, PlayerCreatedEvent, PlayerDamagedEvent} from './Events';
 
 export class Player {
     craftProgress;
@@ -65,20 +65,21 @@ export class Player {
             this.character.setPosition(entity.position.x, entity.position.y);
         }
 
+        let damageState: DamageState = DamageState.None;
         if (entity.statusEffects.includes(StatusEffect.Damaged)) {
-            PlayerDamagedEvent.trigger(this);
-            this.vitalSigns.onDamageTaken();
+            damageState = DamageState.OneTime;
+            PlayerDamagedEvent.trigger({player: this, damageState: damageState});
         } else if (entity.statusEffects.includes(StatusEffect.DamagedAmbient)) {
-            this.vitalSigns.onDamageTaken(true);
-            PlayerDamagedEvent.trigger(this);
+            damageState = DamageState.Continuous;
+            PlayerDamagedEvent.trigger({player: this, damageState: damageState});
         }
 
-        let newVitalSigns = {
+        let newVitalSigns: VitalSignValues = {
             health: entity.health,
             satiety: entity.satiety,
             bodyHeat: entity.bodyHeat
         };
-        this.vitalSigns.updateFromBackend(newVitalSigns);
+        this.vitalSigns.updateFromBackend(newVitalSigns, damageState);
 
         /**
          * Handle Actions

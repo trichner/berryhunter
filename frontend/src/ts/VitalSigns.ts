@@ -2,11 +2,15 @@ import * as Preloading from './Preloading';
 import * as UserInterface from './userInterface/UserInterface';
 import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/BasicConfig';
-import {VitalSignBar} from "./userInterface/VitalSignBar";
-import {IGame} from "./interfaces/IGame";
-import {ISubscriptionToken, PlayerStartedFreezingEvent, PreloadingStartedEvent, PrerenderEvent, VitalSignChangedEvent} from "./Events";
-
-let Game: IGame = null;
+import {VitalSignBar} from './userInterface/VitalSignBar';
+import {
+    ISubscriptionToken,
+    PlayerStartedFreezingEvent,
+    PreloadingStartedEvent,
+    VitalSignChangedEvent,
+} from './Events';
+import {isDefined} from './Utils';
+import {StatusEffect, StatusEffectDefinition} from './gameObjects/StatusEffect';
 
 export enum VitalSign {
     health = 'health',
@@ -16,6 +20,8 @@ export enum VitalSign {
 
 const OPACITY_STEPS: number = -1; // 32
 
+export type VitalSignValues = { [key in VitalSign]: number };
+
 export class VitalSigns {
 
     /**
@@ -23,7 +29,7 @@ export class VitalSigns {
      *
      * @type {{health: number, satiety: number, bodyHeat: number}}
      */
-    static MAXIMUM_VALUES = {
+    static MAXIMUM_VALUES: VitalSignValues = {
         health: 0xffffffff,
         satiety: 0xffffffff,
         bodyHeat: 0xffffffff,
@@ -32,10 +38,10 @@ export class VitalSigns {
     health: number;
     satiety: number;
     bodyHeat: number;
-    previousValues;
+    previousValues: VitalSignValues[];
     previousValuesLimit: number;
     uiBars: { [key in VitalSign]: VitalSignBar };
-    display: IVitalSignDisplay;
+    overlayManager: HtmlOverlayManager;
     private prerenderSubToken: ISubscriptionToken;
 
     constructor() {
@@ -52,18 +58,8 @@ export class VitalSigns {
             bodyHeat: UserInterface.getVitalSignBar('bodyHeat'),
         };
 
-        // this.display = new PixiDisplay();
-        this.display = new HtmlDisplay();
-        this.display.hideAll();
-
-        this.prerenderSubToken = PrerenderEvent.subscribe(this.update, this);
+        this.overlayManager = new HtmlOverlayManager();
     }
-
-    static setup(game, group) {
-        Game = game;
-
-        // PixiDisplay.setup(game, group);
-    };
 
     setHealth(health: number) {
         this.setValue(VitalSign.health, health);
@@ -77,7 +73,7 @@ export class VitalSigns {
         this.setValue(VitalSign.bodyHeat, bodyHeat);
     }
 
-    setValue(valueIndex: string, value: number) {
+    setValue(valueIndex: keyof typeof VitalSign, value: number) {
         let previousValue = this[valueIndex];
         this[valueIndex] = value;
         let change = value - previousValue;
@@ -104,8 +100,8 @@ export class VitalSigns {
             newValue: {
                 relative: relativeValue,
                 absolute: value,
-                change: change
-            }
+                change: change,
+            },
         });
 
         if (valueIndex == VitalSign.bodyHeat && relativeValue <= 0 && previousValue > 0) {
@@ -113,15 +109,11 @@ export class VitalSigns {
         }
     }
 
-    onDamageTaken(skipFadeIn = false) {
-        this.display.onDamageTaken(skipFadeIn);
-    }
-
-    updateFromBackend(backendValues) {
-        let previousValues = {};
+    updateFromBackend(backendValues: VitalSignValues, damageState: DamageState) {
+        let previousValues: VitalSignValues = {bodyHeat: undefined, health: undefined, satiety: undefined};
         for (const vitalSign in VitalSign) {
             if (backendValues.hasOwnProperty(vitalSign)) {
-                this.setValue(vitalSign, backendValues[vitalSign]);
+                this.setValue(vitalSign as keyof typeof VitalSign, backendValues[vitalSign]);
                 previousValues[vitalSign] = backendValues[vitalSign];
             } else {
                 previousValues[vitalSign] = this[vitalSign];
@@ -133,44 +125,46 @@ export class VitalSigns {
             this.previousValues.shift();
         }
 
-        this.display.onUpdateFromBackend();
-    }
-
-    update() {
-        this.display.update(Game.timeDelta);
-        if (!this.display.isDamageVisible()) {
-            let indicatorVisible = false;
-            let relativeSatiety = this.satiety / VitalSigns.MAXIMUM_VALUES.satiety;
-            if (this.showIndicatorBelowThreshold(relativeSatiety, 'hunger')) {
-                indicatorVisible = true;
-            }
-
-            let relativeBodyHeat = this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat;
-            if (this.showIndicatorBelowThreshold(relativeBodyHeat, 'coldness')) {
-                indicatorVisible = true;
-            }
-
-            if (!indicatorVisible) {
-                this.display.hideIndicator('hunger');
-                this.display.hideIndicator('coldness');
-            }
+        const displayedStatusEffects: StatusEffectDefinition[] = [];
+        switch (damageState) {
+            case DamageState.OneTime:
+                displayedStatusEffects.push(StatusEffect.Damaged);
+                break;
+            case DamageState.Continuous:
+                displayedStatusEffects.push(StatusEffect.DamagedAmbient);
+                break;
         }
+
+        let relativeSatiety = this.satiety / VitalSigns.MAXIMUM_VALUES.satiety;
+        if (this.showIndicatorBelowThreshold(relativeSatiety, 'hunger')) {
+            displayedStatusEffects.push(StatusEffect.Starving);
+        }
+
+        let relativeBodyHeat = this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat;
+        if (this.showIndicatorBelowThreshold(relativeBodyHeat, 'coldness')) {
+            displayedStatusEffects.push(StatusEffect.Freezing);
+        }
+
+        this.overlayManager.onUpdateFromBackend(displayedStatusEffects);
+
+
     }
 
     private showIndicatorBelowThreshold(relativeVitalSign: number, indicator: string) {
         if (relativeVitalSign < GraphicsConfig.vitalSigns.overlayThreshold) {
-            let opacity = 1 - (relativeVitalSign / GraphicsConfig.vitalSigns.overlayThreshold);
-            this.display.showIndicator(indicator, opacity);
+            // TODO apply opacity to overlays
+            // let opacity = 1 - (relativeVitalSign / GraphicsConfig.vitalSigns.overlayThreshold);
+            // this.overlayManager.showIndicator(indicator, opacity);
             return true;
         }
 
-        this.display.hideIndicator(indicator);
         return false;
     }
 
     destroy() {
-        this.prerenderSubToken.unsubscribe();
-        this.display.onDestroy();
+        if (isDefined(this.prerenderSubToken)) {
+            this.prerenderSubToken.unsubscribe();
+        }
     }
 }
 
@@ -186,162 +180,10 @@ function getSteppedOpacity(opacity: number) {
     return Math.ceil(opacity * OPACITY_STEPS) / OPACITY_STEPS;
 }
 
-interface IVitalSignDisplay {
-    hideAll(): void;
-
-    onDamageTaken(skipFadeIn: boolean): void;
-
-    update(timeDelta: number): void;
-
-    isDamageVisible(): boolean;
-
-    showIndicator(indicatorName: string, opacity: number): void;
-
-    hideIndicator(indicatorName: string): void;
-
-    onUpdateFromBackend(): void;
-
-    onDestroy(): void;
-}
-
-/*
- * ============================================================================
- * Render overlays in PIXI.js
- */
-
-// class PixiDisplay implements IVitalSignDisplay {
-//     static indicators: {
-//         damage: PIXI.Sprite,
-//         hunger: PIXI.Sprite,
-//         coldness: PIXI.Sprite,
-//     };
-//     static damageIndicator: ISvgContainer = {svg: undefined};
-//     static hungerIndicator: ISvgContainer = {svg: undefined};
-//     static coldnessIndicator: ISvgContainer = {svg: undefined};
-//
-//     indicators: {
-//         damage: PIXI.Sprite,
-//         hunger: PIXI.Sprite,
-//         coldness: PIXI.Sprite,
-//     };
-//     damageIndicatorDuration: number;
-//
-//     constructor() {
-//         this.indicators = PixiDisplay.indicators;
-//
-//         this.damageIndicatorDuration = 0;
-//     }
-//
-//     static setup(game, group: PIXI.Container) {
-//         let indicators = {
-//             damage: createIndicator(PixiDisplay.damageIndicator.svg),
-//             hunger: createIndicator(PixiDisplay.hungerIndicator.svg),
-//             coldness: createIndicator(PixiDisplay.coldnessIndicator.svg),
-//         };
-//         PixiDisplay.indicators = indicators;
-//
-//         group.addChild(
-//             indicators.damage,
-//             indicators.hunger,
-//             indicators.coldness
-//         );
-//         group.position.set(game.width / 2, game.height / 2);
-//     }
-//
-//     hideAll(): void {
-//         // hide all indicators
-//         Object.values(this.indicators).forEach(function (indicator: { visible: boolean }) {
-//             indicator.visible = false;
-//         });
-//     }
-//
-//     onDamageTaken(skipFadeIn: boolean): void {
-//         // 300ms shows the damage indicator
-//         if (skipFadeIn) {
-//             this.damageIndicatorDuration = 420;
-//         } else {
-//             this.damageIndicatorDuration = 500;
-//         }
-//         this.showIndicator('damage', 0);
-//     }
-//
-//     update(timeDelta: number): void {
-//         if (!this.isDamageVisible()) {
-//             return;
-//         }
-//
-//         this.damageIndicatorDuration -= timeDelta;
-//         if (this.damageIndicatorDuration < 0) {
-//             this.hideIndicator('damage');
-//         } else {
-//             this.hideIndicator('hunger');
-//             this.hideIndicator('coldness');
-//             this.showIndicator('damage', getDamageOpacity(this.damageIndicatorDuration));
-//         }
-//     }
-//
-//     isDamageVisible(): boolean {
-//         return this.damageIndicatorDuration > 0;
-//     }
-//
-//     showIndicator(indicatorName: string, opacity: number) {
-//         opacity = getSteppedOpacity(opacity);
-//
-//         this.indicators[indicatorName].visible = true;
-//         if (this.indicators[indicatorName].filters[0].alpha !== opacity) {
-//             this.indicators[indicatorName].filters[0].alpha = opacity;
-//         }
-//     }
-//
-//     hideIndicator(indicatorName: string) {
-//         this.indicators[indicatorName].visible = false;
-//     }
-//
-//     onUpdateFromBackend(): void {
-//         // Nothing to do
-//     }
-//
-//     onDestroy(): void {
-//         // Nothing to do
-//     }
-// }
-//
-// /**
-//  * 500 - 420ms --> fadeIn
-//  * 420 - 280ms --> show
-//  * 280 -   0ms --> fadeOut
-//  * @param time
-//  */
-// function getDamageOpacity(time) {
-//     if (time > 420) {
-//         return map(time, 500, 420, 0, 1);
-//     } else if (time >= 280) {
-//         return 1;
-//     } else {
-//         return map(time, 280, 0, 1, 0);
-//     }
-// }
-//
-// function createIndicator(svgGraphic: PIXI.Texture): PIXI.Sprite {
-//     let indicatorSprite = new InjectedSVG(svgGraphic, 0, 0, indicatorSize / 2);
-//     indicatorSprite.width = window.innerWidth;
-//     indicatorSprite.height = window.innerHeight;
-//     indicatorSprite.visible = false;
-//     indicatorSprite.filters = [new PIXI.filters.AlphaFilter()];
-//
-//     return indicatorSprite;
-// }
-//
-// let indicatorSize = roundToNearestPowOfTwo(window.innerWidth) / 3.2;
-// Preloading.registerGameObjectSVG(PixiDisplay.damageIndicator, require('../img/overlays/damage.svg'), indicatorSize);
-// Preloading.registerGameObjectSVG(PixiDisplay.hungerIndicator, require('../img/overlays/hunger.svg'), indicatorSize);
-// Preloading.registerGameObjectSVG(PixiDisplay.coldnessIndicator, require('../img/overlays/coldness.svg'), indicatorSize);
-
 /*
  * ============================================================================
  * Render overlays in HTML
  */
-
 const htmlFile = require('../partials/vitalSigns.html');
 let rootElement: HTMLElement;
 
@@ -356,133 +198,250 @@ export function onDomReady() {
     document.body.insertBefore(rootElement, UserInterface.getRootElement());
 }
 
-enum DamageIndicatorState {
+enum OverlayState {
     INVISIBLE,
     FADING_IN,
     VISIBLE,
     FADING_OUT
 }
 
-class HtmlDisplay implements IVitalSignDisplay {
+enum Indicators {
+    coldness = 'coldness',
+    oneShotDamage = 'oneShotDamage',
+    continuousDamage = 'continuousDamage',
+    hunger = 'hunger'
+}
 
-    private readonly indicators: {
-        coldness: HTMLElement,
-        damage: HTMLElement,
-        hunger: HTMLElement,
-    };
+export enum DamageState {
+    None = 'None',
+    OneTime = 'OneTime',
+    Continuous = 'Continuous',
+}
 
-    private damageIndicatorState: DamageIndicatorState = DamageIndicatorState.INVISIBLE;
-    private isDamageContinuous: boolean;
-    private backendTickContainedDamage: boolean = false;
-    private readonly transitionendListener: (event: TransitionEvent) => void;
+class HtmlOverlayManager /*implements IVitalSignsOverlayManager*/ {
+    private readonly overlays: { [key in Indicators]: Overlay };
 
     constructor() {
-        this.indicators = {
-            coldness: rootElement.querySelector('.overlay.coldness'),
-            damage: rootElement.querySelector('.overlay.damage'),
-            hunger: rootElement.querySelector('.overlay.hunger')
+        this.overlays = {
+            coldness: new TransitionedOverlay(rootElement.querySelector('.overlay.coldness')),
+            oneShotDamage: new AnimatedOverlay(rootElement.querySelector('.overlay.damage')),
+            continuousDamage: new TransitionedOverlay(rootElement.querySelector('.overlay.continuousDamage')),
+            hunger: new TransitionedOverlay(rootElement.querySelector('.overlay.hunger')),
         };
-
-        this.transitionendListener = () => {
-            this.onDamageIndicatorTransitionEnd();
-        };
-        this.indicators.damage.addEventListener('transitionend', this.transitionendListener);
     }
 
-    hideAll(): void {
-        this.hideIndicator('coldness');
-        this.hideIndicator('damage');
-        this.hideIndicator('hunger');
-    }
-
-    isDamageVisible(): boolean {
-        // TODO Gameplay test. Do we want to overlay the fadeout with possible other overlays?
-        //  Or delay the other overlays until the damage overlay is completely gone.
-        return this.damageIndicatorState === DamageIndicatorState.VISIBLE ||
-            this.damageIndicatorState === DamageIndicatorState.FADING_IN;
-    }
-
-    onDamageTaken(skipFadeIn: boolean): void {
-        this.isDamageContinuous = skipFadeIn;
-        switch (this.damageIndicatorState) {
-            case DamageIndicatorState.INVISIBLE:
-                this.indicators.damage.classList.add('active');
-                this.damageIndicatorState = DamageIndicatorState.FADING_IN;
-                break;
-            case DamageIndicatorState.FADING_OUT:
-                this.indicators.damage.classList.add('active');
-                this.damageIndicatorState = DamageIndicatorState.FADING_IN;
-                break;
-            case DamageIndicatorState.FADING_IN:
-            case DamageIndicatorState.VISIBLE:
-                // Nothing to do, already fading in / visible
-                break;
-        }
-        this.backendTickContainedDamage = true;
-        this.hideIndicator('coldness');
-        this.hideIndicator('hunger');
-    }
-
-    onDamageIndicatorTransitionEnd(/*event: TransitionEvent*/) {
-        switch (this.damageIndicatorState) {
-            case DamageIndicatorState.FADING_IN:
-                this.damageIndicatorState = DamageIndicatorState.VISIBLE;
-                if (!this.isDamageContinuous) {
-                    this.indicators.damage.classList.remove('active');
-                    this.damageIndicatorState = DamageIndicatorState.FADING_OUT;
-                } else {
-                    // via onUpdateFromBackend:
-                    //  Wait for next backend update
-                    //  if it's not another damage --> start fading out
-                }
-                break;
-            case DamageIndicatorState.FADING_OUT:
-                this.damageIndicatorState = DamageIndicatorState.INVISIBLE;
-                break;
-            default:
-                // Something's fucky
-                console.error('Invalid state. Damage indicator ended transition but the state is "' +
-                    DamageIndicatorState[this.damageIndicatorState] + '"?');
-                break;
-        }
-    }
-
-    onUpdateFromBackend(): void {
-        if (!this.backendTickContainedDamage &&
-            this.damageIndicatorState === DamageIndicatorState.VISIBLE &&
-            this.isDamageContinuous) {
-            this.indicators.damage.classList.remove('active');
-            this.damageIndicatorState = DamageIndicatorState.FADING_OUT;
-        }
-        this.backendTickContainedDamage = false;
-    }
-
-    update(timeDelta: number): void {
-        // Animations are handled via CSS
-    }
-
-    showIndicator(indicatorName: string, opacity: number): void {
-        opacity = getSteppedOpacity(opacity);
-
-        let indicator = this.getIndicatorByName(indicatorName);
-        indicator.classList.remove('hidden');
-        indicator.style.opacity = opacity.toString();
-    }
-
-    hideIndicator(indicatorName: string): void {
-        if (indicatorName === 'damage') {
-            this.indicators.damage.classList.remove('active');
+    public onUpdateFromBackend(displayedStatusEffects: StatusEffectDefinition[]) {
+        if (displayedStatusEffects.length === 0) {
+            this.overlays.coldness.hide();
+            this.overlays.oneShotDamage.hide();
+            this.overlays.continuousDamage.hide();
+            this.overlays.hunger.hide();
             return;
         }
 
-        this.getIndicatorByName(indicatorName).classList.add('hidden');
+        if (displayedStatusEffects.includes(StatusEffect.Damaged)) {
+            // Hide continuous damage overlay
+            this.overlays.continuousDamage.hideWithoutTransition();
+            // Play animation for damage overlay // only starts if not already running
+            this.overlays.oneShotDamage.show();
+            // else if states.contains(ContinuousDamage)
+        } else if (displayedStatusEffects.includes(StatusEffect.DamagedAmbient)) {
+            // Fade out hunger overlay // only fades out if visible
+            this.overlays.hunger.hide();
+            // Fade out cold overlay
+            this.overlays.coldness.hide();
+            // Fade in continuous damage overlay // only fades in if not already visible
+            this.overlays.continuousDamage.show();
+        } else {
+            // Fade out continuous damage overlay
+            this.overlays.continuousDamage.hide();
+            // if states.contains(Hunger)
+            if (displayedStatusEffects.includes(StatusEffect.Starving)) {
+                // Fade in hunger overlay
+                this.overlays.hunger.show();
+            } else {
+                // Fade out hunger overlay
+                this.overlays.hunger.hide();
+            }
+            // if states.contains(Cold)
+            if (displayedStatusEffects.includes(StatusEffect.Freezing)) {
+                // Fade in cold overlay
+                this.overlays.coldness.show();
+            } else {
+                // Fade out cold overlay
+                this.overlays.coldness.hide();
+            }
+        }
+    }
+}
+
+interface Overlay {
+    isShown(): boolean;
+
+    isHidden(): boolean;
+
+    show(): void;
+
+    hide(): void;
+
+    hideWithoutTransition(): void;
+}
+
+class TransitionedOverlay implements Overlay {
+
+    private state: OverlayState;
+    private overlayElement: HTMLElement;
+    private animation: Animation = null;
+
+    constructor(overlayElement: HTMLElement) {
+        this.overlayElement = overlayElement;
+        this.overlayElement.classList.add('hidden');
+        this.state = OverlayState.INVISIBLE;
     }
 
-    getIndicatorByName(indicatorName: string): HTMLElement {
-        return this.indicators[indicatorName] as HTMLElement;
+    public isShown(): boolean {
+        return this.state === OverlayState.FADING_IN ||
+            this.state === OverlayState.VISIBLE ||
+            this.state === OverlayState.FADING_OUT;
     }
 
-    onDestroy(): void {
-        this.indicators.damage.removeEventListener('transitionend', this.transitionendListener);
+    public isHidden(): boolean {
+        return !this.isShown();
+    }
+
+    public fadeIn() {
+        // if the overlay is hidden, remove the 'hidden' class
+        // and fade its opacity from 0 to 100 over 80ms
+        if (!this.isHidden()) {
+            return;
+        }
+
+        this.overlayElement.classList.remove('hidden');
+        this.state = OverlayState.FADING_IN;
+        this.animation = this.overlayElement.animate([
+            {opacity: 0},
+            {opacity: 1},
+        ], {
+            duration: 80,
+            fill: 'forwards',
+        });
+        this.animation.onfinish = () => {
+            this.animation = null;
+            this.state = OverlayState.VISIBLE;
+        };
+    }
+
+    public fadeOut() {
+        // if the overlay is shown, fade its opacity from the current value to 0 over 150ms
+        // then add the class 'hidden' to it
+        if (this.state === OverlayState.INVISIBLE || this.state === OverlayState.FADING_OUT) {
+            return;
+        }
+
+        if (this.state === OverlayState.FADING_IN) {
+            this.state = OverlayState.FADING_OUT;
+            // Fake fading out by just reversing the current fade in animation;
+            this.animation.reverse();
+        } else {
+            this.state = OverlayState.FADING_OUT;
+            this.animation = this.overlayElement.animate([
+                {opacity: 1},
+                {opacity: 0},
+            ], {
+                duration: 150,
+                fill: 'forwards',
+            });
+        }
+
+        this.animation.onfinish = () => {
+            this.animation = null;
+            this.overlayElement.classList.add('hidden');
+            this.state = OverlayState.INVISIBLE;
+        };
+    }
+
+    public hide() {
+        this.fadeOut();
+    }
+
+    public hideWithoutTransition() {
+        // Cancel any transition
+        this.overlayElement.getAnimations().forEach(animation => animation.cancel());
+        this.overlayElement.classList.add('hidden');
+        this.state = OverlayState.INVISIBLE;
+    }
+
+    public show() {
+        this.fadeIn();
+    }
+}
+
+class AnimatedOverlay implements Overlay {
+
+    private state: OverlayState;
+    private overlayElement: HTMLElement;
+    private animation: Animation = null;
+
+    constructor(overlayElement: HTMLElement) {
+        this.overlayElement = overlayElement;
+        this.overlayElement.classList.add('hidden');
+        this.state = OverlayState.INVISIBLE;
+    }
+
+    show(): void {
+        this.animate();
+    }
+
+    public isShown(): boolean {
+        return this.state === OverlayState.FADING_IN ||
+            this.state === OverlayState.VISIBLE ||
+            this.state === OverlayState.FADING_OUT;
+    }
+
+    public isHidden(): boolean {
+        return !this.isShown();
+    }
+
+    public animate() {
+        // if no animation currently running --> start it
+        // animation goes like this
+        //  - fade opacity from 0 to 1 over 80ms
+        //  - keep opacity at 1 for 140ms
+        //  - fade opacity from 1 to 0 over 280ms
+
+        if (this.animation === null || this.animation.playState === 'finished') {
+            this.overlayElement.classList.remove('hidden');
+            this.state = OverlayState.FADING_IN;
+
+            // Animate opacity: 0 to 1 over 80ms, stay at 1 for 140ms, then fade to 0 over 280ms
+            const fadeInDuration = 80;
+            const visibleDuration = 140;
+            const fadeOutDuration = 280;
+            const totalDuration = fadeInDuration + visibleDuration + fadeOutDuration;
+            this.animation = this.overlayElement.animate([
+                {opacity: 0},            // Start at opacity 0
+                {opacity: 1, offset: (fadeInDuration / totalDuration)}, // Fade in to opacity 1 (at 80ms/360ms)
+                {opacity: 1, offset: (visibleDuration / totalDuration)}, // Stay at opacity 1 for a while (140ms total)
+                {opacity: 0},             // Fade out to opacity 0 (at 360ms)
+            ], {
+                duration: totalDuration, // Total duration: 80ms + 140ms + 280ms = 360ms
+                fill: 'forwards',
+            });
+
+            this.animation.onfinish = () => {
+                this.overlayElement.classList.add('hidden');
+                this.state = OverlayState.INVISIBLE;
+            };
+        }
+    }
+
+    hide(): void {
+        // Nothing to do - either we are already hidden or we are not, but then we still finish the animation
+    }
+
+    hideWithoutTransition(): void {
+        this.animation.cancel();
+        this.overlayElement.classList.add('hidden');
+        this.state = OverlayState.INVISIBLE;
     }
 }

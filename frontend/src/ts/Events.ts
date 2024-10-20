@@ -8,7 +8,7 @@ import {integer, radians} from "./interfaces/Types";
 import {InputAction} from "./backend/messages/outgoing/InputMessage";
 import {EquipmentSlot} from "./items/Equipment";
 import {Placeable} from "./gameObjects/Placeable";
-import {ItemType} from '../ts/items/ItemType';
+import {DamageState} from './VitalSigns';
 
 const warnedEvents = [];
 
@@ -189,7 +189,7 @@ export const GameSetupEvent: OneTimePayloadEvent<IGame> = new OneTimePayloadEven
 export const GameLateSetupEvent: OneTimePayloadEvent<IGame> = new OneTimePayloadEvent<IGame>();
 export const GamePlayingEvent: PayloadEvent<IGame> = new PayloadEvent<IGame>();
 export const PlayerCreatedEvent: PayloadEvent<Player> = new PayloadEvent<Player>();
-export const PlayerDamagedEvent: PayloadEvent<Player> = new PayloadEvent<Player>();
+export const PlayerDamagedEvent: PayloadEvent<{player: Player, damageState: DamageState}> = new PayloadEvent<{player: Player, damageState: DamageState}>();
 export const PlayerStartedFreezingEvent: SimpleEvent = new SimpleEvent();
 export const PlayerMoved: PayloadEvent<Vector> = new PayloadEvent<Vector>();
 export const CharacterMoved: PayloadEvent<Vector> = new PayloadEvent<Vector>();

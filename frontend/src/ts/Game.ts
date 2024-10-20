@@ -207,7 +207,6 @@ export class Game implements IGame {
         this.createBackground();
 
         Camera.setup(this);
-        VitalSigns.setup(this, this.layers.overlays.vitalSignIndicators);
         Recipes.setup(this);
         Scoreboard.setup();
         GroundTextureManager.setup(this);
