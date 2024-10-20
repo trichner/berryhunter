@@ -1,0 +1,68 @@
+{
+  "date": "20.10.2024",
+  "codename": "Community Playtest #1",
+  "descriptionHtml": [
+    "<p>Welcome to the first Community Playtest!</p>",
+    "<p class=\"offset\">BerryHunter will follow a \"Game-as-an-Event\" release model. That means while the server should mostly be online, support and maintenance can only be expected during communicated events like the current Playtest.</p>",
+    "<p>That also means the game will change and evolve from event to event - while the state in-between is not guaranteed in any way.</p>",
+    "<p class=\"help\">As you find bugs or have suggestions for the game,<br />let us know via our social media channels on the right.</p>",
+    "<p class=\"offset\">Thank you very much for playing this early version of our game!</p>"
+  ],
+  "changes": [
+    {
+      "category": "bugFix",
+      "description": "Animals won't randomly become invisible to you.",
+      "trelloId": "c/jABfWyaq"
+    },
+    {
+      "category": "bugFix",
+      "description": "Attack and action animations are not longer broken.",
+      "trelloId": "c/h8aJMJsK"
+    },
+    {
+      "category": "bugFix",
+      "description": "Damage overlay could become stuck until you reloaded the game. This should be fixed.",
+      "trelloId": "c/SF3zrNIK"
+    },
+    {
+      "category": "bugFix",
+      "description": "Mammoth and tiger damage areas are now more forgiving, making it easier to hit them without being hit.",
+      "trelloUrl": "https://trello.com/c/KjluLplC/130-mammoth-and-tiger-damage-collider-are-not-aligned-to-visuals"
+    },
+    {
+      "category": "bugFix",
+      "description": "Game doesn't freeze anymore when you sent an overly long chat message. In fact chat messages are now capped to 120 characters.",
+      "trelloId": "c/dO3pZfLg"
+    },
+    {
+      "category": "bugFix",
+      "description": "When you now click outside of the chat window, the game will continue as expected.",
+      "trelloId": "c/abt1Ve5l"
+    },
+    {
+      "category": "bugFix",
+      "description": "Headlines (on the start screen) could become ginormous on wide-screens. Not anymore!",
+      "trelloId": "c/qKhkdrg9"
+    },
+    {
+      "category": "bugFix",
+      "description": "Fixed table layout of highscores.",
+      "trelloId": "c/I46xhp8G"
+    },
+    {
+      "category": "bugFix",
+      "description": "Highscores (at the top of the screen) will now update when opening the scoreboards.",
+      "trelloId": "c/EBJIIk8z"
+    },
+    {
+      "category": "bugFix",
+      "description": "The rate+feedback form was broken. As it is still not fixed, we decided to remove it for now to not lose your valuable feedback into the aether.",
+      "trelloId": "c/pLPytjml"
+    },
+    {
+      "category": "improvement",
+      "description": "Updated the credits with the latest changes to the team.",
+      "trelloId": "c/R2yscN9e"
+    }
+  ]
+}

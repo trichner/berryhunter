@@ -1,0 +1,29 @@
+{
+  "date": "25.07.2024",
+  "codename": "Internal Playtest",
+  "descriptionHtml": [
+    "<p>Goal was to update the internals of the game and test out, what works and what needs work.</p>"
+  ],
+  "changes": [
+    {
+      "category": "bugFix",
+      "description": "Fixed scoreboard display.",
+      "trelloId": "c/wzJSHo1Q"
+    },
+    {
+      "category": "bugFix",
+      "description": "Also fixed scoreboard backend.",
+      "trelloId": "c/W5wbd1A8"
+    },
+    {
+      "category": "bugFix",
+      "description": "Backend doesn't randomly crash anymore.",
+      "trelloId": "c/1zBPh6rh"
+    },
+    {
+      "category": "highlight",
+      "description": "There are sounds now!",
+      "trelloId": "/c/O9RMpFqV/"
+    }
+  ]
+}

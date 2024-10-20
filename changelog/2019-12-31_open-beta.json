@@ -1,6 +1,6 @@
 {
   "date": "31.12.2019",
-  "codename": "Open Beta",
+  "codename": "Hibernation",
   "descriptionHtml": [
     "<p class=\"warn\">This is an unfinished version of BerryHunter.</p>",
     "<p>Anything may be changed at any time without warning!</p>",
@@ -41,7 +41,7 @@
     {
       "category": "improvement",
       "description": "Improved caching and reduced number of file downloads before the game starts.",
-      "trelloId": [
+      "trelloIds": [
         "c/oMja915P",
         "c/sPSzWW1u",
         "c/il3c3lnm"
@@ -195,7 +195,7 @@
     {
       "category": "feature",
       "description": "Mobs show when they are damaged. Players show both damage and freezing.",
-      "trelloId": [
+      "trelloIds": [
         "c/0fpmujP9",
         "c/t2hWEqxY"
       ]

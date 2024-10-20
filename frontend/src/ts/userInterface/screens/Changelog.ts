@@ -26,16 +26,35 @@ function renderChangelogs(changelogs: ChangelogVO[]): string {
     return Mustache.render(htmlModuleToString(template), changelogs);
 }
 
-function validateTrelloId(trelloId: string | string[]) {
-    if (Array.isArray(trelloId)) {
-        trelloId.forEach(validateTrelloId);
-        return;
-    }
-
-    // TrelloId is a single string
+function validateTrelloId(trelloId: string) {
     if (!trelloId.match(/c\/[0-9a-zA-Z]{8}/)) {
         console.warn('Trello Id "' + trelloId + '" appears to be invalid. It should look like "c/aBcD1234".');
     }
+}
+
+function validateTrelloIds(trelloIds: string[]) {
+    if (!Array.isArray(trelloIds)) {
+        console.warn('TrelloIds need to be an array.');
+        return;
+    }
+
+    trelloIds.forEach(validateTrelloId);
+}
+
+function validateTrelloUrl(trelloUrl: string) {
+    if (!trelloUrl.match(/https:\/\/trello\.com\/c\/[0-9a-zA-Z]{8}\/[^\/]+/)) {
+        console.warn('TrelloUrl "' + trelloUrl + '" appears to be invalid. It should be a full trello card url ' +
+            'like "https://trello.com/c/KjluLplC/130-mammoth-and-tiger-damage-collider-are-not-aligned-to-visuals".');
+    }
+}
+
+function validateTrelloUrls(trelloUrls: string[]) {
+    if (!Array.isArray(trelloUrls)) {
+        console.warn('TrelloUrls need to be an array.');
+        return;
+    }
+
+    trelloUrls.forEach(validateTrelloUrl);
 }
 
 function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
@@ -48,8 +67,25 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
             }
             category.changes.push(change);
 
+            let hasTrelloReference = false;
             if (isDefined(change.trelloId)) {
                 validateTrelloId(change.trelloId);
+                hasTrelloReference = true;
+            }
+            if (isDefined(change.trelloIds)) {
+                validateTrelloIds(change.trelloIds);
+                hasTrelloReference = true;
+            }
+            if (isDefined(change.trelloUrl)) {
+                validateTrelloUrl(change.trelloUrl);
+                hasTrelloReference = true;
+            }
+            if (isDefined(change.trelloUrls)) {
+                validateTrelloUrls(change.trelloUrls);
+                hasTrelloReference = true;
+            }
+            if (!hasTrelloReference) {
+                console.warn('At least one of trelloId, trelloIds, trelloUrl, trelloUrls need to be provided for', change);
             }
         });
         for (let [name, category] of categories) {
@@ -61,11 +97,11 @@ function mapChangelogs(changelogs: ChangelogJSON[]): ChangelogVO[] {
         return {
             codename: prepareCodename(changelog.codename),
             date: mdate,
-            datetime: format( mdate, 'yyyy-MM-dd'),
-            dateFormatted: format( mdate, 'dd.MM.yyyy'),
+            datetime: format(mdate, 'yyyy-MM-dd'),
+            dateFormatted: format(mdate, 'dd.MM.yyyy'),
             description: changelog.description,
             descriptionHtml: prepareDescriptionHtml(changelog.descriptionHtml),
-            categories: Array.from(categories.values())
+            categories: Array.from(categories.values()),
         };
     });
 
@@ -107,7 +143,7 @@ function newCategories(): Map<string, ChangeCategoryVO> {
 function newCategory(categories: Map<string, ChangeCategoryVO>, key: string, name: string) {
     categories.set(key, {
         name: name,
-        changes: []
+        changes: [],
     });
 }
 
@@ -122,7 +158,10 @@ interface ChangelogJSON {
 interface ChangeJSON {
     category: string,
     description: string,
-    trelloId: string | string[]
+    trelloId?: string,
+    trelloIds?: string[],
+    trelloUrl?: string,
+    trelloUrls?: string[],
 }
 
 interface ChangelogVO {
@@ -143,5 +182,8 @@ interface ChangeCategoryVO {
 interface ChangeVO {
     category: string,
     description: string,
-    trelloId: string | string[]
+    trelloId?: string,
+    trelloIds?: string[],
+    trelloUrl?: string,
+    trelloUrls?: string[],
 }
