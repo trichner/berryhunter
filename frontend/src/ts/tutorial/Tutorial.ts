@@ -137,7 +137,7 @@ let tutorialToggle: HTMLInputElement;
 
 StartScreenDomReadyEvent.subscribe(() => {
     tutorialToggle = document.getElementById('tutorialToggle') as HTMLInputElement;
-    tutorialToggle.checked = false;
+    tutorialToggle.checked = Account.tutorialCompleted === null;
 });
 
 PlayerCreatedEvent.subscribe(() => {
@@ -149,6 +149,7 @@ PlayerCreatedEvent.subscribe(() => {
 });
 
 BeforeDeathEvent.subscribe(() => {
+    tutorialToggle.checked = Account.tutorialCompleted === null;
     // Reset all tutorial elements on death
     let elements = rootElement.getElementsByClassName('tutorialStep');
     for (let i = 0; i < elements.length; i++) {
