@@ -1,13 +1,13 @@
 import {isDefined} from '../Utils';
 import {GroundTexture, Parameters} from './GroundTexture';
-import {GroundTextureTypes} from './GroundTextureTypes';
+import {groundTextureTypes} from './GroundTextureTypes';
 import {IGame} from "../interfaces/IGame";
 import { Container } from 'pixi.js';
 
 
-const textures = [];
+const textures: GroundTexture[] = [];
 let renderingStarted = false;
-let latestTextureIndex;
+let latestTextureIndex: number;
 let terrainTexturesLayer: Container;
 
 export function setup(game: IGame) {
@@ -44,6 +44,15 @@ export function removeLatestTexture() {
     }
 }
 
+interface GroundTextureDefinition {
+    type: string;
+    x: number;
+    y: number;
+    size: number;
+    rotation: number;
+    flipped: 'none' | 'horizontal' | 'vertical';
+}
+
 export function getTexturesAsJSON() {
     return JSON.stringify(textures.map(function (texture) {
         let params = texture.parameters;
@@ -54,7 +63,7 @@ export function getTexturesAsJSON() {
             size: params.size,
             rotation: Math.round(params.rotation * 1000) / 1000, // Round to 3 digits
             flipped: params.flipped,
-        }
+        };
     }), null, 2);
 }
 
@@ -64,7 +73,32 @@ export function getTextureCount() {
 
 const groundTextures = require('../../config/groundTextures.json');
 
-groundTextures.forEach(function (groundTexture) {
-    groundTexture.type = GroundTextureTypes[groundTexture.type];
-    placeTexture(groundTexture);
+groundTextures.forEach(function (groundTexture: GroundTextureDefinition) {
+    // Migration to move certain textures towards center
+    // if (groundTexture.type === 'Sand') {
+    //     const units = 240;
+    //     const { x, y } = groundTexture;
+    //     const distance = Math.sqrt(x * x + y * y);
+    //
+    //     // Calculate the new distance
+    //     const newDistance = distance - units;
+    //     const scale = newDistance / distance;
+    //
+    //     // Update the coordinates based on the scale
+    //     const newX = x * scale;
+    //     const newY = y * scale;
+    //
+    //     groundTexture.x = Math.round(newX);
+    //     groundTexture.y = Math.round(newY);
+    // }
+
+    placeTexture({
+        type: groundTextureTypes[groundTexture.type],
+        x: groundTexture.x,
+        y: groundTexture.y,
+        size: groundTexture.size,
+        rotation: groundTexture.rotation,
+        flipped: groundTexture.flipped,
+        stacking: 'top'
+    });
 });

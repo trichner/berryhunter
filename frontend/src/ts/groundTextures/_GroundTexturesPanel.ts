@@ -5,18 +5,19 @@ import {
     deg2rad,
     htmlToElement,
     isUndefined,
-    random,
+    preventShortcutPropagation,
+    randomFrom,
     randomInt,
     roundToNearest,
-    sortStrings
+    sortStrings,
 } from '../Utils';
 import {BasicConfig as Constants} from '../../config/BasicConfig';
-import {GroundTextureType, GroundTextureTypes} from './GroundTextureTypes';
+import {GroundTextureType, groundTextureTypes} from './GroundTextureTypes';
 import * as GroundTextureManager from './GroundTextureManager';
 import {saveAs} from 'file-saver';
 import * as Console from '../Console';
 import {GameState, IGame} from "../interfaces/IGame";
-import {BackendValidTokenEvent, GamePlayingEvent, PrerenderEvent} from "../Events";
+import {BackendValidTokenEvent, CharacterEquippedItemEvent, GamePlayingEvent, PrerenderEvent} from '../Events';
 import {WebParameters} from '../WebParameters';
 
 let Game: IGame = null;
@@ -60,10 +61,13 @@ GamePlayingEvent.subscribe((game: IGame) => {
     });
 });
 
-function stopPropagation(event) {
-    event.stopPropagation();
-    // event.preventDefault();
-}
+CharacterEquippedItemEvent.subscribe((payload) => {
+    if (!active) return;
+
+    if (payload.item.name !== 'MysticWand') return;
+
+    Game.player.character.say('You can now click the ground anywhere to place a texture!');
+})
 
 let typeSelect;
 let xLabel;
@@ -83,18 +87,19 @@ let randomizeNextToggle;
 let placeButton;
 let undoButton;
 
-let types;
+let types: GroundTextureType[];
 let groundTextureType: GroundTextureType;
 
 function setupPanel() {
     let groundTexturePanel = document.getElementById('groundTexturePanel');
     let groundTexturePopup = document.getElementById('groundTexturePopup');
     // Capture inputs to prevent game actions while acting in develop panel
-    ['pointerdown', 'mousedown', 'keyup', 'keydown']
-        .forEach(function (eventName) {
-            groundTexturePanel.addEventListener(eventName, stopPropagation);
-            groundTexturePopup.addEventListener(eventName, stopPropagation);
-        });
+    groundTexturePanel
+        .querySelectorAll('input, button, a, select')
+        .forEach(preventShortcutPropagation);
+    groundTexturePopup
+        .querySelectorAll('input, button, a, select')
+        .forEach(preventShortcutPropagation);
 
     typeSelect = document.getElementById('groundTexture_type');
     xLabel = document.getElementById('groundTexture_x');
@@ -115,15 +120,15 @@ function setupPanel() {
     placeButton = document.getElementById('groundTexture_placeButton');
     undoButton = document.getElementById('groundTexture_undoButton');
 
-    types = Object.keys(GroundTextureTypes);
-    sortStrings(types);
+
+    types = sortStrings(Object.values(groundTextureTypes), 'displayName');
     types.map(function (type) {
-        return htmlToElement('<option value="' + type + '">' + type + '</option>');
+        return htmlToElement('<option value="' + type.name + '">' + type.displayName + '</option>');
     }).forEach(function (option) {
         typeSelect.appendChild(option);
     });
     typeSelect.addEventListener('change', function () {
-        groundTextureType = GroundTextureTypes[typeSelect.value];
+        groundTextureType = groundTextureTypes[typeSelect.value];
 
         randomizeInputs();
 
@@ -225,9 +230,9 @@ export function placeTexture(position) {
 
 function randomizeInputs() {
     if (randomizeNextToggle.checked) {
-        let type = random(types);
-        typeSelect.value = type;
-        groundTextureType = GroundTextureTypes[type];
+        const type = randomFrom(types);
+        typeSelect.value = type.name;
+        groundTextureType = type;
     }
 
 

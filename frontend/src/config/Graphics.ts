@@ -2,7 +2,8 @@ import {BasicConfig} from "./BasicConfig";
 
 export const GraphicsConfig = {
 
-    waterColor: 0x287aff,
+    deepWaterColor: 0x1C57B5,
+    shallowWaterColor: 0x287aff,
     landColor: 0x006030,
 
     hitAnimation: {
@@ -196,77 +197,101 @@ export const GraphicsConfig = {
      */
     groundTextureTypes: {
         'Dark Green Grass 1': {
+            displayName: 'Greens - Gras, dark 1',
             file: require('../img/groundTextures/darkGrass1.svg'),
             minSize: 180,
             maxSize: 300,
         },
         'Dark Green Grass 2': {
+            displayName: 'Greens - Gras, dark 2',
             file: require('../img/groundTextures/darkGrass2.svg'),
             minSize: 180,
             maxSize: 300,
         },
         'Green Grass 1': {
+            displayName: 'Greens - Gras 1',
             file: require('../img/groundTextures/grass1.svg'),
             minSize: 180,
             maxSize: 300,
         },
         'Green Grass 2': {
+            displayName: 'Greens - Gras 2',
             file: require('../img/groundTextures/grass2.svg'),
             minSize: 180,
             maxSize: 300,
         },
         'Dark Stone Patch': {
+            displayName: 'Greys - Stone Patch, dark',
             file: require('../img/groundTextures/darkStonePatch.svg'),
             minSize: 130,
             maxSize: 300,
         },
         'Stone Patch': {
+            displayName: 'Greys - Stone Patch',
             file: require('../img/groundTextures/stonePatch.svg'),
             minSize: 130,
             maxSize: 300,
         },
         'Pebble': {
+            displayName: 'Greys - Pebbles',
             file: require('../img/groundTextures/pebble.svg'),
             minSize: 130,
             maxSize: 200,
         },
         'Dark Pebble': {
+            displayName: 'Greys - Pebbles, dark',
             file: require('../img/groundTextures/darkPebble.svg'),
             minSize: 130,
             maxSize: 200,
         },
         'Rubble': {
+            displayName: 'Greys - Rubble',
             file: require('../img/groundTextures/rubble.svg'),
             minSize: 50,
             maxSize: 100,
         },
         'Dark Rubble': {
+            displayName: 'Greys - Rubble, dark',
             file: require('../img/groundTextures/darkRubble.svg'),
             minSize: 50,
             maxSize: 100,
         },
         'Puddle': {
+            displayName: 'Blues - Puddle',
             file: require('../img/groundTextures/puddle.svg'),
             minSize: 60,
             maxSize: 140,
         },
         'Dark Puddle': {
+            displayName: 'Blues - Puddle, dark',
             file: require('../img/groundTextures/darkPuddle.svg'),
             minSize: 60,
             maxSize: 140,
         },
         'Flowers': {
+            displayName: 'Pinks - Flowers, white outlined',
             file: require('../img/groundTextures/flowers.svg'),
             minSize: 70,
             maxSize: 100,
         },
         'Leaves': {
+            displayName: 'Greens - Leaves',
             file: require('../img/groundTextures/leaves.svg'),
             minSize: 50,
             maxSize: 100,
         },
         'Sand': {
+            displayName: 'Yellows - Sand',
             file: require('../img/groundTextures/sand1.svg'),
+            minSize: 150,
+            maxSize: 200,
+        },
+        /**
+         * Same shape as sand, but same color as {@link landColor}.
+         */
+        'Land': {
+            displayName: 'Greens - Land',
+            file: require('../img/groundTextures/land1.svg'),
             minSize: 150,
             maxSize: 200,
         }

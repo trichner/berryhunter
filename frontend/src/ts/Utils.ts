@@ -396,10 +396,14 @@ export function preventInputPropagation(
 export function preventShortcutPropagation(element: Element) {
     if (element instanceof HTMLInputElement) {
         switch (element.type) {
+            case 'number':
+                preventInputPropagation(element, {notPropagated: ['ArrowUp', 'ArrowDown', 'Tab']});
+                return;
             case 'range':
                 preventInputPropagation(element, {notPropagated: ['ArrowLeft', 'ArrowRight', 'Tab']});
                 return;
             case 'checkbox':
+            case 'radio':
                 preventInputPropagation(element, {notPropagated: ['Space', 'Tab']});
                 return;
             default:
@@ -415,6 +419,11 @@ export function preventShortcutPropagation(element: Element) {
 
     if (element instanceof HTMLAnchorElement) {
         preventInputPropagation(element, {notPropagated: ['Enter', 'Tab']});
+        return;
+    }
+
+    if (element instanceof HTMLSelectElement) {
+        preventInputPropagation(element, {notPropagated: ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'Enter', 'Tab']});
         return;
     }
 

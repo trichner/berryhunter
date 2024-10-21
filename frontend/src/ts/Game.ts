@@ -15,7 +15,6 @@ import {isDefined, resetFocus} from './Utils';
 import {WelcomeMessage} from './backend/messages/incoming/WelcomeMessage';
 import * as Console from './Console';
 import {Camera} from './Camera';
-import {VitalSigns} from './VitalSigns';
 import * as Recipes from './items/Recipes';
 import * as Scoreboard from './scores/Scoreboard';
 import * as GroundTextureManager from './groundTextures/GroundTextureManager';
@@ -23,7 +22,6 @@ import {GameState, IGame, IGameLayers} from './interfaces/IGame';
 import {GameObjectId} from './interfaces/Types';
 import {GraphicsConfig} from '../config/Graphics';
 import {IBackend} from './interfaces/IBackend';
-import {Develop} from './develop/_Develop';
 import {
     BackendValidTokenEvent,
     BeforeDeathEvent,
@@ -31,7 +29,8 @@ import {
     GamePlayingEvent,
     GameSetupEvent,
     ModulesLoadedEvent,
-    PrerenderEvent, UserInteraceDomReadyEvent,
+    PrerenderEvent,
+    UserInteraceDomReadyEvent,
 } from './Events';
 import {createNameContainer} from './CustomData';
 import {registerPreload} from './Preloading';
@@ -353,10 +352,12 @@ export class Game implements IGame {
 
     startRendering(gameInformation: WelcomeMessage): void {
         Console.log('Joined Server "' + gameInformation.serverName + '"');
-        const baseTexture = new Graphics()
+        this.layers.terrain.ground.addChild(new Graphics()
             .circle(0, 0, gameInformation.mapRadius)
-            .fill(GraphicsConfig.landColor);
-        this.layers.terrain.ground.addChild(baseTexture);
+            .fill(GraphicsConfig.shallowWaterColor));
+        this.layers.terrain.ground.addChild(new Graphics()
+            .circle(0, 0, gameInformation.mapRadius - 240) // deduct a bit of radius to allow movement in "shallow" water
+            .fill(GraphicsConfig.landColor));
 
         this.map = new GameMapWithBackend(this, gameInformation.mapRadius);
         this.play();
@@ -365,9 +366,10 @@ export class Game implements IGame {
     }
 
     private createBackground() {
+        this.application.renderer.background.color = GraphicsConfig.deepWaterColor;
         const waterRect = new Graphics()
             .rect(0, 0, this.width, this.height)
-            .fill(GraphicsConfig.waterColor);
+            .fill(GraphicsConfig.deepWaterColor);
         this.layers.terrain.water.addChild(waterRect);
     }
 }

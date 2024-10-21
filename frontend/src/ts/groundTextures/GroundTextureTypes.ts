@@ -7,6 +7,7 @@ const GroundTextureTypes = GraphicsConfig.groundTextureTypes;
 
 export interface GroundTextureType {
     name: string;
+    displayName: string;
     svg: Texture;
     file: string,
     minSize: number,
@@ -53,4 +54,4 @@ if (hasError) {
     throw "There are erroneous GroundTextureType(s).";
 }
 
-export {GroundTextureTypes};
+export const groundTextureTypes = GroundTextureTypes as unknown as {[key: string]: GroundTextureType};
