@@ -14,15 +14,36 @@
     position: relative;
 
     > .indicator,
-    > .previousIndicator {
+    > .negativeDeltaIndicator,
+    > .positiveDeltaIndicator {
       height: 100%;
+      width: 100%;
+
+      scale: 1.0;
+      translate: 0 0;
+      transition: all 33ms linear;
+      transition-property: scale, translate;
+      transform-origin: left center;
     }
 
-    > .previousIndicator {
-      background-color: rgba(255, 255, 255, 0.7);
+    > .negativeDeltaIndicator,
+    > .positiveDeltaIndicator {
       position: absolute;
-      z-index: -1;
+      top: 0;
+      left: 0;
+
+      z-index: 1;
     }
+
+    > .negativeDeltaIndicator {
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+
+
+    > .positiveDeltaIndicator {
+      background-color: rgba(255, 255, 0, 0.7);
+    }
+
   }
 }
 

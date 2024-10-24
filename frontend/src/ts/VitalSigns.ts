@@ -3,12 +3,10 @@ import * as UserInterface from './userInterface/UserInterface';
 import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/BasicConfig';
 import {
-    ISubscriptionToken,
     PlayerStartedFreezingEvent,
     PreloadingStartedEvent,
     VitalSignChangedEvent,
 } from './Events';
-import {isDefined} from './Utils';
 import {StatusEffect, StatusEffectDefinition} from './gameObjects/StatusEffect';
 
 export enum VitalSign {
@@ -155,9 +153,7 @@ export class VitalSigns {
     }
 
     destroy() {
-        if (isDefined(this.prerenderSubToken)) {
-            this.prerenderSubToken.unsubscribe();
-        }
+        // Nothing to do
     }
 }
 
