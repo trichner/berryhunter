@@ -3,18 +3,19 @@ import {BasicConfig as Constants} from '../../config/BasicConfig';
 import {clearNode, isUndefined, playCssAnimation} from '../Utils';
 import {ClickableIcon} from './ClickableIcon';
 import {ClickableCountableIcon} from './ClickableCountableIcon';
-import {VitalSignBar} from './VitalSignBar';
+import {VitalSignBar} from '../vitalSigns/VitalSignBar';
 import {IGame} from "../interfaces/IGame";
 import {UserInteraceDomReadyEvent} from '../Events';
+import {VitalSign} from '../VitalSigns';
 
 let Game: IGame = null;
 
-let rootElement;
+let rootElement: HTMLElement;
 let cycleIcon = require('./cycle-icon.svg?raw');
 
-let craftingElement;
-let craftableItemTemplate;
-let inventorySlots;
+let craftingElement: HTMLElement;
+let craftableItemTemplate: HTMLElement;
+let inventorySlots: ClickableCountableIcon[];
 
 let vitalSignsBars: { [key: string]: VitalSignBar };
 
@@ -63,9 +64,9 @@ function setupInventorySlot(inventorySlot, index) {
 
 function setupVitalSigns() {
     vitalSignsBars = {
-        health: new VitalSignBar(document.getElementById('healthBar')),
-        satiety: new VitalSignBar(document.getElementById('satietyBar')),
-        bodyHeat: new VitalSignBar(document.getElementById('bodyHeatBar'))
+        health: new VitalSignBar(document.getElementById('healthBar'), VitalSign.health),
+        satiety: new VitalSignBar(document.getElementById('satietyBar'), VitalSign.satiety),
+        bodyHeat: new VitalSignBar(document.getElementById('bodyHeatBar'), VitalSign.bodyHeat),
     };
 }
 

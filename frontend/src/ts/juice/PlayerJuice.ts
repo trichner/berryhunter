@@ -6,6 +6,7 @@ import { registerPreload } from '../Preloading';
 import { BerryhunterApi } from "../backend/BerryhunterApi";
 import { TriggerIntervalMap } from './TriggerIntervalMap';
 import { spatialAudio } from './SpatialAudio';
+import {GraphicsConfig} from '../../config/Graphics';
 
 BeforeDeathEvent.subscribe((payload) => {
     if (payload?.player?.character) {
@@ -112,7 +113,7 @@ CharacterMoved.subscribe((position) => {
 VitalSignChangedEvent.subscribe((payload) => {
     switch (payload.vitalSign) {
         case 'satiety':
-            if (payload.newValue.relative <= 0) {
+            if (payload.newValue.relative < GraphicsConfig.vitalSigns.overlayThreshold) {
                 const soundId = 'hungry';
                 const delayInterval = 5000;
                 if (triggerMap.trigger(soundId, delayInterval)) {

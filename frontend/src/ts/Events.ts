@@ -227,10 +227,29 @@ export const AutoFeedDeactivateEvent: PayloadEvent<AutoFeedMsg> = new PayloadEve
 
 export interface VitalSignMsg {
     vitalSign: string;
+    /**
+     * The value right before the newValue was applied
+     */
+    previousValue: {
+        relative: number,
+        absolute: number,
+    };
+    /**
+     * The highest/lowest value within the last 1500ms (time configured in {@link GraphicsConfig.vitalSigns.fadeInMS}
+     */
+    previousValues: {
+        relative: {
+            min: number,
+            max: number,
+        },
+        absolute: {
+            min: number,
+            max: number,
+        },
+    };
     newValue: {
         relative: number,
         absolute: number,
-        change: number
     };
 }
 

@@ -2,7 +2,6 @@ import * as Preloading from './Preloading';
 import * as UserInterface from './userInterface/UserInterface';
 import {GraphicsConfig} from '../config/Graphics';
 import {BasicConfig as Constants} from '../config/BasicConfig';
-import {VitalSignBar} from './userInterface/VitalSignBar';
 import {
     ISubscriptionToken,
     PlayerStartedFreezingEvent,
@@ -35,27 +34,25 @@ export class VitalSigns {
         bodyHeat: 0xffffffff,
     };
 
-    health: number;
-    satiety: number;
-    bodyHeat: number;
-    previousValues: VitalSignValues[];
-    previousValuesLimit: number;
-    uiBars: { [key in VitalSign]: VitalSignBar };
-    overlayManager: HtmlOverlayManager;
-    private prerenderSubToken: ISubscriptionToken;
+    private readonly currentValues: VitalSignValues;
+    /**
+     * Keeps the last X previous values, where X = previousValuesLimit
+     */
+    private readonly previousValues: { [key in VitalSign]: number[] };
+    private readonly previousValuesLimit: number = Math.round(GraphicsConfig.vitalSigns.fadeInMS / Constants.SERVER_TICKRATE);
+
+    private readonly overlayManager: HtmlOverlayManager;
 
     constructor() {
-        this.health = VitalSigns.MAXIMUM_VALUES.health;
-        this.satiety = VitalSigns.MAXIMUM_VALUES.satiety;
-        this.bodyHeat = VitalSigns.MAXIMUM_VALUES.bodyHeat;
-
-        this.previousValues = [];
-        this.previousValuesLimit = Math.round(GraphicsConfig.vitalSigns.fadeInMS / Constants.SERVER_TICKRATE);
-
-        this.uiBars = {
-            health: UserInterface.getVitalSignBar('health'),
-            satiety: UserInterface.getVitalSignBar('satiety'),
-            bodyHeat: UserInterface.getVitalSignBar('bodyHeat'),
+        this.currentValues = {
+            health: VitalSigns.MAXIMUM_VALUES.health,
+            satiety: VitalSigns.MAXIMUM_VALUES.satiety,
+            bodyHeat: VitalSigns.MAXIMUM_VALUES.bodyHeat,
+        };
+        this.previousValues = {
+            health: [this.currentValues.health],
+            satiety: [this.currentValues.satiety],
+            bodyHeat: [this.currentValues.bodyHeat],
         };
 
         this.overlayManager = new HtmlOverlayManager();
@@ -73,56 +70,52 @@ export class VitalSigns {
         this.setValue(VitalSign.bodyHeat, bodyHeat);
     }
 
-    setValue(valueIndex: keyof typeof VitalSign, value: number) {
-        let previousValue = this[valueIndex];
-        this[valueIndex] = value;
-        let change = value - previousValue;
-        let relativeValue = value / VitalSigns.MAXIMUM_VALUES[valueIndex];
+    setValue(valueIndex: VitalSign, newValue: number) {
+        const currentValue = this.currentValues[valueIndex];
+        const currentRelativeValue = currentValue / VitalSigns.MAXIMUM_VALUES[valueIndex];
+        const newRelativeValue = newValue / VitalSigns.MAXIMUM_VALUES[valueIndex];
 
-        // If the vital sign increased ...
-        if (value > previousValue) {
-            // discard all recorded values to make sure the previous values will be correctly shown for the next ticks
-            this.previousValues.forEach(function (previousValueObject) {
-                // Use the higher value, to ensure that a visible previous value is not discarded
-                previousValueObject[valueIndex] = Math.max(value, previousValueObject[valueIndex]);
-            });
-        }
+        this.currentValues[valueIndex] = newValue;
 
-        // If there are already recorded previous values...
-        if (this.previousValues.length > 0) {
-            // set the actual previous value to the first recorded value
-            previousValue = this.previousValues[0][valueIndex];
+        this.previousValues[valueIndex].push(currentValue);
+        if (this.previousValues[valueIndex].length > this.previousValuesLimit) {
+            this.previousValues[valueIndex].shift();
         }
-        previousValue /= VitalSigns.MAXIMUM_VALUES[valueIndex];
-        this.uiBars[valueIndex].setValue(relativeValue, previousValue);
+        const minPreviousValue = Math.min(...this.previousValues[valueIndex]);
+        const maxPreviousValue = Math.max(...this.previousValues[valueIndex]);
+
         VitalSignChangedEvent.trigger({
             vitalSign: valueIndex,
+            previousValue: {
+                relative: currentRelativeValue,
+                absolute: currentValue,
+            },
+            previousValues: {
+                relative: {
+                    min: minPreviousValue / VitalSigns.MAXIMUM_VALUES[valueIndex],
+                    max: maxPreviousValue / VitalSigns.MAXIMUM_VALUES[valueIndex],
+                },
+                absolute: {
+                    min: minPreviousValue,
+                    max: maxPreviousValue,
+                },
+            },
             newValue: {
-                relative: relativeValue,
-                absolute: value,
-                change: change,
+                relative: newRelativeValue,
+                absolute: newValue,
             },
         });
 
-        if (valueIndex == VitalSign.bodyHeat && relativeValue <= 0 && previousValue > 0) {
+        if (valueIndex == VitalSign.bodyHeat && newRelativeValue <= 0 && currentValue > 0) {
             PlayerStartedFreezingEvent.trigger();
         }
     }
 
     updateFromBackend(backendValues: VitalSignValues, damageState: DamageState) {
-        let previousValues: VitalSignValues = {bodyHeat: undefined, health: undefined, satiety: undefined};
         for (const vitalSign in VitalSign) {
             if (backendValues.hasOwnProperty(vitalSign)) {
-                this.setValue(vitalSign as keyof typeof VitalSign, backendValues[vitalSign]);
-                previousValues[vitalSign] = backendValues[vitalSign];
-            } else {
-                previousValues[vitalSign] = this[vitalSign];
+                this.setValue(vitalSign as VitalSign, backendValues[vitalSign]);
             }
-        }
-
-        this.previousValues.push(previousValues);
-        if (this.previousValues.length > this.previousValuesLimit) {
-            this.previousValues.shift();
         }
 
         const displayedStatusEffects: StatusEffectDefinition[] = [];
@@ -135,12 +128,12 @@ export class VitalSigns {
                 break;
         }
 
-        let relativeSatiety = this.satiety / VitalSigns.MAXIMUM_VALUES.satiety;
+        const relativeSatiety = this.currentValues.satiety / VitalSigns.MAXIMUM_VALUES.satiety;
         if (this.showIndicatorBelowThreshold(relativeSatiety, 'hunger')) {
             displayedStatusEffects.push(StatusEffect.Starving);
         }
 
-        let relativeBodyHeat = this.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat;
+        const relativeBodyHeat = this.currentValues.bodyHeat / VitalSigns.MAXIMUM_VALUES.bodyHeat;
         if (this.showIndicatorBelowThreshold(relativeBodyHeat, 'coldness')) {
             displayedStatusEffects.push(StatusEffect.Freezing);
         }

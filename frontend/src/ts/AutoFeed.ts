@@ -34,15 +34,15 @@ export function checkChangedVitalSign(payload: VitalSignMsg) {
         return;
     }
 
+    if (payload.vitalSign !== 'satiety') {
+        return;
+    }
+
     // Check if enough time is elapsed before the Auto feed triggers again.
     // This is mainly to prevent the auto feed being triggered more than once before
     // there is an update in satiety from the backend
     let now = Date.now();
     if (dateDiff(now, lastAutoFeed) < 500) {
-        return;
-    }
-
-    if (payload.vitalSign !== 'satiety') {
         return;
     }
 
