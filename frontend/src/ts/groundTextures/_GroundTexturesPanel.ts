@@ -11,7 +11,7 @@ import {
     roundToNearest,
     sortStrings,
 } from '../Utils';
-import {BasicConfig as Constants} from '../../game-data/BasicConfig';
+import {BasicConfig as Constants} from '../../client-data/BasicConfig';
 import {GroundTextureType, groundTextureTypes} from './GroundTextureTypes';
 import * as GroundTextureManager from './GroundTextureManager';
 import {saveAs} from 'file-saver';

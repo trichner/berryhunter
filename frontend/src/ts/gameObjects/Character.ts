@@ -1,12 +1,12 @@
 import {GameObject} from './_GameObject';
-import {BasicConfig as Constants} from '../../game-data/BasicConfig';
+import {BasicConfig as Constants} from '../../client-data/BasicConfig';
 import {isDefined} from '../Utils';
 import * as Equipment from '../items/Equipment';
 import {EquipmentSlot} from '../items/Equipment';
 import {createInjectedSVG} from '../InjectedSVG';
 import * as Preloading from '../Preloading';
 import {Vector} from '../Vector';
-import {GraphicsConfig} from '../../game-data/Graphics';
+import {GraphicsConfig} from '../../client-data/Graphics';
 import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
 import {Animation} from '../Animation';
@@ -16,7 +16,7 @@ import {CharacterEquippedItemEvent, CharacterMoved, GameSetupEvent, ISubscriptio
 import {ICharacterLike} from '../interfaces/ICharacter';
 import {createNameContainer} from '../CustomData';
 import {Container, Graphics, Text, Texture} from 'pixi.js';
-import * as TextDisplay from '../../game-data/TextDisplay';
+import * as TextDisplay from '../../client-data/TextDisplay';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {

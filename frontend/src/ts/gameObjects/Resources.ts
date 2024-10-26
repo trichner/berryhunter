@@ -3,7 +3,7 @@ import {GameObject} from './_GameObject';
 import * as Preloading from '../Preloading';
 import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../Utils';
 import {createInjectedSVG} from '../InjectedSVG';
-import {GraphicsConfig} from '../../game-data/Graphics';
+import {GraphicsConfig} from '../../client-data/Graphics';
 import {IGame} from "../interfaces/IGame";
 import {GameSetupEvent, ResourceStockChangedEvent} from '../Events';
 import {alea as SeedRandom} from "seedrandom";

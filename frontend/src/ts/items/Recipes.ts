@@ -1,5 +1,5 @@
 import {isDefined, isFunction} from '../Utils';
-import {BasicConfig as Constants} from '../../game-data/BasicConfig';
+import {BasicConfig as Constants} from '../../client-data/BasicConfig';
 import {Placeable} from '../gameObjects/Placeable';
 import {Items} from '../items/Items';
 import {ClickableIcon} from "../userInterface/ClickableIcon";

@@ -1,7 +1,7 @@
-import {BasicConfig as Constants} from '../../game-data/BasicConfig';
+import {BasicConfig as Constants} from '../../client-data/BasicConfig';
 import {isFunction} from "../Utils";
 import {VitalSigns} from "../VitalSigns";
-import {GraphicsConfig} from "../../game-data/Graphics";
+import {GraphicsConfig} from "../../client-data/Graphics";
 import * as Console from '../Console';
 
 let currentValue = GraphicsConfig.vitalSigns.overlayThreshold;

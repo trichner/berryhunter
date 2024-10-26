@@ -1,5 +1,5 @@
-import {GraphicsConfig} from "../../../frontend/src/game-data/Graphics";
-import {ItemsConfig} from "../../../frontend/src/game-data/Items";
+import {GraphicsConfig} from "../../../frontend/src/client-data/Graphics";
+import {ItemsConfig} from "../../../frontend/src/client-data/Items";
 
 const resourceCfg = GraphicsConfig.resources;
 

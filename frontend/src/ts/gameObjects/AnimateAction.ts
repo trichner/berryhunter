@@ -1,5 +1,5 @@
 import {deg2rad} from '../Utils';
-import {GraphicsConfig} from '../../game-data/Graphics';
+import {GraphicsConfig} from '../../client-data/Graphics';
 import {Animation} from "../Animation";
 import _merge = require('lodash/merge');
 import { Hand } from './Character';

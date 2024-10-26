@@ -1,5 +1,5 @@
 import {chance, meter, percentage, perSecond, seconds} from "../format";
-import {BasicConfig} from "../../../frontend/src/game-data/BasicConfig";
+import {BasicConfig} from "../../../frontend/src/client-data/BasicConfig";
 
 // See berryhunterd/items/itemdefinition.go type itemDefinition
 export const KEYWORD_DATA: { [key: string]: { name?: string, formatter?: (number) => string, link?: string, ignore?: boolean } } = {

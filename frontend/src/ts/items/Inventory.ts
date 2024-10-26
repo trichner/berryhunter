@@ -1,5 +1,5 @@
 import {isDefined, isUndefined} from '../Utils';
-import {BasicConfig as Constants} from '../../game-data/BasicConfig';
+import {BasicConfig as Constants} from '../../client-data/BasicConfig';
 import * as Recipes from './Recipes';
 import * as Crafting from './Crafting';
 import * as Equipment from './Equipment';

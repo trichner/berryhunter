@@ -1,5 +1,5 @@
 import * as Preloading from '../Preloading';
-import {GraphicsConfig} from '../../game-data/Graphics';
+import {GraphicsConfig} from '../../client-data/Graphics';
 import {degrees} from "../interfaces/Types";
 import { Texture } from 'pixi.js';
 import * as PIXI from 'pixi.js';

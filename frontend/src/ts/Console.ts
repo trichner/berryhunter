@@ -3,7 +3,7 @@ import {BackendValidTokenEvent, PongReceivedEvent} from './Events';
 import {clearNode, isFunction, preventInputPropagation, resetFocus} from './Utils';
 import {CommandMessage} from './backend/messages/outgoing/CommandMessage';
 import {WebParameters} from './WebParameters';
-import {BasicConfig} from '../game-data/BasicConfig';
+import {BasicConfig} from '../client-data/BasicConfig';
 
 export const KEY_CODE = 'Backquote';
 

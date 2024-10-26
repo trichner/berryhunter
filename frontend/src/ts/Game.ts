@@ -9,7 +9,7 @@ import {Spectator} from './Spectator';
 import {GameObject} from './gameObjects/_GameObject';
 import * as UserInterface from './userInterface/UserInterface';
 import * as Chat from './Chat';
-import {BasicConfig as Constants} from '../game-data/BasicConfig';
+import {BasicConfig as Constants} from '../client-data/BasicConfig';
 import {InputManager} from './input/InputManager';
 import {isDefined, resetFocus} from './Utils';
 import {WelcomeMessage} from './backend/messages/incoming/WelcomeMessage';
@@ -20,7 +20,7 @@ import * as Scoreboard from './scores/Scoreboard';
 import * as GroundTextureManager from './groundTextures/GroundTextureManager';
 import {GameState, IGame, IGameLayers} from './interfaces/IGame';
 import {GameObjectId} from './interfaces/Types';
-import {GraphicsConfig} from '../game-data/Graphics';
+import {GraphicsConfig} from '../client-data/Graphics';
 import {IBackend} from './interfaces/IBackend';
 import {
     BackendValidTokenEvent,

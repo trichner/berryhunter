@@ -1,4 +1,4 @@
-import {GraphicsConfig} from "../../../frontend/src/game-data/Graphics";
+import {GraphicsConfig} from "../../../frontend/src/client-data/Graphics";
 
 export const animals = [
     {
