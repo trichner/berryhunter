@@ -1,7 +1,15 @@
 import * as AABBs from './AABBs';
 import * as Fps from './Fps';
 import * as Preloading from '../Preloading';
-import {htmlToElement, isDefined, isNumber, isUndefined, rad2deg, resetFocus} from '../Utils';
+import {
+    htmlToElement,
+    isDefined,
+    isNumber,
+    isUndefined,
+    preventShortcutPropagation,
+    rad2deg,
+    resetFocus,
+} from '../Utils';
 import * as Console from '../Console';
 import {ItemType} from '../items/ItemType';
 import {BasicConfig as Constants} from '../../config/BasicConfig';
@@ -102,23 +110,10 @@ export class Develop implements IDevelop {
         Preloading.renderPartial(require('./developPanel.html'), () => {
             const developPanel = document.getElementById('developPanel');
             // Capture inputs to prevent game actions while acting in develop panel
-            // TODO use GameSettingsUI behavior
-            [
-                'click',
-                'pointerdown',
-                'pointerup',
-                'mousedown',
-                'mouseup',
-                'mousemove',
-                'touchstart',
-                'touchend',
-                'keyup',
-                'keydown']
-                .forEach((eventName) => {
-                    developPanel.addEventListener(eventName, (event) => {
-                        event.stopPropagation();
-                    });
-                });
+            // TODO using this leads to the dragging not working anymore
+            // developPanel
+            //     .querySelectorAll('input, button, a')
+            //     .forEach(preventShortcutPropagation);
 
             developPanel.addEventListener('focusin', (event) => {
                 const target = event.target as Element;
