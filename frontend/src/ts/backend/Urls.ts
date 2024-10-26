@@ -1,4 +1,4 @@
-import {BasicConfig as Constants} from "../../config/BasicConfig";
+import {BasicConfig as Constants} from "../../game-data/BasicConfig";
 import {WebParameters} from '../WebParameters';
 
 function isLocalhost(hostname: string) {

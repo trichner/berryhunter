@@ -1,7 +1,7 @@
 import {isFunction} from '../Utils';
 import {Items} from '../items/Items';
 import {SubIcon} from './SubIcon';
-import {BasicConfig as Constants} from '../../config/BasicConfig';
+import {BasicConfig as Constants} from '../../game-data/BasicConfig';
 import {IGame} from "../interfaces/IGame";
 import {GameSetupEvent, InventoryChangedEvent} from "../Events";
 

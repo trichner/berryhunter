@@ -71,7 +71,7 @@ export function getTextureCount() {
     return textures.length;
 }
 
-const groundTextures = require('../../config/groundTextures.json');
+const groundTextures = require('../../game-data/ground-textures.json');
 
 groundTextures.forEach(function (groundTexture: GroundTextureDefinition) {
     // Migration to move certain textures towards center

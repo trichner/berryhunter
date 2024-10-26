@@ -16,7 +16,7 @@ hook.hook('.svg', (source: string, filename: string) => {
 });
 
 // Special import with the SVG hook in place!
-import {ItemsConfig as items} from '../../frontend/src/config/Items';
+import {ItemsConfig as items} from '../../frontend/src/game-data/Items';
 import {ItemConfig} from "../../frontend/src/ts/interfaces/Item";
 
 interface ItemExtra {

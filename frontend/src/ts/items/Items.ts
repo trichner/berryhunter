@@ -5,8 +5,8 @@
 import {isDefined} from '../Utils';
 import * as Preloading from '../Preloading';
 import {ItemType} from './ItemType';
-import {BasicConfig as Constants} from '../../config/BasicConfig';
-import {ItemsConfig as Items} from '../../config/Items';
+import {BasicConfig as Constants} from '../../game-data/BasicConfig';
+import {ItemsConfig as Items} from '../../game-data/Items';
 import {GameLateSetupEvent} from '../Events';
 import {IGame} from "../interfaces/IGame";
 import _isObject = require('lodash/isObject');

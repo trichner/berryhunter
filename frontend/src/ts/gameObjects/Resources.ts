@@ -3,7 +3,7 @@ import {GameObject} from './_GameObject';
 import * as Preloading from '../Preloading';
 import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../Utils';
 import {createInjectedSVG} from '../InjectedSVG';
-import {GraphicsConfig} from '../../config/Graphics';
+import {GraphicsConfig} from '../../game-data/Graphics';
 import {IGame} from "../interfaces/IGame";
 import {GameSetupEvent, ResourceStockChangedEvent} from '../Events';
 import {alea as SeedRandom} from "seedrandom";
@@ -288,7 +288,7 @@ export class BerryBush extends Resource {
 }
 
 // noinspection JSIgnoredPromiseFromCall
-Preloading.registerGameObjectSVG(BerryBush, berryBushCfg.bushfile, berryBushCfg.maxSize);
+Preloading.registerGameObjectSVG(BerryBush, berryBushCfg.bushFile, berryBushCfg.maxSize);
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(BerryBush.berry, berryBushCfg.berryFile, berryBushCfg.berryMaxSize);
 // noinspection JSIgnoredPromiseFromCall

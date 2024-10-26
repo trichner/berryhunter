@@ -1,23 +1,24 @@
 import {BasicConfig} from "./BasicConfig";
+import {color, integer} from '../ts/interfaces/Types';
 
 export const GraphicsConfig = {
 
-    deepWaterColor: 0x1C57B5,
-    shallowWaterColor: 0x287aff,
-    landColor: 0x006030,
+    deepWaterColor: <color> 0x1C57B5,
+    shallowWaterColor: <color> 0x287aff,
+    landColor: <color> 0x006030,
 
     hitAnimation: {
         /**
          * Maximum opacity of the flood filter that applied on game objects when they are hit.
          */
-        floodOpacity: 1,
-        duration: 500, //ms
+        floodOpacity: <number> 1,
+        duration: <number> 500, //ms
     },
 
     /**
      * Controls how translucent equipped placeables appear that are not yet placed
      */
-    equippedPlaceableOpacity: 0.6,
+    equippedPlaceableOpacity: <number> 0.6,
 
     character: {
         /**
@@ -25,68 +26,67 @@ export const GraphicsConfig = {
          *
          * SYNCED WITH BACKEND
          */
-        size: 30,
+        size: <number> 30,
         file: require('../img/character.svg'),
 
         hands: {
-            fillColor: 0xf2a586,
-            lineColor: 0x000000,
+            fillColor: <color> 0xf2a586,
+            lineColor: <color> 0x000000,
         },
 
         craftingIndicator: {
             file: require('../img/userInterface/crafting.svg'),
-            size: 20,
-            lineColor: 0xc9a741,
-            lineWidth: 5, //px
+            size: <number> 20,
+            lineColor: <color> 0xc9a741,
+            lineWidth: <number> 5, //px
         },
 
         actionAnimation: {
             /**
-             * In milliseconds.
-             *
              * Should be synchronized with the value below,
              * but is purely used for a smooth client side animation.
              */
-            duration: 500,
+            duration: <integer> 500, // ms
 
             /**
              * How much of the animation is forward - the rest is reversing.
              * 0.4 ==> 40% (200ms of 500ms) are forward movement, 60% is backwards
              */
-            relativeDurationForward: 0.35,
+            relativeDurationForward: <number> 0.35,
 
             /**
              * How many ticks will the backend communicate an action in progress
+             *
              * SYNCED WITH BACKEND
              */
-            backendTicks: 10,
+            backendTicks: <integer> 10,
         },
     },
 
     mobs: {
         dodo: {
             file: require('../img/dodo.svg'),
-            minSize: 35,
-            maxSize: 45,
+            minSize: <number> 35,
+            maxSize: <number> 45,
         },
 
         saberToothCat: {
             file: require('../img/saberToothCat.svg'),
-            minSize: 45,
-            maxSize: 60,
+            minSize: <number> 45,
+            maxSize: <number> 60,
         },
 
         mammoth: {
             file: require('../img/mammoth.svg'),
-            minSize: 85,
-            maxSize: 100,
+            minSize: <number> 85,
+            maxSize: <number> 100,
         },
     },
 
     resources: {
         tree: {
             spotFile: require('../img/treeSpot.svg'),
-            maxSize: 210,
+            maxSize: <number> 210,
 
             roundTreeFile: require('../img/roundTree.svg'),
             deciduousTreeFile: require('../img/deciduousTree.svg'),
@@ -94,7 +94,7 @@ export const GraphicsConfig = {
 
         mineral: {
             spotFile: require('../img/stoneSpot.svg'),
-            maxSize: 142,
+            maxSize: <number> 142,
 
             stoneFile: require('../img/stone.svg'),
             bronzeFile: require('../img/bronze.svg'),
@@ -103,12 +103,12 @@ export const GraphicsConfig = {
         },
 
         berryBush: {
-            bushfile: require('../img/berryBush.svg'),
-            maxSize: 60,
+            bushFile: require('../img/berryBush.svg'),
+            maxSize: <number> 60,
 
             berryFile: require('../img/berry.svg'),
-            berryMaxSize: 11,
-            berryMinSize: 6,
+            berryMaxSize: <number> 11,
+            berryMinSize: <number> 6,
 
             calyxFile: require('../img/berryCalyx.svg'),
         },
@@ -116,8 +116,8 @@ export const GraphicsConfig = {
         flower: {
             spotFile: require('../img/flowerSpot.svg'),
             file: require('../img/flower.svg'),
-            minSize: BasicConfig.PIXEL_PER_METER * 0.15 * 2,
-            maxSize: BasicConfig.PIXEL_PER_METER * 0.25 * 2,
+            minSize: <number> (BasicConfig.PIXEL_PER_METER * 0.15 * 2),
+            maxSize: <number> (BasicConfig.PIXEL_PER_METER * 0.25 * 2),
         },
     },
 
@@ -125,7 +125,7 @@ export const GraphicsConfig = {
         /**
          * Every icon has a color and a size. Sizes are scaled just like the mini map.
          */
-        icons: {
+        icons: <{[key: string]: {color: color, alpha: number, sizeFactor: number}}> {
             character: {
                 color: 0x00008B,
                 alpha: 1,
@@ -184,18 +184,18 @@ export const GraphicsConfig = {
          * Determines below which relative value screen overlays for vital signs are shown
          * and how low the satiety has be before auto feed kicks in.
          */
-        overlayThreshold: 0.3,
+        overlayThreshold: <number> 0.3,
 
         /**
          * How many milliseconds old values are shown, after a vital sign has been reduced.
          */
-        fadeInMS: 1500,
+        fadeInMS: <number> 1500,
     },
 
     /**
      * Contains information about types of ground textures that are available for placing.
      */
-    groundTextureTypes: {
+    groundTextureTypes: <{[key: string]: {displayName: string, file: string, minSize: number, maxSize: number }}> {
         'Dark Green Grass 1': {
             displayName: 'Greens - Gras, dark 1',
             file: require('../img/groundTextures/darkGrass1.svg'),

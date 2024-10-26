@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import {GameObject} from './_GameObject';
 import {randomRotation} from '../Utils';
-import {GraphicsConfig} from '../../config/Graphics';
+import {GraphicsConfig} from '../../game-data/Graphics';
 import {StatusEffect} from "./StatusEffect";
 import {PlaceablePlacedEvent} from '../Events';
 

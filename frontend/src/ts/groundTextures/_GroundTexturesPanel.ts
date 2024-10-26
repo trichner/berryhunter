@@ -11,7 +11,7 @@ import {
     roundToNearest,
     sortStrings,
 } from '../Utils';
-import {BasicConfig as Constants} from '../../config/BasicConfig';
+import {BasicConfig as Constants} from '../../game-data/BasicConfig';
 import {GroundTextureType, groundTextureTypes} from './GroundTextureTypes';
 import * as GroundTextureManager from './GroundTextureManager';
 import {saveAs} from 'file-saver';
@@ -182,7 +182,7 @@ function setupPanel() {
         event.preventDefault();
 
         let blob = new Blob([GroundTextureManager.getTexturesAsJSON()], {type: 'application/json;charset=utf-8'});
-        saveAs(blob, 'groundTextures.json');
+        saveAs(blob, 'ground-textures.json');
     });
 }
 

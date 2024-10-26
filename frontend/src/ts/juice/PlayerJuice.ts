@@ -6,7 +6,7 @@ import { registerPreload } from '../Preloading';
 import { BerryhunterApi } from "../backend/BerryhunterApi";
 import { TriggerIntervalMap } from './TriggerIntervalMap';
 import { spatialAudio } from './SpatialAudio';
-import {GraphicsConfig} from '../../config/Graphics';
+import {GraphicsConfig} from '../../game-data/Graphics';
 
 BeforeDeathEvent.subscribe((payload) => {
     if (payload?.player?.character) {

@@ -20,9 +20,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-/js/schema/
-/js/item-definitions/
 /node_modules/
 /dist/
-/wiki-generator/output/
-/src/less/index.css

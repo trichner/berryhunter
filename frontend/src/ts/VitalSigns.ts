@@ -1,7 +1,7 @@
 import * as Preloading from './Preloading';
 import * as UserInterface from './userInterface/UserInterface';
-import {GraphicsConfig} from '../config/Graphics';
-import {BasicConfig as Constants} from '../config/BasicConfig';
+import {GraphicsConfig} from '../game-data/Graphics';
+import {BasicConfig as Constants} from '../game-data/BasicConfig';
 import {
     PlayerStartedFreezingEvent,
     PreloadingStartedEvent,

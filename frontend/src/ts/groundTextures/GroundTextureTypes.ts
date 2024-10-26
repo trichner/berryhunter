@@ -1,7 +1,8 @@
 import * as Preloading from '../Preloading';
-import {GraphicsConfig} from '../../config/Graphics';
+import {GraphicsConfig} from '../../game-data/Graphics';
 import {degrees} from "../interfaces/Types";
 import { Texture } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 
 const GroundTextureTypes = GraphicsConfig.groundTextureTypes;
 
@@ -20,7 +21,7 @@ export interface GroundTextureType {
 // Validate
 let hasError = false;
 for (let type in GroundTextureTypes) {
-    let groundTextureType: GroundTextureType = GroundTextureTypes[type];
+    let groundTextureType: Partial<GroundTextureType> = GroundTextureTypes[type];
     groundTextureType.name = type;
 
     if (!groundTextureType.hasOwnProperty('file')) {
@@ -46,7 +47,7 @@ for (let type in GroundTextureTypes) {
      * Type is valid - preload the texture graphic
      */
     if (!hasError) {
-        Preloading.registerGameObjectSVG(groundTextureType, groundTextureType.file, groundTextureType.maxSize);
+        Preloading.registerGameObjectSVG(groundTextureType as { svg: PIXI.Texture }, groundTextureType.file, groundTextureType.maxSize);
     }
 }
 

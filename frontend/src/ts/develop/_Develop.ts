@@ -12,7 +12,7 @@ import {
 } from '../Utils';
 import * as Console from '../Console';
 import {ItemType} from '../items/ItemType';
-import {BasicConfig as Constants} from '../../config/BasicConfig';
+import {BasicConfig as Constants} from '../../game-data/BasicConfig';
 import {Items} from '../items/Items';
 import {BerryhunterApi} from '../backend/BerryhunterApi';
 import {IGame} from "../interfaces/IGame";

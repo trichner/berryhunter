@@ -1,4 +1,4 @@
-import {GraphicsConfig} from '../config/Graphics';
+import {GraphicsConfig} from '../game-data/Graphics';
 import {dateDiff, playCssAnimation} from './Utils';
 import {BerryhunterApi} from './backend/BerryhunterApi';
 import {IGame} from "./interfaces/IGame";

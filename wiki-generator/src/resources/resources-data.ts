@@ -1,5 +1,5 @@
-import {GraphicsConfig} from "../../../frontend/src/config/Graphics";
-import {ItemsConfig} from "../../../frontend/src/config/Items";
+import {GraphicsConfig} from "../../../frontend/src/game-data/Graphics";
+import {ItemsConfig} from "../../../frontend/src/game-data/Items";
 
 const resourceCfg = GraphicsConfig.resources;
 
@@ -15,7 +15,7 @@ export const resources = [
         generator: {weight: 80}
     }, {
         name: "Berry Bush",
-        graphics: [resourceCfg.berryBush.bushfile],
+        graphics: [resourceCfg.berryBush.bushFile],
         produces: ItemsConfig.Berry,
         generator: {weight: 6}
     }, {
