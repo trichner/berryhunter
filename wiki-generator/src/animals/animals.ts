@@ -17,7 +17,7 @@ hook.hook('.svg', (source: string, filename: string) => {
 // Special import with the SVG hook in place!
 import {animals} from "./animals.data";
 import {ItemsConfig} from "../../../frontend/src/client-data/Items";
-import {isUndefined} from "../../../frontend/src/ts/Utils";
+import {isUndefined} from "../../../frontend/src/old-structure/Utils";
 
 const blacklistedFactors = ['damageFraction'];
 let totalWeight: number = 0;

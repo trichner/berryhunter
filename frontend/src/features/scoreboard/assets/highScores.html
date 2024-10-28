@@ -1,0 +1,88 @@
+<div id="highScores">
+	<div class="highScoreOverview">
+		<h3>
+			High Scores
+			<img src="./expand.svg" class="icon expand" alt="v"/>
+		</h3>
+		<div class="highscoresGroup">
+			<div class="highscore alltime">
+				<h4>All time</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div>
+			<div class="highscore monthly">
+				<h4>Monthly</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div>
+			<div class="highscore weekly">
+				<h4>Weekly</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div>
+			<div class="highscore daily">
+				<h4>Daily</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div>
+			<!-- <div class="highscore current">
+				<h4>Now</h4>
+				<span class="playerName"></span>
+				<data value="" class="score"></data>
+			</div> -->
+		</div>
+	</div>
+
+	<div class="highScoreDetails">
+		<a href="#" id="closeLeaderboard">X</a>
+
+		<header>
+			<h3 class="leaderboard">
+				Top<span class="spacer"></span>10
+			</h3>
+			<span class="spacer"></span>
+			<h2 class="berryhunter">
+				BerryHunters
+			</h2>
+		</header>
+
+		<div class="tableContainer">
+			<table class="highscore alltime">
+				<caption>All time</caption>
+				<tbody>
+				<tr class="templateRow">
+					<!-- Rows are copied and filled in JS -->
+					<td class="rank"></td>
+					<td class="date"></td>
+					<td class="playerName"></td>
+					<td class="score"></td>
+				</tr>
+				</tbody>
+			</table>
+
+			<table class="highscore monthly">
+				<caption>Monthly</caption>
+				<tbody>
+				</tbody>
+			</table>
+			<table class="highscore weekly">
+				<caption>Weekly</caption>
+				<tbody>
+				</tbody>
+			</table>
+
+			<table class="highscore daily">
+				<caption>Daily</caption>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+
+		<p class="help">
+			As the game is still in <a href="#changelog"><span class="warn" style="opacity: 1">beta</span> phase</a>,
+			all data can be wiped at any given time. After release the high scores will persist.
+		</p>
+
+		<div class="socialMediaContainer injected horizontal center layout-row"></div>
+	</div>
+</div>

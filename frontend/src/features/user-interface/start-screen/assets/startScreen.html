@@ -1,0 +1,82 @@
+<div id="startScreen" class="loading">
+	<!-- TODO include splashscreen.jpg in Markup to make it load faster? -->
+	<div id="splashScreen"></div>
+
+	<header class="layout-row hideForLeaderboard hideForCredits hideForChangelog">
+		<img id="hunter" src="./hunter.png"/>
+		<h1>BerryHunter</h1>
+	</header>
+
+	<div id="chromeWarning" class="playerForm layout-column hidden">
+		<em class="warning">Warning</em>
+		<p>
+			In the Beta version, the game only runs smoothly on an up to date
+			<a href="https://www.google.com/chrome" target="_blank">Chrome</a> or
+			<a href="https://www.mozilla.org/firefox" target="_blank">Firefox</a> browser.
+		</p>
+		<div class="layout-row">
+			<a href="#" id="continueAnywayButton" class="button secondary flex-50">
+				Continue anyway
+			</a>
+			<span style="width: 1rem;"></span>
+			<a href="https://www.google.com/chrome" target="_blank" class="button flex-50">
+				Get Chrome
+			</a>
+		</div>
+	</div>
+
+	<form id="startForm" class="playerForm layout-column hideForLeaderboard hideForCredits hideForChangelog">
+		<div class="inputContainer layout-row">
+			<input class="playerNameInput flex"
+			       placeholder="Some Name"
+			       maxlength="20"
+			       tabindex="0" />
+		</div>
+		<div class="optionsContainer layout-row layout-align-space-around-center">
+			<div class="layout-row layout-align-center-end startFormToggle">
+				<div class="switch">
+					<input type="checkbox" id="tutorialToggle">
+					<label><i></i></label>
+					<span></span>
+				</div>
+				<label for="tutorialToggle">Tutorial</label>
+			</div>
+			<div class="layout-row layout-align-center-end startFormToggle">
+				<div class="switch">
+					<input type="checkbox" id="fullscreenToggle">
+					<label><i></i></label>
+					<span></span>
+				</div>
+				<label for="fullscreenToggle">Fullscreen</label>
+			</div>
+		</div>
+		<div class="submitContainer">
+			<input type="submit" value="Loading..." class="playerNameSubmit" disabled="disabled"/>
+			<div id="loadingBar"></div>
+		</div>
+
+		<!--		<a href="#changelog" id="betaStamp"><img src="./betaStamp.svg" /></a>-->
+<!--		<a href="#changelog" id="betaStamp" class="text-mode">Playtest<br />20.10.2024</a>-->
+		<a href="#changelog" id="betaStamp" class="text-mode off-season">Off-&NoBreak;Season</a>
+	</form>
+
+	<div class="menu infoContainer center bottom layout-row hideForLeaderboard">
+		<a href="#highScores">Top 10</a>
+<!--		<a href="http://berryhunter.wikia.com" target="_blank">Wiki</a>-->
+		<a href="#credits">Credits</a>
+		<a href="#changelog">Changelog</a>
+<!--		<a href="http://iogames.space/" target="_blank">More IO-Games</a>-->
+	</div>
+
+	<a href="#" id="closeCredits" class="closeButton hidden hideForLeaderboard hideForChangelog">X</a>
+	<div id="creditsContainer" class="panel hidden hideForLeaderboard">
+		<!-- Filled via JS -->
+	</div>
+
+	<a href="#" id="closeChangelog" class="closeButton hidden hideForLeaderboard hideForCredits">X</a>
+	<div id="changelogContainer" class="panel hidden hideForLeaderboard">
+		<!-- Filled via JS -->
+	</div>
+
+	<div class="socialMediaContainer injected vertical infoContainer middle right layout-column hideForLeaderboard"></div>
+</div>

@@ -1,6 +1,6 @@
 import * as changeCase from "change-case";
 import {KEYWORD_DATA} from "./mechanics/keywords";
-import {isDefined} from "../../frontend/src/ts/Utils";
+import {isDefined} from "../../frontend/src/old-structure/Utils";
 
 export interface MappedFactor {
     name: string;

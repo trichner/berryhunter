@@ -1,5 +1,5 @@
 import {BasicConfig} from "./BasicConfig";
-import {color, integer} from '../ts/interfaces/Types';
+import {color, integer} from '../old-structure/interfaces/Types';
 
 export const GraphicsConfig = {
 
@@ -27,7 +27,7 @@ export const GraphicsConfig = {
          * SYNCED WITH BACKEND
          */
         size: <number> 30,
-        file: require('../img/character.svg'),
+        file: require('../features/game-objects/assets/character.svg'),
 
         hands: {
             fillColor: <color> 0xf2a586,
@@ -35,7 +35,7 @@ export const GraphicsConfig = {
         },
 
         craftingIndicator: {
-            file: require('../img/userInterface/crafting.svg'),
+            file: require('../features/game-objects/assets/icons/crafting.svg'),
             size: <number> 20,
             lineColor: <color> 0xc9a741,
             lineWidth: <number> 5, //px
@@ -65,19 +65,19 @@ export const GraphicsConfig = {
 
     mobs: {
         dodo: {
-            file: require('../img/dodo.svg'),
+            file: require('../features/game-objects/assets/dodo.svg'),
             minSize: <number> 35,
             maxSize: <number> 45,
         },
 
         saberToothCat: {
-            file: require('../img/saberToothCat.svg'),
+            file: require('../features/game-objects/assets/saberToothCat.svg'),
             minSize: <number> 45,
             maxSize: <number> 60,
         },
 
         mammoth: {
-            file: require('../img/mammoth.svg'),
+            file: require('../features/game-objects/assets/mammoth.svg'),
             minSize: <number> 85,
             maxSize: <number> 100,
         },
@@ -85,37 +85,37 @@ export const GraphicsConfig = {
 
     resources: {
         tree: {
-            spotFile: require('../img/treeSpot.svg'),
+            spotFile: require('../features/game-objects/assets/treeSpot.svg'),
             maxSize: <number> 210,
 
-            roundTreeFile: require('../img/roundTree.svg'),
-            deciduousTreeFile: require('../img/deciduousTree.svg'),
+            roundTreeFile: require('../features/game-objects/assets/roundTree.svg'),
+            deciduousTreeFile: require('../features/game-objects/assets/deciduousTree.svg'),
         },
 
         mineral: {
-            spotFile: require('../img/stoneSpot.svg'),
+            spotFile: require('../features/game-objects/assets/stoneSpot.svg'),
             maxSize: <number> 142,
 
-            stoneFile: require('../img/stone.svg'),
-            bronzeFile: require('../img/bronze.svg'),
-            ironFile: require('../img/iron.svg'),
-            titaniumFile: require('../img/titanium.svg'),
+            stoneFile: require('../features/game-objects/assets/stone.svg'),
+            bronzeFile: require('../features/game-objects/assets/bronze.svg'),
+            ironFile: require('../features/game-objects/assets/iron.svg'),
+            titaniumFile: require('../features/game-objects/assets/titanium.svg'),
         },
 
         berryBush: {
-            bushFile: require('../img/berryBush.svg'),
+            bushFile: require('../features/game-objects/assets/berryBush.svg'),
             maxSize: <number> 60,
 
-            berryFile: require('../img/berry.svg'),
+            berryFile: require('../features/game-objects/assets/berry.svg'),
             berryMaxSize: <number> 11,
             berryMinSize: <number> 6,
 
-            calyxFile: require('../img/berryCalyx.svg'),
+            calyxFile: require('../features/game-objects/assets/berryCalyx.svg'),
         },
 
         flower: {
-            spotFile: require('../img/flowerSpot.svg'),
-            file: require('../img/flower.svg'),
+            spotFile: require('../features/game-objects/assets/flowerSpot.svg'),
+            file: require('../features/game-objects/assets/flower.svg'),
             minSize: <number> (BasicConfig.PIXEL_PER_METER * 0.15 * 2),
             maxSize: <number> (BasicConfig.PIXEL_PER_METER * 0.25 * 2),
         },
@@ -198,91 +198,91 @@ export const GraphicsConfig = {
     groundTextureTypes: <{[key: string]: {displayName: string, file: string, minSize: number, maxSize: number }}> {
         'Dark Green Grass 1': {
             displayName: 'Greens - Gras, dark 1',
-            file: require('../img/groundTextures/darkGrass1.svg'),
+            file: require('../features/ground-textures/assets/textures/darkGrass1.svg'),
             minSize: 180,
             maxSize: 300,
         },
         'Dark Green Grass 2': {
             displayName: 'Greens - Gras, dark 2',
-            file: require('../img/groundTextures/darkGrass2.svg'),
+            file: require('../features/ground-textures/assets/textures/darkGrass2.svg'),
             minSize: 180,
             maxSize: 300,
         },
         'Green Grass 1': {
             displayName: 'Greens - Gras 1',
-            file: require('../img/groundTextures/grass1.svg'),
+            file: require('../features/ground-textures/assets/textures/grass1.svg'),
             minSize: 180,
             maxSize: 300,
         },
         'Green Grass 2': {
             displayName: 'Greens - Gras 2',
-            file: require('../img/groundTextures/grass2.svg'),
+            file: require('../features/ground-textures/assets/textures/grass2.svg'),
             minSize: 180,
             maxSize: 300,
         },
         'Dark Stone Patch': {
             displayName: 'Greys - Stone Patch, dark',
-            file: require('../img/groundTextures/darkStonePatch.svg'),
+            file: require('../features/ground-textures/assets/textures/darkStonePatch.svg'),
             minSize: 130,
             maxSize: 300,
         },
         'Stone Patch': {
             displayName: 'Greys - Stone Patch',
-            file: require('../img/groundTextures/stonePatch.svg'),
+            file: require('../features/ground-textures/assets/textures/stonePatch.svg'),
             minSize: 130,
             maxSize: 300,
         },
         'Pebble': {
             displayName: 'Greys - Pebbles',
-            file: require('../img/groundTextures/pebble.svg'),
+            file: require('../features/ground-textures/assets/textures/pebble.svg'),
             minSize: 130,
             maxSize: 200,
         },
         'Dark Pebble': {
             displayName: 'Greys - Pebbles, dark',
-            file: require('../img/groundTextures/darkPebble.svg'),
+            file: require('../features/ground-textures/assets/textures/darkPebble.svg'),
             minSize: 130,
             maxSize: 200,
         },
         'Rubble': {
             displayName: 'Greys - Rubble',
-            file: require('../img/groundTextures/rubble.svg'),
+            file: require('../features/ground-textures/assets/textures/rubble.svg'),
             minSize: 50,
             maxSize: 100,
         },
         'Dark Rubble': {
             displayName: 'Greys - Rubble, dark',
-            file: require('../img/groundTextures/darkRubble.svg'),
+            file: require('../features/ground-textures/assets/textures/darkRubble.svg'),
             minSize: 50,
             maxSize: 100,
         },
         'Puddle': {
             displayName: 'Blues - Puddle',
-            file: require('../img/groundTextures/puddle.svg'),
+            file: require('../features/ground-textures/assets/textures/puddle.svg'),
             minSize: 60,
             maxSize: 140,
         },
         'Dark Puddle': {
             displayName: 'Blues - Puddle, dark',
-            file: require('../img/groundTextures/darkPuddle.svg'),
+            file: require('../features/ground-textures/assets/textures/darkPuddle.svg'),
             minSize: 60,
             maxSize: 140,
         },
         'Flowers': {
             displayName: 'Pinks - Flowers, white outlined',
-            file: require('../img/groundTextures/flowers.svg'),
+            file: require('../features/ground-textures/assets/textures/flowers.svg'),
             minSize: 70,
             maxSize: 100,
         },
         'Leaves': {
             displayName: 'Greens - Leaves',
-            file: require('../img/groundTextures/leaves.svg'),
+            file: require('../features/ground-textures/assets/textures/leaves.svg'),
             minSize: 50,
             maxSize: 100,
         },
         'Sand': {
             displayName: 'Yellows - Sand',
-            file: require('../img/groundTextures/sand1.svg'),
+            file: require('../features/ground-textures/assets/textures/sand1.svg'),
             minSize: 150,
             maxSize: 200,
         },
@@ -291,7 +291,7 @@ export const GraphicsConfig = {
          */
         'Land': {
             displayName: 'Greens - Land',
-            file: require('../img/groundTextures/land1.svg'),
+            file: require('../features/ground-textures/assets/textures/land1.svg'),
             minSize: 150,
             maxSize: 200,
         }

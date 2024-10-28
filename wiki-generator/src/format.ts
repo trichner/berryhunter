@@ -1,5 +1,5 @@
 import * as changeCase from 'change-case';
-import {isUndefined} from "../../frontend/src/ts/Utils";
+import {isUndefined} from "../../frontend/src/old-structure/Utils";
 
 export function percentage(value: number): string {
     return (value * 100).toFixed(0) + '%';

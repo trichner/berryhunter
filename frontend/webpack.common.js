@@ -12,7 +12,7 @@ module.exports = {
 			xhtml: true
 		}),
 		new FaviconWebpackPlugin({
-			logo: './src/img/logo.svg',
+			logo: './src/features/user-interface/assets/logo.svg',
 			publicPath: '.',
 			prefix: '',
 			inject: true,

@@ -20,6 +20,6 @@
 	},
 	"include": [
 		"./src/index.ts",
-		"./src/ts/**/*"
+      "./src/old-structure/**/*"
 	]
 }
