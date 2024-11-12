@@ -20,7 +20,9 @@ export class ColorMatrixTweenEffect implements TweenEffect {
     red: number;
     green: number;
     blue: number;
-    constructor(red: number, green: number, blue: number, from: number, to: number, duration: number, repeat?: boolean) {
+    brightness: number;
+    greyscale: boolean;
+    constructor(red: number, green: number, blue: number, from: number, to: number, duration: number, repeat?: boolean, brightness?: number, greyscale?: boolean) {
         this.type = 'colorMatrix'
         this.red = red;
         this.green = green;
@@ -29,6 +31,8 @@ export class ColorMatrixTweenEffect implements TweenEffect {
         this.to = to;
         this.duration = duration
         this.repeat = repeat
+        this.brightness = brightness
+        this.greyscale = greyscale
     }
 }
 
@@ -85,6 +89,8 @@ export class StatusEffect implements StatusEffectDefinition {
                 }
                 this.colorMatrix = new ColorMatrixFilter();
                 flood(this.colorMatrix, effect.red, effect.green, effect.blue, 1);
+                if (effect.brightness > 0) this.colorMatrix.brightness(effect.brightness, false);
+                if (effect.greyscale) this.colorMatrix.greyscale(1, true);
                 this.colorMatrix.alpha = effect.from;
                 this.colorMatrix.enabled = false;
 
@@ -112,17 +118,14 @@ export class StatusEffect implements StatusEffectDefinition {
     }
 
     static forDamaged(gameObjectShape: Container, soundData?: SoundData) {
-        // #BF153A old Health Bar dark red?
         return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
-            [
-                new ColorMatrixTweenEffect(191, 21, 58, 0.5, 0.1, 100),
+            [new ColorMatrixTweenEffect(255, 255, 255, 0.4, 1, 200, false, 0, true),
                 { type: 'scale', from: 1.1, to: 0.8, duration: 100 }], soundData);
     }
 
     static forDamagedOverTime(gameObjectShape: Container, soundData?: SoundData) {
-        // #BF153A old Health Bar dark red?
         return new StatusEffect(StatusEffect.DamagedAmbient, gameObjectShape,
-            [new ColorMatrixTweenEffect(191, 21, 58, 0.8, 0.2, 200)],
+            [new ColorMatrixTweenEffect(255, 255, 255, 0, 1, 200, false, 0, true)],
             soundData);
     }
 
