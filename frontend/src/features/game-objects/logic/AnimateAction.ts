@@ -68,6 +68,7 @@ types.swing = function (options: AnimationActionOptions, overallDuration: number
     .onComplete(function () {
         options.hand.container.group.x = startX;
         options.hand.container.group.y = startY;
+        options.hand.container.group.rotation = startRotation;
     });
     options.animation.start();
     options.animation.onComplete(options.onDone);

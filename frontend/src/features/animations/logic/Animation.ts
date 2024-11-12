@@ -3,6 +3,7 @@ import _merge = require('lodash/merge');
 import { ListenerFn } from "eventemitter3";
 import { Container, Ticker } from 'pixi.js';
 import { Easing, Tween, Group as TweenGroup } from '@tweenjs/tween.js';
+import { reverse } from 'lodash';
 
 export class Animation {
     private tweenGroup: TweenGroup;
@@ -46,8 +47,8 @@ export class Animation {
         let tween = new Tween(object);
         tween.to(to, options.duration)
             .easing(options.easing)
-            .yoyo(true)
-            .repeat(1);
+            .yoyo(options.reverse ? true : false)
+            .repeat(options.reverse ? 1 : 0);
         this.tweenGroup.add(tween);
         return tween;
     }
