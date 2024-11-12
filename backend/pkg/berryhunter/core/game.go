@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/EngoEngine/ecs"
-	"github.com/google/flatbuffers/go"
+	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
 	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
@@ -73,8 +73,10 @@ func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
 
 	// Prepare welcome message. Its static anyways.
 	msg := &codec.Welcome{
-		"berryhunter.io [Alpha] rza, n1b, xyckno & co.",
-		gc.Radius * codec.Points2px,
+		ServerName:         "berryhunter.io [Alpha] rza, n1b, xyckno & co.",
+		Radius:             gc.Radius * codec.Points2px,
+		TotalDayCycleTicks: g.config.TotalDayCycleSeconds * constant.TicksPerSecond,
+		DayTimeTicks:       g.config.DayTimeSeconds * constant.TicksPerSecond,
 	}
 	builder := flatbuffers.NewBuilder(32)
 	welcomeMsg := codec.WelcomeMessageFlatbufMarshal(builder, msg)
@@ -128,7 +130,7 @@ func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
 	d := sys.NewDecaySystem(g)
 	g.AddSystem(d)
 
-	dayCycle := sys.NewDayCycleSystem(g, constant.DayNightCyleTicks, gc.ColdFractionNightPerS, gc.ColdFractionDayPerS)
+	dayCycle := sys.NewDayCycleSystem(g, g.config.TotalDayCycleSeconds*constant.TicksPerSecond, g.config.DayTimeSeconds*constant.TicksPerSecond, gc.ColdFractionNightPerS, gc.ColdFractionDayPerS)
 	g.AddSystem(dayCycle)
 
 	sb := sys.NewScoreboardSystem(g)

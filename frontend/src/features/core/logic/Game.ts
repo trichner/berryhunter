@@ -211,24 +211,6 @@ export class Game implements IGame {
         GroundTextureManager.setup(this);
 
         GameObject.setup();
-        DayCycle.setup([
-            this.layers.terrain.water,
-            this.layers.terrain.ground,
-            this.layers.terrain.textures,
-            this.layers.terrain.resourceSpots,
-            this.layers.placeables.chest,
-            this.layers.placeables.workbench,
-            this.layers.resources.berryBush,
-            this.layers.characters,
-            this.layers.mobs.dodo,
-            this.layers.mobs.saberToothCat,
-            this.layers.mobs.mammoth,
-            this.layers.placeables.doors,
-            this.layers.placeables.walls,
-            this.layers.placeables.spikyWalls,
-            this.layers.resources.minerals,
-            this.layers.resources.trees,
-        ]);
 
         this.inputManager = new InputManager({
             inputKeyboard: true,
@@ -360,6 +342,26 @@ export class Game implements IGame {
             .fill(GraphicsConfig.landColor));
 
         this.map = new GameMapWithBackend(this, gameInformation.mapRadius);
+        DayCycle.setup(gameInformation.totalDayCycleTicks, gameInformation.dayTimeTicks, 
+            [
+                this.layers.terrain.water,
+                this.layers.terrain.ground,
+                this.layers.terrain.textures,
+                this.layers.terrain.resourceSpots,
+                this.layers.placeables.chest,
+                this.layers.placeables.workbench,
+                this.layers.resources.berryBush,
+                this.layers.characters,
+                this.layers.mobs.dodo,
+                this.layers.mobs.saberToothCat,
+                this.layers.mobs.mammoth,
+                this.layers.placeables.doors,
+                this.layers.placeables.walls,
+                this.layers.placeables.spikyWalls,
+                this.layers.resources.minerals,
+                this.layers.resources.trees,
+            ]
+        );
         this.play();
         this.state = GameState.RENDERING;
         this.miniMap.setup(this.map.width, this.map.height);

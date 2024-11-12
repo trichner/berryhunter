@@ -2,7 +2,8 @@ package cfg
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
+	"os"
 )
 
 type Server struct {
@@ -23,6 +24,8 @@ type Config struct {
 	Game struct {
 		ColdFractionDayPerS   float32 `json:"coldFractionDayPerSecond"`
 		ColdFractionNightPerS float32 `json:"coldFractionNightPerSecond"`
+		TotalDayCycleSeconds  uint64  `json:"totalDayCycleSeconds"`
+		DayTimeSeconds        uint64  `json:"dayTimeSeconds"`
 		Player                struct {
 			FreezingDamageTickFraction       float32 `json:"freezingDamageTickFraction"`
 			StarveDamageTickFraction         float32 `json:"starveDamageTickFraction"`
@@ -45,13 +48,28 @@ type Config struct {
 func ReadConfig(filename string) (*Config, error) {
 	var err error
 	// read file
-	dat, err := ioutil.ReadFile(filename)
+	dat, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
 
 	// parse config
 	config := &Config{}
-	err = json.Unmarshal(dat, config)
+	if err := json.Unmarshal(dat, config); err != nil {
+		return nil, err
+	}
+
+	// Default if values are missing
+	if config.Game.TotalDayCycleSeconds <= 0 {
+		config.Game.TotalDayCycleSeconds = 600
+	}
+	if config.Game.DayTimeSeconds <= 0 {
+		config.Game.DayTimeSeconds = 400
+	}
+	// Validate
+	if config.Game.DayTimeSeconds > config.Game.TotalDayCycleSeconds {
+		return config, fmt.Errorf("invalid configuration: DayTimeSeconds (%d) must not be larger than TotalDayCycleSeconds (%d)",
+			config.Game.DayTimeSeconds, config.Game.TotalDayCycleSeconds)
+	}
 	return config, err
 }

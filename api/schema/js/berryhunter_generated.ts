@@ -2332,10 +2332,26 @@ mapRadius():number {
 };
 
 /**
+ * @returns {flatbuffers.Long}
+ */
+totalDaycycleTicks():flatbuffers.Long {
+  var offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : this.bb!.createLong(0, 0);
+};
+
+/**
+ * @returns {flatbuffers.Long}
+ */
+dayTimeTicks():flatbuffers.Long {
+  var offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : this.bb!.createLong(0, 0);
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 static startWelcome(builder:flatbuffers.Builder) {
-  builder.startObject(2);
+  builder.startObject(4);
 };
 
 /**
@@ -2352,6 +2368,22 @@ static addServerName(builder:flatbuffers.Builder, serverNameOffset:flatbuffers.O
  */
 static addMapRadius(builder:flatbuffers.Builder, mapRadius:number) {
   builder.addFieldFloat32(1, mapRadius, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Long} totalDaycycleTicks
+ */
+static addTotalDaycycleTicks(builder:flatbuffers.Builder, totalDaycycleTicks:flatbuffers.Long) {
+  builder.addFieldInt64(2, totalDaycycleTicks, builder.createLong(0, 0));
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Long} dayTimeTicks
+ */
+static addDayTimeTicks(builder:flatbuffers.Builder, dayTimeTicks:flatbuffers.Long) {
+  builder.addFieldInt64(3, dayTimeTicks, builder.createLong(0, 0));
 };
 
 /**

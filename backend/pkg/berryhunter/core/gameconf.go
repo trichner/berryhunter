@@ -13,6 +13,9 @@ func Config(conf *cfg.Config) Configuration {
 		g.ColdFractionNightPerS = conf.Game.ColdFractionNightPerS
 		g.ColdFractionDayPerS = conf.Game.ColdFractionDayPerS
 
+		g.TotalDayCycleSeconds = conf.Game.TotalDayCycleSeconds
+		g.DayTimeSeconds = conf.Game.DayTimeSeconds
+
 		g.PlayerConfig.FreezingDamageTickFraction = conf.Game.Player.FreezingDamageTickFraction
 		g.PlayerConfig.HealthGainSatietyLossTickFraction = conf.Game.Player.HealthGainSatietyLossTickFraction
 		g.PlayerConfig.HealthGainSatietyThreshold = conf.Game.Player.HealthGainSatietyThreshold

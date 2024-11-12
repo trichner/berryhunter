@@ -11,19 +11,21 @@ type DayCycleSystem struct {
 	players []model.PlayerEntity
 
 	g                model.Game
-	cycleTicks       uint64
+	totalCycleTicks  uint64
+	dayTimeTicks     uint64
 	nightCoolPerTick uint32
 	dayCoolPerTick   uint32
 }
 
-func NewDayCycleSystem(g model.Game, cycleTicks uint64, coldFractionNightPerS float32,
+func NewDayCycleSystem(g model.Game, totalCycleTicks uint64, dayCycleTicks uint64, coldFractionNightPerS float32,
 	coldFractionDayPerS float32,
 ) *DayCycleSystem {
 	nightCoolPerTick := vitals.FractionToAbsPerTick(coldFractionNightPerS)
 	dayCoolPerTick := vitals.FractionToAbsPerTick(coldFractionDayPerS)
 	return &DayCycleSystem{
 		g:                g,
-		cycleTicks:       cycleTicks,
+		totalCycleTicks:  totalCycleTicks,
+		dayTimeTicks:     dayCycleTicks,
 		nightCoolPerTick: nightCoolPerTick,
 		dayCoolPerTick:   dayCoolPerTick,
 	}
@@ -38,18 +40,29 @@ func (d *DayCycleSystem) AddPlayer(e model.PlayerEntity) {
 }
 
 func (d *DayCycleSystem) Update(dt float32) {
-	// is it night?
-	c := d.dayCoolPerTick
-	if d.g.Ticks()%d.cycleTicks > d.cycleTicks/2 {
+	// Calculate the total cycle length (sum of day and night)
+	totalCycleTicks := d.totalCycleTicks
+
+	// Get the current tick in the cycle
+	currentTick := d.g.Ticks() % totalCycleTicks
+
+	// Determine if it's day or night
+	var c uint32 // Cooling rate per tick
+	if currentTick < d.dayTimeTicks {
+		// It's day
+		c = d.dayCoolPerTick
+	} else {
+		// It's night
 		c = d.nightCoolPerTick
 	}
 
-	// adjust body temp
+	// Adjust body temperature for all players
 	for _, p := range d.players {
 		if p.IsGod() {
-			continue
+			continue // Skip god players
 		}
 
+		// Subtract the cooling rate from the player's body temperature
 		t := p.VitalSigns().BodyTemperature.Sub(c)
 		p.VitalSigns().BodyTemperature = t
 	}

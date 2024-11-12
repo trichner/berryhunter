@@ -17,6 +17,9 @@ type GameConfig struct {
 	ColdFractionNightPerS float32
 	ColdFractionDayPerS   float32
 
+	TotalDayCycleSeconds uint64
+	DayTimeSeconds       uint64
+
 	PlayerConfig    PlayerConfig
 	ChieftainConfig *ChieftainConfig
 }

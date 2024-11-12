@@ -10,6 +10,8 @@
     "coldFractionDayPerSecond": 0.005,
     "coldFractionNightPerSecond": 0.04,
     "heatFractionPerSecond": 0.04,
+    "totalDayCycleSeconds": 600,
+    "dayTimeSeconds": 400,
     "player": {
       "freezingDamageTickFraction": 0.001,
       "starveDamageTickFraction": 0.001,

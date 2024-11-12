@@ -61,14 +61,44 @@ func (rcv *Welcome) MutateMapRadius(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(6, n)
 }
 
+func (rcv *Welcome) TotalDaycycleTicks() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Welcome) MutateTotalDaycycleTicks(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(8, n)
+}
+
+func (rcv *Welcome) DayTimeTicks() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *Welcome) MutateDayTimeTicks(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(10, n)
+}
+
 func WelcomeStart(builder *flatbuffers.Builder) {
-	builder.StartObject(2)
+	builder.StartObject(4)
 }
 func WelcomeAddServerName(builder *flatbuffers.Builder, serverName flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(serverName), 0)
 }
 func WelcomeAddMapRadius(builder *flatbuffers.Builder, mapRadius float32) {
 	builder.PrependFloat32Slot(1, mapRadius, 0.0)
+}
+func WelcomeAddTotalDaycycleTicks(builder *flatbuffers.Builder, totalDaycycleTicks uint64) {
+	builder.PrependUint64Slot(2, totalDaycycleTicks, 0)
+}
+func WelcomeAddDayTimeTicks(builder *flatbuffers.Builder, dayTimeTicks uint64) {
+	builder.PrependUint64Slot(3, dayTimeTicks, 0)
 }
 func WelcomeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

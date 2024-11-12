@@ -30,10 +30,13 @@ func main() {
 
 	platform := ""
 	artifactName := ""
+	compilerPath := fmt.Sprintf("./flatc_%s_%s", platform, strings.ReplaceAll(version, ".", "_"))
+
 	switch runtime.GOOS {
 	case "windows":
 		platform = "Windows"
 		artifactName = "Windows.flatc.binary.zip"
+		compilerPath += ".exe"
 	case "darwin":
 		platform = "Mac"
 		artifactName = "Mac.flatc.binary.zip"
@@ -50,7 +53,6 @@ func main() {
 	// https://github.com/google/flatbuffers/releases/download/v24.3.25/Mac.flatc.binary.zip
 	// https://github.com/google/flatbuffers/releases/download/v24.3.25/Windows.flatc.binary.zip
 
-	compilerPath := fmt.Sprintf("./flatc_%s_%s", platform, strings.ReplaceAll(version, ".", "_"))
 	err := downloadCompilerTo(compilerPath, version, artifactName)
 	if err != nil {
 		slog.Error("failed to download flatc compiler", slog.String("version", version), slog.Any("error", err))
@@ -89,7 +91,12 @@ func downloadCompilerTo(path, version, artifactName string) error {
 	}
 
 	i := slices.IndexFunc(zr.File, func(f *zip.File) bool {
-		return f.Name == "flatc"
+		switch runtime.GOOS {
+		case "windows":
+			return f.Name == "flatc.exe"
+		default:
+			return f.Name == "flatc"
+		}
 	})
 	if i < 0 {
 		return errors.New("'flatc' not found in archive")

@@ -4,13 +4,14 @@ import {flood, lumaGreyscale} from '../../../old-structure/ColorMatrixFilterExte
 import {isUndefined} from '../../../old-structure/Utils';
 import {OnDayTimeStartEvent, OnNightTimeStartEvent} from '../../core/logic/Events';
 
-const ticksPerDay = 10 * 60 * 30; // 8 Minutes at 30 tps
+let ticksPerDay: number;
+let dayTimeTicks: number;
 const hoursPerDay = 24;
 /**
  * First hour that is considered "day" in regard to visuals and temperature
  */
 const sunriseHour: number = 6;
-const sunsetHour = sunriseHour + hoursPerDay / 2;
+let sunsetHour: number;
 /**
  * Time of color fade on dusk / dawn
  */
@@ -19,8 +20,8 @@ const twilightDuration: number = 1.5;
 const sunriseStart = sunriseHour - (twilightDuration * 2 / 3);
 const sunriseEnd = sunriseHour + (twilightDuration / 3);
 
-const sunsetStart = sunsetHour - (twilightDuration / 3);
-const sunsetEnd = sunsetHour + (twilightDuration * 2 / 3);
+let sunsetStart;
+let sunsetEnd;
 
 const NightVisuals = {
     SATURATION: 0.4,
@@ -39,7 +40,20 @@ let colorMatrix: ColorMatrixFilter;
 let filters: Filter[];
 let knownIsDay;
 
-export function setup(pFilteredContainers: Container[]) {
+/**
+ * Initializes the day cycle setup with the specified parameters.
+ * 
+ * @param ticksPerDay - The number of ticks in a full day cycle.
+ * @param dayTimeTicks - The number of ticks that constitute the daytime period.
+ * @param pFilteredContainers - An array of PIXI.js Containers to be filtered by the day cycle effects.
+ */
+export function setup(totalTicksPerDay: number, ldayTimeTicks: number, pFilteredContainers: Container[]) {
+    ticksPerDay = totalTicksPerDay;
+    dayTimeTicks = ldayTimeTicks;
+    sunsetHour = sunriseHour + dayTimeTicks / ticksPerDay * hoursPerDay;
+    sunsetStart = sunsetHour - (twilightDuration / 3);
+    sunsetEnd = sunsetHour + (twilightDuration * 2 / 3)
+
     filteredContainers = pFilteredContainers;
 
     colorMatrix = new ColorMatrixFilter();

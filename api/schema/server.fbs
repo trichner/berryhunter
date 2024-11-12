@@ -135,6 +135,8 @@ table GameState {
 table Welcome {
   server_name:string;
   map_radius:float;
+  total_daycycle_ticks:ulong;
+  day_time_ticks:ulong;
 }
 
 table Accept {

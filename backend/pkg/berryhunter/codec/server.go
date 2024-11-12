@@ -1,7 +1,7 @@
 package codec
 
 import (
-	"github.com/google/flatbuffers/go"
+	flatbuffers "github.com/google/flatbuffers/go"
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 )
 
@@ -18,6 +18,8 @@ func WelcomeMessageFlatbufMarshal(builder *flatbuffers.Builder, w *Welcome) flat
 	BerryhunterApi.WelcomeStart(builder)
 	BerryhunterApi.WelcomeAddServerName(builder, serverName)
 	BerryhunterApi.WelcomeAddMapRadius(builder, w.Radius)
+	BerryhunterApi.WelcomeAddTotalDaycycleTicks(builder, w.TotalDayCycleTicks)
+	BerryhunterApi.WelcomeAddDayTimeTicks(builder, w.DayTimeTicks)
 
 	welcome := BerryhunterApi.WelcomeEnd(builder)
 
@@ -25,8 +27,10 @@ func WelcomeMessageFlatbufMarshal(builder *flatbuffers.Builder, w *Welcome) flat
 }
 
 type Welcome struct {
-	ServerName string
-	Radius     float32
+	ServerName         string
+	Radius             float32
+	TotalDayCycleTicks uint64
+	DayTimeTicks       uint64
 }
 
 func AcceptMessageFlatbufMarshal(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
