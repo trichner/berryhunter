@@ -253,7 +253,7 @@ export class BerryBush extends Resource {
             .fill({color: miniMapCfg.color, alpha: miniMapCfg.alpha});
     }
 
-    onStockChange(newNumberOfBerries: number) {
+    onStockChange(newStock: number, oldStock: number) {
         if (isDefined(this.berries)) {
             this.berries.parent.removeChild(this.berries);
         }
@@ -265,7 +265,7 @@ export class BerryBush extends Resource {
         let seedRandom = new SeedRandom(this.id);
 
         for (let i = 0; i < this.capacity; i++) {
-            if (i >= newNumberOfBerries) {
+            if (i >= newStock) {
                 break;
             }
 
@@ -280,6 +280,12 @@ export class BerryBush extends Resource {
             let calyx = createInjectedSVG(BerryBush.calyx.svg, x, y, berrySize, this.random(seedRandom, deg2rad(-65), deg2rad(220)));
             this.berries.addChild(calyx);
         }
+        ResourceStockChangedEvent.trigger({
+            entityType: this.constructor.name,
+            newStock: newStock,
+            oldStock: oldStock,
+            position: this.getPosition()
+        });
     }
 
     random(rng: () => number, min: number, max: number) {
