@@ -70,7 +70,9 @@ const stages: IStage[] = [
         markupId: 'placing',
         showUntil: ControlsActionEvent,
         eventFilter: function (payload) {
-            if (payload.item.name !== 'Campfire') {
+            if (payload.item !== null &&
+                payload.item.name !== 'Campfire'
+            ) {
                 return false;
             }
             return payload.actionType === BerryhunterApi.ActionType.PlaceItem;
