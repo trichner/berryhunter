@@ -3,7 +3,8 @@
   "id": 30,
   "type": "PLACEABLE",
   "factors": {
-    "vulnerability": 0.01
+    "vulnerability": 0.01,
+    "durationInSeconds": 2400
   },
   "recipe": {
     "craftTimeInSeconds": 10,
