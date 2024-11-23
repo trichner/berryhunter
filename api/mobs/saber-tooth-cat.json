@@ -3,7 +3,7 @@
   "name": "SaberToothCat",
   "type": "MOB",
   "factors": {
-    "vulnerability": 0.667,
+    "vulnerability": 0.833,
     "damageFraction": 0.0067,
     "speed": 0.5,
     "deltaPhi": 0.1,
