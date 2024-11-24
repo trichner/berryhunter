@@ -1,27 +1,32 @@
 {
-  "name": "Seeds",
   "id": 41,
+  "name": "BerrySeed",
   "type": "PLACEABLE",
+  "factors": {
+    "minimumYield": 0,
+    "replenishProbabilityPerSecond": 0.02,
+    "capacity": 3,
+    "durationInSeconds": 500,
+    "vulnerability": 0.2
+  },
   "recipe": {
     "craftTimeInSeconds": 10,
     "materials": [
       {
-        "item": "Berry",
-        "count": 3
+        "item": "Wood",
+        "count": 30
       },
       {
-        "item": "Wood",
-        "count": 20
+        "item": "Berry",
+        "count": 5
       }
     ],
     "tools": [
-      "Campfire",
-      "BigCampfire",
       "Furnace"
     ]
   },
   "body": {
-    "solid": false,
-    "radius": 0.35
+    "radius": 0.35,
+    "solid": false
   }
 }

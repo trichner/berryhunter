@@ -10,12 +10,12 @@
     "craftTimeInSeconds": 10,
     "materials": [
       {
-        "item": "Stone",
-        "count": 20
+        "item": "Wood",
+        "count": 30
       },
       {
-        "item": "WoodWall",
-        "count": 1
+        "item": "Stone",
+        "count": 20
       }
     ],
     "tools": [

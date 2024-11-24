@@ -9,12 +9,16 @@
     "craftTimeInSeconds": 10,
     "materials": [
       {
-        "item": "Bronze",
-        "count": 20
+        "item": "Wood",
+        "count": 40
       },
       {
-        "item": "StoneWall",
-        "count": 1
+        "item": "Stone",
+        "count": 30
+      },
+      {
+        "item": "Bronze",
+        "count": 20
       }
     ],
     "tools": [
