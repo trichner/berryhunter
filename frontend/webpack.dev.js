@@ -10,7 +10,7 @@ const common = require('./webpack.common.js');
 module.exports = (env) => {
 	// Define default environment
 	env = merge({
-		port: 80,
+		port: 2001,
 		proxy: false
 	}, env);
 
