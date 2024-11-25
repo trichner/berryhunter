@@ -176,6 +176,26 @@ export const GraphicsConfig = {
                 alpha: 1,
                 sizeFactor: 0.4,
             },
+            WoodWall: {
+                color: 0x8B4513,
+                alpha: 1,
+                sizeFactor: 0.7,
+            },
+            StoneWall: {
+                color: 0x8B4513,
+                alpha: 1,
+                sizeFactor: 0.7,
+            },
+            BronzeWall: {
+                color: 0x8B4513,
+                alpha: 1,
+                sizeFactor: 0.7,
+            },
+            IronWall: {
+                color: 0x8B4513,
+                alpha: 1,
+                sizeFactor: 0.7,
+            }
         },
     },
 
