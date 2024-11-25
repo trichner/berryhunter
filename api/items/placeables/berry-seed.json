@@ -3,11 +3,12 @@
   "name": "BerrySeed",
   "type": "PLACEABLE",
   "factors": {
+    "durationInSeconds": 5,
+    "vulnerability": 0.2,
+
     "minimumYield": 0,
     "replenishProbabilityPerSecond": 0.02,
-    "capacity": 3,
-    "durationInSeconds": 500,
-    "vulnerability": 0.2
+    "capacity": 3
   },
   "recipe": {
     "craftTimeInSeconds": 10,
