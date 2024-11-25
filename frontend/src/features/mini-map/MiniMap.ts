@@ -49,6 +49,8 @@ export class MiniMap {
         registerPreload(this.application.init({
             backgroundAlpha: 0,
             resizeTo: container as HTMLElement,
+            antialias: true,
+            autoDensity: true,
         }));
     }
 
