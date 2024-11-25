@@ -1,4 +1,4 @@
-import {BasicConfig} from "./BasicConfig";
+import {meter2px} from './BasicConfig';
 import {color, integer} from '../old-structure/interfaces/Types';
 
 export const GraphicsConfig = {
@@ -104,7 +104,7 @@ export const GraphicsConfig = {
 
         berryBush: {
             bushFile: require('../features/game-objects/assets/berryBush.svg'),
-            maxSize: <number> 60,
+            maxSize: <number> (meter2px(0.5) * 2),
 
             berryFile: require('../features/game-objects/assets/berry.svg'),
             berryMaxSize: <number> 11,
@@ -116,8 +116,8 @@ export const GraphicsConfig = {
         flower: {
             spotFile: require('../features/game-objects/assets/flowerSpot.svg'),
             file: require('../features/game-objects/assets/flower.svg'),
-            minSize: <number> (BasicConfig.PIXEL_PER_METER * 0.15 * 2),
-            maxSize: <number> (BasicConfig.PIXEL_PER_METER * 0.25 * 2),
+            minSize: <number> (meter2px(0.15) * 2),
+            maxSize: <number> (meter2px(0.25) * 2),
         },
     },
 

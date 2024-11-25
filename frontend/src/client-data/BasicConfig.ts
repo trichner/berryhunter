@@ -2,6 +2,10 @@
 
 const PIXEL_PER_METER: number = 120;
 
+export function meter2px(meter: number) {
+    return meter * PIXEL_PER_METER;
+}
+
 export const BasicConfig = {
     /**
      * Contains all available query parameter that modify the behavior of the game
