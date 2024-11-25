@@ -142,7 +142,7 @@ export class MiniMap {
      */
     add(gameObject: GameObject, layer: Layer) {
         if (this.registeredGameObjectIds.includes(gameObject.id)) {
-            // The object is already on the minimao
+            // The object is already on the mini map
             return;
         }
 

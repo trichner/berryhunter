@@ -167,7 +167,7 @@ export const GraphicsConfig = {
                 sizeFactor: 1,
             },
             WorkbenchConstruction: {
-                color: 0xFF0000,
+                color: 0xFF00FF,
                 alpha: 1,
                 sizeFactor: 1,
             },
