@@ -4,6 +4,8 @@
  */
 import {ItemType} from '../features/items/logic/ItemType';
 import {EquipmentSlot} from "../features/items/logic/Equipment";
+import {meter2px} from './BasicConfig';
+import {GraphicsConfig} from './Graphics';
 
 /**
  * ItemName: {
@@ -405,19 +407,23 @@ export const ItemsConfig = {
         }
     },
 
-    // TODO Needs an actual function
-    // Seeds: {
-    // 	icon: {file: require('../img/items/seedIcon.svg')},
-    // 	graphic: {
-    // 		file: require('../img/items/../berryBush.svg'),
-    // 		size: 42
-    // 	},
-    // 	definition: require('../../../api/items/placeables/seeds.json'),
-    // 	type: ItemType.PLACEABLE,
-    // 	placeable: {
-    // 		layer: 'resources.berryBush'
-    // 	}
-    // },
+    BerrySeed: {
+        icon: {file: require('../features/items/assets/icons/seedIcon.svg')},
+        graphic: {
+            file: GraphicsConfig.resources.berryBush.bushFile,
+            size: <number> (meter2px(0.35)),
+        },
+        berryGraphic: {
+            file: GraphicsConfig.resources.berryBush.berryFile,
+            berryMaxSize: <number> GraphicsConfig.resources.berryBush.berryMaxSize,
+            berryMinSize: <number> GraphicsConfig.resources.berryBush.berryMinSize,
+        },
+        definition: require('../../../api/items/placeables/berry-seed.json'),
+        type: ItemType.PLACEABLE,
+        placeable: {
+            layer: 'resources.berryBush',
+        },
+    },
 
     /***********************************
      * WALLS

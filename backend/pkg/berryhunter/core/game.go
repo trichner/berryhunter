@@ -211,6 +211,10 @@ func (g *game) AddEntity(e model.BasicEntity) {
 		g.addResourceEntity(v)
 	case model.PlaceableEntity:
 		g.addPlaceableEntity(v)
+		// TODO handling a resource as sub entity is probably a bad idea
+		if r, ok := v.(model.Resourcer); ok && r.Resource() != nil {
+			g.AddEntity(r.Resource())
+		}
 	case model.Spectator:
 		g.addSpectator(v)
 	case model.Entity:

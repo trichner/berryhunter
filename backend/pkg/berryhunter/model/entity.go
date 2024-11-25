@@ -18,13 +18,13 @@ type EntityType uint16
 type Bodies []phy.DynamicCollider
 
 // BasicEntity is an entity that at least embeds
-// the ecs.BasicEntity. Therefore it can be removed
+// the ecs.BasicEntity. Therefore, it can be removed
 // from the game if necessary
 type BasicEntity interface {
 	Basic() ecs.BasicEntity
 }
 
-// BodiedEntiy is an entity with physical bodies and
+// BodiedEntity is an entity with physical bodies and
 // a dynamic position
 type BodiedEntity interface {
 	BasicEntity
@@ -59,6 +59,13 @@ type PlaceableEntity interface {
 	Update(dt float32)
 	HeatRadiation() *HeatRadiator
 	Item() items.Item
+}
+
+// Resourcer is an entity that acts as a ResourceEntity
+type Resourcer interface {
+	BasicEntity
+
+	Resource() ResourceEntity
 }
 
 type ResourceStock struct {

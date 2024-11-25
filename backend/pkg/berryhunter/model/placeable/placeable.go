@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"math/rand"
 
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
+	"github.com/trichner/berryhunter/pkg/berryhunter/model/resource"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/vitals"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
 )
@@ -20,6 +22,7 @@ type Placeable struct {
 
 	health        vitals.VitalSign
 	radiator      *model.HeatRadiator
+	resource      model.ResourceEntity
 	ticksLeft     int
 	statusEffects model.StatusEffects
 }
@@ -39,6 +42,10 @@ func (p *Placeable) Decayed() bool {
 
 func (p *Placeable) HeatRadiation() *model.HeatRadiator {
 	return p.radiator
+}
+
+func (p *Placeable) Resource() model.ResourceEntity {
+	return p.resource
 }
 
 func (p *Placeable) SetPosition(pos phy.Vec2f) {
@@ -74,10 +81,16 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	}
 
 	body := phy.NewCircle(phy.VEC2F_ZERO, item.Body.Radius)
+	layer := model.LayerViewportCollision
+
+	if item.Factors.ReplenishProbability != 0 {
+		layer = layer | model.LayerRessourceCollision
+	}
+
 	if item.Body.Solid {
-		body.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerActionCollision | model.LayerViewportCollision)
+		body.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerActionCollision | layer)
 	} else {
-		body.Shape().Layer = int(model.LayerViewportCollision)
+		body.Shape().Layer = int(layer)
 		body.Shape().IsSensor = true
 	}
 
@@ -98,7 +111,16 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		radiator.Body = heaterBody
 	}
 
-	// setup the decay time
+	var res model.ResourceEntity = nil
+	if item.Factors.ReplenishProbability != 0 {
+		var err error
+		res, err = resource.NewResource(body, newRandom(), item /* TODO needs to be configured */, model.EntityType(BerryhunterApi.EntityTypeBerryBush))
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// set up the decay time
 	var ticksLeft int = math.MaxInt32
 	if item.Factors.DurationInTicks != 0 {
 		ticksLeft = item.Factors.DurationInTicks
@@ -110,6 +132,7 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 		item:          item,
 		health:        vitals.Max,
 		radiator:      radiator,
+		resource:      res,
 		ticksLeft:     ticksLeft,
 		statusEffects: model.NewStatusEffects(),
 	}
@@ -129,4 +152,9 @@ func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 		p.health = p.health.SubFraction(dmgFraction)
 		p.StatusEffects().Add(model.StatusEffectDamaged)
 	}
+}
+
+// TODO not connected to the master seed
+func newRandom() *rand.Rand {
+	return rand.New(rand.NewSource(0xDEADBEEF))
 }
