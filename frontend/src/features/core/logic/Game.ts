@@ -93,6 +93,8 @@ export class Game implements IGame {
         registerPreload(this.application.init({
             resizeTo: window,
             antialias: true,
+            autoDensity: true,
+            // resolution: window.devicePixelRatio, // TODO improves quality but fucks up ... everything
         }));
     }
 
