@@ -15,6 +15,11 @@
       "trelloUrl": "https://trello.com/c/rF5cLvht/212-use-device-dpi-as-render-resolution"
     },
     {
+      "category": "highlight",
+      "description": "Placeables are now no longer infinite - nothing is forever and now neither our placeables.",
+      "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
+    },
+    {
       "category": "balancing",
       "description": "Sabertooth HP reduced from 150 to 120.",
       "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
@@ -41,7 +46,17 @@
     },
     {
       "category": "balancing",
-      "description": "Stone Walls no longer require Wood Walls as an ingredient.",
+      "description": "Bronze Walls lifetime reduced from infinite to 4800s.",
+      "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
+    },
+    {
+      "category": "balancing",
+      "description": "Stone Walls no longer require Wood Walls as an ingredient but now require an extra 30 Wood.",
+      "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
+    },
+    {
+      "category": "balancing",
+      "description": "Bronze Walls no longer require Stone Walls as an ingredient but now require an extra 40 Wood and 30 Stone.",
       "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
     },
     {
