@@ -46,6 +46,7 @@ type PlayerEntity interface {
 
 	SetGodmode(on bool)
 	IsGod() bool
+	WasGod() bool
 
 	Config() *cfg.PlayerConfig
 	Stats() *Stats
