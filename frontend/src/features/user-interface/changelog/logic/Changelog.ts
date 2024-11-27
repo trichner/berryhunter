@@ -134,8 +134,9 @@ function newCategories(): Map<string, ChangeCategoryVO> {
     // Insertion order defines sorting
     newCategory(categories, 'highlight', 'Highlights in this version');
     newCategory(categories, 'feature', 'New Features');
-    newCategory(categories, 'bugFix', 'Fixed Bugs');
+    newCategory(categories, 'balancing', 'Changes to gameplay values');
     newCategory(categories, 'improvement', 'Other improvements and changes');
+    newCategory(categories, 'bugFix', 'Fixed Bugs');
 
     return categories;
 }
