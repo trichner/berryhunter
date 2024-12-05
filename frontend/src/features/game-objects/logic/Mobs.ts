@@ -85,6 +85,21 @@ export class SaberToothCat extends Mob {
             SaberToothCat.svg);
 
     }
+
+    protected override createStatusEffects() {
+        return {
+            Damaged: StatusEffect.forDamaged(this.shape,
+                {
+                    soundId: 'saberToothCatHit',
+                    options: {
+                        volume: random(0.4, 0.5),
+                        speed: random(0.9, 1)
+                    },
+                    chanceToPlay: 0.3
+                }),
+            DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
+        };
+    }
 }
 
 // noinspection JSIgnoredPromiseFromCall
