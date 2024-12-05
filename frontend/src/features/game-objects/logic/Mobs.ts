@@ -42,7 +42,7 @@ export class Mob extends GameObject {
 
     protected override createStatusEffects() {
         return {
-            Damaged: StatusEffect.forDamaged(this.shape, ),
+            Damaged: StatusEffect.forDamaged(this.shape),
             DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
         };
     }
