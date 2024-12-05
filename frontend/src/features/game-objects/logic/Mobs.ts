@@ -153,7 +153,7 @@ export class TitaniumShard extends Mob {
     constructor(id: number, x: number, y: number) {
         super(id, Game.layers.resources.minerals, x, y,
             randomInt(minSize('titaniumShard'), maxSize('titaniumShard')),
-            titaniumShard.svg);
+            TitaniumShard.svg);
     }
 
     protected override createStatusEffects() {
