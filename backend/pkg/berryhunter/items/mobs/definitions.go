@@ -37,8 +37,21 @@ type Body struct {
 	DamageRadius float32
 }
 
+type RespawnBehavior int
+
+const (
+	RespawnBehaviorRandomLocation RespawnBehavior = iota
+	RespawnBehaviorProcreation
+)
+
+var namesEnumRespawnBehavior = map[string]RespawnBehavior{
+	"RandomLocation": RespawnBehaviorRandomLocation,
+	"Procreation":    RespawnBehaviorProcreation,
+}
+
 type Generator struct {
-	Weight int
+	Weight          int
+	RespawnBehavior RespawnBehavior
 }
 
 type Drops []*items.ItemStack
@@ -73,7 +86,8 @@ type mobDefinition struct {
 		DamageRadius float32 `json:"damageRadius"`
 	} `json:"body"`
 	Generator struct {
-		Weight int `json:"weight"`
+		Weight          int    `json:"weight"`
+		RespawnBehavior string `json:"respawnBehavior"`
 	} `json:"generator"`
 }
 
@@ -90,6 +104,11 @@ func parseMobDefinition(data []byte) (*mobDefinition, error) {
 }
 
 func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, error) {
+	respawnBehavior := RespawnBehaviorProcreation
+	if m.Generator.RespawnBehavior != "" {
+		respawnBehavior = namesEnumRespawnBehavior[m.Generator.RespawnBehavior]
+	}
+
 	mob := &MobDefinition{
 		ID:   MobID(m.Id),
 		Name: m.Name,
@@ -107,7 +126,8 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 			DamageRadius: m.Body.DamageRadius,
 		},
 		Generator: Generator{
-			Weight: m.Generator.Weight,
+			Weight:          m.Generator.Weight,
+			RespawnBehavior: respawnBehavior,
 		},
 	}
 

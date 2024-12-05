@@ -45,12 +45,14 @@ func (n *MobSystem) Update(dt float32) {
 }
 
 func (n *MobSystem) respawnMob(d *mobs.MobDefinition) {
-	m := mob.NewMob(d)
+	m := mob.NewMob(d, d.Generator.RespawnBehavior == mobs.RespawnBehaviorRandomLocation)
 
-	randomMob := n.randomMob(d.ID)
-	if randomMob != nil {
-		m.SetPosition(randomMob.Position())
-		m.SetAngle(randomMob.Angle())
+	if d.Generator.RespawnBehavior == mobs.RespawnBehaviorProcreation {
+		randomMob := n.randomMob(d.ID)
+		if randomMob != nil {
+			m.SetPosition(randomMob.Position())
+			m.SetAngle(randomMob.Angle())
+		}
 	}
 
 	n.game.AddEntity(m)

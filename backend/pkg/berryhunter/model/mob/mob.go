@@ -23,7 +23,7 @@ var types = func() map[string]model.EntityType {
 	return t
 }()
 
-func NewMob(d *mobs.MobDefinition) *Mob {
+func NewMob(d *mobs.MobDefinition, rndPos bool) *Mob {
 	entityType, ok := types[d.Name]
 	if !ok {
 		log.Fatalf("Mob type not found: %d/%s", d.ID, d.Name)
@@ -39,9 +39,10 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 	damageAura.Shape().IsSensor = true
 
 	base := model.NewBaseEntity(mobBody, entityType)
+	rnd := rand.New(rand.NewSource(int64(base.Basic().ID())))
 	m := &Mob{
 		BaseEntity:         base,
-		rand:               rand.New(rand.NewSource(int64(base.Basic().ID()))),
+		rand:               rnd,
 		heading:            phy.Vec2f{1, 0},
 		health:             vitals.Max,
 		definition:         d,
@@ -53,7 +54,23 @@ func NewMob(d *mobs.MobDefinition) *Mob {
 		statusEffects: model.NewStatusEffects(),
 	}
 	m.Body.Shape().UserData = m
+	if rndPos {
+		// TODO use global radius instead hard-coded copy
+		var radius float32 = 20
+		x := newRandomCoordinate(radius)
+		y := newRandomCoordinate(radius)
+		for x*x+y*y > radius*radius {
+			x = newRandomCoordinate(radius)
+			y = newRandomCoordinate(radius)
+		}
+		m.SetPosition(phy.Vec2f{float32(x), float32(y)})
+		m.SetAngle(rnd.Float32() * 2 * math.Pi)
+	}
 	return m
+}
+
+func newRandomCoordinate(radius float32) float32 {
+	return rand.Float32()*2*radius - radius
 }
 
 type Mob struct {

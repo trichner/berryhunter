@@ -16,7 +16,6 @@ import (
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/mob"
-	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
 	"github.com/trichner/berryhunter/pkg/berryhunter/wrand"
 	"github.com/trichner/berryhunter/pkg/logging"
 	"golang.org/x/crypto/acme/autocert"
@@ -117,7 +116,7 @@ func main() {
 	if err != nil {
 		slog.Error("Unable to find boss mob", slog.Any("error", err))
 	} else {
-		g.AddEntity(newMobEntity(ow, radius))
+		g.AddEntity(newMobEntity(ow))
 		slog.Debug(fmt.Sprintf("Spawned Boss: %4d %s", 1, bossName))
 	}
 
@@ -278,31 +277,13 @@ func newRandomMobEntity(mobList []*mobs.MobDefinition, rnd *rand.Rand, radius fl
 	wc := wrand.NewWeightedChoice(choices)
 	selected := wc.Choose(rnd).(*mobs.MobDefinition)
 
-	m := mob.NewMob(selected)
-	x := newRandomCoordinate(radius)
-	y := newRandomCoordinate(radius)
-	for x*x+y*y > radius*radius {
-		x = newRandomCoordinate(radius)
-		y = newRandomCoordinate(radius)
-	}
-	m.SetPosition(phy.Vec2f{float32(x), float32(y)})
+	m := mob.NewMob(selected, true)
 
 	return m
 }
 
-func newMobEntity(def *mobs.MobDefinition, radius float32) model.MobEntity {
-	m := mob.NewMob(def)
-	x := newRandomCoordinate(radius)
-	y := newRandomCoordinate(radius)
-	for x*x+y*y > radius*radius {
-		x = newRandomCoordinate(radius)
-		y = newRandomCoordinate(radius)
-	}
-	m.SetPosition(phy.Vec2f{float32(x), float32(y)})
+func newMobEntity(def *mobs.MobDefinition) model.MobEntity {
+	m := mob.NewMob(def, true)
 
 	return m
-}
-
-func newRandomCoordinate(radius float32) float32 {
-	return rand.Float32()*2*radius - radius
 }
