@@ -12,6 +12,11 @@ func ScoreboardFlatbufMarshal(builder *flatbuffers.Builder, scoreboard model.Sco
 	n := len(scoreboard.Players)
 	players := make([]flatbuffers.UOffsetT, 0, n)
 	for _, p := range scoreboard.Players {
+		// Active or previous god players do not track their score
+		if p.WasGod() {
+			continue
+		}
+
 		name := builder.CreateString(p.Name())
 		BerryhunterApi.ScoreboardPlayerStart(builder)
 		BerryhunterApi.ScoreboardPlayerAddName(builder, name)

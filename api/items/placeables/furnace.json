@@ -5,7 +5,8 @@
   "factors": {
     "heatPerSecond": 0.06,
     "heatRadius": 1.35,
-    "vulnerability": 0.01
+    "vulnerability": 0.01,
+    "durationInSeconds": 1200
   },
   "recipe": {
     "craftTimeInSeconds": 10,

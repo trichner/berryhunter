@@ -10,6 +10,6 @@
   "body": {
     "minRadius": 0.15,
     "maxRadius": 0.25,
-    "solid": true
+    "solid": false
   }
 }

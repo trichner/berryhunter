@@ -93,7 +93,8 @@ type player struct {
 
 	ongoingAction model.PlayerAction
 
-	isGod bool
+	isGod  bool
+	wasGod bool
 
 	stats model.Stats
 }
@@ -239,8 +240,13 @@ func (p *player) OwnedEntities() model.BasicEntities {
 
 func (p *player) SetGodmode(on bool) {
 	p.isGod = on
+	p.wasGod = p.wasGod || on
 }
 
 func (p *player) IsGod() bool {
 	return p.isGod
+}
+
+func (p *player) WasGod() bool {
+	return p.wasGod
 }

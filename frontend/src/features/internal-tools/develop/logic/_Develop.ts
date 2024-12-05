@@ -110,6 +110,23 @@ export class Develop implements IDevelop {
         Preloading.renderPartial(require('./developPanel.html'), () => {
             const developPanel = document.getElementById('developPanel');
             // Capture inputs to prevent game actions while acting in develop panel
+            // TODO use GameSettingsUI behavior
+            [
+                'click',
+                'pointerdown',
+                'pointerup',
+                'mousedown',
+                'mouseup',
+                'mousemove',
+                'touchstart',
+                'touchend',
+                'keyup',
+                'keydown']
+                .forEach((eventName) => {
+                    developPanel.addEventListener(eventName, (event) => {
+                        event.stopPropagation();
+                    });
+                });
             // TODO using this leads to the dragging not working anymore
             // developPanel
             //     .querySelectorAll('input, button, a')

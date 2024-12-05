@@ -1,0 +1,25 @@
+{
+  "id": 4,
+  "name": "AngryMammoth",
+  "type": "MOB",
+  "factors": {
+    "vulnerability": 0.1,
+    "damageFraction": 0.0067,
+    "speed": 0.1,
+    "deltaPhi": 0.05,
+    "turnRate": 0.02
+  },
+  "drops": [
+    {
+      "item": "RawMeat",
+      "count": 30
+    }
+  ],
+  "body": {
+    "radius": 0.75,
+    "damageRadius": 0.6525
+  },
+  "generator": {
+    "weight": 1
+  }
+}

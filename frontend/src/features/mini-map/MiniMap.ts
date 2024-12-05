@@ -49,6 +49,8 @@ export class MiniMap {
         registerPreload(this.application.init({
             backgroundAlpha: 0,
             resizeTo: container as HTMLElement,
+            antialias: true,
+            autoDensity: true,
         }));
     }
 
@@ -142,7 +144,7 @@ export class MiniMap {
      */
     add(gameObject: GameObject, layer: Layer) {
         if (this.registeredGameObjectIds.includes(gameObject.id)) {
-            // The object is already on the minimao
+            // The object is already on the mini map
             return;
         }
 

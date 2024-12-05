@@ -10,6 +10,6 @@
   },
   "body": {
     "radius": 0.5,
-    "solid": true
+    "solid": false
   }
 }

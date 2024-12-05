@@ -43,6 +43,7 @@ export class Game implements IGame {
     public state = GameState.INITIALIZING;
 
     private application: Application;
+    private readonly renderResolution: number;
     public layers: IGameLayers;
     public cameraGroup: Container;
 
@@ -63,11 +64,11 @@ export class Game implements IGame {
     private backend: IBackend;
 
     public get width(): number {
-        return this.application.canvas.width;
+        return this.application.canvas.width / this.renderResolution;
     }
 
     public get height(): number {
-        return this.application.canvas.height;
+        return this.application.canvas.height / this.renderResolution;
     }
 
     public get centerX(): number {
@@ -88,11 +89,15 @@ export class Game implements IGame {
 
     constructor() {
         this.application = new Application();
+        // Save this as it might change later on, but Pixi.js will still use the same.
+        this.renderResolution = window.devicePixelRatio;
 
         // noinspection JSIgnoredPromiseFromCall
         registerPreload(this.application.init({
             resizeTo: window,
             antialias: true,
+            autoDensity: true,
+            resolution: this.renderResolution,
         }));
     }
 

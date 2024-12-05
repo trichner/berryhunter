@@ -1,0 +1,33 @@
+{
+  "id": 41,
+  "name": "BerrySeed",
+  "type": "PLACEABLE",
+  "factors": {
+    "durationInSeconds": 5,
+    "vulnerability": 0.2,
+
+    "minimumYield": 0,
+    "replenishProbabilityPerSecond": 0.02,
+    "capacity": 3
+  },
+  "recipe": {
+    "craftTimeInSeconds": 10,
+    "materials": [
+      {
+        "item": "Wood",
+        "count": 30
+      },
+      {
+        "item": "Berry",
+        "count": 5
+      }
+    ],
+    "tools": [
+      "Furnace"
+    ]
+  },
+  "body": {
+    "radius": 0.35,
+    "solid": false
+  }
+}

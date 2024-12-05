@@ -433,7 +433,8 @@ export const ItemsConfig = {
         placeable: {
             layer: 'placeables.walls',
             multiPlacing: true,
-            directions: 4
+            directions: 4,
+            visibleOnMinimap: true,
         }
     },
     // WoodSpikyWall: {
@@ -447,7 +448,8 @@ export const ItemsConfig = {
     // 	placeable: {
     // 		layer: 'placeables.spikyWalls',
     // 		multiPlacing: true,
-    // 		directions: 4
+    // 		directions: 4,
+    //      visibleOnMinimap: true
     // 	}
     // },
     StoneWall: {
@@ -461,7 +463,8 @@ export const ItemsConfig = {
         placeable: {
             layer: 'placeables.walls',
             multiPlacing: true,
-            directions: false
+            directions: false,
+            visibleOnMinimap: true,
         }
     },
     // StoneSpikyWall: {
@@ -475,7 +478,8 @@ export const ItemsConfig = {
     // 	placeable: {
     // 		layer: 'placeables.spikyWalls',
     // 		multiPlacing: true,
-    // 		directions: false
+    // 		directions: false,
+    //      visibleOnMinimap: true
     // 	}
     // },
     BronzeWall: {
@@ -489,7 +493,8 @@ export const ItemsConfig = {
         placeable: {
             layer: 'placeables.walls',
             multiPlacing: true,
-            directions: false
+            directions: false,
+            visibleOnMinimap: true,
         }
     },
     // BronzeSpikyWall: {
@@ -503,7 +508,8 @@ export const ItemsConfig = {
     // 	placeable: {
     // 		layer: 'placeables.spikyWalls',
     // 		multiPlacing: true,
-    // 		directions: false
+    // 		directions: false,
+    //      visibleOnMinimap: true,
     // 	}
     // },
     // IronWall: {
@@ -514,7 +520,8 @@ export const ItemsConfig = {
     //     type: ItemType.PLACEABLE,
     //     placeable: {
     //         layer: 'placeables.walls',
-    //         multiPlacing: true
+    //         multiPlacing: true,
+    //         visibleOnMinimap: true,
     //     }
     // },
     // IronSpikyWall: {
@@ -525,7 +532,8 @@ export const ItemsConfig = {
     // 	type: ItemType.PLACEABLE,
     // 	placeable: {
     // 		layer: 'placeables.spikyWalls',
-    // 		multiPlacing: true
+    // 		multiPlacing: true,
+    //      visibleOnMinimap: true,
     // 	}
     // },
 
