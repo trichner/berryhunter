@@ -45,7 +45,8 @@ export enum EntityType{
   Mammoth= 11,
   Placeable= 12,
   Titanium= 13,
-  Flower= 14
+  Flower= 14,
+  AngryMammoth= 15
 }};
 
 /**

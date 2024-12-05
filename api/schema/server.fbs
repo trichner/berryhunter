@@ -17,7 +17,8 @@ enum EntityType : ushort {
   Mammoth,
   Placeable,
   Titanium,
-  Flower
+  Flower,
+  AngryMammoth
 }
 
 enum StatusEffect : ushort {

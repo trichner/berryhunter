@@ -118,3 +118,31 @@ export class Mammoth extends Mob {
 
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(Mammoth, file('mammoth'), maxSize('mammoth'));
+
+export class AngryMammoth extends Mob {
+    static svg: PIXI.Texture;
+
+    constructor(id: number, x: number, y: number) {
+        super(id, Game.layers.mobs.mammoth, x, y,
+            randomInt(minSize('angryMammoth'), maxSize('angryMammoth')),
+            AngryMammoth.svg);
+    }
+
+    protected override createStatusEffects() {
+        return {
+            Damaged: StatusEffect.forDamaged(this.shape,
+                {
+                    soundId: 'mammothHit',
+                    options: {
+                        volume: random(0.4, 0.5),
+                        speed: random(0.8, 0.9)
+                    },
+                    chanceToPlay: 0.3
+                }),
+            DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
+        };
+    }
+}
+
+// noinspection JSIgnoredPromiseFromCall
+Preloading.registerGameObjectSVG(AngryMammoth, file('angryMammoth'), maxSize('angryMammoth'));

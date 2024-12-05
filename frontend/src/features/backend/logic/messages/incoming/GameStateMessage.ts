@@ -187,6 +187,7 @@ const gameObjectClasses = [
     Placeable,
     Resources.Titanium,
     Resources.Flower,
+    Mobs.AngryMammoth,
 ];
 
 function unmarshalEntityType(entityType) {
