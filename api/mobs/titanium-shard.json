@@ -1,0 +1,23 @@
+{
+  "id": 5,
+  "name": "TitaniumShard",
+  "type": "MOB",
+  "factors": {
+    "vulnerability": 1.0,
+    "speed": 0.0,
+    "deltaPhi": 0.0,
+    "turnRate": 0.0
+  },
+  "drops": [
+    {
+      "item": "Titanium",
+      "count": 3
+    }
+  ],
+  "body": {
+    "radius": 0.2
+  },
+  "generator": {
+    "weight": 5
+  }
+}

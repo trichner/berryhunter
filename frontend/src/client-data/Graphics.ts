@@ -81,11 +81,17 @@ export const GraphicsConfig = {
             minSize: <number> 85,
             maxSize: <number> 100,
         },
-		
+
         angryMammoth: {
             file: require('../features/game-objects/assets/angryMammoth.svg'),
             minSize: <number> 170,
             maxSize: <number> 170,
+        },
+
+        titaniumShard: {
+            file: require('../features/game-objects/assets/titaniumShard.svg'),
+            minSize: <number> 35,
+            maxSize: <number> 35,
         },
     },
 
