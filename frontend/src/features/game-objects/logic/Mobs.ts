@@ -166,8 +166,9 @@ export class TitaniumShard extends Mob {
                         speed: random(0.8, 0.9)
                     },
                     chanceToPlay: 1.0
-                }),
-        };
+                }), 
+            DamagedAmbient: undefined,
+        }; 
     }
 }
 
