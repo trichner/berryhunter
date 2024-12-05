@@ -4,7 +4,7 @@ import { isDefined, random, randomInt, randomSign } from '../../../old-structure
 import { SoundData } from '../../audio/logic/SoundData';
 import { spatialAudio } from '../../../old-structure/juice/SpatialAudio';
 import { Vector } from '../../core/logic/Vector';
-import { Easing, Tween, Group as TweenGroup } from '@tweenjs/tween.js'
+import { Easing, Tween, Group as TweenGroup } from '@tweenjs/tween.js';
 
 export interface StatusEffectDefinition {
     id: string;
@@ -67,14 +67,14 @@ export class StatusEffect implements StatusEffectDefinition {
     originalScaleX: number;
     originalScaleY: number;
     tweenEffects: TweenEffect[];
-    soundData?: SoundData;
+    soundData?: SoundData[];
     tweenGroup: TweenGroup
 
     private constructor(
         definition: StatusEffectDefinition,
         gameObjectShape: Container,
         tweenEffects: TweenEffect[],
-        soundData?: SoundData
+        soundData?: SoundData[]
     ) {
         this.tweenGroup = new TweenGroup();
         this.id = definition.id;
@@ -108,7 +108,7 @@ export class StatusEffect implements StatusEffectDefinition {
 
         this.tweenEffects = tweenEffects;
 
-        if (soundData && typeof soundData.soundId === 'string') {
+        if (soundData) {
             this.soundData = soundData;
         }
 
@@ -117,13 +117,23 @@ export class StatusEffect implements StatusEffectDefinition {
         };
     }
 
-    static forDamaged(gameObjectShape: Container, soundData?: SoundData) {
+    static forDamaged(gameObjectShape: Container, soundData?: SoundData[]) {
+        if (soundData !== undefined) {
+            soundData.push({
+                soundId: 'mobHit',
+                options: {
+                    volume: random(0.3, 0.4),
+                    speed: random(0.9, 1.5)
+                },
+                chanceToPlay: 1
+            });
+        }
         return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
             [new ColorMatrixTweenEffect(255, 255, 255, 0.4, 1, 200, false, 0, true),
                 { type: 'scale', from: 1.1, to: 0.8, duration: 100 }], soundData);
     }
 
-    static forDamagedOverTime(gameObjectShape: Container, soundData?: SoundData) {
+    static forDamagedOverTime(gameObjectShape: Container, soundData?: SoundData[]) {
         return new StatusEffect(StatusEffect.DamagedAmbient, gameObjectShape,
             [new ColorMatrixTweenEffect(255, 255, 255, 0, 1, 200, false, 0, true)],
             soundData);
@@ -144,12 +154,12 @@ export class StatusEffect implements StatusEffectDefinition {
     static forYielded(gameObjectShape: Container, soundId?: string) {
         return new StatusEffect(StatusEffect.Yielded, gameObjectShape,
             [{ type: 'shake', from: 4, to: 4, duration: 24 }],
-            {
+            [{
                 soundId: soundId, options: {
                     speed: random(0.8, 0.9),
                     volume: random(0.8, 0.9),
                 }
-            });
+            }]);
     }
 
     static sortByPriority(statusEffects: StatusEffectDefinition[]): StatusEffectDefinition[] {
@@ -167,10 +177,12 @@ export class StatusEffect implements StatusEffectDefinition {
         this.tweenGroup.getAll().forEach(tween => tween.start());
 
         if (this.soundData) {
-            const playRoll = this.soundData.chanceToPlay ? Math.random() <= this.soundData.chanceToPlay : true;
-            if (playRoll) {
-                spatialAudio.play(this.soundData.soundId, Vector.clone(this.shape.position), this.soundData.options);
-            }
+            this.soundData.forEach((sound : SoundData) =>{
+                const playRoll = sound.chanceToPlay ? Math.random() <= sound.chanceToPlay : true;
+                if (playRoll) {
+                    spatialAudio.play(sound.soundId, Vector.clone(this.shape.position), sound.options);
+                }
+            });
         }
 
         this.showing = true;

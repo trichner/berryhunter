@@ -42,7 +42,7 @@ export class Mob extends GameObject {
 
     protected override createStatusEffects() {
         return {
-            Damaged: StatusEffect.forDamaged(this.shape),
+            Damaged: StatusEffect.forDamaged(this.shape, ),
             DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
         };
     }
@@ -60,14 +60,14 @@ export class Dodo extends Mob {
     protected override createStatusEffects() {
         return {
             Damaged: StatusEffect.forDamaged(this.shape,
-                {
+                [{
                     soundId: 'dodoHit',
                     options: {
                         volume: random(0.4, 0.5),
                         speed: random(1, 1.1)
                     },
                     chanceToPlay: 0.3
-                }),
+                }]),
             DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
         };
     }
@@ -89,14 +89,14 @@ export class SaberToothCat extends Mob {
     protected override createStatusEffects() {
         return {
             Damaged: StatusEffect.forDamaged(this.shape,
-                {
+                [{
                     soundId: 'saberToothCatHit',
                     options: {
                         volume: random(0.4, 0.5),
                         speed: random(0.9, 1)
                     },
                     chanceToPlay: 0.3
-                }),
+                }]),
             DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
         };
     }
@@ -118,14 +118,14 @@ export class Mammoth extends Mob {
     protected override createStatusEffects() {
         return {
             Damaged: StatusEffect.forDamaged(this.shape,
-                {
+                [{
                     soundId: 'mammothHit',
                     options: {
                         volume: random(0.4, 0.5),
                         speed: random(1, 1.1)
                     },
                     chanceToPlay: 0.3
-                }),
+                }]),
             DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
         };
     }
@@ -146,14 +146,14 @@ export class AngryMammoth extends Mob {
     protected override createStatusEffects() {
         return {
             Damaged: StatusEffect.forDamaged(this.shape,
-                {
+                [{
                     soundId: 'mammothHit',
                     options: {
                         volume: random(0.4, 0.5),
                         speed: random(0.8, 0.9)
                     },
                     chanceToPlay: 0.3
-                }),
+                }]),
             DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
         };
     }
@@ -174,14 +174,14 @@ export class TitaniumShard extends Mob {
     protected override createStatusEffects() {
         return {
             Damaged: StatusEffect.forDamaged(this.shape,
-                {
+                [{
                     soundId: 'titanium-shard-hit',
                     options: {
                         volume: random(0.4, 0.5),
                         speed: random(0.8, 0.9)
                     },
                     chanceToPlay: 1.0
-                }), 
+                }]),
             DamagedAmbient: undefined,
         }; 
     }
