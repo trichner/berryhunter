@@ -1,4 +1,16 @@
-import { InventoryAddEvent, BeforeDeathEvent, PlaceablePlacedEvent, ControlsActionEvent, VitalSignChangedEvent, PlayerDamagedEvent, PlayerStartedFreezingEvent, PlayerCraftingStateChangedEvent, PlayerMoved, CharacterMoved } from '../../features/core/logic/Events';
+import {
+    InventoryAddEvent,
+    BeforeDeathEvent,
+    PlaceablePlacedEvent,
+    ControlsActionEvent,
+    VitalSignChangedEvent,
+    PlayerDamagedEvent,
+    PlayerStartedFreezingEvent,
+    PlayerCraftingStateChangedEvent,
+    PlayerMoved,
+    CharacterMoved,
+    GameJoinEvent
+} from '../../features/core/logic/Events';
 import { random, randomFrom } from '../Utils';
 import { sound } from '@pixi/sound';
 import * as PIXI from 'pixi.js';
@@ -38,7 +50,7 @@ InventoryAddEvent.subscribe((payload) => {
             if (payload.itemName == 'Flower') break;
             sound.play('collect', {
                 speed: random(0.9, 1.11),
-                volume: random(0.7 * volumeModifier, 1 * volumeModifier),
+                volume: random(0.7 * volumeModifier, volumeModifier),
             });
             break;
     }
@@ -110,6 +122,11 @@ CharacterMoved.subscribe((position) => {
     }
 });
 
+GameJoinEvent.subscribe((player) => {
+    //const soundId = 'hello';
+    //sound.play(soundId, { volume: 0.9 });
+})
+
 VitalSignChangedEvent.subscribe((payload) => {
     switch (payload.vitalSign) {
         case 'satiety':
@@ -145,6 +162,7 @@ PlayerCraftingStateChangedEvent.subscribe((isCrafting) => {
 
 const triggerMap = new TriggerIntervalMap();
 const hurt = ['hurt', 'hurt2', 'hurt3', 'hurt4', 'hurt5'];
+export const swingLightAudioCues = ['swingLight', 'swingLight2', 'swingLight3', 'swingLight4', 'swingHeavy', "swingHeavy2"];
 const steps = ['step', 'step2', 'step3'];
 
 PIXI.Assets.add({ alias: 'collect', src: require('../sounds/245645__unfa__cartoon-pop-clean.mp3') });
@@ -163,6 +181,15 @@ PIXI.Assets.add({ alias: 'step', src: require('../sounds/750798__simonjeffery13_
 PIXI.Assets.add({ alias: 'step2', src: require('../sounds/750798__simonjeffery13__footsteps-on-road2.mp3') });
 PIXI.Assets.add({ alias: 'step3', src: require('../sounds/750798__simonjeffery13__footsteps-on-road3.mp3') });
 
+PIXI.Assets.add({ alias: 'swingLight', src: require('../sounds/542000__rob_marion__gasp_swing_light_1.mp3') });
+PIXI.Assets.add({ alias: 'swingLight2', src: require('../sounds/542001__rob_marion__gasp_swing_light_2.mp3') });
+PIXI.Assets.add({ alias: 'swingLight3', src: require('../sounds/542002__rob_marion__gasp_swing_light_3.mp3') });
+PIXI.Assets.add({ alias: 'swingLight4', src: require('../sounds/542019__rob_marion__gasp_swing_light_4.mp3') });
+PIXI.Assets.add({ alias: 'swingHeavy', src: require('../sounds/541996__rob_marion__gasp_swing_heavy_1.mp3') });
+PIXI.Assets.add({ alias: 'swingHeavy2', src: require('../sounds/541994__rob_marion__gasp_swing_heavy_2.mp3') });
+
+PIXI.Assets.add({ alias: 'hello', src: require('../sounds/411184__d3rfux__gruzi.mp3') });
+
 // noinspection JSIgnoredPromiseFromCall
 registerPreload(PIXI.Assets.load('collect'));
 registerPreload(PIXI.Assets.load('death'));
@@ -179,3 +206,12 @@ registerPreload(PIXI.Assets.load('step'));
 registerPreload(PIXI.Assets.load('step2'));
 registerPreload(PIXI.Assets.load('step3'));
 registerPreload(PIXI.Assets.load('loopCrafting'));
+
+registerPreload(PIXI.Assets.load('swingLight'));
+registerPreload(PIXI.Assets.load('swingLight2'));
+registerPreload(PIXI.Assets.load('swingLight3'));
+registerPreload(PIXI.Assets.load('swingLight4'));
+registerPreload(PIXI.Assets.load('swingHeavy'));
+registerPreload(PIXI.Assets.load('swingHeavy2'));
+
+registerPreload(PIXI.Assets.load('hello'));
