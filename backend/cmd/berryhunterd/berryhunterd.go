@@ -94,13 +94,31 @@ func main() {
 	}
 
 	mobList := mobsRegistry.Mobs()
+	spawnedMobs := make(map[string]int)
 
 	if len(mobList) > 0 {
 		// add some mobsRegistry
 		for i := 0; i < 70; i++ {
 			m := newRandomMobEntity(mobList, rnd, radius)
+
 			g.AddEntity(m)
+
+			spawnedMobs[m.MobDefinition().Name]++
 		}
+	}
+
+	for mobName, count := range spawnedMobs {
+		slog.Debug(fmt.Sprintf("Spawned: %4d %s", count, mobName))
+	}
+
+	// Spawn old white
+	bossName := "AngryMammoth"
+	ow, err := mobsRegistry.GetByName(bossName)
+	if err != nil {
+		slog.Error("Unable to find boss mob", slog.Any("error", err))
+	} else {
+		g.AddEntity(newMobEntity(ow, radius))
+		slog.Debug(fmt.Sprintf("Spawned Boss: %4d %s", 1, bossName))
 	}
 
 	//---- set up server
@@ -261,6 +279,19 @@ func newRandomMobEntity(mobList []*mobs.MobDefinition, rnd *rand.Rand, radius fl
 	selected := wc.Choose(rnd).(*mobs.MobDefinition)
 
 	m := mob.NewMob(selected)
+	x := newRandomCoordinate(radius)
+	y := newRandomCoordinate(radius)
+	for x*x+y*y > radius*radius {
+		x = newRandomCoordinate(radius)
+		y = newRandomCoordinate(radius)
+	}
+	m.SetPosition(phy.Vec2f{float32(x), float32(y)})
+
+	return m
+}
+
+func newMobEntity(def *mobs.MobDefinition, radius float32) model.MobEntity {
+	m := mob.NewMob(def)
 	x := newRandomCoordinate(radius)
 	y := newRandomCoordinate(radius)
 	for x*x+y*y > radius*radius {
