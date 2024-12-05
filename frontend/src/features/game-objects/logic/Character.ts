@@ -1,6 +1,6 @@
 import {GameObject} from './_GameObject';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
-import {isDefined} from '../../../old-structure/Utils';
+import {isDefined, random, randomFrom} from '../../../old-structure/Utils';
 import * as Equipment from '../../items/logic/Equipment';
 import {EquipmentSlot} from '../../items/logic/Equipment';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
@@ -17,6 +17,8 @@ import {ICharacterLike} from '../../../old-structure/interfaces/ICharacter';
 import {createNamedContainer} from '../../../old-structure/CustomData';
 import {Container, Graphics, Text, Texture} from 'pixi.js';
 import * as TextDisplay from '../../../client-data/TextDisplay';
+import {spatialAudio} from "../../../old-structure/juice/SpatialAudio";
+import {swingLightAudioCues} from "../../../old-structure/juice/PlayerJuice";
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -268,10 +270,12 @@ export class Character extends GameObject implements ICharacterLike {
         // If nothing is equipped (= action with bare hand), use the boolean `useLeftHand`
         // to alternate between left and right punches
         if (this.getEquippedItem(Equipment.EquipmentSlot.HAND) === null && this.useLeftHand) {
+            spatialAudio.play(randomFrom(swingLightAudioCues), this.getPosition(), { volume: 0.25, speed: random(0.8, 1.2) });
             this.currentAction = 'ALT';
             this.animateAction(this.leftHand, this.getEquippedItemAnimationType(), remainingTicks, true);
         } else {
             this.currentAction = 'MAIN';
+            spatialAudio.play(randomFrom(swingLightAudioCues), this.getPosition(), { volume: 0.25, speed: random(0.8, 1.2) });
             this.animateAction(this.rightHand, this.getEquippedItemAnimationType(), remainingTicks);
         }
         this.useLeftHand = !this.useLeftHand;
