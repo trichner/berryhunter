@@ -27,7 +27,7 @@ export const GraphicsConfig = {
          * SYNCED WITH BACKEND
          */
         size: <number> 30,
-        file: require('../features/game-objects/assets/character.svg'),
+        file: require('../features/game-objects/assets/characters/character.svg'),
 
         hands: {
             fillColor: <color> 0xf2a586,

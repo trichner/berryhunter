@@ -1,0 +1,18 @@
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g id="Player" transform="matrix(-1.28556,1.57436e-16,-1.57436e-16,-1.28556,115.333,99.8926)">
+        <ellipse id="path3698.-1" cx="51.37" cy="42.573" rx="28.844" ry="30.422" style="fill:rgb(242,165,134);"/>
+        <g transform="matrix(1,0,0,0.662336,0.622177,18.2365)">
+            <path d="M50.809,62.685C54.371,62.685 58.483,63.619 58.483,64.554C58.483,65.49 54.626,64.656 51.063,64.656C47.501,64.656 43.542,65.895 43.542,64.96C43.542,64.024 47.247,62.685 50.809,62.685Z" style="stroke:rgb(255,133,81);stroke-width:0.3px;"/>
+        </g>
+        <g transform="matrix(1,0,0,1,-0.995,0)">
+            <g transform="matrix(1,0,0,0.455571,0,31.7654)">
+                <circle cx="63.329" cy="38.636" r="4.83" style="stroke:white;stroke-width:0.2px;"/>
+                <circle cx="65.061" cy="40.807" r="2.055" style="fill:white;"/>
+            </g>
+            <g transform="matrix(1,0,0,0.455571,0,31.7654)">
+                <circle cx="41.401" cy="38.636" r="4.83" style="stroke:white;stroke-width:0.2px;"/>
+                <circle cx="43.133" cy="40.807" r="2.055" style="fill:white;"/>
+            </g>
+        </g>
+    </g>
+</svg>
