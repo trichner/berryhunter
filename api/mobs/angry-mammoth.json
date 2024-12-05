@@ -7,7 +7,7 @@
     "damageFraction": 0.0067,
     "speed": 0.1,
     "deltaPhi": 0.05,
-    "turnRate": 0.02
+    "turnRate": 0.008
   },
   "drops": [
     {
@@ -16,8 +16,8 @@
     }
   ],
   "body": {
-    "radius": 0.75,
-    "damageRadius": 0.6525
+    "radius": 0.95,
+    "damageRadius": 0.84
   },
   "generator": {
     "weight": 1
