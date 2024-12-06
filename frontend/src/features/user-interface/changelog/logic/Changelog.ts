@@ -1,7 +1,8 @@
+import '../assets/changelog.less';
 import * as Mustache from 'mustache';
-import {htmlModuleToString, isDefined, isUndefined, requireAll} from '../../../../old-structure/Utils';
+import {htmlModuleToString, isDefined, isUndefined, requireAll} from '../../../common/logic/Utils';
 import {StartScreenDomReadyEvent} from '../../../core/logic/Events';
-import {createStartScreenPanel} from '../../logic/ScreenUtil';
+import {createStartScreenPanel} from '../../logic/UserInterface';
 import {compareDesc, format, parse} from 'date-fns';
 
 const changelogs = requireAll(require.context('../../../../../../changelog', false, /\.json$/)) as unknown as ChangelogJSON[];

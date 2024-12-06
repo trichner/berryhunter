@@ -7,19 +7,19 @@ import * as DayCycle from '../../day-cycle/logic/DayCycle';
 import {Player} from '../../player/logic/Player';
 import {Spectator} from '../../player/logic/Spectator';
 import {GameObject} from '../../game-objects/logic/_GameObject';
-import * as UserInterface from '../../user-interface/HUD/logic/UserInterface';
+import * as HUD from '../../user-interface/HUD/logic/HUD';
 import * as Chat from '../../chat/logic/Chat';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {InputManager} from '../../input-system/logic/InputManager';
-import {isDefined, resetFocus} from '../../../old-structure/Utils';
+import {isDefined, resetFocus} from '../../common/logic/Utils';
 import {WelcomeMessage} from '../../backend/logic/messages/incoming/WelcomeMessage';
 import * as Console from '../../internal-tools/console/logic/Console';
 import {Camera} from '../../camera/logic/Camera';
 import * as Recipes from '../../items/logic/Recipes';
 import * as Scoreboard from '../../scoreboard/logic/Scoreboard';
 import * as GroundTextureManager from '../../ground-textures/logic/GroundTextureManager';
-import {GameState, IGame, IGameLayers} from '../../../old-structure/interfaces/IGame';
-import {GameObjectId} from '../../../old-structure/interfaces/Types';
+import {GameState, IGame, IGameLayers} from './IGame';
+import {GameObjectId} from '../../common/logic/Types';
 import {GraphicsConfig} from '../../../client-data/Graphics';
 import {IBackend} from '../../backend/logic/IBackend';
 import {
@@ -32,7 +32,7 @@ import {
     PrerenderEvent,
     UserInteraceDomReadyEvent,
 } from './Events';
-import {createNamedContainer} from '../../../old-structure/CustomData';
+import {createNamedContainer} from '../../pixi-js/logic/CustomData';
 import {registerPreload} from './Preloading';
 
 
@@ -247,7 +247,7 @@ export class Game implements IGame {
         });
 
 
-        UserInterface.setup(this);
+        HUD.setup(this);
 
         /*
          * Initializing modules that require an initialized UI

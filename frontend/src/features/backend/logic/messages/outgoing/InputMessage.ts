@@ -1,10 +1,10 @@
-import {radians} from "../../../../../old-structure/interfaces/Types";
+import {radians} from "../../../../common/logic/Types";
 import {Vector} from "../../../../core/logic/Vector";
 import {BerryhunterApi} from "../../BerryhunterApi";
 import {flatbuffers} from "flatbuffers";
 import {ClientMessage} from "./ClientMessage";
 import * as BackendConstants from "../../BackendConstants";
-import {isDefined} from "../../../../../old-structure/Utils";
+import {isDefined} from "../../../../common/logic/Utils";
 import * as SnapshotFactory from "../../SnapshotFactory";
 import {Develop} from "../../../../internal-tools/develop/logic/_Develop";
 

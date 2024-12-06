@@ -1,8 +1,8 @@
-import {isFunction} from '../../../../old-structure/Utils';
+import {isFunction} from '../../../common/logic/Utils';
 import {Items} from '../../../items/logic/Items';
 import {SubIcon} from './SubIcon';
 import {BasicConfig as Constants} from '../../../../client-data/BasicConfig';
-import {IGame} from "../../../../old-structure/interfaces/IGame";
+import {IGame} from "../../../core/logic/IGame";
 import {GameSetupEvent, InventoryChangedEvent} from "../../../core/logic/Events";
 
 let Game: IGame = null;

@@ -1,5 +1,5 @@
 import {BasicConfig as Constants} from '../../../../client-data/BasicConfig';
-import {isFunction} from "../../../../old-structure/Utils";
+import {isFunction} from "../../../common/logic/Utils";
 import {VitalSigns} from "../../../vital-signs/logic/VitalSigns";
 import {GraphicsConfig} from "../../../../client-data/Graphics";
 import * as Console from '../../console/logic/Console';

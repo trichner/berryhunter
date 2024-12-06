@@ -1,5 +1,6 @@
-import * as UserInterface from '../../user-interface/HUD/logic/UserInterface';
-import {clearNode, formatIntWithAbbreviation, isDefined, isUndefined} from '../../../old-structure/Utils';
+import '../assets/highScores.less';
+import * as HUD from '../../user-interface/HUD/logic/HUD';
+import {clearNode, formatIntWithAbbreviation, isDefined, isUndefined} from '../../common/logic/Utils';
 
 let domElement;
 let playerRowTemplate;
@@ -9,7 +10,7 @@ let rows;
 let pendingMessage;
 
 export function setup() {
-    domElement = UserInterface.getScoreboard();
+    domElement = HUD.getScoreboard();
     playerRowTemplate = domElement.getElementsByClassName('playerRow').item(0);
     rowContainer = playerRowTemplate.parentNode;
     rowContainer.removeChild(playerRowTemplate);

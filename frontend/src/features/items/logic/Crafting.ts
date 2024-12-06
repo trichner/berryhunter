@@ -1,7 +1,7 @@
-import {arraysEqual, isUndefined} from '../../../old-structure/Utils';
-import * as UserInterface from '../../user-interface/HUD/logic/UserInterface';
+import {arraysEqual, isUndefined} from '../../common/logic/Utils';
+import * as HUD from '../../user-interface/HUD/logic/HUD';
 import {BerryhunterApi} from '../../backend/logic/BerryhunterApi';
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import {GameSetupEvent} from "../../core/logic/Events";
 
 let Game: IGame = null;
@@ -41,7 +41,7 @@ export function displayAvailableCrafts(availableCrafts) {
         }
     });
 
-    UserInterface.displayAvailableCrafts(availableCrafts, onCraftIconLeftClick);
+    HUD.displayAvailableCrafts(availableCrafts, onCraftIconLeftClick);
 }
 
 function onCraftIconLeftClick(event, recipe) {
@@ -54,7 +54,7 @@ function onCraftIconLeftClick(event, recipe) {
     }
 
     if (!Game.player.inventory.canFitCraft(recipe.item, recipe.materials)) {
-        UserInterface.flashInventory();
+        HUD.flashInventory();
         return;
     }
 

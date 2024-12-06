@@ -1,6 +1,6 @@
 import {GameObject} from './_GameObject';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
-import {hashCode, isDefined, random, randomFrom} from '../../../old-structure/Utils';
+import {hashCode, isDefined, random, randomFrom} from '../../common/logic/Utils';
 import * as Equipment from '../../items/logic/Equipment';
 import {EquipmentSlot} from '../../items/logic/Equipment';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
@@ -11,7 +11,7 @@ import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
 import {Animation} from '../../animations/logic/Animation';
 import {Items} from '../../items/logic/Items';
-import {IGame} from '../../../old-structure/interfaces/IGame';
+import {IGame} from '../../core/logic/IGame';
 import {
     CharacterEquippedItemEvent,
     CharacterMoved,
@@ -21,12 +21,13 @@ import {
     PlayerMoved,
     PrerenderEvent,
 } from '../../core/logic/Events';
-import {ICharacterLike} from '../../../old-structure/interfaces/ICharacter';
-import {createNamedContainer} from '../../../old-structure/CustomData';
+import {ICharacterLike} from './ICharacter';
+import {createNamedContainer} from '../../pixi-js/logic/CustomData';
 import {Container, Graphics, Text, Texture} from 'pixi.js';
 import * as TextDisplay from '../../../client-data/TextDisplay';
-import {spatialAudio} from '../../../old-structure/juice/SpatialAudio';
-import {swingLightAudioCues} from '../../../old-structure/juice/PlayerJuice';
+import {spatialAudio} from '../../audio/logic/SpatialAudio';
+import {swingLightAudioCues} from '../../player/logic/PlayerJuice';
+import {ISvgContainer} from '../../core/logic/ISvgContainer';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -40,9 +41,9 @@ export interface Hand {
 }
 
 export class Character extends GameObject implements ICharacterLike {
-    static variants: { svg: Texture }[] = [];
+    static variants: ISvgContainer[] = [];
     static svg: Texture;
-    static craftingIndicator: { svg: Texture } = {svg: undefined};
+    static craftingIndicator: ISvgContainer = {svg: undefined};
     static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
 
 
@@ -151,7 +152,7 @@ export class Character extends GameObject implements ICharacterLike {
     /**
      * Picks a character variant based on the name. Same name = same look, by the magic of hash codes.
      */
-    private static pickVariant(name: string): { svg: Texture } {
+    private static pickVariant(name: string): ISvgContainer {
         return Character.variants[hashCode(name) % Character.variants.length];
     }
 

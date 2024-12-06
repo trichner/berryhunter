@@ -1,10 +1,11 @@
+import '../assets/HUD.less';
 import * as Preloading from '../../../core/logic/Preloading';
 import {BasicConfig as Constants} from '../../../../client-data/BasicConfig';
-import {clearNode, isUndefined, playCssAnimation} from '../../../../old-structure/Utils';
+import {clearNode, isUndefined, playCssAnimation} from '../../../common/logic/Utils';
 import {ClickableIcon} from './ClickableIcon';
 import {ClickableCountableIcon} from './ClickableCountableIcon';
 import {VitalSignBar} from '../../../vital-signs/logic/VitalSignBar';
-import {IGame} from "../../../../old-structure/interfaces/IGame";
+import {IGame} from "../../../core/logic/IGame";
 import {UserInteraceDomReadyEvent} from '../../../core/logic/Events';
 import {VitalSign} from '../../../vital-signs/logic/VitalSigns';
 
@@ -19,7 +20,7 @@ let inventorySlots: ClickableCountableIcon[];
 
 let vitalSignsBars: { [key: string]: VitalSignBar };
 
-Preloading.renderPartial(require('../assets/userInterface.html'), () => {
+Preloading.renderPartial(require('../assets/HUD.html'), () => {
     rootElement = document.getElementById('gameUI');
     UserInteraceDomReadyEvent.trigger(rootElement);
 });

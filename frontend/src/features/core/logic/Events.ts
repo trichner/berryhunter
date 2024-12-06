@@ -1,10 +1,10 @@
-import {isDefined, removeElement} from "../../../old-structure/Utils";
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {isDefined, removeElement} from "../../common/logic/Utils";
+import {IGame} from "./IGame";
 import {BackendState, IBackend} from "../../backend/logic/IBackend";
 import {Player} from "../../player/logic/Player";
 import {InventorySlot} from "../../items/logic/InventorySlot";
 import {Vector} from "./Vector";
-import {integer, radians} from "../../../old-structure/interfaces/Types";
+import {integer, radians} from "../../common/logic/Types";
 import {InputAction} from "../../backend/logic/messages/outgoing/InputMessage";
 import {EquipmentSlot} from "../../items/logic/Equipment";
 import {Placeable} from "../../game-objects/logic/Placeable";

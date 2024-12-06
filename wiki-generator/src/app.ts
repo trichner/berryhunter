@@ -1,4 +1,4 @@
-import {isDefined, isUndefined} from '../../frontend/src/old-structure/Utils';
+import {isDefined, isUndefined} from '../../frontend/src/features/common/logic/Utils';
 import _isString = require('lodash/isString');
 import _isObject = require('lodash/isObject');
 import * as changeCase from 'change-case';
@@ -17,7 +17,7 @@ hook.hook('.svg', (source: string, filename: string) => {
 
 // Special import with the SVG hook in place!
 import {ItemsConfig as items} from '../../frontend/src/client-data/Items';
-import {ItemConfig} from "../../frontend/src/old-structure/interfaces/Item";
+import {ItemConfig} from "../../frontend/src/features/items/logic/Item";
 
 interface ItemExtra {
     ignore: boolean

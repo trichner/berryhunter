@@ -2,13 +2,13 @@
  * Item configs are getting loaded.
  *
  */
-import {isDefined} from '../../../old-structure/Utils';
+import {isDefined} from '../../common/logic/Utils';
 import * as Preloading from '../../core/logic/Preloading';
 import {ItemType} from './ItemType';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {ItemsConfig as Items} from '../../../client-data/Items';
 import {GameLateSetupEvent} from '../../core/logic/Events';
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import _isObject = require('lodash/isObject');
 import _property = require('lodash/property');
 

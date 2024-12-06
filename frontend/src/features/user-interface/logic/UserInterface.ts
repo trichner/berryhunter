@@ -1,3 +1,8 @@
+import '../assets/userInterface.less'
+
+// Custom scrollbars for panels. CSS is included via userInterface.less
+import 'simplebar';
+
 export function createStartScreenPanel(
     rootElement: HTMLElement,
     html: string,

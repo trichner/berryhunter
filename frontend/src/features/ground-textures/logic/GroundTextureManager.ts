@@ -1,7 +1,7 @@
-import {isDefined} from '../../../old-structure/Utils';
+import {isDefined} from '../../common/logic/Utils';
 import {GroundTexture, Parameters} from './GroundTexture';
 import {groundTextureTypes} from './GroundTextureTypes';
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import { Container } from 'pixi.js';
 
 

@@ -605,7 +605,7 @@ export const ItemsConfig = {
         type: ItemType.CONSUMABLE
     },
     Flower: {
-        icon: {file: require('../features/game-objects/assets/flower.svg')},
+        icon: {file: require('../features/game-objects/assets/resources/flower.svg')},
         definition: require('../../../api/items/consumables/flower.json'),
         type: ItemType.CONSUMABLE
     },

@@ -1,11 +1,11 @@
 import * as PIXI from "pixi.js";
-import {GameMapWithBackend} from "../../features/backend/logic/GameMapWithBackend";
-import {MiniMap} from "../../features/mini-map/MiniMap";
-import {Spectator} from "../../features/player/logic/Spectator";
-import {Player} from "../../features/player/logic/Player";
-import {InputManager} from "../../features/input-system/logic/InputManager";
-import {WelcomeMessage} from "../../features/backend/logic/messages/incoming/WelcomeMessage";
-import {GameObjectId} from "./Types";
+import {GameMapWithBackend} from "../../backend/logic/GameMapWithBackend";
+import {MiniMap} from "../../mini-map/MiniMap";
+import {Spectator} from "../../player/logic/Spectator";
+import {Player} from "../../player/logic/Player";
+import {InputManager} from "../../input-system/logic/InputManager";
+import {WelcomeMessage} from "../../backend/logic/messages/incoming/WelcomeMessage";
+import {GameObjectId} from "../../common/logic/Types";
 import {Container} from 'pixi.js';
 
 export enum GameState {

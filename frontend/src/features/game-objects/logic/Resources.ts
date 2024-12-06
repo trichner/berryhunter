@@ -1,13 +1,15 @@
 import {Container, Graphics, Sprite, Texture} from 'pixi.js';
 import {GameObject} from './_GameObject';
 import * as Preloading from '../../core/logic/Preloading';
-import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../../../old-structure/Utils';
+import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../../common/logic/Utils';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
 import {GraphicsConfig} from '../../../client-data/Graphics';
-import {IGame} from '../../../old-structure/interfaces/IGame';
+import {IGame} from '../../core/logic/IGame';
 import {GameSetupEvent, ResourceStockChangedEvent} from '../../core/logic/Events';
 import {alea as SeedRandom} from 'seedrandom';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
+import {ISvgContainer} from '../../core/logic/ISvgContainer';
+import './ResourceJuice';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -78,7 +80,7 @@ export class Resource extends GameObject {
 }
 
 export class Tree extends Resource {
-    static resourceSpot: { svg: Texture } = {svg: undefined};
+    static resourceSpot: ISvgContainer = {svg: undefined};
     resourceSpotTexture: Sprite;
 
     constructor(id: number, x: number, y: number, size: number, svg: Texture) {
@@ -128,7 +130,7 @@ export class MarioTree extends Tree {
 Preloading.registerGameObjectSVG(MarioTree, treeCfg.deciduousTreeFile, treeCfg.maxSize);
 
 export class Mineral extends Resource {
-    static resourceSpot: { svg: Texture } = {svg: undefined};
+    static resourceSpot: ISvgContainer = {svg: undefined};
     resourceSpotTexture: Sprite;
 
     constructor(id: number, x: number, y: number, size: number, svg: Texture) {
@@ -225,9 +227,9 @@ let berryBushCfg = GraphicsConfig.resources.berryBush;
 
 export class BerryBush extends Resource {
     static svg: Texture;
-    static berry: { svg: Texture } = {svg: undefined};
+    static berry: ISvgContainer = {svg: undefined};
     // It's the little black cross on top of berries
-    static calyx: { svg: Texture } = {svg: undefined};
+    static calyx: ISvgContainer = {svg: undefined};
 
     actualShape: Container;
     berries: Container;

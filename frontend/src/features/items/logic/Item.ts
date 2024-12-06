@@ -1,4 +1,4 @@
-import {EquipmentSlot} from "../../features/items/logic/Equipment";
+import {EquipmentSlot} from "./Equipment";
 
 export interface ItemConfig {
     icon: {

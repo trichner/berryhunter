@@ -1,5 +1,5 @@
 import {GameObject} from '../../../game-objects/logic/_GameObject';
-import {isDefined, isUndefined} from '../../../../old-structure/Utils';
+import {isDefined, isUndefined} from '../../../common/logic/Utils';
 import {IDevelop} from "./IDevelop";
 import {Graphics} from 'pixi.js';
 

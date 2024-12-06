@@ -1,4 +1,4 @@
-export class TriggerIntervalMap{
+export class TriggerIntervalMap {
     lastTriggeredMap: Map<string, { lastTriggered: number; interval: number }> = new Map();
 
     canTrigger(triggerName: string): boolean {
@@ -16,7 +16,7 @@ export class TriggerIntervalMap{
         if (!this.canTrigger(triggerName)) {
             return false;
         }
-        this.lastTriggeredMap.set(triggerName, { lastTriggered: Date.now(), interval: interval });
+        this.lastTriggeredMap.set(triggerName, {lastTriggered: Date.now(), interval: interval});
         return true;
     }
 }

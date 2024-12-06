@@ -1,9 +1,9 @@
-import {isDefined, isFunction} from '../../../old-structure/Utils';
+import {isDefined, isFunction} from '../../common/logic/Utils';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {Placeable} from '../../game-objects/logic/Placeable';
 import {Items} from './Items';
 import {ClickableIcon} from "../../user-interface/HUD/logic/ClickableIcon";
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import {BeforeDeathEvent} from "../../core/logic/Events";
 
 let Game: IGame = null;

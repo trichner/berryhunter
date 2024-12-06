@@ -4,7 +4,7 @@ import * as Mobs from '../../../../game-objects/logic/Mobs';
 import {DebugCircle} from '../../../../internal-tools/develop/logic/DebugCircle';
 import {Character} from '../../../../game-objects/logic/Character';
 import {Placeable} from '../../../../game-objects/logic/Placeable';
-import {isFunction} from '../../../../../old-structure/Utils';
+import {isFunction} from '../../../../common/logic/Utils';
 import {StatusEffectDefinition} from '../../../../game-objects/logic/StatusEffect'
 import {BerryhunterApi} from '../../BerryhunterApi';
 

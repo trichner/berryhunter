@@ -1,6 +1,7 @@
+import '../assets/console.less';
 import * as Preloading from '../../../core/logic/Preloading';
 import {BackendValidTokenEvent, PongReceivedEvent} from '../../../core/logic/Events';
-import {clearNode, isFunction, preventInputPropagation, resetFocus} from '../../../../old-structure/Utils';
+import {clearNode, isFunction, preventInputPropagation, resetFocus} from '../../../common/logic/Utils';
 import {CommandMessage} from '../../../backend/logic/messages/outgoing/CommandMessage';
 import {QueryParameters} from '../../logic/QueryParameters';
 import {BasicConfig} from '../../../../client-data/BasicConfig';

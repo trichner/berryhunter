@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Capture Smallz';
+    src: local("Capture Smallz"), local("CaptureSmallz"),
+        url("subset-CaptureSmallz.woff2") format("woff2"),
+        url("subset-CaptureSmallz.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}

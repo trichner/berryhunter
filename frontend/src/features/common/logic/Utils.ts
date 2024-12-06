@@ -1,5 +1,5 @@
 import _isString = require('lodash/isString');
-import {radians} from './interfaces/Types';
+import {radians} from './Types';
 import RequireContext = __WebpackModuleApi.RequireContext;
 
 /*

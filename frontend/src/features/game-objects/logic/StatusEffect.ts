@@ -1,8 +1,8 @@
 import { ColorMatrixFilter, Container, Ticker } from 'pixi.js';
-import { flood } from '../../../old-structure/ColorMatrixFilterExtensions';
-import { isDefined, random, randomInt, randomSign } from '../../../old-structure/Utils';
+import { flood } from '../../pixi-js/logic/ColorMatrixFilterExtensions';
+import { isDefined, random, randomInt, randomSign } from '../../common/logic/Utils';
 import { SoundData } from '../../audio/logic/SoundData';
-import { spatialAudio } from '../../../old-structure/juice/SpatialAudio';
+import { spatialAudio } from '../../audio/logic/SpatialAudio';
 import { Vector } from '../../core/logic/Vector';
 import { Easing, Tween, Group as TweenGroup } from '@tweenjs/tween.js';
 

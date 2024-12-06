@@ -1,9 +1,6 @@
-import { defaultFor } from '../../../old-structure/Utils';
-import _merge = require('lodash/merge');
 import { ListenerFn } from "eventemitter3";
-import { Container, Ticker } from 'pixi.js';
-import { Easing, Tween, Group as TweenGroup } from '@tweenjs/tween.js';
-import { reverse } from 'lodash';
+import { Ticker } from 'pixi.js';
+import { Tween, Group as TweenGroup } from '@tweenjs/tween.js';
 
 export class Animation {
     private tweenGroup: TweenGroup;

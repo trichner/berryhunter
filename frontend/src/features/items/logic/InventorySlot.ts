@@ -1,9 +1,9 @@
 import * as Equipment from './Equipment';
 import {ItemType} from './ItemType';
-import * as UserInterface from '../../user-interface/HUD/logic/UserInterface';
+import * as HUD from '../../user-interface/HUD/logic/HUD';
 import * as AutoFeed from './AutoFeed';
 import {BerryhunterApi} from '../../backend/logic/BerryhunterApi';
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import {
     AutoFeedActivateEvent,
     AutoFeedDeactivateEvent,
@@ -49,7 +49,7 @@ export class InventorySlot {
         this.active = false;
         this.activeAutoFeed = false;
 
-        this.clickableIcon = UserInterface.getInventorySlot(index);
+        this.clickableIcon = HUD.getInventorySlot(index);
         this.clickableIcon.onLeftClick = this.leftClick.bind(this);
         this.clickableIcon.onRightClick = this.rightClick.bind(this);
 

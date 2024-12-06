@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
 import {GroundTextureType} from "./GroundTextureTypes";
-import {integer, radians} from "../../../old-structure/interfaces/Types";
+import {integer, radians} from "../../common/logic/Types";
 
 export interface Parameters {
     type: GroundTextureType,

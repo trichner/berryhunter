@@ -1,4 +1,4 @@
-import {randomInt} from '../../../old-structure/Utils';
+import {randomInt} from '../../common/logic/Utils';
 
 const maleFirstNames = [
     'Arnold',

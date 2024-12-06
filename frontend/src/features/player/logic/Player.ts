@@ -4,11 +4,12 @@ import {Controls} from '../../controls/logic/Controls';
 import {Camera} from '../../camera/logic/Camera';
 import {Inventory} from '../../items/logic/Inventory';
 import {DamageState, VitalSigns, VitalSignValues} from '../../vital-signs/logic/VitalSigns';
-import {isDefined} from '../../../old-structure/Utils';
+import {isDefined} from '../../common/logic/Utils';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {BerryhunterApi} from '../../backend/logic/BerryhunterApi';
 import {Layer, MiniMap} from '../../mini-map/MiniMap';
 import {PlayerCraftingStateChangedEvent, PlayerCreatedEvent, PlayerDamagedEvent} from '../../core/logic/Events';
+import './PlayerJuice';
 
 export class Player {
     craftProgress;

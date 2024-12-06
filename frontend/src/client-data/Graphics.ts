@@ -1,6 +1,6 @@
 import {meter2px} from './BasicConfig';
-import {color, integer} from '../old-structure/interfaces/Types';
-import {requireAll} from '../old-structure/Utils';
+import {color, integer} from '../features/common/logic/Types';
+import {requireAll} from '../features/common/logic/Utils';
 
 export const GraphicsConfig = {
 
@@ -66,31 +66,31 @@ export const GraphicsConfig = {
 
     mobs: {
         dodo: {
-            file: require('../features/game-objects/assets/dodo.svg'),
+            file: require('../features/game-objects/assets/mobs/dodo.svg'),
             minSize: <number> 35,
             maxSize: <number> 45,
         },
 
         saberToothCat: {
-            file: require('../features/game-objects/assets/saberToothCat.svg'),
+            file: require('../features/game-objects/assets/mobs/saberToothCat.svg'),
             minSize: <number> 45,
             maxSize: <number> 60,
         },
 
         mammoth: {
-            file: require('../features/game-objects/assets/mammoth.svg'),
+            file: require('../features/game-objects/assets/mobs/mammoth.svg'),
             minSize: <number> 85,
             maxSize: <number> 100,
         },
 
         angryMammoth: {
-            file: require('../features/game-objects/assets/angryMammoth.svg'),
+            file: require('../features/game-objects/assets/mobs/angryMammoth.svg'),
             minSize: <number> 170,
             maxSize: <number> 170,
         },
 
         titaniumShard: {
-            file: require('../features/game-objects/assets/titaniumShard.svg'),
+            file: require('../features/game-objects/assets/mobs/titaniumShard.svg'),
             minSize: <number> 35,
             maxSize: <number> 35,
         },
@@ -98,37 +98,37 @@ export const GraphicsConfig = {
 
     resources: {
         tree: {
-            spotFile: require('../features/game-objects/assets/treeSpot.svg'),
+            spotFile: require('../features/game-objects/assets/resources/treeSpot.svg'),
             maxSize: <number> 210,
 
-            roundTreeFile: require('../features/game-objects/assets/roundTree.svg'),
-            deciduousTreeFile: require('../features/game-objects/assets/deciduousTree.svg'),
+            roundTreeFile: require('../features/game-objects/assets/resources/roundTree.svg'),
+            deciduousTreeFile: require('../features/game-objects/assets/resources/deciduousTree.svg'),
         },
 
         mineral: {
-            spotFile: require('../features/game-objects/assets/stoneSpot.svg'),
+            spotFile: require('../features/game-objects/assets/resources/stoneSpot.svg'),
             maxSize: <number> 142,
 
-            stoneFile: require('../features/game-objects/assets/stone.svg'),
-            bronzeFile: require('../features/game-objects/assets/bronze.svg'),
-            ironFile: require('../features/game-objects/assets/iron.svg'),
-            titaniumFile: require('../features/game-objects/assets/titanium.svg'),
+            stoneFile: require('../features/game-objects/assets/resources/stone.svg'),
+            bronzeFile: require('../features/game-objects/assets/resources/bronze.svg'),
+            ironFile: require('../features/game-objects/assets/resources/iron.svg'),
+            titaniumFile: require('../features/game-objects/assets/resources/titanium.svg'),
         },
 
         berryBush: {
-            bushFile: require('../features/game-objects/assets/berryBush.svg'),
+            bushFile: require('../features/game-objects/assets/resources/berryBush.svg'),
             maxSize: <number> (meter2px(0.5) * 2),
 
-            berryFile: require('../features/game-objects/assets/berry.svg'),
+            berryFile: require('../features/game-objects/assets/resources/berry.svg'),
             berryMaxSize: <number> 11,
             berryMinSize: <number> 6,
 
-            calyxFile: require('../features/game-objects/assets/berryCalyx.svg'),
+            calyxFile: require('../features/game-objects/assets/resources/berryCalyx.svg'),
         },
 
         flower: {
-            spotFile: require('../features/game-objects/assets/flowerSpot.svg'),
-            file: require('../features/game-objects/assets/flower.svg'),
+            spotFile: require('../features/game-objects/assets/resources/flowerSpot.svg'),
+            file: require('../features/game-objects/assets/resources/flower.svg'),
             minSize: <number> (meter2px(0.15) * 2),
             maxSize: <number> (meter2px(0.25) * 2),
         },

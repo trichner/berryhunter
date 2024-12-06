@@ -1,4 +1,4 @@
-import {isDefined, isUndefined} from '../../../old-structure/Utils';
+import {isDefined, isUndefined} from '../../common/logic/Utils';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import * as Recipes from './Recipes';
 import * as Crafting from './Crafting';
@@ -6,7 +6,7 @@ import * as Equipment from './Equipment';
 import {InventorySlot} from './InventorySlot';
 import {BerryhunterApi} from '../../backend/logic/BerryhunterApi';
 import './InventoryShortcuts';
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import {GameSetupEvent, InventoryChangedEvent, ISubscriptionToken} from "../../core/logic/Events";
 import { Character } from '../../game-objects/logic/Character';
 

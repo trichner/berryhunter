@@ -1,5 +1,7 @@
+import '../assets/startScreen.less';
+import '../../assets/toggleSwitch.less';
 import * as PlayerName from '../../../player/logic/PlayerName';
-import {isDefined, preventInputPropagation, smoothHoverAnimation} from '../../../../old-structure/Utils';
+import {isDefined, preventInputPropagation, smoothHoverAnimation} from '../../../common/logic/Utils';
 import * as DetectBrowser from 'detect-browser';
 import * as Preloading from '../../../core/logic/Preloading';
 import * as Credits from '../../credits/logic/Credits';

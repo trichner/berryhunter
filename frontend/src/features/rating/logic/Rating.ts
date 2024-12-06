@@ -1,4 +1,5 @@
-import {htmlModuleToString, makeRequest, smoothHoverAnimation} from "../../../old-structure/Utils";
+import '../assets/rating.less';
+import {htmlModuleToString, makeRequest, smoothHoverAnimation} from "../../common/logic/Utils";
 import _isObject = require('lodash/isObject');
 import * as SocialMedia from "../../user-interface/social-media-links/logic/SocialMedia";
 

@@ -1,5 +1,5 @@
 import _clone = require('lodash/clone');
-import {isDefined, removeElement} from '../../../old-structure/Utils';
+import {isDefined, removeElement} from '../../common/logic/Utils';
 import {DebugCircle} from '../../internal-tools/develop/logic/DebugCircle';
 import {GameObject} from '../../game-objects/logic/_GameObject';
 import {Character} from '../../game-objects/logic/Character';
@@ -9,7 +9,7 @@ import * as Equipment from '../../items/logic/Equipment';
 import {EquipmentSlot} from '../../items/logic/Equipment';
 import {BerryhunterApi} from './BerryhunterApi';
 import {Layer} from "../../mini-map/MiniMap";
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import {Develop} from "../../internal-tools/develop/logic/_Develop";
 
 let Game: IGame = null;

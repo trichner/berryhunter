@@ -1,6 +1,6 @@
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {KeyCodes} from '../../input-system/logic/keyboard/keys/KeyCodes';
-import {GameState, IGame} from "../../../old-structure/interfaces/IGame";
+import {GameState, IGame} from "../../core/logic/IGame";
 import {GameSetupEvent} from "../../core/logic/Events";
 
 let Game: IGame = null;

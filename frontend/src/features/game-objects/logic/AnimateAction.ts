@@ -1,4 +1,4 @@
-import {deg2rad} from '../../../old-structure/Utils';
+import {deg2rad} from '../../common/logic/Utils';
 import {GraphicsConfig} from '../../../client-data/Graphics';
 import {Animation} from "../../animations/logic/Animation";
 import _merge = require('lodash/merge');

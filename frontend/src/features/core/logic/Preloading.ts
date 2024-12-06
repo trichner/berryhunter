@@ -1,9 +1,8 @@
-import * as PIXI from 'pixi.js';
-import {htmlModuleToString, htmlToElement, isNumber} from '../../../old-structure/Utils';
+import {htmlModuleToString, htmlToElement, isNumber} from '../../common/logic/Utils';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {PreloadingProgressedEvent, PreloadingStartedEvent, StartScreenDomReadyEvent} from './Events';
 import {Assets, Texture} from 'pixi.js';
-import {ISvgContainer} from "../../../old-structure/interfaces/ISvgContainer";
+import {ISvgContainer} from "./ISvgContainer";
 
 
 const promises = [];

@@ -3,7 +3,7 @@
 // http://natureofcode.com
 // The "Vehicle" class
 import {Vector} from '../../../../core/logic/Vector';
-import {map} from '../../../../../old-structure/Utils';
+import {map} from '../../../../common/logic/Utils';
 
 export class Vehicle {
     acceleration = new Vector(0, 0);

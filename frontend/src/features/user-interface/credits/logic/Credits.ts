@@ -1,5 +1,6 @@
-import {createStartScreenPanel} from "../../logic/ScreenUtil";
-import {htmlModuleToString} from "../../../../old-structure/Utils";
+import '../assets/credits.less';
+import {createStartScreenPanel} from "../../logic/UserInterface";
+import {htmlModuleToString} from "../../../common/logic/Utils";
 
 const html: string = require('../assets/credits.html');
 

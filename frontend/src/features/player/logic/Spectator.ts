@@ -1,7 +1,7 @@
 import {Vector} from '../../core/logic/Vector';
 import {Camera} from '../../camera/logic/Camera';
-import {IGame} from "../../../old-structure/interfaces/IGame";
-import {ICharacterLike} from "../../../old-structure/interfaces/ICharacter";
+import {IGame} from "../../core/logic/IGame";
+import {ICharacterLike} from "../../game-objects/logic/ICharacter";
 
 export class Spectator implements ICharacterLike {
     position: Vector;

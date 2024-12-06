@@ -4,7 +4,7 @@
 import {BackendValidTokenEvent, GameSetupEvent, PlayerCreatedEvent} from '../../../core/logic/Events';
 import * as Console from '../../console/logic/Console';
 import {Player} from "../../../player/logic/Player";
-import {IGame} from "../../../../old-structure/interfaces/IGame";
+import {IGame} from "../../../core/logic/IGame";
 
 
 function setup() {

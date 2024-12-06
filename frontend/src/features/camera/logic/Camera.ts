@@ -1,10 +1,9 @@
-import _debounce = require('lodash/debounce');
 import {Vehicle} from './natureOfCode/arrive/vehicle';
 import {Vector} from '../../core/logic/Vector';
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import {Develop} from "../../internal-tools/develop/logic/_Develop";
 import {CameraUpdatedEvent, ISubscriptionToken, PrerenderEvent} from "../../core/logic/Events";
-import {ICharacterLike} from "../../../old-structure/interfaces/ICharacter";
+import {ICharacterLike} from "../../game-objects/logic/ICharacter";
 
 let Game: IGame = null;
 

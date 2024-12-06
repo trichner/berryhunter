@@ -1,11 +1,12 @@
 import {GameObject} from './_GameObject';
 import * as Preloading from '../../core/logic/Preloading';
-import {isUndefined, random, randomInt} from '../../../old-structure/Utils';
+import {isUndefined, random, randomInt} from '../../common/logic/Utils';
 import {GraphicsConfig} from '../../../client-data/Graphics';
 import {StatusEffect} from './StatusEffect';
-import {IGame} from '../../../old-structure/interfaces/IGame';
+import {IGame} from '../../core/logic/IGame';
 import {GameSetupEvent} from '../../core/logic/Events';
 import * as PIXI from 'pixi.js';
+import './MobJuice';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {

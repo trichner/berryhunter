@@ -1,4 +1,4 @@
-import * as UserInterface from '../user-interface/HUD/logic/UserInterface';
+import * as HUD from '../user-interface/HUD/logic/HUD';
 import {GameObject} from '../game-objects/logic/_GameObject';
 import {registerPreload} from '../core/logic/Preloading';
 import {Application, Container, ContainerChild} from 'pixi.js';
@@ -41,7 +41,7 @@ export class MiniMap {
     }
 
     constructor() {
-        let container = UserInterface.getMinimapContainer();
+        let container = HUD.getMinimapContainer();
 
         this.application = new Application();
 
@@ -55,7 +55,7 @@ export class MiniMap {
     }
 
     public setup(mapWidth: number, mapHeight: number) {
-        let container = UserInterface.getMinimapContainer();
+        let container = HUD.getMinimapContainer();
         container.appendChild(this.application.canvas);
 
         this.mapWidth = mapWidth;

@@ -1,4 +1,4 @@
-import {isUndefined} from '../../../old-structure/Utils';
+import {isUndefined} from '../../common/logic/Utils';
 
 export class QueryParameters {
     private static instance: QueryParameters = null;

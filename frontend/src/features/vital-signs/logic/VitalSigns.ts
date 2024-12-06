@@ -1,5 +1,7 @@
+import '../assets/vitalSigns.less';
+
 import * as Preloading from '../../core/logic/Preloading';
-import * as UserInterface from '../../user-interface/HUD/logic/UserInterface';
+import * as HUD from '../../user-interface/HUD/logic/HUD';
 import {GraphicsConfig} from '../../../client-data/Graphics';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {
@@ -184,7 +186,7 @@ export function onDomReady() {
     rootElement = document.getElementById('vitalSignsOverlay');
     // Move the overlays under the game UI
     rootElement.remove();
-    document.body.insertBefore(rootElement, UserInterface.getRootElement());
+    document.body.insertBefore(rootElement, HUD.getRootElement());
 }
 
 enum OverlayState {

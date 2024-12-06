@@ -1,8 +1,9 @@
+import '../assets/gameSettings.less';
 import * as Preloading from '../../core/logic/Preloading';
 import {GameSettings} from './GameSettings';
 import {DevelopSetupEvent} from '../../core/logic/Events';
 import {parseInt} from 'lodash';
-import {preventShortcutPropagation, resetFocus} from '../../../old-structure/Utils';
+import {preventShortcutPropagation, resetFocus} from '../../common/logic/Utils';
 
 const gameSettings = GameSettings.get();
 let rootElement: HTMLElement;

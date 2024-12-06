@@ -1,4 +1,4 @@
-import {isDefined, nearlyEqual} from '../../../old-structure/Utils';
+import {isDefined, nearlyEqual} from '../../common/logic/Utils';
 import {BackendState} from "./IBackend";
 import _clone = require('lodash/clone');
 

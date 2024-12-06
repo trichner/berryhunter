@@ -1,4 +1,4 @@
-import {Vector} from "../../features/core/logic/Vector";
+import {Vector} from "../../core/logic/Vector";
 
 export interface ICharacterLike {
     getX: () => number;

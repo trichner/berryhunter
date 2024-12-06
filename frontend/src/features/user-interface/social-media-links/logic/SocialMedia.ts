@@ -1,5 +1,6 @@
+import '../assets/socialMedia.less';
 import {PreloadingStartedEvent} from "../../../core/logic/Events";
-import {htmlModuleToString} from "../../../../old-structure/Utils";
+import {htmlModuleToString} from "../../../common/logic/Utils";
 
 const htmlFile = require('../assets/socialMedia.html');
 

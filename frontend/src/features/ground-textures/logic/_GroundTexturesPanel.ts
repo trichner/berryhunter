@@ -1,3 +1,4 @@
+import '../assets/groundTexturePanel.less';
 import {Items} from '../../items/logic/Items';
 import * as Equipment from '../../items/logic/Equipment';
 import * as Preloading from '../../core/logic/Preloading';
@@ -10,13 +11,13 @@ import {
     randomInt,
     roundToNearest,
     sortStrings,
-} from '../../../old-structure/Utils';
+} from '../../common/logic/Utils';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {GroundTextureType, groundTextureTypes} from './GroundTextureTypes';
 import * as GroundTextureManager from './GroundTextureManager';
 import {saveAs} from 'file-saver';
 import * as Console from '../../internal-tools/console/logic/Console';
-import {GameState, IGame} from "../../../old-structure/interfaces/IGame";
+import {GameState, IGame} from "../../core/logic/IGame";
 import {BackendValidTokenEvent, CharacterEquippedItemEvent, GamePlayingEvent, PrerenderEvent} from '../../core/logic/Events';
 import {QueryParameters} from '../../internal-tools/logic/QueryParameters';
 

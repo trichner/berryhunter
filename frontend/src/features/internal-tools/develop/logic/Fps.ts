@@ -1,5 +1,5 @@
 import {IDevelop} from "./IDevelop";
-import {IGame} from "../../../../old-structure/interfaces/IGame";
+import {IGame} from "../../../core/logic/IGame";
 import {PrerenderEvent} from "../../../core/logic/Events";
 
 let Develop: IDevelop = null;

@@ -1,3 +1,5 @@
+@import "../../assets/variables";
+
 #gameUI {
 	&.hidden {
 		display: block;
@@ -43,12 +45,6 @@
 	}
 }
 
-@uiElementHeight: 7vh;
-@slotSize: @uiElementHeight;
-
-@backgroundColorDark: @backgroundColor;
-@backgroundColorMedium: rgba(64, 64, 64, 0.6);
-@backgroundColorLight: rgba(255, 255, 255, 0.6);
 
 #inventory {
 	position: absolute;
@@ -304,8 +300,8 @@
 		// there's an icon in the top left corner
 		&.upgrade {
 			> .iconBackground {
-				-webkit-mask-image: url('../../features/user-interface/HUD/assets/hintedCraftMask_upgrade.svg');
-				mask-image: url('../../features/user-interface/HUD/assets/hintedCraftMask_upgrade.svg');
+				-webkit-mask-image: url("hintedCraftMask_upgrade.svg");
+				mask-image: url("hintedCraftMask_upgrade.svg");
 				-webkit-mask-size: 100% 100%;
 				mask-size: 100% 100%;
 
@@ -323,8 +319,8 @@
 		// there are icons in bottom row
 		&.withIngredients {
 			> .iconBackground {
-				-webkit-mask-image: url('../../features/user-interface/HUD/assets/hintedCraftMask_ingredients.svg');
-				mask-image: url('../../features/user-interface/HUD/assets/hintedCraftMask_ingredients.svg');
+				-webkit-mask-image: url("hintedCraftMask_ingredients.svg");
+				mask-image: url("hintedCraftMask_ingredients.svg");
 				-webkit-mask-size: 100% 100%;
 				mask-size: 100% 100%;
 
@@ -342,8 +338,8 @@
 
 		&.upgrade.withIngredients {
 			> .iconBackground {
-				-webkit-mask-image: url('../../features/user-interface/HUD/assets/hintedCraftMask.svg');
-				mask-image: url('../../features/user-interface/HUD/assets/hintedCraftMask.svg');
+				-webkit-mask-image: url("hintedCraftMask.svg");
+				mask-image: url("hintedCraftMask.svg");
 				-webkit-mask-size: 100% 100%;
 				mask-size: 100% 100%;
 

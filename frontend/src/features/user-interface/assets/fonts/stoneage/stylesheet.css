@@ -35,8 +35,8 @@ Other free fonts available at "http://www.davebastian.com"
 
 @font-face {
 	font-family: 'stone-age';
-	src: url('stoneage-webfont.woff2') format('woff2'),
-	url('stoneage-webfont.woff') format('woff');
+	src: url("stoneage-webfont.woff2") format("woff2"),
+	url("stoneage-webfont.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;

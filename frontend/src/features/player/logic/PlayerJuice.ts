@@ -10,15 +10,19 @@ import {
     PlayerMoved,
     CharacterMoved,
     GameJoinEvent
-} from '../../features/core/logic/Events';
-import { random, randomFrom } from '../Utils';
+} from '../../core/logic/Events';
+import { random, randomFrom } from '../../common/logic/Utils';
 import { sound } from '@pixi/sound';
 import * as PIXI from 'pixi.js';
-import { registerPreload } from '../../features/core/logic/Preloading';
-import { BerryhunterApi } from "../../features/backend/logic/BerryhunterApi";
-import { TriggerIntervalMap } from './TriggerIntervalMap';
-import { spatialAudio } from './SpatialAudio';
-import {GraphicsConfig} from '../../client-data/Graphics';
+import { registerPreload } from '../../core/logic/Preloading';
+import { BerryhunterApi } from "../../backend/logic/BerryhunterApi";
+import { TriggerIntervalMap } from '../../audio/logic/TriggerIntervalMap';
+import { spatialAudio } from '../../audio/logic/SpatialAudio';
+import {GraphicsConfig} from '../../../client-data/Graphics';
+
+/*
+ * TODO this file should be split across Character, VitalSigns, potentially more
+ */
 
 BeforeDeathEvent.subscribe((payload) => {
     if (payload?.player?.character) {
@@ -165,30 +169,30 @@ const hurt = ['hurt', 'hurt2', 'hurt3', 'hurt4', 'hurt5'];
 export const swingLightAudioCues = ['swingLight', 'swingLight2', 'swingLight3', 'swingLight4', 'swingHeavy', "swingHeavy2"];
 const steps = ['step', 'step2', 'step3'];
 
-PIXI.Assets.add({ alias: 'collect', src: require('../sounds/245645__unfa__cartoon-pop-clean.mp3') });
-PIXI.Assets.add({ alias: 'death', src: require('../sounds/416838__tonsil5__grunt2-death-pain.mp3') });
-PIXI.Assets.add({ alias: 'place-heavy', src: require('../sounds/443629__checholio__28-clavando-estaca.mp3') });
-PIXI.Assets.add({ alias: 'eat', src: require('../sounds/548367__borgory__chewing-crunch.mp3') });
-PIXI.Assets.add({ alias: 'hurt', src: require('../sounds/413181__micahlg__male_hurt5.mp3') });
-PIXI.Assets.add({ alias: 'hurt2', src: require('../sounds/413185__micahlg__male_hurt8.mp3') });
-PIXI.Assets.add({ alias: 'hurt3', src: require('../sounds/413186__micahlg__male_hurt9.mp3') });
-PIXI.Assets.add({ alias: 'hurt4', src: require('../sounds/413175__micahlg__male_hurt10.mp3') });
-PIXI.Assets.add({ alias: 'hurt5', src: require('../sounds/413179__micahlg__male_hurt14.mp3') });
-PIXI.Assets.add({ alias: 'hungry', src: require('../sounds/447911__breviceps__growling-stomach-stomach-rumbles.mp3') });
-PIXI.Assets.add({ alias: 'cold', src: require('../sounds/685253__antonsoederberg__freeze-sound-effect-fx.mp3') });
-PIXI.Assets.add({ alias: 'loopCrafting', src: require('../sounds/399585__wolffvisuals__workbench-tailoring.mp3') });
-PIXI.Assets.add({ alias: 'step', src: require('../sounds/750798__simonjeffery13__footsteps-on-road.mp3') });
-PIXI.Assets.add({ alias: 'step2', src: require('../sounds/750798__simonjeffery13__footsteps-on-road2.mp3') });
-PIXI.Assets.add({ alias: 'step3', src: require('../sounds/750798__simonjeffery13__footsteps-on-road3.mp3') });
+PIXI.Assets.add({ alias: 'collect', src: require('../assets/245645__unfa__cartoon-pop-clean.mp3') });
+PIXI.Assets.add({ alias: 'death', src: require('../assets/416838__tonsil5__grunt2-death-pain.mp3') });
+PIXI.Assets.add({ alias: 'place-heavy', src: require('../assets/443629__checholio__28-clavando-estaca.mp3') });
+PIXI.Assets.add({ alias: 'eat', src: require('../assets/548367__borgory__chewing-crunch.mp3') });
+PIXI.Assets.add({ alias: 'hurt', src: require('../assets/413181__micahlg__male_hurt5.mp3') });
+PIXI.Assets.add({ alias: 'hurt2', src: require('../assets/413185__micahlg__male_hurt8.mp3') });
+PIXI.Assets.add({ alias: 'hurt3', src: require('../assets/413186__micahlg__male_hurt9.mp3') });
+PIXI.Assets.add({ alias: 'hurt4', src: require('../assets/413175__micahlg__male_hurt10.mp3') });
+PIXI.Assets.add({ alias: 'hurt5', src: require('../assets/413179__micahlg__male_hurt14.mp3') });
+PIXI.Assets.add({ alias: 'hungry', src: require('../assets/447911__breviceps__growling-stomach-stomach-rumbles.mp3') });
+PIXI.Assets.add({ alias: 'cold', src: require('../assets/685253__antonsoederberg__freeze-sound-effect-fx.mp3') });
+PIXI.Assets.add({ alias: 'loopCrafting', src: require('../assets/399585__wolffvisuals__workbench-tailoring.mp3') });
+PIXI.Assets.add({ alias: 'step', src: require('../assets/750798__simonjeffery13__footsteps-on-road.mp3') });
+PIXI.Assets.add({ alias: 'step2', src: require('../assets/750798__simonjeffery13__footsteps-on-road2.mp3') });
+PIXI.Assets.add({ alias: 'step3', src: require('../assets/750798__simonjeffery13__footsteps-on-road3.mp3') });
 
-PIXI.Assets.add({ alias: 'swingLight', src: require('../sounds/542000__rob_marion__gasp_swing_light_1.mp3') });
-PIXI.Assets.add({ alias: 'swingLight2', src: require('../sounds/542001__rob_marion__gasp_swing_light_2.mp3') });
-PIXI.Assets.add({ alias: 'swingLight3', src: require('../sounds/542002__rob_marion__gasp_swing_light_3.mp3') });
-PIXI.Assets.add({ alias: 'swingLight4', src: require('../sounds/542019__rob_marion__gasp_swing_light_4.mp3') });
-PIXI.Assets.add({ alias: 'swingHeavy', src: require('../sounds/541996__rob_marion__gasp_swing_heavy_1.mp3') });
-PIXI.Assets.add({ alias: 'swingHeavy2', src: require('../sounds/541994__rob_marion__gasp_swing_heavy_2.mp3') });
+PIXI.Assets.add({ alias: 'swingLight', src: require('../assets/542000__rob_marion__gasp_swing_light_1.mp3') });
+PIXI.Assets.add({ alias: 'swingLight2', src: require('../assets/542001__rob_marion__gasp_swing_light_2.mp3') });
+PIXI.Assets.add({ alias: 'swingLight3', src: require('../assets/542002__rob_marion__gasp_swing_light_3.mp3') });
+PIXI.Assets.add({ alias: 'swingLight4', src: require('../assets/542019__rob_marion__gasp_swing_light_4.mp3') });
+PIXI.Assets.add({ alias: 'swingHeavy', src: require('../assets/541996__rob_marion__gasp_swing_heavy_1.mp3') });
+PIXI.Assets.add({ alias: 'swingHeavy2', src: require('../assets/541994__rob_marion__gasp_swing_heavy_2.mp3') });
 
-PIXI.Assets.add({ alias: 'hello', src: require('../sounds/411184__d3rfux__gruzi.mp3') });
+PIXI.Assets.add({ alias: 'hello', src: require('../assets/411184__d3rfux__gruzi.mp3') });
 
 // noinspection JSIgnoredPromiseFromCall
 registerPreload(PIXI.Assets.load('collect'));

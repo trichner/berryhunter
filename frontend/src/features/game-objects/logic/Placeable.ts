@@ -1,5 +1,5 @@
 import {GameObject} from './_GameObject';
-import {randomRotation} from '../../../old-structure/Utils';
+import {randomRotation} from '../../common/logic/Utils';
 import {GraphicsConfig} from '../../../client-data/Graphics';
 import {StatusEffect} from "./StatusEffect";
 import {PlaceablePlacedEvent} from '../../core/logic/Events';

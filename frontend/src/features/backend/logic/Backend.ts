@@ -1,4 +1,4 @@
-import * as Utils from '../../../old-structure/Utils';
+import * as Utils from '../../common/logic/Utils';
 import * as Console from '../../internal-tools/console/logic/Console';
 import * as BackendConstants from './BackendConstants';
 import * as SnapshotFactory from './SnapshotFactory';
@@ -11,11 +11,11 @@ import * as Scoreboard from '../../scoreboard/logic/Scoreboard';
 import * as DayCycle from '../../day-cycle/logic/DayCycle';
 import * as StartScreen from '../../user-interface/start-screen/logic/StartScreen';
 import * as EndScreen from '../../user-interface/end-screen/logic/EndScreen';
-import * as UserInterface from '../../user-interface/HUD/logic/UserInterface';
+import * as HUD from '../../user-interface/HUD/logic/HUD';
 import {BerryhunterApi} from './BerryhunterApi';
 import {flatbuffers} from 'flatbuffers';
 import * as Urls from './Urls';
-import {GameState, IGame} from "../../../old-structure/interfaces/IGame";
+import {GameState, IGame} from "../../core/logic/IGame";
 import {BackendState, IBackend} from "./IBackend";
 import {Develop} from "../../internal-tools/develop/logic/_Develop";
 import {
@@ -173,7 +173,7 @@ export class Backend implements IBackend {
 
                 StartScreen.hide();
                 EndScreen.hide();
-                UserInterface.show();
+                HUD.show();
 
                 break;
             case BerryhunterApi.ServerMessageBody.Obituary:

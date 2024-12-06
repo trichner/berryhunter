@@ -1,3 +1,4 @@
+import '../assets/developPanel.less';
 import * as AABBs from './AABBs';
 import * as Fps from './Fps';
 import * as Preloading from '../../../core/logic/Preloading';
@@ -6,16 +7,15 @@ import {
     isDefined,
     isNumber,
     isUndefined,
-    preventShortcutPropagation,
     rad2deg,
     resetFocus,
-} from '../../../../old-structure/Utils';
+} from '../../../common/logic/Utils';
 import * as Console from '../../console/logic/Console';
 import {ItemType} from '../../../items/logic/ItemType';
 import {BasicConfig as Constants} from '../../../../client-data/BasicConfig';
 import {Items} from '../../../items/logic/Items';
 import {BerryhunterApi} from '../../../backend/logic/BerryhunterApi';
-import {IGame} from "../../../../old-structure/interfaces/IGame";
+import {IGame} from "../../../core/logic/IGame";
 import {InputMessage} from "../../../backend/logic/messages/outgoing/InputMessage";
 import {IDevelop} from "./IDevelop";
 import {

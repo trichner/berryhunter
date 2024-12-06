@@ -1,7 +1,7 @@
 import {GraphicsConfig} from '../../../client-data/Graphics';
-import {dateDiff, playCssAnimation} from '../../../old-structure/Utils';
+import {dateDiff, playCssAnimation} from '../../common/logic/Utils';
 import {BerryhunterApi} from '../../backend/logic/BerryhunterApi';
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import {
     AutoFeedActivateEvent,
     AutoFeedDeactivateEvent,

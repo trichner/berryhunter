@@ -1,3 +1,4 @@
+import '../assets/tutorial.less';
 import * as Preloading from '../../core/logic/Preloading';
 import {
     BeforeDeathEvent,
@@ -10,10 +11,10 @@ import {
     PlayerCreatedEvent,
     StartScreenDomReadyEvent
 } from '../../core/logic/Events';
-import {deg2rad, isDefined, isFunction} from '../../../old-structure/Utils';
+import {deg2rad, isDefined, isFunction} from '../../common/logic/Utils';
 import {BerryhunterApi} from '../../backend/logic/BerryhunterApi';
 import {Account} from "../../accounts/logic/Account";
-import {integer, radians} from "../../../old-structure/interfaces/Types";
+import {integer, radians} from "../../common/logic/Types";
 
 
 // Ginos Vorschlag: Alle Tutorials als (animierte) Icons

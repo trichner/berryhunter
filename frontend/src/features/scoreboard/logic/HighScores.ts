@@ -1,3 +1,4 @@
+import '../assets/highScores.less';
 import {
     clearNode,
     formatInt,
@@ -7,13 +8,13 @@ import {
     makeRequest,
     preventInputPropagation,
     smoothHoverAnimation,
-} from '../../../old-structure/Utils';
+} from '../../common/logic/Utils';
 import * as Urls from '../../backend/logic/Urls';
 import * as Preloading from '../../core/logic/Preloading';
 import {EndScreenShownEvent, GamePlayingEvent, GameSetupEvent, StartScreenDomReadyEvent} from '../../core/logic/Events';
-import {GameState, IGame} from '../../../old-structure/interfaces/IGame';
+import {GameState, IGame} from '../../core/logic/IGame';
 import * as SocialMedia from '../../user-interface/social-media-links/logic/SocialMedia';
- import {format, parseISO} from 'date-fns';
+import {format, parseISO} from 'date-fns';
 
 let rootElement: HTMLElement;
 let leaderboardTables: Map<string, HTMLElement>;
@@ -59,6 +60,7 @@ interface HighScoresVO {
     weekly?: HighScoreVO[];
     daily?: HighScoreVO[];
 }
+
 interface HighScoreVO {
     playerName: string;
     score: number;

@@ -1,7 +1,8 @@
+import '../assets/endScreen.less';
 import * as Preloading from '../../../core/logic/Preloading';
 import * as PlayerName from '../../../player/logic/PlayerName';
 import * as Console from '../../../internal-tools/console/logic/Console';
-import {preventInputPropagation} from '../../../../old-structure/Utils';
+import {preventInputPropagation} from '../../../common/logic/Utils';
 import {BeforeDeathEvent, EndScreenShownEvent, PlayerCreatedEvent} from '../../../core/logic/Events';
 import * as DayCycle from '../../../day-cycle/logic/DayCycle';
 import * as SnapshotFactory from '../../../backend/logic/SnapshotFactory';

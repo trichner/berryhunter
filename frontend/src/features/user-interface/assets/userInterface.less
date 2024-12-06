@@ -1,15 +1,14 @@
-@import "fonts/stoneage/stylesheet.css";
-@import "fonts/capture-smallz/stylesheet.css";
+@import "./fonts/stoneage/stylesheet.css";
+@import "./fonts/capture-smallz/stylesheet.css";
 @import (inline) "~simplebar/dist/simplebar.css";
 
-
-@backgroundColor: rgba(0, 0, 0, 0.6);
+@import "variables";
 
 body {
 	padding: 0;
 	margin: 0;
 
-	font-family: 'stone-age', serif;
+	font-family: "stone-age", serif;
 	font-size: 1.5rem;
 	font-variant: small-caps;
 
@@ -51,7 +50,7 @@ svg .clickable text {
 
 code {
 	font-size: 14px;
-	font-family: 'Menlo', 'Noto Mono', 'Consolas', monospace;
+	font-family: "Menlo", "Noto Mono", "Consolas", monospace;
 	font-variant: normal;
 }
 
@@ -351,19 +350,8 @@ a.closeButton {
 }
 
 // Own modules
-@import "mapEditor";
-@import "developPanel";
-@import "groundTexturePanel";
-@import "userInterface";
-@import "startScreen";
-@import "endScreen";
-@import "console";
-@import "tutorial";
-@import "rating";
+@import "../HUD/assets/HUD";
+@import "../start-screen/assets/startScreen";
+@import "../../tutorial/assets/tutorial";
 @import "toggleSwitch";
-@import "highScores";
-@import "credits";
-@import "changelog";
-@import "socialMedia";
-@import "../../features/vital-signs/assets/vitalSigns";
-@import "gameSettings";
+@import "../social-media-links/assets/socialMedia";

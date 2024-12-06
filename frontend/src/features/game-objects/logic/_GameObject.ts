@@ -2,9 +2,9 @@ import {Container, Graphics, Texture} from 'pixi.js';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {Vector} from '../../core/logic/Vector';
-import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../../../old-structure/Utils';
+import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../../common/logic/Utils';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
-import {radians} from "../../../old-structure/interfaces/Types";
+import {radians} from "../../common/logic/Types";
 import {PrerenderEvent} from "../../core/logic/Events";
 
 let movementInterpolatedObjects = new Set();

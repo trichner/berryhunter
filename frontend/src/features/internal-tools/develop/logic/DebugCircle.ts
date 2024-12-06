@@ -1,7 +1,7 @@
 import {GameObject} from '../../../game-objects/logic/_GameObject';
 import * as PIXI from 'pixi.js';
 import {hasAABB} from './AABBs';
-import {IGame} from '../../../../old-structure/interfaces/IGame';
+import {IGame} from '../../../core/logic/IGame';
 import {Develop} from './_Develop';
 import {GameSetupEvent, PrerenderEvent} from '../../../core/logic/Events';
 

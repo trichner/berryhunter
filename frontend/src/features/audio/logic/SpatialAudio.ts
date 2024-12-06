@@ -1,7 +1,6 @@
-import * as PIXI from 'pixi.js';
 import { filters, PlayOptions, sound } from '@pixi/sound';
-import { Vector } from '../../features/core/logic/Vector';
-import { CameraUpdatedEvent, PlayerMoved } from '../../features/core/logic/Events';
+import { Vector } from '../../core/logic/Vector';
+import { CameraUpdatedEvent } from '../../core/logic/Events';
 import { isNumber, isUndefined } from 'lodash';
 
 export class SpatialAudio {

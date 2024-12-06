@@ -1,4 +1,4 @@
-import {color, integer} from "../../../../old-structure/interfaces/Types";
+import {color, integer} from "../../../common/logic/Types";
 import {InputMessage} from "../../../backend/logic/messages/outgoing/InputMessage";
 
 export interface IDevelop {

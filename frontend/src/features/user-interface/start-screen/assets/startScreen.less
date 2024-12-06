@@ -1,4 +1,4 @@
-@splashScreenAnimation: 1s;
+@import "../../assets/variables";
 
 #startScreen {
 	position: fixed;
@@ -186,7 +186,7 @@
 
 #splashScreen {
 	background-color: #2FA107; // Color of the trees
-	background-image: url('../../features/user-interface/start-screen/assets/loadingScreen.jpg');
+	background-image: url("loadingScreen.jpg");
 	background-position: center center;
 	background-size: cover;
 
@@ -283,11 +283,11 @@
 		padding: 8px 16px;
 
 		border: 10px solid transparent;
-		border-image-source: url("../../features/user-interface/changelog/assets/betaStampFrame.svg");
+		border-image-source: url("../../changelog/assets/betaStampFrame.svg");
 		border-image-width: 10px;
 		border-image-slice: calc(2 / 31 * 100%) calc(2 / 99 * 100%) fill;
 
-		font-family: 'Capture Smallz', sans-serif;
+		font-family: "Capture Smallz", sans-serif;
 		text-transform: uppercase;
 		color: #ff0000;
 		text-decoration: none;
@@ -359,7 +359,7 @@
 			z-index: -1;
 
 			background-position: center 0;
-			background-image: url(../../features/user-interface/changelog/assets/background.jpg);
+			background-image: url(../../changelog/assets/background.jpg);
 			background-color: #0D0E0F;
 			background-repeat: repeat-y;
 			background-size: 100% auto;

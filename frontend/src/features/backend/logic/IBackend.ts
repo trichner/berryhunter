@@ -1,4 +1,4 @@
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 
 export enum BackendState {
     DISCONNECTED = 'DISCONNECTED',

@@ -1,9 +1,9 @@
 import * as Preloading from '../../core/logic/Preloading';
 import {GraphicsConfig} from '../../../client-data/Graphics';
-import {degrees} from "../../../old-structure/interfaces/Types";
+import {degrees} from "../../common/logic/Types";
 import { Texture } from 'pixi.js';
 import * as PIXI from 'pixi.js';
-import {ISvgContainer} from "../../../old-structure/interfaces/ISvgContainer";
+import {ISvgContainer} from "../../core/logic/ISvgContainer";
 
 const GroundTextureTypes = GraphicsConfig.groundTextureTypes;
 

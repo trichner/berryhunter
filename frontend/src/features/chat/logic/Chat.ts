@@ -1,8 +1,8 @@
-import {isFunction} from '../../../old-structure/Utils';
-import * as UserInterface from '../../user-interface/HUD/logic/UserInterface';
+import {isFunction} from '../../common/logic/Utils';
+import * as HUD from '../../user-interface/HUD/logic/HUD';
 import * as Console from '../../internal-tools/console/logic/Console';
 import {BackendValidTokenEvent, BeforeDeathEvent} from '../../core/logic/Events';
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from "../../core/logic/IGame";
 import {IBackend} from "../../backend/logic/IBackend";
 import {ChatMessage} from "../../backend/logic/messages/outgoing/ChatMessage";
 
@@ -21,7 +21,7 @@ export function setup(game: IGame, backend) {
     Game = game;
     Backend = backend;
 
-    rootElement = UserInterface.getChat();
+    rootElement = HUD.getChat();
     inputElement = rootElement.querySelector('#chatInput');
 
     inputElement.addEventListener('keydown', (event) => {

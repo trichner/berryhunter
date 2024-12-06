@@ -1,8 +1,9 @@
 import {Develop} from '../../internal-tools/develop/logic/_Develop';
 import {ColorMatrixFilter, Container, Filter} from 'pixi.js';
-import {flood, lumaGreyscale} from '../../../old-structure/ColorMatrixFilterExtensions';
-import {isUndefined} from '../../../old-structure/Utils';
+import {flood, lumaGreyscale} from '../../pixi-js/logic/ColorMatrixFilterExtensions';
+import {isUndefined} from '../../common/logic/Utils';
 import {OnDayTimeStartEvent, OnNightTimeStartEvent} from '../../core/logic/Events';
+import './DayCycleJuice';
 
 let ticksPerDay: number;
 let dayTimeTicks: number;
