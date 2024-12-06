@@ -4,10 +4,10 @@ import * as Preloading from '../../core/logic/Preloading';
 import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../../../old-structure/Utils';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
 import {GraphicsConfig} from '../../../client-data/Graphics';
-import {IGame} from "../../../old-structure/interfaces/IGame";
+import {IGame} from '../../../old-structure/interfaces/IGame';
 import {GameSetupEvent, ResourceStockChangedEvent} from '../../core/logic/Events';
-import {alea as SeedRandom} from "seedrandom";
-import { StatusEffect, StatusEffectDefinition } from './StatusEffect';
+import {alea as SeedRandom} from 'seedrandom';
+import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -26,7 +26,7 @@ export class Resource extends GameObject {
         y: number,
         size: number,
         rotation: number,
-        svg: Texture
+        svg: Texture,
     ) {
         super(id, gameLayer, x, y, size, rotation, svg);
 
@@ -54,7 +54,7 @@ export class Resource extends GameObject {
             entityType: this.constructor.name,
             newStock: newStock,
             oldStock: oldStock,
-            position: this.getPosition()
+            position: this.getPosition(),
         });
         let scale = newStock / this.capacity;
         this.shape.scale.set(this.baseScale * scale);
@@ -62,13 +62,13 @@ export class Resource extends GameObject {
 
     createStatusEffects() {
         return {
-            Yielded: StatusEffect.forYielded(this.shape)
+            Yielded: StatusEffect.forYielded(this.shape),
         };
     }
 
     protected logStatusChange(newStatusEffects: StatusEffectDefinition[]): void {
         if (!Array.isArray(newStatusEffects) || newStatusEffects.length === 0) {
-            console.log("nothing");
+            console.log('nothing');
         } else {
             newStatusEffects.forEach((effect: StatusEffectDefinition) => {
                 console.log(effect.id);
@@ -284,7 +284,7 @@ export class BerryBush extends Resource {
             entityType: this.constructor.name,
             newStock: newStock,
             oldStock: oldStock,
-            position: this.getPosition()
+            position: this.getPosition(),
         });
     }
 
@@ -302,7 +302,7 @@ Preloading.registerGameObjectSVG(BerryBush.calyx, berryBushCfg.calyxFile, berryB
 
 export class Flower extends Resource {
     static resourceSpot = {
-        svg: null as Texture
+        svg: null as Texture,
     };
     resourceSpotTexture: Sprite;
 

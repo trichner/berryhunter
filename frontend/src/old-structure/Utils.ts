@@ -1,5 +1,5 @@
 import _isString = require('lodash/isString');
-import {radians} from "./interfaces/Types";
+import {radians} from './interfaces/Types';
 import RequireContext = __WebpackModuleApi.RequireContext;
 
 /*
@@ -93,7 +93,7 @@ export const TwoDimensional = {
             }
         }
         return points;
-    }
+    },
 };
 
 export function defaultFor(arg, val) {
@@ -107,7 +107,7 @@ export function clearNode(node: Node) {
 }
 
 export function escapeRegExp(str) {
-    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
 }
 
 export function replaceAll(str, find, replace) {
@@ -439,7 +439,7 @@ export function preventShortcutPropagation(element: Element) {
 export const dateDiffUnit = {
     milliseconds: 1,
     seconds: 1000,
-    days: 24 * 60 * 60 * 1000
+    days: 24 * 60 * 60 * 1000,
 };
 
 export function dateDiff(a, b, unit?) {
@@ -469,7 +469,10 @@ export function playCssAnimation(element: HTMLElement, animationClass: string) {
  * @param {number} options.animationDuration in seconds
  * @param {boolean} options.alternating default = true
  */
-export function smoothHoverAnimation(element: Element, options?: { additionalHoverElement?: Element, animationDuration?: number }) {
+export function smoothHoverAnimation(element: Element, options?: {
+    additionalHoverElement?: Element,
+    animationDuration?: number
+}) {
     let {animationDuration, additionalHoverElement} = options;
 
     let mouseOverElement = false;

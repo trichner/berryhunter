@@ -12,13 +12,21 @@ import {StatusEffect} from './StatusEffect';
 import {Animation} from '../../animations/logic/Animation';
 import {Items} from '../../items/logic/Items';
 import {IGame} from '../../../old-structure/interfaces/IGame';
-import {CharacterEquippedItemEvent, CharacterMoved, GameSetupEvent, ISubscriptionToken, PlayerCraftingStateChangedEvent, PlayerMoved, PrerenderEvent} from '../../core/logic/Events';
+import {
+    CharacterEquippedItemEvent,
+    CharacterMoved,
+    GameSetupEvent,
+    ISubscriptionToken,
+    PlayerCraftingStateChangedEvent,
+    PlayerMoved,
+    PrerenderEvent,
+} from '../../core/logic/Events';
 import {ICharacterLike} from '../../../old-structure/interfaces/ICharacter';
 import {createNamedContainer} from '../../../old-structure/CustomData';
 import {Container, Graphics, Text, Texture} from 'pixi.js';
 import * as TextDisplay from '../../../client-data/TextDisplay';
-import {spatialAudio} from "../../../old-structure/juice/SpatialAudio";
-import {swingLightAudioCues} from "../../../old-structure/juice/PlayerJuice";
+import {spatialAudio} from '../../../old-structure/juice/SpatialAudio';
+import {swingLightAudioCues} from '../../../old-structure/juice/PlayerJuice';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -32,7 +40,7 @@ export interface Hand {
 }
 
 export class Character extends GameObject implements ICharacterLike {
-    static variants: {svg: Texture}[] = [];
+    static variants: { svg: Texture }[] = [];
     static svg: Texture;
     static craftingIndicator: { svg: Texture } = {svg: undefined};
     static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
@@ -166,7 +174,7 @@ export class Character extends GameObject implements ICharacterLike {
         return {
             Damaged: StatusEffect.forDamaged(this.actualShape),
             DamagedAmbient: StatusEffect.forDamagedOverTime(this.actualShape),
-            Freezing: StatusEffect.forFreezing(this.actualShape)
+            Freezing: StatusEffect.forFreezing(this.actualShape),
         };
     }
 
@@ -217,8 +225,8 @@ export class Character extends GameObject implements ICharacterLike {
                 group: group,
                 slot: slotGroup,
             },
-            originalTranslation: { x: group.x, y: group.y },
-            originalRotation: group.rotation
+            originalTranslation: {x: group.x, y: group.y},
+            originalRotation: group.rotation,
         };
     }
 
@@ -278,12 +286,18 @@ export class Character extends GameObject implements ICharacterLike {
         // If nothing is equipped (= action with bare hand), use the boolean `useLeftHand`
         // to alternate between left and right punches
         if (this.getEquippedItem(Equipment.EquipmentSlot.HAND) === null && this.useLeftHand) {
-            spatialAudio.play(randomFrom(swingLightAudioCues), this.getPosition(), { volume: 0.25, speed: random(0.8, 1.2) });
+            spatialAudio.play(randomFrom(swingLightAudioCues), this.getPosition(), {
+                volume: 0.25,
+                speed: random(0.8, 1.2),
+            });
             this.currentAction = 'ALT';
             this.animateAction(this.leftHand, this.getEquippedItemAnimationType(), remainingTicks, true);
         } else {
             this.currentAction = 'MAIN';
-            spatialAudio.play(randomFrom(swingLightAudioCues), this.getPosition(), { volume: 0.25, speed: random(0.8, 1.2) });
+            spatialAudio.play(randomFrom(swingLightAudioCues), this.getPosition(), {
+                volume: 0.25,
+                speed: random(0.8, 1.2),
+            });
             this.animateAction(this.rightHand, this.getEquippedItemAnimationType(), remainingTicks);
         }
         this.useLeftHand = !this.useLeftHand;
@@ -312,7 +326,7 @@ export class Character extends GameObject implements ICharacterLike {
             onDone: () => {
                 this.currentAction = false;
             },
-            mirrored
+            mirrored,
         });
     }
 
@@ -355,8 +369,7 @@ export class Character extends GameObject implements ICharacterLike {
                     width: GraphicsConfig.character.craftingIndicator.lineWidth,
                     color: GraphicsConfig.character.craftingIndicator.lineColor,
                 });
-        }
-        else {
+        } else {
             //TODO: this triggers all the time now, preventing audio loop from sticking when the window is not focused
             PlayerCraftingStateChangedEvent.trigger(false);
         }
@@ -468,10 +481,9 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     override onMove(): void {
-        if (this.isPlayerCharacter){
+        if (this.isPlayerCharacter) {
             PlayerMoved.trigger(this.getPosition());
-        }
-        else{
+        } else {
             CharacterMoved.trigger(this.getPosition());
         }
     }
