@@ -1,5 +1,6 @@
 import {meter2px} from './BasicConfig';
 import {color, integer} from '../old-structure/interfaces/Types';
+import {requireAll} from '../old-structure/Utils';
 
 export const GraphicsConfig = {
 
@@ -27,7 +28,7 @@ export const GraphicsConfig = {
          * SYNCED WITH BACKEND
          */
         size: <number> 30,
-        file: require('../features/game-objects/assets/characters/character.svg'),
+        files: requireAll(require.context('../features/game-objects/assets/characters', false, /\.svg$/)),
 
         hands: {
             fillColor: <color> 0xf2a586,

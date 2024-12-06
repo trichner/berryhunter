@@ -1,6 +1,6 @@
 import {GameObject} from './_GameObject';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
-import {isDefined, random, randomFrom} from '../../../old-structure/Utils';
+import {hashCode, isDefined, random, randomFrom} from '../../../old-structure/Utils';
 import * as Equipment from '../../items/logic/Equipment';
 import {EquipmentSlot} from '../../items/logic/Equipment';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
@@ -32,6 +32,7 @@ export interface Hand {
 }
 
 export class Character extends GameObject implements ICharacterLike {
+    static variants: {svg: Texture}[] = [];
     static svg: Texture;
     static craftingIndicator: { svg: Texture } = {svg: undefined};
     static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
@@ -63,7 +64,7 @@ export class Character extends GameObject implements ICharacterLike {
     private prerenderSubToken: ISubscriptionToken;
 
     constructor(id: number, x: number, y: number, name: string, isPlayerCharacter: boolean) {
-        super(id, Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2, Character.svg);
+        super(id, Game.layers.characters, x, y, GraphicsConfig.character.size, Math.PI / 2, Character.pickVariant(name).svg);
         this.name = name;
         this.isPlayerCharacter = isPlayerCharacter;
         this.movementSpeed = Constants.BASE_MOVEMENT_SPEED;
@@ -137,6 +138,13 @@ export class Character extends GameObject implements ICharacterLike {
         }, this);
 
         this.prerenderSubToken = PrerenderEvent.subscribe(this.update, this);
+    }
+
+    /**
+     * Picks a character variant based on the name. Same name = same look, by the magic of hash codes.
+     */
+    private static pickVariant(name: string): { svg: Texture } {
+        return Character.variants[hashCode(name) % Character.variants.length];
     }
 
     initShape(svg: Texture, x: number, y: number, size: number, rotation: number) {
@@ -469,8 +477,12 @@ export class Character extends GameObject implements ICharacterLike {
     }
 }
 
+Character.variants = new Array(GraphicsConfig.character.files.length);
+GraphicsConfig.character.files.forEach((file: string | { default: string }, index: number) => {
+    Character.variants[index] = {svg: undefined};
 // noinspection JSIgnoredPromiseFromCall
-Preloading.registerGameObjectSVG(Character, GraphicsConfig.character.file, GraphicsConfig.character.size);
+    Preloading.registerGameObjectSVG(Character.variants[index], file, GraphicsConfig.character.size);
+});
 
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(

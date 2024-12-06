@@ -1,14 +1,10 @@
 import * as Mustache from 'mustache';
-import {htmlModuleToString, isDefined, isUndefined} from '../../../../old-structure/Utils';
+import {htmlModuleToString, isDefined, isUndefined, requireAll} from '../../../../old-structure/Utils';
 import {StartScreenDomReadyEvent} from '../../../core/logic/Events';
 import {createStartScreenPanel} from '../../logic/ScreenUtil';
 import {compareDesc, format, parse} from 'date-fns';
 
-function requireAll(requireContext) {
-    return requireContext.keys().map(requireContext);
-}
-
-const changelogs = requireAll(require.context('../../../../../../changelog', false, /\.json$/));
+const changelogs = requireAll(require.context('../../../../../../changelog', false, /\.json$/)) as unknown as ChangelogJSON[];
 const template = require('../assets/changelog.mustache');
 
 StartScreenDomReadyEvent.subscribe(setup);

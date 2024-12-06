@@ -49,20 +49,6 @@ export function fillInput(inputElement) {
     inputElement.focus();
 }
 
-/**
- *
- * @return an integer between 0 (included) and max (excluded)
- */
-export function hash(name, max) {
-    let unicodeSum = 0;
-    for (let i = 0; i < name.length; i++) {
-        unicodeSum += name.charCodeAt(i);
-    }
-
-    return unicodeSum % max;
-}
-
-
 function onSubmit(event, inputElement, screen: screen) {
     event.preventDefault();
 

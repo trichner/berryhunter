@@ -1,5 +1,6 @@
 import _isString = require('lodash/isString');
 import {radians} from "./interfaces/Types";
+import RequireContext = __WebpackModuleApi.RequireContext;
 
 /*
  http://stackoverflow.com/a/3885844
@@ -46,8 +47,8 @@ export function randomInt(min, max?) {
     return Math.floor(random(min, max));
 }
 
-export function randomSign(){
-    if (Math.random() <= 0.5){
+export function randomSign() {
+    if (Math.random() <= 0.5) {
         return -1;
     }
     return 1;
@@ -153,6 +154,10 @@ export function randomRotation(limitDirections?) {
         return randomInt(0, limitDirections) * Math.PI * 2 / limitDirections;
     }
     return random(0, Math.PI * 2);
+}
+
+export function requireAll(requireContext: RequireContext): string[] | { default: string; }[] {
+    return requireContext.keys().map(requireContext) as string[];
 }
 
 export function htmlModuleToString(html: (string | { 'default': string })): string {
@@ -527,7 +532,7 @@ export function formatInt(x: number): string {
  */
 export function formatIntWithAbbreviation(x: number): string {
 
-    let kExp:  number = 0;
+    let kExp: number = 0;
 
     while (x >= 10 * 1000 && kExp < multipliers.length - 1) {
         kExp++;
@@ -545,4 +550,18 @@ export function formatIntWithAbbreviation(x: number): string {
  */
 export function roundToNearestPowOfTwo(value: number): number {
     return Math.pow(2, Math.round(Math.log2(value)));
+}
+
+/**
+ * Produces an evenly distributed hash code of a string, ensuring positive numbers.
+ * @param value
+ */
+export function hashCode(value: string): number {
+    let hash = 2166136261; // FNV offset basis
+    for (let i = 0; i < value.length; i++) {
+        hash ^= value.charCodeAt(i); // XOR with character code
+        hash *= 16777619; // FNV prime
+        hash >>>= 0; // Ensure unsigned 32-bit integer
+    }
+    return hash;
 }
