@@ -3,6 +3,7 @@ package resource
 import (
 	"fmt"
 	"log"
+	"math"
 	"math/rand"
 
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
@@ -88,7 +89,7 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 		stock: model.ResourceStock{
 			Item:      resource,
 			Capacity:  resource.Factors.Capacity,
-			Available: resource.Factors.Capacity / 2,
+			Available: int(math.Round(float64(resource.Factors.Capacity) * float64(resource.Factors.StartStock))),
 		},
 		rand:                    rand,
 		invReplenishProbability: invReplenishProbability,

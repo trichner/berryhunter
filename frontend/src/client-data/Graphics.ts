@@ -174,6 +174,11 @@ export const GraphicsConfig = {
                 alpha: 1,
                 sizeFactor: 1.2,
             },
+            BerrySeed: {
+                color: 0xc20071,
+                alpha: 1,
+                sizeFactor: 1.2,
+            },
             Workbench: {
                 color: 0xFF0000,
                 alpha: 1,

@@ -3,13 +3,15 @@
   "name": "BerrySeed",
   "type": "PLACEABLE",
   "factors": {
-    "durationInSeconds": 5,
+    "durationInSeconds": 500,
     "vulnerability": 0.2,
 
     "minimumYield": 0,
     "replenishProbabilityPerSecond": 0.02,
-    "capacity": 3
+    "capacity": 3,
+    "startStock": 0.0
   },
+  "resource": "Berry",
   "recipe": {
     "craftTimeInSeconds": 10,
     "materials": [

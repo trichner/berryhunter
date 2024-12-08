@@ -51,7 +51,7 @@ func RegistryFromFS(fileSystem fs.FS) (*registry, error) {
 		return nil, err
 	}
 
-	r.decorateMaterials()
+	r.resolveShallowItems()
 
 	return r, nil
 }
@@ -93,28 +93,46 @@ func RegistryFromPaths(f ...string) (*registry, error) {
 		}
 	}
 
-	r.decorateMaterials()
+	r.resolveShallowItems()
 
 	return r, nil
 }
 
-func (r *registry) decorateMaterials() {
+func (r *registry) resolveShallowItems() {
 	for _, itemDef := range r.items {
-		decoratedMaterials := make([]*ItemStack, 0)
-		if itemDef.Recipe == nil {
-			continue
-		}
-
-		for _, m := range itemDef.Recipe.Materials {
-			item, err := r.GetByName(m.Item.Name)
-			if err != nil {
-				panic(err)
-			}
-
-			decoratedMaterials = append(decoratedMaterials, &ItemStack{item, m.Count})
-		}
-		itemDef.Recipe.Materials = decoratedMaterials
+		r.decorateMaterials(itemDef)
+		r.decorateReferencedResources(itemDef)
 	}
+}
+
+func (r *registry) decorateMaterials(itemDef *ItemDefinition) {
+	if itemDef.Recipe == nil {
+		return
+	}
+
+	decoratedMaterials := make([]*ItemStack, 0)
+	for _, m := range itemDef.Recipe.Materials {
+		item, err := r.GetByName(m.Item.Name)
+		if err != nil {
+			panic(err)
+		}
+
+		decoratedMaterials = append(decoratedMaterials, &ItemStack{item, m.Count})
+	}
+	itemDef.Recipe.Materials = decoratedMaterials
+}
+
+func (r *registry) decorateReferencedResources(itemDef *ItemDefinition) {
+	if itemDef.Resource == nil {
+		return
+	}
+
+	res, err := r.GetByName(itemDef.Resource.Name)
+	if err != nil {
+		panic(err)
+	}
+
+	itemDef.Resource = &res
 }
 
 func (r *registry) GetByName(name string) (Item, error) {

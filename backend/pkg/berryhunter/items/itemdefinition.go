@@ -49,6 +49,7 @@ type Factors struct {
 	// Resource
 	ReplenishProbability float32
 	Capacity             int
+	StartStock           float32
 }
 
 type Body struct {
@@ -61,13 +62,14 @@ type Body struct {
 }
 
 type ItemDefinition struct {
-	ID      ItemID
-	Type    ItemType
-	Name    string
-	Slot    EquipSlot
-	Factors Factors
-	Recipe  *Recipe
-	Body    *Body
+	ID       ItemID
+	Type     ItemType
+	Name     string
+	Slot     EquipSlot
+	Factors  Factors
+	Resource *Item
+	Recipe   *Recipe
+	Body     *Body
 }
 
 type ByID []*ItemDefinition
@@ -98,8 +100,10 @@ type itemDefinition struct {
 
 		ReplenishProbabilityPerS float32 `json:"replenishProbabilityPerSecond"`
 		Capacity                 int     `json:"capacity"`
+		StartStock               float32 `json:"startStock"`
 	} `json:"factors"`
-	Slot string `json:"slot"`
+	Slot     string `json:"slot"`
+	Resource string `json:"resource"`
 
 	Recipe *struct {
 		CraftTimeInSeconds int `json:"craftTimeInSeconds"`
@@ -124,6 +128,7 @@ type itemDefinition struct {
 // appropriate recipe object
 func parseItemDefinition(data []byte) (*itemDefinition, error) {
 	var i itemDefinition
+	i.Factors.StartStock = 0.5
 	err := json.Unmarshal(data, &i)
 	if err != nil {
 		return nil, err
@@ -148,6 +153,12 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			MinRadius: i.Body.MinRadius,
 			MaxRadius: i.Body.MaxRadius,
 		}
+	}
+
+	var res *Item = nil
+	if i.Resource != "" {
+		item := shallowItem(i.Resource)
+		res = &item
 	}
 
 	// parse recipe
@@ -202,8 +213,10 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
 			ReplenishProbability: i.Factors.ReplenishProbabilityPerS / constant.TicksPerSecond,
 			Capacity:             i.Factors.Capacity,
+			StartStock:           i.Factors.StartStock,
 		},
-		Recipe: recipe,
-		Body:   body,
+		Resource: res,
+		Recipe:   recipe,
+		Body:     body,
 	}, nil
 }

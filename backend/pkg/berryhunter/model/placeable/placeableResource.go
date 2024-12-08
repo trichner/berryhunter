@@ -1,6 +1,7 @@
 package placeable
 
 import (
+	"fmt"
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
@@ -65,19 +66,26 @@ func NewPlaceableResource(item items.Item, stockItem items.Item) (*PlaceableReso
 	}
 
 	rnd := rand.New(rand.NewSource(int64(placeable.Basic().ID())))
-	res, err := resource.NewResource(placeable.Body, rnd, item /* TODO needs to be configured */, model.EntityType(BerryhunterApi.EntityTypeBerryBush))
+	res, err := resource.NewResource(placeable.Body, rnd, item, determineResourceEntityType(stockItem))
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO configure me
 	res.Resource().Item = stockItem
-	res.Resource().Available = 0
 
 	return &PlaceableResource{
 		Placeable:        placeable,
 		EmbeddedResource: res,
 	}, nil
+}
+
+func determineResourceEntityType(stockItem items.Item) model.EntityType {
+	switch stockItem.Name {
+	case "Berry":
+		return model.EntityType(BerryhunterApi.EntityTypeBerryBush)
+	}
+
+	panic(fmt.Errorf("no EntityType set up for stock item '%s'", stockItem.Name))
 }
 
 func (pr *PlaceableResource) Basic() ecs.BasicEntity {

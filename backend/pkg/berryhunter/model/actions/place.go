@@ -38,16 +38,8 @@ func (a *Place) Start() {
 
 	var e model.PlaceableEntity = nil
 	var err error = nil
-	if item.Factors.ReplenishProbability != 0 {
-		// TODO configure me
-		stockItem, err2 := a.game.Items().GetByName("Berry")
-		if err2 != nil {
-			// TODO error
-			log.Printf("Cannot place %s: %s", item.Name, err)
-			return
-		}
-
-		e, err = placeable.NewPlaceableResource(item, stockItem)
+	if item.Resource != nil {
+		e, err = placeable.NewPlaceableResource(item, *item.Resource)
 	} else {
 		e, err = placeable.NewPlaceable(item)
 	}
