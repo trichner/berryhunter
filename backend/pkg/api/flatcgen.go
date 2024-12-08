@@ -30,13 +30,13 @@ func main() {
 
 	platform := ""
 	artifactName := ""
-	compilerPath := fmt.Sprintf("./flatc_%s_%s", platform, strings.ReplaceAll(version, ".", "_"))
+	compilerPathPrefix := ""
 
 	switch runtime.GOOS {
 	case "windows":
 		platform = "Windows"
 		artifactName = "Windows.flatc.binary.zip"
-		compilerPath += ".exe"
+		compilerPathPrefix = ".exe"
 	case "darwin":
 		platform = "Mac"
 		artifactName = "Mac.flatc.binary.zip"
@@ -53,13 +53,16 @@ func main() {
 	// https://github.com/google/flatbuffers/releases/download/v24.3.25/Mac.flatc.binary.zip
 	// https://github.com/google/flatbuffers/releases/download/v24.3.25/Windows.flatc.binary.zip
 
-	err := downloadCompilerTo(compilerPath, version, artifactName)
+	compilerPath := fmt.Sprintf("./flatc_%s_%s%s", platform, strings.ReplaceAll(version, ".", "_"), compilerPathPrefix)
+	err := downloadCompilerTo(compilerPath, version, artifactName, compilerPathPrefix)
 	if err != nil {
 		slog.Error("failed to download flatc compiler", slog.String("version", version), slog.Any("error", err))
 		panic(err)
 	}
 
 	files, err := filepath.Glob(fileGlob)
+
+	cleanOutputFolders()
 
 	err = compileGoFlatbuffers(compilerPath, files)
 	if err != nil {
@@ -68,7 +71,18 @@ func main() {
 	}
 }
 
-func downloadCompilerTo(path, version, artifactName string) error {
+func cleanOutputFolders() {
+	generatedFiles, _ := filepath.Glob("./BerryhunterApi/*.go")
+	for _, f := range generatedFiles {
+		_ = os.Remove(f)
+	}
+	generatedFiles, _ = filepath.Glob("./ChieftainApi/*.go")
+	for _, f := range generatedFiles {
+		_ = os.Remove(f)
+	}
+}
+
+func downloadCompilerTo(path string, version string, artifactName string, compilerPathPrefix string) error {
 	var buf bytes.Buffer
 
 	downloadUrl := fmt.Sprintf("https://github.com/google/flatbuffers/releases/download/%s/%s", version, artifactName)
@@ -91,12 +105,7 @@ func downloadCompilerTo(path, version, artifactName string) error {
 	}
 
 	i := slices.IndexFunc(zr.File, func(f *zip.File) bool {
-		switch runtime.GOOS {
-		case "windows":
-			return f.Name == "flatc.exe"
-		default:
-			return f.Name == "flatc"
-		}
+		return f.Name == ("flatc" + compilerPathPrefix)
 	})
 	if i < 0 {
 		return errors.New("'flatc' not found in archive")
@@ -126,7 +135,7 @@ func downloadCompilerTo(path, version, artifactName string) error {
 }
 
 func compileGoFlatbuffers(compilerPath string, files []string) error {
-	slog.Info("compiling flatbuffers", slog.String("files", strings.Join(files, ",")))
+	slog.Info("compiling flatbuffers", slog.String("compilerPath", compilerPath), slog.String("files", strings.Join(files, ",")))
 	// flatc --go *.fbs
 
 	args := []string{"--go"}
@@ -140,6 +149,7 @@ func compileGoFlatbuffers(compilerPath string, files []string) error {
 }
 
 func run(prog string, args ...string) error {
+	slog.Info(fmt.Sprintf("Running: %s %s", prog, strings.Join(args, " ")))
 	cmd := exec.Command(prog, args...)
 	cmd.Stderr = os.Stderr
 

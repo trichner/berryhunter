@@ -15,10 +15,10 @@ cp-defs:
 	@find ./pkg/api -type f -name '*.json' -delete
 	@cp -rf ../api/items ../api/mobs ./pkg/api
 
-%.build: cp-defs
+%.build: gen cp-defs
 	go build -o $* ./cmd/$*
 
 dev: berryhunterd.dev
 
-%.dev: cp-defs
+%.dev: gen cp-defs
 	go run ./cmd/$* -dev
