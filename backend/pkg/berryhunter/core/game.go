@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"github.com/trichner/berryhunter/pkg/berryhunter/model/placeable"
 	"log/slog"
 	"math/rand"
 	"net/http"
@@ -207,14 +208,12 @@ func (g *game) AddEntity(e model.BasicEntity) {
 		g.addPlayer(v)
 	case model.MobEntity:
 		g.addMobEntity(v)
+	case *placeable.PlaceableResource:
+		g.addPlaceableResourceEntity(v)
 	case model.ResourceEntity:
 		g.addResourceEntity(v)
 	case model.PlaceableEntity:
 		g.addPlaceableEntity(v)
-		// TODO handling a resource as sub entity is probably a bad idea
-		if r, ok := v.(model.Resourcer); ok && r.Resource() != nil {
-			g.AddEntity(r.Resource())
-		}
 	case model.Spectator:
 		g.addSpectator(v)
 	case model.Entity:
@@ -315,6 +314,34 @@ func (g *game) addResourceEntity(e model.ResourceEntity) {
 			s.AddEntity(e)
 		case *sys.UpdateSystem:
 			s.AddUpdateable(e)
+		}
+	}
+}
+
+func (g *game) addPlaceableResourceEntity(p *placeable.PlaceableResource) {
+	// Loop over all Systems
+	for _, system := range g.Systems() {
+		// Use a type-switch to figure out which System is which
+		switch s := system.(type) {
+
+		// Create a case for each System you want to use
+
+		// Currently matches 100% the addPlaceableEntity registration,
+		// but only because resources use a sub set of the placeable systems.
+		case *sys.PhysicsSystem:
+			s.AddEntity(p)
+		case *NetSystem:
+			s.AddEntity(p)
+		case *statuseffects.StatusEffectsSystem:
+			s.Add(p, p)
+		case *sys.UpdateSystem:
+			s.AddUpdateable(p)
+		case *sys.DecaySystem:
+			s.AddDecayable(p)
+		case *heater.HeaterSystem:
+			if p.HeatRadiation() != nil {
+				s.AddHeater(p)
+			}
 		}
 	}
 }

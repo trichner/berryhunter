@@ -61,13 +61,6 @@ type PlaceableEntity interface {
 	Item() items.Item
 }
 
-// Resourcer is an entity that acts as a ResourceEntity
-type Resourcer interface {
-	BasicEntity
-
-	Resource() ResourceEntity
-}
-
 type ResourceStock struct {
 	Item      items.Item
 	Capacity  int

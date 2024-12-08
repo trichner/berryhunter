@@ -422,6 +422,8 @@ export const ItemsConfig = {
         type: ItemType.PLACEABLE,
         placeable: {
             layer: 'resources.berryBush',
+            visibleOnMinimap: true, // TODO like (special) berry bush
+            multiPlacing: true, // TODO just for testing
         },
     },
 
