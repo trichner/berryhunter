@@ -4,13 +4,14 @@
   "type": "RESOURCE",
   "factors": {
     "minimumYield": 4,
-    "replenishProbabilityPerSecond": 0.25,
-    "capacity": 15
+    "replenishProbabilityPerSecond": 0.0,
+    "capacity": 15,
+    "startStock": 0.0
   },
   "body": {
     "minRadius": 0.3,
     "maxRadius": 0.45,
-    "solid": true
+    "solid": false
   },
   "generator": {
     "weight": 2
