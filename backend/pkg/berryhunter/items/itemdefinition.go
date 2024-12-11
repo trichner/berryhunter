@@ -103,9 +103,10 @@ type Item struct {
 
 // recipe matching the json schema for recipes
 type itemDefinition struct {
-	ID      int    `json:"id"`
-	Type    string `json:"type"`
-	Name    string `json:"name"`
+	ID   int    `json:"id"`
+	Type string `json:"type"`
+	Name string `json:"name"`
+
 	Factors struct {
 		Food            float32 `json:"food"`
 		Damage          float32 `json:"damage"`
@@ -121,6 +122,7 @@ type itemDefinition struct {
 		Capacity                 *int     `json:"capacity"`
 		StartStock               *float32 `json:"startStock"`
 	} `json:"factors"`
+
 	Slot     string `json:"slot"`
 	Resource string `json:"resource"`
 

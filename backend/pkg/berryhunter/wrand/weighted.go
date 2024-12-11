@@ -11,14 +11,19 @@ type Choice struct {
 }
 
 func NewWeightedChoice(choices []Choice) *WeightedChoice {
-	wc := &WeightedChoice{choices: choices}
+	wc := &WeightedChoice{}
 
 	totals := []int{}
 	runningTotal := 0
 
-	for _, w := range wc.choices {
+	for _, w := range choices {
+		if w.Weight == 0 {
+			continue
+		}
+
 		runningTotal += w.Weight
 		totals = append(totals, runningTotal)
+		wc.choices = append(wc.choices, w)
 	}
 
 	wc.totals = totals

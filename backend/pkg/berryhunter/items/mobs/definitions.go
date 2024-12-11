@@ -51,6 +51,7 @@ var namesEnumRespawnBehavior = map[string]RespawnBehavior{
 
 type Generator struct {
 	Weight          int
+	Fixed           int
 	RespawnBehavior RespawnBehavior
 }
 
@@ -67,9 +68,10 @@ type MobDefinition struct {
 }
 
 type mobDefinition struct {
-	Id      uint64 `json:"id"`
-	Name    string `json:"name"`
-	Type    string `json:"type"`
+	Id   uint64 `json:"id"`
+	Name string `json:"name"`
+	Type string `json:"type"`
+
 	Factors struct {
 		Vulnerability  float32 `json:"vulnerability"`
 		DamageFraction float32 `json:"damageFraction"`
@@ -77,16 +79,20 @@ type mobDefinition struct {
 		DeltaPhi       float32 `json:"deltaPhi"`
 		TurnRate       float32 `json:"turnRate"`
 	} `json:"factors"`
+
 	Drops []struct {
 		Item  string `json:"item"`
 		Count int    `json:"count"`
 	} `json:"drops"`
+
 	Body struct {
 		Radius       float32 `json:"radius"`
 		DamageRadius float32 `json:"damageRadius"`
 	} `json:"body"`
+
 	Generator struct {
 		Weight          int    `json:"weight"`
+		Fixed           int    `json:"fixed"`
 		RespawnBehavior string `json:"respawnBehavior"`
 	} `json:"generator"`
 }
@@ -127,6 +133,7 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 		},
 		Generator: Generator{
 			Weight:          m.Generator.Weight,
+			Fixed:           m.Generator.Fixed,
 			RespawnBehavior: respawnBehavior,
 		},
 	}

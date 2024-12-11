@@ -20,6 +20,7 @@
     "damageRadius": 0.84
   },
   "generator": {
-    "weight": 1
+    "weight": 0,
+    "fixed": 1
   }
 }

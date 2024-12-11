@@ -106,18 +106,18 @@ func main() {
 		}
 	}
 
-	for mobName, count := range spawnedMobs {
-		slog.Debug(fmt.Sprintf("Spawned: %4d %s", count, mobName))
+	for _, md := range mobList {
+		for range md.Generator.Fixed {
+			m := mob.NewMob(md, true, radius)
+
+			g.AddEntity(m)
+
+			spawnedMobs[m.MobDefinition().Name]++
+		}
 	}
 
-	// Spawn old white
-	bossName := "AngryMammoth"
-	ow, err := mobsRegistry.GetByName(bossName)
-	if err != nil {
-		slog.Error("Unable to find boss mob", slog.Any("error", err))
-	} else {
-		g.AddEntity(mob.NewMob(ow, true, radius))
-		slog.Debug(fmt.Sprintf("Spawned Boss: %4d %s", 1, bossName))
+	for mobName, count := range spawnedMobs {
+		slog.Debug(fmt.Sprintf("Spawned: %4d %s", count, mobName))
 	}
 
 	//---- set up server
