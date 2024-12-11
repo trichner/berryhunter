@@ -47,9 +47,9 @@ type Factors struct {
 	Vulnerability float32
 
 	// Resource
-	ReplenishProbability float32
-	Capacity             int
-	StartStock           float32
+	ReplenishProbability *float32
+	Capacity             *int
+	StartStock           *float32
 }
 
 type Body struct {
@@ -61,15 +61,34 @@ type Body struct {
 	MaxRadius float32
 }
 
+type DepletionBehavior int
+
+const (
+	DepletionBehaviorNone DepletionBehavior = iota
+	DepletionBehaviorRespawn
+)
+
+var namesEnumDepletionBehavior = map[string]DepletionBehavior{
+	"None":    DepletionBehaviorNone,
+	"Respawn": DepletionBehaviorRespawn,
+}
+
+type Generator struct {
+	Weight      int
+	Fixed       int
+	OnDepletion DepletionBehavior
+}
+
 type ItemDefinition struct {
-	ID       ItemID
-	Type     ItemType
-	Name     string
-	Slot     EquipSlot
-	Factors  Factors
-	Resource *Item
-	Recipe   *Recipe
-	Body     *Body
+	ID        ItemID
+	Type      ItemType
+	Name      string
+	Slot      EquipSlot
+	Factors   Factors
+	Resource  *Item
+	Recipe    *Recipe
+	Body      *Body
+	Generator *Generator
 }
 
 type ByID []*ItemDefinition
@@ -98,9 +117,9 @@ type itemDefinition struct {
 		HeatRadius      float32 `json:"heatRadius"`
 		Vulnerability   float32 `json:"vulnerability"`
 
-		ReplenishProbabilityPerS float32 `json:"replenishProbabilityPerSecond"`
-		Capacity                 int     `json:"capacity"`
-		StartStock               float32 `json:"startStock"`
+		ReplenishProbabilityPerS *float32 `json:"replenishProbabilityPerSecond"`
+		Capacity                 *int     `json:"capacity"`
+		StartStock               *float32 `json:"startStock"`
 	} `json:"factors"`
 	Slot     string `json:"slot"`
 	Resource string `json:"resource"`
@@ -122,13 +141,18 @@ type itemDefinition struct {
 		MinRadius float32 `json:"minRadius"`
 		MaxRadius float32 `json:"maxRadius"`
 	} `json:"body"`
+
+	Generator *struct {
+		Weight      int    `json:"weight"`
+		Fixed       int    `json:"fixed"`
+		OnDepletion string `json:"onDepletion"`
+	} `json:"generator"`
 }
 
 // parseItemDefinition parses a json string from a byte array into the
 // appropriate recipe object
 func parseItemDefinition(data []byte) (*itemDefinition, error) {
 	var i itemDefinition
-	i.Factors.StartStock = 0.5
 	err := json.Unmarshal(data, &i)
 	if err != nil {
 		return nil, err
@@ -191,11 +215,30 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 		recipe = &Recipe{craftTicks, materials, tools}
 	}
 
+	// parse body
+	var generator *Generator = nil
+	if i.Generator != nil {
+		depletionBehavior := DepletionBehaviorNone
+		if i.Generator.OnDepletion != "" {
+			depletionBehavior = namesEnumDepletionBehavior[i.Generator.OnDepletion]
+		}
+		generator = &Generator{
+			Weight:      i.Generator.Weight,
+			Fixed:       i.Generator.Fixed,
+			OnDepletion: depletionBehavior,
+		}
+	}
+
 	itemType, ok := ItemTypeMap[i.Type]
 	if !ok {
 		itemType = ItemTypeNone
 	}
 
+	var replenishProbability *float32 = nil
+	if i.Factors.ReplenishProbabilityPerS != nil {
+		rebProb := (*i.Factors.ReplenishProbabilityPerS) / constant.TicksPerSecond
+		replenishProbability = &rebProb
+	}
 	return &ItemDefinition{
 		ID:   ItemID(i.ID),
 		Type: itemType,
@@ -211,12 +254,13 @@ func (i *itemDefinition) mapToItemDefinition() (*ItemDefinition, error) {
 			HeatRadius:           i.Factors.HeatRadius,
 			Vulnerability:        i.Factors.Vulnerability,
 			DurationInTicks:      i.Factors.DurationInS * constant.TicksPerSecond,
-			ReplenishProbability: i.Factors.ReplenishProbabilityPerS / constant.TicksPerSecond,
+			ReplenishProbability: replenishProbability,
 			Capacity:             i.Factors.Capacity,
 			StartStock:           i.Factors.StartStock,
 		},
-		Resource: res,
-		Recipe:   recipe,
-		Body:     body,
+		Resource:  res,
+		Recipe:    recipe,
+		Body:      body,
+		Generator: generator,
 	}, nil
 }

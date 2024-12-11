@@ -1,6 +1,7 @@
 package mob
 
 import (
+	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"log"
 	"math"
 	"math/rand"
@@ -23,7 +24,7 @@ var types = func() map[string]model.EntityType {
 	return t
 }()
 
-func NewMob(d *mobs.MobDefinition, rndPos bool) *Mob {
+func NewMob(d *mobs.MobDefinition, rndPos bool, radius float32) *Mob {
 	entityType, ok := types[d.Name]
 	if !ok {
 		log.Fatalf("Mob type not found: %d/%s", d.ID, d.Name)
@@ -56,21 +57,10 @@ func NewMob(d *mobs.MobDefinition, rndPos bool) *Mob {
 	m.Body.Shape().UserData = m
 	if rndPos {
 		// TODO use global radius instead hard-coded copy
-		var radius float32 = 20
-		x := newRandomCoordinate(radius)
-		y := newRandomCoordinate(radius)
-		for x*x+y*y > radius*radius {
-			x = newRandomCoordinate(radius)
-			y = newRandomCoordinate(radius)
-		}
-		m.SetPosition(phy.Vec2f{float32(x), float32(y)})
+		m.SetPosition(gen.NewRandomPos(radius))
 		m.SetAngle(rnd.Float32() * 2 * math.Pi)
 	}
 	return m
-}
-
-func newRandomCoordinate(radius float32) float32 {
-	return rand.Float32()*2*radius - radius
 }
 
 type Mob struct {

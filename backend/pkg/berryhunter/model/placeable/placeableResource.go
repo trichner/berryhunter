@@ -59,19 +59,17 @@ func (pr *PlaceableResource) Resource() *model.ResourceStock {
 	return pr.EmbeddedResource.Resource()
 }
 
-func NewPlaceableResource(item items.Item, stockItem items.Item) (*PlaceableResource, error) {
+func NewPlaceableResource(item items.Item, resourceItem items.Item) (*PlaceableResource, error) {
 	placeable, err := NewPlaceable(item)
 	if err != nil {
 		return nil, err
 	}
 
 	rnd := rand.New(rand.NewSource(int64(placeable.Basic().ID())))
-	res, err := resource.NewResource(placeable.Body, rnd, item, determineResourceEntityType(stockItem))
+	res, err := resource.NewResource(placeable.Body, rnd, item, determineResourceEntityType(resourceItem))
 	if err != nil {
 		return nil, err
 	}
-
-	res.Resource().Item = stockItem
 
 	return &PlaceableResource{
 		Placeable:        placeable,

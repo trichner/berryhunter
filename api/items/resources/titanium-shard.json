@@ -1,0 +1,22 @@
+{
+  "id": 51,
+  "name": "TitaniumShard",
+  "type": "RESOURCE",
+  "factors": {
+    "minimumYield": 4,
+    "replenishProbabilityPerSecond": 0.0,
+    "capacity": 3,
+    "startStock": 1.0
+  },
+  "resource": "Titanium",
+  "body": {
+    "minRadius": 0.3,
+    "maxRadius": 0.45,
+    "solid": true
+  },
+  "generator": {
+    "weight": 0,
+    "fixed": 5,
+    "onDepletion": "Respawn"
+  }
+}

@@ -11,5 +11,8 @@
   "body": {
     "radius": 0.5,
     "solid": false
+  },
+  "generator": {
+    "weight": 6
   }
 }

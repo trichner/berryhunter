@@ -11,5 +11,8 @@
     "minRadius": 0.3,
     "maxRadius": 0.45,
     "solid": true
+  },
+  "generator": {
+    "weight": 2
   }
 }

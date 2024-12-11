@@ -13,27 +13,19 @@ import (
 
 var _ = model.Interacter(&resource.Resource{})
 
-func NewRandomEntityFrom(items items.Registry, p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) (model.ResourceEntity, error) {
+func NewRandomEntityFrom(p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) (model.ResourceEntity, error) {
 	choices := []wrand.Choice{}
 	for _, b := range bodies {
-		choices = append(choices, wrand.Choice{Weight: b.weight, Choice: b})
+		choices = append(choices, wrand.Choice{Weight: b.resourceItem.Generator.Weight, Choice: b})
 	}
 
 	wc := wrand.NewWeightedChoice(choices)
 	selected := wc.Choose(rnd).(staticEntityBody)
-	return NewStaticEntityWithBody(items, p, &selected, rnd)
+	return NewStaticEntityWithBody(p, &selected, rnd)
 }
 
-func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEntityBody, rnd *rand.Rand) (model.ResourceEntity, error) {
-	resourceItem, err := items.GetByName(body.resourceName)
-	if err != nil {
-		return nil, fmt.Errorf("unknown ressource: %s", body.resourceName)
-		//TODO: errors.WithMessage(err,
-		//	fmt.Sprintf("unknown ressource: %s", body.resourceName),
-		//	err,
-		//)
-	}
-
+func NewStaticEntityWithBody(p phy.Vec2f, body *staticEntityBody, rnd *rand.Rand) (model.ResourceEntity, error) {
+	resourceItem := *body.resourceItem
 	if resourceItem.Body == nil {
 		return nil, fmt.Errorf("ressource %s has no body", resourceItem.Name)
 	}
@@ -45,7 +37,12 @@ func NewStaticEntityWithBody(items items.Registry, p phy.Vec2f, body *staticEnti
 	}
 
 	ball := phy.NewCircle(p, radius)
-	ball.Shape().Layer = int(body.collisionLayer)
+	if resourceItem.Body.Solid {
+		ball.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision)
+
+	} else {
+		ball.Shape().Layer = int(model.LayerRessourceCollision | model.LayerViewportCollision)
+	}
 
 	r, err := resource.NewResource(ball, splitRandom(rnd, p), resourceItem, body.entityType)
 	if err != nil {

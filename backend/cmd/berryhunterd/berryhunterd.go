@@ -116,7 +116,7 @@ func main() {
 	if err != nil {
 		slog.Error("Unable to find boss mob", slog.Any("error", err))
 	} else {
-		g.AddEntity(newMobEntity(ow))
+		g.AddEntity(mob.NewMob(ow, true, radius))
 		slog.Debug(fmt.Sprintf("Spawned Boss: %4d %s", 1, bossName))
 	}
 
@@ -277,13 +277,7 @@ func newRandomMobEntity(mobList []*mobs.MobDefinition, rnd *rand.Rand, radius fl
 	wc := wrand.NewWeightedChoice(choices)
 	selected := wc.Choose(rnd).(*mobs.MobDefinition)
 
-	m := mob.NewMob(selected, true)
-
-	return m
-}
-
-func newMobEntity(def *mobs.MobDefinition) model.MobEntity {
-	m := mob.NewMob(def, true)
+	m := mob.NewMob(selected, true, radius)
 
 	return m
 }

@@ -1,6 +1,7 @@
 package gen
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
 
@@ -25,6 +26,16 @@ func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.Reso
 	entities = append(entities, trees...)
 	entities = append(entities, resources...)
 
+	for i := range entities {
+		e := &entities[i]
+		resourceItem, err := items.GetByName(e.resourceName)
+		if err != nil {
+			panic(fmt.Errorf("unknown ressource: %s", e.resourceName))
+		}
+
+		e.resourceItem = &resourceItem
+	}
+
 	resourceEntities := make([]model.ResourceEntity, 0, steps*steps)
 	for x := int64(0); x < steps; x++ {
 		for y := int64(0); y < steps; y++ {
@@ -40,7 +51,19 @@ func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.Reso
 				continue
 			}
 
-			e, err := NewRandomEntityFrom(items, ev, entities, crnd)
+			e, err := NewRandomEntityFrom(ev, entities, crnd)
+			if err != nil {
+				panic(err)
+			}
+			resourceEntities = append(resourceEntities, e)
+			countEntities = countEntities + 1
+		}
+	}
+
+	ernd := rand.New(rand.NewSource(rnd.Int63()))
+	for _, e := range entities {
+		for range e.resourceItem.Generator.Fixed {
+			e, err := NewStaticEntityWithBody(NewRandomPos(radius), &e, ernd)
 			if err != nil {
 				panic(err)
 			}
@@ -60,72 +83,64 @@ func chunkRand(x, y int64, rnd *rand.Rand) *rand.Rand {
 	return rand.New(rand.NewSource(seed))
 }
 
+func NewRandomPos(radius float32) phy.Vec2f {
+	x := NewRandomCoordinate(radius)
+	y := NewRandomCoordinate(radius)
+	for x*x+y*y > radius*radius {
+		x = NewRandomCoordinate(radius)
+		y = NewRandomCoordinate(radius)
+	}
+	return phy.Vec2f{float32(x), float32(y)}
+}
+
+func NewRandomCoordinate(radius float32) float32 {
+	return rand.Float32()*2*radius - radius
+}
+
 var trees = []staticEntityBody{
 	{
-		model.EntityType(BerryhunterApi.EntityTypeRoundTree),
-		40,
-		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
-		0,
-		"Wood",
+		entityType:   model.EntityType(BerryhunterApi.EntityTypeRoundTree),
+		resourceName: "Wood",
 	},
 	{
-		model.EntityType(BerryhunterApi.EntityTypeMarioTree),
-		40,
-		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
-		0,
-		"Wood",
+		entityType:   model.EntityType(BerryhunterApi.EntityTypeMarioTree),
+		resourceName: "Wood",
 	},
 }
 
 var resources = []staticEntityBody{
 	{
-		model.EntityType(BerryhunterApi.EntityTypeFlower),
-		18,
-		model.LayerRessourceCollision | model.LayerViewportCollision,
-		0,
-		"Flower",
+		entityType:   model.EntityType(BerryhunterApi.EntityTypeFlower),
+		resourceName: "Flower",
 	},
 	{
-		model.EntityType(BerryhunterApi.EntityTypeBerryBush),
-		6,
-		model.LayerRessourceCollision | model.LayerViewportCollision,
-		0,
-		"Berry",
+		entityType:   model.EntityType(BerryhunterApi.EntityTypeBerryBush),
+		resourceName: "Berry",
 	},
 	{
-		model.EntityType(BerryhunterApi.EntityTypeStone),
-		20,
-		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
-		0,
-		"Stone",
+		entityType:   model.EntityType(BerryhunterApi.EntityTypeStone),
+		resourceName: "Stone",
 	},
 	{
-		model.EntityType(BerryhunterApi.EntityTypeBronze),
-		10,
-		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
-		0,
-		"Bronze",
+		entityType:   model.EntityType(BerryhunterApi.EntityTypeBronze),
+		resourceName: "Bronze",
 	},
 	{
-		model.EntityType(BerryhunterApi.EntityTypeIron),
-		4,
-		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
-		0,
-		"Iron",
+		entityType:   model.EntityType(BerryhunterApi.EntityTypeIron),
+		resourceName: "Iron",
 	},
 	{
-		model.EntityType(BerryhunterApi.EntityTypeTitanium),
-		2,
-		model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision,
-		0,
-		"Titanium",
+		entityType:   model.EntityType(BerryhunterApi.EntityTypeTitanium),
+		resourceName: "Titanium",
+	},
+	{
+		entityType:   model.EntityType(BerryhunterApi.EntityTypeTitaniumShard),
+		resourceName: "TitaniumShard",
 	},
 }
 
 type staticEntityBody struct {
-	entityType     model.EntityType
-	weight         int
-	collisionLayer model.CollisionLayer
-	collisionMask  int
-	resourceName   string
+	entityType   model.EntityType
+	resourceName string
+	resourceItem *items.Item
 }
