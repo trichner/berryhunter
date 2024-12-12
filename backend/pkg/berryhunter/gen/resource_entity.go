@@ -13,18 +13,18 @@ import (
 
 var _ = model.Interacter(&resource.Resource{})
 
-func NewRandomEntityFrom(p phy.Vec2f, bodies []staticEntityBody, rnd *rand.Rand) (model.ResourceEntity, error) {
+func NewRandomEntityFrom(p phy.Vec2f, bodies []StaticEntityBody, rnd *rand.Rand) (model.ResourceEntity, error) {
 	choices := []wrand.Choice{}
 	for _, b := range bodies {
 		choices = append(choices, wrand.Choice{Weight: b.resourceItem.Generator.Weight, Choice: b})
 	}
 
 	wc := wrand.NewWeightedChoice(choices)
-	selected := wc.Choose(rnd).(staticEntityBody)
+	selected := wc.Choose(rnd).(StaticEntityBody)
 	return NewStaticEntityWithBody(p, &selected, rnd)
 }
 
-func NewStaticEntityWithBody(p phy.Vec2f, body *staticEntityBody, rnd *rand.Rand) (model.ResourceEntity, error) {
+func NewStaticEntityWithBody(p phy.Vec2f, body *StaticEntityBody, rnd *rand.Rand) (model.ResourceEntity, error) {
 	resourceItem := *body.resourceItem
 	if resourceItem.Body == nil {
 		return nil, fmt.Errorf("ressource %s has no body", resourceItem.Name)

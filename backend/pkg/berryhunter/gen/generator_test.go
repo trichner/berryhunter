@@ -38,7 +38,7 @@ func (*mockRegistry) Items() []*items.ItemDefinition {
 var _ = items.Registry(&mockRegistry{})
 
 func Test_randomEntity(t *testing.T) {
-	entities := []staticEntityBody{}
+	entities := []StaticEntityBody{}
 	entities = append(entities, trees...)
 	entities = append(entities, resources...)
 
@@ -50,7 +50,7 @@ func Test_randomEntity(t *testing.T) {
 }
 
 func Test_chooseEnity(t *testing.T) {
-	entities := []staticEntityBody{}
+	entities := []StaticEntityBody{}
 	entities = append(entities, trees...)
 	entities = append(entities, resources...)
 
@@ -64,7 +64,7 @@ func Test_chooseEnity(t *testing.T) {
 
 	rnd := rand.New(rand.NewSource(int64(1)))
 	for i := 0; i < 10; i++ {
-		selected := wc.Choose(rnd).(staticEntityBody)
+		selected := wc.Choose(rnd).(StaticEntityBody)
 		fmt.Printf("Selection: %v\n", selected)
 	}
 }

@@ -72,10 +72,11 @@ type ResourceEntity interface {
 	Entity
 	Interacter
 	StatusEntity
+	Respawnee
 
 	Update(dt float32)
-	Resource() *ResourceStock
-	// count
+	Stock() *ResourceStock
+	Resource() items.Item
 }
 
 // MobEnity is a mob that usually comes with a mob definition

@@ -233,8 +233,8 @@ func ResourceEntityFlatbufMarshal(e model.ResourceEntity, builder *flatbuffers.B
 	BerryhunterApi.ResourceAddRadius(builder, f32ToU16Px(e.Radius()))
 	BerryhunterApi.ResourceAddEntityType(builder, BerryhunterApi.EntityType(e.Type()))
 
-	BerryhunterApi.ResourceAddCapacity(builder, byte(e.Resource().Capacity))
-	BerryhunterApi.ResourceAddStock(builder, byte(e.Resource().Available))
+	BerryhunterApi.ResourceAddCapacity(builder, byte(e.Stock().Capacity))
+	BerryhunterApi.ResourceAddStock(builder, byte(e.Stock().Available))
 
 	return BerryhunterApi.ResourceEnd(builder)
 }

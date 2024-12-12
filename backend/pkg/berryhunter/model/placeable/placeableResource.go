@@ -55,8 +55,8 @@ func (pr *PlaceableResource) Item() items.Item {
 	return pr.Placeable.Item()
 }
 
-func (pr *PlaceableResource) Resource() *model.ResourceStock {
-	return pr.EmbeddedResource.Resource()
+func (pr *PlaceableResource) Stock() *model.ResourceStock {
+	return pr.EmbeddedResource.Stock()
 }
 
 func NewPlaceableResource(item items.Item, resourceItem items.Item) (*PlaceableResource, error) {

@@ -22,7 +22,7 @@ func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.Reso
 	var chunkQuarterSize float32 = chunkSize / 4.0
 	var countEntities int64 = 0
 
-	entities := []staticEntityBody{}
+	entities := []StaticEntityBody{}
 	entities = append(entities, trees...)
 	entities = append(entities, resources...)
 
@@ -97,7 +97,7 @@ func NewRandomCoordinate(radius float32) float32 {
 	return rand.Float32()*2*radius - radius
 }
 
-var trees = []staticEntityBody{
+var trees = []StaticEntityBody{
 	{
 		entityType:   model.EntityType(BerryhunterApi.EntityTypeRoundTree),
 		resourceName: "Wood",
@@ -108,7 +108,7 @@ var trees = []staticEntityBody{
 	},
 }
 
-var resources = []staticEntityBody{
+var resources = []StaticEntityBody{
 	{
 		entityType:   model.EntityType(BerryhunterApi.EntityTypeFlower),
 		resourceName: "Flower",
@@ -139,8 +139,12 @@ var resources = []staticEntityBody{
 	},
 }
 
-type staticEntityBody struct {
+type StaticEntityBody struct {
 	entityType   model.EntityType
 	resourceName string
 	resourceItem *items.Item
+}
+
+func NewStaticEntityBody(entityType model.EntityType, resourceName string, resourceItem *items.Item) *StaticEntityBody {
+	return &StaticEntityBody{entityType: entityType, resourceName: resourceName, resourceItem: resourceItem}
 }

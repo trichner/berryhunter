@@ -12,10 +12,12 @@ import (
 )
 
 var _ = model.ResourceEntity(&Resource{})
+var _ = model.Respawnee(&Resource{})
 
 type Resource struct {
 	model.BaseEntity
-	stock model.ResourceStock
+	resource items.Item
+	stock    model.ResourceStock
 
 	rand                    *rand.Rand
 	invReplenishProbability int
@@ -30,11 +32,15 @@ func (r *Resource) replenish(i int) {
 	}
 }
 
+func (r *Resource) Resource() items.Item {
+	return r.resource
+}
+
 func (r *Resource) StatusEffects() *model.StatusEffects {
 	return &r.statusEffects
 }
 
-func (r *Resource) Resource() *model.ResourceStock {
+func (r *Resource) Stock() *model.ResourceStock {
 	return &r.stock
 }
 
@@ -131,6 +137,7 @@ func NewResource(body *phy.Circle, rand *rand.Rand, resource items.Item, entityT
 	base := model.NewBaseEntity(body, entityType)
 	r := &Resource{
 		BaseEntity: base,
+		resource:   resource,
 		stock: model.ResourceStock{
 			Item:      resourceItem,
 			Capacity:  cpct,
@@ -157,4 +164,11 @@ func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 		return
 	}
 	p.Inventory().AddItem(items.NewItemStack(r.stock.Item, y))
+}
+
+func (r *Resource) NeedsRespawn() bool {
+	return r.stock.Available == 0 && r.resource.Generator.OnDepletion == items.DepletionBehaviorRespawn
+}
+func (r *Resource) ToRespawn() model.ResourceEntity {
+	return r
 }

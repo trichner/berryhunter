@@ -131,6 +131,9 @@ func NewGameWith(seed int64, conf ...Configuration) (model.Game, error) {
 	d := sys.NewDecaySystem(g)
 	g.AddSystem(d)
 
+	r := sys.NewRespawnSystem(g)
+	g.AddSystem(r)
+
 	dayCycle := sys.NewDayCycleSystem(g, g.config.TotalDayCycleSeconds*constant.TicksPerSecond, g.config.DayTimeSeconds*constant.TicksPerSecond, gc.ColdFractionNightPerS, gc.ColdFractionDayPerS)
 	g.AddSystem(dayCycle)
 
@@ -307,13 +310,21 @@ func (g *game) addResourceEntity(e model.ResourceEntity) {
 
 		// Create a case for each System you want to use
 		case *sys.PhysicsSystem:
-			s.AddStaticBody(e.Basic(), e.Bodies()[0])
+			if e.Resource().Generator.OnDepletion == items.DepletionBehaviorRespawn {
+				s.AddEntity(e)
+			} else {
+				s.AddStaticBody(e.Basic(), e.Bodies()[0])
+			}
 		case *statuseffects.StatusEffectsSystem:
 			s.Add(e, e)
 		case *NetSystem:
 			s.AddEntity(e)
 		case *sys.UpdateSystem:
 			s.AddUpdateable(e)
+		case *sys.RespawnSystem:
+			if e.Resource().Generator.OnDepletion == items.DepletionBehaviorRespawn {
+				s.AddRespawnable(e)
+			}
 		}
 	}
 }
