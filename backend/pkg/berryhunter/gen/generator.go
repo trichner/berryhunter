@@ -16,7 +16,7 @@ const (
 	chunkSize float32 = 2.7
 )
 
-func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.ResourceEntity {
+func Generate(itemReg items.Registry, rnd *rand.Rand, radius float32) []model.ResourceEntity {
 	var steps int64 = int64(radius * 2 / chunkSize)
 	var maximumOffset float32 = 0.9 * chunkSize
 	var chunkQuarterSize float32 = chunkSize / 4.0
@@ -28,7 +28,7 @@ func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.Reso
 
 	for i := range entities {
 		e := &entities[i]
-		resourceItem, err := items.GetByName(e.resourceName)
+		resourceItem, err := itemReg.GetByName(e.resourceName)
 		if err != nil {
 			panic(fmt.Errorf("unknown ressource: %s", e.resourceName))
 		}
@@ -63,11 +63,15 @@ func Generate(items items.Registry, rnd *rand.Rand, radius float32) []model.Reso
 	ernd := rand.New(rand.NewSource(rnd.Int63()))
 	for _, e := range entities {
 		for range e.resourceItem.Generator.Fixed {
-			e, err := NewStaticEntityWithBody(NewRandomPos(radius), &e, ernd)
+			res, err := NewStaticEntityWithBody(NewRandomPos(radius), &e, ernd)
 			if err != nil {
 				panic(err)
 			}
-			resourceEntities = append(resourceEntities, e)
+			if res.Resource().Generator.OnDepletion == items.DepletionBehaviorRespawn {
+				// These fixed resources to not adhere to the resource grid, thus they need to collide with other resources
+				res.Bodies()[0].Shape().Mask = int(model.LayerMobStaticCollision | model.LayerBorderCollision)
+			}
+			resourceEntities = append(resourceEntities, res)
 			countEntities = countEntities + 1
 		}
 	}
