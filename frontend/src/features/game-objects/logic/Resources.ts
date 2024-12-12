@@ -217,6 +217,7 @@ export class Titanium extends Mineral {
 
     constructor(id: number, x: number, y: number, size: number) {
         super(id, x, y, size, Titanium.svg);
+        this.visibleOnMinimap = false;
     }
 
     createMinimapIcon() {
