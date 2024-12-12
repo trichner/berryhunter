@@ -39,7 +39,6 @@ func NewStaticEntityWithBody(p phy.Vec2f, body *staticEntityBody, rnd *rand.Rand
 	ball := phy.NewCircle(p, radius)
 	if resourceItem.Body.Solid {
 		ball.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerRessourceCollision | model.LayerViewportCollision)
-
 	} else {
 		ball.Shape().Layer = int(model.LayerRessourceCollision | model.LayerViewportCollision)
 	}

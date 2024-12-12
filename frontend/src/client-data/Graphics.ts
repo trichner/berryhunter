@@ -88,12 +88,6 @@ export const GraphicsConfig = {
             minSize: <number> 170,
             maxSize: <number> 170,
         },
-
-        titaniumShard: {
-            file: require('../features/game-objects/assets/mobs/titaniumShard.svg'),
-            minSize: <number> 35,
-            maxSize: <number> 35,
-        },
     },
 
     resources: {
@@ -108,11 +102,13 @@ export const GraphicsConfig = {
         mineral: {
             spotFile: require('../features/game-objects/assets/resources/stoneSpot.svg'),
             maxSize: <number> 142,
+            shardMaxSize: <number> 71,
 
             stoneFile: require('../features/game-objects/assets/resources/stone.svg'),
             bronzeFile: require('../features/game-objects/assets/resources/bronze.svg'),
             ironFile: require('../features/game-objects/assets/resources/iron.svg'),
             titaniumFile: require('../features/game-objects/assets/resources/titanium.svg'),
+            titaniumShardFile: require('../features/game-objects/assets/resources/titaniumShard.svg'),
         },
 
         berryBush: {
@@ -168,6 +164,11 @@ export const GraphicsConfig = {
                 color: 0x181818,
                 alpha: 1,
                 sizeFactor: 1.3,
+            },
+            titaniumShard: {
+                color: 0x181818,
+                alpha: 1,
+                sizeFactor: 2,
             },
             berryBush: {
                 color: 0xc20071,

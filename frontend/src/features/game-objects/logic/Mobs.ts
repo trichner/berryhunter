@@ -162,31 +162,3 @@ export class AngryMammoth extends Mob {
 
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(AngryMammoth, file('angryMammoth'), maxSize('angryMammoth'));
-
-export class TitaniumShard extends Mob {
-    static svg: PIXI.Texture;
-
-    constructor(id: number, x: number, y: number) {
-        super(id, Game.layers.resources.minerals, x, y,
-            randomInt(minSize('titaniumShard'), maxSize('titaniumShard')),
-            TitaniumShard.svg);
-    }
-
-    protected override createStatusEffects() {
-        return {
-            Damaged: StatusEffect.forDamaged(this.shape,
-                [{
-                    soundId: 'titanium-shard-hit',
-                    options: {
-                        volume: random(0.4, 0.5),
-                        speed: random(0.8, 0.9),
-                    },
-                    chanceToPlay: 1.0,
-                }]),
-            DamagedAmbient: undefined,
-        };
-    }
-}
-
-// noinspection JSIgnoredPromiseFromCall
-Preloading.registerGameObjectSVG(TitaniumShard, file('titaniumShard'), maxSize('titaniumShard'));

@@ -10,8 +10,8 @@
   },
   "resource": "Titanium",
   "body": {
-    "minRadius": 0.3,
-    "maxRadius": 0.45,
+    "minRadius": 0.15,
+    "maxRadius": 0.23,
     "solid": true
   },
   "generator": {

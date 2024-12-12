@@ -37,12 +37,19 @@ ResourceStockChangedEvent.subscribe((payload) => {
         case Resources.Stone.name:
         case Resources.Bronze.name:
         case Resources.Iron.name:
-        case Resources.Titanium.name:
             spatialAudio.play('mineral-hit-dull',
                 payload.position, {
                 speed: random(0.7, 1.3),
                 volume: random(1, 1.25),
             });
+            break;
+        case Resources.Titanium.name:
+        case Resources.TitaniumShard.name:
+            spatialAudio.play('titanium-shard-hit',
+                payload.position, {
+                    speed: random(0.8, 0.9),
+                    volume: random(0.4, 0.5),
+                });
             break;
         default:
             return;

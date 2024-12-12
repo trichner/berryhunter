@@ -1,7 +1,7 @@
 import {Container, Graphics, Sprite, Texture} from 'pixi.js';
 import {GameObject} from './_GameObject';
 import * as Preloading from '../../core/logic/Preloading';
-import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../../common/logic/Utils';
+import {deg2rad, isDefined, random, randomInt, randomRotation, TwoDimensional} from '../../common/logic/Utils';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
 import {GraphicsConfig} from '../../../client-data/Graphics';
 import {IGame} from '../../core/logic/IGame';
@@ -10,6 +10,7 @@ import {alea as SeedRandom} from 'seedrandom';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
 import {ISvgContainer} from '../../core/logic/ISvgContainer';
 import './ResourceJuice';
+import * as PIXI from 'pixi.js';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -133,12 +134,18 @@ export class Mineral extends Resource {
     static resourceSpot: ISvgContainer = {svg: undefined};
     resourceSpotTexture: Sprite;
 
-    constructor(id: number, x: number, y: number, size: number, svg: Texture) {
-        // Due to the shadow in the mineral graphics, those should not be randomly rotated
-        super(id, Game.layers.resources.minerals, x, y, size * 1.1 + GraphicsConfig.character.size, 0, svg);
+    constructor(id: number, x: number, y: number, size: number, svg: Texture, applyVisualPadding: boolean = true) {
+        super(id, Game.layers.resources.minerals, x, y,
+            applyVisualPadding ? size * 1.1 + GraphicsConfig.character.size : size, // Add some space so the character can get visually close to the collider
+            0, // Due to the shadow in the mineral graphics, those should not be randomly rotated
+            svg);
 
-        this.resourceSpotTexture = createInjectedSVG(Mineral.resourceSpot.svg, x, y, this.size * 0.7, this.rotation);
+        this.resourceSpotTexture = createInjectedSVG(Mineral.resourceSpot.svg, x, y, this.getResourceSpotSize(), this.rotation);
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
+    }
+
+    protected getResourceSpotSize() {
+        return this.size * 0.7;
     }
 
     hide() {
@@ -222,6 +229,29 @@ export class Titanium extends Mineral {
 
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(Titanium, mineralCfg.titaniumFile, mineralCfg.maxSize);
+
+export class TitaniumShard extends Mineral {
+    static svg: PIXI.Texture;
+
+    constructor(id: number, x: number, y: number, size: number) {
+        super(id, x, y, size - (GraphicsConfig.character.size * 0.5), TitaniumShard.svg);
+    }
+
+    protected getResourceSpotSize() {
+        return this.size * 0.9;
+    }
+
+    createMinimapIcon() {
+        const miniMapCfg = GraphicsConfig.miniMap.icons.titaniumShard;
+        return new Graphics()
+            .poly(TwoDimensional.makePolygon(this.size * miniMapCfg.sizeFactor, 3, true))
+            .fill({color: miniMapCfg.color, alpha: miniMapCfg.alpha});
+    }
+}
+
+// noinspection JSIgnoredPromiseFromCall
+Preloading.registerGameObjectSVG(TitaniumShard, mineralCfg.titaniumShardFile, mineralCfg.shardMaxSize);
+
 
 let berryBushCfg = GraphicsConfig.resources.berryBush;
 
