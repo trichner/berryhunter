@@ -5,13 +5,13 @@ import {registerPreload} from '../../core/logic/Preloading';
 
 OnDayTimeStartEvent.subscribe(() => {
     sound.play('rooster', {
-        volume: 0.5
+        volume: 0.3
     });
 });
 
 OnNightTimeStartEvent.subscribe(() => {
     sound.play('wolf', {
-        volume: 0.5
+        volume: 0.3
     });
 });
 
