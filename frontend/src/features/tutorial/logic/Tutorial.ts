@@ -101,6 +101,7 @@ function showNextStep() {
     if (stages.length <= currentStage) {
         // Last step was shown
         Account.tutorialCompleted = Date.now();
+        // Account.reset('tutorialActivated');
         return;
     }
 
@@ -140,19 +141,33 @@ let tutorialToggle: HTMLInputElement;
 
 StartScreenDomReadyEvent.subscribe(() => {
     tutorialToggle = document.getElementById('tutorialToggle') as HTMLInputElement;
-    tutorialToggle.checked = Account.tutorialCompleted === null;
+    tutorialToggle.addEventListener('change', () => {
+        Account.tutorialActivated = tutorialToggle.checked;
+    });
+
+    updateTutorialToggle();
 });
+
+function updateTutorialToggle() {
+    let activated = Account.tutorialActivated;
+    if (activated === null) { // No decision made yet
+        activated = Account.tutorialCompleted === null; // Activate if not yet completed
+    }
+    tutorialToggle.checked = activated;
+}
 
 PlayerCreatedEvent.subscribe(() => {
     currentStage = -1;
 
+    Account.tutorialActivated = tutorialToggle.checked;
     if (tutorialToggle.checked) {
         showNextStep();
     }
 });
 
 BeforeDeathEvent.subscribe(() => {
-    tutorialToggle.checked = Account.tutorialCompleted === null;
+    updateTutorialToggle();
+
     // Reset all tutorial elements on death
     let elements = rootElement.getElementsByClassName('tutorialStep');
     for (let i = 0; i < elements.length; i++) {

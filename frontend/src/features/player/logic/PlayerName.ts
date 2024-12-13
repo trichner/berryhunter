@@ -12,7 +12,7 @@ BackendSetupEvent.subscribe((backend: IBackend) => {
 const MAX_LENGTH = 20;
 
 function get() {
-    let playerName = {
+    const playerName = {
         name: Account.playerName,
         suggestion: NameGenerator.generate(),
         fromStorage: true,

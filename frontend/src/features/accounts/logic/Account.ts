@@ -4,16 +4,28 @@
  */
 
 export class Account {
-    static get playerName(): string {
-        return getString('playerName');
+    static reset(property: string) {
+        resetValue(property);
+    }
+
+    static get playerName(): string | null {
+        return getString('playerName', null);
     }
 
     static set playerName(playerName: string) {
         setValue('playerName', playerName);
     }
 
-    static get tutorialCompleted(): number {
-        return getInt('tutorialCompleted');
+    static get tutorialActivated(): boolean | null {
+        return getBoolean('tutorialActivated', null);
+    }
+
+    static set tutorialActivated(active: boolean) {
+        setValue('tutorialActivated', String(active));
+    }
+
+    static get tutorialCompleted(): number | null {
+        return getInt('tutorialCompleted', null);
     }
 
     static set tutorialCompleted(timeStamp: number) {
@@ -21,31 +33,31 @@ export class Account {
     }
 
     static get fullScreen(): boolean {
-        return getBoolean('fullScreen');
+        return getBoolean('fullScreen', false);
     }
 
     static set fullScreen(enabled: boolean) {
-        setValue('fullScreen', enabled);
+        setValue('fullScreen', String(enabled));
     }
 
-    static get rawGameSettings(): string {
-        return getString('gameSettings');
+    static get rawGameSettings(): string | null {
+        return getString('gameSettings', null);
     }
 
     static set rawGameSettings(json: string) {
         setValue('gameSettings', json);
     }
 
-    static get developPanelPositionX(): number {
-        return getInt('developPanel.position.x');
+    static get developPanelPositionX(): number | null {
+        return getInt('developPanel.position.x', null);
     }
 
     static set developPanelPositionX(x: number) {
         setValue('developPanel.position.x', String(x));
     }
 
-    static get developPanelPositionY(): number {
-        return getInt('developPanel.position.y');
+    static get developPanelPositionY(): number | null {
+        return getInt('developPanel.position.y', null);
     }
 
     static set developPanelPositionY(y: number) {
@@ -53,23 +65,36 @@ export class Account {
     }
 }
 
-function getString(key: string) {
-    return localStorage.getItem(key);
+function isSet(key: string) {
+    return localStorage.getItem(key) !== null;
 }
 
-function getBoolean(key: string): boolean {
-    return (getString(key) === 'true');
+function getString(key: string, defaultValue: string | null = ''): string | null {
+    const value = localStorage.getItem(key);
+    if (value === null) return defaultValue;
+    return value;
 }
 
-function getInt(key: string): number {
-    let value = getString(key);
-    return value === null ? null : parseInt(value, 10);
+function getBoolean(key: string, defaultValue: boolean | null = false): boolean | null {
+    const value = localStorage.getItem(key);
+    if (value === null) return defaultValue;
+    return (value === 'true');
 }
 
-function setValue(key: string, value: any) {
+function getInt(key: string, defaultValue: number | null = 0): number {
+    const value = localStorage.getItem(key);
+    if (value === null) return defaultValue;
+    return parseInt(value, 10);
+}
+
+function setValue(key: string, value: string) {
     if (value) {
         localStorage.setItem(key, value);
     } else {
         localStorage.removeItem(key);
     }
+}
+
+function resetValue(key: string) {
+    localStorage.removeItem(key);
 }
