@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/EngoEngine/ecs"
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
+	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
-	"github.com/trichner/berryhunter/pkg/berryhunter/model/resource"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
 	"math/rand"
 )
@@ -14,11 +14,11 @@ import (
 var _ = model.PlaceableEntity(&PlaceableResource{})
 var _ = model.ResourceEntity(&PlaceableResource{})
 
-type EmbeddedResource = resource.Resource
+type EmbeddedResource = model.ResourceEntity
 
 type PlaceableResource struct {
 	*Placeable
-	*EmbeddedResource
+	EmbeddedResource
 }
 
 /*
@@ -66,7 +66,13 @@ func NewPlaceableResource(item items.Item, resourceItem items.Item) (*PlaceableR
 	}
 
 	rnd := rand.New(rand.NewSource(int64(placeable.Basic().ID())))
-	res, err := resource.NewResource(placeable.Body, rnd, item, determineResourceEntityType(resourceItem))
+	res, err := gen.NewStaticEntityWithBody(
+		placeable.Position(),
+		gen.NewStaticEntityBody(
+			determineResourceEntityType(resourceItem),
+			item.Name,
+			&item),
+		rnd)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +97,15 @@ func (pr *PlaceableResource) Basic() ecs.BasicEntity {
 }
 
 func (pr *PlaceableResource) Bodies() model.Bodies {
-	return pr.Placeable.Bodies()
+	placeableBodies := pr.Placeable.Bodies()
+	resourceBodies := pr.EmbeddedResource.Bodies()
+
+	combinedBodies := make(model.Bodies, 0, len(placeableBodies)+len(resourceBodies))
+
+	combinedBodies = append(combinedBodies, placeableBodies...)
+	combinedBodies = append(combinedBodies, resourceBodies...)
+
+	return combinedBodies
 }
 
 func (pr *PlaceableResource) Type() model.EntityType {
