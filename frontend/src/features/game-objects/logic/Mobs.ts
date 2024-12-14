@@ -150,8 +150,8 @@ export class AngryMammoth extends Mob {
                 [{
                     soundId: 'mammothHit',
                     options: {
-                        volume: random(0.4, 0.5),
-                        speed: random(0.8, 0.9),
+                        volume: random(0.6, 0.7),
+                        speed: random(0.4, 0.5),
                     },
                     chanceToPlay: 0.3,
                 }]),
