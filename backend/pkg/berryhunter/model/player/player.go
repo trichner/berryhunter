@@ -1,6 +1,7 @@
 package player
 
 import (
+	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"log"
 
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
@@ -118,14 +119,25 @@ func (p *player) CurrentAction() model.PlayerAction {
 	return p.ongoingAction
 }
 
-func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
-	h := p.PlayerVitalSigns.Health
-
-	dmgFraction := item.Factors.Damage // * vulnerability
-	if dmgFraction > 0 {
-		p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)
-		p.StatusEffects().Add(model.StatusEffectDamaged)
+func (p *player) takeDamage(damage float32, s model.StatusEffect) {
+	if p.IsGod() {
+		return
 	}
+
+	dmgFraction := damage // * vulnerability
+	if dmgFraction > 0 {
+		h := p.PlayerVitalSigns.Health
+		p.PlayerVitalSigns.Health = h.SubFraction(dmgFraction)
+		p.StatusEffects().Add(s)
+	}
+}
+
+func (p *player) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
+	p.takeDamage(item.Factors.Damage, model.StatusEffectDamaged)
+}
+
+func (p *player) MobTouches(e model.MobEntity, factors mobs.Factors) {
+	p.takeDamage(factors.DamageFraction, model.StatusEffectDamagedAmbient)
 }
 
 func (p *player) Name() string {

@@ -1,6 +1,7 @@
 package mob
 
 import (
+	"fmt"
 	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"log"
 	"math"
@@ -24,6 +25,12 @@ var types = func() map[string]model.EntityType {
 	return t
 }()
 
+var namesEnumDamages = map[string]model.CollisionLayer{
+	"Player":    model.LayerPlayerCollision,
+	"Placeable": model.LayerPlaceableCollision,
+	"All":       model.LayerPlayerCollision | model.LayerPlaceableCollision,
+}
+
 func NewMob(d *mobs.MobDefinition, rndPos bool, radius float32) *Mob {
 	entityType, ok := types[d.Name]
 	if !ok {
@@ -36,7 +43,14 @@ func NewMob(d *mobs.MobDefinition, rndPos bool, radius float32) *Mob {
 
 	damageAura := phy.NewCircle(phy.VEC2F_ZERO, d.Body.DamageRadius)
 	damageAura.Shape().Layer = int(model.LayerNoneCollision)
-	damageAura.Shape().Mask = int(model.LayerPlayerCollision)
+	damageAuraMask := namesEnumDamages["Player"]
+	if d.Body.Damages != "" {
+		damageAuraMask, ok = namesEnumDamages[d.Body.Damages]
+		if !ok {
+			panic(fmt.Sprintf("Can not convert damages: %s to a collision mask for %s.", d.Body.Damages, d.Name))
+		}
+	}
+	damageAura.Shape().Mask = int(damageAuraMask)
 	damageAura.Shape().IsSensor = true
 
 	base := model.NewBaseEntity(mobBody, entityType)
@@ -102,17 +116,18 @@ func (m *Mob) MobDefinition() *mobs.MobDefinition {
 func (m *Mob) Update(dt float32) bool {
 	auraCollisions := m.damageAura.Collisions()
 	for c := range auraCollisions {
-		p, ok := c.Shape().UserData.(model.PlayerEntity)
-		if ok {
-			if p.IsGod() {
-				continue
-			}
-			if m.definition.Factors.DamageFraction != 0 {
-				h := p.VitalSigns().Health.SubFraction(m.definition.Factors.DamageFraction)
-				p.VitalSigns().Health = h
-				p.StatusEffects().Add(model.StatusEffectDamagedAmbient)
-			}
+		usr := c.Shape().UserData
+		if usr == nil {
+			log.Printf("Missing UserData!")
+			continue
 		}
+
+		r, ok := usr.(model.Interacter)
+		if !ok {
+			log.Printf("Non conformant UserData: %T", usr)
+			continue
+		}
+		r.MobTouches(m, m.definition.Factors)
 	}
 
 	// TODO:
@@ -170,24 +185,33 @@ func (m *Mob) Health() vitals.VitalSign {
 	return m.health
 }
 
-func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
-	log.Printf("🎯")
-
+func (m *Mob) takeDamage(damage float32, s model.StatusEffect) {
 	vulnerability := m.definition.Factors.Vulnerability
 	if vulnerability == 0 {
 		vulnerability = 1
 	}
 
-	dmgFraction := item.Factors.Damage * vulnerability
+	dmgFraction := damage * vulnerability
 	if dmgFraction > 0 {
 		m.health = m.health.SubFraction(dmgFraction)
-		m.StatusEffects().Add(model.StatusEffectDamaged)
+		m.StatusEffects().Add(s)
+	}
+}
 
-		// is it dead?
-		if m.health <= 0 {
-			for _, i := range m.definition.Drops {
-				p.Inventory().AddItem(i)
-			}
+func (m *Mob) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
+	log.Printf("🎯")
+
+	m.takeDamage(item.Factors.Damage, model.StatusEffectDamaged)
+	// is it dead?
+	if m.health <= 0 {
+		for _, i := range m.definition.Drops {
+			p.Inventory().AddItem(i)
 		}
 	}
+}
+
+func (m *Mob) MobTouches(e model.MobEntity, factors mobs.Factors) {
+	log.Printf("👉")
+
+	m.takeDamage(factors.DamageFraction, model.StatusEffectDamagedAmbient)
 }

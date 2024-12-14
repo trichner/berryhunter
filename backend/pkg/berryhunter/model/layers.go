@@ -16,5 +16,6 @@ const (
 	LayerViewportCollision
 
 	LayerMobStaticCollision
-	LayerPlayerCollision // layer with all players on
+	LayerPlayerCollision    // layer with all players on
+	LayerPlaceableCollision // layer with all placeables on
 )

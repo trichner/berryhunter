@@ -2,6 +2,7 @@ package placeable
 
 import (
 	"fmt"
+	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"log"
 	"math"
 
@@ -75,9 +76,16 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 
 	body := phy.NewCircle(phy.VEC2F_ZERO, item.Body.Radius)
 	if item.Body.Solid {
-		body.Shape().Layer = int(model.LayerPlayerStaticCollision | model.LayerMobStaticCollision | model.LayerActionCollision | model.LayerViewportCollision)
+		body.Shape().Layer =
+			int(model.LayerPlayerStaticCollision |
+				model.LayerMobStaticCollision |
+				model.LayerActionCollision |
+				model.LayerViewportCollision |
+				model.LayerPlaceableCollision)
 	} else {
-		body.Shape().Layer = int(model.LayerViewportCollision)
+		body.Shape().Layer =
+			int(model.LayerViewportCollision |
+				model.LayerPlaceableCollision)
 		body.Shape().IsSensor = true
 	}
 
@@ -117,16 +125,27 @@ func NewPlaceable(item items.Item) (*Placeable, error) {
 	return p, nil
 }
 
-func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
-	log.Printf("💥")
+func (p *Placeable) takeDamage(damage float32, s model.StatusEffect) {
 	vulnerability := p.item.Factors.Vulnerability
 	if vulnerability == 0 {
 		vulnerability = 1
 	}
 
-	dmgFraction := item.Factors.StructureDamage * vulnerability
+	dmgFraction := damage * vulnerability
 	if dmgFraction > 0 {
 		p.health = p.health.SubFraction(dmgFraction)
-		p.StatusEffects().Add(model.StatusEffectDamaged)
+		p.StatusEffects().Add(s)
 	}
+}
+
+func (p *Placeable) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
+	log.Printf("💥")
+
+	p.takeDamage(item.Factors.StructureDamage, model.StatusEffectDamaged)
+}
+
+func (p *Placeable) MobTouches(e model.MobEntity, factors mobs.Factors) {
+	log.Printf("👉")
+
+	p.takeDamage(factors.StructureDamageFraction, model.StatusEffectDamagedAmbient)
 }

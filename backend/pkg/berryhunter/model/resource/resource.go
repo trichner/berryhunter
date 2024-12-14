@@ -2,6 +2,7 @@ package resource
 
 import (
 	"fmt"
+	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"log"
 	"math"
 	"math/rand"
@@ -164,6 +165,10 @@ func (r *Resource) PlayerHitsWith(p model.PlayerEntity, item items.Item) {
 		return
 	}
 	p.Inventory().AddItem(items.NewItemStack(r.stock.Item, y))
+}
+
+func (r *Resource) MobTouches(e model.MobEntity, factors mobs.Factors) {
+	// Nothing yet
 }
 
 func (r *Resource) NeedsRespawn() bool {

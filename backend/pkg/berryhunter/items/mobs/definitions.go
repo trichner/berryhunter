@@ -25,16 +25,18 @@ import (
 type MobID uint64
 
 type Factors struct {
-	Vulnerability  float32
-	DamageFraction float32
-	Speed          float32
-	DeltaPhi       float32
-	TurnRate       float32
+	Vulnerability           float32
+	DamageFraction          float32
+	Speed                   float32
+	DeltaPhi                float32
+	TurnRate                float32
+	StructureDamageFraction float32
 }
 
 type Body struct {
 	Radius       float32
 	DamageRadius float32
+	Damages      string
 }
 
 type RespawnBehavior int
@@ -73,11 +75,12 @@ type mobDefinition struct {
 	Type string `json:"type"`
 
 	Factors struct {
-		Vulnerability  float32 `json:"vulnerability"`
-		DamageFraction float32 `json:"damageFraction"`
-		Speed          float32 `json:"speed"`
-		DeltaPhi       float32 `json:"deltaPhi"`
-		TurnRate       float32 `json:"turnRate"`
+		Vulnerability           float32 `json:"vulnerability"`
+		DamageFraction          float32 `json:"damageFraction"`
+		StructureDamageFraction float32 `json:"structureDamageFraction"`
+		Speed                   float32 `json:"speed"`
+		DeltaPhi                float32 `json:"deltaPhi"`
+		TurnRate                float32 `json:"turnRate"`
 	} `json:"factors"`
 
 	Drops []struct {
@@ -88,6 +91,7 @@ type mobDefinition struct {
 	Body struct {
 		Radius       float32 `json:"radius"`
 		DamageRadius float32 `json:"damageRadius"`
+		Damages      string  `json:"damages"`
 	} `json:"body"`
 
 	Generator struct {
@@ -120,16 +124,18 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 		Name: m.Name,
 		Type: m.Type,
 		Factors: Factors{
-			Vulnerability:  m.Factors.Vulnerability,
-			DamageFraction: m.Factors.DamageFraction,
-			Speed:          m.Factors.Speed,
-			DeltaPhi:       m.Factors.DeltaPhi,
-			TurnRate:       m.Factors.TurnRate,
+			Vulnerability:           m.Factors.Vulnerability,
+			StructureDamageFraction: m.Factors.StructureDamageFraction,
+			DamageFraction:          m.Factors.DamageFraction,
+			Speed:                   m.Factors.Speed,
+			DeltaPhi:                m.Factors.DeltaPhi,
+			TurnRate:                m.Factors.TurnRate,
 		},
 		Drops: make(Drops, 0, 1),
 		Body: Body{
 			Radius:       m.Body.Radius,
 			DamageRadius: m.Body.DamageRadius,
+			Damages:      m.Body.Damages,
 		},
 		Generator: Generator{
 			Weight:          m.Generator.Weight,

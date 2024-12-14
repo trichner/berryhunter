@@ -6,6 +6,7 @@ import (
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
+	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
 	"math/rand"
@@ -49,6 +50,10 @@ func (pr *PlaceableResource) StatusEffects() *model.StatusEffects {
 
 func (pr *PlaceableResource) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	pr.Placeable.PlayerHitsWith(player, item)
+}
+
+func (pr *PlaceableResource) MobTouches(e model.MobEntity, factors mobs.Factors) {
+	pr.Placeable.MobTouches(e, factors)
 }
 
 func (pr *PlaceableResource) Item() items.Item {
