@@ -13,7 +13,6 @@ type Choice struct {
 func NewWeightedChoice(choices []Choice) *WeightedChoice {
 	wc := &WeightedChoice{}
 
-	totals := []int{}
 	runningTotal := 0
 
 	for _, w := range choices {
@@ -22,11 +21,10 @@ func NewWeightedChoice(choices []Choice) *WeightedChoice {
 		}
 
 		runningTotal += w.Weight
-		totals = append(totals, runningTotal)
+		wc.totals = append(wc.totals, runningTotal)
 		wc.choices = append(wc.choices, w)
 	}
 
-	wc.totals = totals
 	wc.runningTotal = runningTotal
 
 	return wc
@@ -38,11 +36,21 @@ type WeightedChoice struct {
 	runningTotal int
 }
 
-func (wc *WeightedChoice) Choose(rand *rand.Rand) interface{} {
+func (wc *WeightedChoice) Choose(rnd *rand.Rand) interface{} {
 	if wc.runningTotal == 0 {
 		return nil
 	}
-	rnd := rand.Intn(wc.runningTotal)
-	i := sort.Search(len(wc.totals), func(i int) bool { return wc.totals[i] >= rnd })
+	r := rand.Intn(wc.runningTotal)
+
+	//for _, c := range wc.choices {
+	//	r -= c.Weight
+	//	if r < 0 {
+	//		return c.Choice
+	//	}
+	//}
+	//
+	//panic("internal error - code should not reach this point")
+
+	i := sort.Search(len(wc.totals), func(i int) bool { return wc.totals[i] >= r })
 	return wc.choices[i].Choice
 }
