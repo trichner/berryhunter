@@ -1,68 +1,71 @@
+export interface IVector {
+    x: number;
+    y: number;
+}
+
 export class Vector {
     x: number;
     y: number;
 
     static zero = new Vector();
 
-    constructor(x?, y?) {
-
+    constructor(x: number = 0, y: number = 0) {
         this.x = x || 0;
         this.y = y || 0;
-
     }
 
-    static clone(vector) {
+    static clone(vector: IVector): Vector {
         return new Vector(vector.x, vector.y);
     }
 
-    set(x, y) {
+    set(x: number, y: number): Vector {
         this.x = x;
         this.y = y;
         return this;
     }
 
-    copy(v) {
+    copy(v: IVector): Vector {
         this.x = v.x;
         this.y = v.y;
         return this;
     }
 
-    clear() {
+    clear(): Vector {
         this.x = 0;
         this.y = 0;
         return this;
     }
 
-    clone() {
+    clone(): Vector {
         return new Vector(this.x, this.y);
     }
 
-    add(v) {
+    add(v: IVector): Vector {
         this.x += v.x;
         this.y += v.y;
         return this;
     }
 
 
-    sub(v) {
+    sub(v: IVector): Vector {
         this.x -= v.x;
         this.y -= v.y;
         return this;
     }
 
-    multiply(v) {
+    multiply(v: IVector): Vector {
         this.x *= v.x;
         this.y *= v.y;
         return this;
     }
 
-    multiplyScalar(s) {
+    multiplyScalar(s: number): Vector {
         this.x *= s;
         this.y *= s;
         return this;
     }
 
-    divideScalar(s) {
+    divideScalar(s: number): Vector {
         if (s) {
             this.x /= s;
             this.y /= s;
@@ -72,37 +75,37 @@ export class Vector {
         return this;
     }
 
-    negate() {
+    negate(): Vector {
         return this.multiplyScalar(-1);
     }
 
-    dot(v) {
+    dot(v: IVector): number {
         return this.x * v.x + this.y * v.y;
     }
 
-    lengthSquared() {
+    lengthSquared(): number {
         return this.x * this.x + this.y * this.y;
     }
 
-    length() {
+    length(): number {
         return Math.sqrt(this.lengthSquared());
     }
 
-    normalize() {
+    normalize(): Vector {
         return this.divideScalar(this.length());
     }
 
-    distanceTo(v) {
+    distanceTo(v: IVector): number {
         return Math.sqrt(this.distanceToSquared(v));
     }
 
-    distanceToSquared(v) {
+    distanceToSquared(v: IVector): number {
         let dx = this.x - v.x,
             dy = this.y - v.y;
         return dx * dx + dy * dy;
     }
 
-    limit(max) {
+    limit(max: number): Vector {
         const mSq = this.lengthSquared();
         if (mSq > max * max) {
             this.divideScalar(Math.sqrt(mSq)); //normalize it
@@ -111,31 +114,29 @@ export class Vector {
         return this;
     }
 
-    setLength(l) {
+    setLength(l: number): Vector {
         return this.normalize().multiplyScalar(l);
     }
 
-    equals(v, eps) {
-        eps = (typeof eps === 'undefined') ? 0.0001 : eps;
+    equals(v: IVector, eps: number = 0.0001): boolean {
         return (this.distanceTo(v) < eps);
     }
 
-    lerp(v, t) {
+    lerp(v: IVector, t: number): Vector {
         let x = (v.x - this.x) * t + this.x;
         let y = (v.y - this.y) * t + this.y;
         return this.set(x, y);
     }
 
-    isZero(eps) {
-        eps = (typeof eps === 'undefined') ? 0.0001 : eps;
+    isZero(eps: number = 0.0001): boolean {
         return (this.length() < eps);
     }
 
-    toString() {
+    toString(): string {
         return this.x + ',' + this.y;
     }
 
-    toObject() {
+    toObject(): IVector {
         return {x: this.x, y: this.y};
     }
 }
