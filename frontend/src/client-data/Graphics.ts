@@ -64,7 +64,15 @@ export const GraphicsConfig = {
         },
     },
 
-    mobs: {
+    mobs: <{
+        [key: string]:
+            {
+                file: string,
+                minSize: number,
+                maxSize: number,
+                anchor?: {x: number, y: number}
+            }
+    }>{
         dodo: {
             file: require('../features/game-objects/assets/mobs/dodo.svg'),
             minSize: <number> 35,
@@ -81,12 +89,14 @@ export const GraphicsConfig = {
             file: require('../features/game-objects/assets/mobs/mammoth.svg'),
             minSize: <number> 85,
             maxSize: <number> 100,
+            anchor: {x: 0.5, y: 0.4},
         },
 
         angryMammoth: {
             file: require('../features/game-objects/assets/mobs/angryMammoth.svg'),
-            minSize: <number> 170,
-            maxSize: <number> 170,
+            minSize: <number> 340,
+            maxSize: <number> 340,
+            anchor: {x: 0.5, y: 0.4},
         },
     },
 

@@ -20,6 +20,7 @@ export interface IGameLayers {
     characters: Container,
     mobs: Record<string, Container>,
     resources: Record<string, Container>,
+    bossMobs: Container,
     characterAdditions: Record<string, Container>,
     overlays: Record<string, Container>,
 }

@@ -38,8 +38,16 @@ func NewMob(d *mobs.MobDefinition, rndPos bool, radius float32) *Mob {
 	}
 
 	mobBody := phy.NewCircle(phy.VEC2F_ZERO, d.Body.Radius)
-	mobBody.Shape().Layer = int(model.LayerViewportCollision | model.LayerActionCollision)
-	mobBody.Shape().Mask = int(model.LayerMobStaticCollision | model.LayerBorderCollision)
+	if d.Body.CollisionLayer <= 0 {
+		mobBody.Shape().Layer = int(model.LayerViewportCollision | model.LayerActionCollision)
+	} else {
+		mobBody.Shape().Layer = d.Body.CollisionLayer
+	}
+	if d.Body.CollisionMask <= 0 {
+		mobBody.Shape().Mask = int(model.LayerMobStaticCollision | model.LayerBorderCollision)
+	} else {
+		mobBody.Shape().Mask = d.Body.CollisionMask
+	}
 
 	damageAura := phy.NewCircle(phy.VEC2F_ZERO, d.Body.DamageRadius)
 	damageAura.Shape().Layer = int(model.LayerNoneCollision)

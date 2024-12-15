@@ -34,9 +34,11 @@ type Factors struct {
 }
 
 type Body struct {
-	Radius       float32
-	DamageRadius float32
-	Damages      string
+	Radius         float32
+	CollisionLayer int
+	CollisionMask  int
+	DamageRadius   float32
+	Damages        string
 }
 
 type RespawnBehavior int
@@ -89,9 +91,11 @@ type mobDefinition struct {
 	} `json:"drops"`
 
 	Body struct {
-		Radius       float32 `json:"radius"`
-		DamageRadius float32 `json:"damageRadius"`
-		Damages      string  `json:"damages"`
+		Radius         float32 `json:"radius"`
+		CollisionLayer int     `json:"collisionLayer"`
+		CollisionMask  int     `json:"collisionMask"`
+		DamageRadius   float32 `json:"damageRadius"`
+		Damages        string  `json:"damages"`
 	} `json:"body"`
 
 	Generator struct {
@@ -133,9 +137,11 @@ func (m *mobDefinition) mapToMobDefinition(r items.Registry) (*MobDefinition, er
 		},
 		Drops: make(Drops, 0, 1),
 		Body: Body{
-			Radius:       m.Body.Radius,
-			DamageRadius: m.Body.DamageRadius,
-			Damages:      m.Body.Damages,
+			Radius:         m.Body.Radius,
+			CollisionLayer: m.Body.CollisionLayer,
+			CollisionMask:  m.Body.CollisionMask,
+			DamageRadius:   m.Body.DamageRadius,
+			Damages:        m.Body.Damages,
 		},
 		Generator: Generator{
 			Weight:          m.Generator.Weight,

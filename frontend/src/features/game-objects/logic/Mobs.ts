@@ -1,3 +1,4 @@
+import {IVector} from "../../core/logic/Vector";
 import {GameObject} from './_GameObject';
 import * as Preloading from '../../core/logic/Preloading';
 import {isUndefined, random, randomInt} from '../../common/logic/Utils';
@@ -21,13 +22,25 @@ function minSize(mob: keyof typeof GraphicsConfig.mobs) {
     return GraphicsConfig.mobs[mob].minSize;
 }
 
+function anchor(mob: keyof typeof GraphicsConfig.mobs) {
+    return GraphicsConfig.mobs[mob].anchor;
+}
+
 function file(mob: keyof typeof GraphicsConfig.mobs) {
     return GraphicsConfig.mobs[mob].file;
 }
 
 export class Mob extends GameObject {
-    constructor(id: number, gameLayer: PIXI.Container, x: number, y: number, size: number, svg: PIXI.Texture) {
-        super(id, gameLayer, x, y, size, 0, svg);
+    constructor(
+        id: number,
+        gameLayer: PIXI.Container,
+        x: number,
+        y: number,
+        size: number,
+        svg: PIXI.Texture,
+        anchor?: IVector
+    ) {
+        super(id, gameLayer, x, y, size, 0, svg, anchor);
         this.isMovable = true;
         this.visibleOnMinimap = false;
     }
@@ -113,7 +126,7 @@ export class Mammoth extends Mob {
     constructor(id: number, x: number, y: number) {
         super(id, Game.layers.mobs.mammoth, x, y,
             randomInt(minSize('mammoth'), maxSize('mammoth')),
-            Mammoth.svg);
+            Mammoth.svg, anchor('mammoth'));
     }
 
     protected override createStatusEffects() {
@@ -139,9 +152,9 @@ export class AngryMammoth extends Mob {
     static svg: PIXI.Texture;
 
     constructor(id: number, x: number, y: number) {
-        super(id, Game.layers.mobs.mammoth, x, y,
+        super(id, Game.layers.bossMobs, x, y,
             randomInt(minSize('angryMammoth'), maxSize('angryMammoth')),
-            AngryMammoth.svg);
+            AngryMammoth.svg, anchor('angryMammoth'));
     }
 
     protected override createStatusEffects() {

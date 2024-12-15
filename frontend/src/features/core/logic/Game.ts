@@ -143,6 +143,7 @@ export class Game implements IGame {
                 minerals: createNamedContainer('minerals'),
                 trees: createNamedContainer('trees'),
             },
+            bossMobs: createNamedContainer('bossMobs'),
             characterAdditions: {
                 craftProgress: createNamedContainer('craftProgress'),
                 chatMessages: createNamedContainer('chatMessages'),
@@ -197,6 +198,9 @@ export class Game implements IGame {
             this.layers.resources.minerals,
             this.layers.resources.trees,
         );
+
+        // Boss mobs overlaying resources
+        this.cameraGroup.addChild(this.layers.bossMobs);
 
         // Character Additions
         this.cameraGroup.addChild(
@@ -347,7 +351,7 @@ export class Game implements IGame {
             .fill(GraphicsConfig.landColor));
 
         this.map = new GameMapWithBackend(this, gameInformation.mapRadius);
-        DayCycle.setup(gameInformation.totalDayCycleTicks, gameInformation.dayTimeTicks, 
+        DayCycle.setup(gameInformation.totalDayCycleTicks, gameInformation.dayTimeTicks,
             [
                 this.layers.terrain.water,
                 this.layers.terrain.ground,

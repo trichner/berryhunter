@@ -18,6 +18,8 @@
   ],
   "body": {
     "radius": 0.95,
+    "collisionLayer": 67,
+    "collisionMask": 32,
     "damageRadius": 0.84,
     "damages": "All"
   },

@@ -1,7 +1,7 @@
 import {Container, Graphics, Texture} from 'pixi.js';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
-import {Vector} from '../../core/logic/Vector';
+import {IVector, Vector} from '../../core/logic/Vector';
 import {isDefined, isUndefined, nearlyEqual, TwoDimensional} from '../../common/logic/Utils';
 import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
 import {radians} from "../../common/logic/Types";
@@ -35,13 +35,22 @@ export class GameObject {
      */
     minimapIcon: Container;
 
-    constructor(id: number, gameLayer: Container, x: number, y: number, size: number, rotation: number, svg: Texture) {
+    constructor(
+        id: number,
+        gameLayer: Container,
+        x: number,
+        y: number,
+        size: number,
+        rotation: number,
+        svg: Texture,
+        anchor?: IVector
+    ) {
         this.id = id;
         this.layer = gameLayer;
         this.size = size;
         this.rotation = rotation;
 
-        this.shape = this.initShape(svg, x, y, size, rotation);
+        this.shape = this.initShape(svg, x, y, size, rotation, anchor);
         this.statusEffects = this.createStatusEffects();
         this.show();
     }
@@ -55,9 +64,9 @@ export class GameObject {
         }
     };
 
-    initShape(svg: Texture, x: number, y: number, size: number, rotation: number): Container {
+    initShape(svg: Texture, x: number, y: number, size: number, rotation: number, anchor?: IVector): Container {
         if (svg) {
-            return createInjectedSVG(svg, x, y, size, rotation);
+            return createInjectedSVG(svg, x, y, size, rotation, anchor);
         } else {
             return this.createShape(x, y, size, rotation);
         }
