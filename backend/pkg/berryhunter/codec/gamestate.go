@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/google/flatbuffers/go"
+
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
@@ -192,6 +193,10 @@ func EntitiesMarshalFlatbuf(entities []model.Entity, builder *flatbuffers.Builde
 		case model.MobEntity:
 			marshalled = MobEntityFlatbufMarshal(v, builder)
 			eType = BerryhunterApi.AnyEntityMob
+		case model.PlaceableResourceEntity:
+			// Placeable resources are handled as resources for the client
+			marshalled = ResourceEntityFlatbufMarshal(v, builder)
+			eType = BerryhunterApi.AnyEntityResource
 		case model.PlaceableEntity:
 			marshalled = PlaceableEntityFlatbufMarshal(v, builder)
 			eType = BerryhunterApi.AnyEntityPlaceable

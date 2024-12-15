@@ -2,7 +2,6 @@ package core
 
 import (
 	"fmt"
-	"github.com/trichner/berryhunter/pkg/berryhunter/model/placeable"
 	"log/slog"
 	"math/rand"
 	"net/http"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/EngoEngine/ecs"
 	flatbuffers "github.com/google/flatbuffers/go"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/cfg"
 	"github.com/trichner/berryhunter/pkg/berryhunter/codec"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
@@ -206,12 +206,14 @@ func (g *game) RemoveEntity(e ecs.BasicEntity) {
 func (g *game) AddEntity(e model.BasicEntity) {
 	g.entities[e.Basic().ID()] = e
 
+	// If you add something here, you might want to edit
+	// code.gamestate.EntitiesMarshalFlatbuf as well
 	switch v := e.(type) {
 	case model.PlayerEntity:
 		g.addPlayer(v)
 	case model.MobEntity:
 		g.addMobEntity(v)
-	case *placeable.PlaceableResource:
+	case model.PlaceableResourceEntity:
 		g.addPlaceableResourceEntity(v)
 	case model.ResourceEntity:
 		g.addResourceEntity(v)
@@ -329,7 +331,7 @@ func (g *game) addResourceEntity(e model.ResourceEntity) {
 	}
 }
 
-func (g *game) addPlaceableResourceEntity(p *placeable.PlaceableResource) {
+func (g *game) addPlaceableResourceEntity(p model.PlaceableResourceEntity) {
 	// Loop over all Systems
 	for _, system := range g.Systems() {
 		// Use a type-switch to figure out which System is which

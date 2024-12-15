@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/EngoEngine/ecs"
+
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/vitals"
@@ -77,6 +78,11 @@ type ResourceEntity interface {
 	Update(dt float32)
 	Stock() *ResourceStock
 	Resource() items.Item
+}
+
+type PlaceableResourceEntity interface {
+	PlaceableEntity
+	ResourceEntity
 }
 
 // MobEnity is a mob that usually comes with a mob definition

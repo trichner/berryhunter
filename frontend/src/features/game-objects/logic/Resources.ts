@@ -65,6 +65,8 @@ export class Resource extends GameObject {
 
     createStatusEffects() {
         return {
+            Damaged: StatusEffect.forDamaged(this.shape),
+            DamagedAmbient: StatusEffect.forDamagedOverTime(this.shape),
             Yielded: StatusEffect.forYielded(this.shape),
         };
     }

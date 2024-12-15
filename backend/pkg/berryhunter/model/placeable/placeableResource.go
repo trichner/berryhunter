@@ -2,27 +2,34 @@ package placeable
 
 import (
 	"fmt"
+	"math/rand"
+
 	"github.com/EngoEngine/ecs"
+
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/phy"
-	"math/rand"
 )
 
-var _ = model.PlaceableEntity(&PlaceableResource{})
-var _ = model.ResourceEntity(&PlaceableResource{})
-
-type EmbeddedResource = model.ResourceEntity
-
-type PlaceableResource struct {
-	*Placeable
-	EmbeddedResource
-}
+/*
+ * This whole class/approach needs to be re-thought.
+ * Yes, it works. But in pretty wonky, non-transferable way.
+ * What should be an entity that behaves both as a placeable and a resource
+ * we now have this unholy hybrid that suffers from the badly defined
+ * behaviors of both entity types (e.g. what happens when you hit
+ * an entity with an item that has both structureDamage and yield?)
+ *
+ * For the very least one of the combined entities should be completely
+ * hidden away from other systems (I think) and the now container
+ * entity should to all the sensible relaying.
+ */
 
 /*
+ * PREVIOUS THOUGHTS/CONSIDERATIONS
+ *
  * There are various overlaps of Placeable and Resource.
  * Rule of thumb: This entity is primarily a Placeable
  * and secondly a resource. Thus, everything that is shared
@@ -30,6 +37,15 @@ type PlaceableResource struct {
  * by the placeable, while the resource is doing its unique
  * resource behavior.
  */
+
+var _ = model.PlaceableResourceEntity(&PlaceableResource{})
+
+type EmbeddedResource = model.ResourceEntity
+
+type PlaceableResource struct {
+	*Placeable
+	EmbeddedResource
+}
 
 func (pr *PlaceableResource) Update(dt float32) {
 	pr.Placeable.Update(dt)
@@ -45,15 +61,27 @@ func (pr *PlaceableResource) HeatRadiation() *model.HeatRadiator {
 }
 
 func (pr *PlaceableResource) StatusEffects() *model.StatusEffects {
-	return pr.Placeable.StatusEffects() // Can use either Placeable or Resource effects
+	combinedEffects := model.NewStatusEffects()
+
+	for _, effect := range pr.EmbeddedResource.StatusEffects().Effects() {
+		combinedEffects.Add(effect)
+	}
+
+	for _, effect := range pr.Placeable.StatusEffects().Effects() {
+		combinedEffects.Add(effect)
+	}
+
+	return &combinedEffects
 }
 
 func (pr *PlaceableResource) PlayerHitsWith(player model.PlayerEntity, item items.Item) {
 	pr.Placeable.PlayerHitsWith(player, item)
+	pr.EmbeddedResource.PlayerHitsWith(player, item)
 }
 
 func (pr *PlaceableResource) MobTouches(e model.MobEntity, factors mobs.Factors) {
 	pr.Placeable.MobTouches(e, factors)
+	pr.EmbeddedResource.MobTouches(e, factors)
 }
 
 func (pr *PlaceableResource) Item() items.Item {
@@ -82,10 +110,15 @@ func NewPlaceableResource(item items.Item, resourceItem items.Item) (*PlaceableR
 		return nil, err
 	}
 
-	return &PlaceableResource{
+	p := &PlaceableResource{
 		Placeable:        placeable,
 		EmbeddedResource: res,
-	}, nil
+	}
+	// We technically have 2 entities - make sure only one holds the combined
+	// entity as user data and the other does not communicate the inner, wrapped entity
+	placeable.Body.Shape().UserData = nil
+	res.Bodies()[0].Shape().UserData = p
+	return p, nil
 }
 
 func determineResourceEntityType(stockItem items.Item) model.EntityType {
@@ -98,7 +131,7 @@ func determineResourceEntityType(stockItem items.Item) model.EntityType {
 }
 
 func (pr *PlaceableResource) Basic() ecs.BasicEntity {
-	return pr.Placeable.Basic()
+	return pr.EmbeddedResource.Basic()
 }
 
 func (pr *PlaceableResource) Bodies() model.Bodies {
@@ -114,7 +147,7 @@ func (pr *PlaceableResource) Bodies() model.Bodies {
 }
 
 func (pr *PlaceableResource) Type() model.EntityType {
-	return pr.Placeable.Type()
+	return pr.EmbeddedResource.Type()
 }
 
 func (pr *PlaceableResource) Position() phy.Vec2f {
@@ -123,6 +156,7 @@ func (pr *PlaceableResource) Position() phy.Vec2f {
 
 func (pr *PlaceableResource) SetPosition(p phy.Vec2f) {
 	pr.Placeable.SetPosition(p)
+	pr.EmbeddedResource.SetPosition(p)
 }
 
 func (pr *PlaceableResource) AABB() model.AABB {
