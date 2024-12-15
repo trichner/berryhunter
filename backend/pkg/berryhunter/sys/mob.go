@@ -2,9 +2,12 @@ package sys
 
 import (
 	"log"
+	"math"
 	"math/rand"
 
 	"github.com/EngoEngine/ecs"
+
+	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/mob"
@@ -52,6 +55,9 @@ func (n *MobSystem) respawnMob(d *mobs.MobDefinition) {
 		if randomMob != nil {
 			m.SetPosition(randomMob.Position())
 			m.SetAngle(randomMob.Angle())
+		} else {
+			m.SetPosition(gen.NewRandomPos(n.game.Radius()))
+			m.SetAngle(n.rnd.Float32() * 2 * math.Pi)
 		}
 	}
 

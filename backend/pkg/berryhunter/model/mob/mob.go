@@ -2,12 +2,12 @@ package mob
 
 import (
 	"fmt"
-	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"log"
 	"math"
 	"math/rand"
 
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
+	"github.com/trichner/berryhunter/pkg/berryhunter/gen"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items"
 	"github.com/trichner/berryhunter/pkg/berryhunter/items/mobs"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
@@ -78,7 +78,6 @@ func NewMob(d *mobs.MobDefinition, rndPos bool, radius float32) *Mob {
 	}
 	m.Body.Shape().UserData = m
 	if rndPos {
-		// TODO use global radius instead hard-coded copy
 		m.SetPosition(gen.NewRandomPos(radius))
 		m.SetAngle(rnd.Float32() * 2 * math.Pi)
 	}
