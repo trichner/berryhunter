@@ -1,5 +1,12 @@
 'use strict';
 
+/**
+ * Meter are the unit in backend. Pixels are units in the frontend.
+ *
+ * Used meter2px(meter) to calculate px length from configured meter lengths.
+ *
+ * SYNCED WITH BACKEND
+ */
 const PIXEL_PER_METER: number = 120;
 
 export function meter2px(meter: number) {
@@ -25,18 +32,21 @@ export const BasicConfig = {
     },
 
     /**
-     * Meter are the unit in backend. Pixels are units in the frontend.
-     *
-     * SYNCED WITH BACKEND
-     */
-    PIXEL_PER_METER: <number> PIXEL_PER_METER,
-
-    /**
      * Movement speed of characters in the game. Is use for camera tracking.
      *
      * SYNCED WITH BACKEND
      */
-    BASE_MOVEMENT_SPEED: <number> (PIXEL_PER_METER * 0.055),
+    BASE_MOVEMENT_SPEED: <number> meter2px(0.055),
+
+    /**
+     * Area of interest as management by the backend.
+     *
+     * SYNCED WITH BACKEND (backend/pkg/berryhunter/model/constant/const.go:5)
+     */
+    VIEWPORT: {
+        WIDTH: <number>  meter2px(20),
+        HEIGHT: <number>  meter2px(12),
+    },
 
     /**
      * true: character movement AND mouse movement adjust the character facing direction
