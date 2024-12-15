@@ -40,7 +40,7 @@ func (wc *WeightedChoice) Choose(rnd *rand.Rand) interface{} {
 	if wc.runningTotal == 0 {
 		return nil
 	}
-	r := rand.Intn(wc.runningTotal)
+	r := rnd.Intn(wc.runningTotal)
 
 	//for _, c := range wc.choices {
 	//	r -= c.Weight
