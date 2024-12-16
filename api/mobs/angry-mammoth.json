@@ -5,7 +5,7 @@
   "factors": {
     "vulnerability": 0.1,
     "damageFraction": 0.0067,
-    "structureDamageFraction": 0.33,
+    "structureDamageFraction": 0.67,
     "speed": 0.1,
     "deltaPhi": 0.05,
     "turnRate": 0.008
@@ -19,7 +19,7 @@
   "body": {
     "radius": 1.7,
     "collisionLayer": 67,
-    "collisionMask": 32,
+    "collisionMask": 544,
     "damageRadius": 1.75,
     "damages": "All"
   },
