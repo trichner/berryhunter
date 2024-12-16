@@ -188,6 +188,20 @@ export const ItemsConfig = {
             animation: 'swing'
         }
     },
+    IvorySword: {
+        icon: {file: require('../features/items/assets/icons/swordIvoryIcon.svg')},
+        graphic: {
+            file: require('../features/items/assets/icons/swordIvory.svg'),
+            size: 40,
+            offsetX: 15
+        },
+        definition: require('../../../api/items/swords/ivory-sword.json'),
+        type: ItemType.EQUIPMENT,
+        equipment: {
+            slot: EquipmentSlot.HAND,
+            animation: 'swing'
+        }
+    },
 
     /***********************************
      * Spears

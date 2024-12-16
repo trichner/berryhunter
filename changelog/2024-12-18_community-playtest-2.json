@@ -1,5 +1,5 @@
 {
-  "date": "27.11.2024",
+  "date": "18.12.2024",
   "codename": "Community Playtest #2",
   "descriptionHtml": [
     "<p>Welcome to the second Community Playtest!</p>",
@@ -16,7 +16,27 @@
     },
     {
       "category": "highlight",
-      "description": "Nothing lasts forever, and now, neither do placeables.",
+      "description": "You can now craft Berry Seeds that can be planted to grow new Berry Bushes. They last for 500 seconds and only produce half as many berries as wild Berry Bushes.",
+      "trelloUrl": "https://trello.com/c/A8OlhW2x/176"
+    },
+    {
+      "category": "highlight",
+      "description": "A large mammoth now roams the island. They move slowly, but don't stand in their way! They will trample anyone and anything in their path and are tough to take down. Their massive horns make for good weapons, though.",
+      "trelloUrl": "https://trello.com/c/vtyu35le/216-introduce-rare-mob"
+    },
+    {
+      "category": "highlight",
+      "description": "Titanium shards will now spawn randomly on the island and can be harvested for 3 Titanium.",
+      "trelloUrl": "https://trello.com/c/kiOc2a16/217-introduce-titanium-shards"
+    },
+    {
+      "category": "highlight",
+      "description": "We introduced new character models, including different facial hair and beards. The looks are based on your name, so the same name will always give you the same look.",
+      "trelloUrl": "https://trello.com/c/2TDdOgwG/218-introduce-different-character-models-based-on-player-name"
+    },
+    {
+      "category": "highlight",
+      "description": "Nothing lasts forever, and now, neither do placeables. Check the balance for more info.",
       "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
     },
     {
@@ -26,27 +46,32 @@
     },
     {
       "category": "balancing",
-      "description": "Furnace livetime reduced from infinite to 1200s.",
+      "description": "Furnace livetime reduced from infinite to 1200 seconds.",
       "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
     },
     {
       "category": "balancing",
-      "description": "Workbench and Siege Workbench lifetime reduced from infinite to 1800s.",
+      "description": "Wild Berry Bushes now only produce half as many berries.",
+      "trelloUrl": "https://trello.com/c/A8OlhW2x/176"
+    },
+    {
+      "category": "balancing",
+      "description": "Workbench and Siege Workbench lifetime reduced from infinite to 1800 seconds.",
       "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
     },
     {
       "category": "balancing",
-      "description": "Wood Walls lifetime reduced from infinite to 1800s.",
+      "description": "Wood Walls lifetime reduced from infinite to 1800 seconds.",
       "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
     },
     {
       "category": "balancing",
-      "description": "Stone Walls lifetime reduced from infinite to 2400s.",
+      "description": "Stone Walls lifetime reduced from infinite to 2400 seconds.",
       "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
     },
     {
       "category": "balancing",
-      "description": "Bronze Walls lifetime reduced from infinite to 4800s.",
+      "description": "Bronze Walls lifetime reduced from infinite to 4800 seconds.",
       "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
     },
     {
@@ -71,6 +96,11 @@
     },
     {
       "category": "improvement",
+      "description": "Punch punch now has new swing sound.",
+      "trelloUrl": "https://trello.com/c/wnj8FBKt/198-implement-swing-woosh-for-player-attack"
+    },
+    {
+      "category": "improvement",
       "description": "Walls are now visible on the MiniMap.",
       "trelloUrl": "https://trello.com/c/NQANFWue/211-make-walls-visible-on-minimap"
     },
@@ -78,6 +108,11 @@
       "category": "improvement",
       "description": "Berrybushes now make a sound when harvested.",
       "trelloUrl": "https://trello.com/c/F1qT2UuW/192-berry-bush-bush-whack-sound-does-not-work"
+    },
+    {
+      "category": "improvement",
+      "description": "The tutorial will no longer be automatically enabled if you have completed it once.",
+      "trelloUrl": "https://trello.com/c/AoWIrvdo/163-enable-tutorial-unless-you-already-completed-it-also-dont-restart-the-tutorial-after-death-once-you-completed-it"
     },
     {
       "category": "improvement",

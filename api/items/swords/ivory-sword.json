@@ -1,0 +1,10 @@
+{
+  "id": 52,
+  "name": "IvorySword",
+  "type": "EQUIPMENT",
+  "factors": {
+    "damage": 0.3,
+    "structureDamage": 5,
+    "yield": 0
+  }
+}
