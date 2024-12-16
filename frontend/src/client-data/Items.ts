@@ -300,9 +300,8 @@ export const ItemsConfig = {
         icon: {file: require('../features/items/assets/icons/hammerBronzeIcon.svg')},
         graphic: {
             file: require('../features/items/assets/icons/hammerBronze.svg'),
-            size: 50,
+            size: 45,
             offsetX: 10,
-            offsetY: -2
         },
         definition: require('../../../api/items/hammers/bronze-hammer.json'),
         type: ItemType.EQUIPMENT,
