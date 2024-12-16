@@ -17,10 +17,10 @@
     }
   ],
   "body": {
-    "radius": 0.95,
+    "radius": 1.7,
     "collisionLayer": 67,
     "collisionMask": 32,
-    "damageRadius": 0.84,
+    "damageRadius": 1.75,
     "damages": "All"
   },
   "generator": {
