@@ -300,9 +300,9 @@ export const ItemsConfig = {
         icon: {file: require('../features/items/assets/icons/hammerBronzeIcon.svg')},
         graphic: {
             file: require('../features/items/assets/icons/hammerBronze.svg'),
-            size: 30,
+            size: 50,
             offsetX: 10,
-            offsetY: -2.5
+            offsetY: -2
         },
         definition: require('../../../api/items/hammers/bronze-hammer.json'),
         type: ItemType.EQUIPMENT,
@@ -317,7 +317,7 @@ export const ItemsConfig = {
             file: require('../features/items/assets/icons/hammerIron.svg'),
             size: 50,
             offsetX: 10,
-            offsetY: -2.5
+            offsetY: -2
         },
         definition: require('../../../api/items/hammers/iron-hammer.json'),
         type: ItemType.EQUIPMENT,
