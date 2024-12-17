@@ -142,12 +142,12 @@ export abstract class Mineral extends Resource {
             0, // Due to the shadow in the mineral graphics, those should not be randomly rotated
             svg);
 
-        this.resourceSpotTexture = createInjectedSVG(Mineral.resourceSpot.svg, x, y, this.getResourceSpotSize(), this.rotation);
+        this.resourceSpotTexture = this.createResourceSpotTexture(x, y);
         Game.layers.terrain.resourceSpots.addChild(this.resourceSpotTexture);
     }
 
-    protected getResourceSpotSize() {
-        return this.size * 0.7;
+    protected createResourceSpotTexture(x: number, y: number) {
+        return createInjectedSVG(Mineral.resourceSpot.svg, x, y, this.size * 0.7, this.rotation);
     }
 
     hide() {
@@ -234,14 +234,15 @@ export class Titanium extends Mineral {
 Preloading.registerGameObjectSVG(Titanium, mineralCfg.titaniumFile, mineralCfg.maxSize);
 
 export class TitaniumShard extends Mineral {
+    static resourceSpot: ISvgContainer = {svg: undefined};
     static svg: PIXI.Texture;
 
     constructor(id: number, x: number, y: number, size: number) {
         super(id, x, y, size - (GraphicsConfig.character.size * 0.5), TitaniumShard.svg);
     }
 
-    protected getResourceSpotSize() {
-        return this.size * 0.9;
+    protected createResourceSpotTexture(x: number, y: number) {
+        return createInjectedSVG(TitaniumShard.resourceSpot.svg, x, y, this.size * 0.9, this.rotation);
     }
 
     createMinimapIcon() {
@@ -256,6 +257,8 @@ export class TitaniumShard extends Mineral {
     }
 }
 
+// noinspection JSIgnoredPromiseFromCall
+Preloading.registerGameObjectSVG(TitaniumShard.resourceSpot, mineralCfg.shardSpotFile, mineralCfg.shardMaxSize);
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(TitaniumShard, mineralCfg.titaniumShardFile, mineralCfg.shardMaxSize);
 

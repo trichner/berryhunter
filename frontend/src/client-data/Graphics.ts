@@ -111,6 +111,7 @@ export const GraphicsConfig = {
 
         mineral: {
             spotFile: require('../features/game-objects/assets/resources/stoneSpot.svg'),
+            shardSpotFile: require('../features/game-objects/assets/resources/shardSpot.svg'),
             maxSize: <number> 142,
             shardMaxSize: <number> 71,
 
