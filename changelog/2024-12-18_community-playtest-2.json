@@ -126,6 +126,11 @@
     },
     {
       "category": "improvement",
+      "description": "Beach visuals now match the actual walkable area more accurately.",
+      "trelloUrl": "https://trello.com/c/7mowWaTc/137-beach-visuals-dont-match-actually-walkable-area"
+    },
+    {
+      "category": "improvement",
       "description": "Health, Hunger and Temperature increases are now also shown in the HUD.",
       "trelloUrl": "https://trello.com/c/mU1gtDAR/144-vitals-negative-delta-is-displayed-but-not-a-positive-delta"
     },
