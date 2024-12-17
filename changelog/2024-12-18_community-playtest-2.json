@@ -17,12 +17,15 @@
     {
       "category": "highlight",
       "description": "You can now craft Berry Seeds that can be planted to grow new Berry Bushes. They last for 500 seconds and only produce half as many berries as wild Berry Bushes.",
-      "trelloUrl": "https://trello.com/c/A8OlhW2x/176"
+      "trelloUrl": "https://trello.com/c/A8OlhW2x/176-berry-seeds-implementation"
     },
     {
       "category": "highlight",
-      "description": "A large mammoth now roams the island. They move slowly, but don't stand in their way! They will trample anyone and anything in their path and are tough to take down. Their massive horns make for great weapons, though.",
-      "trelloUrl": "https://trello.com/c/vtyu35le/216-introduce-rare-mob"
+      "description": "A large mammoth now roams the island. It moves slowly, but don't stand in its way! It will trample anyone and anything in their path and are tough to take down. Its massive horns make for great weapons, though.",
+      "trelloUrls": [
+        "https://trello.com/c/vtyu35le/216-introduce-rare-mob",
+        "https://trello.com/c/K5R7TEcp/221-new-item-ivory-sword"
+      ]
     },
     {
       "category": "highlight",
@@ -52,7 +55,7 @@
     {
       "category": "balancing",
       "description": "Wild Berry Bushes now only produce half as many berries.",
-      "trelloUrl": "https://trello.com/c/A8OlhW2x/176"
+      "trelloUrl": "https://trello.com/c/A8OlhW2x/176-berry-seeds-implementation"
     },
     {
       "category": "balancing",
@@ -91,18 +94,17 @@
     },
     {
       "category": "bugFix",
-      "description": "Fixed an issue where placeables would not be shown on the minimap anymore.",
-      "trelloUrl": "https://trello.com/c/py5pVkdZ/197-placeables-are-not-shown-on-minmap-anymore"
-    },
-    {
-      "category": "bugFix",
       "description": "Fixed an issue where the game could crash during the tutorial.",
       "trelloUrl": "https://trello.com/c/nG6mFK1q/201-runtime-error-tutorialts"
     },
     {
       "category": "improvement",
       "description": "All placeable objects, except for campfires, are now shown on the mini-map.",
-      "trelloUrl": "https://trello.com/c/WqipEIGd/223-destroyed-decayed-placeables-are-not-removed-from-the-minimap"
+      "trelloUrls": [
+        "https://trello.com/c/WqipEIGd/223-destroyed-decayed-placeables-are-not-removed-from-the-minimap",
+        "https://trello.com/c/NQANFWue/211-make-walls-visible-on-minimap",
+        "https://trello.com/c/py5pVkdZ/197-placeables-are-not-shown-on-minmap-anymore"
+      ]
     },
     {
       "category": "improvement",
@@ -111,12 +113,7 @@
     },
     {
       "category": "improvement",
-      "description": "Walls are now visible on the MiniMap.",
-      "trelloUrl": "https://trello.com/c/NQANFWue/211-make-walls-visible-on-minimap"
-    },
-    {
-      "category": "improvement",
-      "description": "Berrybushes now make a sound when harvested.",
+      "description": "Berry bushes now make a sound when harvested.",
       "trelloUrl": "https://trello.com/c/F1qT2UuW/192-berry-bush-bush-whack-sound-does-not-work"
     },
     {
@@ -146,7 +143,7 @@
     },
     {
       "category": "improvement",
-      "description": "Added anti-alisaing for minimap icons.",
+      "description": "Added anti-aliasing for minimap icons.",
       "trelloUrl": "https://trello.com/c/TdJoKMiK/210-minimap-icons-look-rugged-missing-anti-aliasing"
     }
   ]
