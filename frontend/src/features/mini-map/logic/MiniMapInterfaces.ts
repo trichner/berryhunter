@@ -5,7 +5,6 @@ export enum Layer {
     OTHER,
 }
 
-// TODO there could be a fourth behavior: only visible in AoI (is what REMOVABLE_REMEMBERED is currently doing)
 export enum LevelOfDynamic {
     /**
      * Doesn't move, gets never removed.

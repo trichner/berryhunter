@@ -252,7 +252,7 @@ export class TitaniumShard extends Mineral {
     }
 
     get miniMapDynamic(): LevelOfDynamic {
-        return LevelOfDynamic.REMOVABLE_FORGOTTEN;
+        return LevelOfDynamic.REMOVABLE_REMEMBERED;
     }
 }
 
