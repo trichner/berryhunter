@@ -67,8 +67,8 @@ export class StatusEffect implements StatusEffectDefinition {
     originalScaleX: number;
     originalScaleY: number;
     tweenEffects: TweenEffect[];
-    soundData?: SoundData[];
-    tweenGroup: TweenGroup
+    soundData: SoundData[];
+    tweenGroup: TweenGroup;
 
     private constructor(
         definition: StatusEffectDefinition,
@@ -108,7 +108,7 @@ export class StatusEffect implements StatusEffectDefinition {
 
         this.tweenEffects = tweenEffects;
 
-        if (soundData) {
+        if (Array.isArray(soundData)) {
             this.soundData = soundData;
         }
 
@@ -118,7 +118,7 @@ export class StatusEffect implements StatusEffectDefinition {
     }
 
     static forDamaged(gameObjectShape: Container, soundData?: SoundData[]) {
-        if (soundData !== undefined) {
+        if (isDefined(soundData)) {
             soundData.push({
                 soundId: 'mobHit',
                 options: {
@@ -128,38 +128,56 @@ export class StatusEffect implements StatusEffectDefinition {
                 chanceToPlay: 1
             });
         }
-        return new StatusEffect(StatusEffect.Damaged, gameObjectShape,
-            [new ColorMatrixTweenEffect(255, 255, 255, 0.4, 1, 200, false, 0, true),
-                { type: 'scale', from: 1.1, to: 0.8, duration: 100 }], soundData);
+        return new StatusEffect(
+            StatusEffect.Damaged,
+            gameObjectShape,
+            [
+                new ColorMatrixTweenEffect(255, 255, 255, 0.4, 1, 200, false, 0, true),
+                {type: 'scale', from: 1.1, to: 0.8, duration: 100},
+            ],
+            soundData,
+        );
     }
 
     static forDamagedOverTime(gameObjectShape: Container, soundData?: SoundData[]) {
-        return new StatusEffect(StatusEffect.DamagedAmbient, gameObjectShape,
+        return new StatusEffect(
+            StatusEffect.DamagedAmbient,
+            gameObjectShape,
             [new ColorMatrixTweenEffect(255, 255, 255, 0, 1, 200, false, 0, true)],
-            soundData);
+            soundData
+        );
     }
 
     static forFreezing(gameObjectShape: Container) {
         // #125799
-        return new StatusEffect(StatusEffect.Freezing, gameObjectShape,
-            [new ColorMatrixTweenEffect(18, 87, 153, 0.4, 0.8, 200)]);
+        return new StatusEffect(
+            StatusEffect.Freezing,
+            gameObjectShape,
+            [new ColorMatrixTweenEffect(18, 87, 153, 0.4, 0.8, 200)]
+        );
     }
 
     static forStarving(gameObjectShape: Container) {
         // #1E7A1E
-        return new StatusEffect(StatusEffect.Starving, gameObjectShape,
-            [new ColorMatrixTweenEffect(30, 120, 30, 0.2, 0.8, 200)]);
+        return new StatusEffect(
+            StatusEffect.Starving,
+            gameObjectShape,
+            [new ColorMatrixTweenEffect(30, 120, 30, 0.2, 0.8, 200)]
+        );
     }
 
     static forYielded(gameObjectShape: Container, soundId?: string) {
-        return new StatusEffect(StatusEffect.Yielded, gameObjectShape,
+        return new StatusEffect(
+            StatusEffect.Yielded,
+            gameObjectShape,
             [{ type: 'shake', from: 4, to: 4, duration: 24 }],
-            [{
+            isDefined(soundId) ? [{
                 soundId: soundId, options: {
                     speed: random(0.8, 0.9),
                     volume: random(0.8, 0.9),
                 }
-            }]);
+            }] : undefined
+        );
     }
 
     static sortByPriority(statusEffects: StatusEffectDefinition[]): StatusEffectDefinition[] {
