@@ -21,7 +21,7 @@
     },
     {
       "category": "highlight",
-      "description": "A large mammoth now roams the island. They move slowly, but don't stand in their way! They will trample anyone and anything in their path and are tough to take down. Their massive horns make for good weapons, though.",
+      "description": "A large mammoth now roams the island. They move slowly, but don't stand in their way! They will trample anyone and anything in their path and are tough to take down. Their massive horns make for great weapons, though.",
       "trelloUrl": "https://trello.com/c/vtyu35le/216-introduce-rare-mob"
     },
     {
@@ -85,6 +85,11 @@
       "trelloUrl": "https://trello.com/c/osqNXCkS/207-balancing-changes"
     },
     {
+      "category": "highlight",
+      "description": "The night is now only half as long as the day.",
+      "trelloUrl": "https://trello.com/c/1T3qouev/196-reduce-the-night-time-to-25-of-a-day"
+    },
+    {
       "category": "bugFix",
       "description": "Fixed an issue where placeables would not be shown on the minimap anymore.",
       "trelloUrl": "https://trello.com/c/py5pVkdZ/197-placeables-are-not-shown-on-minmap-anymore"
@@ -101,7 +106,7 @@
     },
     {
       "category": "improvement",
-      "description": "Punch punch now has new swing sound.",
+      "description": "Punch now has new swing sound.",
       "trelloUrl": "https://trello.com/c/wnj8FBKt/198-implement-swing-woosh-for-player-attack"
     },
     {
