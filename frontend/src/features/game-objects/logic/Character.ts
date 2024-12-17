@@ -5,7 +5,7 @@ import * as Equipment from '../../items/logic/Equipment';
 import {EquipmentSlot} from '../../items/logic/Equipment';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
 import * as Preloading from '../../core/logic/Preloading';
-import {Vector} from '../../core/logic/Vector';
+import {IVector, Vector} from '../../core/logic/Vector';
 import {GraphicsConfig} from '../../../client-data/Graphics';
 import {animateAction} from './AnimateAction';
 import {StatusEffect} from './StatusEffect';
@@ -28,6 +28,7 @@ import * as TextDisplay from '../../../client-data/TextDisplay';
 import {spatialAudio} from '../../audio/logic/SpatialAudio';
 import {swingLightAudioCues} from '../../player/logic/PlayerJuice';
 import {ISvgContainer} from '../../core/logic/ISvgContainer';
+import {IMiniMapRendered, Layer, LevelOfDynamic} from '../../mini-map/logic/MiniMapInterfaces';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
@@ -35,12 +36,12 @@ GameSetupEvent.subscribe((game: IGame) => {
 });
 
 export interface Hand {
-    container: { group: Container & { originalTranslation: { x: number, y: number } }, slot: Container };
-    originalTranslation: { x: number, y: number };
+    container: { group: Container & { originalTranslation: IVector }, slot: Container };
+    originalTranslation: IVector;
     originalRotation: number;
 }
 
-export class Character extends GameObject implements ICharacterLike {
+export class Character extends GameObject implements ICharacterLike, IMiniMapRendered {
     static variants: ISvgContainer[] = [];
     static svg: Texture;
     static craftingIndicator: ISvgContainer = {svg: undefined};
@@ -53,7 +54,7 @@ export class Character extends GameObject implements ICharacterLike {
     movementSpeed: number;
 
     currentAction: string | false;
-    equipmentSlotGroups;
+    equipmentSlotGroups: { [key in EquipmentSlot]?: Container & { originalTranslation?: IVector }; };
     equippedItems;
     lastRemainingTicks: number = 0;
     useLeftHand: boolean = false;
@@ -88,12 +89,12 @@ export class Character extends GameObject implements ICharacterLike {
          */
         this.equipmentSlotGroups = {};
         this.equippedItems = {};
-        for (let equipmentSlot in Equipment.EquipmentSlot) {
+        for (const equipmentSlot in Equipment.EquipmentSlot) {
             //noinspection JSUnfilteredForInLoop
             this.equippedItems[equipmentSlot] = null;
         }
 
-        let placeableSlot = new Container();
+        const placeableSlot = new Container();
         this.actualShape.addChild(placeableSlot);
         this.equipmentSlotGroups[Equipment.EquipmentSlot.PLACEABLE] = placeableSlot;
         placeableSlot.position.set(
@@ -104,7 +105,7 @@ export class Character extends GameObject implements ICharacterLike {
 
         this.createHands();
 
-        Object.values(this.equipmentSlotGroups).forEach((equipmentSlot: { originalTranslation: Vector, position }) => {
+        Object.values(this.equipmentSlotGroups).forEach((equipmentSlot: { originalTranslation?: IVector, position: IVector }) => {
             equipmentSlot.originalTranslation = Vector.clone(equipmentSlot.position);
         });
 
@@ -115,7 +116,7 @@ export class Character extends GameObject implements ICharacterLike {
 
         this.followGroups = [];
 
-        let messagesFollowGroup = new Container();
+        const messagesFollowGroup = new Container();
         Game.layers.characterAdditions.chatMessages.addChild(messagesFollowGroup);
         this.followGroups.push(messagesFollowGroup);
 
@@ -157,7 +158,7 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     initShape(svg: Texture, x: number, y: number, size: number, rotation: number) {
-        let group = new Container();
+        const group = new Container();
         group.position.set(x, y);
 
         this.actualShape = createNamedContainer('actualShape');
@@ -196,9 +197,8 @@ export class Character extends GameObject implements ICharacterLike {
         this.equipmentSlotGroups[Equipment.EquipmentSlot.HAND] = this.rightHand.container.slot;
     }
 
-    createHand(handAngleDistance: number):
-        Hand {
-        let group = new Container() as Container & { originalTranslation: { x: number, y: number } };
+    createHand(handAngleDistance: number): Hand {
+        const group = new Container() as Container & { originalTranslation: { x: number, y: number } };
 
         const handAngle = 0;
         group.position.set(
@@ -206,12 +206,12 @@ export class Character extends GameObject implements ICharacterLike {
             Math.sin(handAngle + Math.PI * handAngleDistance) * this.size * 0.8,
         );
 
-        let slotGroup = new Container();
+        const slotGroup = new Container();
         group.addChild(slotGroup);
         slotGroup.position.set(-this.size * 0.2, 0);
         slotGroup.rotation = Math.PI / 2;
 
-        let handShape = new Graphics()
+        const handShape = new Graphics()
             .circle(0, 0, this.size * 0.2)
             .fill(GraphicsConfig.character.hands.fillColor)
             .stroke({
@@ -254,10 +254,18 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     createMinimapIcon() {
-        let miniMapCfg = GraphicsConfig.miniMap.icons.character;
+        const miniMapCfg = GraphicsConfig.miniMap.icons.character;
         return new Graphics()
             .circle(0, 0, this.size * miniMapCfg.sizeFactor)
             .fill({color: miniMapCfg.color, alpha: miniMapCfg.alpha});
+    }
+
+    get miniMapLayer(): Layer {
+        return Layer.CHARACTER;
+    }
+
+    get miniMapDynamic(): LevelOfDynamic {
+        return LevelOfDynamic.DYNAMIC;
     }
 
     getEquippedItemAnimationType() {
@@ -332,7 +340,7 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     update() {
-        let timeDelta = Game.timeDelta;
+        const timeDelta = Game.timeDelta;
 
         this.messages = this.messages.filter((message) => {
             message['timeToLife'] -= timeDelta;
@@ -389,7 +397,7 @@ export class Character extends GameObject implements ICharacterLike {
             return false;
         }
 
-        let slotGroup = this.equipmentSlotGroups[equipmentSlot];
+        const slotGroup = this.equipmentSlotGroups[equipmentSlot];
         // Offsets are applied to the slot itself to respect the slot rotation
         if (isDefined(item.graphic.offsetX)) {
             slotGroup.position.x = slotGroup.originalTranslation.x + item.graphic.offsetX * 2;
@@ -401,7 +409,7 @@ export class Character extends GameObject implements ICharacterLike {
         } else {
             slotGroup.position.y = slotGroup.originalTranslation.y;
         }
-        let equipmentGraphic = createInjectedSVG(item.graphic.svg, 0, 0, item.graphic.size);
+        const equipmentGraphic = createInjectedSVG(item.graphic.svg, 0, 0, item.graphic.size);
         slotGroup.addChild(equipmentGraphic);
 
         if (equipmentSlot === Equipment.EquipmentSlot.PLACEABLE) {
@@ -420,19 +428,19 @@ export class Character extends GameObject implements ICharacterLike {
      * @param equipmentSlot
      * @return {Item} the item that was unequipped
      */
-    unequipItem(equipmentSlot) {
+    unequipItem(equipmentSlot: EquipmentSlot) {
         // If the slot is already empty, just cancel
         if (this.equippedItems[equipmentSlot] === null) {
             return;
         }
 
-        let slotGroup = this.equipmentSlotGroups[equipmentSlot];
+        const slotGroup = this.equipmentSlotGroups[equipmentSlot];
         if (!this.isSlotEquipped(equipmentSlot)) {
             return;
         }
         slotGroup.removeChildAt(0);
 
-        let item = this.equippedItems[equipmentSlot];
+        const item = this.equippedItems[equipmentSlot];
         this.equippedItems[equipmentSlot] = null;
 
         return item;
@@ -443,7 +451,7 @@ export class Character extends GameObject implements ICharacterLike {
     }
 
     say(message: string) {
-        let textStyle = TextDisplay.style({
+        const textStyle = TextDisplay.style({
             fill: '#E37313',
             stroke: {color: '#000000', width: 3},
             wordWrap: true,
@@ -451,14 +459,14 @@ export class Character extends GameObject implements ICharacterLike {
             breakWords: true,
             lineHeight: 22,
         });
-        let fontSize = textStyle.fontSize as number;
+        const fontSize = textStyle.fontSize as number;
 
         // Move all currently displayed messages up
         this.messages.forEach((message) => {
             message.position.y -= fontSize * 1.1;
         });
 
-        let messageShape = new Text({
+        const messageShape = new Text({
             text: message,
             style: textStyle,
         });

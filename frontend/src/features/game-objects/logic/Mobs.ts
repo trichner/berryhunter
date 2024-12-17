@@ -30,8 +30,8 @@ function file(mob: keyof typeof GraphicsConfig.mobs) {
     return GraphicsConfig.mobs[mob].file;
 }
 
-export class Mob extends GameObject {
-    constructor(
+export abstract class Mob extends GameObject {
+    protected constructor(
         id: number,
         gameLayer: PIXI.Container,
         x: number,

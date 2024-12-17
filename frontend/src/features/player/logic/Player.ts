@@ -7,7 +7,7 @@ import {DamageState, VitalSigns, VitalSignValues} from '../../vital-signs/logic/
 import {isDefined} from '../../common/logic/Utils';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {BerryhunterApi} from '../../backend/logic/BerryhunterApi';
-import {Layer, MiniMap} from '../../mini-map/MiniMap';
+import {MiniMap} from '../../mini-map/logic/MiniMap';
 import {PlayerCraftingStateChangedEvent, PlayerCreatedEvent, PlayerDamagedEvent} from '../../core/logic/Events';
 import './PlayerJuice';
 
@@ -34,7 +34,8 @@ export class Player {
         this.controls = new Controls(this.character, this.isCraftInProgress.bind(this));
 
         this.camera = new Camera(this.character);
-        miniMap.add(this.character, Layer.CHARACTER);
+        miniMap.add(this.character);
+        miniMap.setPlayerCharacter(this.character);
 
         this.inventory = new Inventory(this.character, this.isCraftInProgress.bind(this));
 

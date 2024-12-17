@@ -10,8 +10,8 @@ import {PrerenderEvent} from "../../core/logic/Events";
 let movementInterpolatedObjects = new Set();
 let rotatingObjects = new Set();
 
-export class GameObject {
-    readonly id: number; // will be filled in GameMapWithBackend with backend ids
+export abstract class GameObject {
+    readonly id: number;
 
     layer: Container;
     size: number = Constants.GRAPHIC_BASE_SIZE / 2;
@@ -30,12 +30,7 @@ export class GameObject {
     desiredRotation: number;
     desiredRotationTimestamp: number;
 
-    /**
-     * Set by MiniMap if this is a tracked (= movable) GameObject
-     */
-    minimapIcon: Container;
-
-    constructor(
+    protected constructor(
         id: number,
         gameLayer: Container,
         x: number,
@@ -82,10 +77,6 @@ export class GameObject {
      */
     createShape(x: number, y: number, size: number, rotation: number): Graphics {
         throw 'createShape not implemented for ' + this.constructor.name;
-    }
-
-    createMinimapIcon(): Container {
-        throw 'createMinimapIcon not implemented for ' + this.constructor.name;
     }
 
     setPosition(x: number, y: number) {

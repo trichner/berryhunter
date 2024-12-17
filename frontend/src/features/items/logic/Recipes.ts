@@ -187,7 +187,7 @@ export function checkNearbys(recipes) {
     if (isFunction(Game.map.getObjectsInRange)) {
         getObjectsInRange = Game.map.getObjectsInRange.bind(Game.map, Game.player.character.getPosition(), Constants.CRAFTING_RANGE);
     } else {
-        getObjectsInRange = Game.map.getObjectsInView
+        getObjectsInRange = Game.map.getObjectsInView;
     }
 
     let placeablesInView = getObjectsInRange.call(Game.map).filter(function (gameObject) {

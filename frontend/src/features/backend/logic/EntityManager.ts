@@ -8,31 +8,30 @@ import {Resource} from '../../game-objects/logic/Resources';
 import * as Equipment from '../../items/logic/Equipment';
 import {EquipmentSlot} from '../../items/logic/Equipment';
 import {BerryhunterApi} from './BerryhunterApi';
-import {Layer} from "../../mini-map/MiniMap";
-import {IGame} from "../../core/logic/IGame";
-import {Develop} from "../../internal-tools/develop/logic/_Develop";
+import {Develop} from '../../internal-tools/develop/logic/_Develop';
+import {gameObjectId} from '../../common/logic/Types';
+import {Vector} from '../../core/logic/Vector';
+import {IMiniMapRendered} from '../../mini-map/logic/MiniMapInterfaces';
+import {MiniMap} from '../../mini-map/logic/MiniMap';
 
-let Game: IGame = null;
 
-export class GameMapWithBackend {
+export class EntityManager {
     radius: number;
     width: number;
     height: number;
 
-    objects = {};
+    objects: {[key: gameObjectId]: GameObject} = {};
+    private miniMap: MiniMap;
 
-    constructor(game, radius: number) {
-        Game = game;
+    constructor(radius: number, miniMap: MiniMap) {
         this.radius = radius;
         this.width = 2 * radius;
         this.height = 2 * radius;
+
+        this.miniMap = miniMap;
     }
 
-    /**
-     * @param entityId
-     * @return {GameObject}
-     */
-    getObject(entityId) {
+    getObject(entityId: gameObjectId): GameObject {
         return this.objects[entityId];
     };
 
@@ -46,7 +45,7 @@ export class GameMapWithBackend {
                     gameObject.setRotation(entity.rotation);
                 }
                 if (Develop.isActive()) {
-                    gameObject.updateAABB(entity.aabb);
+                    gameObject['updateAABB'](entity.aabb);
                 }
             }
 
@@ -78,16 +77,16 @@ export class GameMapWithBackend {
             this.objects[entity.id] = gameObject;
 
             if (gameObject.visibleOnMinimap) {
-                Game.miniMap.add(gameObject, Layer.OTHER);
+                this.miniMap.add(gameObject as unknown as IMiniMapRendered);
             }
 
             if (Develop.isActive()) {
-                gameObject.updateAABB(entity.aabb);
+                gameObject['updateAABB'](entity.aabb);
             }
         }
 
         if (entity.type === Character) {
-            let character: Character = gameObject;
+            const character: Character = gameObject as Character;
 
             /**
              * Handle equipment
@@ -106,13 +105,13 @@ export class GameMapWithBackend {
                     if (currentlyEquippedItem !== null) {
                         character.unequipItem(slot);
                     }
-                    gameObject.equipItem(equippedItem, slot);
+                    character.equipItem(equippedItem, slot);
                 });
             }
 
             // All Slots that are not equipped according to backend are dropped.
             slotsToHandle.forEach(slot => {
-                gameObject.unequipItem(slot);
+                character.unequipItem(slot);
             });
 
             /**
@@ -152,13 +151,16 @@ export class GameMapWithBackend {
             delete removedObjects[entity.id];
         });
 
-        Object.values(removedObjects).forEach((entity: GameObject) => {
-            this.objects[entity.id].hide();
-            delete this.objects[entity.id];
+        Object.values(removedObjects).forEach((gameObject: GameObject) => {
+            this.objects[gameObject.id].hide();
+            if (gameObject.visibleOnMinimap) {
+                this.miniMap.remove(gameObject as unknown as IMiniMapRendered);
+            }
+            delete this.objects[gameObject.id];
         }, this);
     };
 
-    getObjectsInRange() {
+    getObjectsInRange(position: Vector, distance: number) {
         return this.getObjectsInView();
     }
 

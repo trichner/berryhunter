@@ -1,11 +1,11 @@
 import * as PIXI from "pixi.js";
-import {GameMapWithBackend} from "../../backend/logic/GameMapWithBackend";
-import {MiniMap} from "../../mini-map/MiniMap";
+import {EntityManager} from "../../backend/logic/EntityManager";
+import {MiniMap} from "../../mini-map/logic/MiniMap";
 import {Spectator} from "../../player/logic/Spectator";
 import {Player} from "../../player/logic/Player";
 import {InputManager} from "../../input-system/logic/InputManager";
 import {WelcomeMessage} from "../../backend/logic/messages/incoming/WelcomeMessage";
-import {GameObjectId} from "../../common/logic/Types";
+import {gameObjectId} from "../../common/logic/Types";
 import {Container} from 'pixi.js';
 
 export enum GameState {
@@ -36,7 +36,7 @@ export interface IGame {
     readonly layers: IGameLayers;
     readonly cameraGroup: PIXI.Container;
 
-    readonly map: GameMapWithBackend;
+    readonly map: EntityManager;
     readonly miniMap: MiniMap;
 
     readonly domElement: HTMLCanvasElement;
@@ -57,7 +57,7 @@ export interface IGame {
 
     pause(): void;
 
-    createPlayer(id: GameObjectId, x: number, y: number, name: string): void;
+    createPlayer(id: gameObjectId, x: number, y: number, name: string): void;
 
     removePlayer(): void;
 

@@ -10,7 +10,7 @@ export enum EquipmentSlot {
 }
 
 export const Helper = {
-    getItemEquipmentSlot: function (item): EquipmentSlot {
+    getItemEquipmentSlot: function (item: {type: keyof typeof ItemType, equipment: { slot: EquipmentSlot}}): EquipmentSlot {
         switch (item.type) {
             case ItemType.EQUIPMENT:
                 return item.equipment.slot;

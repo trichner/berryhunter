@@ -16,11 +16,7 @@ export interface hasAABB {
 export function setup(develop: IDevelop) {
     Develop = develop;
 
-    /**
-     *
-     * @param {{LowerX: number, LowerY: number, UpperX: number, UpperY: number}} aabb
-     */
-    GameObject.prototype['updateAABB'] = function (aabb) {
+    GameObject.prototype['updateAABB'] = function (aabb: { LowerX: number; LowerY: number; UpperX: number; UpperY: number; }) {
         if (!(Develop.settings.showAABBs && //
             aabb && //
             !isUndefined(aabb.LowerX) && //

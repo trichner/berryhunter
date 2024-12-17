@@ -1,8 +1,8 @@
 import {Application, Container, Graphics, Ticker} from 'pixi.js';
 
 import {Backend} from '../../backend/logic/Backend';
-import {GameMapWithBackend} from '../../backend/logic/GameMapWithBackend';
-import {MiniMap} from '../../mini-map/MiniMap';
+import {EntityManager} from '../../backend/logic/EntityManager';
+import {MiniMap} from '../../mini-map/logic/MiniMap';
 import * as DayCycle from '../../day-cycle/logic/DayCycle';
 import {Player} from '../../player/logic/Player';
 import {Spectator} from '../../player/logic/Spectator';
@@ -19,7 +19,7 @@ import * as Recipes from '../../items/logic/Recipes';
 import * as Scoreboard from '../../scoreboard/logic/Scoreboard';
 import * as GroundTextureManager from '../../ground-textures/logic/GroundTextureManager';
 import {GameState, IGame, IGameLayers} from './IGame';
-import {GameObjectId} from '../../common/logic/Types';
+import {gameObjectId} from '../../common/logic/Types';
 import {GraphicsConfig} from '../../../client-data/Graphics';
 import {IBackend} from '../../backend/logic/IBackend';
 import {
@@ -47,7 +47,7 @@ export class Game implements IGame {
     public layers: IGameLayers;
     public cameraGroup: Container;
 
-    public map: GameMapWithBackend = null;
+    public map: EntityManager = null;
     public miniMap: MiniMap = null;
 
     public inputManager: InputManager;
@@ -310,7 +310,7 @@ export class Game implements IGame {
     /**
      * Creating a player starts implicitly the game
      */
-    createPlayer(id: GameObjectId, x: number, y: number, name: string): void {
+    createPlayer(id: gameObjectId, x: number, y: number, name: string): void {
         if (isDefined(this.spectator)) {
             this.spectator.remove();
             this.spectator = undefined;
@@ -350,8 +350,11 @@ export class Game implements IGame {
             .circle(0, 0, gameInformation.mapRadius - 240) // deduct a bit of radius to allow movement in "shallow" water
             .fill(GraphicsConfig.landColor));
 
-        this.map = new GameMapWithBackend(this, gameInformation.mapRadius);
-        DayCycle.setup(gameInformation.totalDayCycleTicks, gameInformation.dayTimeTicks,
+        this.miniMap.setup(gameInformation.mapRadius * 2, gameInformation.mapRadius * 2);
+        this.map = new EntityManager(gameInformation.mapRadius, this.miniMap);
+        DayCycle.setup(
+            gameInformation.totalDayCycleTicks,
+            gameInformation.dayTimeTicks,
             [
                 this.layers.terrain.water,
                 this.layers.terrain.ground,
@@ -369,11 +372,11 @@ export class Game implements IGame {
                 this.layers.placeables.spikyWalls,
                 this.layers.resources.minerals,
                 this.layers.resources.trees,
+                this.layers.bossMobs,
             ]
         );
         this.play();
         this.state = GameState.RENDERING;
-        this.miniMap.setup(this.map.width, this.map.height);
     }
 
     private createBackground() {

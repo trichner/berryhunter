@@ -266,7 +266,7 @@ export class Develop implements IDevelop {
     private onSettingToggle(setting, newValue) {
         switch (setting) {
             case 'showAABBs':
-                Object.values(Game.map.objects)
+                (Object.values(Game.map.objects) as unknown as AABBs.hasAABB[])
                     .forEach((gameObject: AABBs.hasAABB) => {
                         if (newValue) {
                             gameObject.showAABB();

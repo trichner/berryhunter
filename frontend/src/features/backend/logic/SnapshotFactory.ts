@@ -1,6 +1,7 @@
 import {isDefined, nearlyEqual} from '../../common/logic/Utils';
 import {BackendState} from "./IBackend";
 import _clone = require('lodash/clone');
+import {GameStateMessage} from './messages/incoming/GameStateMessage';
 
 
 let lastGameState;
@@ -12,7 +13,7 @@ export class Snapshot {
     inventory: [];
 }
 
-export function newSnapshot(backendState: BackendState, gameState) {
+export function newSnapshot(backendState: BackendState, gameState: GameStateMessage) {
     let snapshot;
     if (this.hasSnapshot()) {
         snapshot = {};
@@ -30,7 +31,7 @@ export function newSnapshot(backendState: BackendState, gameState) {
         // Inventory handles item stacks
         snapshot.inventory = gameState.inventory;
 
-        // GameMapWithBackend handles entity states
+        // EntityManager handles entity states
         snapshot.entities = gameState.entities;
     } else {
         snapshot = gameState;

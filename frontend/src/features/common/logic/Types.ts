@@ -1,4 +1,4 @@
-export type GameObjectId = number;
+export type gameObjectId = number;
 
 export type integer = number;
 

@@ -1,14 +1,15 @@
 import {GameObject} from './_GameObject';
 import {randomRotation} from '../../common/logic/Utils';
 import {GraphicsConfig} from '../../../client-data/Graphics';
-import {StatusEffect} from "./StatusEffect";
+import {StatusEffect} from './StatusEffect';
 import {PlaceablePlacedEvent} from '../../core/logic/Events';
 import {Graphics} from 'pixi.js';
+import {IMiniMapRendered, Layer, LevelOfDynamic} from '../../mini-map/logic/MiniMapInterfaces';
 
-export class Placeable extends GameObject {
+export class Placeable extends GameObject implements IMiniMapRendered {
     item;
 
-    constructor(id: number, placeableItem, x, y) {
+    constructor(id: number, placeableItem, x: number, y: number) {
         super(id, placeableItem.placeable.layer,
             x, y,
             placeableItem.graphic.size,
@@ -32,6 +33,13 @@ export class Placeable extends GameObject {
         return new Graphics()
             .circle(0, 0, this.size * miniMapCfg.sizeFactor)
             .fill({color: miniMapCfg.color, alpha: miniMapCfg.alpha});
+    }
+
+    get miniMapLayer(): Layer {
+        return Layer.OTHER;
+    }
+    get miniMapDynamic(): LevelOfDynamic {
+        return LevelOfDynamic.REMOVABLE_REMEMBERED;
     }
 
     createStatusEffects() {

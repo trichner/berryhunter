@@ -5,6 +5,7 @@ import {BackendValidTokenEvent, BeforeDeathEvent} from '../../core/logic/Events'
 import {IGame} from "../../core/logic/IGame";
 import {IBackend} from "../../backend/logic/IBackend";
 import {ChatMessage} from "../../backend/logic/messages/outgoing/ChatMessage";
+import {Character} from '../../game-objects/logic/Character';
 
 let Game: IGame = null;
 let Backend: IBackend = null;
@@ -55,7 +56,7 @@ export function setup(game: IGame, backend) {
 }
 
 export function showMessage(entityId, message) {
-    let gameObject = Game.map.getObject(entityId);
+    let gameObject = Game.map.getObject(entityId) as Character;
     if (isFunction(gameObject.say)) {
         gameObject.say(message);
     }

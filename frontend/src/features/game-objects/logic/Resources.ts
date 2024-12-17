@@ -1,28 +1,29 @@
-import {Container, Graphics, Sprite, Texture} from 'pixi.js';
+import * as PIXI from 'pixi.js';
+import {Container, Graphics, Sprite, Texture, ViewContainer} from 'pixi.js';
 import {GameObject} from './_GameObject';
 import * as Preloading from '../../core/logic/Preloading';
-import {deg2rad, isDefined, random, randomInt, randomRotation, TwoDimensional} from '../../common/logic/Utils';
+import {deg2rad, isDefined, randomRotation, TwoDimensional} from '../../common/logic/Utils';
 import {createInjectedSVG} from '../../core/logic/InjectedSVG';
 import {GraphicsConfig} from '../../../client-data/Graphics';
 import {IGame} from '../../core/logic/IGame';
 import {GameSetupEvent, ResourceStockChangedEvent} from '../../core/logic/Events';
 import {alea as SeedRandom} from 'seedrandom';
-import {StatusEffect, StatusEffectDefinition} from './StatusEffect';
+import {StatusEffect} from './StatusEffect';
 import {ISvgContainer} from '../../core/logic/ISvgContainer';
 import './ResourceJuice';
-import * as PIXI from 'pixi.js';
+import {IMiniMapRendered, Layer, LevelOfDynamic} from '../../mini-map/logic/MiniMapInterfaces';
 
 let Game: IGame = null;
 GameSetupEvent.subscribe((game: IGame) => {
     Game = game;
 });
 
-export class Resource extends GameObject {
+export abstract class Resource extends GameObject implements IMiniMapRendered {
     capacity: number;
     baseScale: number;
     private _stock: number;
 
-    constructor(
+    protected constructor(
         id: number,
         gameLayer: Container,
         x: number,
@@ -59,7 +60,7 @@ export class Resource extends GameObject {
             oldStock: oldStock,
             position: this.getPosition(),
         });
-        let scale = newStock / this.capacity;
+        const scale = newStock / this.capacity;
         this.shape.scale.set(this.baseScale * scale);
     }
 
@@ -71,22 +72,21 @@ export class Resource extends GameObject {
         };
     }
 
-    protected logStatusChange(newStatusEffects: StatusEffectDefinition[]): void {
-        if (!Array.isArray(newStatusEffects) || newStatusEffects.length === 0) {
-            console.log('nothing');
-        } else {
-            newStatusEffects.forEach((effect: StatusEffectDefinition) => {
-                console.log(effect.id);
-            });
-        }
+    abstract createMinimapIcon(): ViewContainer;
+
+    get miniMapLayer(): Layer {
+        return Layer.OTHER;
+    }
+    get miniMapDynamic(): LevelOfDynamic {
+        return LevelOfDynamic.STATIC;
     }
 }
 
-export class Tree extends Resource {
+export abstract class Tree extends Resource {
     static resourceSpot: ISvgContainer = {svg: undefined};
     resourceSpotTexture: Sprite;
 
-    constructor(id: number, x: number, y: number, size: number, svg: Texture) {
+    protected constructor(id: number, x: number, y: number, size: number, svg: Texture) {
         super(id, Game.layers.resources.trees, x, y, size * 1.8 + GraphicsConfig.character.size, 0, svg);
 
         this.resourceSpotTexture = createInjectedSVG(Tree.resourceSpot.svg, x, y, this.size * 0.7, randomRotation());
@@ -106,7 +106,7 @@ export class Tree extends Resource {
     }
 }
 
-let treeCfg = GraphicsConfig.resources.tree;
+const treeCfg = GraphicsConfig.resources.tree;
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(Tree.resourceSpot, treeCfg.spotFile, treeCfg.maxSize);
 
@@ -132,11 +132,11 @@ export class MarioTree extends Tree {
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(MarioTree, treeCfg.deciduousTreeFile, treeCfg.maxSize);
 
-export class Mineral extends Resource {
+export abstract class Mineral extends Resource {
     static resourceSpot: ISvgContainer = {svg: undefined};
     resourceSpotTexture: Sprite;
 
-    constructor(id: number, x: number, y: number, size: number, svg: Texture, applyVisualPadding: boolean = true) {
+    protected constructor(id: number, x: number, y: number, size: number, svg: Texture, applyVisualPadding: boolean = true) {
         super(id, Game.layers.resources.minerals, x, y,
             applyVisualPadding ? size * 1.1 + GraphicsConfig.character.size : size, // Add some space so the character can get visually close to the collider
             0, // Due to the shadow in the mineral graphics, those should not be randomly rotated
@@ -156,7 +156,7 @@ export class Mineral extends Resource {
     }
 }
 
-let mineralCfg = GraphicsConfig.resources.mineral;
+const mineralCfg = GraphicsConfig.resources.mineral;
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(Mineral.resourceSpot, mineralCfg.spotFile, mineralCfg.maxSize);
 
@@ -250,13 +250,17 @@ export class TitaniumShard extends Mineral {
             .poly(TwoDimensional.makePolygon(this.size * miniMapCfg.sizeFactor, 3, true))
             .fill({color: miniMapCfg.color, alpha: miniMapCfg.alpha});
     }
+
+    get miniMapDynamic(): LevelOfDynamic {
+        return LevelOfDynamic.REMOVABLE_FORGOTTEN;
+    }
 }
 
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(TitaniumShard, mineralCfg.titaniumShardFile, mineralCfg.shardMaxSize);
 
 
-let berryBushCfg = GraphicsConfig.resources.berryBush;
+const berryBushCfg = GraphicsConfig.resources.berryBush;
 
 export class BerryBush extends Resource {
     static svg: Texture;
@@ -272,7 +276,7 @@ export class BerryBush extends Resource {
     }
 
     initShape(svg: Texture, x: number, y: number, size: number, rotation: number) {
-        let group = new Container();
+        const group = new Container();
         group.position.set(x, y);
 
         this.actualShape = super.initShape(svg, 0, 0, size, rotation);
@@ -297,22 +301,22 @@ export class BerryBush extends Resource {
         this.shape.addChild(this.berries);
 
         // Seed a random generator with the ID of the game object to make sure it always looks the same
-        let seedRandom = new SeedRandom(this.id);
+        const seedRandom = new SeedRandom(this.id);
 
         for (let i = 0; i < this.capacity; i++) {
             if (i >= newStock) {
                 break;
             }
 
-            let berrySize = this.random(seedRandom, berryBushCfg.berryMinSize, berryBushCfg.berryMaxSize);
+            const berrySize = this.random(seedRandom, berryBushCfg.berryMinSize, berryBushCfg.berryMaxSize);
 
-            let distance = this.random(seedRandom, 0.2, 0.4) * this.size;
-            let x = Math.cos(Math.PI * 2 / this.capacity * i) * distance;
-            let y = Math.sin(Math.PI * 2 / this.capacity * i) * distance;
-            let berry = createInjectedSVG(BerryBush.berry.svg, x, y, berrySize);
+            const distance = this.random(seedRandom, 0.2, 0.4) * this.size;
+            const x = Math.cos(Math.PI * 2 / this.capacity * i) * distance;
+            const y = Math.sin(Math.PI * 2 / this.capacity * i) * distance;
+            const berry = createInjectedSVG(BerryBush.berry.svg, x, y, berrySize);
             this.berries.addChild(berry);
 
-            let calyx = createInjectedSVG(BerryBush.calyx.svg, x, y, berrySize, this.random(seedRandom, deg2rad(-65), deg2rad(220)));
+            const calyx = createInjectedSVG(BerryBush.calyx.svg, x, y, berrySize, this.random(seedRandom, deg2rad(-65), deg2rad(220)));
             this.berries.addChild(calyx);
         }
         ResourceStockChangedEvent.trigger({
@@ -355,9 +359,13 @@ export class Flower extends Resource {
         this.resourceSpotTexture.parent.removeChild(this.resourceSpotTexture);
         super.hide();
     }
+
+    createMinimapIcon(): ViewContainer {
+        throw new Error('Method not implemented.');
+    }
 }
 
-let flowerCfg = GraphicsConfig.resources.flower;
+const flowerCfg = GraphicsConfig.resources.flower;
 // noinspection JSIgnoredPromiseFromCall
 Preloading.registerGameObjectSVG(Flower.resourceSpot, flowerCfg.spotFile, flowerCfg.maxSize);
 // noinspection JSIgnoredPromiseFromCall
