@@ -2,6 +2,7 @@ package core
 
 import (
 	"log"
+	"log/slog"
 
 	"github.com/EngoEngine/ecs"
 	"github.com/google/flatbuffers/go"
@@ -84,6 +85,11 @@ func (n *NetSystem) playerSendState(p model.PlayerEntity, gs codec.CharacterGame
 
 	err := p.Client().SendMessage(builder.FinishedBytes())
 	if err != nil {
+		slog.Error("👢 Disconnect player",
+			slog.Bool("spectator", false),
+			slog.String("uuid", p.Client().UUID().String()),
+			slog.Any("error", err),
+		)
 		n.game.RemoveEntity(p.Basic())
 	}
 }
@@ -110,6 +116,11 @@ func (n *NetSystem) spectatorSendState(s model.Spectator, gs codec.SpectatorGame
 
 	err := s.Client().SendMessage(builder.FinishedBytes())
 	if err != nil {
+		slog.Error("👢 Disconnect player",
+			slog.Bool("spectator", true),
+			slog.String("uuid", s.Client().UUID().String()),
+			slog.Any("error", err),
+		)
 		n.game.RemoveEntity(s.Basic())
 	}
 }
