@@ -96,6 +96,11 @@
     },
     {
       "category": "improvement",
+      "description": "All placeable objects, except for campfires, are now shown on the mini-map.",
+      "trelloUrl": "https://trello.com/c/WqipEIGd/223-destroyed-decayed-placeables-are-not-removed-from-the-minimap"
+    },
+    {
+      "category": "improvement",
       "description": "Punch punch now has new swing sound.",
       "trelloUrl": "https://trello.com/c/wnj8FBKt/198-implement-swing-woosh-for-player-attack"
     },
