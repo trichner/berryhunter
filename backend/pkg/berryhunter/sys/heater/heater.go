@@ -82,8 +82,11 @@ func (f *HeaterSystem) UpdateHeater(h model.Heater) {
 		if t == nil {
 			log.Panicf("😱 Player not found in system, not added?")
 		}
-		// TODO Account for radius
-		t.temperature += h.HeatRadiation().HeatPerTick
+		// TODO Account for radius^
+		heatPerTick := h.HeatRadiation().HeatPerTick
+		if (t.temperature == 0) || (t.temperature < heatPerTick) {
+			t.temperature = h.HeatRadiation().HeatPerTick
+		}
 	}
 }
 
