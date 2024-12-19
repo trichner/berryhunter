@@ -45,7 +45,7 @@ export class Character extends GameObject implements ICharacterLike, IMiniMapRen
     static variants: ISvgContainer[] = [];
     static svg: Texture;
     static craftingIndicator: ISvgContainer = {svg: undefined};
-    static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks - 1;
+    static hitAnimationFrameDuration: number = GraphicsConfig.character.actionAnimation.backendTicks;
 
 
     name: string;
