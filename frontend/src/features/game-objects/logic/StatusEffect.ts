@@ -196,6 +196,7 @@ export class StatusEffect implements StatusEffectDefinition {
 
         if (this.soundData) {
             this.soundData.forEach((sound : SoundData) =>{
+                if (!sound || !sound.soundId) return;
                 const playRoll = sound.chanceToPlay ? Math.random() <= sound.chanceToPlay : true;
                 if (playRoll) {
                     spatialAudio.play(sound.soundId, Vector.clone(this.shape.position), sound.options);

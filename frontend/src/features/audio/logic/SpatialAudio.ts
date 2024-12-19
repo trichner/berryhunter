@@ -14,6 +14,8 @@ export class SpatialAudio {
     }
 
     play(soundId: string, sourcePosition: Vector, playOptions?: PlayOptions) {
+        if (!soundId) return;
+
         const soundInstance = sound.find(soundId);
 
         if (!soundInstance) return;
