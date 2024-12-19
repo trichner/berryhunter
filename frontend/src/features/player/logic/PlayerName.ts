@@ -53,7 +53,11 @@ function onSubmit(event, inputElement, screen: screen) {
     event.preventDefault();
 
     let name: string = inputElement.value;
-    if (!name) {
+    const blacklist = ".,-_;:'!@#$%^&*()|<>{[]}+~";
+    const trimmedName = name.trim();
+    const isOnlyBlacklistedChars = trimmedName.length > 0 && [...trimmedName].every(char => blacklist.includes(char));
+
+    if (!name || trimmedName.length === 0 || isOnlyBlacklistedChars) {
         name = inputElement.getAttribute('placeholder');
         remove();
     } else {
