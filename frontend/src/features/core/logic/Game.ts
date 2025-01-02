@@ -64,10 +64,12 @@ export class Game implements IGame {
     private backend: IBackend;
 
     public get width(): number {
+        // FIXME Doesn't take browser zoom into consideration
         return this.application.canvas.width / this.renderResolution;
     }
 
     public get height(): number {
+        // FIXME Doesn't take browser zoom into consideration
         return this.application.canvas.height / this.renderResolution;
     }
 
