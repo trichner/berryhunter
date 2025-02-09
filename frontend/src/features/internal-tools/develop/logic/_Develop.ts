@@ -413,6 +413,7 @@ export class Develop implements IDevelop {
 
         let movementStr = '';
         if (inputObj.movement !== null) {
+            movementStr = inputObj.movement.x.toFixed(2) + ' / ' + inputObj.movement.y.toFixed(2);
             switch (inputObj.movement.x) {
                 case 1:
                     switch (inputObj.movement.y) {

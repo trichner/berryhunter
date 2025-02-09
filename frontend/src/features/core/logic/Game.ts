@@ -52,7 +52,7 @@ export class Game implements IGame {
     public miniMap: MiniMap = null;
 
     public inputManager: InputManager;
-    private joystickManager: JoystickManager;
+    public joystickManager: JoystickManager;
 
     // TODO merge with GameState?
     public started: boolean;

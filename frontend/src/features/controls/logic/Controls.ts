@@ -163,7 +163,17 @@ export class Controls {
             consoleCooldown--;
         }
 
-        let movement = new Vector();
+        let movement: Vector;
+        let rotationFace: ('CURSOR' | 'WALKING_DIRECTION');
+
+        const joystickMovement = Game.joystickManager.movementVector;
+        if (joystickMovement === null) {
+            rotationFace = 'CURSOR';
+            movement = new Vector();
+        } else {
+            rotationFace = 'WALKING_DIRECTION';
+            movement = joystickMovement;
+        }
 
         if (this.upKeys.isDown) {
             movement.y -= 1;
@@ -227,14 +237,13 @@ export class Controls {
                 this.lastX !== this.character.getX() ||
                 this.lastY !== this.character.getY()
             ) {
-
-                input.rotation = this.adjustCharacterRotation();
+                input.rotation = this.adjustCharacterRotation(rotationFace, movement);
                 hasInput = true;
                 this.lastX = this.character.getX();
                 this.lastY = this.character.getY();
             }
         } else if (inputManager.activePointer.justMoved) {
-            input.rotation = this.adjustCharacterRotation();
+            input.rotation = this.adjustCharacterRotation(rotationFace, movement);
             hasInput = true;
         }
 
@@ -266,18 +275,13 @@ export class Controls {
 
     }
 
-    adjustCharacterRotation() {
-        let pointer = Game.inputManager.activePointer;
-
-        if (isDefined(Game.player)) {
-            let characterX = Game.player.camera.getScreenX(this.character.getX());
-            let characterY = Game.player.camera.getScreenY(this.character.getY());
-
-            let rotation: radians = TwoDimensional.angleBetween(
-                pointer.x,
-                pointer.y,
-                characterX,
-                characterY,
+    adjustCharacterRotation(face: 'CURSOR' | 'WALKING_DIRECTION', movement: Vector) {
+        if (face === 'WALKING_DIRECTION') {
+             const rotation: radians = TwoDimensional.angleBetween(
+                movement.x,
+                movement.y,
+                0,
+                0,
             );
 
             this.character.setRotation(rotation);
@@ -285,7 +289,26 @@ export class Controls {
             return rotation;
         }
 
-        return this.character.shape.rotation;
+        if (face === 'CURSOR') {
+            if (isDefined(Game.player)) {
+                const pointer = Game.inputManager.activePointer;
+                let characterX = Game.player.camera.getScreenX(this.character.getX());
+                let characterY = Game.player.camera.getScreenY(this.character.getY());
+
+                const rotation: radians = TwoDimensional.angleBetween(
+                    pointer.x,
+                    pointer.y,
+                    characterX,
+                    characterY,
+                );
+
+                this.character.setRotation(rotation);
+
+                return rotation;
+            }
+
+            return this.character.shape.rotation;
+        }
     }
 
     destroy() {
