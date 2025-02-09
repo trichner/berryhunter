@@ -36,7 +36,8 @@ function Collection (manager, options) {
         lockY: false,
         shape: 'circle',
         dynamicPage: false,
-        follow: false
+        follow: false,
+        validate: () => true,
     };
 
     self.config(options);
@@ -247,7 +248,7 @@ Collection.prototype.onstart = function (evt) {
     var process = function (touch) {
         // If we can create new nipples
         // meaning we don't have more active nipples than we should.
-        if (self.actives.length < opts.maxNumberOfNipples) {
+        if (self.actives.length < opts.maxNumberOfNipples && opts.validate(touch)) {
             self.processOnStart(touch);
         }
         else if(origEvt.type.match(/^touch/)){
@@ -262,7 +263,7 @@ Collection.prototype.onstart = function (evt) {
                     self.processOnEnd(e);
                 }
             });
-            if(self.actives.length < opts.maxNumberOfNipples){
+            if(self.actives.length < opts.maxNumberOfNipples && opts.validate(touch)){
                 self.processOnStart(touch);
             }
         }

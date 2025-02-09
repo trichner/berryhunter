@@ -52,6 +52,7 @@ export const BasicConfig = {
      * true: character movement AND mouse movement adjust the character facing direction
      * false: only mouse movement adjust the character facing direction
      */
+    // FIXME doesn't work currently
     ALWAYS_VIEW_CURSOR: <boolean> true,
 
     /**
