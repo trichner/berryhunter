@@ -24,7 +24,8 @@ function Nipple (collection, options) {
         zone: document.body,
         lockX: false,
         lockY: false,
-        shape: 'circle'
+        shape: 'circle',
+        validate: () => true,
     };
 
     this.config(options);

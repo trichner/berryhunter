@@ -11,6 +11,7 @@ import * as HUD from '../../user-interface/HUD/logic/HUD';
 import * as Chat from '../../chat/logic/Chat';
 import {BasicConfig as Constants} from '../../../client-data/BasicConfig';
 import {InputManager} from '../../input-system/logic/InputManager';
+import {JoystickManager} from '../../input-system/logic/virtual-joystick/JoystickManager';
 import {isDefined, resetFocus} from '../../common/logic/Utils';
 import {WelcomeMessage} from '../../backend/logic/messages/incoming/WelcomeMessage';
 import * as Console from '../../internal-tools/console/logic/Console';
@@ -51,6 +52,7 @@ export class Game implements IGame {
     public miniMap: MiniMap = null;
 
     public inputManager: InputManager;
+    private joystickManager: JoystickManager;
 
     // TODO merge with GameState?
     public started: boolean;
@@ -238,6 +240,9 @@ export class Game implements IGame {
             inputGamepad: false,
         });
         this.inputManager.boot();
+
+        this.joystickManager = new JoystickManager();
+        this.joystickManager.setup();
 
         // Disable context menu on right click to use the right click in-game
         document.body.addEventListener('contextmenu', (event) => {

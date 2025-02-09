@@ -31,16 +31,16 @@ var events = {
 };
 var toBind;
 var secondBind = {};
-if (isPointer) {
-    toBind = events.pointer;
-} else if (isMSPointer) {
-    toBind = events.MSPointer;
-} else if (isTouch) {
+// if (isTouch) {
     toBind = events.touch;
-    secondBind = events.mouse;
-} else {
-    toBind = events.mouse;
-}
+//     // secondBind = events.mouse;
+// } else if (isPointer) {
+//     toBind = events.pointer;
+// } else if (isMSPointer) {
+//     toBind = events.MSPointer;
+// } else {
+//     toBind = events.mouse;
+// }
 
 function Super () {}
 

@@ -225,7 +225,8 @@ export class Controls {
         if (Constants.ALWAYS_VIEW_CURSOR) {
             if (inputManager.activePointer.justMoved ||
                 this.lastX !== this.character.getX() ||
-                this.lastY !== this.character.getY()) {
+                this.lastY !== this.character.getY()
+            ) {
 
                 input.rotation = this.adjustCharacterRotation();
                 hasInput = true;
