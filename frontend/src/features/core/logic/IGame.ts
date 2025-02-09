@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import {EntityManager} from "../../backend/logic/EntityManager";
+import {JoystickManager} from "../../input-system/logic/virtual-joystick/JoystickManager";
 import {MiniMap} from "../../mini-map/logic/MiniMap";
 import {Spectator} from "../../player/logic/Spectator";
 import {Player} from "../../player/logic/Player";
@@ -41,6 +42,7 @@ export interface IGame {
 
     readonly domElement: HTMLCanvasElement;
     readonly inputManager: InputManager;
+    readonly joystickManager: JoystickManager;
 
     readonly started: boolean;
     readonly paused: boolean;

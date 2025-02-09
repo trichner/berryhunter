@@ -1,8 +1,11 @@
 import * as nipplejs from '../../../../libraries/nipplejs/types/index';
 import nipple from '../../../../libraries/nipplejs/src/index';
+import {Vector} from '../../../core/logic/Vector';
 
 export class JoystickManager {
-    manager: nipplejs.JoystickManager;
+    private manager: nipplejs.JoystickManager;
+
+    private lastOutputData: nipplejs.JoystickOutputData = null;
 
     constructor() {
         this.manager = nipple.create({
@@ -18,30 +21,22 @@ export class JoystickManager {
     setup() {
 
         // listener to be triggered when the joystick moves
-        this.manager.on('move',  (data : nipplejs.EventData, output : nipplejs.JoystickOutputData) => {
-
-            console.log('Joystick move.', data, output);
-
-            // // get the force and don't let it be greater than 1
-            // let force : number = Math.min(output.force, 1);
-            //
-            // // get the angle, in radians
-            // let angle : number = output.angle.radian;
-            //
-            // // determine the speed, according to force and player speed
-            // let speed : number = GameOptions.playerSpeed * force;
-            //
-            // // set player velocity using trigonometry
-            // this.player.setVelocity(speed * Math.cos(angle), speed * Math.sin(angle) * -1);
+        this.manager.on('move', (data: nipplejs.EventData, output: nipplejs.JoystickOutputData) => {
+            this.lastOutputData = output;
         });
 
         // listener to be triggered when the joystick stops moving
-        this.manager.on('end',  () => {
-
+        this.manager.on('end', () => {
+            this.lastOutputData = null;
             console.log('Joystick end.');
-
-            // stop the player
-            // this.player.setVelocity(0, 0);
         })
+    }
+
+    get movementVector(): Vector {
+        if (this.lastOutputData === null) return null;
+        // Define dead-zone
+        if (this.lastOutputData.distance <= 3) return null;
+
+        return new Vector(this.lastOutputData.vector.x, -1 * this.lastOutputData.vector.y);
     }
 }

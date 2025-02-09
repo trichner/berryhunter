@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/EngoEngine/ecs"
+
 	"github.com/trichner/berryhunter/pkg/api/BerryhunterApi"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model"
 	"github.com/trichner/berryhunter/pkg/berryhunter/model/actions"
@@ -172,8 +173,8 @@ func (i *PlayerInputSystem) applyAction(p model.PlayerEntity, action *model.Acti
 }
 
 func input2vec(i *model.PlayerInput) phy.Vec2f {
-	x := phy.Signum32f(i.Movement.X)
-	y := phy.Signum32f(i.Movement.Y)
+	x := i.Movement.X
+	y := i.Movement.Y
 	// prevent division by zero
 	if x == 0 && y == 0 {
 		return phy.Vec2f{}
