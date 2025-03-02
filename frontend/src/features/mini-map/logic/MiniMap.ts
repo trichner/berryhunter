@@ -150,7 +150,6 @@ export class MiniMap {
                 // Is within viewport --> drop
                 icon.shape.removeFromParent();
                 delete this.dynamicIcons[LevelOfDynamic.REMOVABLE_REMEMBERED][icon.gameObjectId];
-                // TODO test
                 delete this.iconsMarkedForRemoval[icon.gameObjectId];
             }
         });
@@ -183,13 +182,10 @@ export class MiniMap {
             return;
         }
 
-        const debug: boolean = gameObject.constructor.name === 'TitaniumShard';
-        if (debug) console.log('MiniMap.add', gameObject.constructor.name, gameObject.id);
         this.registeredGameObjectIds.add(gameObject.id);
 
         if (gameObject.miniMapDynamic === LevelOfDynamic.REMOVABLE_REMEMBERED &&
             this.iconsMarkedForRemoval.hasOwnProperty(gameObject.id)) {
-            if (debug) console.log('is markedForRemoval --> unmark & return');
             delete this.iconsMarkedForRemoval[gameObject.id];
             return;
         }
