@@ -210,8 +210,6 @@ export class MiniMap {
     }
 
     public remove(gameObject: IMiniMapRendered) {
-        const debug: boolean = gameObject.constructor.name === 'TitaniumShard';
-        if (debug) console.log('MiniMap.remove', gameObject.constructor.name, gameObject.id, gameObject.miniMapDynamic);
         switch (gameObject.miniMapDynamic) {
             case LevelOfDynamic.STATIC:
                 // Doesn't get removed
@@ -222,12 +220,10 @@ export class MiniMap {
                 // remove as soon as in viewport OR de-mark if added again
                 const icon = this.dynamicIcons[LevelOfDynamic.REMOVABLE_REMEMBERED][gameObject.id];
                 if (this.isInViewport(icon)) {
-                    if (debug) console.log('isInViewport');
                     // Is within viewport --> drop
                     icon.shape.removeFromParent();
                     delete this.dynamicIcons[LevelOfDynamic.REMOVABLE_REMEMBERED][gameObject.id];
                 } else {
-                    if (debug) console.log('NOT in viewport');
                     this.iconsMarkedForRemoval[gameObject.id] = icon;
                 }
                 break;
