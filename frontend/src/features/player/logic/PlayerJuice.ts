@@ -166,7 +166,7 @@ PlayerCraftingStateChangedEvent.subscribe((isCrafting) => {
 
 const triggerMap = new TriggerIntervalMap();
 const hurt = ['hurt', 'hurt2', 'hurt3', 'hurt4', 'hurt5'];
-export const swingLightAudioCues = ['swingLight', 'swingLight2', 'swingLight3', 'swingLight4', 'swingHeavy', "swingHeavy2"];
+export const swingLightAudioCues = ['swingLight', 'swingLight2', 'swingLight3', 'swingLight4', 'swingHeavy', 'swingHeavy2'];
 const steps = ['step', 'step2', 'step3'];
 
 PIXI.Assets.add({ alias: 'collect', src: require('../assets/245645__unfa__cartoon-pop-clean.mp3') });

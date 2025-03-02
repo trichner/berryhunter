@@ -1,27 +1,25 @@
 import { filters, PlayOptions, sound } from '@pixi/sound';
 import { Vector } from '../../core/logic/Vector';
 import { CameraUpdatedEvent } from '../../core/logic/Events';
-import { isNumber, isUndefined } from 'lodash';
+import  _isNumber from 'lodash/isNumber';
 
 export class SpatialAudio {
-    listenerPosition: Vector;
-    logging: boolean = false;
+   listenerPosition: Vector = null;
+   logging: boolean = false;
 
     constructor() {
         CameraUpdatedEvent.subscribe((position) => {
             this.listenerPosition = position;
-        })
+        });
     }
 
     play(soundId: string, sourcePosition: Vector, playOptions?: PlayOptions) {
-        if (!soundId) return;
+        if (this.listenerPosition == null) return;
+        if (!_isNumber(this.listenerPosition.x)) return;
+        if (!_isNumber(this.listenerPosition.y)) return;
+        if (!sound.exists(soundId)) return;
 
         const soundInstance = sound.find(soundId);
-
-        if (!soundInstance) return;
-
-        if (isUndefined(this.listenerPosition) || !isNumber(this.listenerPosition.x) || !isNumber(this.listenerPosition.y))
-            return;
 
         //TODO: Magical number. what is the actual interest range?
         const maxDistance = 700;

@@ -67,7 +67,7 @@ export class StatusEffect implements StatusEffectDefinition {
     originalScaleX: number;
     originalScaleY: number;
     tweenEffects: TweenEffect[];
-    soundData: SoundData[];
+    soundData: SoundData[] = [];
     tweenGroup: TweenGroup;
 
     private constructor(
@@ -172,7 +172,8 @@ export class StatusEffect implements StatusEffectDefinition {
             gameObjectShape,
             [{ type: 'shake', from: 4, to: 4, duration: 24 }],
             isDefined(soundId) ? [{
-                soundId: soundId, options: {
+                soundId: soundId,
+                options: {
                     speed: random(0.8, 0.9),
                     volume: random(0.8, 0.9),
                 }
@@ -194,15 +195,12 @@ export class StatusEffect implements StatusEffectDefinition {
         this.buildTweens();
         this.tweenGroup.getAll().forEach(tween => tween.start());
 
-        if (this.soundData) {
-            this.soundData.forEach((sound : SoundData) =>{
-                if (!sound || !sound.soundId) return;
-                const playRoll = sound.chanceToPlay ? Math.random() <= sound.chanceToPlay : true;
-                if (playRoll) {
-                    spatialAudio.play(sound.soundId, Vector.clone(this.shape.position), sound.options);
-                }
-            });
-        }
+        this.soundData.forEach((sound: SoundData) => {
+            const playRoll = isDefined(sound.chanceToPlay) ? Math.random() <= sound.chanceToPlay : true;
+            if (playRoll) {
+                spatialAudio.play(sound.soundId, Vector.clone(this.shape.position), sound.options);
+            }
+        });
 
         this.showing = true;
         Ticker.shared.remove(this.updateFn);
