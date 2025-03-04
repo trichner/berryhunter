@@ -121,7 +121,7 @@ export function displayAvailableCrafts(availableCrafts, onLeftClick) {
 
     availableCrafts.forEach(function (recipe, index) {
         if (isUndefined(recipe.clickableIcon)) {
-            let craftableItemElement = craftableItemTemplate.cloneNode(true);
+            let craftableItemElement = craftableItemTemplate.cloneNode(true) as HTMLElement;
 
             let clickableIcon = new ClickableIcon(craftableItemElement);
             clickableIcon.onLeftClick = function (event) {
