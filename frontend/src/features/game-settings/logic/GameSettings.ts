@@ -10,7 +10,7 @@ export class GameSettings {
 
     public static get(): GameSettings {
         if (this.instance === null) {
-            const gameSettings = _merge(new GameSettings(), JSON.parse(Account.rawGameSettings));
+            const gameSettings: GameSettings = _merge(new GameSettings(), JSON.parse(Account.rawGameSettings));
 
             this.instance = onChange(gameSettings, (path, value, previousValue) => {
                 GameSettingChangedEvent.trigger({
@@ -21,6 +21,11 @@ export class GameSettings {
 
                 GameSettings.save(onChange.target(gameSettings));
             });
+
+            // TODO replace with a migration system
+            if (gameSettings.audio.masterVolume > 1 && gameSettings.audio.masterVolume <= 100) {
+                gameSettings.audio.masterVolume /= 100.0;
+            }
         }
 
         return this.instance;
@@ -34,7 +39,9 @@ export class GameSettings {
     }, 250);
 }
 
-class AudioSettings {
+export class AudioSettings {
     public masterMuted: boolean = true;
-    public masterVolume: number = 70;
+    public masterVolume: number = 0.7;
+    public enableBackgroundAudio: boolean = false;
+    public musicVolume: number = 1.0;
 }

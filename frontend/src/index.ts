@@ -6,6 +6,7 @@ import 'core-js';
 
 // Import all modules that listen for Events to ensure the listeners are actually registered
 import './features/audio/logic/Audio';
+import './features/audio/logic/Music';
 import './features/backend/logic/Backend';
 import './features/internal-tools/develop/logic/DebugCircle';
 import './features/internal-tools/develop/logic/_Develop';

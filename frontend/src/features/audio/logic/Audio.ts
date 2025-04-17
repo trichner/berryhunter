@@ -1,6 +1,6 @@
 import {GameSettingChangedEvent} from '../../core/logic/Events';
 import {sound} from '@pixi/sound';
-import {GameSettings} from '../../game-settings/logic/GameSettings';
+import {AudioSettings, GameSettings} from '../../game-settings/logic/GameSettings';
 
 GameSettingChangedEvent.subscribe(payload => {
     if (!payload.path.startsWith('audio.')) {
@@ -18,20 +18,39 @@ GameSettingChangedEvent.subscribe(payload => {
             }
             break;
         case 'masterVolume':
-            sound.volumeAll = (payload.newValue as number) / 100.0;
+            sound.volumeAll = payload.newValue as number;
             break;
     }
 });
 
+function setupBackgroundAudio() {
+    sound.disableAutoPause = true;
+    document.addEventListener('visibilitychange', () => {
+        updateMuting(GameSettings.get().audio);
+    });
+}
+
 function setup() {
     const settings = GameSettings.get().audio;
+    updateMuting(settings);
+
+    sound.volumeAll = settings.masterVolume;
+
+    setupBackgroundAudio();
+}
+
+function updateMuting(settings: AudioSettings) {
     if (settings.masterMuted) {
         sound.muteAll();
-    } else {
-        sound.unmuteAll();
+        return;
     }
 
-    sound.volumeAll = settings.masterVolume / 100.0;
+    if (document.visibilityState === 'hidden' && !settings.enableBackgroundAudio) {
+        sound.muteAll();
+        return;
+    }
+
+    sound.unmuteAll();
 }
 
 setup();

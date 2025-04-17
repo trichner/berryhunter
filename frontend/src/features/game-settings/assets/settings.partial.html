@@ -9,14 +9,26 @@
         <h2>Settings</h2>
 
         <h3>Audio</h3>
-        <div>
-            <input type="checkbox" id="muteAllToggle" />
-            <label for="muteAllToggle">Mute</label>
-        </div>
-        <div>
-            <label for="masterVolume">Volume</label>
-            <input type="range" id="masterVolume" name="volume" min="0" max="100" step="1"  />
-            <span class="value">100</span>
+        <div class="setting-group">
+            <div>
+                <input type="checkbox" id="muteAllToggle" />
+                <label for="muteAllToggle">Mute all</label>
+            </div>
+            <div>
+                <label for="masterVolume">Master</label>
+                <input type="range" id="masterVolume" name="volume" min="0" max="1" step="0.01"  />
+                <span class="value">100</span>
+            </div>
+            <div>
+                <label for="musicVolume">Music</label>
+                <input type="range" id="musicVolume" name="volume" min="0" max="1" step="0.01"  />
+                <span class="value">100</span>
+            </div>
+
+            <div>
+                <input type="checkbox" id="backgroundAudioToggle" />
+                <label for="backgroundAudioToggle">Play audio in background</label>
+            </div>
         </div>
     </section>
 </div>

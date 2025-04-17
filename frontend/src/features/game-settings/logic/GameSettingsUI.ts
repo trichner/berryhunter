@@ -50,21 +50,67 @@ function setupPanel() {
 }
 
 function setupAudioSettings() {
-    const muteAllToggle = rootElement.querySelector('#muteAllToggle') as HTMLInputElement;
-    muteAllToggle.checked = gameSettings.audio.masterMuted;
-    muteAllToggle.addEventListener('change', () => {
-        gameSettings.audio.masterMuted = muteAllToggle.checked;
-    });
+    setupToggle(
+        '#muteAllToggle',
+        () => gameSettings.audio.masterMuted,
+        value => (gameSettings.audio.masterMuted = value),
+    );
 
-    const masterVolumeInput = rootElement.querySelector('#masterVolume') as HTMLInputElement;
-    const masterVolumeValueElement = rootElement.querySelector('#masterVolume + .value') as HTMLElement;
-    masterVolumeInput.value = String(gameSettings.audio.masterVolume);
-    masterVolumeValueElement.textContent = masterVolumeInput.value;
-    masterVolumeInput.addEventListener('input', () => {
-        gameSettings.audio.masterVolume = parseInt(masterVolumeInput.value);
-        masterVolumeValueElement.textContent = masterVolumeInput.value;
+    setupRange(
+        '#masterVolume',
+        '#masterVolume + .value',
+        () => gameSettings.audio.masterVolume,
+        value => (gameSettings.audio.masterVolume = value),
+    );
+
+    setupRange(
+        '#musicVolume',
+        '#musicVolume + .value',
+        () => gameSettings.audio.musicVolume,
+        value => (gameSettings.audio.musicVolume = value),
+    );
+
+    setupToggle(
+        '#backgroundAudioToggle',
+        () => gameSettings.audio.enableBackgroundAudio,
+        value => (gameSettings.audio.enableBackgroundAudio = value),
+    );
+}
+
+
+function setupToggle(
+    selector: string,
+    getValue: () => boolean,
+    setValue: (value: boolean) => void,
+) {
+    const toggle = rootElement.querySelector(selector) as HTMLInputElement;
+    toggle.checked = getValue();
+    toggle.addEventListener('change', () => {
+        setValue(toggle.checked);
     });
 }
+
+function setupRange(
+    selector: string,
+    valueDisplaySelector: string,
+    getValue: () => number,
+    setValue: (value: number) => void,
+) {
+    const input = rootElement.querySelector(selector) as HTMLInputElement;
+    const display = rootElement.querySelector(valueDisplaySelector) as HTMLElement;
+    const updateUI = (value: number) => {
+        input.value = String(value);
+        display.textContent = (value * 100).toFixed(0);
+    };
+
+    updateUI(getValue());
+    input.addEventListener('input', () => {
+        const val = parseFloat(input.value);
+        setValue(val);
+        updateUI(val);
+    });
+}
+
 
 function show() {
     showButton.classList.add('hidden');
