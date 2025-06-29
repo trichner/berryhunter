@@ -184,6 +184,7 @@ PreloadingStartedEvent.subscribe(() => {
 
 export function onDomReady() {
     rootElement = document.getElementById('vitalSignsOverlay');
+    // TODO an actual UI system should take care of appropriate layering
     // Move the overlays under the game UI
     rootElement.remove();
     document.body.insertBefore(rootElement, HUD.getRootElement());

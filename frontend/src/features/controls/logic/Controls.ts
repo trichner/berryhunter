@@ -61,6 +61,7 @@ export class Controls {
     clock: Tock;
     inventoryAction: InputAction;
     updateTime: number;
+    lastInputType: ('MOUSE' | 'TOUCH') = 'MOUSE';
 
     /**
      * @param {Character} character
@@ -78,7 +79,8 @@ export class Controls {
         this.clock = new Tock({
             interval: Constants.INPUT_TICKRATE,
             callback: this.update.bind(this),
-            complete: () => {},
+            complete: () => {
+            },
         });
 
         this.clock.start();
@@ -163,16 +165,27 @@ export class Controls {
             consoleCooldown--;
         }
 
+        if (Game.joystickManager.touchActionActive) {
+            this.lastInputType = 'TOUCH';
+        } else if (Game.inputManager.activePointer.justMoved) {
+            this.lastInputType = 'MOUSE';
+        }
+
         let movement: Vector;
         let rotationFace: ('CURSOR' | 'WALKING_DIRECTION');
 
         const joystickMovement = Game.joystickManager.movementVector;
         if (joystickMovement === null) {
-            rotationFace = 'CURSOR';
+            if (this.lastInputType === 'MOUSE') {
+                rotationFace = 'CURSOR';
+            } else {
+                rotationFace = 'WALKING_DIRECTION';
+            }
             movement = new Vector();
         } else {
             rotationFace = 'WALKING_DIRECTION';
             movement = joystickMovement;
+            this.lastInputType = 'TOUCH';
         }
 
         if (this.upKeys.isDown) {
@@ -199,7 +212,7 @@ export class Controls {
             } else {
                 if (this.isCraftInProgress()) {
                     // Don't check for actions
-                } else if (this.actionKeys.isDown || inputManager.activePointer.leftButtonDown()) {
+                } else if (this.actionKeys.isDown || inputManager.activePointer.leftButtonDown() || Game.joystickManager.touchActionActive) {
                     this.hitAnimationTick = this.character.action();
                     switch (this.character.currentAction) {
                         case 'MAIN':
@@ -271,13 +284,14 @@ export class Controls {
 
             input.send();
         }
-
-
     }
 
     adjustCharacterRotation(face: 'CURSOR' | 'WALKING_DIRECTION', movement: Vector) {
         if (face === 'WALKING_DIRECTION') {
-             const rotation: radians = TwoDimensional.angleBetween(
+            if (movement.x === 0 && movement.y === 0) {
+                return this.character.getRotation();
+            }
+            const rotation: radians = TwoDimensional.angleBetween(
                 movement.x,
                 movement.y,
                 0,

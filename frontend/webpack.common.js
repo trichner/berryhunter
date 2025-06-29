@@ -9,7 +9,10 @@ module.exports = {
 	plugins: [
 		new HtmlWebpackPlugin({
 			title: 'BerryHunter',
-			xhtml: true
+			xhtml: true,
+			meta: {
+				viewport: 'width=device-width, initial-scale=1, user-scalable=no, interactive-widget=resizes-content'
+			}
 		}),
 		new FaviconWebpackPlugin({
 			logo: './src/features/user-interface/assets/logo.svg',

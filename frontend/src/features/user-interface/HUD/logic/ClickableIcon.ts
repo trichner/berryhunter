@@ -154,9 +154,10 @@ export class ClickableIcon {
             return;
         }
 
+        let requiredTicks = seconds * 1000 / Constants.SERVER_TICKRATE;
         this.progress = {
-            requiredTicks: seconds * 1000 / Constants.SERVER_TICKRATE,
-            remainingTicks: this.progress.requiredTicks,
+            requiredTicks: requiredTicks,
+            remainingTicks: requiredTicks,
         };
 
         this.domElement.classList.add('inProgress');

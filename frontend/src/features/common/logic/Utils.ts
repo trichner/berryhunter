@@ -568,3 +568,9 @@ export function hashCode(value: string): number {
     }
     return hash;
 }
+
+export function logCallers(numberOfCallers: number = 3) {
+    const stack = new Error().stack;
+    const lines = stack.split('\n').slice(2, 2 + numberOfCallers); // Skip 'Error' and get next n callers
+    console.log('Callers:\n' + lines.join('\n'));
+}

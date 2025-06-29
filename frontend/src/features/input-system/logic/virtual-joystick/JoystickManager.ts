@@ -1,24 +1,30 @@
+import '../../assets/inputAreas.less';
+
 import * as nipplejs from '../../../../libraries/nipplejs/types/index';
 import nipple from '../../../../libraries/nipplejs/src/index';
 import {Vector} from '../../../core/logic/Vector';
+import {PreloadingStartedEvent} from '../../../core/logic/Events';
+import * as Preloading from '../../../core/logic/Preloading';
+import * as HUD from '../../../user-interface/HUD/logic/HUD';
 
 export class JoystickManager {
     private manager: nipplejs.JoystickManager;
 
     private lastOutputData: nipplejs.JoystickOutputData = null;
 
+    private rightSideTouchIsDown = false;
+
+    public get touchActionActive(): boolean {
+        return this.rightSideTouchIsDown;
+    }
+
     constructor() {
-        this.manager = nipple.create({
-            validate: (touch: Touch) => {
-                return touch.screenX / window.innerWidth <= 0.5;
-            }
-        });
-        // window.addEventListener('touchstart', () => {
-        //     this.setup();
-        // }, {once: true});
     }
 
     setup() {
+        this.manager = nipple.create({
+            zone: rootElement.querySelector('.left-input-area')
+        });
 
         // listener to be triggered when the joystick moves
         this.manager.on('move', (data: nipplejs.EventData, output: nipplejs.JoystickOutputData) => {
@@ -29,7 +35,16 @@ export class JoystickManager {
         this.manager.on('end', () => {
             this.lastOutputData = null;
             console.log('Joystick end.');
-        })
+        });
+
+        let rightInputArea = rootElement.querySelector('.right-input-area');
+        rightInputArea.addEventListener('touchstart', evt => {
+            this.rightSideTouchIsDown = true;
+        });
+
+        rightInputArea.addEventListener('touchend', evt => {
+            this.rightSideTouchIsDown = false;
+        });
     }
 
     get movementVector(): Vector {
@@ -39,4 +54,19 @@ export class JoystickManager {
 
         return new Vector(this.lastOutputData.vector.x, -1 * this.lastOutputData.vector.y);
     }
+}
+
+const htmlFile = require('../../assets/inputAreas.html');
+let rootElement: HTMLElement;
+
+PreloadingStartedEvent.subscribe(() => {
+    Preloading.renderPartial(htmlFile, onDomReady);
+});
+
+export function onDomReady() {
+    rootElement = document.getElementById('inputAreas');
+    // TODO an actual UI system should take care of appropriate layering
+    // Move the overlays under the game UI
+    rootElement.remove();
+    document.body.insertBefore(rootElement, HUD.getRootElement());
 }
